@@ -1,0 +1,3 @@
+name = NYS Accumulator
+description = Module to store constituent actions on the NY State Senate website
+core = 7.x

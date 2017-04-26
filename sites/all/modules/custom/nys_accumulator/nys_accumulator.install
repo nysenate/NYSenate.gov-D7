@@ -1,0 +1,119 @@
+<?php
+
+/**
+ * @file
+ * Flag module install/schema/update hooks.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function nys_accumulator_schema() {
+  $schema = array();
+
+  $schema['accumulator'] = array(
+    'description' => 'Objects that have been flagged.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'The unique ID for this particular tag.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'user_id' => array(
+        'description' => 'The user ID for whom this action was created.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+      ),
+      'user_is_verified' => array(
+        'description' => 'Bit flag indicating paths of user verification',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'target_shortname' => array(
+        'description' => 'The target Senator\'s shortname',
+        'type' => 'varchar',
+        'length' => '32',
+        'not null' => FALSE,
+        'default' => '',
+      ),
+      'target_district' => array(
+        'description' => 'The target Senator\'s district',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+      ),
+      'user_shortname' => array(
+        'description' => 'The user\'s Senator\'s shortname',
+        'type' => 'varchar',
+        'length' => '32',
+        'not null' => FALSE,
+        'default' => '',
+      ),
+      'user_district' => array(
+        'description' => 'The user\'s district',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+      ),
+      'msg_type' => array(
+        'description' => 'The type of message being recorded',
+        'type' => 'enum',
+        'mysql_type' => 'enum(\'bill\',\'issue\',\'committee\',\'directmsg\', \'contextmsg\',\'petition\',\'account\',\'profile\',\'misc\')',
+        'not null' => TRUE,
+        'default' => 'misc',
+      ),
+      'msg_action' => array(
+        'description' => 'The specific action of the message',
+        'type' => 'varchar',
+        'length' => '32',
+        'not null' => FALSE,
+        'default' => '',
+      ),
+      'msg_info' => array(
+        'description' => 'JSON-formatted data specific to the type of message',
+        'type' => 'text',
+        'not null' => FALSE,
+      ),
+      'created_at' => array(
+        'description' => 'When the message was recorded',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+        'disp-size' => 11,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function nys_accumulator_uninstall() {
+  $result = db_select('variable', 'v')
+    ->fields('v', array('name'))
+    ->condition('name', 'accumulator', 'LIKE')
+    ->execute();
+  foreach ($result as $row) {
+    variable_del($row->name);
+  }
+
+  drupal_set_message(t('accumulator has been uninstalled.'));
+}
+
+/**
+ * Updates the db to use correct default for msg_type.
+ *
+ * Note that Drupal does not support the enum type.
+ */
+function nys_accumulator_update_7000() {
+  db_query('ALTER TABLE `accumulator` CHANGE `msg_type` `msg_type` enum(\'bill\',\'issue\',\'committee\',\'directmsg\', \'contextmsg\',\'petition\',\'account\',\'profile\',\'misc\') NOT NULL DEFAULT \'misc\'');
+}

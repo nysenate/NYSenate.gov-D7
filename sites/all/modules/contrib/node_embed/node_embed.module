@@ -1,0 +1,348 @@
+<?php
+/**
+ * @file
+ * This module defines an input filter for taking an embed code syntax
+ * ([[nid: ###]]) and removing the embed code and replacing with a rendered
+ * node view at that position in the text field.
+ */
+
+/**
+ * Implements hook_filter_info().
+ */
+function node_embed_filter_info() {
+  $filters['node_embed'] = array(
+    'title' => t('Insert node'),
+    'description' => t('By including the syntax [[nid:(node_id)]], this filter will embed the node with given NID'),
+    'prepare callback' => 'node_embed_filter_node_embed_prepare',
+    'process callback' => 'node_embed_filter_node_embed_process',
+    'tips callback'  => 'node_embed_filter_node_embed_tips',
+    'cache' => FALSE,
+  );
+
+  return $filters;
+}
+
+/**
+ * Prepare callback for hook_filter.
+ */
+function node_embed_filter_node_embed_prepare($text, $filter, $format, $langcode, $cache, $cache_id) {
+  return $text;
+}
+
+/**
+ * Process callback for hook_filter.
+ */
+function node_embed_filter_node_embed_process($text, $filter, $format, $langcode, $cache, $cache_id) {
+  return preg_replace_callback('/\[\[nid:(\d+)(\s.*)?\]\]/', '_node_embed_replacements', $text);
+}
+
+/**
+ * Tips callback for hook_filter.
+ */
+function node_embed_filter_node_embed_tips($filter, $format, $long) {
+  return t('[[nid:123]] - Insert a node content');
+}
+
+/**
+ * Provides the replacement html to be rendered in place of the embed code.
+ *
+ * @param array $matches
+ *   Embedded code, numeric node id and parameters that has been captured
+ *   by preg_replace_callback.
+ *
+ * @return string
+ *   The rendered HTML replacing the embed code. If embedding fails an empty
+ *   string will be returned for users without update access or else the
+ *   embed code.
+ */
+function _node_embed_replacements($matches) {
+  $stack = &drupal_static(__FUNCTION__, array());
+
+  // Add the node page to the stack.
+  if (empty($stack) && $node_page = menu_get_object('node')) {
+    $stack[$node_page->nid] = $node_page;
+  }
+
+  // Check if node isn't already embedded.
+  if (array_key_exists($matches[1], $stack)) {
+    return _node_embed_user_feedback(end($stack), $matches, 'loop');
+  }
+
+  // Check if the node is a real node.
+  if (!$node = node_load($matches[1])) {
+    return _node_embed_user_feedback(end($stack), $matches, 'invalid');
+  }
+
+  // Add to stack.
+  $stack[$node->nid] = $node;
+
+  // Check if node can be viewed by the user.
+  if (!node_access('view', $node)) {
+    return _node_embed_user_feedback(end($stack), $matches, 'access');
+  }
+
+  // Warn about an unpublished node.
+  if ($node->status == NODE_NOT_PUBLISHED) {
+    _node_embed_user_feedback($node, $matches, 'unpublished');
+  }
+
+  $node->node_embed_parameters = array();
+  if (isset($matches[2]) && trim($matches[2]) != '') {
+    parse_str(trim(str_replace('&nbsp;', ' ', $matches[2])), $node->node_embed_parameters);
+  }
+
+  if (!isset($node->node_embed_parameters['view_mode'])) {
+    $node->node_embed_parameters['view_mode'] = 'node_embed';
+  }
+
+  $view = node_view($node, $node->node_embed_parameters['view_mode']);
+  $render = drupal_render($view);
+
+  // Node without any problems, remove it from stack.
+  unset($stack[$node->nid]);
+
+  return $render;
+}
+
+/**
+ * Helper function for returning feedback to the user.
+ */
+function _node_embed_user_feedback(stdClass $parent_node, $matches, $type) {
+  // There is no point to show the embed code if the user can't edit the node.
+  if (!node_access('update', $parent_node)) {
+    return '';
+  }
+
+  $parent_node_url = l($parent_node->title, 'node/' . $parent_node->nid);
+
+  switch ($type) {
+    case 'access' :
+      drupal_set_message(t('You don\'t have the permission to view embedded node ID %nid in !node.', array(
+        '%nid' => $matches[1],
+        '!node' => $parent_node_url,
+      )), 'warning');
+      break;
+    case 'unpublished' :
+      drupal_set_message(t('The embedded node !node is unpublished.', array(
+        '%nid' => $matches[1],
+        '!node' => $parent_node_url,
+      )), 'warning');
+      break;
+    case 'loop' :
+      drupal_set_message(t('Loop detected while embedding code %code in !node', array(
+          '%code' => $matches[0],
+          '!node' => $parent_node_url,
+        )), 'error');
+      break;
+    case 'invalid' :
+      drupal_set_message(t('The embedded node ID %nid in !node does not exist (anymore).', array(
+        '%nid' => $matches[1],
+        '!node' => $parent_node_url,
+      )), 'warning');
+      break;
+  }
+
+  return $matches[0];
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ *
+ * This is where we add our default template for the fckeditor view page
+ * template.
+ */
+function node_embed_theme_registry_alter(&$theme_registry) {
+
+  // Add 'html--ckeditor-node-embed.tpl.php' template file
+  $theme_registry['html__ckeditor_node_embed'] = array();
+  $theme_registry['html__ckeditor_node_embed']['template'] = 'html--ckeditor-node-embed';
+  $theme_registry['html__ckeditor_node_embed']['path'] = drupal_get_path('module', 'node_embed') . "/theme";
+  $theme_registry['html__ckeditor_node_embed']['render element'] = 'page';
+  $theme_registry['html__ckeditor_node_embed']['base hook'] = 'html';
+  $theme_registry['html__ckeditor_node_embed']['type'] = 'theme_engine';
+  $theme_registry['html__ckeditor_node_embed']['theme path'] = path_to_theme();
+  $theme_registry['html__ckeditor_node_embed']['preprocess functions'] = array();
+  $theme_registry['html__ckeditor_node_embed']['process functions'] = array();
+
+  // Add 'page--ckeditor-node-embed.tpl.php' template file
+  $theme_registry['page__ckeditor_node_embed'] = array();
+  $theme_registry['page__ckeditor_node_embed']['template'] = 'page--ckeditor-node-embed';
+  $theme_registry['page__ckeditor_node_embed']['path'] = drupal_get_path('module', 'node_embed') . "/theme";
+  $theme_registry['page__ckeditor_node_embed']['render element'] = 'page';
+  $theme_registry['page__ckeditor_node_embed']['base hook'] = 'page';
+  $theme_registry['page__ckeditor_node_embed']['type'] = 'theme_engine';
+  $theme_registry['page__ckeditor_node_embed']['theme path'] = path_to_theme();
+  $theme_registry['page__ckeditor_node_embed']['preprocess functions'] = array();
+  $theme_registry['page__ckeditor_node_embed']['process functions'] = array();
+}
+
+/**
+ * Make compatible with views 2 for default view.
+ */
+function node_embed_views_api() {
+  return array('api' => 3);
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function node_embed_views_pre_render(&$view) {
+  if (arg(0) == 'ckeditor-node-embed') {
+    node_embed_suppress_admin_menu();
+    drupal_add_js("var oEditor = window.parent.CKEDITOR;
+      var instance = oEditor.currentInstance;
+      var lang = oEditor.lang;
+      var config = oEditor.config;",
+      'inline'
+    );
+    drupal_add_js(drupal_get_path('module', 'node_embed') . '/ckeditor/ck_nodeembed.js');
+  }
+}
+
+/**
+ * Implements hook_views_default_views().
+ */
+function node_embed_views_default_views() {
+  $views = array();
+
+  if (module_exists('ckeditor') || module_exists('wysiwyg')) {
+    include drupal_get_path('module', 'node_embed') . '/ckeditor/ckeditor_node_embed.view.inc';
+    if (isset($view)) {
+      $views[$view->name] = $view;
+    }
+  }
+
+  return $views;
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function node_embed_views_data_alter(&$data) {
+  $data['views']['node_embed'] = array(
+    'title' => t('Node embed add area'),
+    'help' => t('Provide links to add nodes.'),
+    'area' => array(
+      'handler' => 'views_handler_node_embed_add_area',
+    ),
+  );
+}
+
+/**
+ * Implementing the Wysiwyg API.
+ *
+ * Register a directory containing Wysiwyg plugins.
+ *
+ * @param string $type
+ *   The type of objects being collected: either 'plugins' or 'editors'.
+ *
+ * @return string
+ *   A sub-directory of the implementing module that contains the corresponding
+ *   plugin files. This directory must only contain integration files for
+ *   Wysiwyg module.
+ */
+function node_embed_wysiwyg_include_directory($type) {
+
+  switch ($type) {
+    case 'plugins':
+      // You can just return $type, if you place your Wysiwyg plugins into a
+      // sub-directory named 'plugins'.
+      return $type;
+  }
+}
+
+/**
+ * Implements hook_page_build().
+ */
+function node_embed_page_build() {
+  drupal_add_css(drupal_get_path('module', 'node_embed') . '/plugins/node_embed/node_embed.css');
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function node_embed_entity_info_alter(&$entity_info) {
+  if (isset($entity_info['node'])) {
+    $entity_info['node']['view modes'] += array(
+      'node_embed' => array(
+        'label' => 'Node embed',
+        'custom settings' => FALSE,
+      ),
+    );
+  }
+}
+
+/**
+ * Implements template_preproccess_node().
+ */
+function node_embed_preprocess_node(&$variables) {
+  if ($variables['view_mode'] == 'node_embed') {
+    $node = $variables['node'];
+    $variables['theme_hook_suggestions'][] = 'node__node_embed';
+    $variables['theme_hook_suggestions'][] = 'node__' . $node->type . '__node_embed';
+  }
+}
+
+/**
+ * Suppress Admin Menu if it is present
+ */
+function node_embed_suppress_admin_menu() {
+  if (module_exists('admin_menu')) {
+    admin_menu_suppress();
+  }
+}
+
+/**
+ * Implements hook_admin_paths().
+ *
+ * Show the admin theme in the wysiwyg popup.
+ */
+function node_embed_admin_paths() {
+  $paths = array();
+  if (variable_get('node_admin_theme', FALSE)) {
+    $paths['ckeditor-node-embed'] = TRUE;
+    $paths['ckeditor-node-embed/*'] = TRUE;
+  }
+  return $paths;
+}
+
+/**
+ * Implements of hook_ckeditor_plugin().
+ */
+function node_embed_ckeditor_plugin() {
+  return array(
+    'NodeEmbed' => array(
+      'name' => 'NodeEmbed',
+      'desc' => t('Node Embed - embed nodes in content.'),
+      'path' => drupal_get_path('module', 'node_embed') .'/ckeditor/NodeEmbed/',
+    ),
+  );
+}
+
+/**
+ *  Implements hook_requirements().
+ */
+function node_embed_requirements($phase) {
+  $t = get_t();
+  $requirements = array();
+
+  if (module_exists('ckeditor')) {
+    $requirements['node_embed_iframedialog'] = array(
+      'title' => $t('Node Embed - CKEditor IFrame Dialog Field plugin'),
+      'value' => $t('Exists'),
+      'severity' => REQUIREMENT_OK,
+    );
+
+    $plugin = DRUPAL_ROOT . ckeditor_library_path() . '/ckeditor/plugins/iframedialog/plugin.js';
+    if (!file_exists($plugin)) {
+      $requirements['node_embed_iframedialog']['description'] = $t('Node embed requires the CKEditor IFrame Dialog Field plugin. Please download it from !link and extract it into %path.', array(
+        '!link' => l('http://ckeditor.com/addon/iframedialog', 'http://ckeditor.com/addon/iframedialog'),
+        '%path' => dirname($plugin),
+      ));
+      $requirements['node_embed_iframedialog']['value'] = $t('Not found');
+      $requirements['node_embed_iframedialog']['severity'] = REQUIREMENT_ERROR;
+    }
+  }
+
+  return $requirements;
+}

@@ -1,0 +1,74 @@
+<?php
+
+/**
+ * @file
+ * Page manager existing pages install file.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function pm_existing_pages_schema() {
+
+  $schema['page_manager_existing_pages'] = array(
+    'description' => 'The table that holds existing overridden pages.',
+
+    // CTools export definitions.
+    'export' => array(
+      'key' => 'name',
+      'identifier' => 'pm_existing_page',
+      'default hook' => 'pm_existing_pages_info',
+      'can disable' => FALSE,
+      'api' => array(
+        'owner' => 'pm_existing_pages',
+        'api' => 'pm_existing_pages',
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+    ),
+
+    'fields' => array(
+      'name' => array(
+        'description' => 'The unique id this task.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'label' => array(
+        'description' => 'The name of the task.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'context' => array(
+        'description' => 'The name of the context.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'paths' => array(
+        'description' => 'The paths to override for this page.',
+        'type' => 'blob',
+        'not null' => FALSE,
+        'size' => 'big',
+      ),
+    ),
+    'primary key' => array('name'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function pm_existing_pages_uninstall() {
+  // Clean up existing pages variables
+  variable_del('default_page_manager_existing_pages');
+  db_delete('variable')
+    ->condition('name', 'pm_existing_pages_%', 'LIKE')
+    ->execute();
+}

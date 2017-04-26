@@ -1,0 +1,25 @@
+<?php
+
+class Redis_Tests_Cache_CompressedPhpRedisShardedWithPipelineFixesUnitTestCase extends Redis_Tests_Cache_FixesUnitTestCase
+{
+    public static function getInfo()
+    {
+        return array(
+            'name'        => 'Compressed PhpRedis cache fixes (SP)',
+            'description' => 'Tests Redis module cache fixes feature.',
+            'group'       => 'Redis',
+        );
+    }
+
+    protected function createCacheInstance($name = null)
+    {
+        return new Redis_CacheCompressed($name);
+    }
+
+    protected function getClientInterface()
+    {
+        $GLOBALS['conf']['redis_flush_mode'] = Redis_Cache::FLUSH_SHARD_WITH_PIPELINING;
+
+        return 'PhpRedis';
+    }
+}

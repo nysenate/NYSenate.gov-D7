@@ -1,0 +1,42 @@
+.district-page {
+	.c-contact-header {
+		font-family: "Proxima Nova Regular";
+		font-size: 14px;
+		font-weight: normal;
+		text-transform: uppercase;
+		padding-bottom: 20px;
+		padding-top: 20px;
+		border-top: 2px solid $grey09;
+	}
+
+	.l-contact-block {
+		width: 270px;
+		font-size: 14px;
+		font-family: 'Proxima Nova Regular';
+		color: $grey03;
+		margin-bottom: 30px;
+
+		.c-name {
+			font-family: 'Proxima Nova SemiBold';
+			text-transform: uppercase;
+			color: $grey02;
+		}
+
+		.c-location span {
+			margin-right: 7px;
+			font-size: 18px;
+		}
+	}
+}
+
+@media #{$tablet} {
+	.district-page {
+		.l-contact-block {
+			float: left;
+		}
+
+		.l-contact-block.last {
+			margin-left: 110px;	
+		}
+	}
+}

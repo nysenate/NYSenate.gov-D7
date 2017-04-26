@@ -1,0 +1,18 @@
+<?php
+
+class Redis_Tests_Path_PredisPathUnitTestCase extends Redis_Tests_Path_PathUnitTestCase
+{
+    public static function getInfo()
+    {
+        return array(
+            'name'        => 'Predis path inc replacement',
+            'description' => 'Tests Predis path inc replacement.',
+            'group'       => 'Redis',
+        );
+    }
+
+    protected function getClientInterface()
+    {
+        return 'Predis';
+    }
+}

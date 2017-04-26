@@ -1,0 +1,11 @@
+<?php
+
+/**
+ * Implements hook_views_api() from Views.
+ */
+function views_list_sort_views_api($module = NULL, $api = NULL) {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'views_list_sort') . '/views',
+  );
+}

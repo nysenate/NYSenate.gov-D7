@@ -1,0 +1,266 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function imagecache_token_menu() {
+  $items = array();
+
+  $items['admin/config/media/imagecache-token'] = array(
+    'title' => 'Imagecache Token',
+    'description' => 'Control which file and media fields contain images.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('imagecache_token_settings_form'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'imagecache_token.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_token_info().
+ */
+function imagecache_token_token_info() {
+  $styles = image_styles();
+  $styles_tokens = array();
+  $image_style = array();
+
+  foreach ($styles as $style => $desc) {
+    $styles_tokens[$style] = array(
+      'name' => $style,
+      'description' => t("@s image style", array("@s" => $style)),
+      'type' => 'image-style',
+    );
+    foreach(_imagegecache_token_image_attributes() as $attribute => $none) {
+      $image_style[$attribute] = array(
+        'name' => $attribute,
+        'description' => t("@s image style attribute: @a", array("@s" => $style, "@a" => $attribute)),
+      );
+    }
+  }
+
+  return array(
+    'types' => array(
+      'image-field' => array(
+        'name' => 'Image Field',
+        'description' => 'Image Field',
+        'needs-data' => 'image-field',
+      ),
+      'image-style' => array(
+        'name' => 'Image Style',
+        'description' => 'Image Style',
+        'needs-data' => 'image-style',
+      ),
+    ),
+    'tokens' => array(
+      'image-field' => $styles_tokens,
+      'image-style' => $image_style,
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_token_info_alter().
+ */
+function imagecache_token_token_info_alter(&$data) {
+  $fields = field_info_fields();
+
+  // Check to see which fields are supported.
+  $supported = variable_get('imagecache_token_fields', array());
+  $supported = array_filter($supported);
+
+  foreach ($fields as $field) {
+    if ($field['type'] == 'image' || $field['type'] == 'file' || $field['type'] == 'media') {
+      foreach ($field['bundles'] as $entity_type => $bundles) {
+        foreach ($bundles as $bundle) {
+          // For 'file' and 'media' field types, it's possible that some fields
+          // won't actually contain images. In these scenarios, the fields must
+          // be enabled on the settings page.
+          if ($field['type'] == 'file' || $field['type'] == 'media') {
+            $key = $field['type'] . ':' . $field['field_name'] . ':' . $entity_type . ':' . $bundle;
+            if (empty($supported[$key])) {
+              continue;
+            }
+          }
+          $token_type = token_get_entity_mapping('entity', $entity_type);
+          if (!empty($data['tokens'][$token_type][$field['field_name']])) {
+            $data['tokens'][$token_type][$field['field_name']]['type'] = 'image-field';
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implementation of hook_tokens().
+ */
+function imagecache_token_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $replacements = array();
+  if ($type == 'entity' && !empty($data['entity'])) {
+    $fields = field_info_fields();
+
+    // Check to see which fields are supported.
+    $supported = variable_get('imagecache_token_fields', array());
+    $supported = array_filter($supported);
+
+    foreach ($fields as $field) {
+      if ($field['type'] == 'image' || $field['type'] == 'file' || $field['type'] == 'media') {
+        // All image fields are supported.
+        if ($field['type'] == 'image') {
+          $is_supported = TRUE;
+        }
+
+        // Only support "file" and "media" fields if they're enabled. If no
+        // fields are enabled, just skip this entirely.
+        elseif (empty($supported)) {
+          continue;
+        }
+
+        // Check through each field bundle to see if it was enabled. If no
+        // copies of this field are enabled then skip it.
+        else {
+          $is_supported = FALSE;
+          foreach ($field['bundles'] as $entity_type => $bundles) {
+            foreach ($bundles as $bundle) {
+              $key = $field['type'] . ':' . $field['field_name'] . ':' . $entity_type . ':' . $bundle;
+              if (!empty($supported[$key])) {
+                $is_supported = TRUE;
+                // Exit both foreach() loops.
+                break 2;
+              }
+            }
+          }
+          if (!$is_supported) {
+            continue;
+          }
+        }
+
+        if (($image_field_tokens = token_find_with_prefix($tokens, $field['field_name'])) && $field_object = field_get_items($data['entity_type'], $data['entity'], $field['field_name'])) {
+          $replacements += token_generate('image-field', $image_field_tokens, array('image-field' => $field_object), $options);
+        }
+      }
+    }
+  }
+
+  $images_style_data = &drupal_static(__FUNCTION__);
+
+  if ($type == 'image-field' && !empty($data['image-field'])) {
+    foreach ($tokens as $token => $original) {
+      $output = array();
+
+      // The token will be in the format "[imagestyle]:[attribute]" so split
+      // into the individual pieces.
+      $explode = explode(':', $token);
+      $type = isset($explode[0]) ? $explode[0] : FALSE;
+      $attribute = isset($explode[1]) ? $explode[1] : FALSE;
+
+      // Special handling for the 'first', 'second' and 'third' tokens.
+      if (in_array($attribute, array('first', 'second', 'third'))) {
+        if ($attribute == 'first') {
+          if (!empty($data['image-field'][0]['uri'])) {
+            $output[] = image_style_url($type, $data['image-field'][0]['uri']);
+          }
+        }
+        elseif ($attribute == 'second') {
+          if (!empty($data['image-field'][1]['uri'])) {
+            $output[] = image_style_url($type, $data['image-field'][1]['uri']);
+          }
+        }
+        elseif ($attribute == 'third') {
+          if (!empty($data['image-field'][2]['uri'])) {
+            $output[] = image_style_url($type, $data['image-field'][2]['uri']);
+          }
+        }
+
+        $replacements[$original] = implode('', $output);
+      }
+
+      // Other tokens.
+      else {
+        foreach ($data['image-field'] as $field) {
+          if ($attribute == 'render') {
+            $output[] = theme('image_formatter', array('item' => $field, 'image_style' => $type));
+          }
+          elseif (isset($attribute) && !empty($attribute) && isset($field[$attribute])) {
+            // These attributes are for the resized image, rather than the
+            // original, so load the resized image and obtain its meta data.
+            if (in_array($attribute, array('width', 'height', 'mimetype', 'extension', 'filesize'))) {
+              $styled_uri = image_style_path($type, $field['uri']);
+              $style = image_style_load($type);
+
+              // Imagecrop module support.
+              global $imagecrop_style;
+              $imagecrop_style = $type;
+
+              // Create a derivative of the image for this style.
+              image_style_create_derivative($style, $field['uri'], $styled_uri);
+
+              // If the styled image's information wasn't loaded before then
+              // load it now; as this process is a little heavy, the
+              // information will be statically cached to avoid needing to
+              // reload the details for another token.
+              if (empty($images_style_data[$styled_uri])) {
+                $images_style_data[$styled_uri] = image_get_info($styled_uri);
+              }
+
+              // Check for each supported attribute.
+              if ($attribute == 'width') {
+                $output[] = $images_style_data[$styled_uri]['width'];
+              }
+              if ($attribute == 'height') {
+                $output[] = $images_style_data[$styled_uri]['height'];
+              }
+              if ($attribute == 'mimetype') {
+                $output[] = $images_style_data[$styled_uri]['mime_type'];
+              }
+              if ($attribute == 'extension') {
+                $output[] = $images_style_data[$styled_uri]['extension'];
+              }
+              if ($attribute == 'filesize') {
+                $output[] = $images_style_data[$styled_uri]['file_size'];
+              }
+            }
+            else {
+              $output[] = $field[$attribute];
+            }
+          }
+          else {
+            $output[] = image_style_url($token, $field['uri']);
+          }
+        }
+
+        // Compile each of the elements into a comma separated list, per
+        // standard Token practice.
+        $replacements[$original] = implode(', ', $output);
+      }
+    }
+  }
+
+  return $replacements;
+}
+
+/**
+ * Implements _imagegecache_token_image_attributes().
+ *
+ * Helper function for getting all available image attributes.
+ */
+function _imagegecache_token_image_attributes() {
+  return array(
+    'style_name' => NULL,
+    'path' => NULL,
+    'width' => NULL,
+    'height' => NULL,
+    'extension' => NULL,
+    'filesize' => NULL,
+    'alt' => '',
+    'title' => NULL,
+    'mimetype' => NULL,
+    'render' => '',
+    'first' => '',
+    'second' => '',
+    'third' => '',
+    'uri' => '',
+  );
+}

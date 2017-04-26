@@ -1,0 +1,8 @@
+name = NYS Context
+description = custom context condition
+package = NY STATE SENATE
+core = 7.x
+
+dependencies[] = context
+
+

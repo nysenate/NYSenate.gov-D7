@@ -1,0 +1,110 @@
+<?php
+
+/**
+ * @file
+ * Install File for Fancy File Delete.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function fancy_file_delete_uninstall() {
+  if (db_table_exists('unmanaged_files')) {
+    db_drop_table('unmanaged_files');
+  }
+
+  // Remove variables.
+  variable_del('fancy_file_delete_unmanaged_chosen_dirs');
+  variable_del('fancy_file_delete_format');
+}
+
+/**
+ * Implements hook_schema().
+ */
+function fancy_file_delete_schema() {
+  $schema = array();
+
+  $schema['unmanaged_files'] = array(
+    'description' => 'Ironically adding Unmanaged files to the DB so we can use this to delete the files.',
+    'fields' => array(
+      'unfid' => array(
+        'description' => 'The primary identifier for the entity.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'path' => array(
+        'description' => 'The path of the file.',
+        'type' => 'text',
+        'size' => 'big',
+        'serialize' => TRUE,
+        'object default' => array(),
+      ),
+    ),
+    'primary key' => array('unfid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_enable().
+ */
+function fancy_file_delete_enable() {
+  // Find the full_html format or use another
+  $result = db_select('filter_format', 'f')->fields('f', array(
+    'format',
+  ))
+  ->condition('name', '%' . db_like('html') . '%', 'LIKE')
+  ->execute()
+  ->fetchCol();
+
+  // Apply html variable.
+  $format = isset($result[0]) ? $result[0] : 'full_html';
+  variable_set('fancy_file_delete_format', $format);
+
+  // So the hook_menu items in views shows up.
+  drupal_flush_all_caches();
+}
+
+/**
+ * Ironically adding a DB table to handle unmanaged files.
+ */
+function fancy_file_delete_update_7101() {
+  // If the unamanged tables doesnt exist.
+  if (!db_table_exists('unmanaged_files')) {
+    $schema['unmanaged_files'] = array(
+      'description' => 'Ironically adding Unmanaged files to the DB so we can use this to delete the files.',
+      'fields' => array(
+        'unfid' => array(
+          'description' => 'The primary identifier for the entity.',
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+        'path' => array(
+          'description' => 'The path of the file.',
+          'type' => 'text',
+          'size' => 'big',
+          'serialize' => TRUE,
+          'object default' => array(),
+        ),
+      ),
+      'primary key' => array('unfid'),
+    );
+
+    // Add the unmanaged table in.
+    db_create_table('unmanaged_files', $schema['unmanaged_files']);
+  }
+}
+
+/**
+ * Clear Chosen Dir variable for new performance tweaks.
+ */
+function fancy_file_delete_update_7102() {
+  // Remove this thang.
+  variable_del('fancy_file_delete_unmanaged_chosen_dirs');
+
+  // Run this again so the views get updated to small tweaks made.
+  drupal_flush_all_caches();
+}

@@ -1,0 +1,133 @@
+<?php
+
+/**
+* Implements hook_menu().
+*/
+function nys_calendar_menu() {
+  $items['get/ajax/events'] = array(
+    'page callback' => 'nys_calendar_ajax_get_ajax', // Render HTML
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
+    'delivery callback' => 'nys_calendar_ajax_callback',  // Magic goes here
+  );
+  $items['get/ajax/moreevents'] = array(
+    'page callback' => 'nys_calendar_ajax_get_events_ajax',
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
+    'delivery callback' => 'nys_calendar_ajax_events_callback',
+  );
+  return $items;
+}
+
+function nys_calendar_ajax_get_ajax() {
+  $path = func_get_args();
+
+  $command = $path[1];
+  $senator = $path[2];
+
+  $current_date = date_create($path[0]);
+  if($command =="next")
+     date_add($current_date, date_interval_create_from_date_string('1 month'));
+  else date_add($current_date, date_interval_create_from_date_string('-1 month'));
+
+  $new_current_date = $current_date->format("Y-m");
+
+  $next_date = date_create($new_current_date);
+  date_add($next_date, date_interval_create_from_date_string('1 month'));
+  $prev_date = date_create($new_current_date);
+  date_add($prev_date, date_interval_create_from_date_string('-1 month'));
+
+  return array($current_date,$senator,$next_date,$prev_date);
+}
+
+function nys_calendar_ajax_get_events_ajax() {
+  return array($_GET['page'], $_GET['date']);
+}
+
+function nys_calendar_ajax_callback($page_callback_result) {
+
+        $previous_month = $page_callback_result[3]->format("F");
+        $next_month = $page_callback_result[2]->format("F");
+        $current_month = $page_callback_result[0]->format("Y-m");
+
+        $link = array(
+          '#type' => 'link',
+          '#title' => t($next_month),
+          '#href' => 'get/ajax/events/'.$current_month.'/next/'.$page_callback_result[1],
+          '#ajax' => array(
+            'effect' => 'fade',
+            'progress' => array(
+              'message' => '',
+              ),
+          ),
+          '#options' => array(
+            'attributes' => array('class' => 'c-upcoming--nav-item'),
+          'html' => FALSE,
+           ),
+        );
+        $link2 = array(
+          '#type' => 'link',
+          '#title' => t($previous_month),
+          '#href' => 'get/ajax/events/'.$current_month.'/previous/'.$page_callback_result[1],
+          '#ajax' => array(
+            'effect' => 'fade',
+            'progress' => array(
+              'message' => '',
+              ),
+          ),
+        '#options' => array(
+            'attributes' => array('class' => 'c-upcoming--nav-item'),
+          'html' => FALSE,
+           ),
+        );
+        $link3 = array(
+          '#type' => 'link',
+          '#title' => t($next_month." >"),
+          '#href' => 'get/ajax/events/'.$current_month.'/next/'.$page_callback_result[1],
+          '#ajax' => array(
+            'effect' => 'fade',
+          ),
+          '#options' => array(
+            'attributes' => array('style' => 'float:right'),
+          'html' => FALSE,
+           ),
+        );
+        $link4 = array(
+          '#type' => 'link',
+          '#title' => t("< ".$previous_month),
+          '#href' => 'get/ajax/events/'.$current_month.'/previous/'.$page_callback_result[1],
+          '#ajax' => array(
+            'effect' => 'fade',
+          ),
+        '#options' => array(
+            'attributes' => array('style' => 'float:left'),
+          'html' => FALSE,
+           ),
+        );    
+
+        $view = views_get_view('senator_events');
+        $view->set_arguments(array($page_callback_result[1],$current_month));
+        $table1= $view->render('upcoming_events');
+
+        $view1 = views_get_view('senator_events');
+        $view1->set_arguments(array($page_callback_result[1],$current_month));
+        $table2= $view1->render('senator_upcoming_albany');
+
+        $view2 = views_get_view('senator_events');
+        $view2->set_arguments(array($page_callback_result[1],$current_month));
+        $table3= $view2->render('senator_upcoming_district');
+
+       $html_top = "<div id='tab_top_bar'><h3 class='c-month-title'>".$page_callback_result[0]->format("F Y")."</h3><div>".drupal_render($link2).drupal_render($link)."</div></div>";
+       $html_bottom = "<div id='tab_bottom_bar'>".drupal_render($link3).drupal_render($link4)."<center><strong>".$page_callback_result[0]->format("F Y")."</strong></center></div></div>";
+
+
+    $commands = array();
+
+    $commands[] = ajax_command_replace('#tab_top_bar', $html_top);
+    //$commands[] = ajax_command_replace('#tab_bottom_bar', $html_bottom);
+    $commands[] = ajax_command_replace('#wrapper1', "<div id='wrapper1'>".$table1."</div>");
+    $commands[] = ajax_command_replace('#wrapper2', "<div id='wrapper2'>".$table2."</div>");
+    $commands[] = ajax_command_replace('#wrapper3', "<div id='wrapper3'>".$table3."</div>");
+
+    print ajax_render($commands);
+}

@@ -1,0 +1,6 @@
+name = NYS Bill Vote
+description = Allows visitors to vote aye or nay on bills ((based on is_useful contrib module)
+package = NY STATE SENATE
+dependencies[] = votingapi
+core = 7.x
+

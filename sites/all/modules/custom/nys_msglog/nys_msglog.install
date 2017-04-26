@@ -1,0 +1,155 @@
+<?php
+
+/**
+ * @file
+ * nys_msglog module install/schema/update hooks.
+ */
+
+/**
+ * Implements hook_schema().
+ * Creates new table `message_log`.
+ */
+function nys_msglog_schema() {
+  $schema['message_log'] = array(
+    'description' => 'Holds all email contact form submissions.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'size' => 'big',
+        'not null' => true,
+        'unsigned' => true,
+        'description' => 'Primary key, autoincrement',
+      ),
+      'time_sent' => array(
+        'type' => 'int',
+        'mysql_type' => 'timestamp',
+        'not null' => true,
+        'description' => 'Timestamp of message submission',
+      ),
+      'sender_ip' => array(
+        'type' => 'varchar',
+        'size' => 'normal',
+        'length' => 15,
+        'not null' => true,
+        'description' => 'IP address of user making submission',
+      ),
+      'sender_uid' => array(
+        'type' => 'int',
+        'size' => 'normal',
+        'unsigned' => 'normal',
+        'default' => 0,
+        'not null' => true,
+        'description' => 'User ID of sending user (0 if user is not logged in)',
+      ),
+      'sender_email' => array(
+        'type' => 'varchar',
+        'size' => 'normal',
+        'length' => 255,
+        'not null' => true,
+        'description' => 'Email address of the sender',
+      ),
+      'inquiry_type' => array(
+        'type' => 'varchar',
+        'size' => 'normal',
+        'length' => 255,
+        'not null' => true,
+        'description' => 'Type of inquiry',
+      ),
+      'first_name' => array(
+        'type' => 'varchar',
+        'size' => 'normal',
+        'length' => 255,
+        'not null' => true,
+        'description' => 'First name of sender',
+      ),
+      'last_name' => array(
+        'type' => 'varchar',
+        'size' => 'normal',
+        'length' => 255,
+        'not null' => true,
+        'description' => 'Last name of sender',
+      ),
+      'phone' => array(
+        'type' => 'varchar',
+        'size' => 'normal',
+        'not null' => true,
+        'length' => 255,
+        'default' => '',
+        'description' => 'Phone number of the sender',
+      ),
+      'street_addr' => array(
+        'type' => 'varchar',
+        'size' => 'normal',
+        'length' => 255,
+        'not null' => true,
+        'description' => 'Street address of the sender',
+      ),
+      'city' => array(
+        'type' => 'varchar',
+        'size' => 'normal',
+        'length' => 255,
+        'not null' => true,
+        'description' => 'City of the sender',
+      ),
+      'zip' => array(
+        'type' => 'varchar',
+        'size' => 'normal',
+        'length' => 255,
+        'not null' => true,
+        'description' => 'Zip code of the sender',
+      ),
+      'subject' => array(
+        'type' => 'varchar',
+        'size' => 'normal',
+        'length' => 255,
+        'not null' => true,
+        'description' => 'Message subject from contact form',
+      ),
+      'body' => array(
+        'type' => 'text',
+        'size' => 'normal',
+        'not null' => true,
+        'description' => 'Message body from contact form',
+      ),
+      'senator_uid' => array(
+        'type' => 'int',
+        'size' => 'normal',
+        'unsigned' => 'normal',
+        'not null' => true,
+        'description' => 'User ID of designated recipient',
+      ),
+      'mail_sent_to' => array(
+        'type' => 'varchar',
+        'size' => 'normal',
+        'length' => 255,
+        'not null' => true,
+        'description' => 'Recipient email address',
+      ),
+      /**
+       * For future reference, integration with SpamAssassin, et al.
+       *
+       * 'spam_rating' => array(
+       * 'type' => 'text',
+       * 'size' => 'normal',
+       * 'description' => 'Response information from SA/Mollum checks',
+       * )
+       */
+    ),
+    'primary key' => array('id'),
+    'indexes' => array(
+      'idx_recipient' => array('senator_uid'),
+      'idx_sender' => array('sender_uid'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Initial schema, adds a default value to the time_sent field.
+ */
+function nys_msglog_update_7000() {
+  $query = 'ALTER TABLE `message_log` MODIFY `time_sent` TIMESTAMP ' .
+           'NOT NULL DEFAULT CURRENT_TIMESTAMP';
+  db_query($query);
+}

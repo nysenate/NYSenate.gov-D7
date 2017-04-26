@@ -1,0 +1,164 @@
+<?php
+
+/**
+ * @file
+ * The login history module.
+ */
+
+/**
+ * Implements hook_views_api().
+ */
+function login_history_views_api() {
+  return array(
+    'api' => '3.0',
+    'path' => drupal_get_path('module', 'login_history') . '/views',
+  );
+}
+
+/**
+ * Implements hook_user_login().
+ */
+function login_history_user_login(&$edit, $account) {
+  // Is this a one-time login?
+  $menu_item = menu_get_item();
+  if ('user/reset/%/%/%' == $menu_item['path']) {
+    $one_time = 1;
+  }
+  else {
+    $one_time = 0;
+  }
+
+  // Limit user agent strings to 255 characters. For example, some versions of
+  // IE8 return long user agent strings causing an error upon login.
+  $user_agent = empty($_SERVER['HTTP_USER_AGENT']) ? '' : $_SERVER['HTTP_USER_AGENT'];
+  if (strlen($user_agent) > 255) {
+    $user_agent = substr($user_agent, 0, 255);
+  }
+
+  // Now save the user's current login timestamp to login_history.
+  db_insert('login_history')
+    ->fields(array(
+      'uid' => $account->uid,
+      'login' => $account->login,
+      'hostname' => ip_address(),
+      'one_time' => $one_time,
+      'user_agent' => $user_agent,
+    ))
+    ->execute();
+}
+
+/**
+ * Implements hook_menu().
+ */
+function login_history_menu() {
+  $items = array();
+  $items['admin/reports/login-history'] = array(
+    'title' => 'Login history',
+    'description' => 'Shows previous login information for site users. Useful for troubleshooting and monitoring.',
+    'page callback' => 'login_history_report_callback',
+    'access arguments' => array('administer users'),
+    'file' => 'includes/login_history.pages.inc',
+  );
+  $items['user/%user/login-history'] = array(
+    'title' => 'Login history',
+    'description' => '',
+    'page callback' => 'login_history_report_callback',
+    'page arguments' => array(1),
+    'access callback' => 'login_history_access_user_history_page',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'includes/login_history.pages.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function login_history_permission() {
+  return array(
+    'view own login history' => array(
+      'title' => t('View own login history'),
+    ),
+    'view all login histories' => array(
+      'title' => t('View all login histories'),
+    ));
+}
+
+/**
+ * Access callback for the user-specific Login History page.
+ *
+ * @param object $account
+ *   A user object.
+ *
+ * @return bool
+ *   TRUE if the user can access the page.
+ */
+function login_history_access_user_history_page($account) {
+  return ($account->uid == $GLOBALS['user']->uid && user_access('view own login history')) || user_access('view all login histories');
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function login_history_block_info() {
+  // Show their last login info.
+  $blocks['login_history_last']['info'] = t("Last login");
+  $blocks['login_history_last']['properties']['administrative'] = TRUE;
+  $blocks['login_history_last']['cache'] = DRUPAL_CACHE_PER_USER;
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function login_history_block_view($delta = '') {
+  switch ($delta) {
+    case 'login_history_last':
+      if (user_is_anonymous()) {
+        return;
+      }
+      // Get information about the user's last login. If no information is
+      // found, the block is not displayed.
+      if ($last_login = login_history_last_login()) {
+        $hostname = $last_login->hostname == ip_address() ? t('this IP address') : $last_login->hostname;
+        $user_agent = $last_login->user_agent == $_SERVER['HTTP_USER_AGENT'] ? t('this browser') : $last_login->user_agent;
+        $output = '<p>' . t('You last logged in from @hostname using @user_agent.', array('@hostname' => $hostname, '@user_agent' => $user_agent)) . '</p>';
+        if (user_access('view own login history')) {
+          global $user;
+          $output .= '<span class="read-more">' . l(t('View your login history.'), 'user/' . $user->uid . '/login-history') . '</span>';
+        }
+
+        $block['subject'] = t('Last login');
+        $block['content'] = $output;
+        return $block;
+      }
+  }
+}
+
+/**
+ * Provide data about the last login for a user.
+ *
+ * @param object $account
+ *   Optional user object. The only thing that really matters is the uid.
+ *
+ * @return object|false
+ *   An object containing information about the last login or FALSE if no
+ *   result is found.
+ */
+function login_history_last_login($account = NULL) {
+  if (user_is_anonymous()) {
+    return;
+  }
+  if (empty($account)) {
+    global $user;
+    $account = $user;
+  }
+  $last_login = db_query("SELECT login, hostname, one_time, user_agent
+                   FROM {login_history}
+                   WHERE uid = :uid
+                   ORDER BY login DESC
+                   LIMIT 1, 2", array(':uid' => $account->uid))->fetchAll();
+  return reset($last_login);
+}

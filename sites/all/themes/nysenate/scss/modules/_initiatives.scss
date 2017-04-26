@@ -1,0 +1,178 @@
+/*-------------------------------------------------
+/
+/	INITIATIVE BLOCK 
+/	half lives on almost every page
+/ full size is on most pages
+/ class will have to updated
+/
+/-------------------------------------------------*/
+.c-block--initiative {
+	position: relative;
+	padding: 0;
+	@extend .lgt-bg;
+
+	.c-block--btn {
+		padding-left: 20px;
+	}
+	img { 
+		display: none;
+	}
+}
+.c-initiative--content {
+	padding: 30px 20px 90px;
+
+	.c-initiative-block--position{
+		margin-bottom: 5px;
+		font-family: "Proxima Nova Regular";
+		text-transform: uppercase;
+		color: #fff;
+		font-size: 12px;
+		line-height: 1.3em;		
+	}
+	.c-party-conf{
+		margin-top: 20px;
+		font-family: "Proxima Nova Regular";
+		text-transform: uppercase;
+		color: #fff;
+		font-size: 12px;
+		line-height: 1.3em;			
+	}
+}
+.c-initiative--descript {
+	margin-bottom: 5px;
+	font-family: "Proxima Nova Regular";
+	text-transform: uppercase;
+	color: $grey01;
+	font-size: 12px;
+	line-height: 1.3em;
+}
+.c-initiative--title {
+	font-family: "Adelle Regular";
+	color: #fff;
+	font-size: 22px;
+	line-height: 1.2em;
+}
+.c-initiative--meta {
+	list-style: none;
+
+	li {
+		display: inline-block;
+		padding-right: 7px;
+		color: #fff;
+		font-family: "Adelle Regular";
+		font-size: 14px;
+		line-height: 1.2em;
+
+		& + li {
+			border-left: 2px solid #fff;
+			padding-left: 7px;
+		}
+	}
+}
+
+@media #{$tablet} {
+	.sitewide-promo-banners{
+		max-width: 760px;
+		margin: 0 auto;
+	}
+	.c-block--initiative {
+		clear: both;
+		padding: 0;
+
+		.c-block--btn {
+			padding-left: 25px;
+		}
+		&.c-block-position--1{
+			margin-bottom: 40px;
+		}
+	}
+
+	.c-initiative--content {
+		padding: 40px 40px 120px;
+	}
+
+	.c-initiative--descript {
+		margin-bottom: 7px;
+		font-size: 15px;
+	}
+	.c-initiative--title {
+		font-family: "Adelle Light";
+		font-size: 36px;
+		
+		a{
+			color:#fff;
+		}
+	}
+	.c-initiative--meta {
+		margin-top: 10px;
+	}
+	// has img modifications
+	.c-block--initiative__has-img {
+		overflow: hidden;
+
+		&:before {
+			content: "";
+			display: inline-block;
+			vertical-align: middle;
+			height: 100%;
+			width: 0;
+			margin-left: -4px;
+		}
+		&:after {
+			content: "";
+			display: table;
+			clear: both;
+			zoom: 1;
+		}
+		img {
+			display: inline-block;
+			height: 280px;
+			width: 280px;
+		}
+
+		.c-initiative--content {
+			position: relative;
+			display: inline-block;
+			vertical-align: middle;
+			width: 58%;
+			max-width: 475px;
+			padding-top: 0;
+			padding-bottom: 80px;
+
+		}
+		.c-block--btn {
+			left: 280px;
+		}
+	}
+	// half size modifications
+	.c-initiative-block__half-wrap {
+		width: 100%;
+		margin-left: 0;
+    	float: left;
+	}
+	.c-block--initiative__half {
+		width: 47%;
+		.view-display-id-senator_home_promo_1 .first &,
+		.view-display-id-senator_home_promo_2 .first &,
+		.view-display-id-senator_home_promo_3 .first &{
+			width: 100%;
+			margin-left: 0;
+			margin-right: 0;
+			height: 280px;
+		}
+		margin-left: 0;
+		margin-right: 0;
+    	margin-bottom: 40px;
+		height: 345px;
+		float: left;
+		clear: none;
+
+		&.c-block--even {
+			margin-right: 6%;
+		}
+
+		.c-initiative--title {
+			font-size: 32px;
+		}
+	}
+}

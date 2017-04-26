@@ -1,0 +1,264 @@
+/*-------------------------------------------------------
+/
+/ 	How the Senate Works
+/	- variant : How We Create a Budget
+/
+/-------------------------------------------------------*/
+
+.c-senate-works-container {
+	padding-bottom: 60px;
+	background-color: $grey06;
+
+	.c-container--header {
+		position: static;
+		padding: 25px 0 0 25px;
+		border: none;
+	}
+	.c-container--link {
+		bottom: 0;
+		top: auto;
+		width: 100%;
+		height: 60px;
+		padding: 23px 0 23px 25px;
+		color: $grey02;
+		background-color: #EAEAEA;
+		@extend .icon-before__arrow;
+
+		&:before {
+			font-size: 17px;
+			margin-top: -2px;
+			line-height: 12px;
+		}
+
+		&:after {
+			display: none;
+		}
+	}
+	.c-carousel--btn {
+		top: -50px;
+	}
+	.c-carousel {
+		width: 500%;
+		margin: 25px 0 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.c-carousel--item {
+		width: 20%; // five elements - percentage width of whole carousel
+		margin: 0;
+		float: left;
+	}
+}
+.c-senate-works--illustration {
+	position: relative;
+	display: block;
+	width: 120px;
+	height: 120px;
+	margin: 0 auto;
+	background: $yellow01;
+	@include border-radius(50%);
+
+	text-align: center;
+	font-family: "Adelle Regular";
+	color: #fff;
+	font-size: 16px;
+	line-height: 1.3em;
+
+	> span {
+		position: absolute;
+		z-index: 3;
+		display: block;
+		height: 40px;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		margin: auto;
+	}
+
+	&.illustration--write {
+		@extend .icon-before__petition;
+	}
+	&.illustration--propose {
+		@extend .icon-before__comment;
+	}
+	&.illustration--committee-votes {
+		@extend .icon-before__committee-confirm;
+
+		&:before {
+			left: 0.3em;
+			font-size: 42px;
+		}
+	}
+	&.illustration--floor-votes {
+		@extend .icon-before__home;
+		
+		&:before {
+			left: 0.2em;
+			font-size: 42px;
+		}
+	}
+	&.illustration--passed {
+		@extend .icon-before__check;
+	}
+	&:before {
+		font-family: 'senate_icons';
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		margin: auto;
+		text-align: center;
+		line-height: 120px;
+		color: #fff;
+		font-size: 36px;
+	}
+}
+.c-senate-works-step-description {
+	margin: 25px 0 20px 0;
+	line-height: 100%;
+	text-align: center;
+	font-family: "Proxima Nova Regular";
+	font-size: 13px;
+	color: $grey02;
+}
+
+
+@media #{$tablet} {
+	.c-senate-works-container {
+		background: none;
+		padding-bottom: 0;
+		margin-top: 80px;
+
+		.c-container--header {
+			padding: 0 0 20px 0;
+			border-bottom: 1px solid $grey05;
+		}
+		.c-container--link {
+			top: 0;
+			bottom: auto;
+			width: auto;
+			height: auto;
+			padding: 0;
+			color: $orange01;
+			background-color: transparent;
+
+			&:before {
+				display: none;
+			}
+			&:after {
+				display: inline-block;
+			}
+		}
+		.c-carousel {
+			width: 100%;
+			margin: 0;
+		}
+		.c-carousel--item {
+			margin: 40px 2.58% 40px 2.58%;
+			width: 15.7%;
+			max-width: 120px;
+
+			&.l-first {
+				margin-left: 0;
+			}
+
+			&.l-last {
+				margin-right: 0;
+
+				.c-senate-works--illustration {
+					&:after {
+						display: none;
+					}
+				}
+			}
+		}
+	}
+	.c-senate-works--illustration {
+		width: 110px;
+		height: 110px;
+		overflow: visible;
+
+		&:before {
+			top: -0.1em;
+		}
+		// TRIANGLE!!
+		&:after {
+			content: "";
+			display: block;
+			position: absolute;
+			z-index: 1;
+			top: 0;
+			bottom: 0;
+			right: -15px;
+			margin: auto;
+			width: 0; 
+			height: 0; 
+			border-top: 20px solid transparent;
+			border-bottom: 20px solid transparent;
+			
+			border-left: 30px solid $yellow01;
+		}
+	}
+
+	.c-senate-works-step-description {
+		line-height: 16px;
+	}
+	&.c-senate-works-container--law {
+		.c-senate-works-step-description {
+			font-size: 14px;
+		}
+	}
+	&.c-senate-works-container--budget {
+		.c-senate-works-step-description {
+			font-size: 13px;
+		}	
+	}
+}
+
+// SEPERATE THESE
+.l-carousel-outer {
+	position: relative;
+
+	.l-carousel-inner {
+		width: 120px;
+		margin: 0 auto;
+		height: 270px;
+		overflow: hidden;
+		position: relative;	
+
+		.mobile-carousel {
+			position: absolute;
+			top: 0;
+			width: 760px;
+		}
+
+	}
+	
+	.arrow {
+		position: absolute;
+		top: 29%;
+		cursor: pointer;
+		color: #aaa;
+		font-family: 'Proxima Nova SemiBold';
+		font-size: 26px;
+	}
+	.left-arrow { left: 15px; }
+	.right-arrow { right: 15px; }
+}
+
+@media #{$tablet} {
+	.l-carousel-outer {
+		.l-carousel-inner {
+			width: 100%;
+			margin: 0;
+			.mobile-carousel {
+				position: static;
+			}
+		}
+		.arrow {
+			display: none;
+		}
+	}
+}

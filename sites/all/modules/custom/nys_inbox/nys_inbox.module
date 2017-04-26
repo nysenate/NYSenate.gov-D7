@@ -1,0 +1,1367 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function nys_inbox_menu() {
+  $items['nys-inbox/autocomplete/bill-search'] = array(
+    'title' => 'bill autocomplete',
+    'page callback' => 'nys_inbox_bill_name_autocomplete',
+    'page arguments' => array(3),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['nys-inbox/autocomplete/user'] = array(
+    'title' => 'first and last name autocomplete',
+    'page callback' => 'nys_inbox_user_autocomplete',
+    'page arguments' => array(3),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function nys_inbox_block_info() {
+  $blocks['nys_inbox'] = array(
+    'info' => t('Inbox'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function nys_inbox_menu_alter(&$menu) {
+  $menu['messages']['page callback'] = 'nys_inbox_redirect';
+}
+
+function nys_inbox_redirect() {
+  global $user;
+  if (arg(0) == 'messages') {
+    drupal_goto('user/' . $user->uid . '/dashboard/inbox');
+  }
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function nys_inbox_block_view($delta = '') {
+  switch ($delta) {
+    case 'nys_inbox':
+      $block['content'] = nys_inbox_content();
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_init().
+ */
+function nys_inbox_init() {
+  module_load_include('inc', 'nys_inbox', 'nys_inbox.forms');
+  module_load_include('inc', 'privatemsg', 'privatemsg.pages');
+  if (arg(0) == 'user' && arg(2) == 'dashboard') {
+    $user = user_load(arg(1));
+    drupal_add_js(drupal_get_path('module', 'nys_inbox') . "/nys-inbox.js");
+    $dashboard_inbox_check_all = 0;
+    if (user_access('dashboard inbox check all', $user)) {
+      $dashboard_inbox_check_all = 1;
+    }
+    drupal_add_js(array('nys_inbox' => array('check_all' => $dashboard_inbox_check_all)), 'setting');
+  }
+}
+
+/**
+ * Switches content of inbox tab, depending on additional url arguments.
+ */
+function nys_inbox_content() {
+
+  if (arg(4) == 'reply' && is_numeric(arg(5))) {
+    $form = drupal_get_form('nys_inbox_reply_form');
+    return drupal_render($form);
+  }
+
+  elseif (arg(4) == 'forward' && is_numeric(arg(5))) {
+    $form = drupal_get_form('nys_inbox_forward_form');
+    return drupal_render($form);
+  }
+
+  elseif (arg(4) == 'new') {
+    $form = drupal_get_form('nys_inbox_message_form');
+    return drupal_render($form);
+  }
+
+  elseif (arg(4) == 'delete') {
+    $form = drupal_get_form('nys_inbox_delete');
+    return drupal_render($form);
+  }
+
+  module_load_include('inc', 'privatemsg', 'privatemsg.pages');
+
+  $form = drupal_get_form('nys_inbox_form');
+
+  return drupal_render($form);
+}
+
+/**
+ * Implements hook_permission().
+ */
+function nys_inbox_permission() {
+  return array(
+    'dashboard inbox search bills' => array(
+      'title' => 'Search Bills within the Dashboard Inbox',
+    ),
+    'dashboard inbox search issues' => array(
+      'title' => 'Search Issues within the Dashboard Inbox',
+    ),
+    'dashboard inbox check all' => array(
+      'title' => 'Use "Check All" functionality within the Dashboard Inbox',
+    ),
+    'dashboard inbox forward messages' => array(
+      'title' => 'Forward messages within the Dashboard Inbox',
+    ),
+    'dashboard inbox search names' => array(
+      'title' => 'Search Messages by Name in Inbox',
+    ),
+  );
+}
+
+function nys_inbox_back_to_inbox_button() {
+  return l(t('Back to Inbox'), 'user/' . arg(1) . '/dashboard/inbox', array('attributes' => array('class' => array('back-to-inbox icon-before__left'))));
+}
+
+
+/**
+ * Implements hook_privatemsg_view_alter().
+ *
+ * Alters the look of the reply page users/so-and-so/dashboard/inbox/reply/1234.
+ */
+function nys_inbox_privatemsg_view_alter(&$content) {
+  $content['backbutton'] = array(
+    '#markup' => nys_inbox_back_to_inbox_button(),
+    '#weight' => -30,
+  );
+
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function nys_inbox_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'privatemsg_form_reply' && arg(2) == 'dashboard' && arg(3) == 'inbox') {
+
+    $user = user_load(arg(1));
+    $form['author']['#value'] = $user;
+    // Turn off tokens.
+    unset($form['token']);
+    // Force wysiwyg.
+    $form['body']['#format'] = 'plain_text';
+
+    // Remove the field form elements.
+    foreach ($form as $key => $form_item) {
+      if (strpos($key, 'field_') === 0) {
+        unset($form[$key]);
+      }
+    }
+
+  }
+}
+
+
+/**
+ * AJAX callback to return the form again.
+ */
+function nys_inbox_delete_button_ajax($form, $form_state) {
+  if (count($form_state['input']['list']) > 1) {
+    $question = t('Are you sure you want to delete these threads?');
+  }
+  else {
+    $question = t('Are you sure you want to delete this thread?');
+  }
+
+  $form = array();
+  $form['question'] = array(
+    '#markup' => '<h4>' . $question . '</h4>',
+    '#prefix' => '<div class="delete-confirm">',
+    '#suffix' => '</div>',
+  );
+
+  $url = drupal_parse_url($form_state['input']['REQUEST_URI']);
+
+  return confirm_form($form,
+    $question,
+    $url,
+    '',
+    t('Delete'),
+    t('Cancel')
+  );
+}
+
+/**
+ * Callback for showing and hiding messages that are out of district.
+ */
+function nys_inbox_district_checkbox_ajax($form, $form_state) {
+
+  if (!empty($form['#action'])) {
+    $form['REQUEST_URI'] = array(
+      '#type' => 'hidden',
+      '#value' => $form['#action'],
+    );
+    // Set up the pager so that it does not try and use the ajax URL.
+    if (strpos($form['updated']['pager']['#markup'], '/system/ajax')) {
+      $pager_url = array();
+      if (strpos($form['#action'], '?')) {
+        $pager_array = explode('?', $form['#action']);
+        $pager_url = $pager_array[0] . '?';
+        $pager_query_array = explode('&', $pager_array[1]);
+        $pager_query_final = array();
+        foreach ($pager_query_array as $query_param) {
+          $query_params = explode('=', $query_param);
+          if ($query_params[0] != 'page' && $query_params[0] != 'in_district') {
+            $pager_query_final[] = $query_params[0] . '=' . $query_params[1];
+          }
+        }
+        $pager_query = implode('&', $pager_query_final);
+      }
+      else {
+        $pager_url = $form['#action'];
+        $pager_query = NULL;
+      }
+
+      // Set up the query string for persistent pager with in district values.
+      if (!empty($form_state['values']['in_district'])) {
+        if (strpos($pager_url, '?')) {
+          $pager_query = $pager_query . '&in_district=1&';
+        }
+        else {
+          $pager_query = '?in_district=1&';
+        }
+      }
+
+      // Turn the form state value off in case the checkbox is checked off.
+      $form_state['values']['in_district'] = 0;
+
+      $form['updated']['pager']['#markup'] = str_replace('/system/ajax?', $pager_url . $pager_query, $form['updated']['pager']['#markup']);
+    }
+  }
+  else {
+    $form['REQUEST_URI']['#value'] = $_SERVER['REQUEST_URI'];
+  }
+
+  return $form;
+}
+
+/**
+ * Implements hook_mail().
+ *
+ * This hook defines a list of possible e-mail templates that this module can
+ * send. Each e-mail is given a unique identifier, or 'key'.
+ *
+ * $message comes in with some standard properties already set: 'to' address,
+ * 'from' address, and a set of default 'headers' from drupal_mail(). The goal
+ * of hook_mail() is to set the message's 'subject' and 'body' properties, as
+ * well as make any adjustments to the headers that are necessary.
+ *
+ * The $params argument is an array which can hold any additional data required
+ * to build the mail subject and body; for example, user-entered form data, or
+ * some context information as to where the mail request came from.
+ *
+ * Note that hook_mail() is not actually a hook. It is only called for a single
+ * module, the module named in the first argument of drupal_mail(). So it's
+ * a callback of a type, but not a hook.
+ */
+function nys_inbox_mail($key, &$message, $params) {
+
+  $user = user_load(arg(1));
+
+  // Each message is associated with a language, which may or may not be the
+  // current user's selected language, depending on the type of e-mail being
+  // sent. This $options array is used later in the t() calls for subject
+  // and body to ensure the proper translation takes effect.
+  $options = array(
+    'langcode' => $message['language']->language,
+  );
+
+  // Take a few defaults from the passed parameters.
+  $message['body'][] = $params['body'];
+  // For subject and content-type header, replace message data only if the params entry is populated.
+  if (isset($params['subject'])) {
+    $message['subject'] = $params['subject'];
+  }
+  if (isset($params['content-type'])) {
+    $message['headers']['Content-Type'] = $params['content-type'];
+  }
+
+  switch ($key) {
+    // Send a simple message from the contact form.
+    case 'nys_inbox_forward':
+      $message['subject'] = check_plain($params['subject']);
+      // Note that the message body is an array, not a string.
+      $name = strip_tags(theme('nys_dashboard_user_link', array('uid' => $user->uid)));
+
+      $message['body'][] = t('@name sent you the following message:', array('@name' => $name), $options);
+      // Because this is just user-entered text, we do not need to translate it.
+      // Since user-entered text may have unintentional HTML entities in it like
+      // '<' or '>', we need to make sure these entities are properly escaped,
+      // as the body will later be transformed from HTML to text, meaning
+      // that a normal use of '<' will result in truncation of the message.
+      $message['body'][] = check_plain($params['message']);
+      break;
+  }
+}
+
+
+/**
+ * Given a number of privatemsg messages, get the distict participants from
+ * thread_ids, excluding the current user.
+ */
+function nys_inbox_get_participants_from_thread_ids($thread_ids = array()) {
+
+  $user = user_load(arg(1));
+
+  if (empty($user)) {
+    return array();
+  }
+
+  if (!empty($thread_ids)) {
+    $result = db_select('pm_index', 'pmi')
+      ->distinct()
+      ->fields('pmi', array('recipient'))
+      ->condition('thread_id', $thread_ids, 'IN')
+      ->execute();
+
+    $arr = array();
+    foreach ($result as $r) {
+      if ($r->recipient != $user->uid) {
+        array_push($arr, $r->recipient);
+      }
+    }
+    return $arr;
+  }
+
+  return array();
+}
+
+
+/**
+ * Implements hook_theme().
+ */
+function nys_inbox_theme() {
+  return array(
+    'privatemsg_list_field__nys_inbox_subject' => array(
+      'variables' => array('thread' => array()),
+      'file' => 'nys_inbox.theme.inc',
+      'path' => drupal_get_path('module', 'nys_inbox'),
+    ),
+    'nys_inbox_district' => array(
+      'variables' => array('thread' => array()),
+      'file' => 'nys_inbox.theme.inc',
+      'path' => drupal_get_path('module', 'nys_inbox'),
+    ),
+    'privatemsg_list_field__name' => array(
+      'variables' => array('thread' => array()),
+      'file' => 'nys_inbox.theme.inc',
+      'path' => drupal_get_path('module', 'nys_inbox'),
+    ),
+    'privatemsg_list_field__nys_inbox_downarrow' => array(
+      'variables' => array('thread' => array()),
+      'file' => 'nys_inbox.theme.inc',
+      'path' => drupal_get_path('module', 'nys_inbox'),
+    ),
+    'nys_inbox_username'  => array(
+      'file' => 'nys_inbox.theme.inc',
+      'path' => drupal_get_path('module', 'nys_inbox'),
+      'variables' => array('recipient' => NULL, 'options' => array()),
+    ),
+  );
+}
+
+function nys_inbox_preprocess_privatemsg_recipients(&$vars) {
+  // Assign a default empty value.
+  $vars['participants'] = '';
+  if (isset($vars['thread']['participants'])) {
+    $vars['participants'] = _nys_inbox_format_participants($vars['thread']['participants']);
+  }
+}
+
+/**
+ * Implements hook_preprocess_privatemsg_view().
+ */
+function nys_inbox_preprocess_privatemsg_view(&$vars) {
+  global $user;
+  $account = user_load(arg(1));
+
+  $message = $vars['message'];
+  $vars['mid'] = isset($message->mid) ? $message->mid : NULL;
+  $vars['message_classes'] = isset($message->classes) ? $message->classes : array();
+  $vars['thread_id'] = isset($message->thread_id) ? $message->thread_id : NULL;
+  $vars['author_picture'] = theme('user_picture', array('account' => $message->author));
+  // Directly address the current user if he is the author.
+  if ($account->uid == $message->author->uid && $user->uid == $account->uid) {
+    $vars['author_name_link'] = t('You');
+  }
+  else {
+    $vars['author_name_link'] = theme('nys_dashboard_user_link', array('uid' => $message->author->uid));
+  }
+  $vars['message_timestamp'] = privatemsg_format_date($message->timestamp);
+
+  $subject = theme('privatemsg_list_field__nys_inbox_subject', array('message' => $message));
+
+  $vars['message_subject'] = 'Re: ' . strip_tags($subject['data']);
+
+  $message->content = array(
+    '#view_mode' => 'message',
+    'body' => array(
+      '#markup' => check_markup($message->body, $message->format),
+      '#weight' => -4,
+    ),
+  );
+
+  // Build fields content.
+  field_attach_prepare_view('privatemsg_message', array($vars['mid'] => $message), 'message');
+  $message->content += field_attach_view('privatemsg_message', $message, 'message');
+
+  // Render message body.
+  $vars['message_body'] = drupal_render($message->content);
+
+  $inbox_link = substr(url('user/' . $user->uid . '/dashboard/inbox'), 1);
+
+  if (arg(4) != 'forward' && isset($vars['mid']) && isset($vars['thread_id']) && privatemsg_user_access('delete privatemsg')) {
+    $vars['message_actions'][] = array('title' => t('Delete'), 'href' => $inbox_link . '/delete/' . $vars['thread_id'] . '/' . $vars['mid']);
+  }
+  $vars['message_anchors'][] = 'privatemsg-mid-' . $vars['mid'];
+  if (!empty($message->is_new)) {
+    $vars['message_anchors'][] = 'new';
+    $vars['new'] = drupal_ucfirst(t('new'));
+  }
+
+  drupal_alter('privatemsg_message_view', $vars);
+
+  $vars['message_actions'] = !empty($vars['message_actions']) ? theme('links', array('links' => $vars['message_actions'], 'attributes' => array('class' => array('privatemsg-message-actions', 'links', 'inline')))) : '';
+
+  $vars['anchors'] = '';
+  foreach ($vars['message_anchors'] as $anchor) {
+    $vars['anchors'] .= '<a name="' . $anchor . '"></a>';
+  }
+}
+
+
+/**
+ * Override some theme functions from privatemsg module.
+ */
+function nys_inbox_theme_registry_alter(&$vars) {
+  $vars['privatemsg_view']['template'] = drupal_get_path('module', 'nys_inbox') . '/templates/privatemsg-view';
+  $vars['privatemsg_view']['theme path'] = drupal_get_path('module', 'nys_inbox');
+
+  foreach ($vars['privatemsg_view']['preprocess functions'] as $key => $item) {
+    if ($item == 'template_preprocess_privatemsg_view') {
+      unset($vars['privatemsg_view']['preprocess functions'][$key]);
+    }
+  }
+
+  $vars['privatemsg_username'] = $vars['nys_inbox_username'];
+
+}
+
+/**
+ * Adjust the headers in the inbox.
+ */
+function nys_inbox_privatemsg_header_info_alter(&$vars) {
+
+  $vars['last_updated']['#title'] = 'Date Sent';
+  $vars['last_updated']['data'] = 'Date Sent';
+
+  // Subject is built in, but client asked that subject show data in column 2,
+  // (bills and issues), so moving things around.
+  $vars['name'] = array(
+    'data' => 'name',
+    'field' => 'subject',
+    'class' => array('privatemsg-header-name'),
+    '#access' => 1,
+    '#enabled' => 1,
+    '#locked' => 1,
+    '#weight' => -20,
+    '#title' => t('Name'),
+    '#theme' => 'privatemsg_list_field__name',
+  );
+
+  unset($vars['subject']);
+
+  $vars['subject'] = array(
+    'data' => 'subject',
+    '#title' => t('Subject'),
+    '#enabled' => 1,
+    '#access' => 1,
+    '#weight' => -18,
+    'class' => array('privatemsg-header-subject'),
+    '#theme' => 'privatemsg_list_field__nys_inbox_subject',
+  );
+
+  $vars['district'] = array(
+    'data' => 'district',
+    '#title' => t('Dist'),
+    '#enabled' => 1,
+    '#access' => 1,
+    '#weight' => -15,
+    'class' => array('privatemsg-header-district'),
+    '#theme' => 'nys_inbox_district',
+  );
+
+  $vars['downarrow'] = array(
+    'data' => '',
+    '#title' => '',
+    '#enabled' => 1,
+    '#access' => 1,
+    '#weight' => -10,
+    'class' => array('privatemsg-header-downarrow'),
+    '#theme' => 'privatemsg_list_field__downarrow',
+  );
+
+  unset($vars['tags']);
+  unset($vars['count']);
+  unset($vars['participants']);
+
+}
+
+/**
+ * Construct string to display in the "to" field on the message form.
+ *
+ * Based on filters in the inbox, used in senator's dashboard inbox.
+ */
+function nys_inbox_get_to_value_constituents_tab_context() {
+  $getvars = array(
+    'namesearch',
+    'agesearch',
+    'gender',
+    'fb',
+    'zipsearch',
+    'all_constituents',
+  );
+
+  $to = array();
+  foreach ($getvars as $var) {
+    if (isset($_GET[$var])) {
+      if ($var == 'namesearch') {
+        $to[] = 'whose first and last name match "' . $_GET['namesearch'] . '"';
+      }
+      elseif ($var == 'agesearch') {
+        $to[] = 'between the ages of ' . $_GET['agesearch'];
+      }
+      elseif ($var == 'gender' && $_GET['gender'] == 'men') {
+        $to[] = 'who are male';
+      }
+      elseif ($var == 'gender' && $_GET['gender'] == 'women') {
+        $to[] = 'who are female';
+      }
+      elseif ($var == 'fb' && (int) $_GET['fb'] == 0) {
+        $to[] = 'who are not facebook verified';
+      }
+      elseif ($var == 'fb' && (int) $_GET['fb'] == 1) {
+        $to[] = 'who are facebook verified';
+      }
+      elseif ($var == 'zipsearch') {
+        $to[] = 'who live in zipcode ' . $_GET['zipsearch'];
+      }
+      elseif ($var == 'all_constituents') {
+        $to[] = '';
+      }
+    }
+  }
+
+  if ($_GET['context'] == 'senators_issues_tab' && !empty($_GET['issue_id'])) {
+    $term = taxonomy_term_load($_GET['issue_id']);
+    if (!empty($term) && $to[0] == '') {
+      $to[0] = 'who are following the issue "' . $term->name . '"';
+    }
+  }
+
+  return $to;
+}
+
+function nys_inbox_thread_get_recipient_count($thread_id) {
+  $user = user_load(arg(1));
+
+  $count_query = 'SELECT COUNT(DISTINCT(pmi.recipient)) as count FROM pm_index pmi
+    WHERE pmi.thread_id = :thread_id AND pmi.deleted = 0 AND pmi.recipient != :current_user';
+
+  $total_recipients = (int) db_query($count_query, array(':thread_id' => $thread_id, ':current_user' => $user->uid))->fetchField();
+
+  return $total_recipients;
+}
+
+/**
+ * Used on senator's constituents tab after select users to bulk message.
+ *
+ * Constructs string to display in the "to" field on the message form.
+ */
+function nys_inbox_get_to_value_inbox_tab_context() {
+
+  $getvars = array(
+    'messagesearch',
+    'issuesearch',
+    'billsearch',
+    'messageall',
+    'usersearch',
+  );
+
+  $to = array();
+  foreach ($getvars as $var) {
+    if (isset($_GET[$var])) {
+      if ($var == 'messagesearch') {
+        $to[] = 'Constituents who have messages to you containing "' . $_GET['messagesearch'] . '" in either the subject or the body';
+      }
+      elseif ($var == 'issuesearch') {
+        $to[] = 'Constituents who have messages to you regarding the "' . $_GET['issuesearch'] . '" issue';
+      }
+      elseif ($var == 'billsearch') {
+        $to[] = 'Constituents who have messages to you regarding the "' . $_GET['billsearch'] . '" bill';
+      }
+      elseif ($var == 'usersearch') {
+        $to[] = 'Constituents with first, last or username like "' . $_GET['usersearch'] . '" who have messaged you';
+      }
+      elseif ($var == 'messageall') {
+        $to[] = 'All constituents who have messages to you in your inbox';
+      }
+    }
+  }
+
+  return $to;
+}
+
+/**
+ * Utility function used to reconstruct filters seen on the front-end.
+ *
+ * Assembles them as a query to get users to bulk message.
+ */
+function nys_inbox_bulk_message_by_query() {
+  $user = user_load(arg(1));
+
+  if (empty($user)) {
+    return;
+  }
+
+  if (in_array($_SESSION['bulk_message_filters']['context'], array('senators_constituents_tab', 'senators_issues_tab'))) {
+    $data = nys_dashboard_constituents_query($_SESSION['bulk_message_filters']);
+    $query = $data['query'];
+    $query_args = $data['queryArgs'];
+    $result = db_query($query, $query_args);
+  }
+  elseif ($_SESSION['bulk_message_filters']['context'] == 'inbox') {
+
+    if (!empty($_SESSION['bulk_message_filters']['messagesearch'])) {
+
+      // Find thread ids that have current user as recipient and contain search term in subject or body.
+      $query = 'select pmi.thread_id from pm_index pmi
+        JOIN pm_message pm ON pm.mid = pmi.mid
+        WHERE pmi.recipient = :uid AND CONCAT(pm.subject, pm.body)
+        LIKE :messagesearch';
+
+      $result = db_query($query, array(':uid' => $user->uid, ':messagesearch' => '%' . db_like($_SESSION['bulk_message_filters']['messagesearch']) . '%'));
+
+      $thread_ids = array();
+      foreach ($result as $r) {
+        $thread_ids[] = $r->thread_id;
+      }
+
+      // Grab recipients other than the current user for the matched threads.
+      $query = "SELECT DISTINCT(pmi.recipient) AS uid, u.name FROM pm_index pmi
+        JOIN users u ON u.uid = pmi.recipient
+        WHERE pmi.thread_id IN (:array) AND pmi.recipient != :uid";
+
+      $result = db_query($query, array(':uid' => $user->uid, ':array' => $thread_ids));
+
+    }
+    elseif (!empty($_SESSION['bulk_message_filters']['issuesearch'])) {
+
+      $results = taxonomy_get_term_by_name($_SESSION['bulk_message_filters']['issuesearch'], 'issues');
+
+      if (!empty($results)) {
+        $search_term = array_shift($results);
+        $tid = $search_term->tid;
+      }
+
+      else {
+        $tid = 0;
+      }
+
+      // Find thread ids with field_data_field_issues that match search tid.
+      $query = "SELECT pmi.thread_id from pm_index pmi
+        JOIN pm_message pm ON pm.mid = pmi.mid
+        JOIN field_data_field_issues fi ON fi.entity_id = pm.mid
+        WHERE pmi.recipient = :uid AND fi.field_issues_tid = :tid AND fi.bundle = 'privatemsg_message'";
+
+      $result = db_query($query, array(':uid' => $user->uid, ':tid' => $tid));
+
+      $thread_ids = array();
+      foreach ($result as $r) {
+        $thread_ids[] = $r->thread_id;
+      }
+
+      // Grab recipients other than the current user for the matched threads.
+      $query = "SELECT DISTINCT(pmi.recipient) AS uid, u.name FROM pm_index pmi
+        JOIN users u ON u.uid = pmi.recipient
+        WHERE pmi.thread_id IN (:array) AND pmi.recipient != :uid";
+
+      $result = db_query($query, array(':uid' => $user->uid, ':array' => $thread_ids));
+    }
+
+    elseif (!empty($_SESSION['bulk_message_filters']['billsearch'])) {
+
+      $result = db_query("select nid from node where type = 'bill' AND title LIKE :bill_search", array(':bill_search' => '%' . db_like($_SESSION['bulk_message_filters']['billsearch']) . '%'));
+
+      $nids = array();
+      foreach ($result as $r) {
+        $nids[] = $r->nid;
+      }
+      // Find thread ids that have field_data_field_issues that match search tid.
+      $query = "SELECT pmi.thread_id FROM pm_index pmi
+        JOIN pm_message pm ON pm.mid = pmi.mid
+        JOIN field_data_field_featured_bill ffb ON ffb.entity_id = pm.mid
+        WHERE pmi.recipient = :uid AND ffb.field_featured_bill_target_id IN (:nids) AND ffb.bundle = 'privatemsg_message'";
+
+      $result = db_query($query, array(':uid' => $user->uid, ':nids' => $nids));
+      $thread_ids = array();
+      foreach ($result as $r) {
+        $thread_ids[] = $r->thread_id;
+      }
+
+      // Grab recipients other than the current user for the matched threads.
+      $query = "SELECT DISTINCT(pmi.recipient) AS uid, u.name FROM pm_index pmi
+        JOIN users u ON u.uid = pmi.recipient
+        WHERE pmi.thread_id IN (:array) AND pmi.recipient != :uid";
+
+      $result = db_query($query, array(':uid' => $user->uid, ':array' => $thread_ids));
+    }
+
+    elseif (!empty($_SESSION['bulk_message_filters']['usersearch'])) {
+
+      $userquery = "SELECT uid, fn.field_first_name_value, fl.field_last_name_value from users u
+        LEFT JOIN field_data_field_first_name fn ON fn.entity_id = u.uid and fn.entity_type = 'user'
+        LEFT JOIN field_data_field_last_name fl ON fl.entity_id = u.uid and fl.entity_type = 'user'
+        WHERE CONCAT(u.name, fn.field_first_name_value, ' ', fl.field_last_name_value) LIKE :q";
+
+      $result = db_query($userquery, array(':q' => '%' . $_SESSION['bulk_message_filters']['usersearch'] . '%'));
+
+      $uids = array();
+      foreach ($result as $r) {
+        $uids[] = $r->uid;
+      }
+
+      if (empty($uids)) {
+        $uids = array(0);
+      }
+
+      // Find thread ids that have field_data_field_issues that match search tid.
+      $query = "SELECT pmi.thread_id FROM pm_index pmi
+        JOIN pm_message pm ON pm.mid = pmi.mid
+        WHERE pm.author IN (:uids) AND pmi.recipient = :uid";
+
+      $result = db_query($query, array(':uid' => $user->uid, ':uids' => $uids));
+      $thread_ids = array();
+      foreach ($result as $r) {
+        $thread_ids[] = $r->thread_id;
+      }
+
+      // Grab recipients other than the current user for the matched threads.
+      $query = "SELECT DISTINCT(pmi.recipient) AS uid, u.name FROM pm_index pmi
+        JOIN users u ON u.uid = pmi.recipient
+        WHERE pmi.thread_id IN (:array) AND pmi.recipient != :uid";
+
+      $result = db_query($query, array(':uid' => $user->uid, ':array' => $thread_ids));
+
+    }
+
+    elseif (!empty($_SESSION['bulk_message_filters']['messageall'])) {
+
+      // Grab recipients other than the current user for all incoming messages.
+      $query = "SELECT DISTINCT(pm.author) AS uid, u.name from pm_message pm
+        JOIN pm_index pmi ON pmi.mid = pm.mid
+        JOIN users u ON u.uid = pm.author
+        WHERE pmi.recipient = :uid AND pm.author != pmi.recipient AND pmi.deleted = 0;";
+
+      $result = db_query($query, array(':uid' => $user->uid));
+
+    }
+  }
+
+  $options = array(
+    'author' => $user,
+  );
+
+  // Send message initially to yourself.  We'll add recipients during the bulk operation.
+  if (empty($_POST['message']) && !empty($_POST['body']['value'])) {
+    $_POST['message'] = $_POST['body']['value'];
+  }
+
+  $message = privatemsg_new_thread(array($user), $_POST['subject'], $_POST['message'], $options);
+
+  if (!$message['success']) {
+    drupal_set_message(t('There was an error sending your message', 'error'));
+    return;
+  }
+
+  $i = 0;
+  foreach ($result as $r) {
+
+    $args = array(
+      'uid' => $r->uid,
+      'name' => $r->name,
+      'mid' => $message['message']->mid,
+    );
+
+    $operations[] = array('_nys_inbox_bulk_message_by_query', array($args, t('(Operation @operation)', array('@operation' => $i))));
+    $i++;
+  }
+  $batch = array(
+    'operations' => $operations,
+    'finished' => 'nys_inbox_batch_finished',
+  );
+
+  return $batch;
+
+}
+
+function _nys_inbox_bulk_message_by_query($args, $operation_details, &$context) {
+  if (!user_is_senator((int) $args['uid'])) {
+    privatemsg_message_change_recipient($args['mid'], $args['uid'], 'user', TRUE);
+    $context['message'] = t('messaging @name', array('@name' => $args['name'])) . ' ' . $operation_details;
+  }
+  $context['results'][] = $www_path;
+  _nys_inbox_update_http_requests();
+
+}
+
+/**
+ * Utility function get counts of HTTP requests in a session variable.
+ */
+function _nys_inbox_get_http_requests() {
+  return !empty($_SESSION['http_request_count']) ? $_SESSION['http_request_count'] : 0;
+}
+
+/**
+ * Utility function to count the HTTP requests in a session variable.
+ */
+function _nys_inbox_update_http_requests() {
+  $_SESSION['http_request_count']++;
+}
+
+/**
+ * @param $search_term
+ * @return array
+ *   keyed list of bill nodes
+ */
+function nys_inbox_bill_name_autocomplete($search_term) {
+
+  $matches = array();
+
+  $result = db_query("SELECT title from node WHERE type = 'bill' && title LIKE :search_term ORDER BY nid DESC LIMIT 50", array(':search_term' => '%' . db_like($search_term) . '%'));
+
+  foreach ($result as $r) {
+    $matches[$r->title] = $r->title;
+  }
+
+  return drupal_json_output($matches);
+}
+
+/**
+ * @param $search_term
+ * @return array
+ *   keyed array of user ids with values based on first and last name
+ */
+function nys_inbox_user_autocomplete($search_term) {
+  $matches = array();
+
+  // 1: Parse $string and build list of valid user names.
+  $fragments = explode(',', $search_term);
+  $names = array();
+  foreach ($fragments as $name) {
+    if ($name = trim($name)) {
+      $names[$name] = $name;
+    }
+  }
+  // 2: Find the next user name suggestion.
+  $fragment = array_pop($names);
+  $matches = array();
+  if (!empty($fragment)) {
+
+    $query = "SELECT fn.entity_id, fn.field_first_name_value AS first_name, ln.field_last_name_value AS last_name
+      FROM field_data_field_first_name fn
+      JOIN field_data_field_last_name ln ON ln.entity_id = fn.entity_id
+      AND ln.bundle = fn.bundle WHERE fn.bundle = 'user'
+      AND CONCAT(fn.field_first_name_value, ' ', ln.field_last_name_value)
+      LIKE :search_term ORDER BY first_name, last_name LIMIT 50";
+    $result = db_query($query, array(':search_term' => '%' . db_like($fragment) . '%'));
+
+    // Prefix the matches and convert them to the correct form for the
+    // autocomplete.
+    $prefix = count($names) ? implode(", ", $names) . ", " : '';
+    $suggestions = array();
+    foreach ($result as $r) {
+      $name = $r->first_name . ' ' . $r->last_name . ' (' . $r->entity_id . ')';
+      // Prevent duplicates.
+      if (strpos($prefix, $name) === FALSE) {
+        $suggestions[$prefix . $name . ', '] = $name;
+      }
+    }
+
+    // Convert to object to prevent drupal bug, see http://drupal.org/node/175361.
+    return drupal_json_output((object)$suggestions);
+  }
+
+  // Default.
+  return drupal_json_output(array());
+
+}
+
+/**
+ * Implements hook_preprocess_panels_pane().
+ */
+function nys_inbox_preprocess_panels_pane(&$vars) {
+
+  global $user;
+  if (in_array($vars['pane']->subtype, array('menu-menu-constituent-dashboard-menu', 'menu-menu-senator-dashboard-menu'))) {
+
+    foreach ($vars['content'] as $key => $item) {
+      if (!empty($item['#title']) && $item['#title'] == 'Inbox') {
+
+        $account = user_load(arg(1));
+
+        if (empty($account)) {
+          return;
+        }
+
+        // Hide inbox link from Senator's when Senator.
+        if (user_is_constituent($account) && $user->uid != $account->uid && user_is_senator($user)) {
+          unset($vars['content'][$key]);
+          return;
+        }
+        // Hide inbox link from Senator's when Senator.
+        if (user_is_constituent($account) && $user->uid != $account->uid && user_has_role(LEGISLATIVE_CORRESPONDENT, $user)) {
+          unset($vars['content'][$key]);
+          return;
+        }
+
+        $unread_messages = nys_inbox_unread_count($account);
+
+        if ($unread_messages) {
+          $vars['content'][$key]['#title'] = 'Inbox (' . $unread_messages . ' new)';
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Use regular expressions to extract user ids from pattern "firstname lastname (<uid>)".
+ */
+function nys_inbox_parse_autocomplete_to_list($to) {
+  $fragments = explode(',', $to);
+  $users = array();
+  foreach ($fragments as $name) {
+    if ($name = trim($name)) {
+      if (preg_match('/\((\d+)\)/', $name, $matches)) {
+        $uid = $matches[1];
+        $users[$uid] = $uid;
+      }
+    }
+  }
+  return $users;
+}
+
+/**
+ * Format an array of user objects.
+ *
+ * @param $part_array
+ *   Array with user objects, for example the one returned by
+ *   _privatemsg_generate_user_array.
+ *
+ * @param $limit
+ *   Limit the number of user objects which should be displayed.
+ * @param $no_text
+ *   When TRUE, don't display the Participants/From text.
+ * @return
+ *   String with formatted user objects, like user1, user2.
+ */
+function _nys_inbox_format_participants($part_array, $limit = NULL, $no_text = FALSE) {
+  global $user;
+
+  $viewed_user = user_load(arg(1));
+
+  if (count($part_array) > 0) {
+    $to = array();
+    $limited = FALSE;
+    foreach ($part_array as $account) {
+
+      // Directly address the current user, IF current dashboard is the logged in user's
+      if (arg(0) == 'user' && arg(2) == 'dashboard' && arg(1) == $viewed_user->uid) {
+        if (isset($account->type) && in_array($account->type, array('hidden', 'user')) && $account->recipient == $viewed_user->uid && $view_user->uid == $user->uid) {
+          array_unshift($to, $no_text ? t('You') : t('you'));
+          continue;
+        }
+      }
+
+      // Don't display recipients with type hidden.
+      if (isset($account->type) && $account->type == 'hidden') {
+        continue;
+      }
+      if (is_int($limit) && count($to) >= $limit) {
+        $limited = TRUE;
+        break;
+      }
+      $to[] = privatemsg_recipient_format($account);
+    }
+
+    $limit_string = '';
+    if ($limited) {
+      $limit_string = t(' and others');
+    }
+
+    if ($no_text) {
+      return implode(', ', $to) . $limit_string;
+    }
+
+    $last = array_pop($to);
+    // Only one participant.
+    if (count($to) == 0) {
+      return t("From !last", array('!last' => $last));
+    }
+    // Multiple participants.
+    else {
+      $participants = implode(', ', $to);
+      if (arg(4) == 'reply') {
+        return t('Message between !participants & !last', array('!participants' => $participants, '!last' => $last));
+      }
+      else {
+        return t('!participants & !last', array('!participants' => $participants, '!last' => $last));
+      }
+    }
+  }
+  return '';
+}
+
+/**
+ * @param $thread_id
+ * @return partipants that are either the current user, or a senator's user account
+ *   needed because constituents are not supposed to see each other's names on bulk messages
+ */
+function nys_inbox_thread_get_allowed_participant_uids($thread_id) {
+
+  $user = user_load(arg(1));
+
+  $query = 'SELECT DISTINCT(pmi.recipient), ua.field_user_account_target_id FROM pm_index pmi
+    LEFT JOIN field_data_field_user_account ua ON ua.field_user_account_target_id = pmi.recipient
+    WHERE pmi.thread_id = :thread_id AND pmi.deleted = 0 AND pmi.recipient != :current_user LIMIT 1';
+
+  $result = db_query($query, array(':thread_id' => $thread_id, ':current_user' => $user->uid));
+  $recipients = array();
+  foreach ($result as $r) {
+    $recipients[$r->recipient] = $r->recipient;
+  }
+
+  array_unshift($recipients, $user->uid);
+
+  return $recipients;
+}
+
+/**
+ * Implements hook_privatemsg_block_message().
+ */
+function nys_inbox_privatemsg_block_message($author, $recipients, $context = array()) {
+  $blocked = array();
+
+  foreach ($recipients as $recipient_id => $recipient) {
+    if ($author->uid != $recipient->uid && user_is_senator($author) && user_is_senator($recipient)) {
+      $blocked[] = array(
+        'recipient' => $recipient_id,
+        'message' => t('Senators are not allowed to write private messages to other senators.'),
+      );
+    }
+
+    if (user_is_constituent($author) && user_is_constituent($recipient)) {
+      $blocked[] = array(
+        'recipient' => $recipient_id,
+        'message' => t('Constituents are not allowed to write private messages to other constituents.'),
+      );
+    }
+
+  }
+
+  return $blocked;
+}
+
+
+/**
+ * Return number of unread messages for an account.
+ *
+ * Excluding messages sent by inbox account user.
+ *
+ * This is a copy of privatemsg_unread_count with alterations.
+ *
+ * @param $account
+ *   Specify the user for which the unread count should be loaded.
+ *
+ * @ingroup api
+ */
+function nys_inbox_unread_count($account = NULL) {
+  $counts = &drupal_static(__FUNCTION__, array());
+  if (!$account || $account->uid == 0) {
+    global $user;
+    $account = $user;
+  }
+  if (!isset($counts[$account->uid])) {
+    $query = _privatemsg_assemble_query('unread_count', $account);
+    $query->join('pm_message', 'pm', 'pm.mid = pmi.mid');
+    $query->condition('pm.author', (string) $account->uid, '!=');
+    $result = $query
+      ->execute()
+      ->fetchField();
+    $counts[$account->uid] = $result;
+  }
+  return $counts[$account->uid];
+}
+
+/**
+ * Implements hook_privatemsg_message_insert, when a new message is saved.
+ *
+ * @param $message
+ *   The message object just added.
+ */
+function nys_inbox_privatemsg_message_insert($message) {
+  // Load the author's full user object.
+  $author = user_load($message->author->uid);
+
+  // The recipients will come from the message object.
+  // Send the notification email(s).
+  _nys_inbox_send_message_notification($author, $message);
+
+  // Detect the special case of constituent author and one senator recipient.
+  $recipient_is_senator = FALSE;
+  if (count($message->recipients) == 1) {
+    $recipient = array_values($message->recipients)[0];
+    $recipient_is_senator = in_array('Senator', $recipient->roles);
+  }
+  $author_is_constituent = in_array('Constituent', $message->author->roles);
+  $message_to_senator = $author_is_constituent && $recipient_is_senator;
+
+  // If the special case has been detected, 
+  // and this is the first message in thread, send the autoreply.
+  if ($message_to_senator && ($message->mid == $message->thread_id)) {
+    _nys_inbox_send_senator_autoreply($recipient, $message);
+  }
+}
+
+/**
+ * "Private" function to send a notification email when a new message is sent
+ *
+ * @param $author
+ *   The user object of the author, e.g., user_load()
+ * @param $message
+ *   The original message object
+ */
+function _nys_inbox_send_message_notification($author, $message) {
+  // Cycle through each recipient.
+  foreach ($message->recipients as $recip_key => $recipient) {
+    // Is this recipient a Senator or a Constituent?
+    $notify_function = '';
+    if (in_array('Senator', $recipient->roles)) {
+      $notify_function = 'senator';
+    }
+    elseif (in_array('Constituent', $recipient->roles)) {
+      $notify_function = 'constituent';
+    }
+
+    // If a role applies, and that role's function exists, send the notification.
+    if ($notify_function) {
+      $notify_function = "_nys_inbox_send_message_notification_{$notify_function}";
+      if (function_exists($notify_function)) {
+        $notify_function($author, $recipient, $message);
+      }
+    }
+  }
+}
+
+/**
+ * "Private" function to send a notification email to a senator
+ *
+ * @param $author
+ *   The user object of the author, e.g., user_load($constituent_uid)
+ * @param $recipient
+ *   The user object of the recipient, e.g., user_load($senator_uid)
+ * @param $message
+ *   The original message object
+ */
+function _nys_inbox_send_message_notification_senator($author, $recipient, $message) {
+  // Load the node associated with $senator.
+  $senator_node = node_load(user_get_senator_nid($recipient->uid));
+
+  // If the senator has outbound addresses configured, generate and send notifications.
+  $outbound_addresses = field_get_items('node', $senator_node, 'field_message_notification_email');
+  if (count($outbound_addresses)) {
+    // Prepare some references.
+    $senator_lname = field_get_items('node', $senator_node, 'field_last_name')[0]['value'];
+    $link = "/user/{$recipient->uid}/dashboard/inbox/reply/{$message->thread_id}";
+
+    // Prepare the notification email content.
+    $msg_area = '<div style="border:2px dotted #bbbbbb; border-radius:2em;margin-left:2em;' .
+                'padding:1em;max-width:600px;"><span style="font-weight:bold;">' .
+                $message->subject . '</span><br /><br />' . nl2br($message->body) . '</div>';
+    $mail_body = "Sen. " . $senator_lname . " has received a new direct message via " .
+                 "NYSenate.gov.<br /><br />" .
+                 'Reply here: ' . l($link, $link, array('absolute'=>TRUE)) . '<br /><br />' .
+                 field_get_items('user', $author, 'field_first_name')[0]['value'] . ' ' .
+                 field_get_items('user', $author, 'field_last_name')[0]['value'] . '<br />' .
+                 field_get_items('user', $author, 'field_address')[0]['street'] . '<br />' .
+                 field_get_items('user', $author, 'field_address')[0]['city'] . ', ' .
+                 field_get_items('user', $author, 'field_address')[0]['province'] . ' ' .
+                 field_get_items('user', $author, 'field_address')[0]['postal_code'] . '<br />' .
+                 $author->mail . '<br /><br />' .
+                 $msg_area . "<br /><br />" .
+                 'The content of this direct message will be automatically added to Senator ' .
+                 $senator_lname . "'s Bluebird account shortly.<br /><br />" .
+                 'If you are unable to reply to this message using NYSenate.gov, please have ' .
+                 'your Chief of Staff or Senator call the STS help line at extension 2011 and ' .
+                 'request that you be added as a "Legislative Correspondent".<br /><br />' .
+                 "Please respect this user's preferences and refrain from contacting them " .
+                 'directly through email.<br /><br />';
+    
+    // Prepare the mail parameters.
+    $mail_params = array(
+      'body' => $mail_body,
+      'subject' => "[NYSenate.gov] " . $message->subject,
+      'content-type' => 'text/html; charset=UTF-8; format=flowed',
+    );
+
+    // Iterate through all configured addresses and send the email to each.
+    foreach ($outbound_addresses as $key => $mail_to) {
+      $one_message = drupal_mail('nys_inbox',
+                                 "message_notification",
+                                 $mail_to['value'],
+                                 user_preferred_language($recipient),
+                                 $mail_params
+                                );
+    }
+  }
+}
+
+/**
+ * "Private" function to send a notification email to a senator
+ *
+ * @param $author
+ *   The user object of the author, e.g., user_load($senator_uid)
+ * @param $recipient
+ *   The user object of the recipient, e.g., user_load($constituent_uid)
+ * @param $message
+ *   The original message object
+ */
+function _nys_inbox_send_message_notification_constituent($author, $recipient, $message) {
+  // Only do anything if user wants to receive emails
+  $ok_to_send = field_get_items('user', $recipient, 'field_user_receive_emails')[0]['value'];
+  if ($ok_to_send) {
+    // Load the node associated with $senator.
+    // Prepare some references.
+    $senator_node = node_load(user_get_senator_nid($author->uid));
+    $senator_lname = field_get_items('node', $senator_node, 'field_last_name')[0]['value'];
+    $link = "/user/{$recipient->uid}/dashboard/inbox/reply/{$message->thread_id}";
+
+    // Prepare the notification email content.
+    $msg_area = '<div style="border:2px dotted #bbbbbb; border-radius:2em;margin-left:2em;' .
+                'padding:1em;max-width:600px;"><span style="font-weight:bold;">' .
+                $message->subject . '</span><br /><br />' . nl2br($message->body) . '</div>';
+    $mail_body = "You have received a new direct message from Sen. {$senator_lname} via " .
+                 "NYSenate.gov.<br /><br />" .
+                 'Reply here: ' . l($link, $link, array('absolute'=>TRUE)) . '<br /><br />' .
+                 $msg_area . "<br /><br />";
+    
+    // Prepare the mail parameters.
+    $mail_params = array(
+      'body' => $mail_body,
+      'subject' => "[NYSenate.gov] " . $message->subject,
+      'content-type' => 'text/html; charset=UTF-8; format=flowed',
+    );
+
+    // Send the email.
+    $one_message = drupal_mail('nys_inbox',
+                               "message_notification",
+                               $recipient->mail,
+                               user_preferred_language($recipient),
+                               $mail_params
+                              );
+  }
+}
+
+/**
+ * "Private" function to send an autoreply message from a senator to a consitutuent.
+ *
+ * @param $senator
+ *   The senator node, e.g., user_load()
+ * @param $message
+ *   The original message object
+ */
+function _nys_inbox_send_senator_autoreply($senator, $message) {
+  // Load the senator node and check if an autoreply text is set.
+  $senator_node = node_load(user_get_senator_nid($senator->uid));
+  $body = field_get_items('node', $senator_node, 'field_autoreply_text')[0]['value'];
+
+  // If an autoreply text exists, generate a new message reply.
+  if ($body) {
+    $ar_subject = "RE:" . $message->subject;
+    $options = array('author' => $senator, 'subject' => $ar_subject);
+    $autoreply_message = privatemsg_reply($message->thread_id, $body, $options);
+  }
+}
+
+
+/**
+ * Gets a count of all messages ever sent or received by a user.
+ *
+ * @param $account
+ *     Drupal user object, or a valid user_id.  If not passed, defaults to
+ *     the current user.
+ * @return int
+ */
+function nys_inbox_get_message_count($account) {
+  global $user;
+
+  // If a user ID or user object was passed, use it.  Otherwise, use global $user.
+  if (is_object($account)) {
+    $check_user = $account;
+  }
+  elseif ((int) $account) {
+    $check_user = user_load($account);
+  }
+  else {
+    $check_user = $user;
+  }
+  $check_user_id = (int) $check_user->uid;
+
+  // Get a count of all messages addressed to this user, which are not
+  // authored by this user.
+  $query = db_select('pm_index', 'pmi');
+  $query->join('pm_message', 'pmm', 'pmi.mid = pmm.mid');
+  $result = $query->condition('pmi.recipient', 'pmm.author', '<>')
+    ->condition('pmi.recipient', $check_user_id)
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+
+  return (int) $result;
+}
+
+/**
+ * Implements hook_block_view_alter
+ */
+function nys_inbox_block_view_alter(&$data, $block) {
+  if ($block->delta == 'menu-constituent-dashboard-menu') {
+    global $user;
+    $has_messages = (boolean) nys_inbox_get_message_count($user);
+    foreach ($data['content'] as $mlid => $item) {
+      if ($item['#title'] == 'Inbox') {
+        $data['content'][$mlid]['#access'] = $has_messages;
+      }
+    }
+  }
+}

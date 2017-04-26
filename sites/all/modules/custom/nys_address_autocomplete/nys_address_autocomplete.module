@@ -1,0 +1,239 @@
+<?php
+use Drupal\gmap\GmapDefaults;
+
+/**
+ * Implements hook_element_info().
+ */
+function nys_address_autocomplete_element_info() {
+  // The top level container for this form field.
+  $fieldset = array(
+    '#input' => TRUE,
+    '#module' => 'nys_address_autocomplete',
+    '#theme_wrappers' => array('form_element'),
+    '#type' => 'fieldset',
+    '#attached' => nys_address_autocomplete_get_form_attachments(),
+
+    // Making this a tree might help with compartmentalization, but it is
+    // hardly necessary, and creates work.  Probably don't need it.
+    /*'#tree' => TRUE,*/
+
+    // To use a custom theme for this container.  Early changes to this
+    // module allowed for using standard Drupal.  This is here only as
+    // a reminder.
+    /*'#theme' => 'auto_address',*/
+  );
+
+  // The actual text box to be linked to the autocompletion JS.
+  $fieldset['autocompleter'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Home address search or <span class="autocomplete-manual-switch">enter your address manually</span>',
+    '#maxlength' => 1023,
+    '#size' => 40,
+    '#attributes' => array(
+      'class' => array('nys-autocompleter'),
+      'placeholder' => array('Search by street, city, state'),
+      'autocomplete' => array('off'),
+    ),
+    '#weight' => 0,
+  );
+
+  // A container for the manual entry form fields.
+  $entry_boxes = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array('manual-entry-container', 'clearfix'),
+      'style' => array('display:none;'),
+    ),
+    '#weight' => 1,
+  );
+
+  // The fields for a manually entered address.  These fields also receive
+  // the parsed autocompleted address parts.
+  $entry_boxes['addr_street'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Street Address',
+    '#required' => TRUE,
+    '#description' => t('Your valid home address is used to determine which NY State Senator Represents you.'),
+    '#maxlength' => 1023,
+    '#size' => 40,
+  );
+
+  $entry_boxes['addr_opt'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Apt/Suite/Floor (Optional)'),
+    '#maxlength' => 1023,
+    '#size' => 12,
+  );
+
+  $entry_boxes['addr_city'] = array(
+    '#type' => 'textfield',
+    '#title' => t('City'),
+    '#required' => TRUE,
+    '#maxlength' => 255,
+    '#size' => 35,
+  );
+
+  $entry_boxes['addr_state'] = array(
+    '#type' => 'textfield',
+    '#title' => t('State'),
+    '#required' => TRUE,
+    '#maxlength' => 255,
+    '#size' => 35,
+  );
+
+  $entry_boxes['addr_zip'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Postal Code'),
+    '#required' => TRUE,
+    '#maxlength' => 15,
+    '#size' => 5,
+  );
+
+  // Add the manual form fields to the top container.
+  $fieldset['manual_entry'] = $entry_boxes;
+
+  // Return the custom field type.
+  return array('auto_address' => $fieldset);
+}
+
+/**
+ * Generates the array to be used for the field type's #attached property.
+ * Almost all of this function was cannibalized from addressfield_autocomplete
+ * module.
+ *
+ * @return array See #attached in Forms API.
+ */
+function nys_address_autocomplete_get_form_attachments() {
+
+  // Make sure the GmapDefaults class is loaded.
+  module_load_include('php', 'gmap', 'lib/Drupal/gmap/GmapDefaults');
+
+  // Get the GMap defaults.  Not sure the maptype manipulation is necessary,
+  // but it's not hurting anything either.
+  $gmap_defaults = GmapDefaults::getInstance()->getDefaults();
+  switch ($gmap_defaults['maptype']) {
+    case 'Map':
+      $gmap_defaults['maptype'] = 'roadmap';
+      break;
+
+    case 'Physical':
+      $gmap_defaults['maptype'] = 'terrain';
+      break;
+  }
+  $gmap_defaults['maptype'] = strtolower($gmap_defaults['maptype']);
+
+  // Use GMap to populate the standard JS includes to make Google work.
+  $js = GmapDefaults::getInstance()->getBaseJs();
+
+  // Add this module's custom JS.
+  $module_path = drupal_get_path('module', 'nys_address_autocomplete');
+  $js[$module_path . '/nys_address_autocomplete.js'] = array(
+    'type' => 'file',
+    'weight' => 10,
+  );
+
+  // Add some data points to the Javascript data structure.
+  $js[] = array(
+    'data' => array(
+      'nys_autocomplete' => array(
+        'gmap' => $gmap_defaults,
+        'fields' => array('autocompleter' => array()),
+      ),
+    ),
+    'type' => 'setting',
+  );
+
+  // Create the final #attached array, including the geocomplete JS library.
+  $attachments = array(
+    'js' => $js,
+    'libraries_load' => array(array('geocomplete')),
+    'css' => array(
+      "{$module_path}/nys_address_autocomplete.css" => array(
+        'type' => 'file',
+        'weight' => 10,
+      ),
+
+    ),
+  );
+
+  return $attachments;
+}
+
+/**
+ * An unused theme function for the field type.  Since created, the field type
+ * now uses standard Drupal methods, so this is unnecessary.  Left in as a
+ * reminder of how to implement it in the future.
+ */
+/*
+function theme_auto_address($element) {
+  nyslog(var_export($element,1));
+  return "<input type='text' name='guess' value='woot3' />";
+}
+*/
+
+/**
+ * Implements hook_theme() for nys_address_autocomplete module.
+ *
+ * @return array
+ */
+function nys_address_autocomplete_theme() {
+  return array(
+    'auto_address' => array(
+      'arguments' => array('element' => NULL)
+    ),
+  );
+}
+
+/**
+ * Implements hook_libraries_info().
+ * Add the geocomplete javascript library.
+ */
+function nys_address_autocomplete_libraries_info() {
+  nyslog('');
+  $libraries['geocomplete'] = array(
+    'name' => 'Geocomplete',
+    'vendor url' => 'http://ubilabs.github.io/geocomplete/',
+    'download url' => 'https://github.com/ubilabs/geocomplete/archive/master.zip',
+    'version arguments' => array(
+      'file' => 'jquery.geocomplete.js',
+      'pattern' => '/V\s+([0-9\.\ \-]+)/',
+      'lines' => 5,
+    ),
+    'files' => array(
+      'js' => array(
+        'jquery.geocomplete.js' => array(
+          'type' => 'file',
+          'weight' => 2,
+        ),
+      ),
+    ),
+    'variants' => array(
+      'minified' => array(
+        'files' => array(
+          'js' => array(
+            'jquery.geocomplete.min.js',
+          ),
+        ),
+        'variant arguments' => array(
+          'variant' => 'minified',
+        ),
+      ),
+    ),
+  );
+  return $libraries;
+}
+
+/**
+ * Ensures the "places" library is added to the gmap library references.
+ * Implements hook_gmap().
+ *
+ * @param $op
+ * @param $map
+ * @return array
+ */
+function nys_address_autocomplete_gmap($op, &$map) {
+  switch ($op) {
+    case 'libraries':
+      return array('places');
+  }
+}

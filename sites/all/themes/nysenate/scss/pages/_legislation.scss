@@ -1,0 +1,457 @@
+/*---------------------------------------
+/ LEGISLATION PAGE: MAIN SITE
+/
+/---------------------------------------*/
+.page-legislation {
+  // may be able to further abstract
+  .c-legislation--descript {
+    margin-bottom: 20px;
+  }
+
+  .block-nys-blocks-how-senate-works-block {
+    max-width: 840px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  .c-block-legislative-search-itro {
+    margin-bottom: 0;
+  }
+
+  .pane-upcoming-legislation {
+
+    .nys-accordion--title {
+      color: $grey02;
+    }
+
+    .nys-arrow-link {
+      color: $yellow03;
+    }
+
+    .accordion dd {
+      margin-bottom: 20px !important;
+    }
+  }
+
+  .view-upcoming-legislation-calendar {
+
+    .l-panel-col--lft {
+      padding-right: 20px;
+      width: 22%;
+
+      a {
+        color: $yellow03;
+        text-transform: uppercase;
+        font-family: "Proxima Nova SemiBold";
+        font-size: 12px;
+        line-height: 18px;
+      }
+    }
+
+    .c-listing--bill-num {
+      margin-bottom: 8px;
+
+      a {
+        color: $grey02;
+        text-transform: none;
+        font-family: "Adelle Bold";
+        font-size: 24px;
+        line-height: 25px;
+      }
+    }
+
+    .c-panel--header.views-row-odd,
+    .c-panel--header.views-row-even {
+      display: none !important;
+    }
+
+    .c-panel--header.views-row-first {
+      display: block !important;
+    }
+  }
+
+  .tabs-content {
+
+    .view-upcoming-legislation-calendar {
+
+      .even,
+      .odd {
+        border-top: 1px solid $grey05;
+      }
+
+      .first > .c-update-block {
+        border-top: none;
+      }
+    }
+  }
+
+  .pane-nys-blocks-legislation-search {
+    position: relative;
+
+    .u-tablet-plus {
+      display: block;
+      color: $yellow03;
+      text-transform: uppercase;
+      font-size: 11px;
+      float: right;
+      padding-top: 5px;
+      font-weight: bold;
+      line-height: 1.2em;
+
+      @media #{$tablet} {
+        font-size: 14px;
+        font-weight: normal;
+      }
+    }
+
+    .c-legislation-search-links {
+      position: absolute;
+      bottom: 20px;
+      left: 15px;
+      width: 88%;
+
+      li {
+        list-style: none;
+        display: inline-block;
+
+        &:before {
+          content: "";
+          margin: 0 10px;
+          text-transform: uppercase;
+          background-color: $grey05;
+          font-size: 16px;
+          display: inline-block;
+          height: 13px;
+          width: 1px;
+        }
+
+        &:nth-child(1) {
+
+          &:before {
+            content: "Go To:";
+            margin-right: 20px;
+            text-transform: uppercase;
+            color: $grey02;
+            font-size: 16px;
+            display: inline;
+            background: none;
+          }
+        }
+
+        a {
+          color: $yellow03;
+          text-transform: uppercase;
+        }
+      }
+    }
+
+    .c-site-search {
+      padding: 25px 20px;
+      margin-bottom: 40px;
+      min-height: 100px;
+      position: relative;
+      top:inherit;
+      background-color: $grey06;
+      &:before,
+      &:after {
+        display: none;
+      }
+
+      .c-site-search--title {
+        color: $grey02;
+      }
+
+      .c-site-search--box {
+        -webkit-appearance: none;
+        border-radius: 0;
+        border: 1px solid $grey05;
+      }
+
+      .c-site-search--btn {
+        top: 24px;
+      }
+    }
+  }
+}
+
+.node-type-senator {
+
+  .view-legislation-bills {
+
+    .view-content {
+
+      .odd,
+      .even {
+        width: 100%;
+        float: none;
+
+        .c-bill-meta,
+        .c-bill-body {
+          width: 100%;
+        }
+      }
+
+      .even {
+        float: none;
+      }
+    }
+  }
+}
+
+.c-bill-text__memo, .c-bill-text__bill {
+  margin-top:20px;
+}
+
+.l-panel-col--rgt,
+.l-right-actions {
+  margin-left: 0;
+
+  .vote-container {
+    margin-bottom: 20px;
+
+    .aye,
+    .nay {
+      width: auto;
+      padding: 6px 10px;
+      background-color: $grey06;
+      display: inline-block;
+      text-align: center;
+
+      &:nth-child(1) {
+        margin-right: 20px;
+      }
+
+      .vote-count {
+        display: inline-block;
+        font: 18px/18px "Adelle Bold";
+        color: $grey03;
+      }
+
+      .vote-label {
+        display: inline-block;
+        font: 13px/18px "Proxima Nova SemiBold";
+        color: $grey04;
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  @media #{$tablet} {
+
+    .vote-container {
+      margin-bottom: 20px;
+
+      .aye,
+      .nay {
+        width: 40%;
+        background-color: $grey06;
+        display: inline-block;
+        text-align: center;
+        padding: 0;
+
+        &:nth-child(1) {
+          margin-right: 20px;
+        }
+
+        .vote-count {
+          display: block;
+          font: 24px/30px "Adelle Bold";
+          color: $grey03;
+        }
+
+        .vote-label {
+          display: block;
+          font: 15px/16px "Proxima Nova SemiBold";
+          padding-bottom: 5px;
+          color: $grey04;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+
+  .vote-meta {
+
+    .meta-row {
+      position: relative;
+      font: 10px/16px "Proxima Nova Regular";
+      color: $grey04;
+      text-transform: uppercase;
+
+      div {
+        display: inline-block;
+
+        &:nth-child(1) {
+          color: $grey03;
+        }
+
+        &:nth-child(2) {
+          position: absolute;
+          left: 25%;
+        }
+
+        &.meta-count {
+          font-family: "Proxima Nova SemiBold";
+        }
+        &.meta-label {
+          position: relative;
+          left: auto;
+          margin-left: 10px;
+        }
+      }
+
+      .meta-comm-referral {
+
+        > label {
+          cursor: text;
+        }
+
+        > label,
+        .date-display-single {
+          letter-spacing: 0.01em;
+        }
+      }
+    }
+
+    .meta-comm-referral {
+      margin-top: 20px;
+
+      label {
+        margin: 0;
+        font: 11px/14px "Proxima Nova Regular";
+        color: $grey05;
+      }
+
+      .committee-link {
+        font: 12px/14px "Proxima Nova SemiBold";
+        color: $yellow03;
+        text-transform: uppercase;
+      }
+    }
+  }
+}
+
+@media #{$tablet} {
+
+  .node-type-senator {
+
+    .view-legislation-bills {
+
+      .view-content {
+
+        .odd,
+        .even {
+          width: 45%;
+          float: left;
+          clear: both;
+          .c-bill-meta,
+          .c-bill-body {
+            width: 100%;
+          }
+        }
+
+        .even {
+          float: right;
+          clear: none;
+        }
+      }
+    }
+  }
+}
+
+.c-text-expander {
+  overflow: visible;
+  margin-top:20px;
+  margin-bottom:20px;
+  :after {
+    content: '';
+  }
+  position:relative;
+}
+
+.c-text-expander--bill-text {
+  right:14px;
+}
+
+.c-text-expander--summary-text {
+  right:33px;
+}
+
+.u-text-expander--inline__more-text {
+  display:none;
+}
+
+/*
+**  !important is used here to override the icons CSS.
+*/
+.expanded:after {
+  content:"\5e" !important;
+}
+
+@media #{$tablet} {
+
+  .c-bill-text__memo, .c-bill-text__summary {
+    margin-top:20px;
+  }
+
+  .page-legislation {
+
+    .pane-nys-blocks-legislation-search {
+      position: relative;
+
+      .c-legislation-search-links {
+        position: absolute;
+        bottom: 20px;
+        left: 30px;
+      }
+
+      .c-site-search {
+        padding: 25px 40px;
+        max-height: 180px;
+
+        .c-site-search--btn {
+          top: -45px;
+        }
+      }
+    }
+
+    .view-upcoming-legislation-calendar {
+
+      .l-right-actions {
+        margin-left: 81%;
+      }
+    }
+  }
+}
+
+
+.pane-nys-blocks-leg-leg-accordion {
+  margin-bottom: 60px;
+
+  .view-upcoming-legislation-calendar.view-display-id-floor_calendar {
+
+    .view-header {
+      font-family: 'Proxima Nova Regular';
+      font-size: 16px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+
+      span {
+        font-family: 'Proxima Nova SemiBold';
+      }
+    }
+  }
+}
+
+// Override for bill page pie chart colors for committees section
+.node-type-bill {
+
+  .c-bill--vote_2\27 {
+    margin-top: 30px;
+  }
+}
+
+// Hide global search on legislation pages that already have search
+.page-search-legislation .search-page-top-form .c-site-search {
+  display: none;
+}

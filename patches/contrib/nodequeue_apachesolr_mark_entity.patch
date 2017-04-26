@@ -1,0 +1,30 @@
+--- a/nodequeue.module
++++ b/nodequeue.module
+@@ -1048,7 +1048,12 @@ function nodequeue_subqueue_add($queue, &$subqueue, $nid) {
+       nodequeue_check_subqueue_size($queue, $subqueue, $queue->size);
+     }
+     if (module_exists('apachesolr')) {
+-      apachesolr_mark_node($nid);
++      if (function_exists('apachesolr_mark_node')) {
++        apachesolr_mark_node($nid);
++      }
++      else {
++        apachesolr_mark_entity('node', $nid);
++      }
+     }
+     // Invoke the hook to notify other modules of the node addition.
+     module_invoke_all('nodequeue_add', $subqueue->sqid, $nid);
+@@ -1069,7 +1074,12 @@ function nodequeue_subqueue_remove_node($sqid, $nid) {
+   if ($pos = nodequeue_get_subqueue_position($sqid, $nid)) {
+     nodequeue_subqueue_remove($sqid, $pos);
+     if (module_exists('apachesolr')) {
+-      apachesolr_mark_node($nid);
++      if (function_exists('apachesolr_mark_node')) {
++        apachesolr_mark_node($nid);
++      }
++      else {
++        apachesolr_mark_entity('node', $nid);
++      }
+     }
+   }
+ }

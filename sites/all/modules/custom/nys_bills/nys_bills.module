@@ -1,0 +1,440 @@
+<?php
+/**
+ * @file
+ * This module contains code to add functionality to bill nodes.
+ */
+
+require_once 'includes/nys_bills_form.inc';
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function nys_bills_module_implements_alter(&$implementations, $hook) {
+  if ($hook != 'user_login') {
+    return;
+  }
+
+  // Move user_login hook to the top to circumvent default flag module behavior.
+  $group = array('nys_bills' => $implementations['nys_bills']);
+  unset($implementations['nys_bills']);
+  $implementations = $group + $implementations;
+}
+
+/**
+ * Implements hook_user_login().
+ *
+ * This hook converts flagging and vote entries from being owned
+ * by an anonymous user to being owned by the current user.  It
+ * will reset the user ID associated with the respective records
+ * in flagging and votingapi_vote, and delete the old records
+ * from nys_bills_anon.
+ *
+ * @param $edit
+ *   Unused for this hook.
+ * @param $account
+ *   The user account logging in for the very first time.
+ */
+function nys_bills_user_login(&$edit, $account) {
+  nyslog(__FUNCTION__);
+
+  // This should only act on a user's first login, determined
+  // by $account->access==0.
+  if (!((boolean)$account->access)) {
+
+    // Load the full user.
+    $this_user = user_load($account->uid);
+    if ($this_user) {
+
+      // Grab any anonymous user records from nys_bills_anon
+      // matching the current user's email address.  We need
+      // fid (flagging PK) and vote_id (votingapi_vote PK).
+      $bills_records = db_select('nys_bills_anon')
+        ->fields('nys_bills_anon', array('sid','fid','vote_id'))
+        ->condition('email', $this_user->mail)
+        // This is now limited to the most-recent record.
+        ->orderBy('sid','DESC')
+        ->range(0,1)
+        ->execute();
+
+      // For each bills record returned, update the flagging
+      // and votingapi_vote tables to reflect the new user id.
+      // Optionally, trigger an accumulator event.
+      if ($bills_records->rowCount()) {
+        // Fetch the rows, and initialize the references.
+        $bill_results = $bills_records->fetchAllAssoc('fid', PDO::FETCH_ASSOC);
+        $change_ids = array('flag' => array(), 'vote' => array(), 'anon' => array());
+        foreach ($bill_results as $rec) {
+          $change_ids['flag'][] = $rec['fid'];
+          $change_ids['vote'][] = $rec['vote_id'];
+          $change_ids['anon'][] = $rec['sid'];
+        }
+        nyslog("change array=\n".var_export($change_ids,1));
+        // Update the flagging table.
+        nyslog("updating anonymous flags:\n".var_export($change_ids['flag'],1));
+        $flag_update = db_update('flagging')
+          ->fields(array('uid' => $this_user->uid, 'sid' => 0))
+          ->condition('flagging_id', $change_ids['flag'])
+          ->execute();
+        nyslog("update return=".var_export($flag_update,1));
+
+        // Update the votingapi_vote table.
+        nyslog("updating anonymous votes:\n".var_export($change_ids['vote'],1));
+        $vote_update = db_update('votingapi_vote')
+          ->fields(array('uid' => $this_user->uid))
+          ->condition('vote_id', $change_ids['vote'])
+          ->execute();
+        nyslog("update return=".var_export($vote_update,1));
+
+        // TODO: Implement sanity check/error reporting?
+        // Here, $(flag|vote)_update should hold number of rows changed.
+        // Each should match their respective count($all_ids).
+
+        // Remove the anonymous user records.
+        nyslog("deleting anonymous records:\n".var_export($change_ids['anon'],1));
+        db_delete('nys_bills_anon')
+          ->condition('sid', $change_ids['anon'])
+          ->execute();
+      }
+    }
+
+    // If a direct message was sent during registration, update the author
+    // record with the new uid.
+    if (isset($_SESSION['reg_msg_id']) && is_numeric($_SESSION['reg_msg_id'])) {
+      $mid = $_SESSION['reg_msg_id'];
+      db_update('pm_message')
+        ->fields(array('author' => $account->uid))
+        ->condition('mid', $mid)
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function nys_bills_node_view($node, $view_mode, $langcode) {
+  if ($node->type == 'bill' && $view_mode == 'full') {
+    $node->content['bill_form'] = drupal_get_form('nys_bills_bill_form', $node);
+  }
+}
+
+/**
+ * A private function used to record the user information for
+ * anonymous users submitting a bill vote.
+ *
+ * @param $node
+ *   The bill node object receiving the vote.
+ * @param $values
+ *   The $form_state['values'] array of the form submission.
+ * @return bool|int
+ *   Returns the auto-increment value of the newly inserted record,
+ *   or false if the current user is logged in (i.e., not anonymous).
+ */
+function _nys_bills_record_anonymous_user($node, $values) {
+  nyslog(__FUNCTION__);
+
+  // If this user is logged in, exit.
+  global $user;
+  if ($user->uid) {
+    return false;
+  }
+
+  // Some includes to support this process.
+  ctools_include('ajax');
+  ctools_include('object-cache');
+  ctools_include('nys_registration.wizard', 'nys_registration', 'inc');
+
+  // We need to know if a flag object for this bill already exists
+  // within this session.
+  $bills_flag = flag_get_flag('follow_this_bill');
+  $sid = flag_set_sid();
+
+  // If a flag already exists, reset the session so this one is
+  // considered new.  This supports multiple sign-ups at a public computer.
+  if ($bills_flag->is_flagged($node->nid)) {
+    $sid = nys_utils_regenerate_session();
+  }
+
+  // Create a default registration form ...
+  $registration_form_state = _nys_registration_create_form_object($values);
+  $registration_form_state['object']->agree_terms = TRUE;
+  $registration_form_state['object']->fbuid       = NULL;
+
+  // ... and call SAGE district lookup.
+  nys_registration_wizard_next($registration_form_state);
+
+  // Retrieve the relevant senator/district information.
+  $senator = !empty($registration_form_state['object']->senator->nid) ? $registration_form_state['object']->senator->nid : NULL;
+  $district_id = !empty($registration_form_state['object']->district_id) ? $registration_form_state['object']->district_id : NULL;
+  $district_number = !empty($registration_form_state['object']->district_number) ? $registration_form_state['object']->district_number : 0;
+
+  // Insert the new anonymous record into nys_bills_anon.
+  nyslog("Inserting into nys_bills_anon");
+  $anon_insert = db_insert('nys_bills_anon')
+    ->fields(array(
+      'bid' => $node->nid,
+      'fid' => 0,
+      'vote_id' => 0,
+      'session_id' => $sid,
+      'email' => $values['email'],
+      'first_name' => $values['first_name'],
+      'last_name' => $values['last_name'],
+      'addr_street' => $values['addr_street'],
+      'addr_opt' => $values['addr_opt'],
+      'addr_city' => $values['addr_city'],
+      'addr_state' => $values['addr_state'],
+      'addr_zip' => $values['addr_zip'],
+      'senator' => $senator,
+      'district_id' => $district_id,
+      'district_number' => $district_number,
+      'timestamp' => REQUEST_TIME,
+      'message' => 0,
+    ))
+    ->execute();
+  nyslog("inserted, return=\n".var_export($anon_insert,1));
+
+  // Return the new record PK.
+  return $anon_insert;
+}
+
+/**
+ * Wrapper for _nys_bills_select_anonymous_user() to return a single record.
+ * See the wrapped function for a description of parameters.
+ *
+ * @param $conditions
+ * @param null $fields
+ * @return mixed|null
+ *   An object representing a single anonymous record, or NULL if none found.
+ */
+function _nys_bills_select_single_anonymous_user($conditions, $fields = null) {
+  $return = _nys_bills_select_anonymous_user($conditions, $fields, 1);
+  return count($return) ? $return[0] : null;
+}
+
+/**
+ * Queries table nys_bills_anon for matching records and returns an array.
+ *
+ * @param $conditions
+ *   An array of ('field_name' => 'field_value') elements used as query conditions.
+ * @param null $fields
+ *   An array of field names to include in the return.  If nothing is passed,
+ *   a default list of fields is used.
+ * @param integer $limit
+ *   An integer value used to limit the number of records eligible for return.
+ * @return array
+ *   An array of objects representing any records found.
+ */
+function _nys_bills_select_anonymous_user($conditions, $fields = null, $limit = 0) {
+  // Prepare the fields to be selected, if none have been passed.
+  if (!is_array($fields)) {
+    $fields = array('sid','bid','fid','vote_id','email','senator','district_id','district_number');
+  }
+
+  // Create the base query.
+  $anon_user_records = db_select('nys_bills_anon', 'a')->fields('a', $fields);
+
+  // Add any conditions passed in.
+  foreach ($conditions as $fld => $val) {
+    $anon_user_records->condition($fld, $val);
+  }
+
+  // If a limit was specified, add it to the query.
+  if ((int)$limit) {
+    $anon_user_records->range(0, (int)$limit);
+  }
+
+  // Grab the list.  This could be an empty array.
+  $result = $anon_user_records->execute();
+  $return = $result->fetchAll(PDO::FETCH_OBJ);
+/*  ($anon_user_records->rowCount() > 0)
+    ? $anon_user_records->fetch(PDO::FETCH_OBJ)
+    : null;*/
+
+  // Return the results.
+  return $return;
+}
+/**
+ * Implements hook_entity_insert().
+ * This hook will update nys_bills_anon records for the current session
+ * with the id of the flag being inserted.  It will only act if the
+ * entity being inserted is of type "flagging" and the flag name is
+ * "follow_this_bill".
+ *
+ * @param $entity
+ *   The entity being inserted, i.e., the flag entity.
+ * @param $type
+ *   The type of entity being inserted ("flagging").
+ */
+function nys_bills_entity_insert($entity, $type) {
+  nyslog(__FUNCTION__);
+
+  // This only acts on flagging activity for "follow_this_bill" flags.
+  if ($type != 'flagging' || $entity->flag_name != 'follow_this_bill') {
+    nyslog("Nothing to do, returning");
+    return;
+  }
+
+  // Add the flagging id to the petition signature of the same session.
+  nyslog("follow_this_bill flag found, updating nys_bills_anon");
+  $flagging_id = $entity->flagging_id;
+  $this_update = db_update('nys_bills_anon')
+    ->fields(array('fid' => $flagging_id))
+    ->condition('session_id', $entity->sid)
+    ->condition('fid', 0)
+    ->condition('bid', $entity->entity_id)
+    ->execute();
+  nyslog("nys_bills_anon update result=\n".var_export($this_update,1));
+}
+
+/**
+ * Implements hook_votingapi_insert().
+ * This hook will update nys_bills_anon records for the current session
+ * with the id of the vote being inserted.  If more than one vote is
+ * passed, only the first will be used for the update.
+ *
+ * @param $votes
+ *   An array of votes already inserted.
+ */
+function nys_bills_votingapi_insert($votes) {
+  nyslog(__FUNCTION__);
+  if (count($votes)) {
+    nyslog("UPDATING");
+    $sid = flag_set_sid();
+    $the_vote = $votes[0];
+    $update = db_update('nys_bills_anon')
+      ->fields(array('vote_id' => $the_vote['vote_id']))
+      ->condition('bid', $the_vote['entity_id'])
+      ->condition('session_id', $sid)
+      ->execute();
+    nyslog("updating nys_bills_anon vote_id={$the_vote['vote_id']}, ret=".var_export($update,1));
+  }
+}
+
+/**
+ * Implements hook_nys_accumulator_user_info().
+ * Adds anonymous user information to accumulator messages.
+ * 
+ * @param $user
+ *   A Drupal user object.
+ * @param $response
+ *   An accumulator response array.
+ * @param $options
+ *   An array of options indicating which work needs to be done.
+ * @return mixed
+ *   The response object.
+ */
+function nys_bills_nys_accumulator_user_info($user, $response, $options) {
+  nyslog();
+  // If the user is logged in, exit.
+  if ($user->uid != 0 || $response['msg_type'] != 'bill') {
+    return $response;
+  }
+
+  // Only do work if a flag or vote id is present in options.
+  $where = '';
+  if (isset($options['flagging']->flagging_id)) {
+    $where = 'fid = :v';
+    $param = array(':v' => $options['flagging']->flagging_id);
+  }
+  else if (isset($options['voting'])) {
+    $where = 'bid = :n and session_id = :s';
+    $param = array(
+      ':n' => $options['voting'],
+      ':s' => flag_set_sid($user->uid),
+    );
+  }
+  if (!$where) {
+    return $response;
+  }
+
+  // Try to find the appropriate row.
+  $query = "SELECT * FROM {nys_bills_anon} WHERE $where";
+  $bills_row = db_query($query, $param)->fetchAll();
+
+  // If no row is found, exit.
+  if (empty($bills_row[0]->email)) {
+    return $response;
+  }
+
+  // Prepare the user's information for inclusion.
+  $user_info = array(
+    'signing_id' => $bills_row[0]->sid,
+    'user_email' => $bills_row[0]->email,
+    'first_name' => $bills_row[0]->first_name,
+    'last_name' => $bills_row[0]->last_name,
+    'user_address' => $bills_row[0]->addr_street,
+    'user_city' => $bills_row[0]->addr_city,
+    'user_state' => $bills_row[0]->addr_state,
+    'user_zipcode' => $bills_row[0]->addr_zip,
+    'district_number' => $bills_row[0]->district_number,
+    'district_id' => $bills_row[0]->district_id,
+    'senator_node' => $bills_row[0]->senator,
+  );
+
+  // Include the information in the response.
+  if (!isset($response['msg_info'])) {
+    $response['msg_info'] = array();
+  }
+  $response['msg_info']['form_info'] = $user_info;
+
+  // Return the response.
+  return $response;
+}
+
+/**
+ * Sends a private message to a user when voting on a bill.
+ *
+ * @param array $message
+ *   Array with properties for sending a message.
+ *
+ * @code
+ *   // Expects the following array structure.
+ *   $message = array(
+ *     'senator_nid' => $senator_nid, // Node id for senator's page.
+ *     'author' => $user, // Sender.
+ *     'vote_label' => $vote_label, // Label for user's vote.
+ *     'values' => $values, // Registration form values.
+ *     'node' => $node, // Bills node object.
+ *   );
+ * @endcode
+ *
+ * @return array
+ *   Returns an array of success/error messages.
+ */
+function nys_bills_send_private_message($message) {
+  nyslog();
+
+  // Array for return warnings/errors/success.
+  $bills_flag_message = array();
+  $values = $message['values'];
+
+  if (empty($message['senator_nid'])) {
+    $bills_flag_message[] = t('You must be a NY resident to send messages to a Senator.');
+  }
+  else {
+    // Get the senator's user object.
+    $senator = user_load(nys_utils_senator_get_uid($message['senator_nid']));
+    // Create the subject.
+    $subject = "{$values['first_name']} {$values['last_name']} has voted {$message['vote_label']} on {$message['node']->title}";
+    // Create the body.
+    $body = filter_xss($values['message']);
+    // Set author and timestamp options.
+    $options = array('timestamp' => REQUEST_TIME, 'author' => $message['author']);
+
+    // Send the message.
+    $new_msg = privatemsg_new_thread(array($senator), $subject, $body, $options);
+
+    // Set the result message.
+    $bills_flag_message[] = ($new_msg['success'] === TRUE)
+      ? t('Your message has been sent.')
+      : t('There was a problem sending your message.');
+
+    // Sending a context message from the bill vote needs the same follow-up as
+    // does sending a new message from the Inbox.  Set the bill_id value to
+    // provide context, and make sure the same hook is fired.
+    $values['bill_id'] = $message['node']->nid;
+    module_invoke_all('nys_inbox_new_message_sent', $values, $new_msg);
+  }
+
+  return $bills_flag_message;
+}

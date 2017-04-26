@@ -1,0 +1,17 @@
+/*----------------------------
+/
+/	News & Issues Page
+/
+/----------------------------*/
+@media #{$tablet} {
+	.c-news_issues--head {
+		margin-bottom: 30px;
+	}
+
+	.page-news-and-issues {
+		.nys-title + p {
+			line-height: 32px;
+		}
+	}
+}
+

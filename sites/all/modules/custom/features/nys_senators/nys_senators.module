@@ -1,0 +1,60 @@
+<?php
+/**
+ * @file
+ * Code for the nys_senators feature.
+ */
+
+include_once 'nys_senators.features.inc';
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ *
+ * Prevents the promotional banner Body field from appearing on node forms.
+ */
+function nys_senators_form_node_form_alter(&$form, &$form_state, $form_id) {
+  if ($form['type']['#value'] == 'promotional_banner') {
+    $form['body']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_inline_entity_form_entity_form_alter().
+ *
+ * Prevents the promotional banner Body field from appearing on the senator edit
+ * forms.
+ */
+function nys_senators_inline_entity_form_entity_form_alter(&$entity_form, &$form_state) {
+  if ($entity_form['#entity_type'] == 'node') {
+    if ($entity_form['#bundle'] == 'promotional_banner') {
+      $entity_form['body']['#access'] = FALSE;
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_NAME_alter().
+ *
+ * Alters cardinality limit on form input to allow for more than 10 promotional banners
+ * to be added by a senator's office.
+ * 
+ */
+
+function nys_senators_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
+    
+  // Increase the max cardinality to 12
+  $range = drupal_map_assoc(range(1, 12));
+  $new_options =  array(FIELD_CARDINALITY_UNLIMITED => t('Unlimited')) + $range;
+
+  // Change the form options to reflect the new selection list
+  $form['field']['cardinality']['#options'] = $new_options;
+}
+
+/**
+ * Implements hook_views_pre_view().
+ */
+function nys_senators_views_pre_view(&$view, &$display_id, &$args) {
+  if ($view->name == 'current_session_bills' && $display_id == 'entityreference') {
+    $max_ol_session_value = (int) db_query("select MAX(field_ol_session_value) from field_data_field_ol_session")->fetchField();
+    $view->set_arguments(array($max_ol_session_value));
+  }
+}

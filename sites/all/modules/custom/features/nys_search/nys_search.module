@@ -1,0 +1,55 @@
+<?php
+/**
+ * @file
+ * Code for the NYS Search feature.
+ */
+
+include_once 'nys_search.features.inc';
+include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'apachesolr') . '/Solr_Base_Query.php';
+
+/**
+ * Implements hook_block_view_alter().
+ *
+ * Removes standard results block from search page.
+ */
+function nys_search_block_view_alter(&$data, $block) {
+  if ($block->bid == 'current_search-standard') {
+    $data['content']['active_items']['#attributes']['class'][] = 'element-invisible';
+    unset($data['content']['results']['#markup']);
+  }
+}
+
+/**
+ * Implements hook_apachesolr_query_prepare().
+ */
+function nys_search_apachesolr_query_prepare($query) {
+
+  // The following query modifications apply only to the global search.
+  if (arg(0) == 'search' && arg(1) == 'global') {
+
+    // Analyze the search term.
+    $search_term = arg(2);
+
+    $bill_search_intent = FALSE;
+    if (preg_match("/^[A-z][0-9]+[A-z]?\\b/u", $search_term) == 1) {
+      $bill_search_intent = TRUE;
+    }
+
+    // Once we're sure they're looking for a bill, filter results accordingly.
+    if ($bill_search_intent == TRUE) {
+
+      // Calculate the current session year.
+      $current_year = date('Y');
+      $session_year = $current_year;
+      if ($current_year % 2 == 0) {
+        $session_year = $current_year - 1;
+      }
+
+      // Apply filter: only include current two-year session's bills.
+      $query->addFilter('its_field_ol_session', $session_year);
+    }
+    else {
+      $query->setSolrsort('score', 'desc');
+    }
+  }
+}

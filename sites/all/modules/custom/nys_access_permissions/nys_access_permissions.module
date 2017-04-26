@@ -1,0 +1,896 @@
+<?php
+
+/**
+ * @file nys_access_permissions.module
+ * Custom Permissions for users and roles on the nysenate.gov site. (Beyond Standard Drupal Perms)
+ */
+
+function nys_access_permissions_menu() {
+
+  $items = array();
+
+  $items['admin/settings/nysenate'] = array(
+    'title' => 'Global settings for NY State Senate',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nys_access_permissions_admin'),
+    'access arguments' => array('administer nys access permissions settings'),
+    'type' => MENU_NORMAL_ITEM,
+   );
+
+    $items['ajax/only-my-nodes'] = array(
+    'title' => 'Show microsite content producer his/her own nodes',
+    'page callback' => 'nys_access_permissions_only_my_nodes_autocomplete',
+    'page arguments' => array(2, 3),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * return results as json with only the content logged-in user has created
+ */
+function nys_access_permissions_only_my_nodes_autocomplete($type, $search_term) {
+  $matches = array();
+
+  global $user;
+
+  $nids = microsite_content_producer_get_senator_nids($user);
+  $query = "SELECT n.nid, n.title
+    FROM node n
+    LEFT JOIN field_data_field_senator fs ON fs.entity_id = n.nid AND fs.bundle = :type
+    WHERE n.type = :type AND n.title LIKE :search_term
+    AND (n.uid = :uid OR fs.field_senator_target_id IN (:nids))
+    ORDER BY n.title LIMIT 20";
+
+   $queryArgs = array(
+     ':search_term' => '%' . db_like($search_term) . '%',
+     ':type' => $type,
+     ':uid' => $user->uid,
+     ':nids' => $nids,
+   );
+
+   $result = db_query($query, $queryArgs);
+
+
+  $suggestions = array();
+  foreach ($result as $r) {
+    $suggestions[$r->title . '(' . $r->nid . ')'] = $r->title . '(' . $r->nid . ')';
+  }
+
+  // convert to object to prevent drupal bug, see http://drupal.org/node/175361
+  return drupal_json_output((object)$suggestions);
+
+}
+
+/**
+ * Checks if an IP address is in the specified range.
+ *
+ * @param string $ip
+ *   The IP Address in string format.
+ * @param string $range
+ *   The IP Range to check in string format. Takes the following formats:
+ *   - Wildcard: '192.168.1.*'.
+ *   - Range: '192.168.1.2-192.168.1.49'.
+ *
+ * @return bool
+ *   TRUE if in the range, FALSE if not.
+ */
+function _nys_ip_in_range($ip, $range) {
+  // Check if in wildcard format.
+  if (strpos($range, '*') !== FALSE) {
+    if (strpos($range, '-') !== FALSE) {
+      list($bottom, $top) = explode('-', $range, 2);
+    }
+    else {
+      $bottom = $top = $range;
+    }
+    // Convert to regular range.
+    $bottom = str_replace('*', '0', $bottom);
+    $top = str_replace('*', '255', $top);
+    $range = "$bottom-$top";
+  }
+
+  // Check if in regular range.
+  if (strpos($range, '-') !== FALSE) {
+    list($bottom, $top) = explode('-', $range, 2);
+    $bottom_dec = (float) sprintf("%u", ip2long($bottom));
+    $top_dec = (float) sprintf("%u", ip2long($top));
+    $ip_dec = (float) sprintf("%u", ip2long($ip));
+    return ($ip_dec >= $bottom_dec) && ($ip_dec <= $top_dec);
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_field_attach_view_alter().
+ *
+ * Directs specified IP's to use an alternate URL for viewing streaming videos.
+ */
+function nys_access_permissions_field_attach_view_alter(&$output, $context) {
+  $vid_fields = array(
+    'field_ustream',
+    'field_ustream_url',
+    'field_yt',
+  );
+
+  $nw = entity_metadata_wrapper($context['entity_type'], $context['entity']);
+
+  // Check if the video has a redirect URL, otherwise prepare the global redirect URL.
+  $url = isset($nw->field_video_redirect) ? $nw->field_video_redirect->value() : filter_xss(variable_get('nys_vid_redir_url'));
+
+  $is_node = $context['entity_type'] == 'node';
+  $is_viewing = $context['view_mode'] == 'full';
+  $is_in_views = $context['view_mode'] == '_custom';
+  $is_rendered_file = isset($context['display']['type']) ? $context['display']['type'] == 'file_rendered' : FALSE;
+  $ip_bottom = variable_get('nys_vid_redir_ip');
+  $ip_top = variable_get('nys_vid_redir_ip_2');
+  $ip_range = !empty($ip_top) ? "$ip_bottom-$ip_top" : $ip_bottom;
+  $in_ip = _nys_ip_in_range(ip_address(), $ip_range);
+
+  // Leaving this as an array in case we need to add more statuses in the future.
+  $stream_array = array('streaming_redirect');
+  $is_streaming = isset($nw->field_video_status) && in_array($nw->field_video_status->value(), $stream_array);
+  $node_vid_fields = array();
+
+  if ($is_node && $in_ip && $is_streaming) {
+    if ($is_viewing) {
+      $node_vid_fields = array_intersect_key(array_flip($vid_fields), $output);
+    }
+    elseif ($is_in_views && $is_rendered_file) {
+      $field = isset($context['display']['views_field']->field) ? $context['display']['views_field']->field : '';
+      $node_vid_fields = array_flip(array_intersect(array($field), $vid_fields));
+    }
+  }
+  if (count($node_vid_fields) > 0) {
+    foreach ($node_vid_fields as $vid_field => $weight) {
+      $output[$vid_field] = array(
+        array(
+          '#markup' => '<h3 class="c-video-redirect">' . t('Please stream this video from !u.', array(
+            '!u' => l($url, $url),
+          )) . '</h3>',
+        ),
+      );
+    }
+  }
+}
+
+/*
+ * Implementation of hook_permission()
+ */
+function nys_access_permissions_permission(){
+  return array(
+    'administer nys access permissions settings' => array(
+      'title' => t('Administer Global NY State Senate Settings'),
+      'description' => t('Administer Global settings for NY State Senate'),
+    ),
+    'edit same role' => array(
+      'title' => t('Edit Same Role Content'),
+      'description' => t('Users can edit the content of others with the same role'),
+    ),
+    'senator dropdown exempt' => array(
+      'title' => t('Exempt from Senator Dropdown Restrictions'),
+      'description' => t('User will have all Senators available in dropdown select fields'),
+    )
+  );
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function nys_access_permissions_menu_alter(&$items) {
+  // Term edit.
+  $items['taxonomy/term/%taxonomy_term/edit']['access callback'] = 'nys_access_permissions_term_edit';
+}
+
+/**
+ * Return edit access for a given term.
+ */
+function nys_access_permissions_term_edit($term) {
+
+  // do a default term access check, role based.
+  if (taxonomy_term_edit_access($term) || user_access('administer ' . $term->vocabulary_machine_name . ' vocabulary terms')) {
+    return TRUE;
+  } else{
+    // get the current user
+    global $user;
+    $type = $term->vocabulary_machine_name;
+
+    switch(true){
+      case ($type === 'districts'):
+        $senator_id = $term->field_senator[LANGUAGE_NONE][0]['target_id'];
+      break;
+      case ($type === 'committees'):
+        $senator_id = $term->field_chair[LANGUAGE_NONE][0]['target_id'];
+      break;
+    }
+     // If user is microsite producer, check if they have rights to edit on behalf of the member
+    if ($type === 'districts' && in_array('Microsite Content Producer', $user->roles) &&
+      user_is_senators_microsite_producer($senator_id, $user->uid)){
+      return TRUE;
+    }
+    // If user is microsite producer, check if they have rights to edit on behalf of the chair
+    if ($type === 'committees' && in_array('Microsite Content Producer', $user->roles) &&
+      user_is_senators_microsite_producer($senator_id, $user->uid)){
+      return TRUE;
+    }
+  }
+
+  return FALSE;
+}
+
+
+/**
+ * global settings form for the NY Senate site,
+ * see https://www.drupal.org/node/206761
+ */
+function nys_access_permissions_admin() {
+  $form = array();
+
+  $form['senate_settings']['debug'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Debugging'),
+  );
+
+  $form['senate_settings']['debug']['nys_debug_mode'] = array(
+    '#type' => 'radios',
+    '#title' => t('Debug mode'),
+    '#options' => array(0 => t('Off'), 1 => t('On')),
+    '#description' => t('Enable debug mode on the site.'),
+    '#default_value' => variable_get('nys_debug_mode'),
+  );
+
+  $form['senate_settings']['debug']['nys_debug_mode_accumulator_insert'] = array(
+    '#type' => 'radios',
+    '#title' => t('Display Accumulator Insert stacktrace'),
+    '#options' => array(0 => t('Off'), 1 => t('On')),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="nys_debug_mode"]' => array('value' => 1),
+      ),
+    ),
+    '#description' => t('Debug level to display Accumulator Insert stacktrace.'),
+    '#default_value' => variable_get('nys_debug_mode_accumulator_insert'),
+  );
+
+  $form['senate_settings']['debug']['nys_debug_mode'] = array(
+    '#type' => 'radios',
+    '#title' => t('Debug mode'),
+    '#options' => array(0 => t('Off'), 1 => t('On')),
+    '#description' => t('Enable debug mode on the site.'),
+    '#default_value' => variable_get('nys_debug_mode'),
+  );
+
+  $form['senate_settings']['debug']['nys_debug_write_to_watchdog'] = array(
+    '#type' => 'radios',
+    '#title' => t('Write to Watchdog?'),
+    '#options' => array(0 => t('Off'), 1 => t('On')),
+    '#description' => t('Mirrors debug entries in the internal Drupal watchdog.'),
+    '#default_value' => variable_get('nys_debug_write_to_watchdog'),
+  );
+
+  $form['senate_settings']['debug']['nys_debug_write_to_message'] = array(
+    '#type' => 'radios',
+    '#title' => t('Write to Site?'),
+    '#options' => array(0 => t('Off'), 1 => t('On')),
+    '#description' => t('Write debug log entries into the system message area on public requests.  Note that this will make logged messages visible to the public.'),
+    '#default_value' => variable_get('nys_debug_write_to_message'),
+  );
+
+  $form['senate_settings']['APIs'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('API Endpoints and Keys'),
+  );
+
+  $form['senate_settings']['APIs']['openleg_key'] = array(
+    '#title' => t('Open Legislation Key'),
+    '#type'  => 'textfield',
+    '#size' => 35,
+    '#default_value' => variable_get('openleg_key'),
+  );
+
+  $form['senate_settings']['APIs']['openleg_base_url'] = array(
+    '#title' => t('Open Legislation Base Url'),
+    '#description' => t('Enter the scheme, host, and context path that will be used as a base url prefix for calls to the openleg server.  No trailing slash required. (e.g. http://legislation.nysenate.gov)'),
+    '#type'  => 'textfield',
+    '#size' => 35,
+    '#default_value' => variable_get('openleg_base_url'),
+  );
+
+  $form['senate_settings']['nys_session_status'] = array(
+    '#title' => t('Current NY State Senate Status'),
+    '#type'  => 'select',
+    '#default_value' => variable_get('nys_session_status'),
+    '#options' => array(
+      'in_session' => t('In Session'),
+      'out_session' => t('Out of Session'),
+      'budget_week' => t('Budget Week'),
+    ),
+  );
+  $form['senate_settings']['nys_session_year'] = array(
+    '#title' => t('Current NY State Senate Session Year'),
+    '#type'  => 'textfield',
+    '#size' => 4,
+    '#default_value' => variable_get('nys_session_year')
+  );
+  $form['senate_settings']['nys_senate_status'] = array(
+    '#title' => t('Custom NY State Senate Status Text'),
+    '#type'  => 'textfield',
+    '#size' => 35,
+    '#default_value' => variable_get('nys_senate_status'),
+  );
+
+  $form['senate_settings']['nys_vid_redir_ip'] = array(
+    '#title' => t('Video Redirect IP'),
+    '#description' => t('Enter an IP (or lower IP value if a range of addresses) in the format 123.456.789.012 that should be redirected to internal feeds when streaming video. Supports wildcards (123.456.*.*).'),
+    '#type'  => 'textfield',
+    '#size'  => '15',
+    '#default_value' => variable_get('nys_vid_redir_ip'),
+  );
+
+  $form['senate_settings']['nys_vid_redir_ip_2'] = array(
+    '#title' => t('Video Redirect IP Range (Optional)'),
+    '#description' => t('If a range of addresses is being used, enter the top value of IP addresses. Supports wildcards (123.456.789.*).'),
+    '#type'  => 'textfield',
+    '#size'  => '15',
+    '#default_value' => variable_get('nys_vid_redir_ip_2'),
+  );
+
+  $form['senate_settings']['nys_vid_redir_url'] = array(
+    '#title' => t('Video Redirect URL'),
+    '#description' => t('Enter the URL that IPs streaming internal video should be directed to.'),
+    '#type'  => 'textfield',
+    '#default_value' => variable_get('nys_vid_redir_url'),
+  );
+
+  // Container fieldset.
+  $form['senate_settings']['hero'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Homepage Hero'),
+  );
+
+  // Default path for image.
+  $hero_default_path = variable_get('hero_default_path');
+  if (file_uri_scheme($hero_default_path) == 'public') {
+    $hero_default_path = file_uri_target($hero_default_path);
+  }
+
+  // Helpful text showing the file name, disabled to avoid the user thinking it can be used for any purpose.
+  $form['senate_settings']['hero']['hero_default_path'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Path to hero default image',
+    '#default_value' => $hero_default_path,
+    '#disabled' => TRUE,
+  );
+
+  // Upload field
+  $form['senate_settings']['hero']['hero_default_upload'] = array(
+    '#type' => 'file',
+    '#title' => 'Upload hero image',
+    '#default' => $hero_default_path,
+    '#description' => 'Upload a new default hero image for use when their is no featured story or live event on homepage.',
+  );
+
+  $form['senate_settings']['pdfs'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('PDFs'),
+  );
+
+  $form['senate_settings']['pdfs']['member_listing_pdf'] =array(
+    '#type' => 'managed_file',
+    '#name' => 'member_listing_pdf',
+    '#title' => t('Member Listing PDF'),
+    '#default_value' => variable_get('member_listing_pdf', ''),
+    '#upload_location' => 'public://pdfs/'
+  );
+
+  $form['senate_settings']['pdfs']['session_calendar_pdf'] =array(
+    '#type' => 'managed_file',
+    '#name' => 'session_calendar_pdf',
+    '#title' => t('Session Calendar PDF'),
+    '#default_value' => variable_get('session_calendar_pdf', ''),
+    '#upload_location' => 'public://pdfs/'
+  );
+
+  $form['senate_settings']['pdfs']['public_hearing_schedule'] = array(
+    '#type' => 'managed_file',
+    '#name' => 'public_hearing_schedule',
+    '#title' => t('Public Hearing Schedule PDF'),
+    '#default_value' => variable_get('public_hearing_schedule', ''),
+    '#upload_location' => 'public://pdfs/'
+  );
+
+  $form['senate_settings']['slack_integration'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Slack Integration'),
+    '#description' => t('Slack integrations settings that enables messages to be sent into a specific slack channel.'),
+  );
+  $form['senate_settings']['slack_integration']['nys_access_permissions_slack_url'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Slack Webhook URL',
+    '#default_value' => variable_get('nys_access_permissions_slack_url'),
+  );
+  $form['senate_settings']['slack_integration']['nys_access_permissions_slack_channel'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Slack Channel',
+    '#default_value' => variable_get('nys_access_permissions_slack_channel'),
+  );
+  $form['senate_settings']['slack_integration']['nys_access_permissions_slack_title'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Slack Message Title',
+    '#default_value' => variable_get('nys_access_permissions_slack_title'),
+  );
+
+  // Attach custom submit handler to the form
+  $form['#submit'][] = 'nys_access_permissions_settings_submit';
+
+  return system_settings_form($form);
+}
+
+
+/**
+ * Capture theme settings, update uploaded image and clear Pantheon edge cache.
+ */
+function nys_access_permissions_settings_submit($form, &$form_state) {
+  $settings = array();
+  // Get the previous value
+  $previous = 'public://' . $form['senate_settings']['hero']['hero_default_path']['#default_value'];
+
+  $file = file_save_upload('hero_default_upload');
+  if ($file) {
+    $parts = pathinfo($file->filename);
+    $destination = 'public://' . $parts['basename'];
+    $file->status = FILE_STATUS_PERMANENT;
+
+    if(file_copy($file, $destination, FILE_EXISTS_REPLACE)) {
+      $_POST['hero_default_path'] = $form_state['values']['hero_default_path'] = $destination;
+      // If new file has a different name than the old one, delete the old
+      if ($destination != $previous) {
+        drupal_unlink($previous);
+      }
+    }
+  } else {
+    // Avoid error when the form is submitted without specifying a new image
+    $_POST['hero_default_path'] = $form_state['values']['hero_default_path'] = $previous;
+  }
+
+  if(!empty($form['senate_settings']['pdfs']['member_listing_pdf']['#file'])) {
+    $file_members = $form['senate_settings']['pdfs']['member_listing_pdf']['#file'];
+    $file_members->status = FILE_STATUS_PERMANENT;
+    file_save($file_members);
+    file_usage_add($file_members, 'nys_access_permissions', 'member_listing_pdf', $file_members->fid);
+
+  }
+
+  if(!empty($form['senate_settings']['pdfs']['session_calendar_pdf']['#file'])) {
+    $file_calendar = $form['senate_settings']['pdfs']['session_calendar_pdf']['#file'];
+    $file_calendar->status = FILE_STATUS_PERMANENT;
+    file_save($file_calendar);
+    file_usage_add($file_calendar, 'nys_access_permissions', 'session_calendar_pdf', $file_calendar->fid);
+
+  }
+
+  if (!empty($form['senate_settings']['pdfs']['public_hearing_schedule']['#file'])) {
+    $file_hearing = $form['senate_settings']['pdfs']['public_hearing_schedule']['#file'];
+    $file_hearing->status = FILE_STATUS_PERMANENT;
+    file_save($file_hearing);
+    file_usage_add($file_hearing, 'nys_access_permissions', 'public_hearing_schedule', $file_hearing->fid);
+
+    // Set up the XML document.
+    $xml_date = date('m/d/Y - g:ia');
+    $xml_path = file_create_url($file_hearing->uri);
+    $xml_file = '<xml><node><title>Public Hearing Schedule</title>
+                <updatedDate>' . $xml_date . '</updatedDate>
+                <pdf>' . $xml_path . '</pdf></node></xml>';
+
+    // Make sure that the file can be created.
+    if (!file_unmanaged_save_data($xml_file, 'public://public-hearing-pdfs-feed.xml', FILE_EXISTS_REPLACE)) {
+      drupal_set_message('XML File could not be created.', 'warning');
+    }
+  }
+
+  if (defined('PANTHEON_ENVIRONMENT')) {
+    $frontpage = !empty(variable_get('site_frontpage')) ? '/' . variable_get('site_frontpage') : '/';
+    $cookies = NULL;
+    try {
+      pantheon_purge_edge_urls($frontpage, $cookies);
+    }
+    catch (Exception $e) {
+      drupal_set_message('Pantheon Cache not cleared, please clear cache manually.');
+    }
+  }
+}
+
+
+/**
+* Implements hook_node_access().
+* Grant access to content on unique content basis
+*/
+function nys_access_permissions_node_access($node, $op, $account) {
+  global $user;
+
+  // MCPs without a Senator should not have any access to create content since
+  // they do not have permission to create site-wide content.
+  $is_mcp = user_has_role(MICROSITE_CONTENT_PRODUCER);
+  $edit_any = user_access('Edit any content');
+  $senators_array = nys_access_permissions_get_allowed_senators_dropdown($account->uid);
+  // Remove the 'none' option from the list.
+  array_shift($senators_array);
+  $has_senators = $senators_array;
+  if ($is_mcp && $op == 'create' && !$edit_any && empty($has_senators)) {
+    return NODE_ACCESS_DENY;
+  }
+
+  $editor = user_load($user->uid);
+
+  if (is_object($node) && is_object($editor)) {
+    $edit_own = 'edit own ' . $node->type . ' content';
+    if ($node->uid == $editor->uid && user_access($edit_own)) {
+      return NODE_ACCESS_IGNORE;
+    }
+
+    // Check if users have same role and permissions to update each other's content.
+    if (!empty($node->uid) && $op == 'update' && user_access('edit same role')) {
+      $author = user_load($node->uid);
+      if (array_intersect($editor->roles, $author->roles)) {
+        $edit_same_roles = user_roles(TRUE, 'edit same role');
+        foreach ($author->roles as $rid => $role) {
+          if (user_has_role($rid) && in_array($role, $edit_same_roles)) {
+            return NODE_ACCESS_ALLOW;
+          }
+        }
+      }
+    }
+
+    if (user_has_role(MICROSITE_CONTENT_PRODUCER, $editor) && $op == 'update') {
+
+      if ($node->type == 'senator' && user_is_senators_microsite_producer($node->nid, $editor->uid)) {
+        return NODE_ACCESS_ALLOW;
+      }
+      elseif (!empty($node->field_committee[LANGUAGE_NONE][0]['tid'])) {
+        $tid = $node->field_committee[LANGUAGE_NONE][0]['tid'];
+
+        $query = "SELECT field_chair_target_id FROM {field_data_field_chair} WHERE entity_id = :tid";
+
+        $result = db_query($query, array(':tid' => $tid));
+        $senator_id = $result->fetchField();
+
+        if (user_is_senators_microsite_producer($senator_id, $editor->uid)) {
+          return NODE_ACCESS_ALLOW;
+        }
+      }
+
+      elseif (in_array($node->type, _microsite_content_producer_node_types())) {
+        if (!empty($node->field_senator[LANGUAGE_NONE][0]['target_id'])) {
+          if (user_is_senators_microsite_producer($node->field_senator[LANGUAGE_NONE][0]['target_id'], $editor->uid)) {
+            return NODE_ACCESS_ALLOW;
+          }
+        }
+        elseif (!empty($node->field_ol_sponsor[LANGUAGE_NONE][0]['target_id'])) {
+          if (user_is_senators_microsite_producer($node->field_ol_sponsor[LANGUAGE_NONE][0]['target_id'], $editor->uid)) {
+            return NODE_ACCESS_ALLOW;
+          }
+        }
+      }
+
+      return NODE_ACCESS_DENY;
+    }
+
+    if (user_has_role(FOIL_ADMINISTRATOR, $editor) && $op == 'update') {
+      if ($node->nid == 143167) {
+        return NODE_ACCESS_ALLOW;
+      }
+      else {
+        //drupal_set_message('FOIL Administrators can only edit the FOIL form ', 'warning', FALSE);
+        return NODE_ACCESS_DENY;
+      }
+    }
+
+    /* allow access to bulk operations manipulation of data from /admin/accessible-sitewide */
+    if (user_has_role(FRONTPAGE_EDITOR, $editor) && $op == 'update' && arg(0) == 'batch') {
+      return NODE_ACCESS_ALLOW;
+    }
+  }
+}
+
+function _microsite_content_producer_node_types() {
+  return array(
+    'article',
+    'event',
+    'initiative',
+    'in_the_news',
+    'petition',
+    'press_release',
+    'questionnaire',
+    'video',
+    'bill',
+    'resolution',
+    'promotional_banner',
+    'meeting',
+    'public_hearing',
+    'webform',
+  );
+}
+
+/**
+ * Implements hook_form_alter.
+ */
+function nys_access_permissions_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+
+  if (!empty($form['type']['#value'])) {
+    $edit_any = 'edit any ' . $form['type']['#value'] . ' content';
+  }
+
+  if (user_has_role(MICROSITE_CONTENT_PRODUCER, $user) && $form_id == 'questionnaire_node_form') {
+    $form['field_webform'][LANGUAGE_NONE][0]['target_id']['#autocomplete_path'] = 'ajax/only-my-nodes/webform';
+  }
+
+  // If Senator MCP only allow them to set Senators listed in $user->field_senator_management.
+  if (user_has_role(MICROSITE_CONTENT_PRODUCER, $user) && (
+    $form_id === 'article_node_form'
+    || $form_id === 'event_node_form'
+    || $form_id === 'in_the_news_node_form'
+    || $form_id === 'initiative_node_form'
+    || $form_id === 'petition_node_form'
+    || $form_id === 'press_release_node_form'
+    || $form_id === 'questionnaire_node_form'
+    || $form_id === 'promotional_banner_node_form'
+    || $form_id === 'video_node_form')) {
+    // Alter field_senator to only display allowed senator(s) for editing user.
+    $senators_array = nys_access_permissions_get_allowed_senators_dropdown($user->uid);
+    // Remove "None" option for everyone except front page editors.
+    if (!user_has_role(FRONTPAGE_EDITOR, $user)) {
+      foreach ($senators_array as $key => $value) {
+        if ($value === "- None -") {
+          unset($senators_array[$key]);
+        }
+      }
+    }
+    $form['field_senator'][LANGUAGE_NONE]['#options'] = $senators_array;
+  }
+
+  if ((user_has_role(MICROSITE_CONTENT_PRODUCER, $user)
+    || user_has_role(LEGISLATIVE_CORRESPONDENT, $user))
+    && ($form_id === 'bill_node_form' && !user_access($edit_any))) {
+    $form['title']['#disabled'] = 1;
+    $form['metatags']['#access'] = FALSE;
+    $form['revision_information']['#access'] = FALSE;
+    $form['comment_settings']['#access'] = FALSE;
+    $form['author']['#access'] = FALSE;
+    $form['options']['#access'] = FALSE;
+    foreach ($form as $key => $value) {
+      if (strpos($key, 'field_') !== FALSE && $key != 'field_issues') {
+        $form[$key]['#access'] = FALSE;
+      }
+    }
+  }
+
+  if ((user_has_role(MICROSITE_CONTENT_PRODUCER,$user) || user_has_role(LEGISLATIVE_CORRESPONDENT,$user)) && (
+    $form_id === 'resolution_node_form'
+  )) {
+      $form['title']['#disabled'] = 1;
+      $form['metatags']['#access'] = FALSE;
+      $form['revision_information']['#access'] = FALSE;
+      $form['comment_settings']['#access'] = FALSE;
+      $form['author']['#access'] = FALSE;
+      $form['options']['#access'] = FALSE;
+      foreach($form as $key => $value) {
+        if(strpos($key, 'field_') !== FALSE && !in_array($key, array('field_issues', 'field_image_main', 'field_featured_quote'))) {
+          $form[$key]['#access'] = FALSE;
+        }
+      }
+  }
+
+  // Restrict committees to those that the MCP has Senators for as chair or co-chair.
+  if (user_has_role(MICROSITE_CONTENT_PRODUCER, $user) && ($form_id == 'meeting_node_form' || $form_id == 'public_hearing_node_form')) {
+    if (!empty($form['field_committee'][LANGUAGE_NONE]['#options'])) {
+      $options = $form['field_committee'][LANGUAGE_NONE]['#options'];
+      $senators_array = microsite_content_producer_get_senator_nids($user);
+      // Filter dropdown options for committee select.
+      if (!empty($senators_array)) {
+        $form['field_committee'][LANGUAGE_NONE]['#options'] = nys_utils_filter_committee_options_by_chair_co_chair($options, $senators_array);
+      }
+    }
+  }
+
+  // only those with access to administer users can change user's assigned senator
+  if($form_id == 'user_profile_form') {
+    if (!user_access('administer users')) {
+      $form['field_senator']['#access'] = FALSE;
+    }
+    // Only Constituents that are not also Senators should be able to receive emails.
+    if (!user_has_role(CONSTITUENT, $user) || user_has_role(SENATOR, $user)) {
+      $form['field_user_receive_emails']['#access'] = FALSE;
+    }
+  }
+
+  // Session nodes should always have a uStream redirect URL prepopulated.
+  if (isset($form['type']['#value']) && $form['type']['#value'] == 'session' && empty($form['#node']->field_video_redirect)) {
+    $form['field_video_redirect'][LANGUAGE_NONE][0]['value']['#default_value'] = filter_xss(variable_get('nys_vid_redir_url'));
+  }
+}
+
+/**
+ * @param null $target_user
+ *   A user account object, or a user account UID value.  If not provided, the
+ *   global user object is used.
+ * @param bool $rebuild
+ *   Indicates if the static cache should be rebuilt for this user.
+ * @return array
+ *   An array of all available associated senator options indexed by the
+ *   senator's node ID.
+ */
+function nys_access_permissions_get_allowed_senators_dropdown($target_user = NULL, $rebuild = FALSE) {
+  global $user;
+
+  // Keep a static return per user.
+  $select_options = &drupal_static(__FUNCTION__);
+
+  // If a user ID or user object was passed, use it.  Otherwise, use global $user.
+  if ((int) $target_user) {
+    $check_user = user_load($target_user);
+  }
+  elseif (is_object($target_user)) {
+    $check_user = $target_user;
+  }
+  else {
+    $check_user = $user;
+  }
+  $check_user_id = (int) $check_user->uid;
+
+  // If there is no static response yet, or if rebuild is requested, build it.
+  if (!isset($select_options[$check_user_id]) || $rebuild) {
+    // Set the default option.
+    $select_options[$check_user_id] = array('_none' => t('- None -'));
+
+    // If we have a good user ID, build the list of associated senators.
+    if ($check_user_id) {
+      // Build the base query.
+      $query = db_select('field_data_field_senator_management', 'fdf_sm');
+      $query->join('node', 'n', 'fdf_sm.field_senator_management_target_id = n.nid');
+      $query->addField('fdf_sm', 'field_senator_management_target_id', 'nid');
+      $query->addField('n', 'title');
+
+      // If the user is not exempt from filtering, filter by the user's allowance.
+      if (!user_access('senator dropdown exempt', $check_user)) {
+        $query->condition('fdf_sm.bundle', 'user')
+          ->condition('fdf_sm.entity_id', $check_user_id);
+      }
+
+      // Execute.
+      $result = $query->execute();
+
+      // Add the query results to the static cache for this user ID.  Use the
+      // senator node ID (management target ID) as the index.
+      foreach ($result as $r) {
+        $select_options[$check_user_id][$r->nid] = $r->title;
+      }
+    }
+  }
+
+  // Return the static cache.
+  return $select_options[$check_user_id];
+}
+
+
+/**
+ * Implements hook_views_query_alter
+ * Admin View of All Bills that a Microsite Editor Can Manage on Behalf of the Senator
+ */
+function nys_access_permissions_views_query_alter(&$view, &$query) {
+  global $user;
+  $sm_query = "SELECT sm.field_senator_management_target_id AS nid, n.title
+  FROM field_data_field_senator_management sm
+  JOIN node n ON n.nid = sm.field_senator_management_target_id
+  WHERE sm.bundle = 'user' AND sm.entity_id = :uid";
+
+  if(($view->name == 'administer_legislation_bills') && ($view->current_display == 'admin_senator_bills' || $view->current_display == 'admin_senator_resolutions')) {
+    if($query->where[1]['conditions'][0]['field'] == 'field_data_field_ol_sponsor.field_ol_sponsor_target_id') {
+
+      $result = db_query($sm_query, array(":uid" => $user->uid));
+      $sponsor_keys = array();
+      foreach($result as $key => $r) {
+        $sponsor_keys[$key] = $r->nid;
+      }
+      $query->where[1]['conditions'][0]['field'] = 'field_data_field_ol_sponsor.field_ol_sponsor_target_id';
+      $query->where[1]['conditions'][0]['value'] = $sponsor_keys;
+      $query->where[1]['conditions'][0]['operator'] = 'IN';
+    }
+  }
+
+  if(($view->name == 'administer_committtees') && ($view->current_display == 'admin_senator_committees')) {
+    $result = db_query($sm_query, array(":uid" => $user->uid));
+    $sponsor_keys = array();
+    foreach($result as $key => $r) {
+      $sponsor_keys[$key] = $r->nid;
+    }
+    $query->where[1]['conditions'][1]['field'] = 'field_data_field_chair.field_chair_target_id';
+    $query->where[1]['conditions'][1]['value'] = $sponsor_keys;
+    $query->where[1]['conditions'][1]['operator'] = 'IN';
+  }
+
+  if(($view->name == 'administer_senators') && ($view->current_display == 'admin_micro_senators')) {
+    $result = db_query($sm_query, array(":uid" => $user->uid));
+    $sponsor_keys = array();
+    foreach($result as $key => $r) {
+      $sponsor_keys[$key] = $r->nid;
+    }
+
+    $query->where[1]['conditions'][0]['field'] = 'node.nid';
+    $query->where[1]['conditions'][0]['value'] = $sponsor_keys;
+    $query->where[1]['conditions'][0]['operator'] = 'IN';
+  }
+
+  if (($view->name == 'administer_districts') && ($view->current_display == 'admin_senator_district')) {
+    $result = db_query($sm_query, array(":uid" => $user->uid));
+    $sponsor_keys = array();
+    foreach ($result as $key => $r) {
+      $sponsor_keys[$key] = $r->nid;
+    }
+    $query->where[1]['conditions'][0]['field'] = 'node_field_data_field_senator.nid';
+    $query->where[1]['conditions'][0]['value'] = $sponsor_keys;
+    $query->where[1]['conditions'][0]['operator'] = 'IN';
+  }
+
+  if (($view->name == 'admin_views_node_custom') && ($view->current_display == 'admin_senator_content')) {
+    $result = db_query($sm_query, array(":uid" => $user->uid));
+    $sponsor_keys = array();
+    foreach ($result as $key => $r) {
+      $sponsor_keys[$key] = $r->nid;
+    }
+    $query->where[1]['conditions'][0]['field'] = 'node_field_data_field_senator.nid';
+    $query->where[1]['conditions'][0]['value'] = $sponsor_keys;
+    $query->where[1]['conditions'][0]['operator'] = 'IN';
+  }
+
+  if (($view->name == 'admin_views_node_custom') && ($view->current_display == 'admin_committee_content')) {
+    $result = db_query($sm_query, array(":uid" => $user->uid));
+    $sponsor_keys = array();
+    foreach ($result as $key => $r) {
+      $sponsor_keys[$key] = $r->nid;
+    }
+
+    $com_query = db_select('node', 'n')->distinct();
+    $com_query->join('field_data_field_committee', 'fco', 'n.nid = fco.entity_id');
+    $com_query->join('field_data_field_chair', 'fch', 'fch.entity_id = fco.field_committee_tid AND fch.field_chair_target_id IN (:skeys)', array(':skeys' => $sponsor_keys));
+    $com_query->fields('n', array('nid'));
+    $com_result = $com_query->execute();
+
+    $com_keys = array();
+    foreach ($com_result as $com_key) {
+      $com_keys[] = $com_key->nid;
+    }
+
+    $query->where[3]['conditions'][0]['field'] = 'node.nid';
+    $query->where[3]['conditions'][0]['value'] = $com_keys;
+    $query->where[3]['conditions'][0]['operator'] = 'IN';
+  }
+
+
+  //blair implementation
+  if(($view->name == 'taxonomy_editor') && ($view->current_display == 'admin_large_taxonomy')) {
+    $result = db_query($sm_query, array(":uid" => $user->uid));
+    $sponsor_keys = array();
+    foreach($result as $key => $r) {
+      $sponsor_keys[$key] = $r->nid;
+    }
+    $query->where[1]['conditions'][0]['field'] = 'node_field_data_field_senator.nid';
+    $query->where[1]['conditions'][0]['value'] = $sponsor_keys;
+    $query->where[1]['conditions'][0]['operator'] = 'IN';
+  }
+
+  // My Webforms also uses field_senator.
+  if ($view->name == 'my_webforms') {
+    $result = db_query($sm_query, array(":uid" => $user->uid));
+    $sponsor_keys = array();
+    foreach ($result as $key => $r) {
+      $sponsor_keys[$key] = $r->nid;
+    }
+    $query->where[1]['conditions'][0]['field'] = 'node_field_data_field_senator.nid';
+    $query->where[1]['conditions'][0]['value'] = $sponsor_keys;
+    $query->where[1]['conditions'][0]['operator'] = 'IN';
+  }
+
+}

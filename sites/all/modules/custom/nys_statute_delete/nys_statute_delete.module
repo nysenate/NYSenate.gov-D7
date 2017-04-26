@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * File nyc_statute_import.module.
+ */
+
+/**
+ * Implements the drush clear-all-statutes  command.
+ */
+function nys_statute_delete_clear_all_statutes($arg1) {
+
+  drupal_set_time_limit(20000);
+
+  $result = db_query("SELECT `nid` FROM `node` WHERE `type` = 'statute';");
+
+  $count = 0;
+
+  foreach ($result as $record) {
+    $nid = $record->nid;
+    node_delete($nid);
+    print "Removing Node - $nid \r\n";
+    $count++;
+  }
+
+  print "-------------------------------\r\n";
+  print "Deleted $count Statute Nodes.\r\n";
+
+}

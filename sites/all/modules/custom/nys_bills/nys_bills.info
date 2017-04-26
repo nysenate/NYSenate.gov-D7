@@ -1,0 +1,12 @@
+name = NYS Bills
+description = Custom bills functionality for New York Senate.
+package = NY STATE SENATE
+core = 7.x
+dependencies[] = session_api
+dependencies[] = flag
+dependencies[] = honeypot
+dependencies[] = nys_senators
+dependencies[] = nys_registration
+dependencies[] = nys_accumulator
+dependencies[] = nys_bill_vote
+version = 7.x-1.0

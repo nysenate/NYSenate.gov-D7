@@ -1,0 +1,33 @@
+<?php
+/**
+ * @file
+ * Install, update and requirements hooks for the module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function simplehtmldom_requirements($phase) {
+  $requirements = array();
+  // Ensure translations do not break at install time.
+  $t = get_t();
+
+  $requirements['simple_html_dom'] = array(
+    'title' => $t('"PHP Simple HTML DOM Parser" library'),
+  );
+
+  // Include the helper file.
+  module_load_include('inc', 'simplehtmldom', 'helper');
+
+  if (_simplhtmldom_get_library_path()) {
+    $requirements['simple_html_dom']['value'] = $t('Installed');
+    $requirements['simple_html_dom']['severity'] = REQUIREMENT_OK;
+  }
+  else {
+    $requirements['simple_html_dom']['value'] = $t('not installed');
+    $requirements['simple_html_dom']['severity'] = REQUIREMENT_ERROR;
+    $requirements['simple_html_dom']['description'] = $t('simple_html_dom.php is missing. Please copy the latest version of simple_html_dom.php (PHP Simple HTML DOM Parser library) from http://sourceforge.net/projects/simplehtmldom/ to you libraries folder, for example sites/all/libraries/simplehtmldom/simple_html_dom.php');
+  }
+
+  return $requirements;
+}

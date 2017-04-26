@@ -1,0 +1,12 @@
+.views-widget-filter-unmanaged_directories .form-checkboxes {
+  -moz-column-count: 2;
+  -moz-column-gap: 10px;
+  -webkit-column-count: 2;
+  -webkit-column-gap: 10px;
+  column-count: 2;
+  column-gap: 10px;
+}
+
+.views-widget-filter-unmanaged_directories .form-checkboxes label {
+  font-weight: normal;
+}

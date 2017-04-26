@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file nys_captcha.module.
+ * Customize the presentation of CAPTCHA controls.
+ */
+
+/**
+ * Implements hook_init().
+ */
+function nys_captcha_init() {
+  module_load_include('inc', 'captcha', 'captcha');
+  if (isset($_SESSION)) {
+    if (!array_key_exists('nys_captcha', $_SESSION)) {
+      $_SESSION['nys_captcha'] = array('present_captcha' => 0);
+    }
+  }
+}
+/**
+ * Implements hook_form_alter().
+ */
+function nys_captcha_form_alter(&$form, &$form_state, $form_id) {
+  if (function_exists('captcha_get_form_id_setting')) {
+
+    // Detect previous CAPTCHA submission, and disable CAPTCHA.
+    if ($form_id == 'nys_messaging_senator_contact_form') {
+      if (array_key_exists('captcha', $form['actions']) && !$_SESSION['nys_captcha']['present_captcha']) {
+        unset($form['actions']['captcha']);
+      }
+    }
+
+    // Is this form supposed to have a CAPTCHA?  If so, add a custom class.
+    $has_captcha = captcha_get_form_id_setting($form_id);
+    if ($has_captcha) {
+      $form['#attributes']['class'][] = 'has-nys-captcha';
+    }
+  }
+}

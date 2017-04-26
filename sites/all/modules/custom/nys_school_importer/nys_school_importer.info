@@ -1,0 +1,15 @@
+; $Id$
+name = NYS School Importer
+description = CSV School Importer Module
+package = NY STATE SENATE
+
+core = 7.x
+
+files[] = nys_school_importer.analyze.inc
+files[] = nys_school_importer.import.inc
+files[] = nys_school_importer.inc
+files[] = nys_school_importer.survey.inc
+files[] = nys_school_importer_mapping.json
+
+
+;dependencies[] = nys_sage

@@ -1,0 +1,129 @@
+/*-------------------------------------------------------
+/
+/ 	EVENTS CLUSTER BLOCK
+/ 	Covers: Featured Issues
+/ 	Exists on : Homepage
+/
+/-------------------------------------------------------*/
+.c-event-cluster-featured-issue {
+	overflow: hidden;
+
+	.c-title {
+		font-family: "Proxima Nova Regular";
+		font-size: 14px;
+		font-weight: normal;
+		text-transform: uppercase;
+		border-top: 2px solid $grey09;
+		position: relative;
+		margin-bottom: 20px;
+		padding-top: 20px;
+
+		a {
+			@extend .lgt-text;
+		}
+	}
+
+	.l-left {
+		float: left;
+		width: 100%;
+		.c-link-title{		
+			border: none;
+			display: block;
+			padding: 0px 0;
+			color: $grey02;
+			font-family: "Adelle Light";
+			font-size: 24px;
+			line-height: 130%;		
+		}
+	}
+
+	.l-right {
+		float: left;
+		width: 100%;
+		margin-top: 20px;
+	}
+
+	.c-event-image {
+		width: 100%;
+		float: left;
+	}
+
+	.c-description {
+		font-family: "Adelle Light";
+		font-size: 24px;
+		margin: 0px;
+		line-height: 120%;
+		padding-top: 16px;
+		max-width: 440px;
+		float: left;
+		clear: left;
+		color: $grey02;
+	}
+
+	.c-link {
+		border-top: 2px solid #d4d4d4;
+		display: block;
+		padding: 30px 0;
+		color: $grey02;
+		font-family: "Adelle Light";
+		font-size: 16px;
+		line-height: 130%;
+	}
+
+	.c-link-with-image {
+		display: table;
+
+		.c-link-image {
+			display: table-cell;
+   			vertical-align: middle;
+   			min-width: 80px;
+   			min-height: 60px;
+   			width: 80px;
+   			height: 60px;
+		}
+		.c-link-title {
+			display: table-cell;
+   			vertical-align: middle;
+   			padding-left: 20px;
+   			width: 100%;
+		}
+	}
+
+	h3 {
+		font-size: inherit;
+		font-family: inherit;
+		display: inline;
+		line-height: inherit;
+	}
+}
+
+@media #{$tablet} {
+	.c-event-cluster-featured-issue {
+		.c-title {
+			border-bottom: 2px solid $grey09;
+			border-top: none;
+			padding-top: 0;
+			padding-bottom: 20px;
+		}
+
+		.l-left {
+			width: 57%;
+		}
+
+		.l-right {
+			width: 280px;
+			float: right;
+			margin-top: 0;
+		}
+
+		.l-left, .l-right {
+			padding-bottom:20px;
+		}
+
+		.c-link {
+			&:first-child{
+				border-top: none;
+			}
+		}
+	}
+}

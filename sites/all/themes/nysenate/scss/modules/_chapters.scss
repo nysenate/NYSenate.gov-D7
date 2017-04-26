@@ -1,0 +1,73 @@
+// Common abstract classes to extend or parametrics are stored here.
+
+/*-------------------------------------------------
+/
+/	Chapter style
+/	TODO: Collapsible. 
+/ Also - not sure if 'chapters' is abstacted enough
+/
+/-------------------------------------------------*/
+.node-chapter {
+	border-top: 1px solid #b0b0b0;
+	overflow: hidden;
+
+	.node-title {
+		position: relative;
+		z-index: 3;
+		padding: 15px 0 20px;
+		background: #fff;
+		color: $grey02;
+		font-family: "Adelle Light";
+		font-size: 18px;
+		line-height: 1.3em;
+		cursor: pointer;
+	}
+	.content {
+		position: relative;
+		z-index: 1;
+	}
+
+	&:last-child {
+		margin-bottom: 20px;
+	}
+}
+.c-chapter-cta {
+	display: block;
+	margin-top: 5px;
+	font-family: "Proxima Nova Regular";
+	font-size: 12px;
+	text-transform: uppercase;
+	@extend .lgt-text;
+	@extend .icon-after__see-less;
+}
+
+.c-chapter__collapsed {
+	.content {
+		display: none;
+	}
+
+	.c-chapter-cta {
+		@extend .icon-after__see-more;
+	}
+}
+
+@media #{$tablet} {
+	.node-chapter {
+		.node-title {
+			font-size: 24px;
+			padding-right: 120px;
+		}
+		&:last-child {
+			margin-bottom: 40px;
+		}
+	}
+	.c-chapter-cta {
+		position: absolute;
+		top: 15px;
+		right: 0;
+		margin: 0;
+		font-size: 16px;
+	}
+}
+
+

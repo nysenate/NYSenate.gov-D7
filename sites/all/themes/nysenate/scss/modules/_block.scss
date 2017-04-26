@@ -1,0 +1,14 @@
+// Various Random blocks that appear in various places around the site can be styled here.
+
+//Inactive Senator Banner (Lander, Legislation and Newsroom details)
+.c-sntor-inactive-banner {
+	margin-top: 20px;
+	background-color: $grey06;
+	padding: 30px;
+}
+
+@media #{$tablet} {
+	.c-sntor-inactive-banner {
+		margin-top: 40px;
+	}
+}

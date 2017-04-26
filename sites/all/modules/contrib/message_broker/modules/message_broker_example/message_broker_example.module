@@ -1,0 +1,140 @@
+<?php
+
+/**
+ * @file
+ * Provides an example on how to use the API together with a sample config file.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function message_broker_example_menu() {
+  $items = array();
+
+  $items['admin/config/system/message_broker_example'] = array(
+    'title' => 'Message broker usage example',
+    'description' => 'A small hello world example that demonstrates the message broker api',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('message_broker_example_form'),
+    'type' => MENU_NORMAL_ITEM,
+    'access arguments' => array('administer site configuration'),
+  );
+
+  return $items;
+}
+
+/**
+ * Form for the hello world example.
+ *
+ * @param array $form
+ *   Form.
+ * @param array $form_state
+ *   Form state.
+ *
+ * @return array
+ *   Example form.
+ */
+function message_broker_example_form($form, &$form_state) {
+  $form['title'] = array(
+    '#markup' => '<h2>' . t('Hello world example') . '</h2>');
+  $form['intro'] = array(
+    '#markup' => '<p>' . t('This form lets you send a message to the exchange "helloWorld". The routing key will be "helloWorld.name_you_entered".') . '</p>');
+  $form['intro2'] = array(
+    '#markup' => '<p>' . t('The example declares two queues that are bound to this exchange. Enter any name to see the first consumer and "Drupal" to see the second one.') . '</p>');
+  $form['intro3'] = array(
+    '#markup' => '<p>' . t('You can trigger an InvalidMessageException if you enter "crash".') . '</p>');
+
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#title' => t('Say hello to'));
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Send message'));
+
+  return $form;
+}
+
+/**
+ * Submit function for the hello world example.
+ *
+ * Sends valid and invalid messages.
+ *
+ * @param array $form
+ *   Form.
+ * @param array $form_state
+ *   Form state.
+ */
+function message_broker_example_form_submit(&$form, &$form_state) {
+  $broker = message_broker_get();
+  $message = new stdClass();
+  $message->name = $form_state['values']['name'];
+
+  $broker->sendMessage(json_encode($message), 'helloWorld',
+          array('routing_key' => 'helloWorld.' . $message->name));
+}
+
+/**
+ * Implements hook_message_broker_consumers().
+ */
+function message_broker_example_message_broker_consumers($self_name) {
+  $consumers = array();
+
+  // An example consumer implemented using a closure.
+  $consumers['helloWorldToEveryone'] = array(
+    'queue' => 'helloWorldForAll',
+    'callback' => function($message, \Closure $ack) {
+      $message = json_decode($message->body);
+
+      if ($message->name == 'crash') {
+        throw new InvalidMessageException('Invalid name detected!');
+      }
+
+      if (function_exists('drush_print')) {
+        drush_print('Hello world, ' . $message->name);
+      }
+      else {
+        drupal_set_message(t('Hello world, @name.', array('@name' => $message->name)));
+      }
+
+      $ack();
+    }, 'invalidMessageHandler' => function($message) {
+      if (function_exists('drush_print')) {
+        drush_print('Invalid message handler was executed.');
+      }
+      else {
+        drupal_set_message(t('Invalid message handler was executed.'), 'warning');
+      }
+    });
+
+  // This consumer will only give a special hello to "Drupal", see the
+  // example_config.json to understand why (look at the routing keys).
+  $consumers['specialHelloWorld'] = array(
+    'queue' => 'helloWorldForDrupal',
+    'callback' => '_message_broker_example_special_hello_world');
+
+  return $consumers;
+}
+
+/**
+ * An example consumer that outputs a special hello.
+ *
+ * @param stdClass $message
+ *   Message to consume.
+ * @param \Closure $ack
+ *   Ack method.
+ */
+function _message_broker_example_special_hello_world($message,
+        \Closure $ack) {
+  $message = json_decode($message->body);
+
+  if (function_exists('drush_print')) {
+    drush_print('A special hello to ' . $message->name . '!');
+  }
+  else {
+    drupal_set_message(t('A special hello to @name!', array('@name' => $message->name)));
+  }
+
+  $ack();
+}

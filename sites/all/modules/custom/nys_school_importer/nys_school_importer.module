@@ -1,0 +1,75 @@
+<?php
+/**
+ * @file
+ * File nys_school_importer.module.
+ */
+
+define("NYS_SCHOOL_IMPORTER_FILE_PATH", "/schools/schools.csv");
+define("NYS_SCHOOL_IMPORTER_UNIQUE_COLUMN", "LEGAL NAME");
+
+define("NYS_SCHOOL_IMPORTER_CONTENT_TYPE", "nys_school_importer_content_type");
+define("NYS_SCHOOL_IMPORTER_CONTENT_TYPE_DEFAULT", "school");
+
+define("NYS_SCHOOL_IMPORTER_COUNTY_TAXONOMY_VID", 8);
+define("NYS_SCHOOL_IMPORTER_DISTRICT_TAXONOMY_VID", 12);
+
+define("NYS_SCHOOL_IMPORTER_DEFAULT_SCHOOL_NAMES_INDEX_NAME", "nys_school_importer_default_school_names_index_name");
+define("NYS_SCHOOL_IMPORTER_DEFAULT_SCHOOL_NAMES_INDEX_VALUE", 4);
+
+/**
+ * An implementation of hook_menu().
+ */
+function nys_school_importer_menu() {
+
+  $items = array();
+
+  $items['admin/config/system/nys-school-nysed-import'] = array(
+    'title' => 'Import NYSED and School Data from CSV Files',
+    'description' => 'Import Nysed and School Data from CSV File.',
+    'page callback' => 'nys_school_importer_nysed_page',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'nys_school_importer.nysed.inc',
+  );
+
+  $items['admin/config/system/nys-school-import'] = array(
+    'title' => 'Import School Data from CSV File',
+    'description' => 'Import School Data from CSV File.',
+    'page callback' => 'nys_school_importer_survey_page',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_CALLBACK,
+    'file' => 'nys_school_importer.survey.inc',
+  );
+
+  $items['admin/nys-school-analyze'] = array(
+    'title' => 'Import Data from CSV File',
+    'description' => 'Import Schools from a <abbr title="Comma Separated Values">CSV</abbr> file.',
+    'access callback' => 'user_access',
+    'access arguments' => array('access administration pages'),
+    'page callback' => 'nys_school_importer_analyze_page',
+    'type' => MENU_CALLBACK,
+    'file' => 'nys_school_importer.analyze.inc',
+  );
+
+  $items['admin/nys-school-import'] = array(
+    'title' => 'Import Data from CSV File',
+    'description' => 'Import Schools from a <abbr title="Comma Separated Values">CSV</abbr> file.',
+    'access callback' => 'user_access',
+    'access arguments' => array('access administration pages'),
+    'page callback' => 'nys_school_importer_import_page',
+    'type' => MENU_CALLBACK,
+    'file' => 'nys_school_importer.import.inc',
+  );
+
+  $items['admin/nys-school-report'] = array(
+    'title' => 'Completed School Import',
+    'description' => 'Completed School Import and Errors If Present.',
+    'access callback' => 'user_access',
+    'access arguments' => array('access administration pages'),
+    'page callback' => 'nys_school_importer_report_page',
+    'type' => MENU_CALLBACK,
+    'file' => 'nys_school_importer.report.inc',
+  );
+
+  return $items;
+}

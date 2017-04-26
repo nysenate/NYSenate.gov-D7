@@ -1,0 +1,3 @@
+name = NYS Access Permissions
+description = Custom Permissions for users and roles on the nysenate.gov site.
+core = 7.x

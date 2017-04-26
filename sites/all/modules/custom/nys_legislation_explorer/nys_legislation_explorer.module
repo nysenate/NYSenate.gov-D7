@@ -1,0 +1,98 @@
+<?php
+
+require_once 'nys_legislation_explorer_paginator.php';
+require_once 'nys_legislation_explorer_search.php';
+//require_once 'nys_legislation_explorer_laws.php';
+
+function nys_legislation_explorer_menu() {
+  $items = array();
+
+  $items['search/legislation'] = array(
+    'title' => 'Advanced Search',
+    'page callback' => 'nys_legislation_explorer_general_search',
+    'access arguments' => array('access content')
+  );
+
+ return $items;
+}
+
+/**
+ * Load the necessary javascript files if the url points to any legislation explorer paths:
+ * ie. /search/legislation or /legislation/laws
+ */
+function nys_legislation_explorer_init() {
+  if ((arg(0) == 'legislation' && arg(1) == 'laws') || (arg(0) == 'search' && arg(1) == 'legislation')) {
+    drupal_add_js(drupal_get_path('module', 'nys_legislation_explorer') . "/nys_legislation_explorer.js");
+  }
+}
+
+function nys_legislation_explorer_theme() {
+  return array(
+    'legislation_explorer_search_general' => array(
+       'variables' => array(),
+       'template' => 'search_general',
+    ),
+    'legislation_explorer_search_laws' => array(
+       'variables' => array(),
+       'template' => 'search_laws',
+    ),
+  );
+}
+
+/**
+ * Implements hook_process
+ */
+
+function nys_legislation_explorer_process(&$variables, $hook) {
+  if ($hook == 'legislation_explorer_search_general') {
+    foreach($variables['resp']->response->docs as $key => $result) {
+      $node_to_lookup = $result->entity_id;
+      $bill_graph_output = nys_dashboard_render_bill_status($node_to_lookup, 'nys-bill-status__sml');
+      $variables['resp']->response->docs[$key]->graph_html = $bill_graph_output->graph_html;
+      $variables['resp']->response->docs[$key]->display_status = $bill_graph_output->display_status;
+    }
+  }
+}
+
+
+/**
+ * This hook intercepts solr indexing requests and adds any additional fields to the document schema
+ * that are necessary for advanced search filters.
+ */
+function nys_legislation_explorer_apachesolr_index_document_build($document, $entity, $entity_type, $env_id) {
+  if ($entity_type == 'node') {
+    switch ($entity->type) {
+      case 'bill':
+        $document->addField('ts_ol_memo', $entity->field_ol_memo[LANGUAGE_NONE][0]['value']);
+        $document->addField('its_ol_last_status_date', $entity->field_ol_last_status_date[LANGUAGE_NONE][0]['value']);
+      case 'resolution':
+        $document->addField('ts_ol_title', $entity->field_ol_name[LANGUAGE_NONE][0]['safe_value']);
+        $document->addField('ts_ol_full_text', $entity->field_ol_full_text[LANGUAGE_NONE][0]['value']);
+        break;
+      case 'calendar':
+        $document->addField('its_ol_cal_date', $entity->field_ol_cal_date[LANGUAGE_NONE][0]['value']);
+        break;
+      case 'meeting':
+        $document->addField('its_meeting_date', $entity->field_date[LANGUAGE_NONE][0]['value']);
+        break;
+      case 'transcript':
+        $tx_text = $entity->field_ol_text[LANGUAGE_NONE][0]['value'];
+        $tx_pub_date = $entity->field_ol_publish_date[LANGUAGE_NONE][0]['value'];
+        if ($tx_text) {
+          $document->addField('ts_ol_text', $tx_text);
+        }
+        if ($tx_pub_date) {
+          $document->addField('its_ol_publish_date', $tx_pub_date);
+        }
+        break;
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function nys_legislation_explorer_form_apachesolr_search_blocks_core_search_alter(&$form, &$form_state, $form_id) {
+  // Hide the apachesolr module's retain current filters checkbox.
+  $form['basic']['retain-filters']['#access'] = FALSE;
+}

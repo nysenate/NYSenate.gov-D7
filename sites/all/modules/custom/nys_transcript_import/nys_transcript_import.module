@@ -1,0 +1,210 @@
+<?php
+
+/**
+ * @file
+ * A module to import transcripts from OpenLeg.
+ */
+
+/**
+ * Implements hook_help().
+ *
+ * Displays help and module information.
+ *
+ * @param path 
+ *   Which path of the site we're using to display help
+ * @param arg 
+ *   Array that holds the current path as returned from arg() function
+ */
+function nys_transcript_import_help($path, $arg) {
+  if ($path == "admin/help#nys_transcript_import") {
+    return '<p>' . t("A module to import transcripts from OpenLeg.") . '</p>';
+  }
+}
+
+/**
+ * Maps the API's response to transcript fields.
+ * @param node
+ *   The node entity we're mapping values to.
+ * @param transcript_result
+ *   The result returned from the transcript API.
+ * @param type
+ *   "hearings" or "transcripts"
+ */
+function nys_transcript_import_set_values(&$node, $transcript_result, $type) {
+  $node->field_ol_filename["und"][0]["value"]        = $transcript_result->result->filename;
+  $node->field_ol_transcript_type["und"][0]["value"] = $type == "hearings" ? "public_hearing" : "floor";
+
+  if ($type == "transcripts" && isset($transcript_result->result->sessionType)) {
+    $node->field_ol_session_type["und"][0]["value"] = $transcript_result->result->sessionType;
+  }
+
+  if ($type == "hearings" && isset($transcript_result->result->date)) {
+    $node->field_ol_publish_date["und"][0]["value"] = strtotime($transcript_result->result->date);
+  }
+
+  if ($type == "transcripts" && isset($transcript_result->result->dateTime)) {
+    $node->field_ol_publish_date["und"][0]["value"] = strtotime($transcript_result->result->dateTime);
+  }
+
+  if ($type == "transcripts") {
+    $node->field_ol_location["und"][0]["value"] = $transcript_result->result->location;
+  }
+
+  $node->field_ol_text["und"][0]["value"] = $transcript_result->result->text;
+
+  if ($type == "hearings" && isset($transcript_result->result->committees)) {
+    $vocabulary_id = 11; // Committee vocabulary ID.
+
+    foreach ($transcript_result->result->committees as $index => $committee) {
+      $committee_tid = db_query("SELECT tid FROM {taxonomy_term_data} WHERE name = :myname AND vid = :myvocabulary", array(":myname" => $committee->name, ":myvocabulary" => $vocabulary_id))->fetchField();
+      if ($committee_tid !== false) {
+        $node->field_ol_committee["und"][$index]["target_id"] = $committee_tid;
+      }
+    }
+
+    $node->field_ol_committee_names["und"][0]["value"] = json_encode($transcript_result->result->committees);
+  }
+}
+
+/**
+ * Implements hook_cron.
+ */
+function nys_transcript_import_cron() {
+
+  $interval   = variable_get("transcript_import_interval", 60 * 5);
+  $timestamps = array(
+    "transcripts" => variable_get("transcripts_import_last_run", "2000-01-01T00:00:00"),
+    "hearings"    => variable_get("hearings_import_last_run", "2000-01-01T00:00:00"),
+  );
+
+  // Check the lock.
+  $is_locked      = variable_get("transcript_import_is_locked", FALSE);
+  $last_lock_time = variable_get("transcript_import_last_lock_time", strtotime("now"));
+
+  // If another process isn't running or that process has been locked > 5 minutes.
+  if (!$is_locked || (strtotime("now") - $last_lock_time) > 300) {
+    // Update the lock.
+    variable_set("transcript_import_is_locked", TRUE);
+    variable_set("transcript_import_last_lock_time", strtotime("now"));
+
+    nys_transcript_import_run($timestamps);
+    variable_set('transcript_import_next_execution', time() + $interval);
+  }
+}
+
+/**
+ * First, fetch results from the updates API.
+ * Iterate and paginate those results and, per transcript, make a request to the transcript API.
+ * Finally, map values and save each transcript as a node.
+ */
+function nys_transcript_import_run($timestamps) {
+  $types = array("transcripts" => "Floor Transcript", "hearings" => "Public Hearing");
+  foreach ($types as $type => $type_name) {
+    $ol_base_url         = variable_get("openleg_base_url");
+    $base_url            = $ol_base_url . "/api/3/" . $type . "/updates/";
+    $timestamp           = $timestamps[$type];
+    $limit               = 1000;  // 1000 maximum.
+    $offset              = variable_get($type . "_import_offset", 1);
+    $start_record        = $offset;
+    $throttle            = 1000000; // Only pull in $throttle per run transcripts.
+    $count               = 0;
+    $base_transcript_url = $ol_base_url . "/api/3/" . $type . "/";
+    $more_results        = true;
+    $bad_result          = false;
+    $openleg_key         = variable_get('openleg_key');
+
+    // We don't need to retrieve more than the $throttle.
+    if ($throttle < $limit) {
+      $limit = $throttle;
+    }
+
+    while ($more_results) {
+      echo "Fetching: " . $base_url . $timestamp . "?offset=" . $offset . "&limit=" . $limit . "&order=asc&key=" . $openleg_key . "\r\n";
+      $base_result   = file_get_contents($base_url . $timestamp . "?offset=" . $offset . "&limit=" . $limit . "&order=asc&key=" . $openleg_key);
+      $base_result   = json_decode($base_result);
+
+      if (isset($base_result->success) && $base_result->success) {
+        foreach ($base_result->result->items as $item) {
+          // Update the lock.
+          variable_set("transcript_import_last_lock_time", strtotime("now"));
+
+          $filename       = $type == "transcripts" ? $item->transcriptId->filename : $item->publicHearingId->filename;
+          $transcript_url = $base_transcript_url . rawurlencode($filename) . "?key=" . $openleg_key;
+
+          echo "Fetching: " . $transcript_url . "\r\n";
+          $transcript_result = file_get_contents($transcript_url);
+          $transcript_result = json_decode($transcript_result);
+
+          if (isset($transcript_result->success) && $transcript_result->success) {
+            $count++;
+
+            // Create or update existing transcript record.
+            $transcript_nid = db_query("SELECT nid FROM node WHERE title = :mytitle AND type = 'transcript'", array(":mytitle" => $type_name . " " . $filename))->fetchField();
+            if ($transcript_nid === false) {
+              // Create a new transcript.
+              $node        = new stdClass;
+              $node->title = $type_name . " " . $filename;
+              $node->type  = "transcript";
+            } else {
+              // Update the existing transcript.
+              $node = node_load($transcript_nid);
+            }
+
+            // Map the transcript's fields.
+            nys_transcript_import_set_values($node, $transcript_result, $type);
+
+            // echo "<pre>"; var_dump($node); die;
+
+            if ($transcript_nid === false) {
+              // Create a new transcript.
+              node_object_prepare($node);
+              $node->uid = "1";
+            }
+
+            node_save($node);
+          } else {
+            $bad_result = true;
+            break;
+          }
+
+          if ($count >= $throttle) {
+            // Hit the $throttle limit, break.
+            break;
+          }
+
+          // Take a break between each request.
+          usleep(100000);
+        }
+
+        if ($bad_result) {
+          // Bad base result. Stop the update prematurely.
+          $more_results = false;
+          $offset       = $start_record + $count;
+          variable_set($type . "_import_offset", $offset);
+        } else if ($count >= $throttle) {
+          // Hit the $throttle limit, don't continue, for now.
+          $more_results = false;
+          $offset       = $start_record + $throttle;
+          variable_set($type . "_import_offset", $offset);
+        } else if ($base_result->offsetEnd < $base_result->total) {
+          // Hit the end of this page and there are more pages to go.
+          $offset = $base_result->offsetEnd + 1;
+          variable_set($type . "_import_offset", $offset);
+        } else {
+          // Hit the end of this page and there are no more pages to go.
+          $more_results = false;
+          variable_set($type . "_import_last_run", date("Y-m-d\TH:i:s", strtotime("now")));
+          variable_set($type . "_import_offset", 1);
+        }
+      } else {
+        // Bad base result. Stop the update prematurely.
+        $more_results = false;
+        $offset       = $start_record + $count;
+        variable_set($type . "_import_offset", $offset);
+      }
+    }
+  }
+
+  // Update the lock.
+  variable_set("transcript_import_is_locked", false);
+}

@@ -1,0 +1,2463 @@
+<?php
+
+/**
+ * @file
+ * Contains function for the Dashboard.
+ */
+
+ require_once 'constituents.query.inc';
+
+/**
+ * Implements hook_theme().
+ */
+function nys_dashboard_theme() {
+
+  return array(
+    'nys_dashboard_user_card_block' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_dashboard-user-card--block',
+    ),
+    'nude_form_element' => array(
+      'render element' => 'element',
+    ),
+    'nys_dashboard_senator_card_block' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_dashboard-senator-card--block',
+    ),
+    'nys_dashboard_year_updates_block' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_dashboard-year-updates--block',
+    ),
+    'nys_dashboard_active_list_block' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_dashboard-active-list--block',
+    ),
+    'nys_dashboard_pet_block' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_dashboard-pet--block',
+    ),
+    'nys_dashboard_quest_block' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_dashboard-quest--block',
+    ),
+    'nys_dashboard_sen_bills_leg_block' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_dashboard-sen-bills-leg--block',
+    ),
+    'nys_dashboard_sen_bills_msg_block' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_dashboard-sen-bills-msg--block',
+    ),
+    'nys_dashboard_sen_issues_block' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_dashboard-sen-issues--block',
+    ),
+    'nys_dashboard_const_issues_flw_block' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_dashboard-const-issues-follow--block',
+    ),
+    'nys_dashboard_const_bills_flw_block' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_dashboard-const-bills-follow--block',
+    ),
+    'nys_dashboard_const_bills_flw_wdgt_block' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_dashboard-const-bills-follow-wdgt--block',
+    ),
+    'nys_dashboard_const_comm_flw_block' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_dashboard-const-comm-follow--block',
+    ),
+    'nys_dashboard_const_pet_quest_block' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_dashboard-const-pet-quest--block',
+    ),
+    'nys_dashboard_sen_leading_issues_block' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_dashboard-sen-leading-issues--block',
+    ),
+    'nys_dashboard_user_link' => array(
+      'variables' => array('uid' => array()),
+    ),
+  );
+}
+
+/**
+ * Implements template_preprocess_block().
+ *
+ * Hides empty menu blocks on the admin/dashboard page. If a user has no access
+ * to any items inside an administration menu, the subject and "(empty)" should
+ * not display.
+ */
+function nys_dashboard_preprocess_block(&$variables) {
+  $block = &$variables['block'];
+  if ($block->region == 'dashboard_main') {
+    if (isset($variables['content'])) {
+      if (strpos($variables['content'], '(empty)') !== FALSE) {
+        unset($block->subject);
+        $variables['content'] = '';
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function nys_dashboard_block_info() {
+
+  $blocks['user_card_block'] = array(
+    'info' => t('Dashboard Constituent Card'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['senator_card_block'] = array(
+    'info' => t('Dashboard Sen ID Card'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['year_updates_block'] = array(
+    'info' => t("Dashboard Sen This Year's Updates"),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['active_list_block'] = array(
+    'info' => t('Dashboard Sen Active List Today'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['pet_block'] = array(
+    'info' => t('Dashboard Sen Petitions'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['quest_block'] = array(
+    'info' => t('Dashboard Sen Questionnaires'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['sen_const_block'] = array(
+    'info' => t('Dashboard Sen Constituents'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['sen_bills_leg_block'] = array(
+    'info' => t('Dashboard Sen Bills Legislation'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['sen_bills_msg_block'] = array(
+    'info' => t('Dashboard Sen Bills Messaging'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['sen_issues_block'] = array(
+    'info' => t('Dashboard Sen Issues'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['const_issues_flw_block'] = array(
+    'info' => t('Dashboard Constituent Issues Follow Update'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['const_bills_flw_block'] = array(
+    'info' => t('Dashboard Constituent Bills Follow Update'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['const_bills_flw_wdgt_block'] = array(
+    'info' => t('Dashboard Constituent Bills You Follow Widget'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['const_comm_flw_block'] = array(
+    'info' => t('Dashboard Constituent Committee Follow Update'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['const_pet_quest_block'] = array(
+    'info' => t('Dashboard Constituent Petitions & Questionnaires'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['sen_leading_issues_block'] = array(
+    'info' => t('Dashboard Sen Leading Issues'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  return $blocks;
+}
+
+
+/**
+ * Implements hook_block_view().
+ */
+function nys_dashboard_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'user_card_block':
+      $block['content'] = _nys_dashboard_user_card_block_content();
+      break;
+
+    case 'senator_card_block':
+      $block['content'] = _nys_dashboard_senator_card_block_content();
+      break;
+
+    case 'year_updates_block':
+      $block['content'] = _nys_dashboard_year_updates_block_content();
+      break;
+
+    case 'active_list_block':
+      $block['content'] = _nys_dashboard_active_list_block_content();
+      break;
+
+    case 'pet_block':
+      $block['content'] = _nys_dashboard_pet_block_content();
+      break;
+
+    case 'quest_block':
+      $block['content'] = _nys_dashboard_quest_block_content();
+      break;
+
+    case 'sen_const_block':
+      $block['content'] = _nys_dashboard_sen_const_block_content();
+      break;
+
+    case 'sen_bills_leg_block':
+      $block['content'] = _nys_dashboard_sen_bills_leg_block_content();
+      break;
+
+    case 'sen_bills_msg_block':
+      $block['content'] = _nys_dashboard_sen_bills_msg_block_content();
+      break;
+
+    case 'sen_issues_block':
+      $block['content'] = _nys_dashboard_sen_issues_block_content();
+      break;
+
+    case 'const_issues_flw_block':
+      $block['content'] = _nys_dashboard_const_issues_flw_block_content();
+      break;
+
+    case 'const_bills_flw_block':
+      $block['content'] = _nys_dashboard_const_bills_flw_block_content();
+      break;
+
+    case 'const_bills_flw_wdgt_block':
+      $block['content'] = _nys_dashboard_const_bills_flw_wdgt_block_content();
+      break;
+
+    case 'const_comm_flw_block':
+      $block['content'] = _nys_dashboard_const_comm_flw_block_content();
+      break;
+
+    case 'const_pet_quest_block':
+      $block['content'] = _nys_dashboard_const_pet_quest_block_content();
+      break;
+
+    case 'sen_leading_issues_block':
+      $block['content'] = _nys_dashboard_sen_leading_issues_block_content();
+      break;
+  }
+
+  return $block;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function nys_dashboard_menu() {
+  $items = array();
+
+  $items['user/dashboard'] = array(
+    'title' => 'dashboard inbox redirect',
+    'page callback' => 'nys_dashboard_redirect',
+    'access callback' => 'user_is_logged_in',
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['nys-dashboard/get-issues'] = array(
+    'title' => 'Pagination for Issues',
+    'page callback' => 'nys_dashboard_get_issues',
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => TRUE,
+  );
+
+  $items['nys_dashboard_get_questionnaires'] = array(
+    'title' => 'Pagination for Questionnaires',
+    'page callback' => 'nys_dashboard_get_questionnaires',
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => TRUE,
+  );
+
+  $items['nys_dashboard_get_petitions'] = array(
+    'title' => 'Pagination for Petitions',
+    'page callback' => 'nys_dashboard_get_petitions',
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => TRUE,
+  );
+
+  $items['nys-dashboard/issues-users'] = array(
+    'title' => 'Pagination for Users on Issues',
+    'page callback' => 'nys_dashboard_get_issues_users',
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => TRUE,
+  );
+
+  $items['nys-dashboard/questionnaires-users'] = array(
+    'title' => 'Pagination for Users on Issues',
+    'page callback' => 'nys_dashboard_get_questionnaire_users',
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => TRUE,
+  );
+
+  $items['nys-dashboard/petitions-users'] = array(
+    'title' => 'Pagination for Users on Petitions',
+    'page callback' => 'nys_dashboard_get_petitions_users',
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => TRUE,
+  );
+
+  $items['nys-dashboard/bills-users'] = array(
+    'title' => 'Pagination for Users on Bills',
+    'page callback' => 'nys_dashboard_get_bills_users',
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => TRUE,
+  );
+
+  $items['nys-dashboard/autocomplete/zip-code'] = array(
+    'title' => 'autocomplete for zip codes in system',
+    'page callback' => 'nys_dashboard_zipcode_autocomplete_page',
+    'page arguments' => array(3),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['nys-dashboard/autocomplete/user'] = array(
+    'title' => 'first and last name autocomplete',
+    'page callback' => 'nys_dashboard_user_autocomplete',
+    'page arguments' => array(3),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['nys-dashboard/autocomplete/bills'] = array(
+    'title' => 'Bill names autocomplete',
+    'page callback' => 'nys_dashboard_bill_autocomplete',
+    'page arguments' => array(3),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_user_redirect().
+ *
+ * Since user/<uid> isn't themed, we're redirecting to the user's dashboard, and
+ * since there's no overview tab for constituents, we're redirecting to the
+ * user's issue tab if the user is a constituent.
+ */
+function nys_dashboard_user_redirect() {
+  if (arg(0) == 'user' && !arg(2)) {
+    $user = user_load(arg(1));
+    $role = '';
+    if (user_is_senator($user)) {
+      $role = 'Senator';
+    }
+    elseif (user_is_constituent($user)) {
+      $role = 'Constituent';
+    }
+    // Do not expose user dashboard URLs by UID.
+    if (!nys_dashboard_variant_access($role, '') && is_numeric(arg(1))) {
+      return MENU_NOT_FOUND;
+    }
+    else {
+      if (user_is_senator($user)) {
+        drupal_goto('user/' . $user->uid . '/dashboard/');
+      }
+      else {
+        drupal_goto('user/' . $user->uid . '/dashboard/issues');
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function nys_dashboard_menu_alter(&$menu) {
+  $menu['user/%user']['page callback'] = 'nys_dashboard_user_redirect';
+  $menu['user/%user/view']['page callback'] = 'nys_dashboard_user_redirect';
+}
+
+/**
+ * Dashboard redirect function.
+ */
+function nys_dashboard_redirect() {
+  global $user;
+
+  $offset = strlen('user/dashboard/');
+
+  $rest = substr($_GET['q'], $offset);
+
+  $options = array(
+    'query' => drupal_get_query_parameters(),
+  );
+
+  if ($rest == '') {
+    drupal_goto('user/' . $user->uid . '/dashboard', $options);
+  }
+  else {
+    drupal_goto('user/' . $user->uid . '/dashboard/' . $rest, $options);
+  }
+
+  return '';
+}
+
+/**
+ * Used to work with the AJAX call for issues on senator tab.
+ */
+function nys_dashboard_get_issues() {
+
+  global $user;
+  $loaded_user = (isset($_GET['userid'])) ? $_GET['userid'] : $user;
+  $pager = (isset($_GET['page'])) ? $_GET['page'] : 0;
+  $name_search = (isset($_GET['nameSearch'])) ? $_GET['nameSearch'] : '';
+  $sort_search = (isset($_GET['sortSearch'])) ? $_GET['sortSearch'] : 'count';
+  $senator_nid = user_get_senator_nid($loaded_user);
+
+  $issues_view = views_get_view('senator_dashboard_issues');
+  $issues_view->set_display('block');
+  $issues_view->set_offset(10 * $pager);
+  $issues_view->set_arguments(array($loaded_user, $name_search, $sort_search));
+  unset($issues_view->exposed_raw_input);
+  unset($issues_view->filter);
+  unset($issues_view->exposed_data);
+  $issues_view->pre_execute();
+  $issues_view->execute();
+  $issues = $issues_view->render();
+  print_r(render($issues));
+}
+
+/**
+ * Used to work with the AJAX call for Questionnaires on senator tab.
+ */
+function nys_dashboard_get_questionnaires() {
+  if (!isset($_GET['page'])) {
+    return FALSE;
+  }
+
+  global $user;
+  $loaded_user = (isset($_GET['user'])) ? $_GET['user'] : $user;
+  $pager = (isset($_GET['page'])) ? $_GET['page'] : 0;
+  $senator_nid = user_get_senator_nid($loaded_user);
+
+  $questionnaires_view = views_get_view('senator_dashboard_petitions_and_questionnaires');
+  $questionnaires_view->set_display('questionnaires');
+  $questionnaire_pager = $questionnaires_view->display_handler->display->display_options['pager']['options']['items_per_page'];
+  $questionnaires_view->set_offset($questionnaire_pager * $pager);
+
+  if ($_GET['tab'] == 'all') {
+    $questionnaires_view->set_arguments(array('all', $senator_nid));
+  }
+  else {
+    $questionnaires_view->set_arguments(array($senator_nid));
+  }
+
+  unset($questionnaires_view->exposed_raw_input);
+  unset($questionnaires_view->filter);
+  unset($questionnaires_view->exposed_data);
+  $questionnaires_view->pre_execute();
+  $questionnaires_view->execute();
+  $questionnaires = $questionnaires_view->render();
+  print_r(render($questionnaires));
+}
+
+/**
+ * Used to work with the AJAX call for Petitions on senator tab function.
+ */
+function nys_dashboard_get_petitions() {
+  if (!isset($_GET['page'])) {
+    return FALSE;
+  }
+
+  global $user;
+  $loaded_user = (isset($_GET['user'])) ? $_GET['user'] : $user;
+  $pager = (isset($_GET['page'])) ? $_GET['page'] : 0;
+  $senator_nid = user_get_senator_nid($loaded_user);
+
+  $petitions_view = views_get_view('senator_dashboard_petitions_and_questionnaires');
+  $petitions_view->set_display('petitions');
+  $petitions_pager = $petitions_view->display_handler->display->display_options['pager']['options']['items_per_page'];
+  $petitions_view->set_offset($petitions_pager * $pager);
+
+  if ($_GET['tab'] == 'all') {
+    $petitions_view->set_arguments(array('all', $senator_nid));
+  }
+  else {
+    $petitions_view->set_arguments(array($senator_nid));
+  }
+
+  unset($petitions_view->exposed_raw_input);
+  unset($petitions_view->filter);
+  unset($petitions_view->exposed_data);
+  $petitions_view->pre_execute();
+  $petitions_view->execute();
+  $petitions = $petitions_view->render();
+  print_r(render($petitions));
+}
+
+/**
+ * Function to retrieve users for an issue on senator dashboard.
+ *
+ * Used by the AJAX call in script.js.
+ */
+function nys_dashboard_get_issues_users() {
+  $tid = $_REQUEST['tid'];
+  $page = (isset($_REQUEST['page'])) ? $_REQUEST['page'] : 0;
+  $comm_status = (isset($_REQUEST['comm_status'])) ? $_REQUEST['comm_status'] : 'all';
+  if (!$tid || !isset($page)) {
+    return FALSE;
+  }
+
+  module_load_include('inc', 'nys_dashboard', 'constituents_issues_table');
+  $form = drupal_get_form('nys_senator_constituents_issues_form', $tid, $page, $comm_status);
+  $output = drupal_render($form);
+  print $output;
+  die();
+
+}
+
+/**
+ * Function to retrieve users for a questionnaire on senator dashboard.
+ *
+ * Used by the AJAX call in script.js.
+ */
+function nys_dashboard_get_questionnaire_users() {
+  $nid = $_REQUEST['nid'];
+  $page = ($_REQUEST['page']) ? $_REQUEST['page'] : 0;
+  $comm_status = (isset($_REQUEST['comm_status'])) ? $_REQUEST['comm_status'] : 'all';
+  if (!$nid || !isset($page)) {
+    return FALSE;
+  }
+
+  module_load_include('inc', 'nys_dashboard', 'constituents_questionnaires_table');
+  $form = drupal_get_form('nys_senator_constituents_questionnaires_form', $nid, $page, $comm_status);
+  $output = drupal_render($form);
+  print $output;
+  die();
+
+}
+
+/**
+ * Function to retrieve users for a petition on senator dashboard.
+ *
+ * Used by the AJAX call in script.js.
+ */
+function nys_dashboard_get_petitions_users() {
+  $vid = $_REQUEST['vid'];
+  $senator_id = $_REQUEST['senator_id'];
+  $nid = $_REQUEST['nid'];
+  $page = ($_REQUEST['page']) ? $_REQUEST['page'] : 0;
+  $comm_status = (isset($_REQUEST['comm_status'])) ? $_REQUEST['comm_status'] : 'all';
+  if (!$nid || !isset($page)) {
+    return FALSE;
+  }
+
+  $senator = user_load($senator_id);
+  module_load_include('inc', 'nys_dashboard', 'constituents_petitions_table');
+  $form = drupal_get_form('nys_senator_constituents_petitions_form', $vid, $nid, $senator, $page, $comm_status);
+  $output = drupal_render($form);
+  print $output;
+  die();
+
+}
+
+/**
+ * Function to retrieve users for bills on senator dashboard.
+ *
+ * Used by the AJAX call in script.js.
+ */
+function nys_dashboard_get_bills_users() {
+  $page = ($_REQUEST['page']) ? $_REQUEST['page'] : 0;
+  $comm_status = (isset($_REQUEST['comm_status'])) ? $_REQUEST['comm_status'] : 'all';
+  $vote_type = (isset($_REQUEST['vote_type'])) ? $_REQUEST['vote_type'] : 'all';
+  $bill_name = (isset($_REQUEST['bill_name'])) ? $_REQUEST['bill_name'] : '';
+  $userid = (isset($_REQUEST['userid'])) ? $_REQUEST['userid'] : '';
+
+  if (!isset($page)) {
+    return FALSE;
+  }
+
+  module_load_include('inc', 'nys_dashboard', 'constituents_bills_table');
+  $form = drupal_get_form('nys_dashboard_senator_bills_form', $page, $vote_type, $comm_status, $bill_name, $userid);
+  $output = drupal_render($form);
+  print $output;
+  die();
+
+}
+
+
+/**
+ * Helper function for user card block content.
+ */
+function _nys_dashboard_user_card_block_content() {
+  global $user;
+  $account = user_load(arg(1));
+  if ($account === FALSE) {
+    // Don't do anything on a non user/%user path.
+    return '';
+  }
+
+  $profile = user_load($account->uid);
+
+  if ($profile->field_address[LANGUAGE_NONE][0]) {
+    $address = $profile->field_address[LANGUAGE_NONE][0];
+  }
+
+  $district = '';
+  if (!empty($profile->field_district[LANGUAGE_NONE][0]['target_id'])) {
+    $district_term = taxonomy_term_load($profile->field_district[LANGUAGE_NONE][0]['target_id']);
+    $district = $district_term->name;
+  }
+
+  $image = '';
+  if ($profile->picture) {
+    $image = _nyss_img($profile->picture->uri, 'user_dashboard_100x100', 'dash-senator-img');
+  }
+
+  $email = $profile->mail
+           ? l($profile->mail, 'mailto:' . $profile->mail, array('absolute' => TRUE))
+           : '';
+
+  $vars = array(
+    'name' => $profile->field_first_name[LANGUAGE_NONE][0]['value'] . ' ' . $profile->field_last_name[LANGUAGE_NONE][0]['value'],
+    'email' => $email,
+    'district' => $district,
+    'location' => theme('location', array('location' => $address)),
+    'avatar' => $image,
+    'fb_status' => fboauth_fbid_load($account->uid),
+  );
+
+  if ($account->uid == $user->uid) {
+    $vars['edit_url'] = url('user/' . $account->uid) . '/edit';
+  }
+
+  return theme('nys_dashboard_user_card_block', $vars);
+}
+
+/**
+ * Helper function for block content updates.
+ */
+function _nys_dashboard_year_updates_block_content() {
+
+  $user = user_load(arg(1));
+  // Total constituents of senator for current year
+  // $nid = user_get_senator_nid($user);
+  $data = user_get_district_senator_data_array($user);
+  $nid = $data['senator_nid'];
+  $tid = $data['district_tid'];
+  $current_year_starting_time = strtotime(date('Y') . '-01-01 00:00:00');
+  $const_uids = array();
+
+  $constituents_query = "SELECT DISTINCT u.uid, u.created, fb.fbid FROM field_data_field_district fd RIGHT JOIN users_roles ur ON ur.uid = fd.entity_id INNER JOIN users u ON u.uid = ur.uid LEFT JOIN fboauth_users fb ON u.uid = fb.uid WHERE fd.field_district_target_id = :tid AND ur.rid = 7 ORDER BY u.created DESC;";
+  $results = db_query($constituents_query, array(':tid' => $tid))->fetchAll();
+  $verified_users = array();
+  $new_users = 0;
+
+  foreach ($results as $r) {
+    if ($r->created > $current_year_starting_time) {
+      $new_users++;
+    };
+    if (!empty($r->fbid)) {
+      $verified_users[] = $r->fbid;
+    }
+    $const_uids[] = $r->uid;
+  }
+
+  /************ New signatures/responses for Petitions/Questionanires ************/
+
+  // Questionnaire response count.
+  $questionnaire_count = 0;
+  $questionnaire_count_query = "SELECT count(sid) as sid FROM webform_submissions w WHERE is_draft = 0 && w.submitted >= :cyst && nid IN (SELECT entity_id FROM field_data_field_senator WHERE entity_type = 'node' && bundle = 'questionnaire' && field_senator_target_id = :nid);";
+  $questionnaire_count = db_query($questionnaire_count_query, array(':nid' => $nid, ':cyst' => $current_year_starting_time))->fetchField();
+
+  // Get Petition Count.
+  $petitions_query = "SELECT * FROM field_data_field_senator WHERE bundle='petition' && field_senator_target_id = :nid;";
+  $petitions = db_query($petitions_query, array(':nid' => $nid))->fetchAll();
+  $petition_count = 0;
+  foreach ($petitions as $petition) {
+    $petition_result = flag_get_counts('node', $petition->entity_id);
+    $petition_count += $petition_result['sign_petition'];
+  }
+
+  $signature_count = $questionnaire_count + $petition_count;
+  /************ End of New signatures/responses for Petitions/Questionanires ************/
+
+  // Votes by constituents for the senator sponsored bills.
+  if (!empty($const_uids)) {
+    $vote_count_query = db_select('votingapi_vote', 'v');
+    $vote_count_query->fields('v', array('vote_id'));
+    $vote_count_query->condition('v.uid', $const_uids, 'IN');
+    $vote_count_query->condition('v.timestamp', $current_year_starting_time, '>');
+    $vote_count = $vote_count_query->execute();
+    $vote_count = $vote_count->fetchAll();
+  }
+  else {
+    $vote_count = array();
+  }
+
+  $vars = array(
+    'sign_ups' => $new_users,
+    'verified' => count($verified_users),
+    'new_signatures' => $signature_count,
+    'constituent_votes' => count($vote_count),
+    'dashboard_link' => url('user/' . $user->uid . '/dashboard'),
+  );
+
+  return theme('nys_dashboard_year_updates_block', $vars);
+}
+
+/**
+ * Helper function for active list content.
+ */
+function _nys_dashboard_active_list_block_content() {
+
+  // Get the bills to be displayed on senator dashboard.
+  $active_bills = views_embed_view('senator_dashboard_bills_new', 'block_2');
+
+  drupal_add_js(path_to_theme() . '/js/vendor/highcharts.js');
+  $vars = array(
+    'active_bills' => $active_bills,
+  );
+  return theme('nys_dashboard_active_list_block', $vars);
+}
+
+/**
+ * Helper function for petition block content.
+ */
+function _nys_dashboard_pet_block_content() {
+  cache_clear_all('nys_dashboard_petitions', 'cache');
+  // Find senator ID.
+  $user = user_load(arg(1));
+  $senator_nid = user_get_senator_nid($user);
+  $senator_petitions = views_embed_view('senator_dashboard_petitions_and_questionnaires', 'petitions', $senator_nid);
+  $all_petitions = views_embed_view('senator_dashboard_petitions_and_questionnaires', 'petitions', 'all', $senator_nid);
+
+  drupal_add_js(path_to_theme() . '/js/senator-dashboard.js');
+  $vars = array(
+    'senator_petitions' => $senator_petitions,
+    'all_petitions' => $all_petitions,
+  );
+  return theme('nys_dashboard_pet_block', $vars);
+}
+
+/**
+ * Helper function for questionnaire block content.
+ */
+function _nys_dashboard_quest_block_content() {
+  // Find senator ID.
+  $user = user_load(arg(1));
+  $senator_nid = user_get_senator_nid($user);
+  $senator_questionnaires = views_embed_view('senator_dashboard_petitions_and_questionnaires', 'questionnaires', $senator_nid);
+  $all_questionnaires = views_embed_view('senator_dashboard_petitions_and_questionnaires', 'questionnaires', 'all', $senator_nid);
+
+  drupal_add_js(path_to_theme() . '/js/senator-dashboard.js');
+  $vars = array(
+    'senator_questionnaires' => $senator_questionnaires,
+    'all_questionnaires' => $all_questionnaires,
+  );
+  return theme('nys_dashboard_quest_block', $vars);
+}
+
+/**
+ * Helper function for senator block content.
+ */
+function _nys_dashboard_sen_const_block_content() {
+  module_load_include('inc', 'nys_dashboard', 'constituents_table');
+  $form = drupal_get_form('nys_inbox_senator_constituents_form');
+  $output = drupal_render($form);
+
+  return $output;
+}
+
+/**
+ * Helper function for bills block content.
+ */
+function _nys_dashboard_sen_bills_leg_block_content() {
+
+  // Find senator ID.
+  $senator_nid = user_get_senator_nid(arg(1));
+
+  // Get the list of constituents for that senator.
+  $constituents = get_constituents($senator_nid);
+  $constituents[] = $senator_nid;
+  $const_list = implode(',', $constituents);
+
+  $bill_ids = array();
+  if (!empty($const_list)) {
+    // Get list of bills constituents are following.
+    $bill_ids = db_query("SELECT entity_id FROM votingapi_vote WHERE uid IN ($const_list);")->fetchAll();
+  }
+
+  foreach ($bill_ids as $bill_id) {
+    $bill_list[] = $bill_id->entity_id;
+  }
+  $bill_list = implode(',', $bill_list);
+
+  // Get the bills to be displayed on senator dashboard.
+  $senator_bills = views_embed_view('senator_dashboard_bills_new', 'block', $constituents);
+
+  // Get the bills to be displayed for consitituents.
+  $constituent_bills = views_embed_view('senator_dashboard_bills_new', 'block_1', $bill_list, $constituents);
+
+  // Get users for Bills.
+  module_load_include('inc', 'nys_dashboard', 'constituents_bills_table');
+  $form = drupal_get_form('nys_dashboard_senator_bills_form');
+  $bills_users = drupal_render($form);
+
+  drupal_add_js(path_to_theme() . '/js/vendor/highcharts.js');
+  drupal_add_js(path_to_theme() . '/js/senator-dashboard.js');
+
+  $vars = array(
+    'senator_bills' => $senator_bills,
+    'constituent_bills' => $constituent_bills,
+    'bills_users' => $bills_users,
+  );
+
+  drupal_alter('senator_dashboard_bill_overview', $vars);
+  return theme('nys_dashboard_sen_bills_leg_block', $vars);
+}
+
+/**
+ * Helper function for senator message block content.
+ */
+function _nys_dashboard_sen_bills_msg_block_content() {
+  $vars = array();
+
+  return theme('nys_dashboard_sen_bills_msg_block', $vars);
+}
+
+/**
+ * Helper function for senator issues block content.
+ */
+function _nys_dashboard_sen_issues_block_content() {
+  // Find senator ID.
+  $senator_nid = user_get_senator_nid($user);
+
+  // Get the list of constituents for that senator.
+  $constituents = get_constituents($senator_nid);
+
+  $senator_issues = views_embed_view('senator_dashboard_issues', 'block');
+
+  drupal_add_js(path_to_theme() . '/js/senator-dashboard.js');
+  $vars = array(
+    'senator_issues' => $senator_issues,
+  );
+
+  return theme('nys_dashboard_sen_issues_block', $vars);
+}
+
+/**
+ * Helper function for issues block content.
+ */
+function _nys_dashboard_const_issues_flw_block_content() {
+
+  $args = array();
+
+  // Retrieve all updates by issues user is following.
+  $issues = views_get_view_result('constituent_updates', 'constituent_all_issue_updates');
+  $issues_followed = views_get_view_result('explore_issues_tabs', 'constituents_issues_followed');
+
+  if (!empty($issues) || !empty($issues_followed)) {
+    $all_issue_updates = views_embed_view('constituent_updates', 'constituent_all_issue_updates', $args);
+  }
+  else {
+    $all_issue_updates = views_embed_view('explore_issues_tabs', 'explore_issues_most_recent', $args);
+  }
+  return theme('nys_dashboard_const_issues_flw_block', array('all_issue_updates' => $all_issue_updates));
+}
+
+/**
+ * Helper function for bills block content.
+ */
+function _nys_dashboard_const_bills_flw_block_content() {
+  // Retrieve all updates by issues user is following.
+  $bill_news_updates = views_embed_view('constituent_updates', 'constituent_all_bill_updates', $args);
+
+  return theme('nys_dashboard_const_bills_flw_block', array('bill_news_updates' => $bill_news_updates));
+}
+
+/**
+ * Helper function for bills widget block content.
+ */
+function _nys_dashboard_const_bills_flw_wdgt_block_content() {
+  return theme('nys_dashboard_const_bills_flw_wdgt_block', array());
+}
+
+/**
+ * Helper function for comm block content.
+ */
+function _nys_dashboard_const_comm_flw_block_content() {
+  // Retrieve all updates by committees user is following.
+  $all_committee_updates = views_embed_view('constituent_updates', 'constituent_all_committees_updates', $args);
+  // var_dump($all_committee_updates);exit;
+  return theme('nys_dashboard_const_comm_flw_block', array('all_committee_updates' => $all_committee_updates));
+}
+
+/**
+ * Helper function for petition questionnaire block content.
+ */
+function _nys_dashboard_const_pet_quest_block_content() {
+  $petitions_view = views_embed_view('constituent_petitions_and_questionairres', 'constituent_petitions_signed', $args);
+  $questionnaires_view = views_embed_view('constituent_petitions_and_questionairres', 'constituent_questionnaires_submitted', $args);
+
+  return theme('nys_dashboard_const_pet_quest_block', array('petitions_view' => $petitions_view, 'questionnaires_view' => $questionnaires_view));
+}
+
+/**
+ * Helper function leading issues block content.
+ */
+function _nys_dashboard_sen_leading_issues_block_content() {
+  $vars = array();
+  $vars['stats'] = array();
+
+  $specific_to_senator = 1;
+
+  if ($specific_to_senator) {
+    $query = "SELECT count(*) as count, fi.field_issues_tid, td.name
+      FROM field_data_field_issues fi JOIN pm_index pmi ON pmi.mid = fi.entity_id
+      JOIN taxonomy_term_data td on td.tid = fi.field_issues_tid
+      WHERE fi.bundle = 'privatemsg_message' AND pmi.recipient = :inbox_user
+      GROUP by fi.field_issues_tid ORDER by count DESC LIMIT 3;";
+    $result = db_query($query, array(':inbox_user' => arg(1)));
+  }
+
+  else {
+    $query = "SELECT count(*) as count, fi.field_issues_tid, td.name FROM field_data_field_issues fi
+      JOIN taxonomy_term_data td on td.tid = fi.field_issues_tid
+      WHERE fi.bundle = 'privatemsg_message'
+      GROUP by fi.field_issues_tid
+      ORDER by count DESC LIMIT 3;";
+
+    $result = db_query($query);
+  }
+
+  foreach ($result as $r) {
+    $vars['stats'][] = array(
+      'count' => $r->count,
+      'name' => $r->name,
+    );
+  }
+  if (count($vars['stats'])) {
+    return theme('nys_dashboard_sen_leading_issues_block', $vars);
+  }
+  else {
+    return '';
+  }
+}
+
+/**
+ * Helper function legislative links.
+ */
+function nys_dashboard_legislative_correspondent_get_links($items) {
+  $managed_links = array();
+  foreach ($items as $item) {
+    $query = "SELECT entity_id FROM field_data_field_user_account
+       WHERE bundle='senator' && field_user_account_target_id = :uid";
+    $managed_nid = db_query($query, array(':uid' => $item['target_id']))->fetchField();
+    if (!empty($managed_nid)) {
+      $managed_name = db_query("SELECT title from node where nid = :nid", array(':nid' => $managed_nid))->fetchField();
+      $managed_text = 'Manage ' . $managed_name . '\'s inbox';
+      $managed_links[] = l(t("@managed_text", array('@managed_text' => $managed_text)), 'user/' . $item['target_id'] . '/dashboard/inbox', array('html' => TRUE));
+    }
+  }
+  return $managed_links;
+}
+
+
+/**
+ * Helper function for senator card block content.
+ */
+function _nys_dashboard_senator_card_block_content() {
+  global $user;
+
+  // It's important to not use global user here!  For example, this block shows
+  // on the edit page!
+  if (arg(0) == 'user' && is_numeric(arg(1)) && $user->uid != arg(1)) {
+    $account = user_load(arg(1));
+    $display_message_senator_link = false;
+  }
+  else {
+    $account = user_load($user->uid);
+    $display_message_senator_link = true;
+  }
+  $is_senator = user_is_senator($account->uid);
+
+  $data = user_get_district_senator_data_array((int) $account->uid);
+  $senator_nid = $data['senator_nid'];
+  $district_tid = $data['district_tid'];
+
+  $managed_links = array();
+
+  if (user_has_role(LEGISLATIVE_CORRESPONDENT, $account) && !empty($account->field_senator_inbox_access[LANGUAGE_NONE])) {
+    $managed_links = nys_dashboard_legislative_correspondent_get_links($account->field_senator_inbox_access[LANGUAGE_NONE]);
+  }
+
+  if ($senator_nid) {
+    $node = node_load($senator_nid);
+    if (isset($node->field_active[LANGUAGE_NONE][0]['value']) && ($node->field_active[LANGUAGE_NONE][0]['value'] == 1)) {
+      $image = '';
+      if (isset($node->field_image_headshot[LANGUAGE_NONE][0]['uri'])) {
+        $image = _nyss_img($node->field_image_headshot[LANGUAGE_NONE][0]['uri'], 'user_dashboard_100x100', 'dash-senator-img');
+      }
+
+      $abbreviations = senator_get_abbreviations($node);
+      if (!empty($abbreviations)) {
+        $abbreviations = '<span class="duties">(' . $abbreviations . ')</span>';
+      }
+
+      $district = '';
+
+      if (!empty($district_tid)) {
+        $district_term = taxonomy_term_load($district_tid);
+        $district = $district_term->name;
+      }
+
+      $duties = '';
+      if (!empty($node->field_current_duties[LANGUAGE_NONE][0]['safe_value'])) {
+        $duties = $node->field_current_duties[LANGUAGE_NONE][0]['safe_value'];
+      }
+
+      $dashboard_link = nys_blocks_get_message_senator_link();
+
+      $vars = array(
+        'title' => $node->title,
+        'image' => $image,
+        'district' => $district,
+        'duties' => $duties,
+        'abbreviations' => $abbreviations,
+        'contact_text' => 'Message',
+        'contact_link' => $dashboard_link,
+        'managed_links' => $managed_links,
+        'active_senator' => TRUE,
+        'microsite_link' => $senator_nid,
+        'is_senator' => $is_senator,
+      );
+    }
+    else {
+      $vars = array(
+        'active_senator' => FALSE,
+        'contact_text' => 'Contact the Senate',
+        'contact_link' => '/contact',
+        'is_senator' => $is_senator,
+        'managed_links' => $managed_links,
+      );
+    }
+
+  }
+
+  if (!$district_tid) {
+    $vars = array(
+      'active_senator' => FALSE,
+      'contact_text' => 'Contact the Senate',
+      'contact_link' => '/contact',
+      'is_senator' => $is_senator,
+      'no_district' => TRUE,
+      'managed_links' => $managed_links,
+    );
+  }
+
+  $vars['display_message_senator_link'] = $display_message_senator_link;
+
+  return theme('nys_dashboard_senator_card_block', $vars);
+
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function nys_dashboard_views_query_alter(&$view, &$query) {
+
+  // Fix most recent issues tab on explore issues(SQLSTATE[HY093]: Invalid
+  // parameter number: number of bound variables does not match number of
+  // tokens).
+  if ($view->name == 'explore_issues_tabs' && $view->current_display == 'explore_issues_most_recent') {
+
+    $query->table_queue['node_taxonomy_term_data']['join']->definition['left_query'] = str_replace(':views_join_condition_1', '0', $query->table_queue['node_taxonomy_term_data']['join']->definition['left_query']);
+    $query->table_queue['node_taxonomy_term_data']['join']->definition['left_query'] = str_replace(':views_join_condition_', "'node'", $query->table_queue['node_taxonomy_term_data']['join']->definition['left_query']);
+
+    $query->table_queue['node_taxonomy_term_data']['join']->left_query = str_replace(':views_join_condition_1', '0', $query->table_queue['node_taxonomy_term_data']['join']->definition['left_query']);
+    $query->table_queue['node_taxonomy_term_data']['join']->left_query = str_replace(':views_join_condition_', "'node'", $query->table_queue['node_taxonomy_term_data']['join']->definition['left_query']);
+
+  }
+
+  if ($view->name == 'senator_dashboard_petitions_and_questionnaires' && $view->current_display == 'petitions') {
+    // Filter out petitions which have been signed by at least one of the
+    // senator constituents.
+    if (isset($view->args[0]) && ($view->args[0] == 'all')) {
+      $constituents = get_constituents($view->args[1]);
+      if (!empty($constituents)) {
+        $const_pet_signed_query = "SELECT entity_id FROM flagging f WHERE f.fid = 6 AND f.uid IN (" . implode(',', $constituents) . ");";
+        $const_pet_signed_query = db_query($const_pet_signed_query);
+        foreach ($const_pet_signed_query->fetchAll() as $bill) {
+          $bill_ids[] = $bill->entity_id;
+        }
+        $query->where[1]['conditions'][2]['value'] = $bill_ids;
+        $query->where[1]['conditions'][2]['operator'] = 'IN';
+      }
+    }
+    else {
+      $query->where[1]['conditions'][2]['value'] = '-1';
+    }
+
+  }
+
+  if ($view->name == 'senator_dashboard_petitions_and_questionnaires' && $view->current_display == 'questionnaires') {
+    // Filter out petitions which have been signed by at least one of the
+    // senator's constituents.
+    if (isset($view->args[0]) && ($view->args[0] == 'all')) {
+      $constituents = get_constituents($view->args[1]);
+
+      $const_quest_signed_query = "SELECT DISTINCT nid FROM webform_submissions_questionnaires w WHERE w.uid IN (" . implode(',', $constituents) . ");";
+      $const_quest_signed_query = db_query($const_quest_signed_query);
+      foreach ($const_quest_signed_query->fetchAll() as $quest) {
+        $quest_ids[] = $quest->nid;
+      }
+
+      $query->where[1]['conditions'][2]['value'] = $quest_ids;
+      $query->where[1]['conditions'][2]['operator'] = 'IN';
+    }
+    else {
+      $query->where[1]['conditions'][2]['value'] = '-1';
+    }
+
+  }
+
+  if ($view->name == 'constituent_petitions_and_questionairres' && $view->current_display == 'constituent_petitions_signed') {
+    $account = user_load(arg(1));
+    $query->table_queue['flagging_node']['join']->extra[1]['value'] = $account->uid;
+
+  }
+
+  if ($view->name == 'constituent_bills') {
+    $account = user_load(arg(1));
+    $query->where[0]['conditions'][0]['value'][':flagging_uid'] = $account->uid;
+  }
+
+  if ($view->name == 'constituent_updates' && $view->current_display == 'constituent_all_issue_updates') {
+    $account = user_load(arg(1));
+    $query->table_queue['flagging_taxonomy_term_data']['join']->extra[1]['value'] = $account->uid;
+  }
+
+  if ($view->name == 'constituent_updates' && $view->current_display == 'constituent_all_committees_updates') {
+    $account = user_load(arg(1));
+    $query->table_queue['flagging_taxonomy_term_data']['join']->extra[1]['value'] = $account->uid;
+  }
+
+  if ($view->name == 'explore_issues_tabs' && $view->current_display == 'constituents_issues_followed') {
+    $account = user_load(arg(1));
+    $query->table_queue['flagging_taxonomy_term_data']['join']->extra[1]['value'] = $account->uid;
+  }
+
+  if (($view->name == 'senator_dashboard_bills_new') && ($view->current_display == 'block')) {
+    $account = user_load(arg(1));
+
+    $senator_nid = user_get_senator_nid($account);
+    $query->where[2]['conditions'][0]['value'] = $senator_nid;
+  }
+
+  if (($view->name == 'senators') && ($view->current_display == 'senators')) {
+
+    if (!empty($query->where[1]['conditions'][3]) && $query->where[1]['conditions'][3]['field'] == 'field_senator_node.tid') {
+
+      // Get the committee members to query from.
+      $senator_query = db_select('taxonomy_term_data', 't');
+      $senator_query->fields('fs', array('field_senator_target_id'));
+      $senator_query->leftJoin('field_data_field_members', 'fm', 't.tid = fm.entity_id');
+      $senator_query->leftJoin('field_data_field_senator', 'fs', 'fm.field_members_value = fs.entity_id');
+      $senator_query->condition('t.tid', $query->where[1]['conditions'][3]['value'], '=');
+      $senator_nids = $senator_query->execute();
+      $senator_nids = $senator_nids->fetchAll();
+      foreach ($senator_nids as $nid) {
+        $nids[] = $nid->field_senator_target_id;
+      }
+
+      $query->where[1]['conditions'][3]['field'] = 'node.nid';
+      $query->where[1]['conditions'][3]['value'] = $nids;
+      $query->where[1]['conditions'][3]['operator'] = 'IN';
+    }
+  }
+
+  // Modify query when trying to get bills followed by the constituents for the
+  // senator.
+  if (($view->name == 'senator_dashboard_bills_new') && ($view->current_display == 'block_1')) {
+    $bill_ids = explode(',', $view->args[0]);
+    $query->where[1]['conditions'][2]['operator'] = 'in';
+    $query->where[1]['conditions'][2]['value'] = array();
+    $query->where[1]['conditions'][2]['value'] = $bill_ids;
+  }
+
+  // Modify query for Senator Legislation Page to dynamically populate the
+  // where/or clauses with senator nid.
+  if ($view->name == 'legislation_bills' && in_array($view->current_display, array(
+    'senator_homepage_legislation_bills',
+    'senator_legislation_bills',
+    'senator_legislation_resolutions',
+  ))) {
+
+    foreach ($query->where[2]['conditions'] as $key => $value) {
+      $query->where[2]['conditions'][$key]['value'] = $view->args[0];
+    }
+  }
+
+  // Modify query when trying to get active bill list.
+  if (($view->name == 'senator_dashboard_bills_new') && ($view->current_display == 'block_2')) {
+
+    $active_session_bills_view  = views_get_view('active_session_bills');
+    $active_session_bills_view->set_display('block');
+    $active_session_bills_view->pre_execute();
+    $active_session_bills_view->execute();
+    $active_session_bills = $active_session_bills_view->result;
+
+    // Find senator ID.
+    if ((arg(0) == 'user') && is_numeric(arg(1))) {
+      $account = user_load(arg(1));
+    }
+    (int) $senator_nid = user_get_senator_nid($account);
+    // Get the list of constituents for that senator.
+    $constituents = get_constituents($senator_nid);
+    $view->args = array();
+    $view->args[] = $constituents;
+
+    $bill_nids = array();
+    $billid_votes = array();
+    foreach ($active_session_bills as $active_session_bill) {
+      $bill_nid = $active_session_bill->node_field_data_field_ol_bill_nid;
+      if (in_array($bill_nid, $bill_nids)) {
+        continue;
+      }
+      else {
+        $bill_nids[] = $bill_nid;
+      }
+      $sponsor_id = $active_session_bill->field_field_ol_sponsor[0]['raw']['target_id'];
+
+      $bill_votes = votingapi_select_results(array(
+        'tag' => 'nys_bill_vote',
+        'entity_id' => $bill_nid,
+        'entity_type' => 'node',
+      ));
+
+      $billid_votes[$bill_nid] = count($bill_votes);
+      $billid_sponsor[$bill_nid] = $sponsor_id;
+
+      $sponsor_bills[$sponsor_id][] = $bill_nid;
+
+    }
+
+    arsort($billid_votes);
+    $prefinal_array = array();
+    foreach ($billid_votes as $billid => $votes) {
+      $prefinal_array[$billid_sponsor[$billid]][] = $billid;
+    }
+
+    $final_array = array();
+    if (in_array($senator_nid, array_keys($prefinal_array))) {
+      $final_array = $prefinal_array[$senator_nid];
+      foreach ($prefinal_array[$senator_nid] as $bill_id) {
+        unset($billid_votes[$bill_id]);
+      }
+    }
+
+    foreach ($billid_votes as $id => $list) {
+      $final_array[] = $id;
+    }
+    $id_list = implode(',', $final_array);
+
+    if (!empty($final_array)) {
+      $query->where[1]['conditions'][2]['operator'] = 'in';
+      $query->where[1]['conditions'][2]['value'] = $final_array;
+    }
+  }
+
+  /********************* Calendar View *********************/
+  if (($view->name == 'calendar_page') && (($view->current_display == 'page')||($view->current_display == 'month')||($view->current_display == 'week'))) {
+
+    $conditions = $query->where[1]['conditions'];
+    $calendar_index = 0;
+    $type_filter = false;
+    foreach ($conditions as $index => $condition) {
+
+      if ($condition['field'] == 'node.type') {
+        $type_filter = TRUE;
+      }
+
+      // Modify the date filters according to the view block.
+      if (strpos($condition['field'], ':field_data_field_date_field_date_value') > 0) {
+        $calendar_filter = TRUE;
+        $calendar_index = $index;
+        if (($view->current_display == 'page') || ($view->current_display == 'week')) {
+          $query->where[1]['conditions'][$index]['field'] = str_replace('%Y-%m', '%Y-%m-%d', $condition['field']);
+        }
+      }
+
+    }
+
+    // Add default content type filter when not assigned.
+    if (!$type_filter) {
+      $query->where[1]['conditions'][] = array(
+        'field' => 'node.type',
+        'value' => array(
+          'event',
+          'meeting',
+          'public_hearing',
+          'session',
+        ),
+        'operator' => 'in',
+      );
+    }
+
+    // Add date format for exposed filters on calendar view.
+    if ($view->current_display == 'page') {
+      if (!$calendar_filter) {
+        $query->where[1]['conditions'][] = array(
+          'field' => 'DATE_FORMAT(FROM_UNIXTIME(field_data_field_date.field_date_value), \'%Y-%m-%d\') = :field_data_field_date_field_date_value',
+          'value' => array(
+            ':field_data_field_date_field_date_value' => date('Y-m-d', time()),
+          ),
+          'operator' => 'formula',
+        );
+      }
+    }
+    if ($view->current_display == 'month') {
+      if ($calendar_filter) {
+        $query->where[1]['conditions'][$calendar_index - 1]['value'][':field_data_field_date_field_date_value'] = date('Y-m-d', strtotime('first day of this month', strtotime($query->where[1]['conditions'][$calendar_index - 1]['value'][':field_data_field_date_field_date_value'])));
+        $query->where[1]['conditions'][$calendar_index]['value'][':field_data_field_date_field_date_value1'] = date('Y-m-t', strtotime('last day of this month', strtotime($query->where[1]['conditions'][$calendar_index - 1]['value'][':field_data_field_date_field_date_value'])));
+      }
+
+      else {
+        if (isset($query->where[1]['conditions'][1]['value'][':field_data_field_date_field_date_value'])) {
+          $query->where[1]['conditions'][1]['value'][':field_data_field_date_field_date_value'] = date('Y-m-d', strtotime('first day of this month', strtotime($query->where[1]['conditions'][1]['value'][':field_data_field_date_field_date_value'])));
+          $query->where[1]['conditions'][2]['value'][':field_data_field_date_field_date_value1'] = date('Y-m-t', strtotime('last day of this month', strtotime($query->where[1]['conditions'][1]['value'][':field_data_field_date_field_date_value'])));
+        }
+      }
+    }
+
+    if ($view->current_display == 'week') {
+      if (!$calendar_filter) {
+        list($start_of_week, $end_of_week) = nys_dashboard_get_date();
+
+        $query->where[1]['conditions'][] = array(
+          'field' => 'DATE_FORMAT(FROM_UNIXTIME(field_data_field_date.field_date_value), \'%Y-%m-%d\') >= :field_data_field_date_field_date_value AND DATE_FORMAT(FROM_UNIXTIME(field_data_field_date.field_date_value), \'%Y-%m-%d\') <= :field_data_field_date_field_date_value1',
+          'value' => array(
+            ':field_data_field_date_field_date_value' => $start_of_week,
+            ':field_data_field_date_field_date_value1' => $end_of_week,
+          ),
+          'operator' => 'formula',
+        );
+      }
+      else {
+        list($start_of_week, $end_of_week) = nys_dashboard_get_date($query->where[1]['conditions'][$calendar_index]['value'][':field_data_field_date_field_date_value']);
+
+        $query->where[1]['conditions'][$calendar_index]['value'][':field_data_field_date_field_date_value'] = $start_of_week;
+        $query->where[1]['conditions'][$calendar_index]['value'][':field_data_field_date_field_date_value1'] = $end_of_week;
+      }
+    }
+  }
+
+  /*Add tweets for a Senator page*/
+  if (($view->name == 'senator_tweets') && ($view->current_display == 'block')) {
+    if ((arg(0) == 'node') && is_numeric(arg(1))) {
+
+      $node = node_load(arg(1));
+      if ($node->type != 'senator') {
+        return;
+      }
+      $keys = array_keys($query->where[0]['conditions'][0]['value']);
+      $query->where[0]['conditions'][0]['value'][$keys[0]] = nys_utils_senator_get_uid($node->nid);
+    }
+  }
+
+  if ($view->name == 'constituent_committees_following') {
+    // On the constituent committee page, we need to see every committee AND
+    // group they've flagged.
+    $query->table_queue['flagging_taxonomy_term_data']['join']->extra[0]['value']   = array(5, 9);
+    $query->table_queue['flagging_taxonomy_term_data']['join']->extra[0]['numeric'] = 'in';
+  }
+
+  // Handle constituent submitted questionnaires query.
+  if (($view->name == 'constituent_petitions_and_questionairres') && ($view->current_display == 'constituent_questionnaires_submitted')) {
+    $account = user_load(arg(1));
+    if (isset($account->uid)) {
+      $uid = $account->uid;
+      $result = db_select('webform_submissions_questionnaires', 'w')
+        ->fields('w', array('nid', 'timestamp'))
+        ->condition('uid', $uid, '=')
+        ->orderBy('sid', 'DESC')
+        ->execute()
+        ->fetchAll();
+      $unique_node_ids = array();
+      $unique_times[] = array();
+      foreach ($result as $res) {
+        if (!in_array($res->nid, $unique_node_ids)) {
+          $unique_node_ids[] = $res->nid;
+          $unique_times[] = $res->timestamp;
+        }
+      }
+      $query->where[1]['conditions'][2]['value'] = $unique_node_ids;
+      $query->where[1]['conditions'][2]['operator'] = 'IN';
+    }
+  }
+
+  if (($view->name == 'senator_dashboard_issues') && ($view->current_display == 'block')) {
+
+    if (isset($view->args[0])) {
+      $account = $view->args[0];
+    }
+    else {
+      $account = user_load(arg(1));
+    }
+
+    $data = user_get_district_senator_data_array($account);
+
+    $constituents = get_constituents_by_district($data['district_tid']);
+    $terms = array();
+    if (!empty($constituents)) {
+      $term_query = "SELECT DISTINCT entity_id FROM flagging WHERE fid = '4' AND uid IN (" . implode(',', $constituents) . ")";
+      $term_query_result = db_query($term_query);
+      while ($term = $term_query_result->fetchAssoc()) {
+        $terms[] = $term['entity_id'];
+      }
+    }
+    if (!empty($terms)) {
+      $query->where[1]['conditions'][2]['operator'] = 'IN';
+      $query->where[1]['conditions'][2]['value'] = $terms;
+    }
+
+    if (isset($view->args[1]) && ($view->args[1] != NULL)) {
+      $query->where[1]['conditions'][1]['value'] = '%' . $view->args[1] . '%';
+    }
+
+    if (isset($view->args[2]) && ($view->args[2] != 'count')) {
+      $query->orderby = array_reverse($query->orderby, FALSE);
+    }
+  }
+}
+
+/**
+ * Helper function for rendering output on search textfield.
+ */
+function nys_dashboard_search_textfield_post_render($content, $element) {
+  $content = str_replace('type="text"', 'type="search"', $content);
+  $content = '<label for="' . $element['#name'] . '">' . $element['#title'] . '</label>' .
+    '<div class="container-inline form-wrapper">' . $content;
+  $content .= '<button class="c-site-search--btn form-submit" id="edit-submit" name="op" value="Search" type="submit">Search</button>';
+  $content .= '</div>';
+  return $content;
+}
+
+/**
+ * Helper functino for rendering output on search textfield.
+ */
+function nys_dashboard_search_textfield_post_render_span($content, $element) {
+  $content = str_replace('type="text"', 'type="search"', $content);
+  $content = '<label for="' . $element['#name'] . '">' . $element['#title'] . '</label>' .
+    '<div class="container-inline form-wrapper">' . $content;
+  $content .= '<div class="c-site-search--btn form-submit" id="edit-submit" name="op" value="Search">Search</div>';
+  $content .= '</div>';
+  return $content;
+}
+
+
+/**
+ * Copy of built in drupal function theme_form_element.
+ *
+ * Doesn't wrap the form element in the div of class "form-item".
+ */
+function theme_nude_form_element($variables) {
+  $element = &$variables['element'];
+
+  // This function is invoked as theme wrapper, but the rendered form element
+  // may not necessarily have been processed by form_builder().
+  $element += array(
+    '#title_display' => 'before',
+  );
+
+  $output = "";
+
+  // If #title is not set, we don't display any label or required marker.
+  if (!isset($element['#title'])) {
+    $element['#title_display'] = 'none';
+  }
+  $prefix = isset($element['#field_prefix']) ? '<span class="field-prefix">' . $element['#field_prefix'] . '</span> ' : '';
+  $suffix = isset($element['#field_suffix']) ? ' <span class="field-suffix">' . $element['#field_suffix'] . '</span>' : '';
+
+  switch ($element['#title_display']) {
+    case 'before':
+    case 'invisible':
+      $output .= ' ' . theme('form_element_label', $variables);
+      $output .= ' ' . $prefix . $element['#children'] . $suffix . "\n";
+      break;
+
+    case 'after':
+      $output .= ' ' . $prefix . $element['#children'] . $suffix;
+      $output .= ' ' . theme('form_element_label', $variables) . "\n";
+      break;
+
+    case 'none':
+    case 'attribute':
+      // Output no label and no required marker, only the children.
+      $output .= ' ' . $prefix . $element['#children'] . $suffix . "\n";
+      break;
+  }
+
+  if (!empty($element['#description'])) {
+    $output .= '<div class="description">' . $element['#description'] . "</div>\n";
+  }
+
+  return $output;
+}
+
+
+function nys_dashboard_passed_senate_assembly_check($nid) {
+  $bill_to_check = node_load($nid);
+
+  if (($bill_to_check->field_ol_chamber[LANGUAGE_NONE][0]['value'] == 'senate') && ($bill_to_check->field_ol_last_status[LANGUAGE_NONE][0]['value'] == 'PASSED_ASSEMBLY'))
+  {
+    return true;
+  }
+  elseif (($bill_to_check->field_ol_chamber[LANGUAGE_NONE][0]['value'] == 'assembly' && $bill_to_check->field_ol_last_status[LANGUAGE_NONE][0]['value'] == 'PASSED_SENATE'))
+  {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function nys_dashboard_views_pre_render(&$view) {
+  $_GET['tab'] = isset($_GET['tab']) ? $_GET['tab'] : '';
+
+  // All Views records with Assembly bills should be overwritten to have their Senate counterpart be what's output
+  if (($view->name == 'upcoming_legislation_calendar')) {
+    foreach($view->result as $key => $item) {
+      $a_s_replace_view = null;
+      $view->result[$key]->overridden = null;
+      if (strtolower($item->field_field_ol_chamber[0]['raw']['value']) == 'assembly') {
+        // Assembly bills should show their Senate same-as's
+        $same_as_info = json_decode($item->field_field_ol_same_as[0]['raw']['value'])[0];
+
+        // Query DB for correct bill to display
+        $sa_bill_nid_query = db_select('field_data_field_ol_print_no', 'pn');
+        $sa_bill_nid_query->join('field_data_field_ol_session', 's', 'pn.entity_id = s.entity_id');
+        $sa_bill_nid_query->addField('pn', 'entity_id');
+        $sa_bill_nid_query->condition('pn.field_ol_print_no_value', $same_as_info->printNo, '=');
+        $sa_bill_nid_query->condition('s.field_ol_session_value', $same_as_info->session, '=');
+
+        $sa_bill_nid = $sa_bill_nid_query->execute()->fetchField();
+
+        // Load replacement result record
+        $a_s_replace_view = null;
+        $a_s_replace_view = views_get_view('upcoming_legislation_calendar');
+        $a_s_replace_view->set_display('a_s_replace_record');
+        $a_s_replace_view->set_arguments(array($sa_bill_nid));
+        $a_s_replace_view->execute();
+
+        /**
+         * Slight Hackery Here!
+         * Views uses the result to tell Semantic Views to draw our vote results -- but, since we are replacing the Assembly
+         * bill node with the Senate bill node below, by the time it gets to Semantic Views, it attempts to output the
+         * votes for the Senate bill.  To avoid this, the vote information is extracted from the Assembly bill, the Senate
+         * bill is then loaded, overwrites the Assembly record, then the vote information is replaced on the result.
+         */
+
+        $assembly_vote = $item->field_field_ol_votes;
+        $assembly_status = $item->field_field_ol_last_status;
+        $assembly_status_date = $item->field_field_ol_last_status_date;
+
+        $view->result[$key] = $a_s_replace_view->result[0];
+        $view->result[$key]->field_field_ol_votes = $assembly_vote;
+        $view->result[$key]->field_field_ol_last_status = $assembly_status;
+        $view->result[$key]->field_field_ol_last_status_date = $assembly_status_date;
+
+        $view->result[$key]->overridden = $item->nid;
+        $abc = 123;
+      }
+    }
+  }
+
+
+  // Hide view header when on explore issues page.
+  if ($view->name == 'explore_issues_tabs' && $view->current_display == 'explore_issues_most_recent') {
+    if (current_path() == 'explore-issues/most-recent') {
+      $view->header = array();
+    }
+  }
+
+  // For upcoming legislation, process current status and vote results
+  if (($view->name == 'upcoming_legislation_calendar')) {
+    foreach ($view->result as $index => $row) {
+      if ($view->current_display == 'sess_supplemental_calendar') {
+        $bill = node_load($row->node_field_data_field_ol_bill_nid);
+      }
+      elseif ($row->overridden) {
+        $bill = node_load($row->overridden);
+      }
+      else {
+        $bill = node_load(isset($row->node_field_data_field_ol_bill_nid) ? $row->node_field_data_field_ol_bill_nid : $row->nid);
+      }
+
+      // Is bill substituted?  We need to check first, and if so, replace the bill with the substituted one
+      if (!$row->overridden) {
+        $check_for_sub = $bill->field_ol_substituted_by[LANGUAGE_NONE][0]['value'] ? $bill->field_ol_substituted_by[LANGUAGE_NONE][0]['value'] : NULL;
+        if (!is_null($check_for_sub)) {
+          // Replace bill loaded for purposes of vote information
+          // From here, the vote should populate correctly if the bill was substituted
+          $sub_bill_versions = nysenate_get_bill_versions($bill->type, $check_for_sub, $bill->field_ol_session[LANGUAGE_NONE][0]['value']);
+          $sub_bill = node_load(end($sub_bill_versions)['nid']);
+          if ((is_array($sub_bill->field_ol_votes[LANGUAGE_NONE]) || is_object($sub_bill->field_ol_votes[LANGUAGE_NONE]))) {
+            $bill = $sub_bill;
+            $row->current_status = nys_dashboard_render_bill_status($bill->nid)->display_status;
+          }
+          else {
+            $row->current_status = nys_dashboard_render_bill_status($bill->nid)->display_status;
+          }
+        }
+        else {
+          $row->current_status = nys_dashboard_render_bill_status(isset($row->node_field_data_field_ol_bill_nid) ? $row->node_field_data_field_ol_bill_nid : $row->nid)->display_status;
+        }
+      }
+
+      $row->status_date = date('F d, Y', $bill->field_ol_last_status_date[LANGUAGE_NONE][0]['value']);
+
+      if (is_array($bill->field_ol_votes[LANGUAGE_NONE]) || is_object($bill->field_ol_votes[LANGUAGE_NONE])) {
+        foreach ($bill->field_ol_votes[LANGUAGE_NONE] as $vote) {
+          $vote_query = "SELECT field_ol_vote_type_value FROM `field_data_field_ol_vote_type` WHERE `entity_id` = :nid AND `field_ol_vote_type_value` = 'floor' LIMIT 1";
+          $vote_result = db_query($vote_query, array(':nid' => $vote['value']))->fetchField();
+          if ($vote_result) {
+            $row->excused_count = db_query('SELECT field_ol_excused_count_value FROM field_data_field_ol_excused_count WHERE entity_id = :fid LIMIT 1', array(':fid' => $vote['value']))->fetchField();
+            $row->aye_wr_count = db_query('SELECT field_ol_aye_wr_count_value FROM field_data_field_ol_aye_wr_count WHERE entity_id = :fid LIMIT 1', array(':fid' => $vote['value']))->fetchField();
+            $row->nay_count = db_query('SELECT field_ol_nay_count_value FROM field_data_field_ol_nay_count WHERE entity_id = :fid LIMIT 1', array(':fid' => $vote['value']))->fetchField();
+            $row->aye_count = db_query('SELECT field_ol_aye_count_value FROM field_data_field_ol_aye_count WHERE entity_id = :fid LIMIT 1', array(':fid' => $vote['value']))->fetchField();
+            $row->abstained_count = db_query('SELECT field_ol_abstained_count_value FROM field_data_field_ol_abstained_count WHERE entity_id = :fid LIMIT 1', array(':fid' => $vote['value']))->fetchField();
+            $row->absent_count = db_query('SELECT field_ol_absent_count_value FROM field_data_field_ol_absent_count WHERE entity_id = :fid LIMIT 1', array(':fid' => $vote['value']))->fetchField();
+            $row->session_year = db_query('SELECT field_ol_session_value FROM field_data_field_ol_session WHERE entity_id = :fid LIMIT 1', array(':fid' => $row->nid))->fetchField();
+            $row->vote_date = db_query('SELECT field_publication_date_value FROM field_data_field_publication_date WHERE entity_id = :fid LIMIT 1', array(':fid' => $vote['value']))->fetchField();
+            $row->vote_year = new DateTime($row->vote_date);
+            $row->vote_year = $row->vote_year->format('Y');
+            switch ($row->vote_year) {
+              case (($row->vote_year % 2 == 0) && (($row->vote_year - 1) == $row->session_year)):
+                $row->bill_in_current_session = TRUE;
+                break;
+
+              case ($row->vote_year == $row->session_year):
+                $row->bill_in_current_session = TRUE;
+                break;
+
+              default:
+                $row->bill_in_current_session = FALSE;
+                break;
+            }
+          }
+        }
+      }
+      // Passed Senate & Assembly Status Replacement -- This is a status type that is not associated with backend statuses, and must be computed
+      $passed_senate_assembly_check = nys_dashboard_passed_senate_assembly_check($bill->nid);
+      if ($passed_senate_assembly_check) {
+        $view->result[$index]->field_field_ol_last_status[0]['rendered']['#markup'] = 'Passed Senate &amp; Assembly';
+        $row->current_status = 'Passed Senate &amp; Assembly';
+      }
+
+    }
+  }
+
+
+  // For a meeting agenda, get the committee a bill was referred to.
+  if (($view->name == 'meeting_agenda_block') && ($view->current_display == 'meeting_agenda')) {
+    foreach ($view->result as $index => $row) {
+      $referred_to_committee = $row->_field_data['field_collection_item_field_data_field_ol_agenda_bills_item_']['entity']->field_ol_bill_message;
+      if (!empty($referred_to_committee)) {
+        // Fix for some legacy content which already contains the "referred to"
+        // text.
+        $row->committee_name = str_ireplace('referred to ', '', $referred_to_committee[LANGUAGE_NONE][0]['value']);
+        $row->committee_name = str_ireplace(' committee', '', $row->committee_name);
+
+        // Lookup the committee URL.
+        $taxonomy           = taxonomy_get_term_by_name($row->committee_name, 'committees');
+        $tid                = array_keys($taxonomy);
+        $row->committee_url = drupal_lookup_path('alias', 'taxonomy/term/' . $tid[0]);
+      }
+    }
+  }
+
+  /*
+   * Get Questionnaire count for display
+   */
+  if (($view->name == 'senator_dashboard_petitions_and_questionnaires') && ($view->current_display == 'questionnaires')) {
+    $view_pager = $view->display_handler->display->display_options['pager']['options']['items_per_page'];
+    $account = user_load(arg(1));
+    foreach ($view->result as $index => $row) {
+      // Grab webform nid from questionnaire's field_webform.
+      $webform_id = $row->_field_data['nid']['entity']->field_webform[LANGUAGE_NONE][0]['target_id'];
+
+      if ($webform_id) {
+        $senator_nid = user_get_senator_nid($account);
+        $view->result[$index]->main_sponsor = ($row->field_field_senator[0]['raw']['target_id'] == $senator_nid) ? TRUE : FALSE;
+
+        // Get the list of constituents for that senator.
+        $constituent_ids = get_constituents($senator_nid);
+        $count_query = "SELECT count(sid) as submission_count FROM webform_submissions WHERE nid = :nid";
+        $count = db_query($count_query, array(':nid' => $webform_id))->fetchField();
+
+        if (!empty($constituent_ids)) {
+          $constituent_count = db_select('webform_submissions', 'w')
+            ->fields('sid')
+            ->condition('nid', $webform_id, '=')
+            ->condition('uid', $constituent_ids, 'IN')
+            ->countQuery()
+            ->execute()
+            ->fetchField();
+
+          $view->result[$index]->webform_count = $count;
+          $view->result[$index]->constituent_count = $constituent_count;
+
+          $questionnaire_id = $webform_id;
+        }
+      }
+
+      module_load_include('inc', 'nys_dashboard', 'constituents_questionnaires_table');
+      $form = drupal_get_form('nys_senator_constituents_questionnaires_form', $questionnaire_id);
+      $output = drupal_render($form);
+      $view->result[$index]->user_list = $output;
+
+      if (count($view->result) == $view_pager) {
+        $next_pager = ($view->offset / 4) + 1;
+        $redirect_link = '/nys_dashboard_get_questionnaires?user=' . (arg(1) ? arg(1) : $_GET['user']);
+        if (($_GET['tab'] == 'all') || ($view->args[0] == 'all')) {
+          $redirect_link .= '&tab=all';
+        }
+        $redirect_link .= '&page=' . $next_pager;
+        $view->attachment_after = '<div class="more-link pager-load-more"><a href="' . $redirect_link . '">Load More</a></div>';
+      }
+      else {
+        $view->attachment_after = '';
+      }
+    }
+  }
+
+  /*
+   * Get Petition count for display
+   */
+  if (($view->name == 'senator_dashboard_petitions_and_questionnaires') && ($view->current_display == 'petitions')) {
+    $view_pager = $view->display_handler->display->display_options['pager']['options']['items_per_page'];
+    $loaded_user = user_load(arg(1));
+    foreach ($view->result as $index => $row) {
+      $petition_id = $row->nid;
+      $senator_nid = user_get_senator_nid($loaded_user);
+      $view->result[$index]->main_sponsor = ($row->field_field_senator[0]['raw']['target_id'] == $senator_nid) ? TRUE : FALSE;
+
+      // Get the list of constituents for that senator.
+      $constituent_ids = get_constituents($senator_nid);
+
+      $petition_count = 0;
+      $constituent_count = 0;
+      if (!empty($constituent_ids)) {
+        $petition_result = flag_get_counts('node', $petition_id);
+        $petition_count = (empty($petition_result['sign_petition'])) ? 0 : $petition_result['sign_petition'];
+
+        $constituent_count = db_select('flagging')
+          ->condition('entity_id', $petition_id)
+          ->condition('uid', $constituent_ids, 'IN')
+          ->countQuery()
+          ->execute()
+          ->fetchField();
+
+      }
+      $petition_anon_count = db_select('nys_petitions')
+        ->condition('pid', $petition_id)
+        ->countQuery()
+        ->execute()
+        ->fetchField();
+
+      $constituent_anon_count = db_select('nys_petitions')
+        ->condition('pid', $petition_id)
+        ->condition('district_id', senator_get_district_tid($senator_nid))
+        ->countQuery()
+        ->execute()
+        ->fetchField();
+
+      $view->result[$index]->petition_count = intval($petition_count);
+      $view->result[$index]->petition_anon_count = intval($petition_anon_count);
+      $view->result[$index]->constituent_count = $constituent_count + $constituent_anon_count;
+      $view->result[$index]->constituent_anon_count = intval($constituent_anon_count);
+
+      module_load_include('inc', 'nys_dashboard', 'constituents_petitions_table');
+      $form = drupal_get_form('nys_senator_constituents_petitions_form', $view, $petition_id, $loaded_user);
+      $output = drupal_render($form);
+      $view->result[$index]->user_list = $output;
+
+      if (count($view->result) == $view_pager) {
+        $next_pager = ($view->offset / 4) + 1;
+        $redirect_link = '/nys_dashboard_get_petitions?user=' . (arg(1) ? arg(1) : $_GET['user']);
+        if (($_GET['tab'] == 'all') || ($view->args[0] == 'all')) {
+          $redirect_link .= '&tab=all';
+        }
+        $redirect_link .= '&page=' . $next_pager;
+        $view->attachment_after = '<div class="more-link pager-load-more"><a href="' . $redirect_link . '">Load More</a></div>';
+      }
+      else {
+        $view->attachment_after = '';
+      }
+
+    }
+  }
+
+  /*
+   * Get User list for Issues
+   */
+  if (($view->name == 'senator_dashboard_issues') && ($view->current_display == 'block')) {
+
+    $view_pager = $view->display_handler->display->display_options['pager']['options']['items_per_page'];
+    $user_id = (isset($view->args[0])) ? $view->args[0] : '';
+    foreach ($view->result as $index => $row) {
+      $issue_id = $row->tid;
+      module_load_include('inc', 'nys_dashboard', 'constituents_issues_table');
+      $form = drupal_get_form('nys_senator_constituents_issues_form', $issue_id, '', '', $user_id);
+      $output = drupal_render($form);
+      $view->result[$index]->user_list = $output;
+    }
+    if (count($view->result) == $view_pager) {
+      $next_pager = ($view->offset / 10) + 1;
+      $view->attachment_after = '<div class="more-link pager-load-more"><a href="/nys-dashboard/get-issues?page=' . $next_pager . '">Load More</a></div>';
+    }
+    else {
+      $view->attachment_after = '';
+    }
+  }
+
+  if (($view->name == 'senator_events') &&
+    (
+      ($view->current_display == 'upcoming_events')
+      || ($view->current_display == 'senator_upcoming_district')
+      || ($view->current_display == 'senator_upcoming_albany')
+    )
+    ) {
+
+    $pager = $view->display_handler->display->display_options['pager']['options']['items_per_page'];
+    $offset = isset($view->pager) ? $view->pager : 0;
+    $next_pager = $offset + 1;
+    $current_month = isset($view->args[1]) ? $view->args[1] : '';
+    if (($next_pager * $pager) < $view->total_rows) {
+      $view->attachment_after = '<div class="item-list"><ul class="pager pager-load-more"><li class="pager-next"><a href="/get/ajax/moreevents?page=' . $next_pager . '&id=' . $view->args[0] . '&date=' . $current_month . '">Load more</a></li>
+</ul></div>';
+    }
+  }
+
+  /*
+  Get Bill counts for the senator bashboard bill view
+   */
+  if (($view->name == 'senator_dashboard_bills_new')) {
+    $uids = array();
+
+    if ($view->current_display == 'block') {
+      if (is_numeric($view->args[0][0]) === TRUE) {
+        $uids = $view->args[0];
+      }
+      else {
+        $senator_nid = user_get_senator_nid(arg(1));
+        $uids = get_constituents($senator_nid);
+      }
+      $uids[] = arg(1);
+    }
+    if ($view->current_display == 'block_1') {
+      if (is_numeric($view->args[1][0]) === TRUE) {
+        $uids = $view->args[1];
+      }
+      else {
+        $senator_nid = user_get_senator_nid(arg(1));
+        $uids = get_constituents($senator_nid);
+      }
+      $uids[] = arg(1);
+    }
+    if ($view->current_display == 'block_2') {
+      $uids = $view->args[0];
+    }
+
+    foreach ($view->result as $index => $row) {
+      $votes['all_aye'] = count(votingapi_votingapi_storage_select_votes(array(
+        'entity_id' => $row->nid,
+        'tag' => 'nys_bill_vote',
+        'value' => 1,
+      )));
+      $votes['all_nay'] = count(votingapi_votingapi_storage_select_votes(array(
+        'entity_id' => $row->nid,
+        'tag' => 'nys_bill_vote',
+        'value' => 0,
+      )));
+      $votes['const_aye'] = count(votingapi_votingapi_storage_select_votes(array(
+        'entity_id' => $row->nid,
+        'tag' => 'nys_bill_vote',
+        'value' => 1,
+        'uid' => $uids,
+      )));
+      $votes['const_nay'] = count(votingapi_votingapi_storage_select_votes(array(
+        'entity_id' => $row->nid,
+        'tag' => 'nys_bill_vote',
+        'value' => 0,
+        'uid' => $uids,
+      )));
+
+      $view->result[$index]->votes = $votes;
+    }
+  }
+
+  /*
+   ** Get questionnaire submitted date
+   */
+  if (($view->name == 'constituent_petitions_and_questionairres') && ($view->current_display == 'constituent_questionnaires_submitted')) {
+    $account = user_load(arg(1));
+    foreach ($view->result as $index => $row) {
+      if (isset($account->uid) && isset($row->nid) && isset($row->field_field_webform[0]['raw']['target_id'])) {
+        $result = db_select('webform_submissions_questionnaires', 'w')
+          ->fields('w', array('timestamp'))
+          ->condition('uid', $account->uid, '=')
+          ->condition('nid', $row->nid, '=')
+          ->condition('wid', $row->field_field_webform[0]['raw']['target_id'], '=')
+          ->orderBy('sid', 'DESC')
+          ->range(0, 1)
+          ->execute()
+          ->fetchField();
+
+        $view->result[$index]->field_timestamp = $result;
+      }
+    }
+  }
+
+}
+
+/**
+ * Returns zip codes from within the currently logged in user's district.
+ *
+ * Originally designed for constituents dashboard.
+ */
+function nys_dashboard_zipcode_autocomplete_page($search_term) {
+
+  $account = user_load(arg(1));
+
+  $district_tid = user_get_district_tid($account);
+
+  $matches = array();
+
+  $query = "SELECT DISTINCT(l.postal_code) from location l
+    JOIN field_data_field_address fa ON fa.field_address_lid = l.lid
+    JOIN field_data_field_district fd ON fd.entity_id = fa.entity_id AND fd.bundle = fa.bundle
+    WHERE l.postal_code LIKE :search_term AND fd.field_district_target_id = :district_tid ORDER BY postal_code LIMIT 50";
+
+  $result = db_query($query, array(':search_term' => '%' . $search_term . '%', ':district_tid' => $district_tid));
+
+  foreach ($result as $r) {
+    $matches[$r->postal_code] = $r->postal_code;
+  }
+
+  return drupal_json_output($matches);
+}
+
+
+/**
+ * Returns access for the dashboard tabs.
+ *
+ * Used by the page manager for dashboards, this is the function responsible for
+ * both determining which tab to display (which tab is active), based on the
+ * given logged in user, and the user's account being viewed.
+ *
+ * Generally there are two types of dashboards: senator and constituent, based
+ * on those two matching roles. Unfortunately, a user can be given both the
+ * senator and constituent roles.
+ *
+ * So as not to confuse the dashboard, two functions
+ * (user_is_constituent and user_is_senator) determine what role the given
+ * account being viewed should use.
+ *
+ * Additionally both the Administrator role and the legislative correspondent
+ * role should be able to view both senator and constituent accounts.
+ * A senator viewing his constituent's dashboard adds another layer of
+ * complexity as he should be able to view all of his constituents tabs, except
+ * for the inbox.
+ *
+ * Example
+ * @code
+ *   return nys_dashboard_variant_access('Senator', 'inbox');
+ * @endcode
+ *
+ * @param string $role
+ *   The type of dashboard to access.
+ * @param string $variant
+ *   The tab variant to access.
+ *
+ * @return bool
+ *   TRUE if access is to be granted or FALSE if not.
+ */
+function nys_dashboard_variant_access($role, $variant) {
+  global $user;
+
+  $viewing_user = user_load($user->uid);
+
+  if (arg(0) != 'user' || !is_numeric(arg(1))) {
+    return FALSE;
+  }
+
+  if (user_is_anonymous()) {
+    return FALSE;
+  }
+
+  if (arg(3) != $variant) {
+    return FALSE;
+  }
+
+  $account = user_load(arg(1));
+
+  if ($role == 'Senator') {
+    // Senators can view their own dashboard tabs.
+    if ($viewing_user->uid == $account->uid  && user_is_senator($account)) {
+      return TRUE;
+    }
+    // Admin's can view Senator's dashboard tabs.
+    elseif (user_has_role(ADMINISTRATOR, $viewing_user) && user_is_senator($account)) {
+      return TRUE;
+    }
+    // Legislative correspondents can view Senator's dashboard tabs.
+    elseif (user_manages_this_inbox($account, $viewing_user)) {
+      return TRUE;
+    }
+  }
+  elseif ($role == 'Constituent') {
+
+    if (user_is_senator($account)) {
+      if ($variant == 'petitions') {
+        drupal_goto('user/' . $account->uid . '/dashboard');
+      }
+      return FALSE;
+    }
+
+    if ($viewing_user->uid == $account->uid  && user_is_constituent($account)) {
+      // Constituents can view their own dashboard tabs.
+      return TRUE;
+    }
+    elseif (user_has_role(ADMINISTRATOR, $viewing_user) && user_is_constituent($account)) {
+      // Admin's can view constituent's dashboard tabs.
+      return TRUE;
+    }
+    elseif (user_is_senator($viewing_user) && user_get_senator_uid($account) == $viewing_user->uid) {
+      // Senator's can view a constituents tabs, except for inbox.
+      if ($variant == 'inbox') {
+        return FALSE;
+      }
+      return TRUE;
+    }
+    elseif (user_is_legislative_correspondent_of_users_senator($viewing_user, $account)) {
+      if ($variant == 'inbox') {
+        return FALSE;
+      }
+      return TRUE;
+    }
+  }
+  // There is no overview tab for constituents, so redirect to the issues tab.
+  if (arg(2) == 'dashboard' && !arg(3) && user_is_constituent($account)) {
+    drupal_goto('user/' . $account->uid . '/dashboard/issues');
+  }
+
+  return FALSE;
+}
+
+/**
+ * Fix this doc comment.
+ *
+ * If the user's senator's user uid is in the array of user accounts the viewing
+ * user manages, return TRUE.
+ */
+function user_is_legislative_correspondent_of_users_senator($viewing_user, $account) {
+
+  $senator_uid = user_get_senator_uid($account);
+  if (empty($senator_uid)) {
+    return FALSE;
+  }
+
+  foreach ($viewing_user->field_senator_inbox_access[LANGUAGE_NONE] as $item) {
+    if ($item['target_id'] == $senator_uid) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Fix this doc comment.
+ *
+ * Utility function to compare if user's field_senator_inbox_access is set to
+ * viewed inbox account.
+ */
+function user_manages_this_inbox($account, $user) {
+  $user = user_load($user->uid);
+  // Add fields.
+  if (!empty($user->field_senator_inbox_access)) {
+    if (is_array($user->field_senator_inbox_access[LANGUAGE_NONE]) || is_object($user->field_senator_inbox_access[LANGUAGE_NONE])) {
+      foreach ($user->field_senator_inbox_access[LANGUAGE_NONE] as $item) {
+        if ($item['target_id'] == $account->uid && user_has_role(LEGISLATIVE_CORRESPONDENT, $user)) {
+          return TRUE;
+        }
+      }
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Return user autocomplete based on  first_name and last_name.
+ */
+function nys_dashboard_user_autocomplete($search_term) {
+  $matches = array();
+
+  $query = "SELECT fn.entity_id, fn.field_first_name_value AS first_name, ln.field_last_name_value AS last_name
+      FROM field_data_field_first_name fn
+      JOIN field_data_field_last_name ln ON ln.entity_id = fn.entity_id
+      AND ln.bundle = fn.bundle WHERE fn.bundle = 'user'
+      AND CONCAT(fn.field_first_name_value, ' ', ln.field_last_name_value)
+      LIKE :search_term ORDER BY first_name, last_name LIMIT 50";
+  $result = db_query($query, array(':search_term' => '%' . db_like($search_term) . '%'));
+
+  $suggestions = array();
+  foreach ($result as $r) {
+    $name = $r->first_name . ' ' . $r->last_name;
+    if (strpos($prefix, $name) === FALSE) {
+      // Prevent duplicates.
+      $suggestions[$name] = $name;
+    }
+  }
+
+  // Convert to object to prevent drupal bug, see http://drupal.org/node/175361
+  return drupal_json_output((object) $suggestions);
+
+}
+
+/**
+ * Return user autocomplete based on bill anme.
+ */
+function nys_dashboard_bill_autocomplete($search_term) {
+  $matches = array();
+
+  $query = "SELECT n.nid, n.title
+      FROM node n
+      WHERE n.type = 'bill' AND n.title LIKE :search_term ORDER BY n.title LIMIT 50";
+  $result = db_query($query, array(':search_term' => '%' . db_like($search_term) . '%'));
+
+  $suggestions = array();
+  foreach ($result as $r) {
+    $name = $r->title;
+    if (strpos($prefix, $name) === FALSE) {
+      // Prevent duplicates.
+      $suggestions[$name] = $name;
+    }
+  }
+
+  // Convert to object to prevent drupal bug, see http://drupal.org/node/175361
+  return drupal_json_output((object) $suggestions);
+
+}
+
+/**
+ * Usage: theme('nys_dashboard_user_link', array('uid' => $uid));.
+ */
+function theme_nys_dashboard_user_link($variables) {
+  $uid = $variables['uid'];
+  if (empty($uid)) {
+    return '';
+  }
+
+  $query = "SELECT fn.field_first_name_value AS first_name, ln.field_last_name_value AS last_name, field_user_account_target_id AS is_senator, n.title, n.nid
+    FROM users u
+    LEFT JOIN field_data_field_first_name fn ON u.uid = fn.entity_id AND fn.bundle = 'user'
+    LEFT JOIN field_data_field_last_name ln ON ln.entity_id = fn.entity_id AND ln.bundle = 'user'
+    LEFT JOIN field_data_field_user_account ua ON ua.field_user_account_target_id = u.uid
+    LEFT JOIN node n ON n.nid = ua.entity_id AND ua.bundle = 'senator'
+    WHERE u.uid = :uid LIMIT 1";
+
+  $user = db_query($query, array(':uid' => $uid))->fetchAssoc();
+
+  if (!empty($user['first_name']) && !empty($user['last_name'])) {
+    $name_output = $user['first_name'] . ' ' . $user['last_name'];
+  }
+  else {
+    $name_output = $user['name'];
+  }
+
+  $link = 'user/' . $uid . '/dashboard/issues';
+
+  if (!empty($user['is_senator'])) {
+    $name_output = 'Senator ' . $user['title'];
+    $link = 'node/' . $user['nid'];
+  }
+  return l($name_output, $link, array('attributes' => array('class' => array('nys-dashboard-user-link'))));
+}
+
+/**
+ * Change the date format for exposed filters on calendar page date field.
+ */
+function nys_dashboard_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'views_exposed_form') {
+    if (($form['#id'] == 'views-exposed-form-calendar-page-page') || ($form['#id'] == 'views-exposed-form-calendar-page-week')) {
+      $format = 'm/d/Y';
+      $form['field_date_value']['value']['#date_format'] = $format;
+      $form['field_date_value']['value']['#default_value'] = date('Y-m-d');
+    }
+    if ($form['#id'] == 'views-exposed-form-calendar-page-month') {
+      $format = 'm/Y';
+      $form['field_date_value']['value']['#date_format'] = $format;
+      $form['field_date_value']['value']['#default_value'] = date('Y-m-d');
+    }
+    if ($form['#id'] == 'views-exposed-form-calendar-page-week') {
+      list($start_of_week, $end_of_week) = nys_dashboard_get_date($form['field_date_value']['min']['#default_value'], $form['field_date_value']['max']['#default_value']);
+      $format = 'm/d/Y';
+
+      $form['field_date_value']['min']['#date_format'] = $format;
+      $form['field_date_value']['min']['#default_value'] = $start_of_week;
+      $form['field_date_value']['max']['#date_format'] = $format;
+      $form['field_date_value']['max']['#default_value'] = $end_of_week;
+
+    }
+
+  }
+}
+
+/**
+ * Get the date ranges to use on calendar page.
+ */
+function nys_dashboard_get_date($start_date = NULL, $end_date = NULL) {
+  if (!isset($start_date) || ($start_date == '')) {
+    $start_date = date('Y-m-d', time());
+  }
+  if (!isset($end_date) || ($end_date == '')) {
+    $end_date = date('Y-m-d');
+  }
+
+  if (date('l', strtotime($start_date)) == 'Sunday') {
+    $start_date = date('Y-m-d', strtotime($start_date));
+  }
+  else {
+    $start_date = date('Y-m-d', strtotime("previous sunday", strtotime($start_date)));
+  }
+
+  $end_date = date('Y-m-d', strtotime("next saturday", strtotime($start_date)));
+
+  return array($start_date, $end_date);
+}
+
+/**
+ * Builds a constituent table row from provided data.
+ *
+ * @param array $data
+ *   Data array with provided keys:
+ *    - int    $uid
+ *    - string $name
+ *    - string $verified
+ *    - string $city
+ *    - string $zip_code
+ *    - string $age_range
+ *    - string $gender
+ *    - string $last_message_time
+ *   Builds the row itself.
+ *
+ * @return array
+ *   Built table row.
+ */
+function _nys_dashboard_build_constituent_table_row($data) {
+  return array(
+    !empty($data['uid']) ? '<input class="row-checkbox" type="checkbox" name="list[' . $data['uid'] . ']" value="' . $data['uid'] . '">' : '',
+    array('data' => $data['name'], 'class' => 'name'),
+    array('data' => $data['verified'], 'class' => 'verified'),
+    array('data' => $data['city'], 'class' => 'city'),
+    array('data' => $data['zip_code'], 'class' => 'zip'),
+    array('data' => $data['age_range'], 'class' => 'age'),
+    array('data' => $data['gender'], 'class' => 'gender'),
+    array('data' => $data['last_message_time'], 'class' => 'last-messaged'),
+  );
+}
+
+
+
+function nys_dashboard_render_bill_status($bill_to_load, $draw_classes = '', $add_spacer = false) {
+  $bill = node_load($bill_to_load);
+
+  $frontend_statuses = array(
+    array(
+      "value" => 0,
+      "name"  => "Introduced"
+    ),
+    array(
+      "value" => 1,
+      "name"  => "In Committee"
+    ),
+    array(
+      "value" => 2,
+      "name"  => "On Floor Calendar"
+    ),
+    array(
+      "value" => 3,
+      "name"  => "Passed Senate",
+      "type"  => "senate"
+    ),
+    array(
+      "value" => 3,
+      "name"  => "Passed Assembly",
+      "type"  => "assembly"
+    ),
+    array(
+      "value" => 4,
+      "name"  => "Delivered to Governor"
+    ),
+    array(
+      "value" => 5,
+      "name"  => "Signed/Vetoed by Governor"
+    ),
+  );
+
+  $backend_statuses_to_values = array(
+    "INTRODUCED"       => array(0, 0),
+    "IN_ASSEMBLY_COMM" => array(1, 1),
+    "IN_SENATE_COMM"   => array(1, 1),
+    "ASSEMBLY_FLOOR"   => array(2, 2),
+    "SENATE_FLOOR"     => array(2, 2),
+    "PASSED_ASSEMBLY"  => array(3, 4),
+    "PASSED_SENATE"    => array(3, 3),
+    "DELIVERED_TO_GOV" => array(4, 5),
+    "SIGNED_BY_GOV"    => array(5, 6),
+    "VETOED"           => array(5, 6),
+    "STRICKEN"         => array(-1,-1),
+    "LOST"             => array(-1,-1),
+    "SUBSTITUTED"      => array(-1,-1),
+    "ADOPTED"          => array(-1,-1)
+  );
+
+  $is_substituted = false;
+
+  if (!empty($bill->field_ol_substituted_by[LANGUAGE_NONE][0]['value'])) {
+    $sub_bill_base_print_no = $bill->field_ol_substituted_by[LANGUAGE_NONE][0]['value'];
+    $sub_bill_versions = nysenate_get_bill_versions($bill->type, $sub_bill_base_print_no, $bill->field_ol_session[LANGUAGE_NONE][0]['value']);
+    if (!empty($sub_bill_versions)) {
+      $bill = node_load(end($sub_bill_versions)['nid']);
+    }
+  }
+
+  $current_status = $bill->field_ol_last_status[LANGUAGE_NONE][0]['value'];
+  $current_status_value = $backend_statuses_to_values[$current_status];
+
+  // Show if the bill has been signed or vetoed if it's reached the governor.
+  $signed_or_vetoed = "Signed/Vetoed by Governor";
+  if ($current_status == "SIGNED_BY_GOV") {
+    $signed_or_vetoed = "Signed by Governor";
+  }
+  else if ($current_status == "VETOED") {
+    $signed_or_vetoed = "Vetoed by Governor";
+  }
+  $frontend_statuses[6]["name"] = $signed_or_vetoed;
+
+
+  // If the bill has passed it's house's floor vote and gone back to the other houses committee,
+  // show the last status as passing the bill's house.
+  if (
+    ($current_status_value[0] == 1  || $current_status_value[0] == 2) &&
+    ($bill->field_ol_chamber[LANGUAGE_NONE][0]['value'] == 'senate' && strrpos($bill->field_ol_all_statuses[LANGUAGE_NONE][0]['value'], 'PASSED_SENATE'))
+  ) {
+    $current_status       = "PASSED_SENATE";
+  }
+  else if (
+    ($current_status_value[0] == 1  || $current_status_value[0] == 2) &&
+    ($bill->field_ol_chamber[LANGUAGE_NONE][0]['value'] == 'assembly' && strrpos($bill->field_ol_all_statuses[LANGUAGE_NONE][0]['value'], 'PASSED_ASSEMBLY'))
+  ) {
+    $current_status       = "PASSED_ASSEMBLY";
+  }
+
+  // Determines Display Status String
+  switch ($current_status) {
+    case 'INTRODUCED': $display_status = 'Introduced'; $current_status_value = 0; break;
+    case 'IN_ASSEMBLY_COMM': $display_status = 'In Assembly Committee'; $current_status_value = 1; break;
+    case 'IN_SENATE_COMM': $display_status = 'In Senate Committee'; $current_status_value = 1; break;
+    case 'SENATE_FLOOR': $display_status = 'On Floor Calendar'; $current_status_value = 2; break;
+    case 'ASSEMBLY_FLOOR': $display_status = 'On Floor Calendar'; $current_status_value = 2; break;
+    case 'PASSED_ASSEMBLY': $display_status = 'Passed Assembly'; $current_status_value = 3; break;
+    case 'PASSED_SENATE': $display_status = 'Passed Senate'; $current_status_value = 3; break;
+    case 'DELIVERED_TO_GOV': $display_status = 'Delivered to Governor'; $current_status_value = 4; break;
+    case 'SIGNED_BY_GOV': $display_status = 'Signed by Governor'; $current_status_value = 5; break;
+    case 'VETOED': $display_status = 'Vetoed by Governor'; $current_status_value = 5; break;
+    case 'STRICKEN': $display_status = 'Stricken'; $current_status_value = -1; break;
+    case 'LOST': $display_status = 'Lost'; $current_status_value = -1; break;
+    case 'SUBSTITUTED': $display_status = 'Substituted'; $current_status_value = -1; break;
+    case 'ADOPTED': $display_status = 'Adopted'; $current_status_value = -1; break;
+  }
+
+  // Change output string for bills that have passed both houses, but have not yet been delivered to the governor
+  if (($current_status_value == 3) &&
+    ($bill->field_ol_chamber[LANGUAGE_NONE][0]['value'] == 'senate' && $current_status == 'PASSED_ASSEMBLY'))
+  {
+    $display_status = 'Passed Senate &amp; Assembly';
+  }
+  elseif (($current_status_value == 3) &&
+    ($bill->field_ol_chamber[LANGUAGE_NONE][0]['value'] == 'assembly' && $current_status == 'PASSED_SENATE'))
+  {
+    $display_status = 'Passed Senate &amp; Assembly';
+  }
+
+  $status_info = array(
+    'current_status' => $current_status,
+    'current_status_value' => $current_status_value,
+    'frontend_statuses' => $frontend_statuses,
+    'chamber' => $bill->field_ol_chamber[LANGUAGE_NONE][0]['value'],
+    'last_status_committee' => $bill->field_ol_latest_status_committee[LANGUAGE_NONE][0]['value'],
+    'draw_classes' => $draw_classes,
+    'add_spacer' => $add_spacer
+  );
+
+  $result = new stdClass();
+  $result->graph_html = theme('nys_blocks_bill_status', $status_info);
+  $result->display_status = $display_status;
+
+  return $result;
+}
+
+

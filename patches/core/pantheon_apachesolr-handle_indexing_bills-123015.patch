@@ -1,0 +1,13 @@
+diff --git a/modules/pantheon/pantheon_apachesolr/Pantheon_Search_Api_Solr_Service.php b/modules/pantheon/pantheon_apachesolr/Pantheon_Search_Api_Solr_Service.php
+index fbb9cb3..6853cbd 100644
+--- a/modules/pantheon/pantheon_apachesolr/Pantheon_Search_Api_Solr_Service.php
++++ b/modules/pantheon/pantheon_apachesolr/Pantheon_Search_Api_Solr_Service.php
+@@ -66,7 +66,7 @@ class PantheonApachesolrSearchApiSolrConnection extends SearchApiSolrConnection
+       $options['context'] = $this->stream_context;
+     }
+     // Specify timeout.
+-    $options['timeout'] = 5;
++    $options['timeout'] = 15;
+ 
+     $result = drupal_http_request($url, $options);
+ 

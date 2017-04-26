@@ -1,0 +1,86 @@
+<?php
+
+/**
+ * @file
+ * Install, uninstall, update and helper
+ * functions for the Media: UStream module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function media_ustream_install() {
+  _media_ustream_import_file_displays();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function media_ustream_uninstall() {
+  return array();
+}
+
+/**
+ * Import the default file displays.
+ */
+function media_ustream_update_7001() {
+  _media_ustream_import_file_displays();
+  return t('The Media UStream default file displays were moved to the database.');
+}
+
+/**
+ * Implements hook_install().
+ */
+function _media_ustream_import_file_displays() {
+  // Create initial display settings.
+  module_load_include('inc', 'file_entity', 'file_entity.file_api');
+
+  $existing_display = file_displays_load('video', 'default');
+  if (empty($existing_display)) {
+    // Video previews should be displayed using a large filetype icon.
+    $display = array(
+      'api_version' => 1,
+      'name' => 'video__default__media_ustream_video',
+      'weight' => 0,
+      'status' => 1,
+      'settings' => array(
+        'width' => 640,
+        'height' => 393,
+        'autoplay_live' => FALSE,
+        'autoplay_recorded' => FALSE,
+        'new_player' => TRUE,
+        'player_color' => '',
+        'custom_color' => '',
+      ),
+    );
+    file_display_save((object) $display);
+
+    $display = array(
+      'api_version' => 1,
+      'name' => 'video__preview__media_ustream_image',
+      'weight' => 0,
+      'status' => 1,
+      'settings' => array(
+        'image_style' => 'media_thumbnail',
+      ),
+    );
+    file_display_save((object) $display);
+
+    $display = array(
+      'api_version' => 1,
+      'name' => 'video__teaser__media_ustream_video',
+      'weight' => 0,
+      'status' => 1,
+      'settings' => array(
+        'width' => 640,
+        'height' => 393,
+        'autoplay_live' => FALSE,
+        'autoplay_recorded' => FALSE,
+        'new_player' => TRUE,
+        'player_color' => '',
+        'custom_color' => '',
+      ),
+    );
+    file_display_save((object) $display);
+  }
+}

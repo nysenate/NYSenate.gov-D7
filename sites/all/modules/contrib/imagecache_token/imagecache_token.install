@@ -1,0 +1,23 @@
+<?php
+/**
+ * @file
+ * Installation and update scripts for the Imagecache Token module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function imagecache_token_uninstall() {
+  variable_del('imagecache_token_fields');
+}
+
+/**
+ * Implementations of hook_update_N().
+ */
+
+/**
+ * Clear the menu cache so that the new settings page will be accessible.
+ */
+function imagecache_token_update_7100() {
+  variable_set('menu_rebuild_needed', TRUE);
+}

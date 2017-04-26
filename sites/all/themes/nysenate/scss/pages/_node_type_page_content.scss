@@ -1,0 +1,54 @@
+/*---------------------------------
+
+ Styles specific to Page Content types
+
+----------------------------------*/
+.node-type-page-content .node-page-content{
+
+	ul { list-style: disc inside; }
+	ol { list-style: decimal inside; }
+	
+	ul,
+	ol {
+		margin: 20px 0 0;
+
+		li {
+			font-family: "Adelle Light";
+			font-size: 14px;
+			line-height: 1.5em;
+			color: $grey02;
+
+			& + li {
+				margin-top: 5px;
+			}
+		}
+
+		& + p {
+			margin-top: 20px;
+		}
+	}
+
+
+}
+
+@media #{$tablet} {
+	.node-type-page-content .node-page-content{
+
+		ul,
+		ol {
+			margin: 30px 0 0;
+
+			li {
+				font-size: 16px;
+
+				& + li {
+					margin-top: 10px;
+				}
+			}
+
+			& + p {
+				margin-top: 20px;
+			}
+		}
+	}
+}

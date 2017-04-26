@@ -1,0 +1,901 @@
+// Non-modular or client styles for the .l-content region.
+/*-------------------------------------
+/ ELEMENT GLOBALS
+/-------------------------------------*/
+
+.page {
+  overflow: hidden;
+}
+body {
+  font-size: 62.5%;
+  font-family: "Proxima Nova Regular";
+  -webkit-font-smoothing: antialiased;
+
+  &.nav-open,
+  &.overlay-open {
+    position: fixed;
+    overflow: hidden
+  }
+}
+
+img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+// captcha image don't need to be full width - makes them look awful
+.captcha {
+  img {
+    width: auto;
+  }
+}
+h1, h2, h3, h4,
+p,
+ul, li,
+button {
+  margin: 0;
+}
+
+a {
+  outline: 0;
+}
+
+select {
+    -moz-appearance: none;
+    text-indent: 0.01px;
+    text-overflow: '';
+}
+
+// make videos responsive w/ foundation mixin we stored in our sass
+.media-youtube-video {
+  @include flex-video-container;
+}
+
+/*-------------------------------------------------------
+/
+/ GLOBAL STYLES
+/
+/-------------------------------------------------------*/
+p{
+  font-family: "Adelle Light";
+  line-height: 1.5em;
+  color: #666;
+  font-size: 16px;
+
+  & + p {
+    margin-top: 20px;
+  }
+
+  b {
+    font-family: "Adelle Bold";
+  }
+
+  a {
+    @extend .link-text;
+  }
+}
+
+ul,
+ol {
+  clear: both;
+  list-style-position: inside;
+  margin: 0;
+  padding-left: 20px;
+
+  li {
+    font-family: "Adelle Light";
+    line-height: 1.5em;
+    color: #666;
+    font-size: 16px;
+
+    & + li {
+      margin-top: 5px;
+    }
+  }
+
+  &.menu {
+    margin-top: 0;
+    padding-left: 0;
+
+    li + li {
+      margin-top: 0;
+    }
+  }
+}
+
+* + ul,
+* + ol { margin-top: 20px; }
+
+.c-block ul {
+  list-style-position: outside;
+  margin-bottom:20px;
+}
+
+.c-block ol {
+  margin-bottom:20px;
+}
+
+.nys-title {
+  margin: 0 0 20px 0;
+  color: $grey02;
+  text-transform: capitalize;
+  font-family: 'Adelle Bold';
+  font-size: 18px;
+
+  &.nys-title--district {
+    margin-bottom: 5px;
+  }
+}
+
+.page-node-contact .nys-title {
+  text-transform: none;
+}
+
+.nys-article-title {
+  margin: 0 0 20px 0;
+  color: $grey02;
+  font-family: "Adelle Light";
+  font-size: 22px;
+  line-height: 1.2em;
+}
+// article title on initiative page margin-bottom diff
+.node-initiative {
+  .nys-article-title {
+    margin-bottom: 0;
+  }
+}
+.nys-subtitle-title {
+  margin: 0 0 15px;
+  text-transform: capitalize;
+  font-family: "Adelle Regular";
+  font-size: 18px;
+  line-height: 1;
+}
+.nys-subtitle {
+  display: inline-block;
+  margin: 0 0px 20px 0;
+  text-transform: capitalize;
+  font-family: "Proxima Nova Regular";
+  font-size: 16px;
+  color: $grey01;
+}
+.nys-arrow-link {
+  display: block;
+  float: right;
+  margin-bottom: 40px;
+  color: $orange01;
+  text-transform: uppercase;
+  font-family: "Proxima Nova SemiBold";
+  font-size: 11px;
+  line-height: 1.2em;
+
+  @extend .icon-after__right;
+
+  &:after {
+    margin-top: -0.2em;
+    font-size: 1.5em;
+  }
+
+  // anything after it clears
+  & + * {
+    clear: right;
+  }
+}
+/*
+  a list of associated issues, committees, etc.
+  a ul with a tags inside lis.
+  usually in a node header area under page title
+*/
+UL.nys-associated-topics {
+  border-left: 1px solid $grey04;
+  padding-left: 14px;
+}
+
+
+.nys-associated-topics {
+  display: block;
+  list-style: none;
+  font-size: 12px;
+  line-height: 1em;
+  padding-left: 0;
+
+  ul {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    display: inline-block;
+    margin-right: 10px;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-family: "Proxima Nova SemiBold";
+    white-space: nowrap;
+  }
+
+  a {
+    @extend .lgt-text;
+  }
+}
+.nys-associated-topics--label {
+  display: inline-block;
+  margin-right: 10px;
+  text-transform: uppercase;
+  font-size: 12px;
+  line-height: 1em;
+  font-family: "Proxima Nova SemiBold";
+}
+@media #{$tablet} {
+  p {
+    font-size: 20px;
+    line-height: 32px;
+
+    & + p {
+      margin-top: 40px;
+    }
+  }
+  ul,
+  ol {
+    padding-left: 40px;
+
+    li {
+      font-size: 20px;
+      line-height: 32px;
+
+      & + li {
+        margin-top: 10px;
+      }
+    }
+    &.menu {
+      margin-top: 0;
+      padding-left: 0;
+
+      li+ li {
+        margin-top: 0;
+      }
+    }
+  }
+  * + ul,
+  * + ol {
+    margin-top: 40px;
+  }
+  .l-main {
+    strong {
+      font-family: "Adelle SemiBold"
+    }
+  }
+  .nys-title {
+    font-size: 32px;
+  }
+  .nys-article-title {
+    margin: 0 0 30px;
+    font-size: 48px;
+  }
+  // article title on initiative page margin-bottom diff
+  .node-initiative {
+    .nys-article-title {
+      margin-bottom: 0;
+    }
+  }
+  .nys-subtitle-title {
+    margin: 0 0 30px;
+    font-size: 26px;
+  }
+  .nys-arrow-link {
+    font-size: 16px;
+    margin-bottom: 70px;
+
+    &:after {
+      // becomes arrow
+      content: "\72";
+    }
+  }
+  .nys-associated-topics {
+    display: inline-block;
+    margin-top: 0;
+
+    li {
+      margin-top: 0;
+    }
+  }
+}
+
+/*------------------------------------
+/
+/ consistent top margins on pages
+/
+/-------------------------------------*/
+main.l-row--main {
+  padding-top: 40px;
+}
+
+@media #{$tablet} {
+  main.l-row--main {
+    padding-top: 80px;
+  }
+}
+
+// specific pages that do not need top padding
+.section-committees {
+  main.l-row--main {
+    padding-top: 0;
+  }
+}
+
+/*-------------------------------------
+/
+/ LAYOUT - ROWS
+/ controls overall width of elements
+/
+/-------------------------------------*/
+.l-row {
+  position: relative;
+  clear: both;
+  margin: 0 auto;
+  width: 100%;
+
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+.l-row--nav {
+  padding: 0 20px;
+  max-width: 100%;
+}
+.l-row--hero {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+.l-row--main {
+  position: relative;
+  z-index: 3;
+  // max-width should account for padding,
+  // so + 40 (20px left and 20px right)
+  padding: 0 20px;
+  max-width: 440px;
+}
+.page-node-dashboard {
+  .l-row--main {
+    max-width: 100%;
+  }
+  .row {
+    margin: 0;
+  }
+}
+.l-row--footer { max-width: 1040px; }
+
+@media #{$tablet} {
+  .l-row--nav {
+    padding: 0 9%;
+    max-width: 1500px;
+  }
+  .l-row--hero { max-width: 1500px; }
+  .l-row--main {
+    padding: 0 40px;
+    max-width: 840px;
+  }
+    .page-node-dashboard {
+      .l-row--main {
+          max-width: 100%;
+      }
+      .row {
+          margin: 0;
+      }
+    }
+  .l-row--footer { max-width: 1040px; }
+}
+
+@media #{$desktop} {
+  .l-row--nav {
+    padding: 0 9%;
+    max-width: 1500px;
+  }
+  .l-row--hero { max-width: 1500px; }
+  .l-row--main { max-width: 840px; }
+    .page-node-dashboard {
+      .l-row--main {
+          max-width: 100%;
+      }
+      .row {
+          margin: 0;
+      }
+    }
+}
+
+@media #{$large} {
+
+  .l-row--nav {
+    padding: 0 9%;
+    max-width: 1500px;
+  }
+  .l-row--hero { max-width: 1500px; }
+  .l-row--main { max-width: 840px; }
+    .page-node-dashboard {
+      .l-row--main {
+          max-width: 100%;
+      }
+      .row {
+          margin: 0;
+      }
+    }
+}
+
+/*-------------------------------------
+/
+/ LAYOUT - COLUMNS
+/ controls overall width of elements
+/
+/-------------------------------------*/
+.l-col {
+  position: relative;
+  float: left;
+  width: 100%;
+}
+@media #{$tablet} {
+  .l-col-2 {
+    width: 50%;
+
+    &.l-col--padded {
+      padding-right: 5%;
+    }
+
+    & + .l-col-2 {
+      &.l-col--padded {
+        padding-right: 0;
+        padding-left: 5%;
+      }
+    }
+  }
+  .l-col-3 {
+    width: 33.33%;
+  }
+  .l-col-4 {
+    width: 25%;
+  }
+  // used for update feeds and the like
+  .l-col-1-of-3 {
+    width: 24%;
+    padding-right: 2%;
+  }
+  .l-col-1-of-2 {
+    width: 24%;
+    padding-right: 2%;
+  }
+  .l-col-2-of-2 {
+    width: 76%;
+    padding-right: 10%;
+  }
+  .l-col-2-of-3 {
+    width: 49%;
+    padding-right: 2%;
+  }
+  // use this is if your second column doesn't have a third.
+  .l-col-2-of-3__full {
+    width: 72%;
+  }
+  .l-col-3-of-3 {
+    width: 27%;
+  }
+}
+
+/*-------------------------------------------------------
+/
+/   Dropdowns
+/
+/-------------------------------------------------------*/
+.dropdown {
+  font-family: 'Proxima Nova SemiBold';
+  font-size: 14px;
+  color: $blue01;
+  text-transform: uppercase;
+  position: relative;
+
+  .l-active-container {
+    padding: 15px 12px 15px 20px;
+    border: 2px solid $grey05;
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+
+    .icon,
+    .c-active {
+      display: inline-block;
+    }
+
+    .c-active {
+      float: left;
+    }
+
+    .icon {
+      float: right;
+    }
+
+    .icon:after {
+      font-weight: bold;
+    }
+  }
+
+  .c-list {
+    display: none;
+    list-style: none;
+    border: 2px solid $grey05;
+    border-top: none;
+    font-size: inherit;
+    font-family: inherit;
+    color: inherit;
+    .c-item {
+      padding: 10px 12px 10px 20px;
+
+      .c-item-button {
+        background: none;
+        color: inherit;
+        font-family: inherit;
+        font-size: inherit;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        text-align: left;
+        outline: none;
+      }
+    }
+  }
+}
+
+.dropdown.u-open {
+  .l-active-container {
+    border-bottom: none;
+  }
+
+  .c-list {
+    display: block;
+  }
+}
+
+/*-------------------------------------------------------
+/
+/   Tabs
+/   TODO HOOK UP FOUNDATION TABS AND CLASSES
+/
+/-------------------------------------------------------*/
+.c-tab-block--title {
+  font-family: "Adelle SemiBold";
+  font-size: 18px;
+  line-height: 21px;
+  color: $grey02;
+  margin-bottom: 20px;
+  text-transform: capitalize;
+}
+.l-tab-bar {
+  position: relative;
+  width: 100%;
+  height: 45px;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding-top: 45px;
+  border: 1px solid #C0C0C0;
+  margin-bottom: -1px;
+
+  .arrow {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    pointer-events: none;
+    font-size: 24px;
+    width: 45px;
+    height: 45px;
+    @extend .lgt-text;
+  }
+
+  .c-tab {
+    margin: 0;
+    width: 100%;
+    height: 45px;
+    box-sizing: border-box;
+
+    text-transform: uppercase;
+
+    .c-tab-link {
+      width: 100%;
+      height: 100%;
+      padding: 0px 0px 0px 20px;
+      display: block;
+      @extend .lgt-text;
+      font-family: 'Proxima Nova SemiBold';
+      font-size: 14px;
+      line-height: 45px;
+      letter-spacing: 0.03em;
+    }
+  }
+
+  .c-tab.active {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+.c-tab--arrow {
+  position: absolute;
+  right: 16px;
+  top: 4px;
+  height: 45px;
+  width: 25px;
+  @extend .lgt-text;
+  @extend .icon-replace__see-more;
+  z-index: 1;
+  pointer-events: none;
+
+  &:after {
+    font-size: 26px;
+  }
+}
+.c-tabs--related-issues {
+  a {
+    text-transform: uppercase;
+    font-family: "Proxima Nova Semibold";
+    font-size: 12px;
+    line-height: 1em;
+    @extend .link-text;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+.c-tab--link-more {
+  display: block;
+  text-align: right;
+  text-transform: uppercase;
+  font-family: "Proxima Nova SemiBold";
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  @extend .icon-after__arrow;
+  @extend .link-text;
+
+  &:after {
+    margin-top: -0.15em;
+    font-size: 1.5em;
+    line-height: 14px;
+  }
+}
+
+.l-tab-bar.open {
+  height: auto;
+
+  .c-tab--arrow {
+    position: absolute;
+    right: 16px;
+    top: 4px;
+    height: 45px;
+    width: 25px;
+    @extend .icon-replace__see-less;
+  }
+}
+
+.tabs-content>.content {
+  padding: 0;
+}
+
+.block-menu-menu-issue-explorer ul {
+  width: 100%;
+  height: 45px;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding-top: 45px;
+  position: relative;
+  border: 1px solid #C0C0C0;
+  margin-bottom: 0;
+
+  .arrow {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    pointer-events: none;
+    font-size: 24px;
+    @extend .lgt-text;
+  }
+
+  li.leaf {
+    width: 100%;
+    height: 45px;
+    box-sizing: border-box;
+
+    text-transform: uppercase;
+
+    a {
+      width: 100%;
+      height: 100%;
+      padding: 12px 0px 0px 20px;
+      display: block;
+      @extend .lgt-text;
+      font-family: 'Proxima Nova SemiBold';
+      font-size: 14px;
+    }
+  }
+
+  .c-tab.active {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+
+@media #{$tablet} {
+  .c-tab-block--title {
+    font-family: "Adelle Bold";
+    font-size: 32px;
+    line-height: 41px;
+    color: $grey02;
+  }
+  .l-tab-bar{
+    overflow: hidden;
+    margin: 30px 0 -1px 0;
+    border: none;
+    border-bottom: 1px solid $grey05;
+    padding-top: 0;
+    height: auto;
+
+    .arrow {
+      display: none;
+    }
+
+    .c-tab {
+      list-style: none;
+      float: left;
+      height: 50px;
+      border: 1px solid transparent;
+      margin-right: -2px;
+      margin-bottom: -2px;
+      text-transform: uppercase;
+      width: auto;
+
+      .section-committees &{
+        width:33.5%
+      }
+
+      .c-tab-link {
+        display: block;
+        width: 100%;
+        height: 100%;
+        padding: 0 50px;
+        text-align: center;
+        white-space: nowrap;
+        background: none;
+        line-height: 50px;
+      }
+      .c-tab-link:hover, a:hover{
+        background: none;
+      }
+    }
+
+    .c-tab-link.first{
+      border-left: none;
+    }
+
+    .c-tab.active{
+      border: 1px solid #aaa;
+      position: relative;
+      z-index: 2;
+      .c-tab-link,  li.leaf a{
+        border-left: none;
+      }
+    }
+  }
+  .l-tab-bar.open .c-tab--arrow { display: none; }
+  .tabs dd>a {
+    padding: 0;
+  }
+  .tabs-content > .content {
+    padding: 0;
+  }
+
+  .tabs-content {
+    // column layouts
+    .l-col-1-of-3 {}
+    .l-col-2-of-3 {}
+    .l-col-3-of-3 {
+
+      a {
+        display: block;
+        float: right;
+        max-width: 200px;
+      }
+    }
+    .pager-load-more{
+      background-color: $grey06;
+      padding: 0;
+      margin: 1.75em 0 0 0;
+
+      a {
+        font-family: 'Proxima Nova SemiBold';
+        font-size: 14px;
+        color: $blue03;
+        padding: 5px 0;
+        display: block;
+      }
+      &.pager-load-more-empty {
+        display: none;
+      }
+    }
+  }
+  .c-tab--link-more {
+    font-size: 14px;
+  }
+
+  .block-menu-menu-issue-explorer ul {
+    overflow: hidden;
+    margin: 30px 0 30px 0;
+    border: none;
+    border-bottom: 1px solid $grey05;
+    padding-top: 0;
+    height: auto;
+
+    .arrow {
+      display: none;
+    }
+
+    li.leaf{
+      list-style: none;
+      float: left;
+      height: 50px;
+      padding-top: 12px;
+      border: 1px solid transparent;
+      margin-right: -2px;
+      margin-bottom: -2px;
+      text-transform: uppercase;
+      width: auto;
+
+      a{
+        display: block;
+        width: 100%;
+        height: 20px;
+        border-left: 1px solid $grey05;
+        padding-left: 35px;
+        padding-right: 36px;
+        background: none;
+        padding-top: 0;
+      }
+      a:hover{
+        background: none;
+      }
+    }
+
+    li.leaf.first a{
+      border-left: none;
+    }
+    li.leaf.active-trail a{
+      border-left: none;
+      border-right: none;
+    }
+    li.leaf.active-trail{
+      border: 1px solid #aaa;
+      position: relative;
+      z-index: 2;
+      .c-tab-link,  li.leaf a{
+        border-left: none;
+      }
+    }
+    li.leaf.active-trail + .leaf a {
+      border-left: none;
+    }
+  }
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+#user-profile-view {
+  .dash-user-img, .dash-senator-img {
+    width: auto;
+  }
+}

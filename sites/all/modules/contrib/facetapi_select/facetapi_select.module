@@ -1,0 +1,104 @@
+<?php
+
+function facetapi_select_facet_form($form_state, $options, $count = 0) {
+  drupal_add_js(drupal_get_path('module', 'facetapi_select') .'/js/facetapi_select.js');
+  
+  $name = 'facetapi_select_facet_form_' . $count;
+  $form['facets'] = array(
+    '#type' => 'select',
+    '#id' => $name,
+    '#default_value' => '',
+    '#options' => $options,
+    '#attributes' => array('onchange' => "top.location.href=document.getElementById('$name').options[document.getElementById('$name').selectedIndex].value"),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#attributes' => array('class' => array('facetapi-select-submit')),
+    '#value' => t('Submit'),
+  );
+  return $form;
+}
+
+/**
+ * Submit function for facetapi_select_form().
+ */
+function facetapi_select_facet_form_submit($form, &$form_state) {
+  preg_match('/^\/(.*)\?(.*)/', $form_state['values']['facets'], $filters);
+  drupal_goto($filters[1], $query = $filters[2]);
+}
+
+/**
+ * Implements hook_facetapi_widgets().
+ */
+function facetapi_select_facetapi_widgets() {
+  return array(
+    'facetapi_select_dropdowns' => array(
+      'handler' => array(
+        'label' => t('Select Field (Dropdowns)'),
+        'class' => 'FacetapiSelectDropdowns',
+        'query types' => array('term', 'date'),
+      ),
+    ),
+  );
+}
+
+/**
+ * Widget that renders facets as dropdowns.
+ */
+class FacetapiSelectDropdowns extends FacetapiWidgetLinks {
+
+  /**
+   * Renders the links.
+   */
+  public function execute() {
+    static $count = 0;
+    $count++;
+    $element = &$this->build[$this->facet['field alias']];
+
+    $settings = $this->settings;
+
+    $facet_active = FALSE;
+    foreach ($element as $value => $item) {
+      $path = !empty($this->settings->settings['submit_page']) ? $this->settings->settings['submit_page'] : $item['#path'];
+      $path = strpos($item['#path'], $path) === 0 ? $item['#path'] : $path;
+      $url = url($path, array('query' => $item['#query']));
+      $options[$url] = $item['#markup'].' ('.$item['#count'].')';
+      if ($item['#active']) {
+        $facet_active = TRUE;
+      }
+    }
+
+    if (!$facet_active) {
+      if (!empty($settings->settings['default_option_label'])) {
+        array_unshift($options, $settings->settings['default_option_label']);
+      }
+      else {
+        array_unshift($options, t('--Choose--'));
+      }
+    }
+
+    // We keep track of how many facets we're adding, because each facet form
+    // needs a different form id.
+    if (end($options) !== '(-)') {
+      if (!isset($form_state)) {
+        $form_state = array();
+      }
+      $element = facetapi_select_facet_form($form_state, $options, $count);
+    }
+  }
+
+  public function settingsForm(&$form, &$form_state) {
+    parent::settingsForm($form, $form_state);
+    $form['widget']['widget_settings']['links'][$this->id]['default_option_label'] = array(
+      '#title' => t('Default Option Label'),
+      '#type' => 'textfield',
+      '#default_value' => !empty($this->settings->settings['default_option_label']) ? $this->settings->settings['default_option_label'] : '',
+    );
+    $form['widget']['widget_settings']['links'][$this->id]['submit_page'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Force this facet to submit to a specific search page'),
+      '#description' => t('This facet will always submit to the page it is on if left empty.'),
+      '#default_value' => !empty($this->settings->settings['submit_page']) ? $this->settings->settings['submit_page'] : '',
+    );
+  }
+}

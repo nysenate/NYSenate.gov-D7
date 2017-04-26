@@ -1,0 +1,38 @@
+diff --git a/login_history.install b/login_history.install
+index c10bd88..38f2f58 100644
+--- a/login_history.install
++++ b/login_history.install
+@@ -38,7 +38,10 @@ function login_history_update_2() {
+   db_drop_field('users', 'last_login');
+ }
+ 
+-
++/**
++ * Trigger an update to clear the cache and ensure menu items are updated.
++ */
++function login_history_update_3() {}
+ 
+ /**
+  * Implements hook_schema().
+diff --git a/login_history.module b/login_history.module
+index 5885e98..5f1498b 100644
+--- a/login_history.module
++++ b/login_history.module
+@@ -47,7 +47,7 @@ function login_history_menu() {
+     'access arguments' => array('administer users'),
+     'file' => 'includes/login_history.pages.inc',
+   );
+-  $items['user/%user/login_history'] = array(
++  $items['user/%user/login-history'] = array(
+     'title' => 'Login history',
+     'description' => '',
+     'page callback' => 'login_history_report_callback',
+@@ -106,7 +106,7 @@ function login_history_block_view($delta = '') {
+         $output = '<p>' . t('You last logged in from @hostname using @user_agent.', array('@hostname' => $hostname, '@user_agent' => $user_agent)) . '</p>';
+         if (user_access('view own login history')) {
+           global $user;
+-          $output .= '<span class="read-more">' . t('<a href="@link">View your login history.</a>', array('@link' => url('user/'. $user->uid . '/login_history'))) . '</span>';
++          $output .= '<span class="read-more">' . l(t('View your login history.'), 'user/' . $user->uid . '/login-history') . '</span>';
+         }
+ 
+         $block['subject'] = t('Last login');

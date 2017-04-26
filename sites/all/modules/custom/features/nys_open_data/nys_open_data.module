@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the NYS Open Data feature.
+ */
+
+include_once 'nys_open_data.features.inc';

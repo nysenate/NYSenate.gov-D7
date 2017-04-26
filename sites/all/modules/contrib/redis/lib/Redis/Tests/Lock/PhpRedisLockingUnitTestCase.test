@@ -1,0 +1,27 @@
+<?php
+
+if (!class_exists('Redis_Tests_Lock_LockingUnitTestCase')) {
+  require_once(__DIR__ . '/LockingUnitTestCase.php');
+}
+
+class Redis_Tests_Lock_PhpRedisLockingUnitTestCase extends Redis_Tests_Lock_LockingUnitTestCase
+{
+    public static function getInfo()
+    {
+        return array(
+            'name'        => 'PhpRedis Redis locking',
+            'description' => 'Ensure that Redis locking feature is working OK.',
+            'group'       => 'Redis',
+        );
+    }
+
+    protected function getLockBackendClass()
+    {
+        return 'Redis_Lock_PhpRedis';
+    }
+
+    protected function getClientInterface()
+    {
+        return 'PhpRedis';
+    }
+}

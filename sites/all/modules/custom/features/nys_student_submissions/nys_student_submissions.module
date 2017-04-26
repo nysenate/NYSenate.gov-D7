@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the NYS Student Submissions feature.
+ */
+
+include_once 'nys_student_submissions.features.inc';

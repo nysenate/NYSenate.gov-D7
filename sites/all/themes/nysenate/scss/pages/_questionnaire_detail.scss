@@ -1,0 +1,86 @@
+.node-type-questionnaire {
+  .alert-box-message {
+    display: inline-block;
+  }
+  .field,
+  .text-content {
+    margin: 5px 0;
+
+    &.field-name-field-file-image-title-text { margin: 0; }
+    
+    .field-label {
+      font-family: "Proxima Nova Regular";
+      font-size: 13px;
+      color: $grey05;
+      text-transform: uppercase;
+      margin-right: 5px;
+    }
+    .date-display-single {
+      font-family: "Proxima Nova Regular";
+      font-size: 13px;
+    }
+    a,
+    li {
+      font-family: "Proxima Nova Regular";
+      font-size: 12px;
+      color: $yellow03;
+      text-transform: uppercase;
+      line-height: 18px;
+    }
+    li {
+      list-style: none;
+    }
+  }
+  .text-content {
+    div {
+      display: inline-block;
+    }
+  }
+  .field-name-field-issues {
+    padding-bottom: 0;
+  }
+  .field-name-field-image-main {
+    margin-bottom: 20px;
+  }
+  .field-name-field-webform {
+    margin-top: 20px;
+    .webform-submit {
+      height: 35px;
+      line-height: 3px;
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.webform-client-form, .webform-client-form LABEL {
+  font-family: "Adelle Light", serif;
+  font-size: 20px;
+  text-transform: none;
+  color: #222;
+  cursor: default;
+}  
+
+.webform-client-form LABEL {
+  text-indent:-14px;
+  margin-left:14px;
+  .option {
+    color:#666;
+    cursor:pointer;
+    margin-left:14px;
+  }
+}
+
+.webform-client-form DIV.form-radios DIV.form-type-radio {
+  margin-left: 14px;
+  LABEL {
+    padding-left:10px;
+  }
+}
+
+
+
+@media #{$tablet} {
+  .node-type-questionnaire {
+    
+  }
+}

@@ -1,0 +1,132 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the location_contact_name module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function location_contact_name_schema() {
+  $schema['location_contact_name'] = array(
+    'description' => 'location_contact_name.module {location} supplementary table.',
+    'fields' => array(
+      'lid' => array(
+        'description' => '{location}.lid',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'contact_name' => array(
+        'description' => 'contact_name number',
+        'type' => 'varchar',
+        'length' => 31,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('lid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function location_contact_name_install() {
+  // Change weight.
+  db_update('system')
+    ->fields(
+      array(
+        'weight' => 1,
+      )
+    )
+    ->condition('name', 'location_contact_name')
+    ->condition('type', 'module')
+    ->execute();
+}
+
+/**
+ * Location 3.0 update 1.
+ *
+ * Fix pgsql -- The table definition was broken.
+ */
+function location_contact_name_update_5300() {
+  if (!db_table_exists('location_contact_name')) {
+    $schema['location_contact_name'] = array(
+      'description' => 'location_contact_name.module {location} supplementary table.',
+      'fields' => array(
+        'lid' => array(
+          'description' => '{location}.lid',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'contact_name' => array(
+          'description' => 'contact_name number',
+          'type' => 'varchar',
+          'length' => 31,
+          'not null' => TRUE,
+          'default' => '',
+        ),
+      ),
+      'primary key' => array('lid'),
+    );
+    db_create_table('location_contact_name', $schema['location_contact_name']);
+  }
+  else {
+    // If the table WAS created (i.e. user manually fixed bug and reinstalled), g/c the postal_code column.
+    if (db_field_exists('location_contact_name', 'postal_code')) {
+      db_drop_field('location_contact_name', 'postal_code');
+    }
+  }
+}
+
+/**
+ * Location 3.0 update 2.
+ *
+ * Change weight of module.
+ */
+function location_contact_name_update_5301() {
+  // This update was moved to update 5302.
+}
+
+/**
+ * Location 3.0 update 2.
+ *
+ * Change weight of module.
+ */
+function location_contact_name_update_5302() {
+  // Change weight.
+  db_update('system')
+    ->fields(
+      array(
+        'weight' => 1,
+      )
+    )
+    ->condition('name', 'location_contact_name')
+    ->condition('type', 'module')
+    ->execute();
+}
+
+/**
+ * Drupal 6 updates.
+ */
+function location_contact_name_update_6301() {
+  db_change_field(
+    'location_contact_name',
+    'contact_name',
+    'contact_name',
+    array(
+      'description' => 'contact_name',
+      'type' => 'varchar',
+      'length' => 31,
+      'not null' => TRUE,
+      'default' => '',
+    )
+  );
+}

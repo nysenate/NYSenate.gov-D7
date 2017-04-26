@@ -1,0 +1,229 @@
+<?php
+
+/**
+ * @file
+ * A module to send a weekly digest to all users.
+ */
+
+/**
+ * Implements hook_help().
+ *
+ * Displays help and module information.
+ *
+ * @param path 
+ *   Which path of the site we're using to display help
+ * @param arg 
+ *   Array that holds the current path as returned from arg() function
+ */
+function nys_email_digest_help($path, $arg) {
+  if ($path == "admin/help#nys_email_digest") {
+    return "<p>" . t("Send a weekly digest to all users.") . "</p>";
+  }
+}
+
+/**
+ * Retrieve a list of issues created this week.
+ *
+ * @param last_monday
+ *   Last Monday's timestamp.
+ * @param now
+ *   Now's timestamp.
+ */
+function nys_email_digest_issues($last_monday, $now) {
+  // TODO: This is incorrect logic. This is counting how many times a piece of content is tagged with an issue this week.
+  $issue_vid   = 4;
+  $issue_count = db_query("SELECT COUNT(taxonomy_term_data.tid) FROM taxonomy_term_data JOIN taxonomy_index ON (taxonomy_index.tid = taxonomy_term_data.tid) WHERE taxonomy_term_data.vid = :vid AND (taxonomy_index.created >= :lastmonday AND taxonomy_index.created <= :now)", array(":vid" => $issue_vid, ":lastmonday" => $last_monday, ":now" => $now))->fetchField();
+
+  return $issue_count << 0;
+}
+
+/**
+ * Retrieve a list of bills created this week.
+ *
+ * @param last_monday
+ *   Last Monday's timestamp.
+ * @param now
+ *   Now's timestamp.
+ */
+function nys_email_digest_bills_introduced($last_monday, $now) {
+  $bills_introduced_count = db_query("SELECT COUNT(entity_id) FROM field_data_field_ol_publish_date WHERE bundle = 'bill' AND (field_ol_publish_date_value >= :lastmonday AND field_ol_publish_date_value <= :now)", array(":lastmonday" => $last_monday, ":now" => $now))->fetchField();
+
+  return $bills_introduced_count << 0;
+}
+
+/**
+ * Retrieve a list of public hearings that happened week.
+ *
+ * @param last_monday
+ *   Last Monday's timestamp.
+ * @param now
+ *   Now's timestamp.
+ */
+function nys_email_digest_public_hearings($last_monday, $now) {
+  $public_hearing_count = db_query("SELECT COUNT(entity_id) FROM field_data_field_date WHERE bundle = 'public_hearing' AND (field_date_value >= :lastmonday AND field_date_value <= :now)", array(":lastmonday" => $last_monday, ":now" => $now))->fetchField();
+
+  return $public_hearing_count << 0;
+}
+
+/**
+ * Retrieve a list of committee meetings that happened week.
+ *
+ * @param last_monday
+ *   Last Monday's timestamp.
+ * @param now
+ *   Now's timestamp.
+ */
+function nys_email_digest_committee_meetings($last_monday, $now) {
+  $committee_meeting_count = db_query("SELECT COUNT(entity_id) FROM field_data_field_date WHERE bundle = 'meeting' AND (field_date_value >= :lastmonday AND field_date_value <= :now)", array(":lastmonday" => $last_monday, ":now" => $now))->fetchField();
+
+  return $committee_meeting_count << 0;
+}
+
+/**
+ * Make a request to Openleg to get bills that passed Senate or were signed into law.
+ *
+ * @param last_monday
+ *   Last Monday's timestamp.
+ * @param now
+ *   Now's timestamp.
+ */
+function nys_email_digest_openleg($last_monday, $now) {
+  $ol_base_url   = variable_get("openleg_base_url");
+  $start_date  = date("Y-m-d", $last_monday);
+  $end_date    = date("Y-m-d", $now);
+  $openleg_key = variable_get('openleg_key');
+
+  $passed       = "/api/3/bills/search?term=milestones.\*.statusType:%22PASSED_SENATE%22%20AND%20status.actionDate:[" . $start_date . "%20TO%20" . $end_date . "]&key=" . $openleg_key;
+  $signed       = "/api/3/bills/search?term=status.statusType:%22SIGNED_BY_GOV%22%20AND%20status.actionDate:[" . $start_date . "%20TO%20" . $end_date . "]&key=" . $openleg_key;
+  $passed_count = 0;
+  $signed_count = 0;
+
+  echo "Fetching: " . $ol_base_url . $passed . "\r\n";
+  $response = file_get_contents($ol_base_url . $passed);
+  $response = json_decode($response);
+
+  if (isset($response->success) && $response->success && isset($response->total)) {
+    echo "-- Found " . $response->total . " result(s).\r\n";
+    $passed_count = $response->total;
+    $passed_count << 0;
+  } else {
+    echo "-- Bad response received.\r\n";
+  }
+
+  echo "Fetching: " . $ol_base_url . $signed . "\r\n";
+  $response = file_get_contents($ol_base_url . $signed);
+  $response = json_decode($response);
+
+  if (isset($response->success) && $response->success && isset($response->total)) {
+    echo "-- Found " . $response->total . " result(s).\r\n";
+    $signed_count = $response->total;
+    $signed_count << 0;
+  } else {
+    echo "-- Bad response received.\r\n";
+  }
+
+  return array("passed_count" => $passed_count, "signed_count" => $signed_count);
+}
+
+/**
+ * Send a weekly digest to all users.
+ */
+function nys_email_digest_run() {
+  // Retrieve last Monday's timestamp, we get everything >= that. And everything that's <= now.
+  $last_monday = strtotime("last monday", strtotime("tomorrow"));
+  $now         = strtotime("now");
+
+  // Retrieve new issues.
+  $issue_count     = nys_email_digest_issues($last_monday, $now);
+  $issue_plurality = $issue_count == 1 ? "issue was" : "issues were";
+
+  // Retrieve bills introduced.
+  $bills_introduced_count     = nys_email_digest_bills_introduced($last_monday, $now);
+  $bills_introduced_plurality = $bills_introduced_count == 1 ? "bill was" : "bills were";
+
+  // Public hearings.
+  $public_hearing_count     = nys_email_digest_public_hearings($last_monday, $now);
+  $public_hearing_plurality = $public_hearing_count == 1 ? "hearing" : "hearings";
+
+  // Committee meetings.
+  $committee_meeting_count     = nys_email_digest_committee_meetings($last_monday, $now);
+  $committee_meeting_plurality = $committee_meeting_plurality == 1 ? "committee meeting was" : "committee meetings were";
+
+  // Openleg data for passed and signed.
+  $openleg_response = nys_email_digest_openleg($last_monday, $now);
+  $passed_count     = $openleg_response["passed_count"];
+  $passed_plurality = $passed_count == 1 ? "bill" : "bills";
+  $signed_count     = $openleg_response["signed_count"];
+  $signed_plurality = $signed_count == 1 ? "bill was" : "bills were";
+
+  // Email settings.
+  $module   = "nys_email_digest";
+  $key      = "digest_message";
+  $from     = variable_get("site_mail");
+  $language = language_default();
+  $send     = TRUE;
+
+  // Translate all the params into a single array.
+  $params = array(
+    "domain"                      => "https://www.nysenate.gov",
+    "issue_count"                 => $issue_count,
+    "issue_plurality"             => $issue_plurality,
+    "bills_introduced_count"      => $bills_introduced_count,
+    "bills_introduced_plurality"  => $bills_introduced_plurality,
+    "public_hearing_count"        => $public_hearing_count,
+    "public_hearing_plurality"    => $public_hearing_plurality,
+    "committee_meeting_count"     => $committee_meeting_count,
+    "committee_meeting_plurality" => $committee_meeting_plurality,
+    "passed_count"                => $passed_count,
+    "passed_plurality"            => $passed_plurality,
+    "signed_count"                => $signed_count,
+    "signed_plurality"            => $signed_plurality
+  );
+
+  // Retrieve all constituents and send them an email.
+  $constituent_role = 7;
+  $constituents     = db_query("SELECT users.mail AS email FROM users JOIN users_roles ON (users_roles.uid = users.uid AND users_roles.rid = :role)", array(":role" => $constituent_role))->fetchAll();
+
+  foreach ($constituents as $constituent) {
+    $to     = $constituent->email;
+    $result = drupal_mail($module, $key, $to, $language, $params, $from, $send);
+  }
+}
+
+/**
+ * Implements hook_mail()
+ * @param string $key
+ * @param string $message
+ * @param array $params
+ */
+function nys_email_digest_mail($key, &$message, $params) {
+  switch ($key) {
+    case "digest_message":
+      $message["subject"] = "Here’s what happened this week at the New York State Senate . . .";
+      $message["body"][]  = "Here’s what happened this week at the New York State Senate . . .<br />
+<br />
+<a href=\"".$params["domain"]."/explore-issues\">".$params["issue_count"]." new ".$params["issue_plurality"]." introduced</a><br />
+<a href=\"".$params["domain"]."/legislation\">".$params["bills_introduced_count"]." new ".$params["bills_introduced_plurality"]." introduced</a><br />
+<a href=\"".$params["domain"]."/calendar/day\">".$params["public_hearing_count"]." new ".$params["public_hearing_plurality"]." took place</a><br />
+<a href=\"".$params["domain"]."/calendar/day\">".$params["committee_meeting_count"]." new ".$params["committee_meeting_plurality"]." held</a><br />
+<a href=\"".$params["domain"]."/legislation\">".$params["passed_count"]." ".$params["passed_plurality"]." passed the Senate</a><br />
+<a href=\"".$params["domain"]."/legislation\">".$params["signed_count"]." ".$params["signed_plurality"]." signed into law</a><br />";
+      break;
+  }
+}
+
+/**
+ * Implements hook_mail_alter()
+ * @param string $message
+ */
+function nys_email_digest_mail_alter(&$message) {
+  $headers = array(
+    "MIME-Version"              => "1.0",
+    "Content-Type"              => "text/html; charset=UTF-8; format=flowed",
+    "Content-Transfer-Encoding" => "8Bit",
+    "X-Mailer"                  => "Drupal"
+  );
+  foreach ($headers as $key => $value) {
+    $message["headers"][$key] = $value;
+  }
+}

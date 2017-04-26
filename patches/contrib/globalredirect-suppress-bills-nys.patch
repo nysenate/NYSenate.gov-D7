@@ -1,0 +1,29 @@
+From d4a2f903b6b5c5e95901cd4bf09d27426dbb0356 Mon Sep 17 00:00:00 2001
+From: Ryan Blair <ryan.t.blair@gmail.com>
+Date: Sun, 3 Apr 2016 16:53:04 -0400
+Subject: [PATCH] Adds nys customization to globalredirects
+
+---
+ sites/all/modules/contrib/globalredirect/globalredirect.module | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/globalredirect.module b/globalredirect.module
+index 961c1ce..a2fffce 100644
+--- a/globalredirect.module
++++ b/globalredirect.module
+@@ -43,6 +43,12 @@ function globalredirect_init() {
+     }
+   }
+ 
++  // Check if path leads to a bill node. If so, we don't want automatic redirects.
++  $node = menu_get_object();
++  if (!empty($node) && $node->type == 'bill') {
++    return FALSE;
++  }
++
+   // Store the destination from the $_GET as, if we leave it in, drupal_goto()
+   // will go to that instead.
+   if (isset($_GET['destination'])) {
+-- 
+2.6.4 (Apple Git-63)
+

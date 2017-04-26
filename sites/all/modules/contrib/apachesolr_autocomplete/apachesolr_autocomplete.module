@@ -1,0 +1,502 @@
+<?php
+
+/**
+ * @file
+ *   Alters search forms to suggest terms using Apache Solr using AJAX.
+ *   Thanks to:
+ *     robertDouglass who contributed some of the code.
+ *     sch4lly for contributing to D7 version
+ */
+
+/**
+ * Implementation of hook_init().
+ */
+function apachesolr_autocomplete_init() {
+  drupal_add_css( drupal_get_path('module', 'apachesolr_autocomplete') . '/apachesolr_autocomplete.css');
+
+  // If using custom JS widget, include files and settings.
+  if (apachesolr_autocomplete_variable_get_widget() == 'custom') {
+    // Add custom autocomplete files
+    drupal_add_js(drupal_get_path('module', 'apachesolr_autocomplete') .'/apachesolr_autocomplete.js');
+    drupal_add_js(drupal_get_path('module', 'apachesolr_autocomplete') .'/jquery-autocomplete/jquery.autocomplete.js');
+    drupal_add_css( drupal_get_path('module', 'apachesolr_autocomplete') .'/jquery-autocomplete/jquery.autocomplete.css');
+    // Specify path to autocomplete handler.
+    drupal_add_js(array('apachesolr_autocomplete' => array('path' => url('apachesolr_autocomplete'))), 'setting');
+  }
+}
+
+/**
+ * Implementation of hook_form_FORM_ID_alter().
+ */
+function apachesolr_autocomplete_form_search_form_alter(&$form, $form_state) {
+  if ($form['module']['#value'] == 'apachesolr_search' || $form['module']['#value'] == 'apachesolr_multisitesearch') {
+    $element = &$form['basic']['keys'];
+    apachesolr_autocomplete_do_alter($element);
+  }
+}
+
+/**
+ * Implementation of hook_form_FORM_ID_alter().
+ */
+function apachesolr_autocomplete_form_search_block_form_alter(&$form, $form_state) {
+  $element = &$form['search_block_form'];
+  apachesolr_autocomplete_do_alter($element);
+}
+
+/**
+ * Helper function to do the actual altering of search forms.
+ *
+ * @param $element
+ *   The element to alter. Should be passed by reference so that original form
+ *   element will be altered.
+ *   E.g.: apachesolr_autocomplete_do_alter(&$form['xyz'])
+ */
+function apachesolr_autocomplete_do_alter(&$element) {
+  if (apachesolr_autocomplete_variable_get_widget() == 'custom') {
+    // Create elements if they do not exist.
+    if (!isset($element['#attributes'])) {
+      $element['#attributes'] = array();
+    }
+    if (!isset($element['#attributes']['class'])) {
+      $element['#attributes']['class'] = array();
+    }
+    array_push($element['#attributes']['class'], 'apachesolr-autocomplete', 'unprocessed');
+  }
+  else {
+    $element['#autocomplete_path'] = 'apachesolr_autocomplete';
+  }
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function apachesolr_autocomplete_menu() {
+  $items = array();
+
+  $items['apachesolr_autocomplete'] = array(
+    'page callback' => 'apachesolr_autocomplete_callback',
+    'access callback' => 'user_access',
+    'access arguments' => array('search content'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Callback for url apachesolr_autocomplete/autocomplete.
+ * @param $keys
+ *   The user-entered query.
+ */
+function apachesolr_autocomplete_callback($keys = '') {
+  if (apachesolr_autocomplete_variable_get_widget() == 'custom') {
+    // Keys for custom widget come from $_GET.
+    $keys = $_GET['query'];
+  }
+
+  $suggestions = array();
+  $suggestions = array_merge($suggestions, apachesolr_autocomplete_suggest_word_completion($keys, 5));
+  if (apachesolr_autocomplete_variable_get_suggest_keywords() || apachesolr_autocomplete_variable_get_suggest_spellcheck()) {
+    $suggestions = array_merge($suggestions, apachesolr_autocomplete_suggest_additional_term($keys, 5));
+  }
+
+  $result = array();
+  $show_counts = apachesolr_autocomplete_variable_get_counts();
+  if (apachesolr_autocomplete_variable_get_widget() == 'custom') {
+    // Place suggestions into new array for returning as JSON.
+    foreach ($suggestions as $key => $suggestion) {
+      $display = theme($suggestion['theme'], array('suggestion' => $suggestion, 'show_counts' => $show_counts));
+      $result[] = array(
+        "key" => substr($key,1),
+        "display" => $display
+      );
+    }
+  }
+  else {
+    foreach ($suggestions as $key => $suggestion) {
+      $display = theme($suggestion['theme'], array('suggestion' => $suggestion, 'show_counts' => $show_counts));
+      $result[substr($key,1)] = $display;
+    }
+  }
+
+  // Add caching headers.
+  // The cache lifetime will be:
+  //  * apachesolr_autocomplete_cache_maximum_age if it's set and >0
+  //  * else, use page_cache_maximum_age.
+  $cache_max_age = variable_get('apachesolr_autocomplete_cache_maximum_age', -1);
+  if ($cache_max_age == -1) {
+    $cache_max_age = variable_get('page_cache_maximum_age', 0);
+  }
+  if ($cache_max_age > 0) {
+    // Only add the caching headers if necessary.
+    drupal_add_http_header('Cache-Control', 'public, max-age=' . $cache_max_age);
+  }
+  // Send the output.
+  drupal_json_output($result);
+  exit();
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function apachesolr_autocomplete_theme() {
+  return array(
+    'apachesolr_autocomplete_highlight' => array(
+      'file' => 'apachesolr_autocomplete.module',
+      'arguments' => array(
+        'keys' => NULL,
+        'suggestion' => NULL,
+        'count' => NULL,
+      ),
+    ),
+    'apachesolr_autocomplete_spellcheck' => array(
+      'file' => 'apachesolr_autocomplete.module',
+      'arguments' => array(
+        'suggestion' => NULL,
+      ),
+    ),
+  );
+}
+
+/**
+ * Themes each returned suggestion.
+ */
+function theme_apachesolr_autocomplete_highlight($variables) {
+  static $first = true;
+  $keys = $variables['suggestion']['keys'];
+  $suggestion_string = $variables['suggestion']['suggestion'];
+  $count = $variables['suggestion']['count'];
+  $show_counts = $variables['show_counts'];
+
+  $html = '';
+  $html .= '<div class="apachesolr_autocomplete suggestion">';
+  $html .= '<strong>' . drupal_substr($suggestion_string, 0, strlen($keys)) . '</strong>' . drupal_substr($suggestion_string, strlen($keys));
+  $html .= '</div>';
+  if ($count && $show_counts) {
+    if ($first) {
+      $html .= "<div class='apachesolr_autocomplete message' style='float:right'>";
+      $html .= t('!count results', array('!count' => $count));
+      $html .= "</div><br style='clear:both'>";
+      $first = false;
+    } else {
+      $html .= "<div class='apachesolr_autocomplete message count'>$count</div><br style='clear:both'>";
+    }
+  }
+  return $html;
+}
+
+/**
+ * Themes the spellchecker's suggestion.
+ */
+function theme_apachesolr_autocomplete_spellcheck($variables) {
+  $suggestion_string = $variables['suggestion']['suggestion'];
+  return '<span class="apachesolr_autocomplete message">' . t('Did you mean') .':</span> ' . $suggestion_string;
+}
+
+/**
+ * Return the basic set of parameters for the Solr query.
+ * 
+ * @param $suggestions_to_return
+ *   Number of facets to return.
+ * @return array
+ */
+function apachesolr_autocomplete_basic_params($suggestions_to_return) {
+  return array(
+    'facet' => 'true',
+    'facet.field' => array('spell'),
+    // We ask for $suggestions_to_return * 5 facets, because we want
+    // not-too-frequent terms (will be filtered below). 5 is just my best guess.
+    'facet.limit' => $suggestions_to_return * 5,
+    'facet.mincount' => 1,
+    'start' => 0,
+    'rows' => 0,
+  );
+}
+
+/**
+ * Helper function that suggests ways to complete partial words.
+ *
+ * For example, if $keys = "learn", this might return suggestions like:
+ *    learn, learning, learner, learnability.
+ * The suggested terms are returned in order of frequency (most frequent first).
+ *
+ */
+function apachesolr_autocomplete_suggest_word_completion($keys, $suggestions_to_return = 5) {
+  /**
+   * Split $keys into two:
+   *  $first_part will contain all complete words (delimited by spaces). Can be empty.
+   *  $last_part is the (assumed incomplete) last word. If this is empty, don't suggest.
+   * Example:
+   *  $keys = "learning dis" : $first_part = "learning", $last_part = "dis"
+   */
+  preg_match('/^(:?(.* |))([^ ]+)$/', $keys, $matches);
+  $first_part = @$matches[2];
+  // Make sure $last_part contains meaningful characters
+  $last_part = preg_replace('/[' . PREG_CLASS_UNICODE_WORD_BOUNDARY . ']+/u', '', @$matches[3]);
+  if ($last_part == '') {
+    return array();
+  }
+  // Ask Solr to return facets that begin with $last_part; these will be the suggestions.
+  $params = apachesolr_autocomplete_basic_params($suggestions_to_return);
+  $params['facet.prefix'] = $last_part;
+  // Get array of themed suggestions.
+  $result = apachesolr_autocomplete_suggest($first_part, $params, $keys, $suggestions_to_return);
+  if ($result && $result['suggestions']) {
+    return $result['suggestions'];
+  } else {
+    return array();
+  }
+}
+
+/**
+ * Helper function that suggests additional terms to search for.
+ *
+ * For example, if $keys = "learn", this might return suggestions like:
+ *    learn student, learn school, learn mathematics.
+ * The suggested terms are returned in order of frequency (most frequent first).
+ */
+function apachesolr_autocomplete_suggest_additional_term($keys, $suggestions_to_return = 5) {
+  $keys = trim($keys);
+  $keys = check_plain($keys);
+  if ($keys == '') {
+    return array();
+  }
+  // Return no suggestions when $keys consists of only word delimiters
+  if (drupal_strlen(preg_replace('/[' . PREG_CLASS_UNICODE_WORD_BOUNDARY . ']+/u', '', $keys)) < 1) {
+    return array();
+  }
+
+  // Ask Solr to return facets from the 'spell' field to use as suggestions.
+  $params = apachesolr_autocomplete_basic_params($suggestions_to_return);
+
+  // Initialize arrays
+  $suggestions = array();
+  $replacements = array();
+
+  // Get array of themed suggestions.
+  $result = apachesolr_autocomplete_suggest($keys, $params, $keys, $suggestions_to_return);
+  if ($result && apachesolr_autocomplete_variable_get_suggest_keywords()) {
+    if (isset($result['suggestions']) && sizeof($result['suggestions'])) {
+      $suggestions = array_merge($suggestions, $result['suggestions']);
+    }
+  }
+
+  // Suggest using the spellchecker
+  if (apachesolr_autocomplete_variable_get_suggest_spellcheck()) {
+    if (isset($result['response']->spellcheck) && isset($result['response']->spellcheck->suggestions)) {
+      $spellcheck_suggestions = get_object_vars($result['response']->spellcheck->suggestions);
+      foreach($spellcheck_suggestions as $word => $value) {
+        $replacements[$word] = $value->suggestion[0];
+      }
+      if (count($replacements)) {
+        $new_keywords = strtr($keys, $replacements);
+        if ($new_keywords != $keys) {
+          // Place spellchecker suggestion before others
+          $suggestions = array_merge(array('*' . $new_keywords => array('theme' => 'apachesolr_autocomplete_spellcheck', 'suggestion' => $new_keywords)), $suggestions);
+        }
+      }
+    }
+  }
+
+  return $suggestions;
+}
+
+
+function apachesolr_autocomplete_suggest($keys, $params, $orig_keys, $suggestions_to_return = 5) {
+  $matches = array();
+  $suggestions = array();
+  $keys = trim($keys);
+
+  // We need the keys array to make sure we don't suggest words that are already
+  // in the search terms.
+  $keys_array = explode(' ', $keys);
+  $keys_array = array_filter($keys_array);
+
+  // Query Solr for $keys so that suggestions will always return results.
+  $query = apachesolr_drupal_query($keys);
+
+  // This hook allows modules to modify the query and params objects.
+  drupal_alter('apachesolr_query', $query);
+  if (!$query) {
+    return array();
+  }
+  apachesolr_search_add_spellcheck_params($query);
+  foreach ($params as $param => $paramValue) {
+    $query->addParam($param, $paramValue);
+  }
+  apachesolr_search_add_boost_params($query);
+
+  // Query Solr
+  $response = $query->search($keys);
+  // Loop through requested fields and get suggestions.
+  foreach ($params['facet.field'] as $field) {
+    foreach ($response->facet_counts->facet_fields->{$field} as $terms => $count) {
+      $terms = preg_replace('/[_-]+/', ' ', $terms);
+      foreach (explode(' ', $terms)  as $term) {
+        if ($term = trim(preg_replace('/['. PREG_CLASS_UNICODE_WORD_BOUNDARY .']+/u', '', $term))) {
+          if (isset($matches[$term])) {
+            $matches[$term] += $count;
+          }
+          else {
+            $matches[$term] = $count;
+          }
+        }
+      }
+    }
+  }
+
+  if (sizeof($matches) > 0) {
+    // Eliminate suggestions that are stopwords or are already in the query.
+    $matches_clone = $matches;
+    $stopwords = apachesolr_autocomplete_get_stopwords();
+    foreach ($matches_clone as $term => $count) {
+      if ((strlen($term) > 3) && !in_array($term, $stopwords) && !array_search($term, $keys_array)) {
+        // Longer strings get higher ratings.
+        #$matches_clone[$term] += strlen($term);
+      }
+      else {
+        unset($matches_clone[$term]);
+        unset($matches[$term]);
+      }
+    }
+
+    // Don't suggest terms that are too frequent (in >90% of results).
+    $max_occurence =  $response->response->numFound * 0.90;
+    foreach ($matches_clone as $match => $count) {
+      if ($count > $max_occurence) {
+        unset($matches_clone[$match]);
+      }
+    }
+
+    // The $count in this array is actually a score. We want the highest ones first.
+    arsort($matches_clone);
+
+    // Shorten the array to the right ones.
+    $matches_clone = array_slice($matches_clone, 0, $suggestions_to_return, TRUE);
+
+    // Add current search as suggestion if results > 0
+    if ($response->response->numFound > 0 && $keys != '') {
+      // Add * to array element key to force into a string, else PHP will
+      // renumber keys that look like numbers on the returned array.
+      $suggestions['*' . $keys] = array('theme' => 'apachesolr_autocomplete_highlight', 'keys' => $keys, 'suggestion' => $keys, 'count' => $response->response->numFound);
+    }
+
+    // Build suggestions using returned facets
+    foreach ($matches_clone as $match => $count) {
+      if ($keys != $match) {
+        $suggestion = trim($keys . ' ' . $match);
+        // On cases where there are more than 3 keywords, omit displaying
+        //  the count because of the mm settings in solrconfig.xml
+        if (substr_count($suggestion, ' ') >= 2) {
+          $count = 0;
+        }
+        if ($suggestion != '') {
+          // Add * to array element key to force into a string, else PHP will
+          // renumber keys that look like numbers on the returned array.
+          $suggestions['*' . $suggestion] = array('theme' => 'apachesolr_autocomplete_highlight', 'keys' => $orig_keys, 'suggestion' => $suggestion, 'count' => $count);
+        }
+      }
+    }
+  }
+
+  return array(
+    'suggestions' => $suggestions,
+    'response' => &$response
+  );
+}
+
+/**
+ * Gets the current stopwords list configured in Solr.
+ */
+function apachesolr_autocomplete_get_stopwords($environment = NULL) {
+  static $words = array(), $cached_flag = false;
+  if ($cached_flag) {
+    return $words;
+  }
+
+  if (!$environment) {
+    $env_id = apachesolr_default_environment();
+  }
+  else {
+    $env_id = $environment['env_id'];
+  }
+
+  try {
+    $solr = apachesolr_get_solr($env_id);
+    $response = $solr->makeServletRequest('admin/file', array('file' => 'stopwords.txt'));
+    $raw_file = $response->data;
+  }
+  catch (Exception $e) {
+    $cached_flag = true;
+    return $words;
+  }
+
+  foreach (explode("\n", $response->data) as $line) {
+    if (drupal_substr($line, 0, 1) == "#") {
+      continue;
+    }
+    if ($word = trim($line)) {
+      $words[] = $word;
+    }
+  }
+  $cached_flag = true;
+  return $words;
+}
+
+/**
+ * Wrapper around variable_get() for variable apachesolr_autocomplete_widget.
+ */
+function apachesolr_autocomplete_variable_get_widget() {
+  return variable_get('apachesolr_autocomplete_widget', 'custom');
+}
+
+/**
+ * Wrapper around variable_get() for variable apachesolr_autocomplete_suggest_keywords.
+ */
+function apachesolr_autocomplete_variable_get_suggest_keywords() {
+  return variable_get('apachesolr_autocomplete_suggest_keywords', 1);
+}
+
+/**
+ * Wrapper around variable_get() for variable apachesolr_autocomplete_suggest_spellcheck.
+ */
+function apachesolr_autocomplete_variable_get_suggest_spellcheck() {
+  return variable_get('apachesolr_autocomplete_suggest_spellcheck', 1);
+}
+
+/**
+ * Wrapper around variable_get() for variable apachesolr_autocomplete_counts.
+ */
+function apachesolr_autocomplete_variable_get_counts() {
+  return variable_get('apachesolr_autocomplete_counts', TRUE);
+}
+
+/**
+ * Alter the apachesolr.module "advanced settings" form.
+ */
+function apachesolr_autocomplete_form_apachesolr_settings_alter(&$form, $form_state) {
+  $form['advanced']['apachesolr_autocomplete_widget'] = array(
+    '#type' => 'radios',
+    '#title' => t('Autocomplete widget to use'),
+    '#description' => t('The custom widget provides instant search upon selection, whereas the Drupal widget needs the user to hit Enter or click on the Search button. If you are having problems, try switching to the default Drupal autocomplete widget.'),
+    '#options' => array('custom' => t('Custom autocomplete widget'), 'drupal' => t('Drupal core autocomplete widget')),
+    '#default_value' => apachesolr_autocomplete_variable_get_widget(),
+  );
+  $form['advanced']['apachesolr_autocomplete_suggest_keywords'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable additional keyword suggestions on the autocomplete widget'),
+    '#description' => t('Suggest words to add to the currently typed-in words. E.g.: typing "blue" might suggest "blue bike" or "blue shirt".'),
+    '#default_value' => apachesolr_autocomplete_variable_get_suggest_keywords(),
+  );
+  $form['advanced']['apachesolr_autocomplete_suggest_spellcheck'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable spellchecker suggestions on the autocomplete widget'),
+    '#description' => t('Suggest corrections to the currently typed-in words. E.g.: typing "rec" or "redd" might suggest "red".'),
+    '#default_value' => apachesolr_autocomplete_variable_get_suggest_spellcheck(),
+  );
+  $form['advanced']['apachesolr_autocomplete_counts'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable counts in autocomplete widget suggestions'),
+    '#description' => t('WARNING: Counts shown alongside suggestions might be lower than the actual result count due to stemming and minimum match (mm) settings in solrconfig.xml.'),
+    '#default_value' => apachesolr_autocomplete_variable_get_counts(),
+  );
+}

@@ -1,0 +1,88 @@
+<?php
+
+/**
+ * @file
+ * Session API tests.
+ */
+
+/**
+ * Session API test class.
+ */
+class SessionApiTestCase extends DrupalWebTestCase {
+  /**
+   * Implement getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Session API tests',
+      'description' => 'Tests various Session API functions',
+      'group' => 'Session API',
+    );
+  }
+
+  /**
+   * Implement setUp().
+   */
+  function setUp() {
+    parent::setUp('session_api', 'session_api_test');
+  }
+
+  /**
+   * Reset the cookie file so that it refers to the specified user.
+   *
+   * @param $uid User id to set as the active session.
+   */
+  function sessionReset($uid = 0) {
+    // Close the internal browser.
+    $this->curlClose();
+    $this->loggedInUser = FALSE;
+
+    // Change cookie file for user.
+    $this->cookieFile = drupal_realpath('public://cookie.' . $uid . '.txt');
+    $this->additionalCurlOptions[CURLOPT_COOKIEFILE] = $this->cookieFile;
+    $this->additionalCurlOptions[CURLOPT_COOKIESESSION] = TRUE;
+    $this->drupalGet('session-api-test');
+    $this->assertResponse(200, t('Session API test module is correctly enabled.'), t('Session API'));
+  }
+
+  /**
+   * Verify functions work properly.
+   */
+  function testFunctions() {
+    module_load_include('module', 'session_api');
+    // Capture existing values, which are restored at the end of this function.
+    $old_cookie = $_COOKIE;
+
+    // Test session_api_available() with cookies disabled.
+    $_COOKIE = NULL;
+    $this->assertFalse(session_api_available(), t('Function session_api_available() correctly returns FALSE when cookies are disabled.'));
+    $this->assertFalse(session_api_get_sid(), t('Function session_api_get_sid() correctly returns FALSE when cookies are disabled.'));
+
+    // Enable cookies.
+    $_COOKIE = array('session_api_test' => 'test');
+
+    // Check that the session_api_get_sid doesn't create a sid when the
+    // caller don't want it to get created.
+    unset($_COOKIE[session_api_get_cookie_name()]);
+    $this->assertEqual(session_api_get_sid(FALSE), -1, t("The session_api_get_sid returns a negative value when the caller don't want to create a new session if it doesn't exist"));
+
+    // Store ID in the db.
+    $rec = new stdClass();
+    $rec->session_id = drupal_hash_base64(uniqid(mt_rand(), TRUE));
+    drupal_write_record('session_api', $rec);
+    $_COOKIE[session_api_get_cookie_name()] = $rec->session_id;
+    $this->assertEqual(session_api_get_sid(), $rec->sid, 'Function session_api_get_sid() correctly retrieves the session_api_id from the database.');
+
+    // Initialize sessions.
+    $this->sessionReset();
+    $this->drupalGet('session-api-test');
+    $sid = $this->drupalGetHeader('X-Session-Api-Sid');
+    $session_id = $this->drupalGetHeader('X-Session-Api-Session-Id');
+    $this->assertTrue(!empty($session_id), t('Session API test module properly initialized session api.'));
+    $stored = db_query("SELECT session_id FROM {session_api} WHERE sid = :sid", array(':sid' => $sid))->fetchField();
+    $this->assertEqual($stored, $session_id, t('session_api_get_sid() is properly storing the session_id.'));
+
+    // Restore original cookie.
+    $_COOKIE = $old_cookie;
+  }
+}

@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Enable hook.
+ */
+
+/**
+ * Implements hook_enable().
+ */
+function message_broker_example_enable() {
+  if (module_exists('message_broker_dummy')) {
+    $config_path_dummy = variable_get('message_broker_dummy_config');
+
+    if (empty($config_path_dummy)) {
+      variable_set('message_broker_dummy_config', drupal_get_path('module', 'message_broker_example') . '/example_config.json');
+      drupal_set_message(t('The json configuration file path for the dummy message broker implementation was set. See !url for the message broker example.', array('!url' => l('admin/config/system/message_broker_example', 'admin/config/system/message_broker_example'))));
+    }
+  }
+
+  if (module_exists('message_broker_amqp')) {
+    $config_path_dummy = variable_get('message_broker_amqp_config');
+
+    if (empty($config_path_dummy)) {
+      variable_set('message_broker_amqp_config', drupal_get_path('module', 'message_broker_example') . '/example_config.json');
+      drupal_set_message(t('The json configuration file path for the AMQP message broker implementation was set. See !url for the message broker example.', array('!url' => l('admin/config/system/message_broker_example', 'admin/config/system/message_broker_example'))));
+    }
+  }
+}

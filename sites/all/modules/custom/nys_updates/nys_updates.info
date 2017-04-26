@@ -1,0 +1,4 @@
+name = NYSS updates
+description = update functions for use in deployment
+core = 7.x
+package = NY STATE SENATE

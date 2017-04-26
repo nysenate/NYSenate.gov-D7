@@ -1,0 +1,12 @@
+name = Facetapi Select
+description = Display search facets as select dropdowns
+package = Search Toolkit
+core = 7.x
+dependencies[] = facetapi
+
+; Information added by Drupal.org packaging script on 2014-06-09
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "facetapi_select"
+datestamp = "1402340345"
+

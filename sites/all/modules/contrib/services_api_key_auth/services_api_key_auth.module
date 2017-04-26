@@ -1,0 +1,155 @@
+<?php
+/**
+ * @file
+ * Extend services to allow API key authentication on endponts.
+ */
+
+/**
+ * Implements hook_services_authentication_info().
+ */
+function services_api_key_auth_services_authentication_info() {
+  return array(
+    'title' => 'API Key Authentications',
+    'description' => 'Enable API Key authentication for an endpoint.',
+    'authenticate_call' => 'services_api_key_auth_services_authenticate',
+    'security_settings' => 'services_api_key_auth_services_settings_form',
+  );
+}
+
+/**
+ * Apply authentication rules.
+ */
+function services_api_key_auth_services_authenticate() {
+  // Get function arguments.
+  $args = func_get_args();
+  // Get the key from the request.
+  $api_key = (!empty($_REQUEST['api-key'])) ? $_REQUEST['api-key'] : '';
+  // Validate request
+  $valid = (services_api_key_auth_compare_key($api_key, $args[0]['api_key'])) ? TRUE : FALSE;
+  if ($valid) {
+    // If a valid request, witch to user to perform drupal response.
+    if (!empty($args[0]['user'])) {
+      global $user;
+      $current_user = user_load($args[0]['user']);
+      if (!empty($current_user)) {
+        $user = $current_user;
+        drupal_session_regenerate();
+      }
+    }
+    return FALSE;
+  }
+  return services_error('Unauthorised access.', 401);
+}
+
+/**
+ * Build form for authentication settings.
+ */
+function services_api_key_auth_services_settings_form($settings) {
+  $form = array();
+  // Text field for api key.
+  $form['api_key'] = array(
+    '#type' => 'textfield',
+    '#title' => t('API Key'),
+    '#description' => t('Enter an API key to allow access to this endpoint.'),
+    '#default_value' => (!empty($settings['api_key'])) ? $settings['api_key'] : '',
+  );
+  // Get list of users with given role.
+  $role = user_role_load_by_name(variable_get('service_api_key_role', 'administrator'));
+  $query = 'SELECT DISTINCT(ur.uid) FROM {users_roles} AS ur WHERE ur.rid = :rids';
+  $result = db_query($query, array(':rids' => $role->rid));
+  $options = array('' => 'Select user');
+  while ($uid = $result->fetchColumn()) {
+    $user = user_load($uid);
+    $options[$uid] = $user->name;
+    unset($user);
+  }
+  // Build select field.
+  $form['user'] = array(
+    '#type' => 'select',
+    '#title' => t('User'),
+    '#description' => t('Select the user to run request through this endpoint as.'),
+    '#options' => $options,
+    '#default_value' => (!empty($settings['user'])) ? $settings['user'] : '',
+  );
+  return $form;
+}
+
+/**
+ * Compare api key.
+ *
+ * @param $a string
+ *   Token string.
+ * @param $b string
+ *   Token string.
+ *
+ * @return boolean
+ */
+function services_api_key_auth_compare_key($a, $b) {
+  if ( strlen( $a ) !== strlen( $b ) ) {
+    return FALSE;
+  }
+  $result = 0;
+  for ( $i = 0; $i < strlen( $a ); $i++ ) {
+    $result |= ord( $a[$i] ) ^ ord( $b[$i] );
+  }
+  return $result == 0;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function services_api_key_auth_menu() {
+  return array(
+    'admin/structure/services/api_key_settings' => array(
+      'title' => t('API Key settings'),
+      'description' => t('Set user role for user list in API Key authentication settings.'),
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('services_api_key_auth_admin_settings'),
+      'access arguments' => array('administer services'),
+      'type' => MENU_LOCAL_TASK,
+    ),
+  );
+}
+
+/**
+ * Define form for admin screen.
+ *
+ * @see services_api_key_auth_admin_settings_submit()
+ */
+function services_api_key_auth_admin_settings() {
+  // Get available roles.
+  $roles = user_roles();
+  // Build field options.
+  $options = array();
+  foreach ($roles as $role) {
+    $options[$role] = $role;
+  }
+  // Build form.
+  $form = array();
+  $form['fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('User settings'),
+    '#description' => t('Set the user role to be used when loading the list of users to pick from when configuring the API Key Authentication settings on an endpoint.'),
+  );
+  $form['fieldset']['role'] = array(
+    '#type' => 'select',
+    '#title' => t('User role'),
+    '#options' => $options,
+    '#default_value' => variable_get('service_api_key_role', 'administrator'),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save settings'),
+  );
+  return $form;
+}
+
+/**
+ * Process admin form submission.
+ *
+ * @see services_api_key_auth_admin_settings()
+ */
+function services_api_key_auth_admin_settings_submit($form, &$state) {
+  variable_set('service_api_key_role', $state['values']['role']);
+  drupal_set_message('Settings saved.');
+}

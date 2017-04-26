@@ -1,0 +1,259 @@
+
+.c-office-location-link {
+  display: none;
+}
+
+.c-block--senator-office,
+.c-block--senator-media {
+  background: $greyLight;
+
+  .vcard,
+  .l-col-2 {
+    padding: 0;
+    display: block;
+    width: 100%;
+    margin-bottom: 30px;
+    border: none;
+  }
+
+  .fn[itemprop="name"],
+  .c-office-info--title {
+    display: block;
+    margin-bottom: 10px;
+    color: #000;
+    font-family: "Proxima Nova SemiBold";
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: normal;
+  }
+
+  abbr[title] { border: none; }
+
+  .fn,
+  .street-address,
+  .locality,
+  .region,
+  .postal-code,
+  .tel,
+  .email,
+  .c-senator-media--item {
+    color: $grey02;
+    font-family: "Proxima Nova Regular";
+    font-size: 16px;
+    line-height: 1.2em;
+    font-weight: normal;
+    text-transform: capitalize;
+
+    & + * {
+      margin-top: 5px;
+    }
+  }
+
+  .c-senator-media--item {
+    text-transform: none;
+  }
+  .locality,
+  .region,
+  .postal-code {
+    display: inline-block;
+  }
+  .tel {
+    clear: left;
+  }
+  .email {
+    text-transform: none;
+    .type {
+      display: none;
+    }
+    a { color: $grey02; }
+  }
+  .additional {
+    display: block;
+  }
+  .street-address {
+    span + span {
+      margin-top: 5px;
+    }
+  }
+  .c-senator-media--contact {
+    list-style: none;
+  }
+  .c-senator-media--item {
+    display: block;
+  }
+  .c-block--senator-email {
+    font-family: "Proxima Nova Regular";
+    font-size: 16px;
+    line-height: 1.2em;
+    @extend .lgt-text;
+  }
+  .c-block--senator-office-contacts {
+    margin-top:20px;
+    color:#444444;
+  }
+  .c-office-info--office-contact {
+    font-family:"Proxima Nova Regular";
+    font-size:16px;
+    line-height: 1.2em;
+    @extend .lgt-text;
+    STRONG {
+      font-family:"Proxima Nova Regular";
+    }
+    &.vcard {
+      color:#444444;
+    }
+  }
+  .c-office-location-link {
+    display: block;
+    font-family: "Proxima Nova SemiBold";
+    font-size: 16px;
+    @extend .lgt-text;
+    @extend .icon-before__circle-pin;
+  }
+}
+
+.c-block--senator-office {
+  padding: 40px 20px 15px;
+
+  .l-col {
+    clear: left;
+  }
+}
+
+.c-block--senator-media {
+  padding: 40px 20px 30px;
+
+  .vcard {
+    margin: 0;
+  }
+
+  .email {
+    margin-top: 20px;
+  }
+
+  .c-office-location-link { display: none; }
+
+}
+
+.panel-separator + .pane-senator-contact-blocks {
+  margin-top: 40px;
+}
+
+.view-display-id-senator_press_kit_block {
+  .views-field-field-press-kit {
+    position: relative;
+    width: 100%;
+    height: 54px;
+    margin-top: -40px;
+
+    .c-block--btn {
+      padding-left: 20px;
+      @extend .lgt-bg;
+      @extend .icon-before__presskit;
+      @include transition(background-color, 0.25s, ease);
+
+      &:hover {
+        @extend .drk-bg;
+      }
+    }
+  }
+}
+
+@media #{$tablet} {
+  .c-block--senator-office,
+  .c-block--senator-media {
+    padding: 40px 40px 45px;
+
+    .vcard,
+    .l-col-2 {
+      float: left;
+      width: 50%;
+      padding-right: 1%;
+    }
+    .l-col-2 {
+      margin-bottom: 0;
+    }
+  }
+
+  .view-display-id-senator_press_kit_block {
+    .views-field-field-press-kit {
+      margin-top: -60px;
+      height: 80px;
+
+      .c-block--btn {
+        padding-left: 40px;
+      }
+    }
+  }
+}
+
+
+#nys-messaging-senator-contact-form,
+#nys-messaging-senator-message-form {
+	&:after {
+	  content: "";
+	  display: table;
+	  clear: both;
+	  margin-bottom: 40px;
+	}
+	.form-type-radio {
+		display: inline-block;
+	}
+	#edit-submit {
+		padding: 0 20px;
+		font-family: "Proxima Nova SemiBold";
+		text-transform: uppercase;
+		font-size: 14px;
+		letter-spacing: 0.2em;
+		line-height: 40px;
+		@extend .med-bg;
+	}
+	.ajax-progress-throbber {
+	  .throbber {
+	    padding: 0 20px;  
+	  }
+	}
+	h3 {
+		margin: 30px 0 10px 0;
+		font-family: "Adelle SemiBold";
+		font-size: 24px;
+	}
+	input[type="text"] {
+		height: 55px;
+	}
+	input[name="first_name"],
+	input[name="last_name"],
+	input[name="from_email"],
+	input[name="phone"],
+	input[name="city"],
+	input[name="zip"] {
+		width: 95%;
+	}
+	input[name="last_name"],
+	input[name="phone"],
+	input[name="zip"],
+	label[for="edit-last-name"],
+	label[for="edit-phone"],
+	label[for="edit-zip"] {
+		margin-left: 18px;
+	}
+}
+#nys-messaging-senator-message-form {
+  padding: 0 8px;
+  #edit-submit {
+    @extend .lgt-bg;
+    margin-top: 30px;
+  }
+  input[type="text"] {
+    margin-bottom: 30px;
+  }
+}
+
+@media #{$tablet} {
+  #nys-messaging-senator-contact-form,
+  #nys-messaging-senator-message-form {
+    #edit-submit {
+
+    }
+  }
+}

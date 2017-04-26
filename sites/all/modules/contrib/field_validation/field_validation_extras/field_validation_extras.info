@@ -1,0 +1,12 @@
+name = Field validation extras
+description = Extra validators for Field validation 7.x-2.x.
+package = Fields
+core = 7.x
+dependencies[] = field_validation
+
+; Information added by Drupal.org packaging script on 2014-01-26
+version = "7.x-2.4"
+core = "7.x"
+project = "field_validation"
+datestamp = "1390724605"
+

@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * Implements hook_entity_insert().
+ */
+function captcha_webform_entity_insert($entity, $type) {
+  _captcha_webform__set_webform_captcha('default', $entity, $type);
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function captcha_webform_entity_delete($entity, $type) {
+  _captcha_webform__set_webform_captcha(NULL, $entity, $type);
+}
+
+/**
+ * Helper function to set (or unset) a captcha whenever any webform is changed.
+ */
+function _captcha_webform__set_webform_captcha($captcha_type, $entity, $entity_type) {
+  if (module_exists('webform') && module_exists('captcha') && !empty($entity->webform)) {
+    list($webform_id) = entity_extract_ids($entity_type, $entity);
+    module_load_include('inc', 'captcha');
+    $form_id = 'webform_client_form_' . $webform_id;
+    captcha_set_form_id_setting($form_id, $captcha_type);
+  }
+}

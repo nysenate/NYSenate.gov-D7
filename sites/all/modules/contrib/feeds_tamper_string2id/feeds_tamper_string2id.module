@@ -1,0 +1,134 @@
+<?php
+/**
+ * @file
+ * Supports mapping incoming data provided as string identifiers to arbitrary
+ * Drupal content.
+ *
+ * Provides a feeds_tamper option to do the conversion, and assists the mapper
+ * to save the data.
+ *
+ * Optionally can use views to do the actual lookup, but defaults to the
+ * autocomplete rules..
+ */
+
+/**
+ * Provides an alternate field target for fields of type entityreference,
+ * where this id can be saved.
+ *
+ * The mapper provided by feeds.module doesn't support just being given an
+ * entity ID so we need to build our own.
+ *
+ * Based on the same tool by feeds_entityreference.module.
+ *
+ * Implements hook_feeds_processor_targets_alter().
+ */
+function feeds_tamper_string2id_feeds_processor_targets_alter(&$targets, $entity_type, $bundle_name) {
+  foreach (field_info_instances($entity_type, $bundle_name) as $field_name => $instance_info) {
+    $field_info = field_info_field($field_name);
+    if ($field_info['type'] == 'entityreference') {
+      $strings = array(
+        '@label' => $instance_info['label'],
+        '@target_type' => $field_info['settings']['target_type'],
+        '@field_name' => $field_info['field_name'],
+      );
+
+      $targets['entityreference:' . $field_name] = array(
+        'name' => t('@label: Entity ID of target @target_type', $strings),
+        'description' => t('Saves the raw value (integer) for entity reference field: "@label" (@field_name)', $strings),
+        'callback' => 'feeds_tamper_string2id_set_entityreference_target',
+      );
+      // Also supply a quick one so you dan't even need to 'tamper'
+      $targets['entityreference_lookup:' . $field_name] = array(
+        'name' => t('@label: Title lookup for target @target_type', $strings),
+        'description' => t('Given a string, makes an entity reference to the result of an autocomplete guess for field: "@label" (@field_name)', $strings),
+        'callback' => 'feeds_tamper_string2id_set_entityreference_lookup_target',
+      );
+    }
+  }
+}
+
+
+/**
+ * Callback for mapping entity reference fields.
+ *
+ * Given a numeric ID, validate it and save as the entityreference's target_id.
+ *
+ * Based on the same tool by feeds_entityreference.module.
+ */
+function feeds_tamper_string2id_set_entityreference_target($source, $entity, $target, $value, $mapping) {
+  if (empty($value)) {
+    return;
+  }
+  if (!is_array($value)) {
+    $value = array($value);
+  }
+
+  $target = str_replace('entityreference:', '', $target);
+  $info = field_info_field($target);
+  $language = isset($mapping['language']) ? $mapping['language'] : LANGUAGE_NONE;
+
+  $field = isset($entity->$target) ? $entity->$target : array($language => array());
+
+  // Allow for multiple mappings to the same target.
+  $delta = count($field[$language]);
+
+  foreach ($value as $v) {
+    if ($info['cardinality'] == $delta) {
+      break;
+    }
+    if (is_object($v) && ($v instanceof FeedsElement)) {
+      $v = $v->getValue();
+    }
+    if (($v) && (is_numeric($v))) {
+      $field[$language][$delta]['target_id'] = $v;
+      $delta++;
+    }
+  }
+  $entity->{$target} = $field;
+}
+
+/**
+ * This short-cut version does the lookup on-the fly, with no configs,
+ * just best-guess.
+ *
+ * This method pushes the 'parsing' and mapping phase right to the end at the
+ * 'process' and save phase. So it's a bit of a cheat, but can work without
+ * requiring the extra dependency of feeds_tamper.
+ * This is better affordance on the UI, but is much less configurable.
+ */
+function feeds_tamper_string2id_set_entityreference_lookup_target($source, $entity, $target, $value, $mapping) {
+  $target = str_replace('entityreference_lookup:', '', $target);
+  $field_info = field_info_field($target);
+
+  // Call the tamper plugin directly
+  module_load_include('inc', 'feeds_tamper_string2id', 'plugins/string2id');
+
+  // Mock up the type of settings that the tamper routine expects.
+  // Keep the logic in one place instead of copy-paste, but we have to fudge.
+  $fake_settings = array();
+  $fake_settings['autocomplete']['field_name'] = $target;
+  // $node doesn't know it's a node. dig it out.
+  $fake_settings['autocomplete']['entity_type'] = $entity->feeds_item->entity_type;
+  $fake_settings['autocomplete']['bundle_name'] = $entity->type;
+
+  // This array gets modified or filled in by reference.
+  $fake_field = array($value);
+  feeds_tamper_string2id_resolve_target_callback_via_autocomplete($source, 'unused', 'unused', $fake_field, $fake_settings);
+  // I should end up with the string $value that came in
+  // producing an integer nid $value out.
+  // Data is either in $fake_field of not now.
+
+  // Use the other setter to save in the right format.
+  feeds_tamper_string2id_set_entityreference_target($source, $entity, $target, $fake_field, $mapping);
+}
+
+/**
+ * Advertise our feeds_tamper plugin.
+ *
+ * Implements hook_ctools_plugin_directory().
+ */
+function feeds_tamper_string2id_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'feeds_tamper') {
+    return 'plugins';
+  }
+}

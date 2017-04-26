@@ -1,0 +1,1055 @@
+<?php
+
+/**
+ * @file nys_accumulator.module
+ * Store user actions in nysenate_accumulator table
+ *
+ * TODO: properly sort "private" vs "public" functionality.
+ */
+
+/**
+ * Include new updates file.
+ */
+include_once dirname(__FILE__) . '/inc/nys_accumulator.updates.inc';
+
+/**
+ * User verification flag constants
+ */
+define('NYSACCUM_USERVERIFY_EMAIL', 1);
+define('NYSACCUM_USERVERIFY_FACEBOOK', 2);
+define('NYSACCUM_USERVERIFY_POSTAL', 4);
+
+/**
+ * Easy-access function to support development logging.
+ *
+ * Writes error to drupal_set_message and also Drupal's watchdog.
+ *
+ * @param string $msg
+ *   Message to write to the error log.  If it evaluates as false, nyslog()
+ *   will generate a message "filename::function" based on the caller.
+ * @param bool $with_trace
+ *   Indicates if debug_backtrace() is included in log entry.
+ */
+function nyslog($msg = '', $with_trace = FALSE) {
+  // Only report error if nys_debug_mode is enabled.
+  if (variable_get('nys_debug_mode') == 1) {
+    if (!$msg) {
+      $bt = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+      $msg = str_replace($_SERVER['DOCUMENT_ROOT'], '', $bt[0]['file']) . '::' . $bt[1]['function'];
+    }
+    if ($with_trace) {
+      $msg .= "\n" . var_export(array_slice(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), 1), 1);
+    }
+
+    error_log($msg);
+    if (variable_get('nys_debug_write_to_watchdog', FALSE)) {
+      watchdog('nyslog', $msg, array(), WATCHDOG_DEBUG);
+    }
+    if (variable_get('nys_debug_write_to_message', FALSE)) {
+      drupal_set_message($msg);
+    }
+  }
+}
+
+/**
+ * Implements hook_init().
+ *
+ * @todo: Determine a better location for nyslog function and related feature.
+ */
+function nys_accumulator_init() {
+  // Display that Debug mode is on to developers.
+  if (variable_get('nys_debug_mode') == 1) {
+    $link = url('admin/settings/nysenate');
+    drupal_set_message(t('DEBUG MODE is currently on. Disable in <a href="@settings-page">Settings form</a>.', array('@settings-page' => $link)));
+  }
+}
+
+/**
+ * Implements hook_help().
+ *
+ * @param $path
+ * @param $arg
+ * @return string
+ */
+function nys_accumulator_help($path, $arg) {
+  switch ($path) {
+    // Main module help for the block module.
+    case 'admin/help#block':
+      return '<p>' . t('Blocks are boxes of content rendered into an area, or region, of a web page. The default theme Bartik, for example, implements the regions "Sidebar first", "Sidebar second", "Featured", "Content", "Header", "Footer", etc., and a block may appear in any one of these areas. The <a href="@blocks">blocks administration page</a> provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions.', array('@blocks' => url('admin/structure/block'))) . '</p>';
+
+    // Help for another path in the block module.
+    case 'admin/structure/block':
+      return '<p>' . t('This page provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions. Since not all themes implement the same regions, or display regions in the same way, blocks are positioned on a per-theme basis. Remember that your changes will not be saved until you click the <em>Save blocks</em> button at the bottom of the page.') . '</p>';
+  }
+}
+
+/**
+ * Initializes the response row for the module.
+ *
+ * @param string $msg_type
+ *   An optional type used to seed the response row.  Should be a valid enum value.
+ * @param string $msg_action
+ *   An optional action used to seed the response row.
+ *
+ * @return array
+ */
+function _nys_accumulator_init_response($msg_type = '', $msg_action = '') {
+  $ret = array('msg_info' => array());
+  if ($msg_type) {
+    $ret['msg_type'] = $msg_type;
+  }
+  if ($msg_action) {
+    $ret['msg_action'] = $msg_action;
+  }
+  return $ret;
+}
+
+/**
+ * Extract the boilerplate user information from a user object.
+ *
+ * @param object $user
+ *   Fully loaded User object.
+ *
+ * @return array
+ *   Array of user data points: id, email, name, address, district.
+ */
+function _nys_accumulator_extract_user_info($user) {
+  // Quick reference to the user id.
+  $user_id = isset($user->uid) ? $user->uid : 0;
+
+  // Initialize user info array.
+  $user_info = array(
+    'id'               => $user_id,
+    'email'            => isset($user->mail) ? $user->mail : '',
+    'first_name'       => isset($user->field_first_name) ? $user->field_first_name[LANGUAGE_NONE][0]['value'] : '',
+    'last_name'        => isset($user->field_last_name) ? $user->field_last_name[LANGUAGE_NONE][0]['value'] : '',
+    'address'          => isset($user->field_address) ? $user->field_address[LANGUAGE_NONE][0]['street'] : '',
+    'city'             => isset($user->field_address) ? $user->field_address[LANGUAGE_NONE][0]['city'] : '',
+    'state'            => isset($user->field_address) ? $user->field_address[LANGUAGE_NONE][0]['province'] : '',
+    'zipcode'          => isset($user->field_address) ? $user->field_address[LANGUAGE_NONE][0]['postal_code'] : '',
+  );
+
+  // Retrieve the senator/district information.
+  $district_info = user_get_district_senator_data_array($user);
+  $user_district = taxonomy_term_load($district_info['district_tid']);
+  $user_senator = node_load($district_info['senator_nid']);
+  $user_info['district_number'] = $user_district ? $user_district->field_district_number[LANGUAGE_NONE][0]['value'] : 0;
+  $user_info['senator_shortname'] = $user_senator ? $user_senator->field_shortname[LANGUAGE_NONE][0]['value'] : '';
+
+  // Set a reference to the user's dashboard.
+  $user_info['dashboard_url'] = $user_id ? "/user/{$user_id}" : '';
+
+  return $user_info;
+}
+
+/**
+ * Retrieve the required information about users based off their uid.
+ *
+ * @param object $user
+ *   Fully loaded User object.
+ * @param array $response
+ *   The accumulator row array, in which 'user_info' exists.
+ * @param array $options
+ *   An optional array of options, including override values.
+ * @return boolean
+ *   Indicates success.
+ */
+function nys_accumulator_populate_user_info($user, &$response, $options = array()) {
+  nyslog();
+
+  // Initialize the user info array.
+  if (!isset($response['msg_info']['user_info'])) {
+    if (!isset($response['msg_info'])) {
+      $response['msg_info'] = array();
+    }
+    $response['msg_info']['user_info'] = array();
+  }
+  $user_info = array_merge($response['msg_info']['user_info'], _nys_accumulator_extract_user_info($user));
+
+  // Allow overrides from $options['user_info'].
+  if (isset($options['user_info']) && is_array($options['user_info'])) {
+    $user_info = array_merge($user_info, $options['user_info']);
+  }
+
+  // Set the new info into the response.
+  $response['msg_info']['user_info'] = $user_info;
+
+  // Allow other modules to modify the response.
+  foreach (module_implements('nys_accumulator_user_info') as $module) {
+    $response = module_invoke($module, 'nys_accumulator_user_info', $user, $response, $options);
+  }
+
+  return TRUE;
+}
+
+/**
+ * Calculates the bit flag for user verification levels
+ * Uses NYSACCUM_USERVERIFY_* constants to build bit flag value
+ *
+ * @param user object $a_user
+ * @return integer
+ *   combined verification levels.
+ *
+ */
+function nys_accumulator_calculate_user_verified_bitflag($a_user = NULL) {
+  // Default to examining the current logged-in user.
+  if (is_null($a_user)) {
+    global $user;
+    $a_user =& $user;
+  }
+  return ((int)$a_user->access ? NYSACCUM_USERVERIFY_EMAIL : 0)
+         | (fboauth_fbid_load($a_user->uid) ? NYSACCUM_USERVERIFY_FACEBOOK : 0);
+}
+
+/**
+ * Retrieve a Senator shortname and district number based on action and user.
+ * TODO: Properly combine target_* with user_* fields.  This function should
+ *       only write a top-level "target" district.
+ *
+ * @param $district_id
+ *   The target/entity ID of the district from which to load.
+ * @param $response
+ *   The generated array of the new accumulator row.
+ * @param mixed $district_number
+ * @param mixed $senator_shortname
+ *   If both parameters are not false, their values will short-circuit
+ *   the lookup.
+ */
+function nys_accumulator_retrieve_senator_and_district($district_id, &$response, $district_number = false, $senator_shortname = false) {
+  nyslog();
+  $response['target_shortname'] = '';
+  $response['target_district']  = 0;
+
+  if ($district_number !== false && $senator_shortname !== false) {
+    // This information can be passed in directly if the caller already
+    // knows the district number and Senator shortname.
+    $response['target_shortname'] = $senator_shortname;
+    $response['target_district']  = $district_number;
+  } else {
+    // First, load the district.
+    $district = taxonomy_term_load($district_id);
+
+    if ($district !== false) {
+      // Now load that district's senator.
+      $senator = node_load($district->field_senator['und'][0]['target_id']);
+
+      if ($senator !== false) {
+        $response['target_shortname'] = $senator->field_shortname['und'][0]['value'];
+        $response['target_district']  = $district->field_district_number['und'][0]['value'];
+      }
+    }
+  }
+}
+
+/**
+ * Retrieve the required information about bills based off their nid.
+ *
+ * @param $nid
+ *   Node ID of the bill.
+ * @param $response
+ *   The generated array of the new accumulator row.
+ */
+function nys_accumulator_retrieve_bill_info($nid, &$response) {
+  nyslog();
+
+  // Load the bill.  If the bill is not found, leave.
+  $bill = node_load($nid);
+  if ($bill !== FALSE) {
+    $bill_info = array(
+      'bill_number' => $bill->title,
+      'bill_year'   => $bill->field_ol_session[LANGUAGE_NONE][0]['value'],
+      'sponsors'    => $bill->field_ol_sponsor_name[LANGUAGE_NONE][0]['value'],
+      'content_url' => "/node/{$nid}",
+    );
+
+    $response['msg_info']['event_info'] = $bill_info;
+  }
+}
+
+/**
+ * Retrieve the required information about issues based off their tid.
+ *
+ * @param $tid
+ *   Taxonomy term ID of the issue.
+ * @param $response
+ *   The generated array of the new accumulator row.
+ */
+function nys_accumulator_retrieve_issue_info($tid, &$response) {
+  nyslog();
+  $issue = taxonomy_term_load($tid);
+
+  if ($issue !== false) {
+    $issue_info = array(
+      'issue_name' => $issue->name,
+      'content_url' => "/taxonomy/term/{$tid}",
+    );
+    $response['msg_info']['event_info'] = $issue_info;
+  }
+}
+
+/**
+ * Retrieve the required information about committees based off their tid.
+ *
+ * @param $tid
+ *   Taxonomy term ID of the committee.
+ * @param $response
+ *   The generated array of the new accumulator row.
+ */
+function nys_accumulator_retrieve_committee_info($tid, &$response) {
+  nyslog();
+  $committee = taxonomy_term_load($tid);
+
+  if ($committee !== false) {
+    $comm_info = array(
+      'committee_name' => $committee->name,
+      'content_url' => "/taxonomy/term/{$tid}",
+    );
+    $response['msg_info']['event_info'] = $comm_info;
+  }
+}
+
+/**
+ * Retrieve the required information about petitions based off their entity id.
+ *
+ * @param $nid
+ *   Node ID of the petition.
+ * @param $response
+ *   The generated array of the new accumulator row.
+ */
+function nys_accumulator_retrieve_petition_info($nid, &$response) {
+  // Load the petition.  If the petition is not found, leave.
+  $petition = node_load($nid);
+
+  if ($petition !== FALSE) {
+    // Set the action array values.
+    $petition_info = array(
+      /*'node_id' => $petition->nid,*/
+      'name'    => $petition->title,
+      'content_url' => "/node/{$nid}",
+      'senator_shortname' => "NONE_LOADED",
+      'district_number' => 0,
+    );
+
+    // Try to load the petition's senator,
+    // and set shortname/district appropriately.
+    $senator = node_load($petition->field_senator[LANGUAGE_NONE][0]['target_id']);
+    if ($senator !== FALSE) {
+      $petition_info['senator_shortname'] = $senator->field_shortname[LANGUAGE_NONE][0]['value'];
+      $petition_info['district_number'] = senator_get_district_number($petition->field_senator[LANGUAGE_NONE][0]['target_id']);
+    }
+
+    $response['msg_info']['event_info'] = $petition_info;
+
+  }
+}
+
+/**
+ * Process flag and unflag actions.  This function is marked private
+ * since all calls should come from one of the wrappers, i.e.,
+ * the hook_flag_* implementations.
+ *
+ * @param boolean $follow
+ *   Indicates a flag (TRUE) or unflag (FALSE) action.
+ * @param $account
+ *  The user account performing the action.
+ * @param $flagging
+ *  The flagging entity.
+ *
+ */
+function _nys_accumulator_process_flag($follow, $account, $flagging) {
+  nyslog();
+
+  // Initialize the user object, options array, and key response data points.
+  $user = user_load($account->uid);
+  $options = array();
+  $msg_type = '';
+  $msg_action = 'follow';
+
+  // Each type of flag action populates its own $action variable.
+  switch ($flagging->flag_name) {
+
+    // User has flagged a bill.
+    case 'follow_this_bill':
+      $msg_type = 'bill';
+
+      // Need to set the option flag to indicate a bill.
+      $options['flagging'] = $flagging;
+      break;
+
+    // User has flagged an issue.
+    case 'follow_issue':
+      $msg_type = 'issue';
+      break;
+
+    // User has flagged a committee (a.k.a. group).
+    case 'follow_committee':
+    case 'follow_group':
+      $msg_type = 'committee';
+      break;
+
+    // User has flagged a petition.
+    case 'sign_petition':
+      $msg_type   = 'petition';
+      $msg_action = 'sign';
+
+      // Need to set the option flag to indicate a petition.
+      $options['flagging'] = $flagging;
+      break;
+  }  // End switch().
+
+  if ($msg_type) {
+
+    // Reverse the action label based on $follow not being TRUE.
+    if (!$follow) {
+      $msg_action = "un{$msg_action}";
+    }
+
+    $response = array_merge(
+      _nys_accumulator_init_response(),
+      array('msg_action' => $msg_action, 'msg_type' => $msg_type)
+    );
+
+    // Set the user data.
+    nys_accumulator_populate_user_info($user, $response, $options);
+
+    // Resolve the target shortname and district number.
+    $target_district = $response['msg_info']['user_info']['district_number'] ? $response['msg_info']['user_info']['district_number'] : FALSE;
+    $target_shortname = $response['msg_info']['user_info']['senator_shortname'] ? $response['msg_info']['user_info']['senator_shortname'] : FALSE;
+    nys_accumulator_retrieve_senator_and_district($user->field_district[LANGUAGE_NONE][0]['target_id'], $response, $target_district, $target_shortname);
+
+    // Retrieve additional entity info (e.g., bill data).
+    $entity_info_callback = "nys_accumulator_retrieve_{$msg_type}_info";
+    if (function_exists($entity_info_callback)) {
+      $entity_info_callback($flagging->entity_id, $response);
+    }
+
+    // Store in the accumulator table.
+    nys_accumulator_action_insert($response);
+  }
+}
+
+/**
+ * Implements hook_flag_flag().  See contrib/flag/flag.api.php.
+ * Acts as a wrapper for _nys_accumulator_process_flag().
+ * 
+ * @param $flag
+ * @param $entity_id
+ * @param $account
+ * @param $flagging
+ */
+function nys_accumulator_flag_flag($flag, $entity_id, $account, $flagging) {
+  nyslog();
+  _nys_accumulator_process_flag(TRUE, $account, $flagging);
+}
+
+/**
+ * Implements hook_flag_unflag().  See contrib/flag/flag.api.php.
+ * Acts as a wrapper for _nys_accumulator_process_flag().
+ *
+ * @param $flag
+ * @param $entity_id
+ * @param $account
+ * @param $flagging
+ */
+function nys_accumulator_flag_unflag($flag, $entity_id, $account, $flagging) {
+  nyslog();
+  _nys_accumulator_process_flag(FALSE, $account, $flagging);
+}
+
+/**
+ * Implements hook_votingapi_results_alter(). 
+ * See contrib/votingapi/votingapi.api.php.
+ * 
+ * @param $votes
+ */
+function nys_accumulator_votingapi_preset_votes_alter(&$votes) {
+  global $user;
+
+  nyslog();
+  $response = array_merge(
+    _nys_accumulator_init_response(),
+    array(
+      'msg_type' => 'bill', 
+      'msg_action' => (($votes[0]['value'] == 1) ? 'aye' : 'nay')
+    )
+  );
+
+  // Load the user.
+  $tmp_user = user_load($user->uid);
+
+  // Set the options for user_info if this user is anonymous.
+  $options = array();
+  if ($user->uid == 0) {
+    $options['voting'] = $votes[0]['entity_id'];
+  }
+
+  // Load the Senator's shortname and user's district.
+  nys_accumulator_retrieve_senator_and_district(
+    $tmp_user->field_district[LANGUAGE_NONE][0]['target_id'], 
+    $response
+  );
+
+  // Set the user data.
+  nys_accumulator_populate_user_info($tmp_user, $response, $options);
+
+  // Retrieve bill data.
+  nys_accumulator_retrieve_bill_info($votes[0]['entity_id'], $response);
+
+  // Store in the accumulator table.
+  nys_accumulator_action_insert($response);
+}
+
+/**
+ * Implements hook_nys_inbox_new_message_sent().
+ * This function fires when sending a new message from a user's dashboard Inbox.
+ *
+ * @param $variables
+ * @param $message
+ */
+function nys_accumulator_nys_inbox_new_message_sent($variables, $message) {
+
+  nyslog();
+  // This should only act if:
+  //   - sending the message was successful ($message->success),
+  //   - the author and recipient are from the same district.
+  if ($message['success']) {
+    // Load the author's full user object.
+    $author = user_load($message['message']->author->uid);
+
+    // Load the references to the author's representative.
+    $author->_district_array = user_get_district_senator_data_array($author->uid);
+
+    // We could have multiple recipients.  Iterate through.
+    foreach ($message['message']->recipients as $recip_key => $recipient) {
+      // Initialize our flag.
+      $need_action = FALSE;
+
+      // If recipient is good, load their district info and set the work flag.
+      if ($recipient) {
+        $recipient->_district_array = user_get_district_senator_data_array($recipient->uid);
+        $need_action = (
+          $recipient->_district_array['district_tid'] == $author->_district_array['district_tid']
+        );
+      }
+
+      // Everything else happens only if need_action is true.
+      if ($need_action) {
+        // Find out if there is a bill id
+        $the_bill_id = isset($variables['bill_id']) ? $variables['bill_id'] : NULL;
+        if (!$the_bill_id) {
+          $the_bill_id = isset($message['node']->nid) ? $message['node']->nid : NULL;
+        }
+
+        // set the constituent references
+        if (in_array('Senator', $recipient->roles)) {
+          $constituent = $author;
+          $msg_action = 'message from constituent';
+        } else {
+          $constituent = $recipient;
+          $msg_action = 'message to constituent';
+        }
+
+        // Initialize the response.  Note the context is a bill is involved.
+        $response = array_merge(
+          _nys_accumulator_init_response(),
+          array(
+            'msg_type' => (($the_bill_id) ? 'context' : 'direct') . 'msg',
+            'msg_action' => $msg_action,
+            'msg_info' => array(
+              'user_info' => array(),
+              'message' => $message['message']->body,
+              'thread_id' => $message['message']->thread_id,
+              'subject' => $message['message']->subject,
+            )
+          )
+        );
+
+        // Load the Senator's shortname and user's district.
+        nys_accumulator_retrieve_senator_and_district(
+          $recipient->_district_array['district_tid'],
+          $response
+        );
+
+        // Set the user data.
+        nys_accumulator_populate_user_info($constituent, $response);
+
+        // Retrieve bill data.
+        nys_accumulator_retrieve_bill_info($the_bill_id, $response);
+
+        // Store in the accumulator table.
+        nys_accumulator_action_insert($response);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_nys_inbox_reply_sent().  This function fires when
+ * replying to a message from the dashboard's Inbox section.
+ *
+ * @param $variables
+ */
+function nys_accumulator_nys_inbox_reply_sent($variables) {
+  nyslog();
+
+  // Sanity check for passed parameters.
+  // We need minimum of author object and thread_id.
+  if (isset($variables['author']) && isset($variables['thread_id'])) {
+
+    // Quick reference.
+    $author_uid = $variables['author']->uid;
+    $thread_id = $variables['thread_id'];
+    $message_id = $variables['reply_to_mid'];
+
+    // Load the references to the author's representative.
+    $variables['author']->_district_array = user_get_district_senator_data_array($author_uid);
+
+    // Get the recipient, based on thread_id and *not* author's uid.
+    $recipient_uid = db_select('pm_index', 'a')
+      ->distinct()
+      ->fields('a', array('recipient'))
+      ->condition('thread_id', $thread_id)
+      ->condition('recipient', $author_uid, '!=')
+      ->execute()
+      ->fetchField();
+    $recipient = user_load($recipient_uid);
+    $recipient->_district_array = user_get_district_senator_data_array($recipient->uid);
+
+    // Everything else happens only if:
+    //   - one participant is a senator, and
+    //   - one participant is a constituent, and
+    //   - both participants are from the same district.
+    $need_action = ($recipient->_district_array == $variables['author']->_district_array) &&
+                   (
+                    (in_array('Constituent',$variables['author']->roles) 
+                      && in_array('Senator', $recipient->roles)
+                    ) ||
+                    (in_array('Constituent',$recipient->roles) 
+                      && in_array('Senator', $variables['author']->roles)
+                    )
+                  );
+
+    if ($need_action) {
+      // get the bill id, if available
+      $bill_id = db_select('field_data_field_featured_bill', 'a')
+        ->fields('a', array('field_featured_bill_target_id'))
+        ->condition('entity_id', $message_id)
+        ->execute()
+        ->fetchField();
+
+      // set the constituent references
+      if (in_array('Senator', $recipient->roles)) {
+        $constituent = $variables['author'];
+        $msg_action = 'message from constituent';
+      } else {
+        $constituent = $recipient;
+        $msg_action = 'message to constituent';
+      }
+
+      // Initialize the response.  Note the context is a bill is involved.
+      $response = array_merge(
+        _nys_accumulator_init_response(),
+        array(
+          'msg_type' => 'directmsg',
+          'msg_action' => $msg_action,
+          'msg_info' => array(
+            'user_info' => array(),
+            'message' => $variables['body']['value'],
+            'thread_id' => $thread_id,
+            'subject' => $variables['subject'],
+          )
+        )
+      );
+
+      // Load the Senator's shortname and user's district.
+      nys_accumulator_retrieve_senator_and_district($constituent->field_district[LANGUAGE_NONE][0]['target_id'], $response);
+
+      // Set the user data.
+      nys_accumulator_populate_user_info($constituent, $response);
+
+      // Retrieve bill data.
+      nys_accumulator_retrieve_bill_info($bill_id, $response);
+
+      // Store in the accumulator table.
+      nys_accumulator_action_insert($response);
+    }
+  }
+}
+
+
+/**
+ * Implements hook_user_login().
+ *
+ * @param $edit
+ * @param $account
+ */
+function nys_accumulator_user_login(&$edit, $account) {
+  nyslog();
+
+  // if this hook is firing, there is a successful login
+  // if there is no access timestamp, then this is the *first* login
+  // in that case, create the accumulator message
+  if (!((boolean)$account->access)) {
+    // Initialize the response.  Note the context is a bill is involved.
+    $response = array_merge(
+      _nys_accumulator_init_response(),
+      array(
+        'msg_type' => 'account',
+        'msg_action' => 'account created',
+      )
+    );
+
+    // Load the Senator's shortname and user's district.
+    nys_accumulator_retrieve_senator_and_district($account->field_district[LANGUAGE_NONE][0]['target_id'], $response);
+
+    // Set the user data.
+    nys_accumulator_populate_user_info($account, $response);
+
+    // Store in the accumulator table.
+    nys_accumulator_action_insert($response);
+  }
+}
+
+/**
+ * Implements hook_user_update().
+ * 
+ * @param $edit
+ * @param $account
+ * @param $category
+ */
+function nys_accumulator_user_update(&$edit, $account, $category) {
+  nyslog();
+
+  // prep the flags
+  $need_action = false;
+  $district_change = false;
+
+  // Only act if the account is not new, and has been accessed at least once.
+  if ((int)$account->access && !$account->is_new) {
+
+    // prep and compare address entries
+    $user_old_address = $account->original->field_address[LANGUAGE_NONE][0];
+    $user_new_address = $account->field_address[LANGUAGE_NONE][0];
+    unset($user_new_address['location_settings']);
+    if ($user_old_address != $user_new_address) {
+      $need_action = true;
+    }
+
+    // Compare other fields of interest.  If the field holds an array, 
+    // we need to know the final index to reference.
+    $fields_to_compare = array(
+                          'field_first_name'=>'value',
+                          'field_last_name'=>'value',
+                          'field_top_issue'=>'target_id',
+                          'field_dateofbirth'=>'value',
+                          'field_gender_user'=>'value',
+                          'field_district'=>'target_id',
+                          'name'=>false,
+                          'mail'=>false,
+                          'status'=>false,
+                         );
+    foreach ($fields_to_compare as $key=>$val) {
+      // if field is an array, get the reference field.  Otherwise, check the whole value
+      $old_value = $val ? $account->original->{$key}[LANGUAGE_NONE][0][$val] : $account->original->{$key};
+      $new_value = $val ? $account->{$key}[LANGUAGE_NONE][0][$val]           : $account->{$key};
+
+      // Any difference triggers a message.
+      if ($new_value != $old_value) {
+        $need_action = true;
+        // Special: if the district is different, note it for later.
+        if ($key == 'field_district') {
+          $district_change = true;
+        }
+      }
+    }
+  }
+
+  // has anything important changed?  If so, generate appropriate messages
+  if ($need_action) {
+
+    // Initialize the response.  Note the context is a bill is involved.
+    $response = array_merge(
+      _nys_accumulator_init_response(),
+      array(
+        'msg_type' => 'profile',
+        'msg_action' => 'account edited',
+      )
+    );
+
+    // Get the district IDs for easy reference.
+    $old_district_id = $account->original->field_district[LANGUAGE_NONE][0]['target_id'];
+    $new_district_id = $account->field_district[LANGUAGE_NONE][0]['target_id'];
+
+    // Load the Senator's shortname and user's district.
+    nys_accumulator_retrieve_senator_and_district($new_district_id, $response);
+
+    // Set the user data.
+    nys_accumulator_populate_user_info($account, $response);
+
+    // Store in the accumulator table.
+    nys_accumulator_action_insert($response);
+
+    // If the district was changed, we need to add two more messages
+    // to the accumulator - "removed district" and "added district".
+    if ($district_change) {
+
+      // Prep for a quick loop.
+      $change_variables = array('removed'=>$old_district_id, 'added'=>$new_district_id);
+
+      // Iterate the loop and insert each message.
+      foreach ($change_variables as $key=>$val) {
+        $response['msg_info']['status'] = $key;
+        nys_accumulator_retrieve_senator_and_district($val, $response);
+        nys_accumulator_populate_user_info($account, $response);
+        nys_accumulator_action_insert($response);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_user_delete().
+ *
+ * @param $account
+ */
+function nys_accumulator_user_delete($account) {
+  nyslog();
+
+  // Initialize the response.
+  $response = array_merge(
+    _nys_accumulator_init_response(),
+    array(
+      'msg_type' => 'account',
+      'msg_action' => 'account deleted',
+    )
+  );
+
+  // Load the user.
+  $a_user = user_load($account->uid);
+
+  // Load the Senator's shortname and user's district.
+  nys_accumulator_retrieve_senator_and_district($a_user->field_district[LANGUAGE_NONE][0]['target_id'], $response);
+
+  // Set the user data.
+  nys_accumulator_populate_user_info($a_user, $response);
+
+  // Store in the accumulator table.
+  nys_accumulator_action_insert($response);
+}
+
+/**
+ * Implements hook_webform_submission_presave().
+ *
+ * @param $node
+ * @param $submission
+ */
+function nys_accumulator_webform_submission_presave($node, &$submission) {
+  nyslog();
+
+  // Initialize the response.
+  $response = array_merge(
+    _nys_accumulator_init_response(),
+    array(
+      'msg_type' => 'petition',
+      'msg_action' => 'questionnaire response',
+    )
+  );
+
+  global $user;
+
+  // Load the field data.
+  $fields = array();
+  foreach ($node->webform['components'] as $index => $component) {
+    $fields[] = array('field' => $component['name'], 'value' => $submission->data[$index][0]);
+  }
+
+  // Add the field data, and the form id and title, to the response.
+  $response['msg_info']['form_values'] = $fields;
+  $response['msg_info']['form_id'] = $node->vid;
+  $response['msg_info']['form_title'] = $node->title;
+
+  // Load the user.
+  $a_user = user_load($user->uid);
+
+  // Load the Senator's shortname and user's district.
+  nys_accumulator_retrieve_senator_and_district($a_user->field_district[LANGUAGE_NONE][0]['target_id'], $response);
+
+  // Set the user data.
+  nys_accumulator_populate_user_info($a_user, $response);
+
+  // Store in the accumulator table.
+  nys_accumulator_action_insert($response);
+}
+
+/**
+ * Implements hook_nys_messaging_contact_message_sent().
+ *
+ * This function will fire when sending a message to a senator from the "Contact" 
+ * link on the senator's page, e.g., /senators/kemp-hannon/contact.
+ *
+ * @param $form_state
+ */
+function nys_accumulator_nys_messaging_contact_message_sent($form_state) {
+  nyslog();
+
+  // Working on the currently logged-in user.
+  global $user;
+
+  // Only act if this user is registered.
+  if ($user->uid != 0) {
+
+    // Load senator's district info and node from the form's senator_uid.
+    $senator_uid = isset($form_state['senator_uid']) ? (int) $form_state['senator_uid'] : 0;
+    $senator_district = user_get_district_senator_data_array($senator_uid);
+    $senator = node_load($senator_district['senator_nid']);
+
+    // Load the user and user's district info.
+    $author = user_load($user->uid);
+    $author_district = user_get_district_senator_data_array($author->uid);
+
+    // Only act if this *registered* user is part of this senator's district.
+    $need_action = (($senator !== false) && ($author_district == $senator_district));
+
+    // Prep and record the accumulator message.
+    if ($need_action) {
+      // Initialize the response.
+      $response = array_merge(
+        _nys_accumulator_init_response(),
+        array(
+          'msg_type' => 'directmsg',
+          'msg_action' => 'message',
+        )
+      );
+
+      // Set the relevant message data.
+      $response['msg_info']['subject']           = isset($form_state['subject']) ? $form_state['subject'] : '';
+      $response['msg_info']['message']           = isset($form_state['email_body']) ? $form_state['email_body'] : '';
+      $response['msg_info']['senator_id']        = $senator->uid;
+      $response['msg_info']['senator_shortname'] = $senator->field_shortname[LANGUAGE_NONE][0]['value'];
+
+      // Load the Senator's shortname and user's district.
+      nys_accumulator_retrieve_senator_and_district($author->field_district[LANGUAGE_NONE][0]['target_id'], $response);
+
+      // Set the user data.
+      nys_accumulator_populate_user_info($author, $response);
+
+      // Store in the accumulator table.
+      nys_accumulator_action_insert($response);
+    }
+  }
+}
+
+/**
+ * Inserts items into the accumulator table.
+ * TODO: make sure integration scripts are cleaned up before removing
+ *       redundant references (e.g., user_dashboard_url).
+ *
+ * @param array $response
+ *   An array from which the new accumulator row will be built.  See
+ *   nys_accumulator.install for the table schema which may be represented
+ *   in the array.  Note that some fields are overwritten within this function.
+ */
+function nys_accumulator_action_insert($response) {
+  nyslog();
+  // Enable debugging of accumulator insert.
+  // We don't need to check if debug mode is enabled here, the nyslog()
+  // function properly handles that.
+  if (variable_get('nys_debug_mode_accumulator_insert') == 1) {
+    nyslog("*********** TRACING ACCUMULATOR INSERT**************");
+    nyslog(print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), 1));
+  }
+
+
+  // Set a reference to the current user's id.  This must be at the
+  // top level to support tables index by user id.
+  $response['user_id'] = (int) $response['msg_info']['user_info']['id'];
+  
+  // Set a reference to the user's dashboard.  
+  // TODO: Remove this after integration script has been updated.
+  $response['msg_info']['user_dashboard_url'] = $response['msg_info']['user_info']['dashboard_url'];
+
+  // TODO: Clean this up.
+  // The top-level user_shortname and user_district are deprecated.
+  // Fill them in for now.  Future refactor will combine this info 
+  // into target_* for table index.
+  $response['user_shortname'] = $response['msg_info']['user_info']['senator_shortname'];
+  $response['user_district'] = $response['msg_info']['user_info']['district_number'];
+
+  // If not preset by the generator, set verification flag and timestamp.
+  if (!array_key_exists('user_is_verified', $response)) {
+    $response['user_is_verified'] = nys_accumulator_calculate_user_verified_bitflag();
+  }
+  if (!array_key_exists('created_at', $response) || !$response['created_at']) {
+    $response['created_at'] = REQUEST_TIME;
+  }
+  
+  // Allow other modules to modify the final record.
+  foreach (module_implements('nys_accumulator_preinsert') as $module) {
+    $response = module_invoke($module, 'nys_accumulator_preinsert', $response);
+  }
+
+  // Encode final msg_info state.
+  $response['msg_info_json'] = json_encode($response['msg_info']);
+
+  // Insert.
+  db_insert('accumulator')
+    ->fields(array(
+      'user_id'          => $response['user_id'],
+      'user_is_verified' => $response['user_is_verified'],
+      'target_shortname' => $response['target_shortname'],
+      'target_district'  => $response['target_district'],
+      'user_shortname'   => $response['user_shortname'],
+      'user_district'    => $response['user_district'],
+      'msg_type'         => $response['msg_type'],
+      'msg_action'       => $response['msg_action'],
+      'msg_info'         => $response['msg_info_json'],
+      'created_at'       => $response['created_at'],
+    ))
+    ->execute();
+}
+
+/**
+ * Implements hook_nys_accumulator_preinsert().
+ * @param array $row
+ * @return array $row
+ */
+function nys_accumulator_nys_accumulator_preinsert($row) {
+  nyslog();
+
+  // At first log in, the access timestamp has not been set yet.
+  // So we kludge it by setting the confirmation flag manually.
+  if ($row['msg_action'] == 'account created') {
+    $row['user_is_verified'] |= 1;
+  }
+
+  // For anonymous petition signatures, bill votes, or bill flagging, the
+  // actual district is in form_info, not user_info.  Make the correction.
+  // TODO: This section will be unnecessary after summer changes.
+  if ($row['user_id'] == 0
+    && in_array($row['msg_type'], array('petition','bill'))) {
+
+    // Default to "no information".
+    $row['user_district'] = 0;
+    $row['user_shortname'] = 'NONE_LOADED';
+
+    // Get the district number.  Look up the shortname from the
+    // senator's node information.
+    $district_number = (int)$row['msg_info']['form_info']['district_number'];
+    $node_number = (int)$row['msg_info']['form_info']['senator_node'];
+    if ($district_number && $node_number) {
+      $name_map = get_senator_name_mapping();
+      // If there is a mapping, set the appropriate fields.
+      if ($name_map[$node_number]) {
+        $row['user_district'] = $district_number;
+        $row['user_shortname'] = $name_map[$node_number]['short_name'];
+      }
+    }
+
+    // Copy to the target_* fields.
+    $row['target_district'] = $row['user_district'];
+    $row['target_shortname'] = $row['user_shortname'];
+  }
+  // TODO: The above section will be unnecessary after summer changes.
+
+  return $row;
+}

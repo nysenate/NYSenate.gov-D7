@@ -1,0 +1,257 @@
+// Non-modular or client styles for .l-header region.
+.l-header {
+  width: 100%;
+  z-index: 5;
+  top: 0;
+
+  // display none for original nav when cloned.
+  & + .l-header {
+    .c-senator-nav--wrap {
+      display: none;
+    }
+  }
+
+  &.fixed {
+    position: fixed;
+  }
+
+  // this is to fix mobile button positioning when logged in as admin
+  .contextual-links-region {
+    position: static;
+  }
+}
+@media #{$tablet} {
+  .l-header + .l-header {
+    .c-senator-nav--wrap {
+      display: block;
+    }
+  }
+  .l-header {
+    // this is to fix mobile button positioning when logged in as admin
+    .contextual-links-region {
+      position: relative;
+    }
+  }
+}
+
+
+/*------------------------------
+/ SENATOR NAV
+/-------------------------------*/
+
+.c-senator-nav--wrap {
+
+  li {
+    border-top: 1px solid #fff;
+    text-transform: uppercase;
+    font-family: "Proxima Nova Regular";
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    line-height: 1em;
+
+    a {
+      display: block;
+      height: 100%;
+      width: 100%;
+      padding: 20px 0 20px 10px;
+    }
+  }
+}
+
+@media #{$tablet} {
+
+  .c-senator-nav--wrap {
+    position: relative;
+    width: 100%;
+    background: #fff;
+    @include transition(top, .5s, ease);
+
+    .c-senator-nav {
+
+      > nav {
+        position: relative;
+        top: 0;
+        height: 100%;
+        padding: 0;
+        overflow: hidden;
+        background: #fff;
+        z-index: 1;
+        @include transition(none, 1s, ease);
+      }
+
+      ul {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+      li {
+        display: inline-block;
+        vertical-align: middle;
+        height: 100%;
+
+        font-family: 'Proxima Nova SemiBold';
+        font-size: 14px;
+
+        a {
+          line-height: 14px;
+        }
+      }
+    }
+  }
+}
+
+@media #{$desktop} {
+  .c-senator-nav--wrap {
+    .c-senator-nav {
+
+      li {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+/*------------------------------
+/ HEADER COLLAPSED
+/-------------------------------*/
+.l-header__collapsed {
+  top: 0;
+  width: 100%;
+  @include transition(top, 0.25s, ease-in);
+
+
+  // Senator variant
+  .node-type-senator &.messages-open {
+    top: 87px;
+  }
+
+  // HERO
+  .c-senator-hero {
+    height: 100px;
+    padding-left: 20px;
+    margin-top: 0;
+    @include transition(margin, 0.25s, ease-in);
+    // padding-bottom: 50px;
+
+    &:before {
+      content: "";
+      display: inline-block;
+      vertical-align: middle;
+      height: 50px;
+      width: 1px;
+      margin-left: -1px;
+    }
+
+    &.hidden {
+      margin-top: -100px;
+    }
+  }
+  .c-senator-hero--img {
+    display: inline-block;
+    vertical-align: middle;
+    height: 35px;
+    width: 35px;
+    @include border-radius(50%);
+
+    img {
+      position: relative;
+      top: 0;
+      width: auto;
+      max-width: 140%;
+      height: 100%;
+    }
+  }
+  .c-senator-hero--info {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0 0 0 10px;
+  }
+  .c-senator-hero--name {
+    font-size: 15px;
+    margin: 0;
+  }
+  .c-senator-hero--title,
+  .c-senator-hero--info-secondary {
+    display: none;
+  }
+  .c-senator-hero--contact-btn {
+    width: 100%;
+    height: 50px;
+    padding-left: 24px;
+
+    &:before {
+      line-height: 50px;
+      padding-left: 0px;
+    }
+  }
+
+}
+
+@media #{$tablet} {
+  .l-header__collapsed {
+    .c-senator-hero {
+      padding: 0 0 0 9%;
+
+      &:before {
+        height: 100%;
+      }
+    }
+    .c-senator-hero--info {
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+
+      > div {
+        margin-left: 0;
+      }
+
+      &:before {
+        margin-left: 0;
+      }
+    }
+    .c-senator-hero--title {
+      display: block;
+    }
+    .c-senator-hero--name {
+      font-size: 22px;
+    }
+    .c-senator-hero--img {
+      height: 72px;
+      width: 72px;
+
+      > img {
+        position: absolute;
+      }
+    }
+
+    .c-senator-hero--contact-btn {
+      height: 100%;
+      max-width: 300px;
+      right: 0;
+      left: auto;
+
+      &:before {
+        line-height: 100px;
+      }
+    }
+  }
+}
+
+.messages-number {
+  display: block;
+  font-size: 15px;
+  color: $contrast_lgt;
+  position: absolute;
+  right: 22px;
+  top: 8px;
+  z-index: 999999;
+  width: 20px;
+  height: 20px;
+  background: $gen_blue_med;
+  border-radius: 50px;
+  text-align: center;
+
+  @media #{$tablet} {
+    display: none;
+  }
+}

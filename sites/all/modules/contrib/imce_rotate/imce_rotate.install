@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * @file
+ * Installs, uninstalls IMCE Rotate.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function imce_rotate_install() {
+  $profiles = variable_get('imce_profiles', array());
+  // Set rotate permissions. Make profile#1 have access by default.
+  foreach ($profiles as $i => $profile) {
+    foreach ($profile['directories'] as $j => $directory) {
+      $profiles[$i]['directories'][$j]['rotate'] = $i == 1 ? 1 : 0;
+    }
+  }
+  variable_set('imce_profiles', $profiles);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function imce_rotate_uninstall() {
+  $profiles = variable_get('imce_profiles', array());
+  // Delete rotate permissions.
+  foreach ($profiles as $i => $profile) {
+    foreach ($profile['directories'] as $j => $directory) {
+      unset($profiles[$i]['directories'][$j]['rotate']);
+    }
+  }
+  variable_set('imce_profiles', $profiles);
+}

@@ -1,0 +1,403 @@
+/*----------------------------
+/	Transition Speeds
+/-----------------------------*/
+$logInDropDown: 0.3s;
+
+/*------------------------------
+/ SITE WIDE TOP BAR
+/-------------------------------*/
+.c-header-bar {
+	height: 60px;
+	background: #fff;
+	z-index: 10;
+	overflow: hidden;
+	@include transition(height, 0.3s, ease);
+
+	// &.collapsed { height: 0; }
+}
+.c-topbar {
+	position: relative;
+	display: block;
+	height: 100%;
+	width: 100%;
+
+	&:before {
+		content: "";
+		height: 100%;
+		width: 1px;
+		margin-left: -1px;
+		display: inline-block;
+		vertical-align: middle;
+	}
+}
+.c-page-title {
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0;
+	font-family: 'FreightText Book';
+	font-size: 12px;
+
+	a {
+		position: relative;
+		display: inline-block;
+		vertical-align: middle;
+		min-width: 250px;
+		color: $grey02;
+		white-space: nowrap;
+
+		&:before {
+			content: "";
+			display: inline-block;
+			vertical-align: middle;
+			width: 20px;
+			height: 20px;
+			margin-right: 10px;
+			background: transparent url("/sites/all/themes/nysenate/images/nys_logo_header240x240.jpg") center center no-repeat;
+			background-size: cover;
+			@include transition(all, 0.15s, ease);
+		}
+	}
+}
+
+@media #{$tablet} {
+	.c-header-bar {
+		overflow: visible;
+		height: 100px;
+
+		// HEADER BAR COLLAPSED
+		&.collapsed {
+			height: 40px;
+
+			.c-page-title {
+				font-size: 13px;
+
+				a {
+					&:before {
+						width: 28px;
+						height: 28px;
+						margin-right: 5px;
+						background-size: cover;
+					}
+				}
+			}
+		}
+	}
+	.c-page-title {
+		font-size: 22px;
+
+		a {
+			&:before {
+				height: 60px;
+				width: 60px;
+				margin-right: 20px;
+			}
+		}
+	}
+	.c-header--connect {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		margin: auto;
+		height: 55px;
+
+		.c-nav--social {
+			position: relative;
+			// display: inline-block;
+			// vertical-align: middle;
+			display: block;
+			float: left;
+			margin: 12px 0;
+			padding: 0 20px 0 0;
+			border-right: 1px solid $grey05;
+
+			li {
+				margin: 0;
+
+				& + li {
+					margin-left: 10px;
+				}
+				a {
+					@include transition(color, 0.25s, ease);
+					&:after{
+						color: $grey02;
+						padding: 0;
+						font-size: 26px;
+						line-height: 28px;
+						text-align: center;
+					}
+					&:hover {
+						&:after {
+							color: $grey05;
+						}
+					}
+				}
+			}
+		}
+	}
+	.c-header--btn {
+		display: block;
+		float: left;
+		color: #666;
+		font-family: 'Proxima Nova SemiBold';
+		font-size: 12px;
+		line-height: 28px;
+		text-transform: capitalize;
+		letter-spacing: 0.25em;
+
+		&.c-header--btn__primary {
+			position: relative;
+			height: 100%;
+			margin-left: -1px;
+			padding: 0 15px 0 20px;
+			background-color: transparent;
+			line-height: 55px;
+
+			@extend .lgt-text;
+			@extend .icon-after__recruit-friends;
+			@include transition(background, 0.2s, ease);
+
+			&:after {
+				height: 30px;
+				width: 30px;
+				line-height: 30px;
+				text-align: center;
+				font-size: 20px;
+				margin-left: 8px;
+				padding-left: 3px;
+				color: #fff;
+				@include border-radius(50%);
+				@extend .lgt-bg;
+			}
+
+			&:hover {
+				color: #fff;
+				@extend .lgt-bg;
+			}
+
+			// if the user has an avatar
+			&.has-avatar {
+				&:after {
+					display: none;
+				}
+				> span,
+				> img {
+					display: inline-block;
+					vertical-align: middle;
+				}
+				img {
+					height: 30px;
+					width: 30px;
+					margin-left: 8px;
+					@include border-radius(50%);
+				}
+			}
+		}
+	}
+	// inactive pallette shoule be general pallette
+	.inactive-pallette {
+		.c-header--btn {
+			&.c-header--btn__primary {
+				&:after {
+					background: $gen_blue_lgt;
+				}
+			}
+		}
+	}
+
+	.c-login--list {
+		position: relative;
+		display: inline-block;
+		vertical-align: middle;
+		list-style: none;
+		height: 100%;
+		margin-left: -1px;
+		margin-top: 0;
+		padding-left: 0;
+
+		.c-header--btn {
+			margin-left: 0;
+
+			&.c-header--btn__primary {
+				@include transition(background, 0.2s, ease, 0.1s);
+			}
+		}
+
+		li {
+			position: relative;
+			top: 0;
+			height: 100%;
+			z-index: 4;
+
+			a {
+				display: block;
+				height: 100%;
+				width: 100%;
+				padding: 0 15px 0 20px;
+				color: #fff;
+				line-height: 55px;
+
+			    -webkit-touch-callout: none;
+			    -webkit-user-select: none;
+			    -khtml-user-select: none;
+			    -moz-user-select: none;
+			    -ms-user-select: none;
+			    user-select: none;
+
+				// background: $grey05;
+			}
+			& + li {
+				position: absolute;
+				width: 100%;
+				margin-top: 0;
+				z-index: 3;
+				@include transition(top, 0.2s, ease-in);
+
+				a {
+					@include transition(background, 0.2s, ease, 0.1s);
+				}
+
+				&.c-login--admin {
+					z-index: 3;
+				}
+
+			}
+		}
+
+		&:hover {
+			.c-header--btn__primary {
+				color: #fff;
+				@extend .lgt-bg;
+				@include transition(background, 0.2s, ease);
+
+				&:hover {
+					@extend .lgt-bg;
+				}
+			}
+			.c-login--edit {
+				top: 100%;
+			}
+			.c-login--logout {
+				top: 200%;
+			}
+			.c-login--admin {
+				top: 300%;
+			}
+			li + li {
+				@include transition(top, 0.2s, ease-in, 0.15s);
+
+				a {
+					background: $grey05;
+					@include transition(background, 0.1s, ease, 0.05s);
+				}
+
+				a:hover {
+					@extend .drk-bg;
+					@include transition(background, 0.15s, ease);
+				}
+			}
+		}
+	}
+	// inactive pallette shoule be general pallette
+	.inactive-pallette {
+		.c-login--list {
+			&:hover {
+				.c-header--btn__primary {
+					background: $gen_blue_lgt;
+
+					&:hover {
+						background: $gen_blue_lgt;
+					}
+				}
+				li + li {
+					a:hover {
+						background: $gen_blue_drk;
+					}
+				}
+			}
+		}
+	}
+	// collaspsed
+	.c-header-bar.collapsed {
+		.c-header--btn {
+			&.c-header--btn__primary {
+				line-height: 40px;
+			}
+		}
+		.c-header--connect {
+			height: 40px;
+		}
+		.c-nav--social {
+			margin: 4px 0;
+		}
+		.c-login--list {
+			li {
+				a {
+					line-height: 40px;
+				}
+			}
+		}
+		.c-header--btn.c-senator-header--btn { 
+			height: 40px; 
+			.nys-senator--thumb {
+				margin: 5px 0;
+			}
+		}
+	}
+}
+@media #{$socialBtnsHidden} {
+	.c-header--connect {
+
+		.c-nav--social {
+			display: none;
+		}
+	}
+}
+@media #{$senatorBtnHidden} {
+	.c-header--btn.c-senator-header--btn { display: none; }	
+}
+@media #{$senatorBtnVisible} {
+	.c-header--btn.c-senator-header--btn {  
+		float: none;
+		display: inline-block;
+		height: 55px;
+		vertical-align: middle;
+		padding: 0 15px;
+		@include transition(background, 0.2s, ease);
+
+		.nys-senator {
+			height: 100%;
+			margin: 0;
+		}
+
+		.nys-senator--info {
+			margin-right: 8px;
+		}
+
+		.nys-senator--title,
+		.nys-senator--name {
+			@extend .lgt-text;
+		}
+		.nys-senator--title {
+			text-transform: capitalize;
+			font-size: 12px;
+			font-family: "Proxima Nova SemiBold";
+		}
+		.nys-senator--name {
+			font-family: "Adelle SemiBold";
+		}
+		.nys-senator--thumb {
+			height: 30px;
+			width: 30px;
+			margin: 13px 0;
+		}
+
+		&:hover {
+			@extend .lgt-bg;
+			.nys-senator--title,
+			.nys-senator--name {
+				color: #fff;
+			}
+		}
+	}	
+}

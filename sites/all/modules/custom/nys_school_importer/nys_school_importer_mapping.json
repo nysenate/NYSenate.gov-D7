@@ -1,0 +1,140 @@
+{
+	"1": {
+		"csv_colname": "ACTIVE DATE",
+		"drupal_colname": "",
+		"drupal_coltype": "",
+		"drupal_coltitle": ""
+	},
+	"2": {
+		"csv_colname": "COUNTY",
+		"drupal_colname": "",
+		"drupal_coltype": "",
+		"drupal_coltitle": ""
+	},
+	"3": {
+		"csv_colname": "SED CODE",
+		"drupal_colname": "field_school_education_id",
+		"drupal_coltype": "value",
+		"drupal_coltitle": "State Education ID Number"
+	},
+	"4": {
+		"csv_colname": "LEGAL NAME",
+			"drupal_colname": "field_school_legal_name",
+		"drupal_coltype": "value",
+		"drupal_coltitle": "School Legal Name"
+	},
+	"5": {
+		"csv_colname": "INSTITUTION TYPE CODE",
+		"drupal_colname": "",
+		"drupal_coltype": "",
+		"drupal_coltitle": ""
+	},
+	"6": {
+		"csv_colname": "INSTUTION TYPE DESCRIPTION",
+		"drupal_colname": "field_school_type",
+		"drupal_coltype": "value",
+		"drupal_coltitle": "School Type"
+	},
+	"7": {
+		"csv_colname": "INSTITUTION SUB TYPE CODE",
+		"drupal_colname": "",
+		"drupal_coltype": "",
+		"drupal_coltitle": ""
+	},
+	"8": {
+		"csv_colname": "INSTITUTION SUB TYPE DESCRIPTION",
+		"drupal_colname": "field_school_subtype_description",
+		"drupal_coltype": "value",
+		"drupal_coltitle": "Institution Sub Type"
+	},
+	"9": {
+		"csv_colname": "NEEDS RESOURCE CODE",
+		"drupal_colname": "",
+		"drupal_coltype": "",
+		"drupal_coltitle": ""
+	},
+	"10": {
+		"csv_colname": "NEEDS RESOURCE DESCRIPTION",
+		"drupal_colname": "field_school_needs_description",
+		"drupal_coltype": "value",
+		"drupal_coltitle": "Resource Needs Grouping"
+	},
+	"11": {
+		"csv_colname": "GRADE ORGANIZATION CODE",
+		"drupal_colname": "",
+		"drupal_coltype": "",
+		"drupal_coltitle": ""
+	},
+	"12": {
+		"csv_colname": "GRADE ORGANIZATION DESCRIPTION",
+		"drupal_colname": "field_school_grade_organization",
+		"drupal_coltype":  "value",
+		"drupal_coltitle": "Grade Organization"
+	},
+	"13": {
+		"csv_colname": "COMMUNITY TYPE",
+		"drupal_colname": "",
+		"drupal_coltype": "",
+		"drupal_coltitle": ""
+	},
+	"14": {
+		"csv_colname": "COMMUNITY TYPE NAME",
+		"drupal_colname": "field_school_community_type",
+		"drupal_coltype": "value",
+		"drupal_coltitle": "Community Type"
+	},
+	"15": {
+		"csv_colname": "MAILING ADDRESS",
+		"drupal_colname": "field_school_address",
+		"drupal_coltype": "street",
+		"drupal_coltitle": "School Address: Street"
+	},
+	"16": {
+		"csv_colname": "CITY",
+		"drupal_colname": "field_school_address",
+		"drupal_coltype": "city",
+		"drupal_coltitle": "School Address: City"
+	},
+	"17": {
+		"csv_colname": "STATE",
+		"drupal_colname": "field_school_address",
+		"drupal_coltype": "province",
+		"drupal_coltitle": "School Address: State"
+	},
+	"18": {
+		"csv_colname": "ZIP",
+		"drupal_colname": "field_school_address",
+		"drupal_coltype": "postal_code",
+		"drupal_coltitle": "School Address: Postal Code"
+	},
+	"19": {
+		"csv_colname": "SALUTATION",
+		"drupal_colname": "field_school_ceo_salutation",
+		"drupal_coltype": "value",
+		"drupal_coltitle": "Principal Salutation"
+	},
+	"20": {
+		"csv_colname": "CEO FIRST NAME",
+		"drupal_colname": "field_school_ceo_first_name",
+		"drupal_coltype": "value",
+		"drupal_coltitle": "Principal First Name"
+	},
+	"21": {
+		"csv_colname": "CEO LAST NAME",
+		"drupal_colname": "field_school_ceo_last_name",
+		"drupal_coltype": "value",
+		"drupal_coltitle": "Principal Last Name"
+	},
+	"22": {
+		"csv_colname": "CEO PHONE",
+		"drupal_colname": "field_school_ceo_phone",
+		"drupal_coltype": "value",
+		"drupal_coltitle": "Principal Phone Number"
+	},
+	"23": {
+		"csv_colname": "CEO EMAIL",
+		"drupal_colname": "field_school_ceo_email",
+		"drupal_coltype": "value",
+		"drupal_coltitle": "Principal Email Address"
+	}
+}

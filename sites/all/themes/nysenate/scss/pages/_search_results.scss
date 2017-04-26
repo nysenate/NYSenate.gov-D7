@@ -1,0 +1,441 @@
+/*----------------------------------------
+/ Search Results
+/----------------------------------------*/
+
+.page-search {
+  .search-page-top-form {
+    .c-site-search {
+      position: relative;
+      top: auto;
+      padding: 30px 20px 40px;
+      width: 100%;
+      background-color: $greyLight;
+      overflow: hidden;
+    }
+    .c-site-search--title {
+      display: block;
+      margin-bottom: 20px;
+      font-family: "Adelle SemiBold";
+      font-size: 26px;
+      line-height: 1;
+    }
+    .form-wrapper {
+      position: relative;
+
+    }
+    .c-site-search--box {
+      @include border-radius(0);
+      border: 1px solid $grey05;
+    }
+    .c-site-search--btn,
+    .c-site-search--btn:focus {
+      top: 45px;
+      right: 0;
+    }
+  }
+
+  .block-facetapi {
+    position: relative;
+    width: 100%;
+    float: left;
+    margin: 0 0 20px 0;
+
+    .form-item {
+      margin: 0;
+    }
+    &:after{
+      @extend .icon-after__see-more;
+      position: absolute;
+      right: 10px;
+      top: 5px;
+      font-size: 25px;
+      color: $blue01;
+      pointer-events: none;
+      cursor: pointer;
+    }
+    select {
+      margin-bottom: 0px;
+      height: 45px;
+      color: $blue01;
+      background: none;
+    }
+    .facetapi-select-submit{
+      display: none;
+    }
+
+  }
+
+  .spelling-suggestions {
+    width:100%;
+    float: left;
+    a{
+      @extend .link-text;
+      text-transform: capitalize;
+    }
+  }
+
+  h2 {
+    font-size: 28px;
+    line-height: 1;
+    margin-bottom: 10px;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+    font-family: "Adelle Regular";
+    font-size: 26px;
+    width: 100%;
+    float: left;
+  }
+  h3 {
+    font-size: 28px;
+    line-height: 1;
+    margin-bottom: 10px;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+    font-family: "Adelle Bold";
+    font-size: 26px;
+    width: 100%;
+    float: left;
+  }
+  .nys-senator--title {
+    float: none;
+    width: auto;
+    color: $grey05;
+    text-transform: uppercase;
+    font-family: "Proxima Nova Regular";
+    font-size: 10px;
+    line-height: 1.2em;
+  }
+  .block-current-search-active-links {
+    width: 100%;
+    float: left;
+
+    .c-block-facets--clear {
+      margin: 0px 0px 20px 2px;
+      list-style: none;
+      li {
+        margin-bottom: 1em;
+        a {
+          color: $orange01;
+        }
+        margin: 0;
+      }
+    }
+  }
+  .ds-search-extra {
+    text-transform: uppercase;
+    font-family: "Proxima Nova Semibold";
+    font-size: 12px;
+    line-height: 1em;
+    color: $grey04;
+    margin-bottom: 30px;
+    width: 100%;
+    float: left;
+  }
+  .c-bill-descript {
+    a{
+      color: $grey04;
+    }
+  }
+  
+  .c-block-search-result--senator IMG {
+    width:50px !important;
+    height: 50px !important;
+    border-radius:25px;
+    float:left;
+    margin-right:10px;
+  }
+  
+  .c-block-search-result--senator SMALL, .c-block-search-result--senator P {
+    font-size:13px;
+    line-height:18px;
+    font-family:"Proxima Nova Regular", sans-serif;
+  }
+
+  .c-block-search-result--senator P {
+    margin:8px 0;
+  }
+
+  .c-block-search-result--no-results {
+    padding-top:50px;
+    padding-bottom:35px;
+    UL {
+      margin-left:0;
+      padding-left:0;
+      LI {
+        text-indent:-15px;
+        margin-left:15px;
+      }
+    }
+  }
+
+  .c-block-search-result {
+    padding-top: 20px;
+    padding-bottom: 30px;
+    margin-bottom: 0;
+    border-top: 1px solid $grey05;
+    .first {
+      .c-block-search-result{
+        border-top: none;
+      }
+    }
+    .c-search-result--header {
+      margin-bottom: 15px;
+    }
+    .c-search-result--title {
+      margin-bottom: 10px;
+      font-family: "Adelle Bold";
+      font-size: 16px;
+      line-height: 24px;
+      
+      h3 {
+        float: none;
+        margin-bottom: 0;
+        font-family: "Adelle Bold";
+        font-size: 16px;
+        line-height: 24px;    
+      }
+    }
+    .field-name-field-issues ul a {
+      font-size: 12px;
+    }
+    .c-search-result--topic {
+      text-transform: uppercase;
+      font-family: "Proxima Nova Semibold";
+      font-size: 12px;
+      line-height: 1em;
+      @extend .link-text;
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 20px 0;
+
+        li {
+          margin: 0;
+          font-family: "Proxima Nova SemiBold";
+            font-size: 12px;
+            line-height: 18px;
+            text-transform: uppercase;
+          @extend .link-text;
+
+            & + li {
+              margin: 0;
+            }
+        }
+        a {
+          @extend .link-text;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+    .c-search-result--body {
+      position: relative;
+    }
+    .c-search-result--body__has-img {
+      padding-right: 120px;
+    }
+    .c-search-result--descript {
+      h2 {
+        float: none;
+        font-size: 28px;
+        line-height: 1;
+        margin-bottom: 10px;
+        font-family: "Adelle Light";
+        a {
+          color:$grey02;
+          margin-bottom: 10px;
+          text-transform: capitalize;
+          font-size: 28px;
+        }
+      }
+    }
+    .c-search-result--date,
+    .c-search-result--senator-author,
+    .c-search-result--follow {
+      margin: 0 0 5px 0;
+      color: $grey04;
+      font-family: "Proxima Nova Regular";
+      font-size: 14px;
+      line-height: 1em;
+      a{
+        @extend .link-text;
+      }
+    }
+    .c-search-result--senator-author {
+      margin: 0 0 5px 0;
+      font-family: "Proxima Nova Regular";
+      font-size: 14px;
+      line-height: 1em;
+      a{
+        color: $grey04;
+      }
+      span{
+        @extend .link-text;
+      }
+    }
+  }
+  .pagination-centered {
+    background-color: $grey06;
+    padding: 10px 10px 1px 10px;
+    float: left;
+    width: 100%;
+    margin-bottom: 40px;
+    color: $blue01;
+    ul.pagination {
+      li{
+        a,
+        button {
+          color: $blue01;
+        }
+        &.current a,
+        &.current button{
+          background: none;
+          color: $grey01;
+          // font-family: "Proxima Nova SemiBold";
+        }
+      } 
+    }
+  }
+    
+  .c-legislation-block{
+    .c-bill-meta{
+      width:23%;
+      .c-bill-num{
+        font-size: 22px;
+      }
+      .field-name-field-issues {
+        ul.links {
+          list-style:none;
+          margin:0;
+          padding:0;
+
+          li {
+            display: inline;
+            margin:0;
+            padding:0 5px 0 0;
+            line-height:16px;
+
+            a {
+              text-transform: uppercase;
+              font-family: "Proxima Nova Semibold";
+              font-size: 12px;
+              line-height:1em;
+              color:#cb8d37;
+              &:after {
+                content: ',';
+                color:#222222;
+              }
+            }
+
+            &:last-child {
+              a:after {
+                content: '';
+              }
+            }
+          }
+        }
+      }
+    }
+    .c-bill-descript{
+      a{
+        color: $grey02;
+      }
+    }
+    margin-bottom: 0px;
+  }
+
+  .c-senator-footer {
+    clear: both;
+  }
+}
+
+@media #{$tablet} {
+.page-search{
+  .c-block-search-result--no-results UL LI {
+    text-indent:-20px;
+    margin-left:20px;
+  }
+
+  .search-page-top-form {
+    .form-wrapper {
+      position: static;
+    }
+    .c-site-search {
+      position: relative;
+      width: 100%;
+      padding: 25px 9%;
+      background-color: $greyLight;
+    }
+    .c-site-search--btn,
+    .c-site-search--btn:focus {
+      top: -45px;
+      right: 15px;
+    }
+    .c-site-search--link {
+      right: 9%;
+    }
+  }
+
+  .block-facetapi {
+    &.contextual-links-region{
+      clear:none;
+    }
+    width:32%;
+    float:left;
+    margin: 0 0 40px 0;
+
+    & + .block-facetapi {
+      margin-left: 2%;
+    }
+  }
+  .c-block-search-result {
+    margin-bottom: 0;
+    padding-top: 30px;
+    padding-bottom: 30px;
+
+    .c-search-result--header {
+      position: absolute;
+      top: 30px;
+      left: 0;
+      width: 180px;
+    }
+    .c-search-result--title {
+      font-size: 20px;
+      margin-bottom: 10px;
+
+      h3 {
+        font-size: 20px;
+      }
+    }
+    .c-search-result--topic {
+      ul {
+        margin: 0;
+      }
+    }
+    .c-search-result--body {
+    }
+    .c-search-result--descript {
+      font-size: 24px;
+
+      h2 {
+        font-size: 24px;
+      }
+    }
+    .c-search-result--date,
+    .c-search-result--senator-author {
+      font-size: 14px;
+    }
+    .c-search-result--body__has-img {
+      padding-right: 220px;
+      min-height: 125px; // height of img
+    }
+    .c-search-result--img {
+      max-width: 200px;
+      margin-left: 20px;
+    }
+  }
+}
+}

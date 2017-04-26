@@ -1,0 +1,4 @@
+name = NYS Blocks 
+description = This module provides custom functionality blocks for the site. 
+package = NY STATE SENATE
+core = 7.x

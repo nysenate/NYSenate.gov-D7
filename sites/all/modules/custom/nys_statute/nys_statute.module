@@ -1,0 +1,526 @@
+<?php
+
+/**
+ * @file
+ * File nys_statute.module.
+ */
+
+define("NYS_STATUTE_EXPLORER_BASE_PATH", "/legislation/statute");
+define("NYS_STATUTE_EXPLORER_STATUTE_PATH", "/legislation/statutes-view");
+define("NYS_STATUTE_STATUTE_ID_DELIMITER", '/');
+define("NYS_STATUTE_STATUTE_GREAT_GRAND_PARENT_PATH", 'all');
+
+/**
+ * Function nys_statute_get_parent_statute_link().
+ *
+ * Returns a link to the parent of the requested $statute_id.
+ */
+function nys_statute_menu() {
+
+  $items['legislation/not-found'] = array(
+    // Page title.
+    'title' => 'Legislation Not Found',
+    // Describe the page for the menu system.  site visitors will not see this.
+    'description' => 'Simple page noy found page.',
+    // Function that is called when visiting the new path.
+    'page callback' => 'nys_statute_legislation_not_found',
+    // Permissions required to view page.
+    'access arguments' => array('access content'),
+  );
+  return $items;
+}
+
+/**
+ * Function nys_statute_legislation_not_found() displays page not found.
+ */
+function nys_statute_legislation_not_found() {
+  // Emit a 404 header.
+  drupal_add_http_header('Status', '404 Not Found');
+
+  // Get the markup for the not found page.
+  $fast_404_html = file_get_contents(DRUPAL_ROOT . '/sites/default/404.html');
+
+  // If the nice markup can not be found use the standard.
+  if (empty($fast_404_html) == TRUE) {
+    $fast_404_html = variable_get('404_fast_html', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>');
+  }
+
+  // Replace @path in the variable with the page path.
+  print strtr($fast_404_html, array('@path' => check_plain($_GET['page'])));
+
+}
+
+/**
+ * Function nys_statute_get_breadcrumb_markup.
+ *
+ * Arguments:
+ * $parent_statute_id - The statuteID of the current pages parent page.
+ * $node_title - The title of the current page.
+ * $law_id - The lawID of the current page. Example: ABP.
+ *
+ * Returns: The HTML markup of the  Breadcrumb <nav> element.
+ */
+function nys_statute_get_breadcrumb_markup($parent_statute_id, $node_title, $law_id, $location_id, $doc_type, $doc_level_id) {
+  $output_array = array();
+  $current_statute_id = $parent_statute_id;
+  $index = 0;
+
+  // Climb the food chain.
+  do {
+    $index++;
+
+    $link_array = nys_statute_get_breadcrumb_link_array($current_statute_id);
+    if ($link_array !== FALSE) {
+
+      // Add the data.
+      $output_array[] = $link_array;
+
+      // Whos your boss.
+      $current_statute_id = $link_array['parent_statute_id'];
+
+    }
+
+  } while (($link_array !== FALSE) && (empty($link_array['parent_statute_id']) == FALSE) && ($index < 20));
+
+  // We really need that LIFO please.
+  $lifo_output_array = array_reverse($output_array);
+
+  // Output the whole enchilada.
+  $markup = '<nav class="breadcrumbs c-law-breadcrumbs">';
+
+  // Emit EACH statute link.
+  foreach ($lifo_output_array as $statute_member) {
+    $markup = $markup . $statute_member['link'];
+    // Print print_r($statute_member['link'], true); print "\r\n";.
+  }
+
+  // Emit the title without the link.
+  $markup = $markup . nys_statute_get_this_page_link_markup($node_title, $law_id, $location_id, $doc_type, $doc_level_id);
+
+  // Emit the nav tag END.
+  $markup = $markup . '</nav>';
+
+  return $markup;
+
+}
+
+/**
+ * Function nys_statute_get_breadcrumb_link_array.
+ *
+ * Arguments:
+ * $statute_id - The statuteID of the desired page.
+ *
+ * Returns: An array containing
+ *    link - the url for the page.
+ *    statute_id - statute_id of the page.
+ *    parent_statute_id - the statute_id of the parent page.
+ *
+ * Returns: FALSE if the $statute_id could not be found.
+ */
+function nys_statute_get_breadcrumb_link_array($statute_id) {
+  // The node_load() is returning a warning.
+  $old_err = error_reporting(0);
+  $node = nys_statute_node_load_by_statute_id($statute_id);
+  error_reporting($old_err);
+
+  if ($node !== FALSE) {
+
+    // Depending on field_doctype what to do in the title ie modify or filter.
+    $doctype = $node->field_doctype[LANGUAGE_NONE][0]['value'];
+
+    if ($doctype == 'CHAPTER') {
+      $link_title = $node->field_lawname[LANGUAGE_NONE][0]['value'];
+    }
+    elseif ($doctype == 'ARTICLE') {
+      $link_title = $node->field_doctype[LANGUAGE_NONE][0]['value'] . ' ' . $node->field_doclevelid[LANGUAGE_NONE][0]['value'];
+    }
+    elseif ($node->field_statuteid[LANGUAGE_NONE][0]['value'] == 'all') {
+      $link_title = 'all';
+    }
+    elseif ($node->field_statuteid[LANGUAGE_NONE][0]['value'] == 'CONSOLIDATED') {
+      $link_title = 'consolidated';
+    }
+    elseif ($node->field_statuteid[LANGUAGE_NONE][0]['value'] == 'UNCONSOLIDATED') {
+      $link_title = 'unconsolidated';
+    }
+    elseif ($node->field_statuteid[LANGUAGE_NONE][0]['value'] == 'COURTACTS') {
+      $link_title = 'court acts';
+    }
+    elseif ($node->field_statuteid[LANGUAGE_NONE][0]['value'] == 'RULES') {
+      $link_title = 'rules';
+    }
+    elseif ($node->field_statuteid[LANGUAGE_NONE][0]['value'] == 'all') {
+      $link_title = 'all';
+    }
+    elseif (strpos($node->field_statuteid[LANGUAGE_NONE][0]['value'], '/') === FALSE) {
+      $link_title = $node->field_statuteid[LANGUAGE_NONE][0]['value'];
+    }
+    else {
+      $link_title = $node->field_doctype[LANGUAGE_NONE][0]['value'] . ' ' . $node->field_doclevelid[LANGUAGE_NONE][0]['value'];
+    }
+
+    $link_url = NYS_STATUTE_IMPORT_BASE_PATH . $node->field_statuteid[LANGUAGE_NONE][0]['value'];
+
+    if (is_array($node->field_parentstatuteid) && count($node->field_parentstatuteid)) {
+
+      return array(
+        'link' => l($link_title, $link_url),
+        'statute_id' => $node->field_statuteid[LANGUAGE_NONE][0]['value'],
+        'parent_statute_id' => $node->field_parentstatuteid[LANGUAGE_NONE][0]['value'],
+      );
+
+    }
+    else {
+
+      return array(
+        'link' => l($link_title, $link_url),
+        'statute_id' => $node->field_statuteid[LANGUAGE_NONE][0]['value'],
+        'parent_statute_id' => '',
+      );
+
+    }
+
+  }
+
+  return FALSE;
+
+}
+
+
+/**
+ * Function nys_statute_get_parent_statute_link().
+ *
+ * Returns a link to the parent of the requested $statute_id.
+ */
+function nys_statute_get_parent_statute_link($statute_id) {
+  if (empty($statute_id) == TRUE) {
+    return FALSE;
+  }
+
+  $node = nys_statute_node_load_by_statute_id($statute_id);
+
+  if ($node !== FALSE) {
+
+    $parent_node = nys_statute_node_load_by_statute_id($node->field_parentstatuteid[LANGUAGE_NONE][0]['value']);
+
+    if ($parent_node !== FALSE) {
+      $link_title = $parent_node->title;
+    }
+
+    $link_url = NYS_STATUTE_IMPORT_BASE_PATH . $node->field_parentstatuteid[LANGUAGE_NONE][0]['value'];
+
+    return l($link_title, $link_url);
+  }
+
+  return FALSE;
+
+}
+
+/**
+ * Function nys_statute_get_statute_link().
+ *
+ * Returns a link to the the requested $statute_id.
+ */
+function nys_statute_get_statute_link($statute_id) {
+  if (empty($statute_id) == TRUE) {
+    return FALSE;
+  }
+
+  $node = nys_statute_node_load_by_statute_id($statute_id);
+
+  if ($node !== FALSE) {
+    $link_title = $node->title;
+    $link_url = NYS_STATUTE_IMPORT_BASE_PATH . $statute_id;
+
+    return l($link_title, $link_url);
+  }
+
+  return FALSE;
+
+}
+
+/**
+ * Returns the string ?key={openleg_key_here} if $is_first_param is true.
+ *
+ * Otherwise &key={openleg_key_here} will be returned.
+ */
+function nys_statute_get_openleg_key($is_first_param) {
+  $openleg_key = variable_get('openleg_key');
+  return (($is_first_param) ? '?' : '&') . 'key=' . $openleg_key;
+}
+
+/**
+ * Retrieves the law info given a three letter law id.
+ */
+function nys_statute_get_law_info($law_id) {
+  $listings = nys_statute_get_law_listings();
+  return $listings[$law_id];
+}
+
+/**
+ * Function nys_statute_get_law_type().
+ *
+ * Returns the lawType of the requested $law_id.
+ */
+function nys_statute_get_law_type($law_id) {
+  $law_info = nys_statute_get_law_info($law_id);
+  return str_replace('_', '', $law_info->lawType);
+}
+
+/**
+ * Function nys_statute_get_law_name().
+ *
+ * Returns the name of the requested $law_id.
+ */
+function nys_statute_get_law_name($law_id) {
+  $law_info = nys_statute_get_law_info($law_id);
+  return $law_info->name;
+}
+
+/**
+ * Function nys_statute_get_law_chapter().
+ *
+ * Returns the chapter of the requested $law_id.
+ */
+function nys_statute_get_law_chapter($law_id) {
+  $law_info = nys_statute_get_law_info($law_id);
+  return $law_info->chapter;
+}
+
+/**
+ * Function nys_statute_get_law_type_link_markup().
+ *
+ * Returns a link to the $law_id section of the LAW-ID page.
+ */
+function nys_statute_get_law_type_link_markup($law_id) {
+  $law_type = nys_statute_get_law_type($law_id);
+
+  $link_url = NYS_STATUTE_EXPLORER_BASE_PATH . '#' . $law_type;
+  return '<a href="' . $link_url . '" >' . $law_type . '</a>';
+
+}
+
+/**
+ * Function nys_statute_get_this_page_link_markup().
+ *
+ * Returns a non active `title link` to the current page without a href.
+ */
+function nys_statute_get_this_page_link_markup($title, $law_id, $location_id, $doc_type, $doc_level_id) {
+  if ($law_id == 'all') {
+    return '<a class="c-law--inactive-breadcrumb" >All</a>';
+  }
+  elseif ($law_id == 'CONSOLIDATED') {
+    return '<a class="c-law--inactive-breadcrumb" >Consolidated</a>';
+  }
+  elseif ($law_id == 'UNCONSOLIDATED') {
+    return '<a class="c-law--inactive-breadcrumb" >Unonsolidated</a>';
+  }
+  elseif ($law_id == 'COURTACTS') {
+    return '<a class="c-law--inactive-breadcrumb" >Court Acts</a>';
+  }
+  elseif ($law_id == 'RULES') {
+    return '<a class="c-law--inactive-breadcrumb" >Rules</a>';
+  }
+  elseif ($doc_type == 'CHAPTER') {
+    return '<a class="c-law--inactive-breadcrumb" >' . $title . '</a>';
+  }
+  else {
+    return '<a class="c-law--inactive-breadcrumb" >' . $doc_type . ' ' . $doc_level_id . '</a>';
+  }
+}
+
+/**
+ * Function nys_statute_node_load_by_statute_id().
+ *
+ * Returns a node given a unique $statuteId.
+ *
+ * Params:
+ *   $statuteId - A Unique statuteId like ABP-210.
+ */
+function nys_statute_node_load_by_statute_id($statuteId) {
+  $entity_id = '';
+  $result = db_query("SELECT `entity_id` FROM `field_data_field_statuteid` WHERE field_statuteid_value = :statuteId",
+                             array(':statuteId' => $statuteId));
+
+  $number_of_rows = $result->rowCount();
+
+  if ($number_of_rows == 0) {
+    drupal_set_message("STATUTE $statuteId NOT FOUND", 'status');
+  }
+  elseif ($number_of_rows == 1) {
+    $entity_id = $result->fetchObject()->entity_id;
+  }
+  elseif ($number_of_rows > 1) {
+    drupal_set_message("MORE THAN ONE $statuteId FOUND", 'status');
+  }
+
+  if (empty($entity_id) == FALSE  &&  is_numeric($entity_id) == TRUE) {
+    $node = node_load($entity_id);
+    return node_load($entity_id);
+  }
+
+  return FALSE;
+
+}
+
+/**
+ * Implements hook_views_pre_render().
+ *
+ * Names the statutes_view.
+ */
+function nys_statute_views_pre_render(&$view) {
+  if ($view->name == 'statute_view') {
+    $view->build_info['title'] = nys_statute_get_law_name(arg(2));
+  }
+}
+
+/**
+ * Returns a string containing the base openleg laws api url.
+ */
+function nys_statute_get_base_openleg_law_url() {
+  $ol_base_url   = variable_get("openleg_base_url");
+  $base_url = $ol_base_url . '/api/3/laws';
+  return $base_url;
+}
+
+/**
+ * Retrieves the law listings from open leg and caches them.
+ */
+function nys_statute_get_law_listings() {
+  $CACHE_KEY = 'nys_legislation_explorer_law_listings';
+  $law_listings = cache_get($CACHE_KEY);
+  if (!$law_listings) {
+    $base_result = file_get_contents(nys_statute_get_base_openleg_law_url() . nys_statute_get_openleg_key(TRUE));
+    $json_response = json_decode($base_result);
+    $law_listings = array();
+    foreach ($json_response->result->items as $k => &$v) {
+      $law_listings[$v->lawId] = $v;
+    }
+    cache_set($CACHE_KEY, $law_listings);
+  }
+  else {
+    $law_listings = $law_listings->data;
+  }
+  return $law_listings;
+}
+
+/**
+ * Formats and massages the Law Body.
+ */
+function nys_statute_html_format_raw_law_text($law_doc_text) {
+  if ($law_doc_text) {
+    $law_doc_text = preg_replace("/\\\\n\s{2}/", "<br/><br/>&nbsp;&nbsp;", $law_doc_text);
+    $law_doc_text = preg_replace("/\\\\n/", " ", $law_doc_text);
+  }
+  return $law_doc_text;
+}
+
+/**
+ * Returns a renderded set of teasers for child statutes.
+ *
+ * Argumants:
+ *     $node      -  the parent node to search.
+ *     Example url.
+ *     /legislation/laws/ABP/212.
+ *           0       1    2   3
+ */
+function nys_statute_render_child_statutes($node) {
+  // Determine what type of page to find.
+  if (nys_statute_alias_arg(0) == 'legislation' && nys_statute_alias_arg(1) == 'laws' && empty(nys_statute_alias_arg(2)) == FALSE && empty(nys_statute_alias_arg(3)) == TRUE) {
+    // This is a great grand parent, grand parent or parent (chapter).
+    switch (nys_statute_alias_arg(2)) {
+      case 'all':
+        $statute_id = $node->field_lawid[LANGUAGE_NONE][0]['value'];
+        $sql = "SELECT entity_id FROM field_data_field_parentstatuteid WHERE `bundle` = 'statute' AND `field_parentstatuteid_value` = :statuteID";
+        break;
+
+      case 'CONSOLIDATED':
+      case 'UNCONSOLIDATED':
+      case 'COURTACTS':
+      case 'RULES':
+        $statute_id = $node->field_lawid[LANGUAGE_NONE][0]['value'];
+        $sql = "SELECT entity_id FROM field_data_field_parentstatuteid, node WHERE entity_id = nid AND `bundle` = 'statute' AND `field_parentstatuteid_value` = :statuteID ORDER BY title";
+        break;
+
+      default:
+        // Must be a Chapter.
+        $statute_id = $node->field_lawid[LANGUAGE_NONE][0]['value'];
+        // Alt $sql = "SELECT entity_id FROM field_data_field_parentstatuteid WHERE `bundle` = 'statute' AND `field_parentstatuteid_value` = :statuteID";.
+        $sql = "SELECT field_data_field_parentstatuteid.entity_id FROM field_data_field_parentstatuteid, field_data_field_doclevelid WHERE field_data_field_parentstatuteid.entity_id = field_data_field_doclevelid.entity_id AND `field_parentstatuteid_value` = :statuteID ORDER BY field_doclevelid_value  * 1 ASC";
+
+    }
+
+  }
+  elseif (nys_statute_alias_arg(0) == 'legislation' && nys_statute_alias_arg(1) == 'laws' && empty(nys_statute_alias_arg(2)) == FALSE && empty(nys_statute_alias_arg(3)) == FALSE) {
+    // Alternate $statute_id = $node->field_lawid[LANGUAGE_NONE][0]['value'] . '/' . $law_id = $node->field_lawid[LANGUAGE_NONE][0]['value'];.
+    $statute_id = nys_statute_alias_arg(2) . '/' . nys_statute_alias_arg(3);
+    // This is a parent or child is not a chapter - switch on the doctype.
+    switch ($node->field_doctype[LANGUAGE_NONE][0]['value']) {
+      case 'ARTICLE':
+        $sql = "SELECT field_data_field_parentstatuteid.entity_id FROM field_data_field_parentstatuteid, field_data_field_doclevelid WHERE field_data_field_parentstatuteid.entity_id = field_data_field_doclevelid.entity_id AND `field_parentstatuteid_value` = :statuteID ORDER BY field_doclevelid_value  * 1 ASC";
+        break;
+
+      case 'SECTION':
+        $sql = "SELECT field_data_field_parentstatuteid.entity_id FROM field_data_field_parentstatuteid, field_data_field_doclevelid WHERE field_data_field_parentstatuteid.entity_id = field_data_field_doclevelid.entity_id AND `field_parentstatuteid_value` = :statuteID ORDER BY field_doclevelid_value  * 1 ASC";
+        break;
+
+      default:
+        $sql = "SELECT field_data_field_parentstatuteid.entity_id FROM field_data_field_parentstatuteid, field_data_field_doclevelid WHERE field_data_field_parentstatuteid.entity_id = field_data_field_doclevelid.entity_id AND `field_parentstatuteid_value` = :statuteID ORDER BY field_doclevelid_value  * 1 ASC";
+    }
+
+  }
+
+  $output_html = '';
+
+  if (empty($sql) == TRUE) {
+    drupal_goto('legislation/not-found', array('query' => array('page' => request_uri())));
+  }
+
+  // Get a list of child statute nodes.
+  $args = array(':statuteID' => $statute_id);
+  $results = db_query($sql, $args);
+
+  foreach ($results as $result) {
+    // Render the Teasers.
+    $node = node_load($result->entity_id);
+
+    $node_view = node_view($node, 'teaser');
+    $output_html = $output_html . drupal_render($node_view);
+  }
+
+  return $output_html;
+
+}
+
+/**
+ * Gets the path component for the current url alias.
+ *
+ * Argument: index the path element id.
+ */
+function nys_statute_alias_arg($index) {
+  return arg($index, drupal_get_path_alias(current_path()));
+}
+
+/**
+ * Function nys_statute_test_statute().
+ *
+ * Tests the functions.
+ */
+function nys_statute_test_statute($arg1) {
+  $parent_statute_id = 'BNK-14';
+  $node_title = "Test Node Title";
+  $law_id = 'BNK';
+
+  print nys_statute_get_breadcrumb_markup($parent_statute_id, $node_title, $law_id);
+
+  // Print nys_statute_get_law_type_link_markup('ABP');.
+  // Print nys_statute_get_law_type('ABP');.
+  // Print nys_statute_get_law_name('ABP');.
+  // Print nys_statute_get_this_page_link_markup($title);.
+  // Print print_r( nys_statute_get_breadcrumb_link_array('BNK-14') );.
+  // Print print_r( nys_statute_get_breadcrumb_link_array('BNK--CH2') );.
+  // Print nys_statute_get_breadcrumb_link('BNK-14');.
+  // Print nys_statute_get_parent_statute_link('BNK-14');.
+  // Print nys_statute_get_statute_link('BNK-14');.
+  // Print nys_statute_get_law_type('ABP');.
+}

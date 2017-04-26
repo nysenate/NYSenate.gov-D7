@@ -1,0 +1,4 @@
+name = NYS Messaging Log
+description = Module to log all contact form submissions
+core = 7.x
+package = NY STATE SENATE

@@ -1,0 +1,14 @@
+core = 7.x
+
+name = Message Broker Usage Example
+description = Example for the usage of the message broker api
+php = 5.3
+package = "Messagebroker"
+dependencies[] = message_broker
+
+; Information added by Drupal.org packaging script on 2014-10-31
+version = "7.x-1.2"
+core = "7.x"
+project = "message_broker"
+datestamp = "1414750730"
+

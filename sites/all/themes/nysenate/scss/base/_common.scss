@@ -1,0 +1,980 @@
+// Common abstract classes to extend or parametrics are stored here.
+
+.panel-separator { clear: both; }
+
+/*
+	overriding column padding rather than constinuously
+	removing the element
+*/
+.l-row {
+	.column,
+	.columns {
+		padding-left: 0;
+		padding-right: 0;
+	}
+}
+/*------------------------------------
+/ UTILITIES (could be own file)
+/	hooks and classes that don't style 
+/ or handle layouts 
+/	- ie for mobile v desktop view
+/-------------------------------------*/
+
+.u-mobile-only { display: block; }
+.u-tablet-plus { display: none; }
+
+@media #{$tablet} {
+	.u-mobile-only { display: none; }
+	.u-tablet-plus { display: block; }
+}
+
+// NO SELECT - use as an extend to make text not highlight
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/*----------------------------------------
+/ BLOCK - starting place for all modules
+/
+/----------------------------------------*/
+
+// TODO - translate into nys-block
+.c-block {
+	display: block;
+	position: relative;
+	margin-bottom: 20px;
+	zoom: 1;
+	clear: both;
+
+	&:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+}
+
+.c-block--half {
+	
+}
+
+.c-block--social{
+	margin-top: 20px;
+	margin-bottom: 40px;
+}
+
+// block that starts the initiatives
+.views-row-first {
+	.c-block--initiative {
+		margin-top: 20px;
+	}
+}
+
+@media #{$tablet} {
+	.c-block {
+		margin-bottom: 60px;
+	}
+
+	.views-row-first {
+		.c-block--initiative {
+			margin-top: 50px;
+		}
+	}
+
+}
+
+/*----------------------------------------
+/ LIST ITEM 
+/----------------------------------------*/
+.c-list-item {
+	padding-top: 20px;
+	border-top: 1px solid $grey05;
+}
+
+/*------------------------------------
+/	SENATOR LISTING  
+/ 	
+/	circular thumbnail of senator
+/	description to the right
+/	name, district, party affiliation
+/-------------------------------------*/
+.nys-senator {
+	position: relative;
+	overflow: hidden;
+	display: inline-block;
+	vertical-align: middle;
+	margin-bottom: 10px;
+}
+.nys-senator--thumb {
+	position: relative;
+	display: inline-block;
+	vertical-align: middle;
+	height: 46px;
+	width: 45px;
+	margin-right: 15px;
+	@include border-radius(50%);
+
+	a {
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+	}
+	img {
+		height: 100%;
+		width: 100%;
+	}
+}
+.nys-senator--info {
+	display: inline-block;
+	vertical-align: middle;
+	list-style: none;
+}
+.nys-senator--title {
+	color: $grey05;
+	text-transform: uppercase;
+	font-family: "Proxima Nova Regular";
+	font-size: 10px;
+	line-height: 1.2em;
+}
+.nys-senator--name {
+	margin: 0;
+	color: $grey02;
+	text-transform: capitalize;
+	font-family: "Adelle Light";
+	font-size: 16px;
+	line-height: 1.2em;
+
+	a {
+		color: $grey02;
+	}
+}
+.nys-senator--district {
+	color: $grey03;
+	text-transform: uppercase;
+	font-family: "Proxima Nova Regular";
+	font-size: 12px;
+	letter-spacing: 0.05em;
+	line-height: 1.2em;
+}
+.nys-senator--party {
+	color: $blue01;
+	text-transform: capitalize;
+	font-family: "Proxima Nova SemiBold";
+}
+
+@media #{$tablet} {
+
+}
+
+/*----------------------------------------
+/ BILL STATUS
+/ styling for a list denoting a bill's status
+/ list items are circle 
+/ add 'passed' class to illustrate we're 
+/	passed that step	
+/----------------------------------------*/
+.nys-bill-status {
+	position: relative;
+	margin: 25px 0;
+	padding: 0;
+	height: 20px;
+	list-style: none;
+	text-align: justify;
+	font-size: 20px;
+
+	hr {
+		display: block;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		margin: auto;
+		height: 2px;
+		width: 90%;
+		border: 0;
+		background: $grey05;
+	}
+	
+	li {
+		position: relative;
+		display: inline-block;
+		vertical-align: middle;
+		height: 1em;
+		width: 1em;
+		margin-top: -0.8em;
+		background: #fff;
+		border: 0.2em solid $grey05;
+		@include border-radius(50%);
+
+		&.passed {
+			border: none;
+			background: $blue01;
+		}
+		&.nys-bill-status--assem-sen {
+			height: auto;
+			width: 18%;
+			min-height: 2em;
+			border-width: 2px; // match hr height
+			@include border-radius(0);
+			overflow: visible;
+
+			.nys-bill-status {
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 100%;
+				width: 100%;
+				margin: 0;
+			}
+
+			li {
+				position: absolute;
+				top: -0.5em;
+				bottom: auto;
+				left: 0;
+				right: 0;
+				margin: auto;
+
+				& + li {
+					top: auto;
+					bottom: -0.5em;
+				}
+			}
+		}
+		/* 
+			spacer is necessary to pull off
+			justified lists
+		*/
+		&.spacer {
+			width: 100%;
+			height: 0;
+			border: none;
+			background: transparent;
+		}
+	}
+}
+.nys-bill-status--text {
+	display: none;
+}
+// smaller bill status and/or colored
+.nys-bill-status__sml,
+.nys-bill-status__drk {
+	width: 125px;
+	margin: 15px 0;
+	padding: 0;
+
+	hr {
+		width: 70%;
+		left: -15%;
+	}
+
+	li {
+		width: 10px;
+		height: 10px;
+		background: $grey-dot;
+		border: none;
+
+		&.passed {
+			background: $blue01;
+		}
+
+		&.nys-bill-status--assem-sen {
+			background: #fff;
+			min-height: 20px;
+			height: 20px;
+			width: 18%;
+			border: 2px solid $grey-line; // match hr height
+
+			.nys-bill-status {
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 100%;
+				width: 100%;
+				margin: 0;
+
+				> li {
+					top: -6px;
+
+					& + li {
+						top: auto;
+						bottom: -6px;
+					}
+				}
+			}
+		}
+	}
+}
+// small colors
+.nys-bill-status__sml {
+	hr {
+		background: $grey-line;
+	}
+	li {
+		background: $grey-dot;
+
+		&.passed {
+			background: $blue01;
+		}
+
+		&.nys-bill-status--assem-sen {
+			border: 2px solid $grey-line; // match hr height
+		}
+	}
+}
+// colored colors
+.nys-bill-status.nys-bill-status__drk {
+
+	hr {
+		@extend .drk-bg;
+	}
+
+	li {
+		@extend .med-bg;
+
+		&.passed {
+			background: $grey05;
+		}
+		&.nys-bill-status--assem-sen {
+			border: 2px solid;
+			@extend .drk-text;
+			@extend .lgt-bg;
+		}
+	}
+}
+@media #{$tablet} {
+	.nys-bill-status {
+		padding: 0 20px;
+		margin: 90px 0 100px; 
+
+		hr {
+			max-width: 710px;
+		}
+		li {
+			overflow: visible;
+			margin-top: -1.25em;
+
+			&.nys-bill-status--assem-sen {
+				height: 70px;
+
+				li {
+					.nys-bill-status--text {
+						top: -35px;
+					}
+
+					& + li {
+						.nys-bill-status--text {
+							top: 35px;
+						}
+					}
+				}
+			}
+		}
+	}
+	.nys-bill-status--text {
+		display: block;
+		position: absolute;
+		top: 35px;
+		bottom: auto;
+		left: -50px;
+		right: -50px;
+		margin: auto;
+		height: auto;
+		width: 100px;
+		
+		color: $grey02;
+		text-align: center;
+		text-transform: capitalize;
+		font-family: "Proxima Nova Regular";
+		font-size: 12px;
+		line-height: 1.4em;
+	}
+
+	.nys-bill-status__sml,
+	.nys-bill-status__drk {
+		padding: 0;
+		margin: 15px 0;
+		
+		li {
+			margin-top: -15px;
+			&.nys-bill-status--assem-sen {
+				height: 20px;
+			}
+		}
+		.nys-bill-status {
+			padding: 0;
+		}
+		.nys-bill-status--text {
+			display: none;
+		}
+	}
+}
+
+/*---------------------------------
+/ ACCORDION LIST & LIST ITEMS
+/	
+/---------------------------------*/
+
+/*----------------------------
+/ CLUSTER GLOBALS
+/----------------------------*/
+.c-cluster {
+	margin-bottom: 40px; // TEMP - kinda a guess
+	display: block;
+	position: relative;
+	clear: both;
+}
+.c-cluster-featured {
+	border-top: 1px solid $grey05;
+}
+.c-cluster-header {
+	padding: 15px 0;
+}
+.c-cluster-header--title,
+.c-cluster-header--link {
+	display: inline-block;
+	text-transform: uppercase;
+	font-family: "Proxima Nova Regular";
+	font-size: 12px;
+	line-height: 1em;
+	letter-spacing: 0.05em;
+}
+.c-cluster-header--title {
+	color: $grey02;
+}
+.c-cluster-header--link {
+	float: right;
+	margin-top: 0.4em;
+
+	// arrow icon
+	&:after {
+		font-size: 1.5em;
+		margin-top: -0.2em;
+		margin-left: 0.25em;
+	}
+}
+
+@media #{$tablet} {
+	.c-cluster-header--title,
+	.c-cluster-header--link {
+		font-size: 14px;
+	}
+	.c-cluster-header--link {
+		margin-top: -0.2em;
+	}
+}
+
+/*-------------------------------------------------------
+/
+/ CONTAINER GLOBALS
+/ containers are reuseable blocks 
+/ things with uniform titles and links to those sections
+/ ie - newsroom container which includes a title,
+/	synopsis of a few articles and a link to the newsroom
+/
+/-------------------------------------------------------*/
+.c-container {
+	position: relative;
+	display: block;
+	overflow: hidden;
+}
+.c-container--header {
+	font-family: "Proxima Nova Regular";
+	text-transform: uppercase;
+	border-bottom: 1px solid $grey05;
+	padding-bottom: 20px;
+	position: relative;
+}
+.c-container--header__top-border {
+	font-family: "Proxima Nova Regular";
+	text-transform: uppercase;
+	border-top: 1px solid $grey05;
+	padding: 20px 0;
+	position: relative;
+}
+.c-container--title {
+	color: $grey02;
+	text-transform: uppercase;
+	font-family: "Proxima Nova Regular";
+	font-size: 12px;
+	letter-spacing: 0.1em;
+	line-height: 1em;
+}
+.c-container--link {
+	position: absolute;
+	right: 0;
+	top: 0;
+	text-transform: uppercase;
+	font-family: "Proxima Nova SemiBold";
+	font-size: 12px;
+	line-height: 12px;
+	letter-spacing: 0.1em;
+	@extend .icon-after__arrow;
+	@extend .link-text;
+
+	&:after {
+		margin-top: -2px;
+		font-size: 17px;
+		line-height: 12px;
+	}
+}
+.c-download--link {
+	margin-bottom: 20px;
+	text-transform: uppercase;
+	font-family: "Proxima Nova SemiBold";
+	font-size: 12px;
+	@extend .icon-before__bill;
+	@extend .lgt-text;
+
+	&:before {
+		margin-top: -3px;
+		font-size: 20px;
+	}
+}
+.c-view--link {
+	margin-bottom: 20px;
+	text-transform: uppercase;
+	font-family: "Proxima Nova SemiBold";
+	font-size: 12px;
+	@extend .icon-before__presskit;
+	@extend .lgt-text;
+
+	&:before {
+		margin-top: -3px;
+		font-size: 20px;
+	}	
+}
+.c-container--header {
+	&.transcript {
+		padding-bottom: 40px;
+	}
+}
+.c-container--header__top-border.transcript {
+	margin-top: 40px;
+	p {
+		margin: 20px 0 10px;
+		text-transform: none;
+	}
+	.c-container--link {
+		position: relative;
+	}
+}
+@media #{$tablet} {
+	.c-container--title {
+		font-size: 16px;
+	}
+	.c-container--link {
+		font-size: 16px;
+		line-height: 16px;
+
+		&:after {
+			margin-top: -4px;
+			font-size: 23px;
+			line-height: 16px;
+		}
+	}
+}
+
+/*----------------------------------------------
+/
+/	CAROUSEL - some containers contain carousels
+/	- these are those styles
+/
+/----------------------------------------------*/
+
+.c-carousel--nav {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	top: 0;
+	z-index: 4;
+	pointer-events: none;
+
+	.c-carousel--btn {
+		position: absolute;
+		padding: 0;
+		pointer-events: auto;
+
+		&:after {
+			height: 100%;
+			width: 100%;
+			color: $grey05;
+			font-size: 36px;
+		}
+	}
+}
+.c-carousel--item {
+	float: left;
+}
+.c-carousel--btn {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	height: 45px;
+	width: 45px;
+	background: transparent;
+
+	&:hover {
+		background: transparent;
+	}
+
+	&.prev {
+		left: 0;
+		@extend .icon-replace__left;
+	}
+	&.next {
+		right: 0;
+		@extend .icon-replace__right;
+	}
+	&.hidden {
+		display: none;
+	}
+	&.visible {
+		display: block;
+	}
+
+}
+.c-carousel {
+	position: relative;
+	left: 0;
+	display: block;
+	@include transition(left, 0.3s, ease);
+	@include clearfix;
+}
+/*----------------------------------------
+/ IMAGE
+/----------------------------------------*/
+.c-block--img {
+
+}
+.c-img--caption {
+	margin: 0;
+	padding: 10px 20px 10px;
+	background: $grey06;
+	color: $grey02;
+	font-family: "Proxima Nova Regular";
+	font-size: 12px;
+	line-height: 1.5em;
+}
+/*-------------------------------------
+/	Page Header styles - 
+/ 	TODO: refactor this with subpage - below
+/-------------------------------------*/
+.c-page-header--title {
+	margin: 0;
+	font-family: "Adelle Bold";
+	font-size: 32px;
+}
+
+/*-------------------------------------
+/	Subpage Header styles
+/-------------------------------------*/
+
+.c-subpage-header--title {
+	margin: 0;
+	font-family: "Adelle Bold";
+	line-height: 1em;
+	font-size: 18px;
+	margin-bottom: 10px;
+}
+
+.c-subpage-header--title02 {
+	margin: 0;
+	font-family: "Adelle Bold";
+	line-height: 1em;
+	font-size: 18px;
+	margin-bottom: 5px;
+}
+.c-subpage-header--title03 {
+	margin: 0;
+	font-family: "Adelle Bold";
+	line-height: 1em;
+	font-size: 18px;
+	margin: 20px 0;
+}
+.c-subpage-header--subtitle01 {
+	margin: 0;
+	color: $grey02;
+	font-family: "Proxima Nova Regular";
+	font-size: 14px;
+}
+.c-subpage-header--subtitle02 {
+	margin: 0;
+	//color defined on element
+	font-family: "Proxima Nova SemiBold";
+	text-transform: uppercase;
+	font-size: 12px;
+}
+.c-subpage-header--subtitle03 {
+	margin: 0 0 25px 0;
+	color: $grey04;
+	font-family: "Proxima Nova Regular";
+	text-transform: uppercase;
+	font-size: 12px;
+}
+.c-subpage-header--subtitle04 {
+	margin: 0;
+	font-family: "Adelle Bold";
+	line-height: 1em;
+	font-size: 18px;
+	margin-bottom: 5px;
+}
+
+.c-subpage-header--subtitle05{
+	display: inline-block;
+	text-transform: uppercase;
+	font-family: "Proxima Nova Regular";
+	font-size: 12px;
+	line-height: 1em;
+	letter-spacing: 0.05em;
+	margin-bottom: 20px;
+}
+
+@media #{$tablet} {
+	.c-subpage-header--title {
+		font-size: 32px;
+	}
+	.c-subpage-header--title02 {
+		font-size: 32px;
+	}
+	.c-subpage-header--title03 {
+		font-size: 24px;
+	}
+	.c-subpage-header--subtitle01 {
+		font-size: 16px;
+	}
+	.c-subpage-header--subtitle02 {
+		font-size: 14px;
+	}
+	.c-subpage-header--subtitle03 {
+		font-size: 14px;
+		margin-bottom: 20px;
+		margin-bottom: 40px;
+	}
+}
+
+/*-------------------------------------
+/
+/	EMBEDDED ITEMS 
+/ shows up within articles
+/ and about page
+/
+/-------------------------------------*/
+/*-------------------------------------
+/	BLOCKQUOTE
+/-------------------------------------*/
+.c-blockquote {
+	color: $grey02;
+	font-family: "Adele SemiBold";
+	font-size: 18px;
+	line-height: 1.3em;
+	margin-bottom: 20px;
+}
+@media #{$tablet} {
+	.c-blockquote {
+		font-size: 26px;
+		margin-bottom: 30px;
+	}
+}
+
+/*-------------------------------------
+/	PULL QUOTE -- actually blockquote.
+/-------------------------------------*/
+.c-pullquote {
+	margin: 0;
+	position: relative;
+	color: $grey02;
+	font-family: "Adelle Semibold";
+	padding: 50px 0 40px;
+	font-size: 18px;
+	line-height: 1.3em;
+
+	p {
+		@extend .icon-before__quotes;
+
+		&:before {
+			position: absolute;
+			top: 0;
+			left: -0.2em;
+			@extend .lgt-text;
+			font-size: 2.7em;
+		}
+	}
+	&:before {
+		position: absolute;
+		top: 0;
+		left: -0.2em;
+		@extend .lgt-text;
+		font-size: 2.7em;
+	}
+
+}
+blockquote {
+	margin: 0;
+	border: none;
+
+	p {
+		border: none;
+		margin: 0;
+		position: relative;
+		color: $grey02;
+		font-family: "Adelle Semibold";
+		padding: 50px 0 40px;
+		font-size: 18px;
+		line-height: 1.3em;
+		@extend .icon-before__quotes;
+
+
+		&:before {
+			position: absolute;
+			top: 0;
+			left: -0.2em;
+			@extend .lgt-text;
+			font-size: 2.7em;
+		}
+	}
+}
+
+.c-pullquote--citation {
+	display: block;
+	margin-top: 20px;
+	color: $grey02;
+	font-family: "Proxima Nova Regular";
+	text-transform: uppercase;
+	font-size: 12px;
+}
+
+@media #{$tablet} {
+	.c-pullquote {
+		padding: 60px 30px;
+		font-size: 28px;
+	}
+	.c-pullquote--citation {
+		font-size: 14px;
+		margin-top: 25px;
+	}
+	blockquote {
+		p {
+			padding: 60px 30px 40px;
+			font-size: 28px;
+		}
+	}
+}
+
+/*-------------------------------------
+/	EMBED IMG - 
+/-------------------------------------*/
+.media-media_landscape_image,
+.c-embed-img,
+.c-news--body .media-element-container,
+.page-node-about .media-element-container {
+	display: block;
+	clear: left;
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.media-element-container {
+	&.media-media_portrait_image,
+	&.media-media_landscape_image {
+		max-width: 400px;
+	}
+}
+
+@media #{$tablet} {
+	.media-element-container {
+
+		&.media-media_portrait_image,
+		&.media-media_landscape_image {
+			float: left;
+			margin: 0 40px 20px 0;
+		}
+	}
+	.media-element-container {
+		&.media-media_portrait_image {
+			max-width: 225px;
+		}
+	}
+}
+
+@media #{$desktop} {
+	.c-embed-img,
+	.media-element-container.media-media_landscape_image,
+	.media-element-container.media-media_portrait_image {
+		float: left;
+		margin-left: -14%;
+	}
+
+	.node-type-in-the-news {
+		.c-embed-img,
+		.media-element-container.media-media_landscape_image,
+		.media-element-container.media-media_portrait_image {
+			float: left;
+			margin-left: 0;
+		}	
+	}
+}
+
+@media #{$large} {
+	.media-element-container 
+	.media-element-container.media-media_landscape_image,
+	.media-element-container.media-media_portrait_image {
+		float: left;
+		margin-left: -20%;
+	}
+	.node-type-in-the-news {
+		.c-embed-img,
+		.media-element-container.media-media_landscape_image,
+		.media-element-container.media-media_portrait_image {
+			float: left;
+			margin-left: 0;
+		}	
+	}
+}
+
+/*----------------------------
+/ EMBED VIDEO
+/----------------------------*/
+
+.c-embed-vid,
+.media-youtube-video {
+	width: 100%;
+	clear: both;
+	margin-bottom: 40px;
+}
+
+
+/*----------------------------
+/ EMBED CAPTION
+/----------------------------*/
+
+.c-embed-caption {
+	display: block;
+	width: 100%;
+	padding: 10px 20px;
+	background: $grey06;
+	font-family: "Proxima Nova Regular";
+	font-size: 12px;
+	line-height: 1.5em;
+	letter-spacing: 0.05em;
+
+	&:empty {
+		padding: 0;
+		background: transparent;
+	}
+}
+
+@media #{$tablet} {
+	.c-embed-caption {
+		padding: 5px 20px;
+	}
+}

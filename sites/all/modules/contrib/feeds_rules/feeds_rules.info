@@ -1,0 +1,17 @@
+name = Feeds Rules
+description = ...
+package = Feeds
+dependencies[] = entity
+dependencies[] = feeds
+dependencies[] = rules
+core = 7.x
+
+; Plugins
+files[] = plugins/FeedsRulesProcessor.inc
+
+; Information added by Drupal.org packaging script on 2014-07-10
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "feeds_rules"
+datestamp = "1404995629"
+

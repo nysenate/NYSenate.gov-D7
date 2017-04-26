@@ -1,0 +1,95 @@
+/*-------------------------------------------------------
+/
+/ 	FEATURED STORY / VIDEO BLOCK
+/ 	Covers: Featured Story and Video
+/ 	Exists on : Homepage
+/
+/-------------------------------------------------------*/
+.c-event-featured-story {
+	overflow: hidden;
+	padding-bottom: 40px;
+
+	.c-title {
+		font-family: "Proxima Nova Regular";
+		font-size: 14px;
+		font-weight: normal;
+		text-transform: uppercase;
+		border-top: 1px solid $grey09;
+		position: relative;
+		margin-bottom: 20px;
+		padding-top: 20px;
+	}
+
+	.l-left {
+ 		width: 100%;
+	}
+
+	.c-story-name {
+		font-family: "Adelle Light";
+		font-size: 24px;
+		margin: 0px;
+		line-height: 120%;
+		padding-top: 16px;
+		max-width: 440px;
+		margin-bottom: 25px;
+		a {
+			color: $grey02;
+		}
+	}
+
+	.c-story-image {
+		width: 100%;
+
+	}
+
+	.c-story-link {
+		color: $yellow03;
+		font-family: "Proxima Nova SemiBold";
+		font-size: 14px;
+		@extend .lgt-text;
+	}
+}
+
+.view-display-id-hp_featured_stories{
+	margin-top: 40px;
+	padding-bottom: 0;
+	.odd{
+		width:100%;
+		float:left;
+		margin-bottom: 40px;
+	}
+	.even{
+		width:100%;
+		float:left;
+	}
+}
+
+@media #{$tablet} {
+	.c-event-featured-story {
+
+		.c-title {
+			font-family: "Proxima Nova Regular";
+			font-size: 16px;
+			font-weight: normal;
+			text-transform: uppercase;
+			border-top: 2px solid $grey09;
+			position: relative;
+			margin-bottom: 20px;
+			padding-top: 20px;
+		}
+
+		.c-story-name {
+			font-size: 26px;
+		}
+
+		.l-left {
+	 		float: left;
+	 		width: 50%;
+		}
+
+		.l-right {
+			width: 340px;
+			float: right;
+		}
+	}
+}

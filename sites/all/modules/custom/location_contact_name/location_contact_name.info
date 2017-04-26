@@ -1,0 +1,6 @@
+name = Location Contact Name
+package = Location
+description = Allows you to add a contact name to a location.
+dependencies[] = location
+core = 7.x
+files[] = location_phone.views.inc

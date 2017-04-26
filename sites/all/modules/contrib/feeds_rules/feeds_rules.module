@@ -1,0 +1,159 @@
+<?php
+
+/**
+ * @file
+ *  Feeds rules module provides different rules implementations for feeds:
+ *
+ *  - FeedsRulesProcessor Plugin to pass parsed items to a rule instead of
+ *    directly creating a node/user/term.
+ */
+
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function feeds_rules_ctools_plugin_api($owner, $api) {
+  if ($owner == 'feeds' && $api == 'plugins') {
+    return array('version' => 1);
+  }
+}
+
+/**
+ * Implements hook_entity_info().
+ *
+ * Provides a pseudo log entity type, so handling for feeds is easier.
+ *
+ */
+function feeds_rules_entity_info() {
+  $return = array(
+    'feeds_rules_action' => array(
+      'label' => t('Feeds Rules import action'),
+      'controller class' => 'EntityAPIController',
+      'metadata controller class' => 'FeedsRulesActionMetadataController',
+      'base table' => 'feeds_rules_action',
+      'fieldable' => FALSE,
+      'entity keys' => array(
+        'id' => 'id',
+        //'bundle' => 'component',
+      ),
+      //'bundle keys' => array(
+      //  'bundle' => 'component',
+      //),
+      'bundles' => array(),
+      'view modes' => array(),
+    ),
+  );
+  return $return;
+}
+
+/**
+ * Extend the defaults.
+ */
+class FeedsRulesActionMetadataController extends EntityDefaultMetadataController {
+
+  public function entityPropertyInfo() {
+    $info = parent::entityPropertyInfo();
+    $properties = &$info[$this->type]['properties'];
+
+    $properties['component'] = array(
+      'label' => t('Component'),
+      'description' => t('The rules component (action / rule set)'),
+      'getter callback' => 'entity_property_getter_method',
+      'schema field' => 'component',
+    );
+
+    $properties['params'] = array(
+      'label' => t('Parameters'),
+      'description' => t('Array of action parameters.'),
+      'getter callback' => 'entity_property_getter_method',
+      'schema field' => 'params',
+    );
+    $properties['provided'] = array(
+      'label' => t('Provided'),
+      'description' => t('Array of provided action parameters.'),
+      'getter callback' => 'entity_property_getter_method',
+      'schema field' => 'provided',
+    );
+    $properties['executed'] = array(
+      'label' => t('Executed'),
+      'description' => t('Timestamp of moment, rule component was executed.'),
+      'getter callback' => 'entity_property_getter_method',
+      'schema field' => 'executed',
+    );
+
+    return $info;
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function feeds_rules_module_implements_alter(&$implementations, $hook) {
+  if ($hook === 'action_info') {
+    // Avoid hook overlapping : feeds_rules_action_info is feeds' implementation
+    // of hook_rules_action_info which is mistakenly interpreted as feeds_rules'
+    // implementation of hook_action_info.
+    unset($implementations['feeds_rules']);
+  }
+}
+
+/**
+ * Helper to get selectable parameters for a rules component.
+ *
+ * @param string $component_name
+ *   Component nachine name without 'comp_' prefix.
+ * @param array $usage_types
+ *   (optional) restrict to specific usage types: 'params' or 'provided'.
+ * @param array $property_types
+ *   (optional) list of rules data property types, that shall be returned,
+ *   e.g. 'text', 'node', ...
+ *
+ * @return array
+ *   Array of key value pairs: e.g. 'params:name' => 'Parameter: Name (text)'
+ *   for usage in an options list.
+ */
+function feeds_rules_get_rules_component_params($component_name, $usage_types = array(), $property_types = array()) {
+  // Provide parameters and provided variables, as values for the target
+  // "reverse" component.
+  $action = rules_get_cache('comp_' . $component_name);
+
+  // Return nothing if component has not been loaded (not configured yet or component disappeared)
+  if (!$action)
+    return array();
+
+  $run = array();
+
+  // Add parameters to the options list.
+  if (empty($usage_types) || in_array('params', $usage_types)) {
+    $run['params'] = $action->parameterInfo();
+  }
+
+  // Provided parameters to the list.
+  if (empty($usage_types) || in_array('provided', $usage_types)) {
+    $run['provided'] = $action->providesVariables();
+  }
+
+  // Human readable labels.
+  $labels = array(
+    'params' => t('Parameter'),
+    'provided' => t('Provided'),
+  );
+
+  // Build the options array for the applicable sources.
+  $sources = array();
+  foreach ($run as $usage_type => $spec) {
+    foreach ($spec as $key => $info) {
+      // Skip the property, if it is not of the specified property types.
+      if (!empty($property_types) && !in_array($info['type'], $property_types)) {
+        continue;
+      }
+      $sources["$usage_type::$key"] = format_string('@usage_type: @label (@value_type)', array(
+        '@usage_type' => $labels[$usage_type],
+        '@label' => $info['label'],
+        '@value_type' => $info['type']
+      ));
+    }
+  }
+
+  return $sources;
+}

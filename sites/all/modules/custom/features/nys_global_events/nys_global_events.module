@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the nys_global_events feature.
+ */
+
+include_once 'nys_global_events.features.inc';

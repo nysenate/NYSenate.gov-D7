@@ -1,0 +1,12 @@
+name = IMCE Rotate
+description = Rotate images in IMCE.
+core = 7.x
+package = Media
+dependencies[] = imce
+
+; Information added by Drupal.org packaging script on 2014-06-01
+version = "7.x-1.0"
+core = "7.x"
+project = "imce_rotate"
+datestamp = "1401660230"
+

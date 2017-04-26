@@ -1,0 +1,178 @@
+/*------------------------------------
+/	INITIATIVES PAGE
+/-------------------------------------*/
+.c-initiative--header {
+	margin-bottom: 20px;
+
+	.c-initiative--section-title {
+		margin-top: 10px;
+	}
+}
+
+.c-initiative--subtitle {
+	text-transform: uppercase;
+	font-family: "Proxima Nova Regular";
+	font-size: 14px;
+	line-height: 1;
+}
+
+.c-initiative--section-title {
+	color: $grey02;
+	text-transform: capitalize;
+	font-family: "Adelle SemiBold";
+	font-size: 18px
+}
+
+.c-initiative--featured-image {
+	margin: 30px 0;
+}
+
+// ASSOCIATED SENATORS
+.c-block--associated-senators {
+	.nys-senator {
+		margin-bottom: 20px;
+
+		@extend .l-col;
+		@extend .l-col-3;
+	}
+
+	.nys-senator--name {
+		font-family: "Proxima Nova Regular";
+		font-size: 14px;
+
+		a {
+			color: $grey02;
+		}
+	}
+
+	.nys-senator--district {
+		color: $grey04;
+		font-size: 10px;
+	}
+}
+
+// HONOREES
+.c-block--initiative-honorees {
+	.c-initiative--section-title {
+		padding-bottom: 20px;
+		border-bottom: 1px solid $grey09;
+	}
+}
+
+.field-collection-view,
+.field-collection-container {
+	position: relative;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border: none;
+	display: block;
+}
+
+// This fixes FF bug //
+.field-collection-view {
+  display: inline-block;
+}
+
+.c-honoree--year {
+	margin: 20px 0;
+	color: $grey02;
+	font-family: "Proxima Nova Regular";
+	font-size: 16px;
+	line-height: 1;
+}
+
+.c-initiative-honorees {
+	padding: 40px 40px 20px;
+	background: $grey06;
+
+	.field-item {
+		padding: 0 10px 20px 0;
+		@extend .l-col;
+		@extend .l-col-3;
+	}
+}
+
+.c-honoree--name {
+	display: block;
+	color: $grey01;
+	text-transform: capitalize;
+	font-family: "Proxima Nova Regular";
+	font-size: 18px;
+	line-height: 1;
+
+	a {
+  	color: $grey01;
+	}
+}
+
+.c-honoree--meta {
+	display: block;
+	color: $grey01;
+	text-transform: uppercase;
+	font-family: "Proxima Nova Regular";
+	font-size: 12px;
+	margin-top: -2px;
+
+  a {
+  	color: $grey01;
+	}
+}
+
+// DOWNLOAD
+.c-download-file {
+	.c-initiative--subtitle {
+		margin-bottom: 5px;
+	}
+}
+
+
+@media #{$tablet} {
+	.c-initiative--header {
+		margin-bottom: 40px;
+
+		.c-initiative--section-title {
+			margin-top: 20px;
+		}
+	}
+
+	.c-initiative--section-title {
+		font-size: 26px;
+	}
+
+	.c-initiative--featured-image {
+		margin: 60px 0 80px;
+	}
+
+	.c-download-file {
+		.c-initiative--subtitle {
+			margin-bottom: 10px;
+		}
+	}
+
+}
+
+// NYSENATE-44
+.c-block--initiative-honorees {
+
+  .field-collection-item-field-honorees .content {
+    font-size: 1rem;
+    margin: 15px 0;
+
+    .field-collection-container {
+      background-color: $grey06;
+      padding: 32px 35px;
+      margin: 15px 0;
+      -moz-column-count: 3;
+      -moz-column-gap: 20px;
+      -webkit-column-count: 3;
+      -webkit-column-gap: 20px;
+      column-count: 3;
+      column-gap: 20px;
+    }
+
+    .view-mode-full {
+      margin-bottom: 18px;
+    }
+  }
+}

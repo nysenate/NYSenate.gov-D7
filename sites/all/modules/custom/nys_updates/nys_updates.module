@@ -1,0 +1,28 @@
+<?php
+// required file
+
+function nys_updates_add_senator_last_names() {
+  $result = db_query("SELECT * from node where type = 'senator'");
+
+  foreach($result as $r) {
+    $node = node_load($r->nid);
+    $name = $node->title;
+    $name = str_replace(' Jr.', '',$name);
+    $name = str_replace(' Jr', '', $name);
+    $name = str_replace(',', '', $name);
+    $name = str_replace('&#039;', "'", $name);
+    $name = preg_replace('/\s[A-Z]\.\s/',' ',$name);
+    $name = preg_replace('/\s[A-Z]\s/',' ', $name);
+    $namesArray = explode(' ',$name);
+    if(!empty($namesArray[1])) {
+      $node->field_last_name[LANGUAGE_NONE][0]['value'] = $namesArray[1];
+    }
+    if(!empty($namesArray[1])) {
+      $node->field_first_name[LANGUAGE_NONE][0]['value'] = $namesArray[0];
+    }
+    
+    field_attach_update('node', $node);
+    entity_get_controller('node')->resetCache(array($node->nid));
+  }
+
+}

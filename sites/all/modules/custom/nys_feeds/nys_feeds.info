@@ -1,0 +1,7 @@
+name = NYSS feeds
+description = handle custom code related to feeds imports
+core = 7.x
+package = NY STATE SENATE
+
+dependencies[] = feeds
+dependencies[] = ctools

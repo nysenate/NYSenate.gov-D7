@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * Module file for nys_feeds.module.
+ */
+
+/**
+ * Pull latest SAGE data for each district.
+ *
+ * Store data into field_sage_data as serialized object.
+ */
+function nys_feeds_update_districts_sage_data() {
+  // Remove script time limit.
+  set_time_limit(0);
+
+  $result = db_query("select * from taxonomy_term_data WHERE vid = 2");
+
+  foreach ($result as $r) {
+    $term = taxonomy_term_load($r->tid);
+    $district_id = $term->field_district_number[LANGUAGE_NONE][0]['value'];
+
+    $sage_base_url = variable_get('nys_sage_api_endpoint');
+    $sage_method = 'map/senate';
+
+    // If the Sage api endpoint isn't set, write error message to drush_print.
+    if ($sage_base_url != NULL) {
+      $request = drupal_http_request($sage_base_url . $sage_method . '?district=' . $district_id);
+
+      $data = json_decode($request->data);
+      if (isset($data->member)) {
+        $term->field_sage_data[LANGUAGE_NONE][0]['value'] = serialize($data->member);
+        drush_print("Updating " . $term->name . ' SAGE data');
+        taxonomy_term_save($term);
+      }
+    }
+    else {
+      drush_print('Sage endpoint not configured');
+    }
+  }
+}

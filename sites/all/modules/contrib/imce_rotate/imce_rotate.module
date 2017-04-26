@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * Implements the hooks for the IMCE Rotate function to operate.
+ */
+
+/**
+ * Implements hook_form_formID_alter().
+ */
+function imce_rotate_form_imce_fileop_form_alter(&$form, &$form_state) {
+  $imce = &$form_state['build_info']['args'][0]['imce'];
+  if (imce_perm_exists($imce, 'rotate')) {
+    include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'imce_rotate') . '/imce_rotate.inc';
+    return _imce_rotate_form_imce_fileop_form_alter($form, $form_state, $imce);
+  }
+}
+
+/**
+ * Implements hook_form_formID_alter().
+ */
+function imce_rotate_form_imce_profile_form_alter(&$form, &$form_state) {
+  foreach (element_children($form['profile']['directories']) as $key) {
+    $form['profile']['directories'][$key]['rotate'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Rotate'),
+      '#default_value' => isset($form_state['profile']['directories'][$key]['rotate']) ? $form_state['profile']['directories'][$key]['rotate'] : 0,
+    );
+  }
+}
+
+/**
+ * Ajax operation: rotate.
+ */
+function imce_js_rotate(&$imce) {
+  if ($imce['perm']['rotate']) {
+    $_POST['op'] = t('Rotate');
+    return imce_process_fileop($imce);
+  }
+}

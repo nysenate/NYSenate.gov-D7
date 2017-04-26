@@ -1,0 +1,15 @@
+name = Apache Solr search
+description = Search with Solr
+dependencies[] = search
+dependencies[] = apachesolr
+package = Search Toolkit
+core = 7.x
+configure = admin/config/search/apachesolr/search-pages
+
+
+; Information added by Drupal.org packaging script on 2015-12-02
+version = "7.x-1.8"
+core = "7.x"
+project = "apachesolr"
+datestamp = "1449085462"
+

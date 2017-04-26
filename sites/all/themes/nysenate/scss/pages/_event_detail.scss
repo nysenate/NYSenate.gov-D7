@@ -1,0 +1,52 @@
+.nys-event-title {
+	margin-bottom: 20px;
+	color: $grey02;
+	font-family: "Adelle Light";
+	font-size: 22px;
+	line-height: 1.2em;
+}
+.event_detail_page {
+	margin-top: 50px;
+
+	.nys-article-title {
+		margin-top: 0;
+	}
+	.c-event-block--featured-image,
+	.c-event-block--featured {
+		padding-top: 0;
+		padding-bottom: 20px;
+		border: none;
+
+		.c-event-image {
+			margin-bottom: 30px;
+		}
+		.c-event-date {
+			margin-top: 0;
+		}
+	}
+	.c-event-address {
+		margin-top: 5px;
+	}
+	.c-event-time {
+		margin-top: 10px;
+	}
+	.nys-associated-topics {
+		display: block;
+		margin-bottom: 20px;
+	}
+}
+
+
+@media #{$tablet} {
+	.nys-event-title {
+		margin-bottom: 30px;
+		font-size: 48px;
+	}
+	.event_detail_page {
+
+		.nys-associated-topics {
+			margin-bottom: 30px;
+		}
+	}
+}
+

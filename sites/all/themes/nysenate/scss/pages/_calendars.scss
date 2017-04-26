@@ -1,0 +1,131 @@
+/*------------------------------------
+/	CALENDAR - SENATOR
+/-------------------------------------*/
+
+.c-upcoming--header {
+	position: relative;
+	height: 42px;
+	margin-bottom: 30px;
+}
+
+.c-month-title {
+	margin: 0;
+	text-align: center;
+	font-family: 'Adelle SemiBold';
+	font-size: 30px;
+	line-height: 42px;
+	color: $grey02;
+}
+
+.c-upcoming--nav {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+}
+.c-upcoming--nav-item {
+	position: absolute;
+	display: block;
+	top: 0;
+	left: 0;
+	width: 42px;
+	height: 42px;
+	padding: 0;
+	font-family: "Proxima Nova SemiBold";
+	text-transform: uppercase;
+	text-align: center;
+	line-height: 42px;
+	background: $grey06;
+	font-size: 16px;
+	@extend .icon-replace__left;
+	@extend .lgt-text;
+
+	&:after {
+		width: 42px;
+		height: 42px;
+		font-size: 30px;
+		@extend .lgt-text;
+	}
+
+	// right arrow
+	& + .c-upcoming--nav-item {
+		position: absolute;
+		left: auto;
+		right: 0;
+		width: 42px;
+		height: 42px;
+		padding: 0;
+		@extend .icon-replace__right;
+
+		&:after {
+			font-size: 30px;
+		}
+	}
+}
+
+.view-senator-events.view-display-id-upcoming_events, .view-senator-events.view-display-id-senator_upcoming_albany, .view-senator-events.view-display-id-senator_upcoming_district {
+	> .item-list {
+		ul.pager {
+			display: none;
+		}
+	}
+	> .view-content {
+		> div {
+			&.first {
+				.c-event-block--list {
+					border-top: 2px solid $grey05;
+				}
+			}
+		}
+	}
+}
+
+
+
+@media #{$tablet} {
+	.c-upcoming--header {
+		height: auto;
+	}
+	.c-month-title {
+		font-size: 30px;
+	}
+	.c-upcoming--nav-item {
+		text-indent: 0;
+		width: auto;
+		background: transparent;
+		@extend .icon-before__left;
+
+		&:before {
+			margin-top: -0.15em;
+			padding: 0 10px 0 0;
+			font-size: 16px;
+			line-height: 47px;
+		}
+		&:after {
+			content: "";
+			font-size: 30px;
+			height: auto;
+			width: auto;
+		}
+		// right arrow
+		& + .c-upcoming--nav-item {
+			text-indent: 0;
+			width: auto;
+			@extend .icon-after__right;
+
+			&:before {
+				content: "";
+				padding: 0;
+			}
+			&:after {
+				position: relative;
+				margin-top: -0.15em;
+				padding: 0 0 0 10px;
+				font-size: 16px;
+				line-height: 47px;
+			}
+		}
+	}
+}
+

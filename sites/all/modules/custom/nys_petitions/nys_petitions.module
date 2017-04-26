@@ -1,0 +1,163 @@
+<?php
+/**
+ * @file
+ * This module contains code to add functionality to petitions nodes.
+ */
+
+require_once 'includes/petition_form.inc';
+
+/**
+ * Include new updates file.
+ */
+require_once dirname(__FILE__) . '/includes/nys_petitions.updates.inc';
+
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function nys_petitions_module_implements_alter(&$implementations, $hook) {
+  if ($hook != 'user_login') {
+    return;
+  }
+
+  // Move user_login hook to the top to circumvent default flag module behavior.
+  $group = array('nys_petitions' => $implementations['nys_petitions']);
+  unset($implementations['nys_petitions']);
+  $implementations = $group + $implementations;
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function nys_petitions_node_view($node, $view_mode, $langcode) {
+  if ($node->type != 'petition' || $view_mode != 'full') {
+    return;
+  }
+  $node->content['petition_form'] = drupal_get_form('nys_petitions_petition_form', $node);
+}
+
+/**
+ * Implements hook_user_login().
+ */
+function nys_petitions_user_login(&$edit, $account) {
+  nyslog();
+
+  // This should only act on a user's first login, determined
+  // by $account->access==0.
+  if (!((boolean)$account->access)) {
+
+    // Load the full user.
+    $this_user = user_load($account->uid);
+    if ($this_user) {
+
+      // Grab any anonymous petition records showing the
+      // same email address.  The fid is the flagging PK.
+      // The sid is nys_petitions PK.
+      // TODO: we may want to filter this by timestamp range.
+      $petition_records = db_select('nys_petitions')
+        ->fields('nys_petitions', array('sid','pid','fid','email'))
+        ->condition('email', $this_user->mail)
+        // This is now limited to the most-recent record.
+        ->orderBy('sid','DESC')
+        ->range(0,1)
+        ->execute()
+        ->fetchAllAssoc('fid', PDO::FETCH_ASSOC);
+
+      // For each petition record returned, update the flagging
+      // table to show the new user id and trigger an accumulator
+      // event for "petition/signature update".
+      if (count($petition_records)) {
+        $all_ids = array_keys($petition_records);
+        $flag_update = db_update('flagging')
+          ->fields(array('uid' => $this_user->uid, 'sid' => 0))
+          ->condition('flagging_id', $all_ids)
+          ->execute();
+
+        // TODO: Implement sanity check/error reporting?
+        // Here, $flag_update should hold number of rows changed.
+
+        // remove the anonymous petition records
+        db_delete('nys_petitions')
+          ->condition('email', $this_user->mail)
+          ->condition('fid', $all_ids)
+          ->execute();
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function nys_petitions_entity_insert($entity, $type) {
+  nyslog(__FUNCTION__);
+
+  // This only acts on flagging activity for "sign_petition" flags.
+  if ($type != 'flagging' || $entity->flag_name != 'sign_petition') {
+    nyslog("Nothing to do, returning");
+    return;
+  }
+
+  nyslog("sign_petition flag found, updating nys_petitions");
+  // Add the flagging id to the petition signature of the same session.
+  $flagging_id = $entity->flagging_id;
+  db_update('nys_petitions')
+    ->fields(array(
+      'fid' => $flagging_id,
+    ))
+    ->condition('session_id', $entity->sid)
+    ->condition('fid', 0)
+    ->condition('pid', $entity->entity_id)
+    ->execute();
+}
+
+/**
+ * Implements hook_nys_accumulator_user_info().
+ */
+function nys_petitions_nys_accumulator_user_info($user, $response, $options) {
+  nyslog();
+
+  // Only do work if flagging_id is set, user is not logged in, and msg_type is petition
+  $fid = 0;
+  if (isset($options['flagging']) && isset($options['flagging']->flagging_id)) {
+    $fid = (int) $options['flagging']->flagging_id;
+  }
+  if ($user->uid != 0 || !$fid || $response['msg_type'] != 'petition') {
+    nyslog("failed to find actionable conditions: user id={$user->uid}, fid=$fid, msg={$response['msg_type']}");
+    return $response;
+  }
+
+  // Get the anonymous row from petitions based on flagging_id
+  $petition_row = db_select('nys_petitions', 'a')
+    ->fields('a')
+    ->condition('fid', $options['flagging']->flagging_id)
+    ->execute()
+    ->fetchAll();
+  if (empty($petition_row[0]->email)) {
+    nyslog("failed to find fid=" . $options['flagging']->flagging_id);
+    return $response;
+  }
+
+  // Set up the user info array
+  $petition_info = array(
+    'signing_id' => $petition_row[0]->sid,
+    'user_email' => $petition_row[0]->email,
+    'first_name' => $petition_row[0]->first_name,
+    'last_name' => $petition_row[0]->last_name,
+    'user_address' => $petition_row[0]->addr_street,
+    'user_city' => $petition_row[0]->addr_city,
+    'user_state' => $petition_row[0]->addr_state,
+    'user_zipcode' => $petition_row[0]->addr_zip,
+    'district_number' => $petition_row[0]->district_number,
+    'district_id' => $petition_row[0]->district_id,
+    'senator_node' => $petition_row[0]->senator,
+  );
+
+  // Apply it to the response.
+  if (!isset($response['msg_info'])) {
+    $response['msg_info'] = array();
+  }
+  $response['msg_info']['form_info'] = $petition_info;
+
+  return $response;
+}

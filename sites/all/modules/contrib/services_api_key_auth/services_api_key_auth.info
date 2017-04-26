@@ -1,0 +1,12 @@
+name = Services API Key Authentication
+description = Enable the ability to set an API Key for services endpoints.
+package = Services
+dependencies[] = services
+core = 7.x
+project = "services_api_key_auth"
+; Information added by  packaging script on 2013-11-07
+version = "7.x-1.0"
+core = "7.x"
+project = "services_api_key_auth"
+datestamp = "1383821933"
+

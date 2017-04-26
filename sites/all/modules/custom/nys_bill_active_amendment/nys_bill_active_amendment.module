@@ -1,0 +1,75 @@
+<?php
+
+/**
+ * @file
+ * A module used to display the active amendment of a bill
+ */
+
+/**
+ * Implements hook_help().
+ *
+ * Displays help and module information.
+ *
+ * @param path
+ *   Which path of the site we're using to display help
+ * @param arg
+ *   Array that holds the current path as returned from arg() function
+ * @return string
+ */
+function nys_bill_active_amendment_help($path, $arg) {
+  if ($path == "admin/help#nys_bill_active_amendment") {
+    return '<p>' . t("Handles assignment of active amendment url aliases to bill nodes.") . '</p>';
+  }
+}
+
+/**
+ * Implements hook_node_insert().
+ */
+function nys_bill_active_amendment_node_insert($node) {
+  if ($node->type === 'bill') {
+    nys_bill_active_amendment_save_alias($node);
+  }
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function nys_bill_active_amendment_node_update($node) {
+  if ($node->type === 'bill') {
+    nys_bill_active_amendment_save_alias($node);
+  }
+}
+
+/**
+ * Adds the active amendment url as an alias to the given updated node if it is the active amendment
+ *
+ * @param $node The node.
+ */
+function nys_bill_active_amendment_save_alias($node) {
+  if ($node->type === 'bill') {
+    $bill_session_year = $node->field_ol_session[LANGUAGE_NONE][0]['value'];
+    $base_print_no = $node->field_ol_base_print_no[LANGUAGE_NONE][0]['value'];
+    $active_version = $node->field_ol_active_version[LANGUAGE_NONE][0]['value'];
+    // If the bill's print number matches that of the active version, assign the base print no alias to the bill node
+    if (!empty($node->title) && strcasecmp($node->title, $base_print_no . $active_version) === 0) {
+      $path = array(
+        'source' => 'node/' . $node->nid,
+        'alias' => 'legislation/bills/' . $bill_session_year . '/' . $base_print_no,
+      );
+
+      // Determine if the alias is in the `url_alias` table already.
+      $num_aliai = db_select('url_alias', 'urlas')
+                   ->condition('urlas.alias', 'legislation/bills/' . $bill_session_year . '/' . $base_print_no ,'=')
+                   ->condition('urlas.source', 'node/' . $node->nid ,'=')
+                   ->countQuery()
+                   ->execute()
+                   ->fetchField();
+
+      // If it's not in there and the source has a node id add alias.
+      if ($num_aliai == 0) {
+        path_save($path);
+      }
+
+    }
+  }
+}

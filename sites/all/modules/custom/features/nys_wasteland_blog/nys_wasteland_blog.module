@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the nys wasteland blog feature.
+ */
+
+include_once 'nys_wasteland_blog.features.inc';

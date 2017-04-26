@@ -1,0 +1,375 @@
+/*------------------------
+/ USER EDIT PAGE
+/-------------------------*/
+#user-profile-form {
+
+  .panel-col-last {
+
+    .pane-title {
+      font-family: "Adelle SemiBold";
+      font-size: 28px;
+      line-height: 32px;
+      color: $grey02;
+      margin-bottom: 60px;
+    }
+
+    #edit-privatemsg,
+    #edit-field-agree-to-terms,
+    #edit-timezone {
+      display: none;
+    }
+  }
+
+  .form-type-password-confirm {
+    .item-list {
+      text-transform: none;
+      h3 {
+        font-size: 12px;
+        font-weight: bold;
+      }
+      ul li {
+        font-size: 10px;
+        margin: 0;
+        list-style: none;
+        line-height: 11px;
+      }
+    }
+  }
+
+  .fb-connect-container {
+      width: 25%;
+
+    .fb-container--title {
+      font-family: "Open Sans";
+      font-size: 14px;
+      line-height: 32px;
+      color: $grey02;
+      margin: 0px auto;
+
+        &.fb {
+        @extend .icon-after__facebook;
+
+        &:after {
+          margin-top: -3px;
+          margin-left: -5px;
+          @extend .med-text;
+          font-size: 26px;
+          line-height: 32px;
+        }
+      }
+    }
+
+    .fb-connect-image {
+      width: 70px;
+      border-radius: 70px;
+      margin: 0px auto;
+    }
+  }
+
+  .c-link--back-dashboard {
+    float:left;
+    padding: 0 0 20px 0;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    font-family: "Proxima Nova SemiBold";
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    width: 100%;
+    color: $orange01;
+    border-bottom: 1px solid $grey09;
+
+    &:before{
+      content: "< ";
+    }
+  }
+
+  #field-name-field-senator-management,
+  #field-senator-inbox-access-add-more-wrapper {
+    width: 100%;
+  }
+
+  #edit-picture {
+    border: none;
+
+    .fieldset-legend {
+      font-weight: normal;
+      font-size: 1.8em;
+      line-height: 1em;
+      margin-bottom: 0.5rem;
+      color: #444;
+      font-family: "Proxima Nova Regular";
+      text-transform: none;
+    }
+
+    .user-picture img {
+      width: 50px;
+      border-radius: 50px;
+    }
+  }
+
+  #field-senator-inbox-access-values {
+    width: 100%;
+  }
+
+  label {
+    font-size: 1.6em;
+  }
+
+  .form-wrapper {
+    float: left;
+    width: 100%;
+  }
+
+  #edit-fboauth {
+    width: 100%;
+    float: left;
+    padding: 30px 0;
+    border-top: 1px solid $grey09;
+    border-bottom: 1px solid $grey09;
+    margin: 30px 0;
+  }
+
+  #edit-field-dateofbirth-und-0-value {
+    padding: 0;
+
+    .form-item-field-dateofbirth-und-0-value-date label {
+      display: none;
+    }
+  }
+
+  #location-dropdown-province-wrapper-field_address-und-0 {
+
+    .form-item-field-address-und-0-province {
+
+      label {
+        float: none;
+      }
+    }
+
+    select {
+      width: 100%;
+    }
+  }
+
+  .location .form-item input[type=text] {
+    width: 100%;
+    clear: left;
+  }
+
+  [id^=field-senator-management-values], [id^=field-senator-inbox-access-values] {
+    width: 100%;
+    margin-bottom: 10px;
+
+    thead {
+
+      .field-label {
+        padding: 1.25rem;
+
+        label {
+          margin: 0;
+          font-size: 20px;
+        }
+      }
+    }
+
+    .field-multiple-drag {
+      padding: 0.5625rem 0 1.2625rem 0.625rem
+    }
+
+    a.tabledrag-handle .handle {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .field-add-more-submit,
+  #edit-submit {
+    margin-left: 0;
+    text-transform: uppercase;
+    font-family: "Proxima Nova SemiBold";
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    @extend .lgt-bg;
+  }
+}
+
+.facebook-action-connect {
+  display: block;
+  height: 60px;
+  width: 100%;
+  max-width: 400px;
+  padding: 0 20px 0 20px;
+  color: #fff;
+  text-indent: 0;
+  text-transform: uppercase;
+  font-family: "Proxima Nova SemiBold";
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  line-height: 60px;
+  @extend .lgt-bg;
+
+  &:before {
+    font-size: 36px;
+    @extend .icon-before__facebook;
+  }
+
+  &:hover {
+    color: #fff;
+  }
+
+  > img {
+    display: none;
+  }
+
+  & + .description {
+    margin-top: 15px;
+  }
+}
+
+@media #{$tablet} {
+  /*------------------------
+  / USER EDIT PAGE
+  /-------------------------*/
+  #user-profile-form {
+
+    #field-name-field-senator-management {
+      width: 100%;
+    }
+
+    .form-wrapper {
+      width: 100%;
+    }
+
+    label {
+      font-size: 1.6em;
+    }
+
+    .form-wrapper {
+      float: left;
+      width: 100%;
+    }
+
+    #edit-field-first-name {
+      width: 50%;
+      float:left;
+      padding: 0 2% 0 0;
+    }
+
+    #edit-field-last-name {
+      width: 50%;
+      float:left;
+      padding: 0 0 0 0;
+    }
+
+    .form-item-current-pass {
+      width:50%;
+      float: left;
+      padding: 0 2% 0 0;
+    }
+
+    #edit-fboauth {
+      width: 100%;
+      float: left;
+      padding: 30px 0;
+      border-top: 1px solid $grey09;
+      border-bottom: 1px solid $grey09;
+      margin: 30px 0;
+    }
+
+    #edit-field-dateofbirth-und-0-value {
+      padding: 0;
+
+      .form-item-field-dateofbirth-und-0-value-date label {
+        display: none;
+      }
+    }
+
+    .form-item-field-address-und-0-street {
+      width: 50%;
+      float:left;
+      padding: 0 2% 0 0;
+      clear: none;
+    }
+
+    .form-item-field-address-und-0-additional {
+      width: 50%;
+      float:left;
+      padding: 0 0 0 0;
+      clear: none;
+    }
+
+    #location-dropdown-province-wrapper-field_address-und-0 {
+      width: 50%;
+      float:left;
+      padding: 0 2% 0 0;
+      clear: none;
+
+      .form-item-field-address-und-0-province {
+
+        label {
+          float: none;
+        }
+      }
+
+      select {
+        width: 100%;
+      }
+    }
+
+    .form-item-field-address-und-0-postal-code {
+      width: 50%;
+      float:left;
+      padding: 0 0 0 0;
+      clear: none;
+    }
+
+    #edit-field-gender-user {
+      width: 30%;
+      float:left;
+      padding: 0 2% 0 0;
+    }
+
+    #edit-field-dateofbirth {
+      width: 30%;
+      float:left;
+      padding: 0 2% 0 0;
+      clear: none;
+
+      #edit-field-dateofbirth-und-0-value-datepicker-popup-0 {
+        width: 100%;
+      }
+    }
+
+    #edit-field-top-issue {
+      width: 40%;
+      float:left;
+      padding: 0 2% 0 0;
+      clear: both;
+    }
+  }
+}
+
+.page-user-edit.page-user-dashboard {
+
+  @media screen and (min-width: 960px) {
+
+    .tooltip {
+      left: 280px !important;
+
+      .nub {
+        left: 130px !important;
+      }
+    }
+  }
+
+  @media screen and (min-width: 1280px) {
+
+    .tooltip {
+      left: 350px !important;
+
+      .nub {
+        left: 130px !important;
+      }
+    }
+  }
+}

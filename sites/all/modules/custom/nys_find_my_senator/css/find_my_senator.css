@@ -1,0 +1,69 @@
+.c-find-my-senator {
+  min-height: 400px;
+  padding-bottom: 20px;
+}
+.c-find-my-senator--title {
+  text-transform: capitalize;
+  font-family: "Adelle Bold";
+  font-size: 32px;
+  width: 100%;
+  float: left;
+}
+.c-find-my-senator p {
+  margin-top: 0;
+}
+.c-find-my-senator--results {
+  padding: 20px;
+  background: #f5f5f5;
+  margin-bottom: 20px;
+}
+.c-find-my-senator--row {
+  margin-bottom:30px;
+}
+hr.c-find-my-senator--divider {
+  margin-top: 5px;
+}
+.c-find-my-senator--address-line {
+  color: #333;
+}
+.c-find-my-senator--district-info p {
+  color: #333;
+}
+.c-find-my-senator--senator-link {
+  color: #008CBF;
+  font-weight: bold;
+}
+.c-find-my-senator--senator-img {
+  height:60px;
+  width:auto;
+  float:left;
+  margin-right: 10px;
+}
+.c-btn--find-senator {
+  width: 210px;
+  text-align: center;
+  height: auto;
+  padding: 0;
+}
+.c-find-my-senator--map-frame {
+  width: 100%;
+  height: 400px;
+  border: 0;
+}
+.c-find-my-senator--form-container {
+  overflow: auto;
+  margin-bottom: 20px;
+}
+@media (max-width: 641px) {
+  .row .columns.l-padded-column, .row .columns.r-padded-column {
+    padding-top: 10px;
+  }
+}
+@media (min-width: 642px) {
+  .row .columns.l-padded-column {
+    padding-right: 20px;
+  }
+  .row .columns.r-padded-column {
+    padding-left: 20px;
+  }
+}

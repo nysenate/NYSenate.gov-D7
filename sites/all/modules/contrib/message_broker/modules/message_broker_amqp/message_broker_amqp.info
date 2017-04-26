@@ -1,0 +1,19 @@
+core = 7.x
+
+name = Message Broker AMQP
+description = A message broker implementation that uses the AMQP protocol to communicate with servers like RabbitMQ
+php = 5.3
+package = "Messagebroker"
+dependencies[] = xautoload
+dependencies[] = libraries
+dependencies[] = message_broker
+configure = admin/config/system/message_broker_amqp
+files[] = consumer_logger_interface.inc
+files[] = drush_consumer_logger.inc
+
+; Information added by Drupal.org packaging script on 2014-10-31
+version = "7.x-1.2"
+core = "7.x"
+project = "message_broker"
+datestamp = "1414750730"
+

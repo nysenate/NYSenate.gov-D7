@@ -1,0 +1,30 @@
+<?php
+// $Id: feeds_jsonpath_parser.module,v 1.1.4.1 2011/02/05 18:12:18 twistor Exp $
+
+/**
+ * Implements hook_feeds_plugins().
+ */
+function feeds_jsonpath_parser_feeds_plugins() {
+  $path = drupal_get_path('module', 'feeds_jsonpath_parser');
+  $info = array();
+  $info['FeedsJSONPathParser'] = array(
+    'name'        => t('JSONPath parser'),
+    'description' => t('Parse JSON using JSONPath.'),
+    'handler' => array(
+      'parent' => 'FeedsParser',
+      'class'  => 'FeedsJSONPathParser',
+      'file'   => 'FeedsJSONPathParser.inc',
+      'path'   => $path,
+    ),
+  );
+  return $info;
+}
+
+/**
+ * Implements hook_enable().
+ *
+ * Clear Feed's plugin cache so that this plugin shows up.
+ */
+function feeds_jsonpath_parser_enable() {
+  cache_clear_all('plugins:feeds:plugins', 'cache');
+}

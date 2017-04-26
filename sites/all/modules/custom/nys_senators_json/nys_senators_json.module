@@ -1,0 +1,19 @@
+<?php
+
+/**
+* @file
+* File nys_senators_json.module.
+*/
+
+function nys_senators_json_menu() {
+  $items = array();
+
+  $items['senators-json'] = array(
+    'title' => 'Senators API',
+    'page callback' => 'nys_senators_json',
+    'access arguments' => array('access content'),
+    'file' => 'nys_senators_json.php',
+  );
+
+  return $items;
+}

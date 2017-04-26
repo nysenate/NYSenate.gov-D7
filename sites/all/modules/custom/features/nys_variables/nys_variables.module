@@ -1,0 +1,30 @@
+<?php
+/**
+ * @file
+ * Code for the nys_variables feature.
+ */
+
+include_once 'nys_variables.features.inc';
+
+/**
+ * Implements hook_date_formats().
+ */
+function nys_variables_date_formats() {
+  return array(
+    // This is the equivalent of DateTime RFC822 const as of 2016-03.
+    array(
+      'type' => 'rfc822',
+      'format' => 'D, d M Y H:i:s O',
+      'locales' => array(),
+    ),
+  );
+}
+
+/**
+ * Implements hook_date_format_types().
+ */
+function nys_variables_date_format_types() {
+  return array(
+    'rfc822' => t('RFC822'),
+  );
+}

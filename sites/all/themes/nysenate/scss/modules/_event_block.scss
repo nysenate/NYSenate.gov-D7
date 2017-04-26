@@ -1,0 +1,831 @@
+/*-------------------------------------------------------
+/
+/ 	EVENTS BLOCK
+/ 	Covers: Featured Event with Image, Featured Event no 
+/		Image, Todays Event, Event Listing
+/ 	Exists on :
+/
+/-------------------------------------------------------*/
+
+.c-event-address {
+	font-family: "Proxima Nova Regular";
+}
+.c-event-name {
+	color: $grey02;
+
+	a {
+		color: $grey02;
+	}
+}
+
+.c-event-block {
+	.c-event-date-multiday {
+		& > div {
+			display:inline-block;
+		}
+        .c-event-date-separator {
+          font-size:2em;
+          vertical-align:middle;
+          margin-right:5px;
+        }
+    }
+}
+
+.c-event-block--today {
+	margin: 0 0 10px 0;
+	padding: 30px 0;
+	position: relative;
+	background-color: $grey06;
+	overflow: hidden;
+	font-family: "Proxima Nova Regular";
+
+	.c-event-name {
+		font-family: "Adelle Light";
+		font-size: 24px;
+		margin: 18px 20px 20px 20px;
+		line-height: 120%;
+		float: left;
+		clear: left;
+
+	}
+
+	.c-event-location {
+		font-size: 14px;
+		margin-left: 20px;
+		float: left;
+		clear: left;
+		color: $grey10;
+
+		span {
+			margin-right: 7px;
+			font-size: 18px;
+			@extend .lgt-text;
+		}
+	}
+
+	.c-event-address {
+		margin-top: 15px;
+		color: $grey04;
+		font-size: 14px;
+		line-height: 140%;
+		display: none;
+		margin-bottom: 0;
+	}
+
+	.c-event-time {
+		margin-top: 0;
+		font-size: 14px;
+		margin-left: 20px;
+		float: left;
+		clear: left;
+
+		span {
+			font-family: "Proxima Nova SemiBold";
+			font-size: 16px;
+		}
+	}
+
+	.c-event-rsvp {
+		margin: 20px 0 0 0;
+		padding: 9px 11px;
+		text-transform: uppercase;
+		font-family: "Proxima Nova SemiBold";
+		display: inline-block;
+		text-decoration: none;
+		border: 1px solid $grey07;
+		border-top: 2px solid $grey05;
+		font-size: 12px;
+		margin-left: 20px;
+		float: left;
+		clear: left;
+		@extend .lgt-text;
+	}
+}
+
+.c-no-events{
+	background-color: #F4F4F7;
+	padding: 20px 20px;
+	margin-bottom: 40px;
+	width: 100%;
+
+	p {
+		font-family: "Adelle Light";
+		font-size: 16px;
+		margin: 0;
+		line-height: 120%;
+		width: 100%;
+		text-align: left;
+	}
+}
+
+.c-event-block--list {
+	margin: 0;
+	padding-top: 16px;
+	padding-bottom: 40px;
+	border-top: 1px solid $grey05;
+	overflow: hidden;
+	font-family: "Proxima Nova Regular";
+	position: relative;
+
+	.c-title {
+		font-family: "Proxima Nova Regular";
+		font-size: 14px;
+		font-weight: normal;
+		text-transform: uppercase;
+		margin-bottom: 20px;
+	}
+
+	.c-event-image {
+		width: 100%;
+	}
+
+	.c-event-date {
+		text-transform: uppercase;
+		font-size: 12px;
+		position: absolute;
+		top: 20px;
+		left: 0;
+		line-height: 130%;
+
+		span {
+			font-family: "Adelle Bold";
+			display: block;
+			font-size: 26px;
+			margin-bottom: 6px;
+		}
+	}
+
+	.c-event-name {
+		font-family: "Adelle Light";
+		font-size: 24px;
+		margin: 0px 0px 25px 60px;
+		line-height: 120%;
+	}
+
+	.c-event-location {
+		font-size: 14px;
+		margin-left: 60px;
+		float: left;
+		clear: left;
+		color: $grey10;
+
+		span {
+			margin-right: 7px;
+			font-size: 18px;
+			@extend .lgt-text;
+		}
+	}
+
+	.c-event-address {
+		margin-top: 15px;
+		color: $grey04;
+		font-size: 14px;
+		line-height: 140%;
+		display: none;
+	}
+
+	.c-event-time {
+		margin-top: 10px;
+		display: none;
+	  	font-family: "Proxima Nova SemiBold";
+	  	font-size: 14px;
+	}
+
+	.c-event-rsvp {
+		margin: 20px 0 0 60px;
+		padding: 9px 11px;
+		text-transform: uppercase;
+		font-family: "Proxima Nova SemiBold";
+		display: inline-block;
+		text-decoration: none;
+		border: 1px solid $grey07;
+		border-top: 2px solid $grey05;
+		font-size: 12px;
+		float: left;
+		clear: left;
+		@extend .lgt-text;
+	}
+}
+.first {
+	.c-event-block--list {
+		border-top: none;
+	}
+}
+
+.view-grouping + .view-grouping {
+	.first {
+		.c-event-block--list {
+			border-top: 1px solid $grey05;
+		}
+	}
+}
+
+.c-event-block--featured {
+	margin: 0;
+	padding-top: 16px;
+	padding-bottom: 40px;
+	border-top: 2px solid $grey09;
+	font-family: "Proxima Nova Regular";
+	@include clearfix;
+
+	.c-title {
+		font-family: "Proxima Nova Regular";
+		font-size: 14px;
+		font-weight: normal;
+		text-transform: uppercase;
+		margin-bottom: 20px;
+	}
+
+	.c-event-image {
+		width: 100%;
+	}
+
+	.c-event-date {
+		margin-top: -15px;
+		text-transform: uppercase;
+		font-size: 16px;
+
+		span {
+			font-family: "Adelle Bold";
+
+	  		&:after {
+				content:"/";
+				display: inline-block;
+				font-family: "Proxima Nova Regular";
+				margin: 0px 0px 0px 5px;
+			}
+		}
+	}
+
+    .c-event-date SPAN:last-of-type {
+      &:after {
+        content: "";
+      }
+    }
+
+	.c-event-name {
+		font-family: "Adelle Light";
+		font-size: 24px;
+		margin: 18px 0px 25px 0px;
+		line-height: 120%;
+	}
+
+	.c-event-location {
+		font-size: 14px;
+		color: $grey10;
+
+		span {
+			margin-right: 7px;
+			font-size: 18px;
+			@extend .lgt-text;
+		}
+	}
+
+	.c-event-address {
+		margin-top: 15px;
+		color: $grey04;
+		font-size: 14px;
+		line-height: 140%;
+	}
+
+	.c-event-time {
+		margin-top: 10px;
+		font-size: 14px;
+	  	font-family: "Proxima Nova SemiBold";
+	}
+
+	.c-event-rsvp {
+		margin: 20px 0 0 0;
+		padding: 9px 11px;
+		text-transform: uppercase;
+		font-family: "Proxima Nova SemiBold";
+		display: inline-block;
+		text-decoration: none;
+		border: 1px solid $grey07;
+		border-top: 2px solid $grey05;
+		font-size: 12px;
+		@extend .lgt-text;
+	}
+	.addthisevent-drop {
+		margin-top: 20px;
+	}
+}
+
+.c-event-block--featured-image {
+	margin: 0;
+	padding-top: 16px;
+	padding-bottom: 40px;
+	border-top: 2px solid $grey09;
+	font-family: "Proxima Nova Regular";
+	@include clearfix;
+
+	.c-title {
+		font-family: "Proxima Nova Regular";
+		font-size: 14px;
+		font-weight: normal;
+		text-transform: uppercase;
+		margin-bottom: 20px;
+	}
+
+	.c-event-image {
+		width: 100%;
+	}
+
+	.c-event-date {
+		margin-top: 30px;	
+		text-transform: uppercase;
+		font-size: 16px;
+
+		span {
+			font-family: "Adelle Bold";
+			&:after {
+				content:"/";
+				display: inline-block;
+				font-family: "Proxima Nova Regular";
+				margin: 0px 0px 0px 5px;
+			}
+		}
+	}
+
+    .c-event-date SPAN:last-of-type {
+      &:after {
+        content: "";
+      }
+    }
+
+	.c-event-name {
+		font-family: "Adelle Light";
+		font-size: 24px;
+		margin: 18px 0px 25px 0px;
+		line-height: 120%;
+	}
+
+	.c-event-location {
+		font-size: 14px;
+		color: $grey10;
+
+		span {
+			margin-right: 7px;
+			font-size: 18px;
+			@extend .lgt-text;
+		}
+	}
+
+	.c-event-address {
+		margin-top: 15px;
+		color: $grey04;
+		font-size: 14px;
+		line-height: 140%;
+	}
+
+	.c-event-time {
+		margin-top: 20px;
+		font-size: 14px;
+	}
+
+	.c-event-rsvp {
+		margin: 20px 0 0 0;
+		padding: 9px 11px;
+		text-transform: uppercase;
+		font-family: "Proxima Nova SemiBold";
+		display: inline-block;
+		text-decoration: none;
+		border: 1px solid $grey07;
+		border-top: 2px solid $grey05;
+		font-size: 12px;
+		@extend .lgt-text;
+	}
+	.addthisevent-drop {
+		margin-top: 20px;
+	}
+
+}
+
+.c-upcoming-container {
+	overflow: hidden;
+	display: block;
+	
+	.c-container--header {
+		margin-bottom: -1px;
+	}
+
+	.c-title {
+		font-family: "Proxima Nova Regular";
+		font-size: 14px;
+		font-weight: normal;
+		text-transform: uppercase;
+		border-bottom: 2px solid $grey09;
+		position: relative;
+		padding-bottom: 20px;
+		margin-bottom: -2px;
+
+		.c-calendar {
+			position: absolute;
+			right: 0;
+			top: 0;
+			@extend .lgt-text;
+
+			&:after {
+				font-size: 15px;
+				vertical-align: bottom;
+			}
+		}
+	}
+
+	.c-event-block--upcoming {
+		margin: 0px;
+		padding: 20px 0 40px;
+		overflow: hidden;
+		font-family: "Proxima Nova Regular";
+		position: relative;
+		border-top: 1px solid $grey09;
+
+		&.u-odd {
+			clear: left;
+		}
+
+		.c-event-date {
+			text-transform: uppercase;
+			font-size: 12px;
+			position: absolute;
+			top: 20px;
+			left: 0;
+			line-height: 130%;
+
+			span {
+				font-family: "Adelle Bold";
+				display: block;
+				font-size: 26px;
+				margin-bottom: 6px;
+			}
+		}
+
+		.c-event-name {
+			font-family: "Adelle Light";
+			font-size: 24px;
+			margin: 0px 0px 25px 60px;
+			line-height: 120%;
+		}
+
+		.c-event-location {
+			font-size: 14px;
+			margin-left: 60px;
+			color: $grey10;
+
+			span {
+				margin-right: 7px;
+				font-size: 18px;
+				@extend .lgt-text;
+			}
+		}
+
+		.c-event-address {
+			margin-top: 15px;
+			color: $grey04;
+			font-size: 14px;
+			line-height: 140%;
+			display: none;
+			margin-bottom: 0px;
+		}
+
+		.c-event-time {
+			margin-top: 20px;
+			display: none;
+			font-size: 14px;
+		}
+	}
+}
+
+.c-event--title {
+	margin-bottom: 20px;
+	font-family: "Adelle Bold";
+	font-size: 32px;
+	line-height: 1.3em;
+}
+
+// .field-name-field-issues{
+// 	margin-top: 0px;
+// 	padding-bottom: 40px;
+	
+// 	ul {
+// 		list-style: none;
+// 		padding: 0;
+// 		li {
+// 			display: inline-block;
+// 		}
+// 		a {
+// 			font-family: "Proxima Nova SemiBold";
+// 			font-size: 14px;	
+// 			color: $orange01;		
+// 		}
+// 	}
+// }
+
+// event detail page specific
+.event_detail_page .c-event-block--featured-image {
+	border-top: none;
+}
+
+.c-upcoming-container.today {
+	background-color: $grey06;
+	padding: 40px 5% 0 5%;
+
+	.c-title {
+		color: $grey02;
+		font-size: 24px;
+		font-family: 'Adelle SemiBold';
+		text-transform: capitalize;
+
+		a {
+			font-family: "Proxima Nova Regular";
+			font-size: 14px;
+			font-weight: normal;
+			text-transform: uppercase;
+		}
+	}
+
+	.c-event-name {
+		font-size: 18px;
+		width: 100%;
+		margin-left: 0;
+	}
+
+	.c-event-time {
+		color: $grey04;
+		font-size: 14px;
+	}
+
+	.c-event-location {
+		margin-left: 0;
+	}
+}
+
+@media #{$tablet} {
+	.c-event-block--today {
+		
+		.c-event-name {
+			margin-top: 0;
+			float: left;
+			width: 440px;
+			margin-left: 240px;
+		}
+
+		.c-event-location {
+			float: left;
+			width: 440px;
+			clear: left;
+			margin-left: 240px;
+		}
+
+		.c-event-address {
+			float: left;
+			width: 440px;
+			clear: left;
+			margin-left: 240px;
+			display: block;
+		}
+
+		.c-event-time {
+			position: absolute;
+			top: 30px;
+			left: 30px;
+			width: auto;
+			margin-left: 0px;
+		}
+
+		.c-event-rsvp {
+			float: left;
+			clear: left;
+			margin-left: 240px;
+		}
+	}
+
+	.c-event-block--list {
+
+		.c-event-image {
+			max-width: 380px;
+			float: left;
+		}
+
+		.c-event-date {
+			float: left;
+			width: 140px;
+			text-transform: uppercase;
+			font-size: 14px;
+			margin-top: 0;
+			position: static;
+			line-height: 1;
+
+			span {
+				font-size: 40px;
+			}
+		}
+
+		.c-event-name {
+			float: right;
+			width: 460px;
+			margin: 0px 120px 10px 0px;
+		}
+
+		.c-event-location {
+			float: right;
+			width: 460px;
+			clear: right;
+			margin-right: 120px;
+			margin-left: 0;
+		}
+
+		.c-event-address {
+			float: right;
+			width: 460px;
+			clear: right;
+			margin-right: 120px;
+			display: block;
+		}
+
+		.c-event-time {
+			float: right;
+			width: 460px;
+			clear: right;
+			margin-right: 120px;
+			display: block;
+		}
+
+		.c-event-rsvp {
+			float: right;
+			clear: right;
+			margin-right: 430px;
+			margin-left: 0px;
+		}
+	}
+
+	.c-event-block--featured {
+
+		.c-event-image {
+			max-width: 380px;
+			float: left;
+		}
+
+		.c-event-date {
+			text-transform: uppercase;
+			font-size: 18px;
+            line-height: 22px;
+
+			span {
+                font-family: "Adelle SemiBold";
+  	    		&:after {
+					display: inline-block;
+                    margin: 0px 0px 0px 5px;
+				}
+			}
+
+		}
+
+		.c-event-name {
+			margin-top: 0;
+			margin-right: 120px;
+		}
+
+		.c-event-location {
+			clear: right;
+			margin-right: 120px;
+		}
+
+		.c-event-address {
+			clear: right;
+			margin-right: 120px;
+		}
+
+		.c-event-time {
+			clear: right;
+			margin-right: 120px;
+		}
+
+		.c-event-rsvp {
+			clear: right;
+			margin-right: 430px;
+		}
+
+		.addthisevent-drop {
+			clear: right;
+			margin-right: 400px;
+		}
+	}
+
+	.c-event-block--featured-image {
+		.c-event-image {
+			width: 50%;
+			float: left;
+		}
+
+		.c-event-date {
+			margin-top: 0;
+			float: right;
+			width: 300px;
+		}
+
+		.c-event-name {
+			float: right;
+			width: 300px;
+			clear: right;
+		}
+
+		.c-event-location {
+			float: right;
+			width: 300px;
+			clear: right;
+		}
+
+		.c-event-address {
+			float: right;
+			width: 300px;
+			clear: right;
+		}
+
+		.c-event-time {
+			float: right;
+			clear: right;
+			width: 300px;
+		}
+
+		.c-event-rsvp {
+			float: right;
+			clear: right;
+			margin-right: 145px;
+		}
+		.addthisevent-drop {
+			clear: right;
+			float: right;
+			width: 180px;
+			margin-top: 20px;
+			margin-right: 120px;
+		}
+	}
+
+	.c-upcoming-container {
+			
+		.c-event-block--upcoming {
+			width: 50%;
+			float: left;
+			margin: 0;
+			padding-top: 0;
+			padding-left: 20px;
+			padding-right: 0px;
+			border-top: none;
+
+			&.u-odd {
+				padding-right: 20px;
+				padding-left: 0px;
+			}
+
+			.c-event-date {
+				float: left;
+				width: 100%;
+				text-transform: uppercase;
+				font-size: 14px;
+				margin-top: 0;
+				position: static;
+				line-height: 1;
+				border-top: 1px solid $grey09;
+				padding-top: 16px;
+
+				span {
+					font-size: 40px;
+				}
+			}
+
+			.c-event-name {
+				float: left;
+				clear: left;
+				margin-left: 0;
+				margin-top: 30px;
+				padding-top: 0;
+			}
+
+		.c-event-location {
+				float: left;
+				clear: left;
+				margin-left: 0;
+		}
+
+		.c-event-address {
+				float: left;
+				clear: left;
+				display: block;
+		}
+
+		.c-event-time {
+				float: left;
+				clear: left;
+				display: block;
+		}
+		}
+	}
+	.c-upcoming-container.today {
+		.c-event-name {
+			margin-top: 0;
+			padding-top: 30px;
+			border-top: 2px solid $grey05;
+		}		
+	}
+}

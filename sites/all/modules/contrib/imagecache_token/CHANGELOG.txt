@@ -1,0 +1,39 @@
+Imagecache_Token 7.x-1.0-rc2, 2016-03-06
+----------------------------------------
+#2578455 by garphy: File and media fields weren't working.
+#2562677 by DamienMcKenna: Indicate on the settings page that image fields are
+  automatically supported.
+#2124637 by designerbrent, achton, DamienMcKenna, garphy: Add new tokens to
+  output the URLs of the first, second and third items in a multi-item field.
+#2578975 by DamienMcKenna: Removed the 'attributes' token.
+#2124637 by DamienMcKenna: Didn't properly handle 'extension' or 'filesize' for
+  resized images.
+#2682049 by DamienMcKenna: Added tests to confirm the tokens that are present
+  for image fields.
+
+
+Imagecache_Token 7.x-1.0-rc1, 2015-08-01
+----------------------------------------
+Initial commit.
+#1525210 by merlinofchaos, s1l: Added Tokens for images on Entities.
+By Hydra: Documentation cleanup.
+By Hydra: Remove unnecessary image instance definition in hook_token_info_alter.
+By Hydra: Make it possible to get all image attributes trough a token.
+#1775294 by osopolar: Added Token to render the complete img-tag (not only url).
+By DamienMcKenna: Added a CHANGELOG.txt file.
+By DamienMcKenna: Updated README.txt file.
+#2365049 by DamienMcKenna: Support for the 'file' field type.
+#1600266 by j0rd, DamienMcKenna: Added the 'uri' attribute.
+#2064275 by jpstrikesback, MediaFormat: Don't assume the field attribute value
+  exists.
+#2422881 by AndreyMaximov: Add support for for Media fields.
+#2064357 by jpstrikesback, DamienMcKenna: Incorrect value passed to
+  image_style_url().
+#2407461 by DamienMcKenna: Add option to control which file and media fields
+  should have the image tokens added.
+#2407461 by DamienMcKenna: Improvements to the admin form.
+#2407461 by DamienMcKenna: Admin form wasn't saving values.
+#2407461 by DamienMcKenna: Remove the variable via hook_uninstall().
+#2407461 by DamienMcKenna: Always support image fields.
+#2344465 by doubouil, DamienMcKenna: Fixed the image height, weight attributes,
+  added the extension and filesize attributes.

@@ -1,0 +1,43 @@
+{
+  "exchanges": [
+  {
+    "name": "helloWorld",
+    "type": "topic",
+    "passive": false,
+    "durable": true,
+    "auto_delete": false,
+    "internal": false,
+    "nowait": false
+  }
+  ],
+  "queues": [
+  {
+    "name": "helloWorldForAll",
+    "passive": false,
+    "durable": true,
+    "exclusive": false,
+    "auto_delete": false,
+    "nowait": false,
+    "bindings": [
+    {
+      "exchange": "helloWorld",
+      "routing_key": "#"
+    }
+    ]
+  },
+  {
+    "name": "helloWorldForDrupal",
+    "passive": false,
+    "durable": true,
+    "exclusive": false,
+    "auto_delete": false,
+    "nowait": false,
+    "bindings": [
+    {
+      "exchange": "helloWorld",
+      "routing_key": "helloWorld.Drupal"
+    }
+    ]
+  }
+  ]
+}

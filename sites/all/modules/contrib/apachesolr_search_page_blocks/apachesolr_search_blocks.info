@@ -1,0 +1,13 @@
+name = Apache Solr search blocks
+description = Create blocks from custom Apache Solr search pages
+dependencies[] = apachesolr_search
+package = Search Toolkit
+core = 7.x
+
+files[] = apachesolr_search_blocks.module
+files[] = apachesolr_search_blocks.admin.inc
+files[] = apachesolr_search_blocks.crud.inc
+
+dependencies[] = ctools
+
+version = "7.x-1.0"

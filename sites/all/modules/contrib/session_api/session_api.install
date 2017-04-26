@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * @file
+ * Install file for Session API.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function session_api_schema() {
+  $schema['session_api'] = array(
+    'description' => 'Map Session API IDs to the {sessions} sid field.',
+    'fields' => array(
+      'sid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+      ),
+      'session_id' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('sid'),
+    'unique keys' => array(
+      'session_id' => array('session_id'),
+    ),
+    'indexes' => array(
+      'timestamp' => array('timestamp'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Remove cleanup variables.
+ */
+function session_api_update_6100() {
+  $ret = array();
+
+  $ret[] = update_sql("DELETE FROM {variable} WHERE name LIKE 'session_api_run_cron_%'");
+
+  return $ret;
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Adds timestamp field.
+ */
+function session_api_update_7101() {
+  db_add_field('session_api', 'timestamp', array('type' => 'int', 'not null' => TRUE, 'default' => 0));
+  db_add_index('session_api', 'timestamp', array('timestamp'));
+  return t('Added a timestamp field and index to the session_api table.');
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Lengthens the session_id field to match core {sessions}.sid field.
+ */
+function session_api_update_7102() {
+  db_change_field('session_api', 'session_id', 'session_id', array('type' => 'varchar', 'length' => 128, 'not null' => TRUE));
+}

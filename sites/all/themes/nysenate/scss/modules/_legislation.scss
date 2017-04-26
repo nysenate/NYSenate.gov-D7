@@ -1,0 +1,1187 @@
+/*----------------------------------------------
+/ BILLS / LEGISLATION
+/ subset: featured legislation - allows polling
+/ appears:
+/
+/---------------------------------------------*/
+
+.c-block-legislation {
+  position: relative;
+  border-top: 1px solid $grey05;
+  padding: 20px 0 35px;
+
+  .c-block--btn-toggle {
+    @extend .icon-replace__share;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: auto;
+    z-index: 11;
+
+    &:after {
+      font-size: 26px;
+      line-height: 42px;
+      color: $grey05 !important;
+    }
+  }
+
+  // social starts hidden;
+  .c-social {
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    height: 50px;
+    width: 50%;
+    top: 0;
+    right: 0;
+    background: rgba(255,255,255,0.9);
+    z-index: 10;
+    // delay visibility transition for smoother fade
+    -webkit-transition: visibility 0s 0.3s, opacity 0.3s;
+    -moz-transition: visibility 0s 0.3s, opacity 0.3s;
+    -ms-transition: visibility 0s 0.3s, opacity 0.3s;
+    -o-transition: visibility 0s 0.3s, opacity 0.3s;
+    transition: visibility 0s 0.3s, opacity 0.3s;
+
+    .c-social--list {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 50px;
+      padding: 0;
+      text-align: left;
+      width: 83%;
+
+      li {
+        display: inline-block;
+        height: 100%;
+        width: 28%;
+        margin: 0 10px;
+        margin-top: 0;
+        line-height: 50px;
+      }
+
+      a {
+        display: block;
+        width: 100%;
+        height: 100%;
+
+        &:after {
+          width: 100%;
+          height: 100%;
+          color: $gen_blue_med;
+          font-size: 36px;
+          @extend .med-text;
+        }
+      }
+    }
+  }
+
+  // social visible
+  &.c-social-visible {
+
+    .c-social {
+      opacity: 1;
+      visibility: visible;
+      @include transition(opacity, 0.3s, ease);
+    }
+  }
+}
+
+.c-bill--heading-block > .nys-title.c-bill-title {
+  margin-bottom: 0;
+}
+
+.c-detail--header__bill .c-bill--flag {
+  @media screen and (min-width: 760px) {
+    margin-left: 20px;
+    margin-top: 5px;
+  }
+  margin-bottom:10px;
+}
+
+.c-bill-num {
+  margin-bottom: 0.25em;
+  color: $grey02;
+  font-family: "Adelle Bold";
+  line-height: 1em;
+  font-size: 20px;
+  letter-spacing: 0.05em;
+
+  a {
+    color: $grey02;
+  }
+}
+
+.c-bill-topic {
+  margin-bottom: 1.5em;
+  text-transform: uppercase;
+  font-family: "Proxima Nova SemiBold";
+  letter-spacing: 0.1em;
+  font-size: 10px;
+  @extend .lgt-text;
+}
+
+.c-bill-descript {
+  margin: 0 0 10px 0;
+  color: $grey02;
+}
+
+.c-bill-path {
+  position: relative;
+  width: 120px;
+  margin: 0 0 7px 0;
+
+  > ul {
+    position: relative;
+    width: 100%;
+    height: 10px;
+    list-style: none;
+    text-align: center;
+  }
+}
+
+.c-bill-path--line {
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  height: 2px;
+  width: 100%;
+  border: 0;
+  background: $grey05;
+}
+
+.c-bill-path--step {
+  display: block;
+  float: left;
+  height: 10px;
+  width: 10px;
+  background: $grey06;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  background-clip: padding-box;
+  text-indent: -9999px;
+
+  & + * {
+    margin-left: 10%;
+  }
+
+  &.c-bill-path--step__passed {
+    @extend .lgt-bg;
+  }
+}
+
+.c-bill-update--date {
+  display: inline-block;
+  margin: 0 0.25em 0 0;
+  font-family: "Proxima Nova Regular";
+  font-size: 12px;
+}
+
+.c-bill-update--location {
+  display: inline-block;
+  margin: 0;
+  font-family: "Proxima Nova Regular";
+  font-size: 12px;
+
+  &:before {
+    content: "|";
+    display: inline-block;
+    margin-right: 0.5em;
+  }
+}
+
+.c-bill-update--sponsor {
+  display: block;
+  margin: 0;
+  // color: white;
+  font-family: "Proxima Nova Regular";
+  font-size: 14px;
+}
+
+.c-bill-section, .c-block.c-bill-section {
+  margin-top: 30px;
+  margin-bottom: 0;
+}
+
+.c-bill-fulltext {
+  overflow: hidden;
+  font-size: 12px;
+
+  @media (max-width: 767px) {
+    font-size: 9px;
+  }
+
+  @media (max-width: 430px) {
+    font-size: 8px;
+  }
+
+  @media (max-width: 350px) {
+    font-size: 7px;
+  }
+}
+
+.c-bill-action-version.c-bill--flag {
+  float: left;
+  text-align: center;
+  &.c-bill-action--orig-bill {
+    background: #eee;
+    color: #888;
+  }
+}
+
+.c-detail--header.c-detail--header__bill {
+  margin-bottom: 0;
+
+  @media screen and (min-width: 760px) {
+    margin-bottom: 20px;
+  }
+}
+
+.c-detail--header-meta.c-detail--header-meta__bill {
+  width: 100%;
+}
+
+.c-block.c-bill--amendment-details {
+  width: 100%;
+  padding: 20px;
+  margin-bottom: 0;
+  dl.accordion {
+    dd {
+      width: 100%;
+    }
+  }
+}
+
+.c-detail--writeup.c-detail--memo {
+  font-family: 'Proxima Nova Regular';
+  background: white;
+}
+
+.c-action-bill--items {
+  padding: 0;
+}
+
+.l-tab-bar .c-tab .c-tab-link.c-tab-link--bill-content {
+  padding: 0 40px;
+  text-transform: uppercase;
+}
+
+.c-bill--amendment-details dd a.c-detail--download {
+  color: #0078a0;
+  text-transform: uppercase;
+}
+
+.c-bill--amendment-details .l-tab-bar {
+  margin-top: 0;
+}
+
+.c-bill--amendment-details #amendment-details {
+  position: relative;
+  top: -155px;
+}
+
+@-moz-document url-prefix() {
+  .c-bill--amendment-details #amendment-details {
+    top: -290px;
+  }
+}
+
+.c-block.c-block--bill-memo {
+  margin-bottom: 20px;
+}
+
+.c-bill-section .accordion-navigation {
+  width: 100%;
+}
+
+.c-bill-amendment-toggle {
+  dt {
+    color: #2B6A90;
+    font-family: 'Proxima Nova SemiBold';
+  }
+  dd {
+    a {
+      background: white;
+      color: #777;
+    }
+    &.active a {
+      background: #2B6A90;
+      color: white;
+      border-radius: 0;
+    }
+  }
+}
+
+.view-display-id-senator_featured_legislation_sub {
+
+  .c-block-legislation {
+
+    .c-block--btn-toggle {
+      &:after {
+        color: white;
+      }
+    }
+  }
+}
+
+@media #{$tablet} {
+  .c-block-legislation {
+
+    // social starts hidden;
+    .c-social {
+      position: absolute;
+      display: block;
+      visibility: visible;
+      opacity: 1;
+      height: 100%;
+      width: 40px;
+      top: 0;
+      left: auto;
+      right: 0;
+      background: transparent;
+      z-index: 1;
+      @include transition(right, 0.3s, ease);
+
+      .c-social--list {
+        top: 0;
+        left: auto;
+        right: auto;
+        height: auto;
+
+        li {
+          display: block;
+          width: 40px;
+          height: 40px;
+          margin: 0 0 5px 0;
+        }
+
+        a {
+
+          &:after {
+            width: 40px;
+            text-align: center;
+            font-size: 26px;
+            color: $blue01;
+          }
+        }
+      }
+    }
+
+    // social visible
+    &.c-social-visible {
+
+      .c-social {
+        right: -40px;
+        @include transition(right, 0.3s, ease);
+      }
+    }
+
+    &.c-list-item {
+
+      .c-bill-num {
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  .c-bill-meta {
+    width: 25%;
+    max-width: 200px;
+    float: left;
+  }
+
+  .c-bill-num {
+    font-size: 36px;
+  }
+
+  .c-bill-topic {
+    font-size: 12px;
+  }
+
+  .c-bill-body {
+    width: 75%;
+    max-width: 560px;
+    float: left;
+  }
+
+  .c-bill-descript {
+    margin-bottom: 15px;
+  }
+
+  .c-bill-path {
+    margin-bottom: 12px;
+  }
+
+  .c-bill-update--date,
+  .c-bill-update--location,
+  .c-bill-update--sponsor {
+    font-size: 14px;
+  }
+
+  .c-bill-fulltext {
+    font-size: 16px;
+  }
+
+  .c-bill-text__summary {
+  }
+
+  .c-bill-text__memo {
+    margin-top:30px;
+  }
+
+  .c-bill-text__bill {
+    margin-top:70px;
+  }
+
+}
+
+/*----------------------------------------------
+/ BILLS / LEGISLATION -- featured
+/---------------------------------------------*/
+
+.c-block {
+
+  &.c-block-legislation-featured {
+    padding: 0;
+    border: none;
+    margin-bottom: 20px;
+    @extend .lgt-bg;
+
+    .c-block-legislation-featured {
+      margin-bottom: 0;
+    }
+
+    .c-block--btn-toggle {
+      background: transparent;
+    }
+
+    .c-bill-num {
+      color: #fff;
+      a {
+        color: #fff;
+      }
+    }
+
+    .c-bill-topic {
+      @extend .contrast_text;
+
+  .field-name-field-issues {
+    padding-bottom: 0px;
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        font-size: 12px;
+        font-family: "Proxima Nova Regular";
+
+        @media #{$tablet} {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+      a {
+        color: #fff;
+      }
+    }
+
+    .c-bill-descript {
+      font-family: "Proxima Nova Regular";
+      color: #fff;
+      font-size: 14px;
+      line-height: 18px;
+    }
+
+    .nys-bill-status.nys-bill-status__drk {
+      li.passed {
+        background: #fff;
+      }
+    }
+
+    .c-bill-update--date,
+    .c-bill-update--location {
+      color: white;
+    }
+
+    .c-bill-path--line {
+      @extend .drk-bg;
+    }
+
+    .c-bill-path--step {
+      @extend .med-bg;
+
+      &.c-bill-path--step__passed {
+        background: $grey05;
+      }
+    }
+
+    .sponsors {
+      color: #fff;
+
+      span {
+        display: block;
+        font-size: 14px;
+
+        &:first-child {
+          font-size: 12px;
+          margin-top: 20px;
+          text-transform: uppercase;
+        }
+      }
+    }
+
+    .nys-senator.sponsor-list {
+      width: auto;
+    }
+  }
+}
+
+.c-legislation-info {
+  position: relative;
+  padding: 30px 20px 130px; // 130 = height of polling + visual padding
+  z-index: 3;
+}
+
+.c-bill-polling {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  @extend .med-bg;
+
+  button {
+    display: none;
+  }
+
+  .c-block--btn {
+    text-align: center;
+
+    &:before {
+      margin-right: 0.4em;
+    }
+  }
+
+  .c-block--response {
+    padding: 40px 40px;
+    text-transform: uppercase;
+    color: #fff;
+    font-family: "Proxima Nova Regular";
+    letter-spacing: 0.1em;
+    font-size: 14px;
+    line-height: 20px;
+
+    span {
+      padding: 4px;
+    }
+  }
+
+    .nys-bill-vote-form {
+      position: relative;
+      height: 100%;
+
+      > div {
+        position: relative;
+        height: 100%;
+
+        .form-item {
+          margin: 0;
+        }
+        .nys-bill-vote-widget {
+          height: 60px;
+        }
+      }
+    }
+
+  // sml button
+  #advpoll-cancel-vote-form button {
+    height: 40px;
+    width: 100%;
+    padding-left: 0px;
+    font-size: 12px;
+    text-indent: 0;
+    line-height: 40px;
+
+    &:after {
+      position: absolute;
+      right: 0;
+      left: auto;
+      width: auto;
+    }
+  }
+}
+
+.c-bill-polling + .choices {
+  visibility: hidden;
+  height: 0;
+}
+
+.c-bill-polling--cta {
+  padding-left: 20px;
+  text-transform: uppercase;
+  color: #fff;
+  font-family: "Proxima Nova Regular";
+  letter-spacing: 0.1em;
+  font-size: 14px;
+  line-height: 40px;
+
+  span {
+    padding: 4px;
+  }
+}
+
+
+.c-legislation--quote {
+  position: relative;
+  background: $grey06;
+  z-index: 2;
+}
+
+.c-quote--content {
+  padding: 0 20px 30px;
+
+  .c-pullquote {
+    margin: 0;
+    z-index: 2;
+    padding: 45px 0 0;
+    font-family: "Adelle Light";
+
+    &:before {
+      z-index: -1;
+      top: 10px;
+      left: -10px;
+      color: #fff;
+      font-size: 70px;
+    }
+  }
+}
+
+.c-quote--title {
+  padding-top: 30px;
+  text-transform: uppercase;
+  color: $grey01;
+  font-family: "Proxima Nova Regular";
+  font-size: 12px;
+  line-height: 1em;
+}
+
+// temporary class for toggling citation
+.c-pullquote--citation {
+
+  &.u-quote--has-img {
+    display: none;
+  }
+}
+
+.c-legislation--sponsor {
+  margin-top: 20px;
+}
+
+.c-sponsor--img {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  height: 60px;
+  width: 60px;
+  @include border-radius(50%);
+
+  a {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.c-sponsor--info {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 20px;
+}
+
+.c-sponsor--name {
+  margin: 0;
+  font-family: "Adelle Light";
+  font-size: 16px;
+  line-height: 1em;
+}
+
+.c-sponsor--party {
+  display: inline-block;
+  margin: 0;
+  @extend .med-text;
+  font-family: "Proxima Nova SemiBold";
+  font-size: 12px;
+}
+
+.c-sponsor--dist {
+  display: inline-block;
+  color: $grey03;
+  text-transform: uppercase;
+  font-family: "Proxima Nova Regular";
+  font-size: 12px;
+}
+
+.c-bill-polling {
+
+  button{
+    display: none;
+  }
+}
+
+/*----------------------------------------------
+/ BILLS / LEGISLATION -- featured -- COLLAPSED
+/---------------------------------------------*/
+.c-block__collapsed {
+  .c-bill-descript,
+  .c-bill-polling,
+  .sponsors {
+    display: none;
+  }
+
+  &.c-block-legislation {
+
+    .c-block--btn-toggle {
+      position: absolute;
+      right: 0;
+      left: auto;
+      @extend .icon-replace__plus;
+
+      &:after {
+        font-size: 26px;
+      }
+    }
+  }
+
+  .c-legislation-info {
+    padding-bottom: 20px
+  }
+
+  .c-legislation--quote {
+
+    .c-pullquote {
+      padding-top: 50px;
+      padding-bottom: 12px;
+      font-size: 14px;
+      line-height: 1.5em;
+
+      &:before {
+        font-size: 3em;
+        top: 0.35em;
+      }
+    }
+
+    .c-pullquote--citation {
+      margin-top: 7px;
+      font-size: 12px;
+    }
+  }
+
+  .c-quote--title {
+    display: none;
+  }
+
+  // temporary class for toggling citation
+  .c-pullquote--citation {
+
+    &.u-quote--has-img {
+      display: block;
+    }
+  }
+
+  .c-legislation--sponsor {
+    display: none;
+  }
+}
+
+.c-search-legislation--link {
+
+  .c-container--link{
+    position: relative;
+    padding: 30px 0;
+    float: left;
+  }
+}
+
+.c-bill--action-line-senate {
+  text-transform: uppercase;
+}
+.c-bill--action-line-assembly {
+  text-transform: capitalize;
+}
+.c-bill--actions-table THEAD {
+  background-color:white;
+}
+
+.cbill--actions-table--row {
+  padding:18px 0px;
+  border-bottom: 1px solid #bbbbbb;
+  TD {
+    line-height:26px;
+    background-color:white;
+  }
+}
+
+.cbill--actions-table--row:last-of-type {
+  border-bottom:none;
+}
+
+TABLE.c-bill--actions-table {
+  border:none;
+}
+
+TABLE.c-bill--actions-table, TABLE.c-bill--actions-table TBODY TR TD {
+  color:#666;
+}
+
+.c-bill--session-year {
+  font-size:14px;
+  color:#{$grey03};
+  font-family:"Proxima Nova SemiBold";
+  margin-bottom:15px;
+}
+
+.c-bill--actions-table-header {
+  text-align:right;
+  STRONG {
+    font-family: "Proxima Nova Regular";
+  }
+}
+
+
+.c-bill--action-line-senate.stricken, .c-bill--action-line-assembly.stricken {
+  background-color:#A00101;
+  font-family:"Proxima Nova SemiBold";
+  color:white;
+  border-radius:4px;
+  padding:4px 8px;
+}
+
+ .c-bill--actions-table-col1 {
+   width:30%;
+   text-align:left;
+   vertical-align:top;
+ }
+
+ .c-bill--actions-table-col2 {
+   width:70%;
+   text-align:left;
+   vertical-align:top;
+ }
+
+.c-bill--action-line-senate.amended, .c-bill--action-line-assembly.amended {
+  background-color:#{$blue01};
+  font-family:"Proxima Nova SemiBold";
+  border-radius:4px;
+  color:white;
+  padding:4px 8px;
+}
+
+.c-bill--action-line-senate.substituted, .c-bill--action-line-assembly.substituted {
+  background-color:rgb(241,175,88);
+  font-family:"Proxima Nova SemiBold";
+  border-radius:4px;
+  color:white;
+  padding:4px 8px;
+}
+
+
+.c-bill--vote {
+  margin-bottom: 40px;
+  clear: both;
+}
+
+.c-bill--vote-details.vote-header {
+  width:155px;
+  height:50px;
+  font-size:13px;
+  color:#888888;
+  margin-top:10px;
+  float:right;
+}
+
+.c-bill--vote-details.vote-header STRONG {
+  font-family: 'Proxima Nova Regular';
+}
+
+.c-bill--vote-details .c-bill--vote-details-wrapper .vote-container {
+  margin: 15px 0 0px 0;
+}
+
+
+@media #{$tablet} {
+
+  .c-bill--actions-table-col1 {
+    width:15%;
+  }
+
+  .c-bill--actions-table-col2 {
+    width:85%;
+  }
+  .c-block-legislation-featured {
+
+    &.c-block--half-wrap {
+      width: 50%;
+      clear:none;
+      float: left;
+      margin-right: 15px;
+      margin-bottom: 0;
+
+      .node-article &{
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      .node-press-release &{
+        width: 100%;
+        margin-bottom: 20px;
+      }
+    }
+
+    .c-bill-num {
+      color: #fff;
+    }
+
+    .c-bill-topic {
+      font-size: 14px;
+    }
+
+    .c-bill-descript {
+      font-size: 16px;
+      line-height: 20px;
+    }
+
+    .c-block--btn-toggle {
+      background: $grey05;
+
+      &:hover {
+
+        &:after {
+          @extend .lgt-text;
+        }
+      }
+    }
+
+    .c-legislation-info {
+      // added this to compensate for short bill description
+      // with long quote.
+      min-height: 400px;
+    }
+  }
+
+  .c-legislation-info {
+    padding: 25px 40px 150px;
+    width: 50%;
+
+    .c-block--half-wrap &{
+      width: 100%;
+    }
+  }
+
+  .c-bill-polling {
+    height: 120px;
+
+    .nys-bill-vote-form {
+      position: relative;
+      height: 100%;
+
+      > div {
+        position: relative;
+        height: 100%;
+
+        .form-item {
+          margin: 0;
+        }
+        .nys-bill-vote-widget {
+          height: 80px;
+        }
+      }
+    }
+  }
+
+  .c-bill-polling--cta {
+    padding-left: 40px;
+  }
+
+  .c-legislation--quote {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    right: 0;
+    top: 0;
+    z-index: 2;
+
+    &:before {
+      content: "";
+      display: inline-block;
+      vertical-align: middle;
+      height: 100%;
+      width: 1px;
+      margin-left: -6px;
+    }
+  }
+
+  .c-quote--content {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0 40px 30px;
+
+    .c-pullquote {
+      display: inline-block;
+      vertical-align: middle;
+      padding: 60px 0 0;
+      font-size: 22px;
+
+      &:before {
+        left: -20px;
+        top: 15px;
+        font-size: 98px;
+      }
+    }
+  }
+
+  .c-sponsor--party,
+  .c-sponsor--dist {
+    display: block;
+    line-height: 1.2em;
+  }
+
+  // collapsed
+  .c-block__collapsed {
+
+    &.c-block-legislation {
+
+      .c-block--btn-toggle {
+        background: $grey05;
+      }
+    }
+
+    .c-legislation-info {
+      padding-bottom: 25px;
+      min-height: 0;
+    }
+
+    .c-quote--content {
+      padding: 20px 40px;
+    }
+
+    .c-legislation--quote {
+
+      .c-pullquote {
+        padding-top: 15px;
+        padding-bottom: 12px;
+        padding-right: 20px;
+
+        &:before {
+          top: -0.2em;
+          left: -0.2em;
+        }
+      }
+    }
+  }
+
+  .c-search-legislation--link {
+
+    .c-container--link {
+      top: -30px;
+      float: none;
+      position: absolute;
+      padding: 0;
+    }
+  }
+}
+
+.node-type-bill, .node-type-resolution {
+
+  .c-detail--related {
+
+    .field-name-field-issues {
+
+      ul.links {
+        list-style-type: none;
+        padding-left: 0;
+      }
+
+      .textformatter-list {
+        list-style-type: none;
+
+        li {
+          display: inline-block;
+          margin: 0 10px 0 0;
+          font-family: "Proxima Nova SemiBold";
+          font-size: 12px;
+          line-height: 14px;
+          color: $yellow03;
+          text-transform: uppercase;
+
+          a {
+            color: $yellow03;
+          }
+        }
+      }
+    }
+  }
+}
+
+.c-bill--substituted {
+  .c-bill--flag {
+    border: 1px solid $orange01;
+    color: $orange01;
+    background: white;
+  }
+  &.c-bill-action--sub-flag {
+    width: 100%;
+    .c-bill--flag {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+
+// Bill page subheader style override
+.c-detail--subhead.c-detail--section-title.c-bill-detail--subhead {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+}
+
+
+// Bill content tabs are padded a bit on desktop
+@media screen and (min-width: 760px) {
+  .c-bill--amendment-details.c-bill-section {
+    .tabs-content {
+      .content {
+        overflow: visible;
+        padding: 15px;
+      }
+    }
+  }
+}
+
+// Color change for span links //
+.trad_blue .c-quote--content a { color: $trad_blue_lgt; }
+.cont_blue .c-quote--content a { color: $cont_blue_lgt; }
+.purple .c-quote--content a { color: $purple_lgt; }
+.trad_red .c-quote--content a { color: $trad_red_lgt; }
+.cont_red .c-quote--content a { color: $cont_red_lgt; }
+.orange .c-quote--content a { color: $orange_lgt; }
+.trad_green .c-quote--content a { color: $trad_green_lgt; }
+.cont_green .c-quote--content a { color: $cont_green_lgt; }
+

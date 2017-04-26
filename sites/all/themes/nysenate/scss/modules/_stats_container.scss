@@ -1,0 +1,218 @@
+/*---------------------------------
+/	
+/ 	QUICK FACTS
+/	and
+/	WHAT WE'VE BEEN UP TO
+/	illustrated module
+/
+/---------------------------------*/
+.c-stats--container {
+	background-color: $yellow01;
+	padding-bottom: 35px;
+
+	.c-container--header {
+		border: none;
+	}
+	.c-container--title {
+		padding: 25px 10px 0 10px;
+		font-family: "Adelle Light";
+		color: #fff;
+		text-transform: capitalize;
+		font-size: 18px;
+		text-align: center;
+	}
+	&.c-quick-facts--container,
+	&.c-senate-quick-facts--container {
+		.c-container--title {
+			text-align: center;
+			margin-bottom: 40px;
+		}
+	}
+	.c-carousel--btn {
+		&:after{
+			color: $orange01;
+		}
+	}
+	.c-carousel {
+		list-style: none;
+		width: 300%;
+		margin-top: 0;
+		padding-left: 0;
+	}
+	.c-carousel--item {
+		width: 33.3%;
+		float: left;
+	}
+	&.c-senate-quick-facts--container {
+		position: relative;
+
+		.c-carousel {
+			width: 400%;
+		}
+		.c-carousel--item {
+			width: 16%;
+			margin: 0 4.5%;
+		}
+	}
+}
+
+.c-stats--highlight {
+	display: block;
+	position: absolute;
+	height: 180px;
+	width: 180px;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	margin: auto;
+	background: $yellow02;
+	@include border-radius(50%);
+}
+.c-senate-quick-facts--container {
+	.c-container--header {
+		padding-bottom: 10px;
+	}
+	.c-stats--highlight {
+		width: 150px;
+		height: 150px;
+		top: 20px;
+	}
+	.c-carousel {
+		margin-top: -20px;
+	}
+}
+.c-quick-facts--container {
+	
+	.c-stats--highlight {
+		top: 40px;
+	}
+}
+
+.c-stats--item {
+	.c-stat {
+		margin-bottom: 5px;
+		text-align: center;
+		color: #fff;
+		font-family: "Adelle Bold";
+		font-size: 54px;
+	}
+	.c-stat--descript {
+		width: 170px;
+		margin: 0 auto 20px;
+		text-align: center;
+		color: $grey01;
+		text-transform: uppercase;
+		font-family: "Proxima Nova Regular";
+		font-size: 14px;
+		line-height: 18px;
+	}
+	.c-stat--illus {
+		display: block;
+		height: 65px;
+		width: 75px;
+		margin: 0 auto;
+		text-align: center;
+		color: #fff;
+		background: url("/sites/all/themes/nysenate/images/sprite-up-to.png");
+		background-size: 100% auto;
+
+		&.c-illus__waiting {
+			background-position: 0 0;
+		}
+
+		&.c-illus__signed {
+			background-position: 0 50%;
+		}
+
+		&.c-illus__vetoed {
+			background-position: 0 100%;
+		}
+	}
+}
+
+@media #{$tablet} {
+	.c-stats--container {
+		margin-top: 60px;
+		padding-bottom: 45px;
+
+		.c-container--title {
+			margin-bottom: 45px;
+			padding: 35px 20px 0;
+			font-size: 32px;
+			letter-spacing: 0;
+			text-align: center;
+		}
+		.c-stats--highlight {
+			opacity: 0;
+			top: 30px;
+			height: 200px;
+			width: 200px;
+			@include transition(all, 0.25s, ease-in-out);
+
+			&.highlight-first {
+				left: -60%;
+			}
+			&.highlight-second {
+				left: 0;
+			}
+			&.highlight-third {
+				left: 60%;
+			}
+		}
+		// hover over container
+		&:hover {
+			.c-stats--highlight {
+				opacity: 1;
+			}
+		}
+		.c-carousel {
+			width: 90%;
+			margin: 0 auto;
+		}
+		.c-carousel--item {
+			position: relative;
+			height: 216px;
+			width: 33.334%;
+			margin: 0;
+			padding: 0;
+		}
+
+		&.c-quick-facts--container,
+		&.c-senate-quick-facts--container {
+
+			.c-carousel {
+				width: 90%;
+				margin: 0 auto;
+			}
+
+			.c-carousel--item {
+				height: 130px;
+				overflow: visible;
+
+				& + .c-carousel--item {
+					border-left: 1px solid #fff;
+				}
+			}
+		}
+		&.c-senate-quick-facts--container {
+			.c-carousel--item {
+				width: 25%;
+				margin: 0;
+				overflow: visible;
+			}
+		}
+	}
+	.c-stats--item {
+		.c-stat {
+			font-size: 60px;
+		}
+
+		.c-stat--illus {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			left: 0;
+		}
+	}
+}

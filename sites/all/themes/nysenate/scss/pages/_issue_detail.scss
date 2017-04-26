@@ -1,0 +1,589 @@
+/*------------------------------------
+/	ISSUE DETAIL
+/-------------------------------------*/
+
+.flag-success-message {
+  width: 487px;
+  top: 100px;
+  left: -132px;
+  right: inherit;
+  .close-message {
+	  cursor: pointer;
+	}
+} 
+.page-taxonomy.section-issues {
+
+	.c-subpage-header--title {
+			font-family: "Adelle Bold";
+			font-size: 18px;
+			line-height: 31px;
+			color: $grey02;
+			margin-bottom: 10px;
+		}
+	.c-common-core-updates {
+		margin-top: 0;
+		.l-tab-bar {
+			//height: 50px;
+			margin-bottom: -1px;
+		}
+		.pane-title {
+			font-family: "Adelle SemiBold";
+			font-size: 18px;
+			line-height: 21px;
+			color: $grey02;
+			margin-bottom: 20px;
+		}
+		.view-content {
+			.odd,
+			.even {
+				.c-press-release--header,
+				.c-legislation-block {
+					padding-right: 20px;
+					.c-press-release--title,
+					.c-bill-num {
+						font-size: 16px;
+						line-height: 30px;
+						color: $grey02;	
+					}
+					a, 
+					.c-bill-topic {
+						font-family: "Proxima Nova SemiBold";
+						font-size: 12px;
+						line-height: 14px;
+						color: $yellow03;	
+						text-transform: uppercase;
+					}
+					.c-bill-topic {
+						margin-bottom: 1px;
+					}
+				}
+				.c-press-release--body,
+				.c-bill-descript {
+					font-family: "Adelle Light";
+					font-size: 24px;
+					line-height: 32px;
+				}
+			}
+			.last {
+				.c-block {
+					margin-bottom: 0;
+				}
+			}
+		}
+	}
+	.c-latest-issue-video {
+		.pane-title {
+			font-family: "Proxima Nova Regular";
+			font-size: 16px;
+			line-height: 20px;
+			text-transform: uppercase;
+			color: $grey02;
+			padding-bottom: 20px;
+			margin-bottom: 30px;
+			border-bottom: 1px solid $grey02;
+		}
+		.large-12 {
+			padding: 0;
+			.view-content {
+				.player {
+					text-align: center;
+					iframe {
+						max-width: 320px;
+						max-height: 180px;
+					}
+				}	
+			}
+		}
+	}
+	.c-detail--social {
+		.c-block.c-block--social {
+			text-align: left;
+			a {
+				font-size: 26px;
+				position: relative;
+				display: inline-block;
+				width: 30px;
+				&.icon-replace__facebook {
+					margin: 0 20px;
+				}
+				&.icon-replace__twitter {
+					margin: 0 20px;
+				}
+				&.icon-replace__mail {
+					margin-left: 20px;
+				}
+			}
+		}
+	}
+	.c-top-content-wrapper {
+		margin-bottom: 0;
+		.large-12 {
+			padding: 0;	
+		}
+		.pane-news-by-issue {
+			.pane-title {
+				font-family: "Proxima Nova Regular";
+				font-size: 16px;
+				line-height: 20px;
+				text-transform: uppercase;
+				color: $grey02;
+				padding-bottom: 20px;
+				border-bottom: 1px solid $grey04;
+			}	
+			.pane-content {
+				padding-top: 25px;
+			}
+			.view-content {
+				.odd, 
+				.even {
+					display: block;
+					height: 240px;
+					width: 100%;
+					background-color: $gen_blue_lgt;
+					color: white;
+					margin-bottom: 40px;
+					position: relative;
+					.c-block--initiative {
+						height: 240px;
+						margin-bottom: 0;
+						img {
+							display: none;
+						}
+						.senator-name {
+							font-family: "Proxima Nova Regular";
+							font-size: 12px;
+							line-height: 16px;
+							color: white;
+							text-transform: uppercase;
+						}
+						.c-block--btn {
+							left: 0;
+							letter-spacing: 1px;
+						}
+						.c-initiative--content {
+							vertical-align: top;
+							padding-top: 40px;
+							width: 100%;
+
+							p {
+								font-family: "Proxima Nova Regular";
+								font-size: 15px;
+								line-height: 20px;
+								color: white;
+								text-transform: uppercase;
+							}
+						}
+					}
+				}
+				.odd {
+					margin-right: 20px;
+				}
+			} 
+		}
+		.pane-senators-talking-about-issue {
+			.pane-title {
+				font-family: "Proxima Nova Regular";
+				font-size: 16px;
+				line-height: 20px;
+				text-transform: uppercase;
+				color: $grey02;
+				padding-bottom: 20px;
+				border-bottom: 1px solid $grey04;
+			}
+			.pane-content {
+				padding-top: 25px;
+			}	
+			.view-senators-talking-about-issue {
+				.view-content {
+					.odd,
+					.even {
+						//display: inline-block;
+						margin-bottom: 25px;
+						height: 45px;
+						//width: 33%;
+						.views-field-title,
+						.views-field-field-district {
+							margin-left: 65px;
+							font-family: "Proxima Nova Regular";
+							font-size: 14px;
+							line-height: 14px;
+							a {
+								color: $grey03;
+							}
+						}
+						.views-field-field-district {
+							font-size: 10px;
+							line-height: 14px;
+							color: $grey04;
+							text-transform: uppercase;
+						}
+						.views-field-field-image-hero {
+							width: 45px;
+							height: 45px;
+							float: left;
+							margin-top: -26px;
+							img {
+								border-radius: 45px;
+							}
+						}
+					}
+				}
+			}
+		}
+	}	
+}
+
+@media #{$tablet} {
+	.page-taxonomy.section-issues {
+		.c-subpage-header--title {
+				font-family: "Adelle Bold";
+				font-size: 32px;
+				line-height: 41px;
+				color: $grey02;
+				margin-bottom: 10px;
+			}
+		.c-common-core-updates {
+			margin-top: 40px;
+			.l-tab-bar {
+				height: 50px;
+				margin-bottom: -1px;
+			}
+			.pane-title {
+				font-family: "Adelle Bold";
+				font-size: 32px;
+				line-height: 41px;
+				color: $grey02;
+			}
+			.view-content {
+				.odd,
+				.even {
+					.c-press-release--header,
+					.c-legislation-block {
+						padding-right: 20px;
+						.c-press-release--title,
+						.c-bill-num {
+							font-size: 16px;
+							line-height: 30px;
+							color: $grey02;	
+						}
+						a, 
+						.c-bill-topic {
+							font-family: "Proxima Nova SemiBold";
+							font-size: 12px;
+							line-height: 14px;
+							color: $yellow03;	
+							text-transform: uppercase;
+						}
+						.c-bill-topic {
+							margin-bottom: 1px;
+						}
+					}
+					.c-press-release--body,
+					.c-bill-descript {
+						font-family: "Adelle Light";
+						font-size: 24px;
+						line-height: 32px;
+					}
+				}
+				.last {
+					.c-block {
+						margin-bottom: 0;
+					}
+				}
+			}
+		}
+		.c-latest-issue-video {
+			.pane-title {
+				font-family: "Proxima Nova Regular";
+				font-size: 16px;
+				line-height: 20px;
+				text-transform: uppercase;
+				color: $grey02;
+				padding-bottom: 20px;
+				margin-bottom: 30px;
+				border-bottom: 1px solid $grey02;
+			}
+			.large-12 {
+				padding: 0;
+				.view-content {
+					iframe {
+						min-width: 100%;
+						max-height: inherit !important;
+					}
+				}
+			}
+		}
+		.c-top-content-wrapper {
+			.large-12 {
+				padding: 0;
+			}
+			.pane-news-by-issue {
+				.view-content {
+					.odd, 
+					.even {
+						display: inline-block;
+						height: 345px;
+						width: 367px;
+						.c-block--initiative {
+							height: 345px;
+							.senator-name {
+								font-family: "Proxima Nova Regular";
+								font-size: 15px;
+								line-height: 20px;
+								color: white;
+								text-transform: uppercase;
+							}
+						}
+					}
+				} 
+			}
+			.pane-senators-talking-about-issue {
+				.pane-title {
+					font-family: "Proxima Nova Regular";
+					font-size: 16px;
+					line-height: 20px;
+					text-transform: uppercase;
+					color: $grey02;
+				}
+				.pane-content {
+					padding-top: 55px;
+				}
+				.view-senators-talking-about-issue {
+					.view-content {
+						.odd,
+						.even {
+							display: inline-block;
+							height: 45px;
+							width: 33%;
+							.views-field-title,
+							.views-field-field-district {
+								margin-left: 55px;
+								font-family: "Proxima Nova Regular";
+								font-size: 14px;
+								line-height: 14px;
+								a {
+									color: $grey03;
+								}
+							}
+							.views-field-field-district {
+								font-size: 10px;
+								line-height: 14px;
+								color: $grey04;
+								text-transform: uppercase;
+							}
+							.views-field-field-image-hero {
+								width: 45px;
+								height: 45px;
+								float: left;
+								margin-top: -26px;
+								img {
+									border-radius: 45px;
+								}
+							}
+						}
+					}
+				}
+			}
+		}	
+	}
+}
+
+@media #{$desktop} {
+	.page-taxonomy.section-issues {
+		.c-subpage-header--title {
+				font-family: "Adelle Bold";
+				font-size: 32px;
+				line-height: 41px;
+				color: $grey02;
+				margin-bottom: 10px;
+			}
+		.c-common-core-updates {
+			margin-top: 40px;
+			.l-tab-bar {
+				height: 50px;
+				margin-bottom: -1px;
+			}
+			.pane-title {
+				font-family: "Adelle Bold";
+				font-size: 32px;
+				line-height: 41px;
+				color: $grey02;
+			}
+			.view-content {
+				.odd,
+				.even {
+					.c-press-release--header,
+					.c-legislation-block {
+						padding-right: 20px;
+						.c-press-release--title,
+						.c-bill-num {
+							font-size: 16px;
+							line-height: 30px;
+							color: $grey02;	
+						}
+						a, 
+						.c-bill-topic {
+							font-family: "Proxima Nova SemiBold";
+							font-size: 12px;
+							line-height: 14px;
+							color: $yellow03;	
+							text-transform: uppercase;
+						}
+						.c-bill-topic {
+							margin-bottom: 1px;
+						}
+					}
+					.c-press-release--body,
+					.c-bill-descript {
+						font-family: "Adelle Light";
+						font-size: 24px;
+						line-height: 32px;
+					}
+				}
+				.last {
+					.c-block {
+						margin-bottom: 0;
+					}
+				}
+			}
+		}
+		.c-latest-issue-video {
+			.pane-title {
+				font-family: "Proxima Nova Regular";
+				font-size: 16px;
+				line-height: 20px;
+				text-transform: uppercase;
+				color: $grey02;
+				padding-bottom: 20px;
+				margin-bottom: 30px;
+				border-bottom: 1px solid $grey02;
+			}
+			.large-12 {
+				padding: 0;
+				.view-content {
+					iframe {
+						min-width: 100%;
+						max-height: inherit !important;
+					}
+				}
+			}
+		}
+		.c-top-content-wrapper {
+			.large-12 {
+				padding: 0;
+			}
+			.pane-news-by-issue {
+				.pane-title {
+					font-family: "Proxima Nova Regular";
+					font-size: 16px;
+					line-height: 20px;
+					text-transform: uppercase;
+					padding-bottom: 20px;
+					border-bottom: 1px solid $grey05;
+				}	
+				.pane-content {
+					padding-top: 25px;
+				}
+				.view-content {
+                    margin: 40px 0;
+					.odd, 
+					.even {
+						display: inline-block;
+						height: 345px;
+						width: 367px;
+						background-color: $gen_blue_lgt;
+						color: white;
+						margin-bottom: 20px;
+						position: relative;
+						.c-block--initiative {
+							height: 345px;
+							margin-bottom: 0;
+							img {
+								display: none;
+							}
+							.senator-name {
+								font-family: "Proxima Nova Regular";
+								font-size: 15px;
+								line-height: 20px;
+								color: white;
+								text-transform: uppercase;
+							}
+							.c-block--btn {
+								left: 0;
+								letter-spacing: 1px;
+							}
+							.c-initiative--content {
+								vertical-align: top;
+								padding-top: 40px;
+								width: 100%;
+                                p{
+                                  color: white;
+                                  font-family: "Proxima Nova Regular";
+                                  font-size: 15px;
+                                  line-height: 20px;
+                                  color: white;
+                                  text-transform: uppercase;
+                                }
+							}
+						}
+					}
+					.odd {
+						margin-right: 20px;
+					}
+				} 
+				.view-display-id-petition {
+					.view-content {
+						margin: 0;
+					}
+				}
+			}
+			.pane-senators-talking-about-issue {
+				.pane-title {
+					font-family: "Proxima Nova Regular";
+					font-size: 16px;
+					line-height: 20px;
+					text-transform: uppercase;
+					color: $grey02;
+				}
+				.pane-content {
+					padding-top: 55px;
+				}
+				.view-senators-talking-about-issue {
+					.view-content {
+						.odd,
+						.even {
+							display: inline-block;
+							height: 45px;
+							width: 33%;
+							.views-field-title,
+							.views-field-field-district {
+								margin-left: 55px;
+								font-family: "Proxima Nova Regular";
+								font-size: 14px;
+								line-height: 14px;
+								a {
+									color: $grey03;
+								}
+							}
+							.views-field-field-district {
+								font-size: 10px;
+								line-height: 14px;
+								color: $grey04;
+								text-transform: uppercase;
+							}
+							.views-field-field-image-hero {
+								width: 45px;
+								height: 45px;
+								float: left;
+								margin-top: -26px;
+								img {
+									border-radius: 45px;
+								}
+							}
+						}
+					}
+				}
+			}
+		}	
+	} 
+}

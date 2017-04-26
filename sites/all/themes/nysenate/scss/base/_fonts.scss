@@ -1,0 +1,927 @@
+/*---------------------------------/
+/
+/	CUSTOM FONT DEFINITIONS
+/
+/----------------------------------*/
+
+/*---------------------------------/
+/	ADELLE
+/----------------------------------*/
+
+// ADELLE LIGHT
+@font-face {
+  font-family: 'Adelle Light';
+  src: url('../fonts/adelle/adelle_light-webfont.eot'); /* IE9 Compat Modes */
+  src: url('../fonts/adelle/adelle_light-webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/adelle/adelle_light-webfont.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/adelle/adelle_light-webfont.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/adelle/adelle_light-webfont.svg#c49f46be445783d8ed80db158e3ab0c9') format('svg'); /* Legacy iOS */
+       
+  font-style:   normal;
+  font-weight:  normal;
+}
+// ADELLE REGULAR
+@font-face {
+  font-family: 'Adelle Regular';
+  src: url('../fonts/adelle/adelle_regular-webfont.eot'); /* IE9 Compat Modes */
+  src: url('../fonts/adelle/adelle_regular-webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/adelle/adelle_regular-webfont.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/adelle/adelle_regular-webfont.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/adelle/adelle_regular-webfont.svg#99729e3539ef0462a0ca8a01772e9888') format('svg'); /* Legacy iOS */
+       
+  font-style:   normal;
+  font-weight:  normal;
+}
+// ADELLE SEMIBOLD
+@font-face {
+  font-family: 'Adelle SemiBold';
+  src: url('../fonts/adelle/adelle_semibold-webfont.eot'); /* IE9 Compat Modes */
+  src: url('../fonts/adelle/adelle_semibold-webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/adelle/adelle_semibold-webfont.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/adelle/adelle_semibold-webfont.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/adelle/adelle_semibold-webfont.svg#0a4f2185508fb7ba59ff5878a2a1ccf5') format('svg'); /* Legacy iOS */
+       
+  font-style:   normal;
+  font-weight:  normal;
+}
+// ADELLE BOLD
+@font-face {
+  font-family: 'Adelle Bold';
+  src: url('../fonts/adelle/adelle_bold-webfont.eot'); /* IE9 Compat Modes */
+  src: url('../fonts/adelle/adelle_bold-webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/adelle/adelle_bold-webfont.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/adelle/adelle_bold-webfont.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/adelle/adelle_bold-webfont.svg#c0e1fa2165fee45abc3a74ff7feb0488') format('svg'); /* Legacy iOS */
+       
+  font-style:   normal;
+  font-weight:  normal;
+}
+
+
+
+/*---------------------------------/
+/	PROXIMA NOVA
+/----------------------------------*/
+
+// PROXIMA NOVA REGULAR
+@font-face {
+  font-family: 'Proxima Nova Regular';
+  src: url('../fonts/proximanova/ProximaNova-Regular.eot'); /* IE9 Compat Modes */
+  src: url('../fonts/proximanova/ProximaNova-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/proximanova/ProximaNova-Regular.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/proximanova/ProximaNova-Regular.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/proximanova/ProximaNova-Regular.svg#2c1459d58560f08b4b0586fbe80aa4cd') format('svg'); /* Legacy iOS */
+       
+  font-style:   normal;
+  font-weight:  normal;
+}
+// PROXIMA NOVA SEMIBOLD
+@font-face {
+  font-family: 'Proxima Nova SemiBold';
+  src: url('../fonts/proximanova/ProximaNova-Semibold.eot'); /* IE9 Compat Modes */
+  src: url('../fonts/proximanova/ProximaNova-Semibold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/proximanova/ProximaNova-Semibold.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/proximanova/ProximaNova-Semibold.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/proximanova/ProximaNova-Semibold.svg#67a6c9f6d7dc8f35ecb08de766ea56f0') format('svg'); /* Legacy iOS */
+       
+  font-style:   normal;
+  font-weight:  normal;
+}
+
+/*---------------------------------/
+/	FREIGHT TEXT BOOK
+/----------------------------------*/
+@font-face {
+  font-family: 'FreightText Book';
+  src: url('../fonts/freighttext-book/FreightText-Book.eot'); /* IE9 Compat Modes */
+  src: url('../fonts/freighttext-book/FreightText-Book.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/freighttext-book/FreightText-Book.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/freighttext-book/FreightText-Book.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/freighttext-book/FreightText-Book.svg#d9e64e66ba0f4be8f0ea154778490c10') format('svg'); /* Legacy iOS */
+       
+  font-style:   normal;
+  font-weight:  400;
+}
+
+
+
+/*----------------------------------------------/
+/
+/	CUSTOM ICON FONT
+/
+/	to apply an icon :
+/	add class "icon-[placement]__[type]"
+/ placements = before, after, replace
+/
+/----------------------------------------------*/
+
+// SENATE ICONS
+@font-face {
+	font-family: 'senate_icons';
+	src:url('../fonts/senate-icons/senate_icons.eot?-wreofx');
+	src:url('../fonts/senate-icons/senate_icons.eot?#iefix-wreofx') format('embedded-opentype'),
+		url('../fonts/senate-icons/senate_icons.woff?-wreofx') format('woff'),
+		url('../fonts/senate-icons/senate_icons.ttf?-wreofx') format('truetype'),
+		url('../fonts/senate-icons/senate_icons.svg?-wreofx#sentate_icons') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+/*---------------------------------/
+/	ICON BEFORE
+/----------------------------------*/
+[class^="icon-before"], 
+[class*=" icon-before"],
+.icon-before__quotes,
+.icon-before__find-senator,
+.icon-before__recruit-friends,
+.icon-before__left,
+.icon-before__right,
+.icon-before__arrow,
+.icon-before__search,
+.icon-before__presskit,
+.icon-before__bill,
+.icon-before__facebook,
+.icon-before__x,
+.icon-before__check,
+.icon-before__circle-check,
+.icon-before__see-more,
+.icon-before__petition,
+.icon-before__error,
+.icon-before__circle-pin,
+.icon-before__questionaire,
+.icon-before__plus,
+.icon-before__mail,
+.flag-action,
+.unflag-action {
+
+	&:before {
+		font-family: 'senate_icons';
+		display:inline-block;
+		vertical-align: middle;
+
+		speak: none;
+		font-style: normal;
+		font-weight: normal;
+		font-variant: normal;
+		text-transform: none;
+		padding-right: 3px;
+
+		/* Better Font Rendering =========== */
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+}
+
+.icon-before__down-arrow:before {
+	content: "\e601";
+}
+
+.icon-before__error:before {
+	content: "\45";
+}
+
+.icon-before__calendar-month:before {
+	content: "\67";
+}
+
+.icon-before__calendar-week:before {
+	content: "\47";
+}
+
+.icon-before__arrow:before {
+	content: "\72";
+}
+
+.icon-before__awards:before {
+	content: "\61";
+}
+
+.icon-before__bill-follow:before {
+	content: "\62";
+}
+
+.icon-before__bill-unfollow:before {
+	content: "\42";
+}
+
+.icon-before__bill:before {
+	content: "\30";
+}
+
+.icon-before__calendar-old:before {
+	content: "\e609";
+}
+
+.icon-before__calendar-view:before {
+	content: "\76";
+}
+
+.icon-before__calendar2:before {
+	content: "\64";
+}
+
+.icon-before__check:before {
+	content: "\2f";
+}
+
+.icon-before__circle-check:before {
+	content: "\31";
+}
+
+.icon-before__circle-pin:before {
+	content: "\32";
+}
+
+.icon-before__circle-question:before {
+	content: "\33";
+}
+
+.icon-before__circle-senators:before {
+	content: "\34";
+}
+
+.icon-before__comment:before {
+	content: "\6a";
+}
+
+.icon-before__committee-confirm:before {
+	content: "\35";
+}
+
+.icon-before__committee-follow:before {
+	content: "\63";
+}
+
+.icon-before__committee-unfollow:before {
+	content: "\43";
+}
+
+.icon-before__contact:before {
+	content: "\6e";
+}
+
+.icon-before__external-link:before {
+	content: "\6c";
+}
+
+.icon-before__facebook:before {
+	content: "\21";
+}
+
+.icon-before__find-senator:before {
+	content: "\24";
+}
+
+.icon-before__hamburger:before {
+	content: "\68";
+}
+
+.icon-before__home:before {
+	content: "\48";
+}
+
+.icon-before__instagram2:before {
+	content: "\40";
+}
+
+.icon-before__issue-follow:before {
+	content: "\e600";
+}
+.icon-before__issue-unfollow:before {
+	content: "\49";
+}
+.icon-before__issue:before {
+	content: "\69";
+}
+
+.icon-before__left:before {
+	content: "\3c";
+}
+
+.icon-before__link:before {
+	content: "\75";
+}
+
+.icon-before__logout:before {
+	content: "\36";
+}
+
+.icon-before__mail:before {
+	content: "\4e";
+}
+
+.icon-before__minus:before {
+	content: "\2d";
+}
+
+.icon-before__notification:before {
+	content: "\6f";
+}
+
+.icon-before__petition:before {
+	content: "\70";
+}
+
+.icon-before__play-outline:before {
+	content: "\50";
+}
+
+.icon-before__plus:before {
+	content: "\2b";
+}
+
+.icon-before__presskit:before {
+	content: "\6b";
+}
+
+.icon-before__questionaire:before {
+	content: "\3f";
+}
+
+.icon-before__quotes:before {
+	content: "\71";
+}
+
+.icon-before__recruit-friends:before {
+	content: "\66";
+}
+
+.icon-before__right:before {
+	content: "\3e";
+}
+
+.icon-before__search:before {
+	content: "\6d";
+}
+
+.icon-before__see-less:before {
+	content: "\5e";
+}
+
+.icon-before__see-more:before {
+	content: "\65";
+}
+
+.icon-before__share:before {
+	content: "\73";
+}
+
+.icon-before__twitter-fav:before {
+	content: "\37";
+}
+
+.icon-before__twitter-reply:before {
+	content: "\38";
+}
+
+.icon-before__twitter-retweet:before {
+	content: "\39";
+}
+
+.icon-before__twitter:before {
+	content: "\23";
+}
+
+.icon-before__x:before {
+	content: "\78";
+}
+
+.icon-before__youtube:before {
+	content: "\79";
+}
+
+.icon-before__view_report:before {
+  content: "\6b";
+}
+
+.icon-before__view_honorees:before {
+  content: "\61";
+}
+
+.icon-before__read_more:before {
+  content: "\61";
+}
+
+/*---------------------------------/
+/	ICON AFTER
+/----------------------------------*/
+[class^="icon-after"], 
+[class*=" icon-after"],
+.icon-after__facebook,
+.icon-after__twitter,
+.icon-after__mail,
+.icon-after__left,
+.icon-after__right,
+.icon-after__arrow,
+.icon-after__recruit-friends,
+.icon-after__see-less,
+.icon-after__see-more,
+.flag-action,
+.icon-after__down-arrow,
+.unflag-action {
+
+	&:after {
+		font-family: 'senate_icons';
+		display:inline-block;
+		vertical-align: middle;
+
+		speak: none;
+		font-style: normal;
+		font-weight: normal;
+		font-variant: normal;
+		text-transform: none;
+		padding-left: 3px;
+
+		/* Better Font Rendering =========== */
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+}
+
+
+.icon-after__down-arrow:after {
+	content: "\e601";
+}
+
+.icon-after__error:after {
+	content: "\45";
+}
+
+.icon-after__calendar-month:after {
+	content: "\67";
+}
+
+.icon-after__calendar-week:after {
+	content: "\47";
+}
+
+.icon-after__arrow:after {
+	content: "\72";
+}
+
+.icon-after__awards:after {
+	content: "\61";
+}
+
+.icon-after__bill-follow:after {
+	content: "\62";
+}
+
+.icon-after__bill-unfollow:after {
+	content: "\42";
+}
+
+.icon-after__bill:after {
+	content: "\30";
+}
+
+.icon-after__calendar-old:after {
+	content: "\e609";
+}
+
+.icon-after__calendar-view:after {
+	content: "\76";
+}
+
+.icon-after__calendar2:after {
+	content: "\64";
+}
+
+.icon-after__check:after {
+	content: "\2f";
+}
+
+.icon-after__circle-check:after {
+	content: "\31";
+}
+
+.icon-after__circle-pin:after {
+	content: "\32";
+}
+
+.icon-after__circle-question:after {
+	content: "\33";
+}
+
+.icon-after__circle-senators:after {
+	content: "\34";
+}
+
+.icon-after__comment:after {
+	content: "\6a";
+}
+
+.icon-after__committee-confirm:after {
+	content: "\35";
+}
+
+.icon-after__committee-follow:after {
+	content: "\63";
+}
+
+.icon-after__committee-unfollow:after {
+	content: "\43";
+}
+
+.icon-after__contact:after {
+	content: "\6e";
+}
+
+.icon-after__external-link:after {
+	content: "\6c";
+}
+
+.icon-after__facebook:after {
+	content: "\21";
+}
+
+.icon-after__find-senator:after {
+	content: "\24";
+}
+
+.icon-after__hamburger:after {
+	content: "\68";
+}
+
+.icon-after__home:after {
+	content: "\48";
+}
+
+.icon-after__instagram2:after {
+	content: "\40";
+}
+
+.icon-after__issue-follow:after {
+	content: "\e600";
+}
+.icon-after__issue-unfollow:after {
+	content: "\49";
+}
+.icon-after__issue:after {
+	content: "\69";
+}
+
+.icon-after__left:after {
+	content: "\3c";
+}
+
+.icon-after__link:after {
+	content: "\75";
+}
+
+.icon-after__logout:after {
+	content: "\36";
+}
+
+.icon-after__mail:after {
+	content: "\4e";
+}
+
+.icon-after__minus:after {
+	content: "\2d";
+}
+
+.icon-after__notification:after {
+	content: "\6f";
+}
+
+.icon-after__petition:after {
+	content: "\70";
+}
+
+.icon-after__play-outline:after {
+	content: "\50";
+}
+
+.icon-after__plus:after {
+	content: "\2b";
+}
+
+.icon-after__presskit:after {
+	content: "\6b";
+}
+
+.icon-after__questionaire:after {
+	content: "\3f";
+}
+
+.icon-after__quotes:after {
+	content: "\71";
+}
+
+.icon-after__recruit-friends:after {
+	content: "\66";
+}
+
+.icon-after__right:after {
+	content: "\3e";
+}
+
+.icon-after__search:after {
+	content: "\6d";
+}
+
+.icon-after__see-less:after {
+	content: "\5e";
+}
+
+.icon-after__see-more:after {
+	content: "\65";
+}
+
+.icon-after__share:after {
+	content: "\73";
+}
+
+.icon-after__twitter-fav:after {
+	content: "\37";
+}
+
+.icon-after__twitter-reply:after {
+	content: "\38";
+}
+
+.icon-after__twitter-retweet:after {
+	content: "\39";
+}
+
+.icon-after__twitter:after {
+	content: "\23";
+}
+
+.icon-after__x:after {
+	content: "\78";
+}
+
+.icon-after__youtube:after {
+	content: "\79";
+}
+
+
+
+
+/*---------------------------------/
+/	ICON REPLACE
+/----------------------------------*/
+[class^="icon-replace"], 
+[class*=" icon-replace"],
+.icon-replace__minus,
+.icon-replace__plus,
+.icon-replace__facebook,
+.icon-replace__twitter,
+.icon-replace__mail,
+.icon-replace__x,
+.icon-replace__hamburger,
+.icon-replace__left,
+.icon-replace__right,
+.icon-replace__arrow,
+.icon-replace__search,
+.icon-replace__twitter-fav,
+.icon-replace__twitter-reply, 
+.icon-replace__twitter-retweet,
+.icon-replace__see-more,
+.icon-replace__see-less {
+	position: relative;
+	display: block;
+	overflow: hidden;
+	padding-top: 1em;
+	text-indent: -99999px;
+	
+	&:after {
+		text-indent: 0;
+		position: absolute;
+		top: 0;
+		left: 0;
+		font-family: 'senate_icons';
+		speak: none;
+		font-style: normal;
+		font-weight: normal;
+		font-variant: normal;
+		text-transform: none;
+		padding-left: 3px;
+	}
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-replace__down-arrow:after {
+	content: "\e601";
+}
+
+.icon-replace__error:after {
+	content: "\45";
+}
+
+.icon-replace__calendar-month:after {
+	content: "\67";
+}
+
+.icon-replace__calendar-week:after {
+	content: "\47";
+}
+
+.icon-replace__arrow:after {
+	content: "\72";
+}
+
+.icon-replace__awards:after {
+	content: "\61";
+}
+
+.icon-replace__bill-follow:after {
+	content: "\62";
+}
+
+.icon-replace__bill-unfollow:after {
+	content: "\42";
+}
+
+.icon-replace__bill:after {
+	content: "\30";
+}
+
+.icon-replace__calendar-old:after {
+	content: "\e609";
+}
+
+.icon-replace__calendar-view:after {
+	content: "\76";
+}
+
+.icon-replace__calendar2:after {
+	content: "\64";
+}
+
+.icon-replace__check:after {
+	content: "\2f";
+}
+
+.icon-replace__circle-check:after {
+	content: "\31";
+}
+
+.icon-replace__circle-pin:after {
+	content: "\32";
+}
+
+.icon-replace__circle-question:after {
+	content: "\33";
+}
+
+.icon-replace__circle-senators:after {
+	content: "\34";
+}
+
+.icon-replace__comment:after {
+	content: "\6a";
+}
+
+.icon-replace__committee-confirm:after {
+	content: "\35";
+}
+
+.icon-replace__committee-follow:after {
+	content: "\63";
+}
+
+.icon-replace__committee-unfollow:after {
+	content: "\43";
+}
+
+.icon-replace__contact:after {
+	content: "\6e";
+}
+
+.icon-replace__external-link:after {
+	content: "\6c";
+}
+
+.icon-replace__facebook:after {
+	content: "\21";
+}
+
+.icon-replace__find-senator:after {
+	content: "\24";
+}
+
+.icon-replace__hamburger:after {
+	content: "\68";
+}
+
+.icon-replace__home:after {
+	content: "\48";
+}
+
+.icon-replace__instagram2:after {
+	content: "\40";
+}
+
+.icon-replace__issue-follow:after {
+	content: "\e600";
+}
+.icon-replace__issue-unfollow:after {
+	content: "\49";
+}
+.icon-replace__issue:after {
+	content: "\69";
+}
+
+.icon-replace__left:after {
+	content: "\3c";
+}
+
+.icon-replace__link:after {
+	content: "\75";
+}
+
+.icon-replace__logout:after {
+	content: "\36";
+}
+
+.icon-replace__mail:after {
+	content: "\4e";
+}
+
+.icon-replace__minus:after {
+	content: "\2d";
+}
+
+.icon-replace__notification:after {
+	content: "\6f";
+}
+
+.icon-replace__petition:after {
+	content: "\70";
+}
+
+.icon-replace__play-outline:after {
+	content: "\50";
+}
+
+.icon-replace__plus:after {
+	content: "\2b";
+}
+
+.icon-replace__presskit:after {
+	content: "\6b";
+}
+
+.icon-replace__questionaire:after {
+	content: "\3f";
+}
+
+.icon-replace__quotes:after {
+	content: "\71";
+}
+
+.icon-replace__recruit-friends:after {
+	content: "\66";
+}
+
+.icon-replace__right:after {
+	content: "\3e";
+}
+
+.icon-replace__search:after {
+	content: "\6d";
+}
+
+.icon-replace__see-less:after {
+	content: "\5e";
+}
+
+.icon-replace__see-more:after {
+	content: "\65";
+}
+
+.icon-replace__share:after {
+	content: "\73";
+}
+
+.icon-replace__twitter-fav:after {
+	content: "\37";
+}
+
+.icon-replace__twitter-reply:after {
+	content: "\38";
+}
+
+.icon-replace__twitter-retweet:after {
+	content: "\39";
+}
+
+.icon-replace__twitter:after {
+	content: "\23";
+}
+
+.icon-replace__x:after {
+	content: "\78";
+}
+
+.icon-replace__youtube:after {
+	content: "\79";
+}
+

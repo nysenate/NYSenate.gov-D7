@@ -1,0 +1,199 @@
+
+/*----------------------------------------
+/ EARTH DAY FORM STYLES
+/----------------------------------------*/
+
+.field-name-field-school-submission-upload {
+  .form-type-managed-file {
+    min-height: inherit;
+  }
+}
+
+form.entitytype-earth_day-form, form.entitytype-earth_day_preview-form {
+  margin-bottom: 10%;
+  button#edit-submit {
+    margin: 0 auto;
+    margin-top: 5%;
+    @extend .icon-before__check;
+  }
+  input[type="file"] {
+    width: 50%;
+  }
+  button[id*="upload-button"] {
+    display: none;
+  }
+  .form-item .description, .fieldset-description {
+    text-transform: none;
+    font-size: 1.2em;
+    color: #2B6A90;
+    font-family: 'Proxima Nova Semibold'
+  }
+    .form-item .form-type-managed-file .description {
+      font-size: .9em!important;
+      padding-top: 3%;
+    }
+  button[id*="remove-button"] {
+    @extend .icon-before__x;
+  }
+  button[id*="add-more"] {
+    @extend .icon-before__plus;
+  }
+  
+}
+
+form.has-nys-captcha.entityform.entitytype-earth_day-form, form.has-nys-captcha.entityform.entitytype-earth_day_preview-form{
+  .form-managed-file button[value="Remove"].ajax-processed {
+    display: inline !important;
+    visibility: visible !important;
+  }
+}
+
+.page-eform-submit-earth-day {
+  div.error {
+   background-image: none!important;
+  }
+}
+
+#field-school-student-submissions-values, #field-school-stud-earthday-subm-values {
+  width: 100%;
+  
+  thead th label {
+    padding-left: 1%;
+    color: $yellow01;
+    font-family: 'Proxima Nova SemiBold';
+    font-size: 14px;
+  }
+
+}
+
+.views-field-field-school-last-name a span {
+  font-size: .7em;
+}
+
+button[id*="edit-field-school-stud-earthday-subm"] {
+    padding-top: .5rem;
+    padding-right: 1rem;
+    padding-bottom: .55rem;
+    padding-left: 1rem;
+    font-size: 1rem;
+    background-color: $yellow01;
+    border-color: $yellow03;
+  }
+  
+
+
+//display settings for submissions
+
+.entityform-earth-day, .entityform-earth-day-preview {
+  margin-bottom: 10%;
+  p.form-label {
+    font-family: 'Proxima Nova SemiBold';
+  }
+  p.form-results {
+    font-family: 'Proxima Nova Regular';
+    padding-left: 250px;
+  }
+  p.label-inline {
+    float: left;
+    padding-right: 3em;
+    font-family: 'Proxima Nova SemiBold';
+  }
+  h3.label-above {
+    margin: 24px 0 12px;
+    padding-top: 3%;
+    border-top: 1px solid $grey10;
+    color: $grey03;
+  }
+  .vcard {
+    display: inline-block;
+    margin: 0;
+    border: none;
+    font-size: 20px;
+    color: $grey03;
+    font-family: 'Proxima Nova Regular';
+    padding: 0 41px;
+  }
+  img {
+    width: auto;
+    padding-left: 250px;
+  }
+  .entity-field-collection-item {
+    margin-top: 5%;
+  }
+}
+
+fieldset[id*="edit-field-school-address-und"] {
+  .form-item-field-school-address-und-0-locpick-user-latitude, .form-item-field-school-address-und-0-locpick-user-longitude, .description {
+        display: none;
+  }
+}
+//SENATOR RESULTS PAGES
+
+.pane-node-field-student-earthday-letter h2 {
+    margin: 0 0 30px;
+    font-size: 48px;
+    color: #444444;
+    font-family: "Adelle Light";
+    line-height: 1.2em;
+}
+.pane-student-submissions {
+  margin-bottom: 24px;
+  h2 {
+      margin: 40px 0 30px;
+      font-family: "Adelle Semibold";
+  }
+   .view-grouping-header {
+      margin: 40px 0 20px;
+      font-family: "Adelle Semibold";
+      color: $grey10;
+      font-size: 30px;
+  }
+  h3 {
+      margin: 12px 0 6px;
+      font-family: "Adelle";
+      color: $grey03;
+      font-size: 24px;
+      font-weight: 400;
+  }
+}
+.views-field-field-school-student-full-name {
+    margin-top: 12px;
+    .field-content span {
+      font-size: .6em;
+    }
+}
+
+//CHOSEN styles
+.chosen-container {
+  background-color: #FAFAFA;
+}
+.chosen-container-single .chosen-single {
+    background-color: #FAFAFA;
+   // background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zd…J2ZSI+PHBvbHlnb24gcG9pbnRzPSI1Ljk5MiwwIDIuOTkyLDMgLTAuMDA4LDAgIi8+PC9zdmc+);
+    background-position: 100% center;
+    background-repeat: no-repeat;
+    border: 1px solid #cccccc;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+    color: rgba(0, 0, 0, 0.75);
+    line-height: normal;
+    border-radius: 0;
+    height: 2.3125rem;
+    background: none;
+    box-shadow: none;
+    &:hover {
+      background-color: #f3f3f3;
+      border-color: #999999;
+    }
+}
+
+
+
+ul.chosen-results {
+  li {
+    font-size: 16px;
+      color: $grey03;
+      font-family: 'Proxima Nova Regular';
+  }
+}

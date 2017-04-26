@@ -1,0 +1,30 @@
+diff --git a/plugins/string2id.inc b/plugins/string2id.inc
+index 7ae30b2..8eb802c 100644
+--- a/plugins/string2id.inc
++++ b/plugins/string2id.inc
+@@ -123,7 +123,7 @@ function feeds_tamper_string2id_resolve_target_form($importer, $element_key, $se
+       '%field_name' => $field_name,
+       '%target_type' => $target_type,
+       '%target_bundles' => implode(', ', $target_bundles),
+-      '!field_settings' => url("admin/structure/types/manage/{$processor_config['content_type']}/fields/$field_name"),
++      '!field_settings' => url("admin/structure/types/manage/{$processor_config['bundle']}/fields/$field_name"),
+     );
+     $form['autocomplete']['autodetected'] = array(
+       '#prefix' => '<p>', '#suffix' => '</p>',
+@@ -165,14 +165,14 @@ function feeds_tamper_string2id_resolve_target_form($importer, $element_key, $se
+     );
+     $form['autocomplete']['bundle_name'] = array(
+       '#type' => 'value',
+-      '#value' => $processor_config['content_type'],
++      '#value' => $processor_config['bundle'],
+     );
+   }
+   else {
+     $strings = array(
+       '%element_key' => $element_key,
+       '%field_name' => $field_name,
+-      '!field_settings' => url("admin/structure/types/manage/{$processor_config['content_type']}/fields/$field_name"),
++      '!field_settings' => url("admin/structure/types/manage/{$processor_config['bundle']}/fields/$field_name"),
+     );
+     $form['autocomplete']['not_autodetected'] = array(
+       '#prefix' => '<p class="error">', '#suffix' => '</p>',

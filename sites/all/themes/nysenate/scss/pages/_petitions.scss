@@ -1,0 +1,132 @@
+/*------------------------------------
+/	PETITION PAGE
+/-------------------------------------*/
+.c-petition--head {
+	margin-bottom: 15px;
+
+	.nys-title {
+		margin-bottom: 5px;
+	}
+	.nys-subtitle-title {
+		margin-bottom: 0;
+	}
+	// only if subtitle is preceeded by topics
+	.nys-associated-topics + .nys-subtitle-title  {
+		margin-top: 20px;
+	}
+}
+
+@media #{$tablet} {
+	.c-petition--head {
+		margin-bottom: 30px;
+
+		.nys-associated-topics + .nys-subtitle-title  {
+			margin-top: 40px;
+		}
+	}
+}
+
+// Petitions form
+.petition-form {
+  margin-top: 0;
+
+  .form-item-first-name,
+  .form-item-addr-street,
+  .form-item-addr-city,
+  .form-item-last-name,
+  .form-item-addr-opt,
+  .form-item-addr-state,
+  .form-item-addr-zip {
+    width: 100%;
+    float: left;
+  }
+  
+  input#edit-addr-street,
+  input#edit-email {
+    margin-bottom: 3px;
+  }
+
+  .form-item-register {
+    float: left;
+
+    .form-checkbox {
+      margin-right: 20px;
+    }
+
+    .description {
+      margin-top: -40px;
+      width: 90%;
+      font-size: 0.8rem;
+    }
+  }
+
+  @media #{$tablet} {
+    margin-top: -40px;
+
+    .form-item-first-name,
+    .form-item-addr-street,
+    .form-item-addr-city {
+      width: 48%;
+      float: left;
+      margin-right: 4%;
+    }
+
+    .form-item-last-name,
+    .form-item-addr-opt {
+      width: 48%;
+      float: left;
+    }
+
+    .form-item-addr-state {
+      width: 22%;
+      float: left;
+      margin-right: 4%;
+    }
+
+    .form-item-addr-zip {
+      width: 22%;
+      float: left;
+    }
+  }
+
+  button {
+    float: left;
+    margin-top: 20px;
+  }
+
+  .form-item-link > label,
+  .form-item-link > input {
+    display: none;
+  }
+
+  .c-btn--cta__sign {
+    float: left;
+    padding: 0 30px;
+
+    &:before {
+      font-family: 'senate_icons';
+      content: "\70";
+      font-size: 32px;
+      margin-right: 10px;
+      font-size: 28px;
+      display: inline-block;
+      vertical-align: middle;
+      text-transform: none;
+      padding-right: 3px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  }
+}
+
+// overrides that live outside the petitions form
+.c-news--body .c-btn--cta__sign {
+  float: left;
+}
+
+.petition-small-text {
+  font-size: 12px;
+  margin-top: 30px;
+  float: left;
+  clear: left;
+}

@@ -1,0 +1,549 @@
+<?php
+
+/**
+ * @file
+ * Provides the bill form callback.
+ */
+
+/**
+ * Generates the bill form.
+ */
+function nys_bills_bill_form($form, &$form_state, $node) {
+  // See if the user just voted and load message form instead.
+  $vote_results = nys_bills_just_voted($form, $form_state, $node);
+  if ($vote_results !== FALSE && $vote_results['voted'] == TRUE) {
+    return nys_bills_bill_voted_form($form, $form_state, $vote_results);
+  }
+
+  $form['#node'] = $node;
+  $form['pass_thru_url'] = array(
+    '#type' => 'hidden',
+    '#default_value' => request_path(),
+  );
+
+  global $user;
+  $form_info = array();
+
+  // Initialize values just in case user is anonymous or out-of-state.
+  $senator = t('the senator');
+  $printno = t('this bill');
+
+  // Check to see if the bill title exists to replace $printno.
+  if (isset($node->title) && !empty($node->title)) {
+    $printno = $node->title;
+  }
+
+  if (user_is_logged_in()) {
+
+    // Only in-state users will have a senator assigned.
+    if (!user_is_out_of_state()) {
+      $senator_nid = user_get_senator_nid($user);
+      if (!empty($senator_nid) && is_numeric($senator_nid)) {
+        $sen_emw = entity_metadata_wrapper('node', $senator_nid);
+        if ($sen_emw->__isset('field_last_name') && !empty($sen_emw->field_last_name->value())) {
+          $senator = 'Sen. ' . $sen_emw->field_last_name->value();
+        }
+      }
+    }
+
+    // Set up EMW since the standard user object does not provide all the data
+    // we need.
+    $loc_emw = entity_metadata_wrapper('user', $user->uid);
+
+    // User's address is an array of location data. We do this first to
+    // leverage the foreach.
+    if ($loc_emw->__isset('field_address') && is_array($loc_emw->field_address->value())) {
+      foreach ($loc_emw->field_address->value() as $key => $value) {
+        $form_info[$key] = $value;
+      }
+    }
+
+    if ($loc_emw->__isset('field_first_name') && !empty($loc_emw->field_first_name->value())) {
+      $form_info['first_name'] = $loc_emw->field_first_name->value();
+    }
+    if ($loc_emw->__isset('field_last_name') && !empty($loc_emw->field_last_name->value())) {
+      $form_info['last_name'] = $loc_emw->field_last_name->value();
+    }
+
+    // This will overwrite the value we got from field_address if not empty.
+    if (isset($user->mail) && !empty($user->mail)) {
+      $form_info['email'] = $user->mail;
+    }
+
+    // If the user is already logged in, personal info fields should be hidden.
+    $texttype = 'hidden';
+    $form_markup = '<p>' . t('Would you like to include a private message to @senator on <span class=\"bill-widget-status\"></span> @printno?', array('@senator' => $senator, '@printno' => $printno)) . '</p>';
+  }
+  else {
+    $texttype = 'textfield';
+    $form_markup = '<p>' . t('You must login or fill out the fields below for the senator to have an accurate account of the support or opposition to this bill.') . '</p>';
+  }
+
+  if (user_is_out_of_state() && user_is_logged_in()) {
+    $form_markup = '<p>' . t('Thank you for your participation.') . '</p>';
+  }
+
+  if (!empty($form_state['errors'])) {
+    $form_markup = $form_state['errors'];
+  }
+
+  $form['header_text'] = array(
+    '#markup' => $form_markup,
+  );
+
+  $form['first_name'] = array(
+    '#type' => $texttype,
+    '#title' => 'First Name',
+    '#required' => TRUE,
+    '#maxlength' => 255,
+    '#size' => 35,
+  );
+
+  if (!empty($form_info['first_name'])) {
+    $form['first_name']['#default_value'] = $form_info['first_name'];
+  }
+
+  $form['last_name'] = array(
+    '#type' => $texttype,
+    '#title' => t('Last Name'),
+    '#required' => TRUE,
+    '#maxlength' => 255,
+    '#size' => 35,
+  );
+
+  if (!empty($form_info['last_name'])) {
+    $form['last_name']['#default_value'] = $form_info['last_name'];
+  }
+
+  $form['email'] = array(
+    '#type' => $texttype,
+    '#title' => t('Email Address'),
+    '#required' => TRUE,
+    '#description' => t('A valid email address is required in order to confirm your account.'),
+    '#maxlength' => 254,
+    '#size' => 30,
+  );
+
+  if (!empty($form_info['email'])) {
+    $form['email']['#default_value'] = $form_info['email'];
+  }
+
+  $form['addr_street'] = array(
+    '#type' => $texttype,
+    '#title' => 'Street Address',
+    '#required' => TRUE,
+    '#description' => t('Your valid home address is used to determine which NY State Senator Represents you.'),
+    '#maxlength' => 1023,
+    '#size' => 40,
+  );
+
+  if (!empty($form_info['street'])) {
+    $form['addr_street']['#default_value'] = $form_info['street'];
+  }
+
+  $form['addr_opt'] = array(
+    '#type' => $texttype,
+    '#title' => t('Apt/Suite/Floor (Optional)'),
+    '#maxlength' => 1023,
+    '#size' => 12,
+  );
+
+  if (!empty($form_info['additional'])) {
+    $form['addr_opt']['#default_value'] = $form_info['additional'];
+  }
+
+  $form['addr_city'] = array(
+    '#type' => $texttype,
+    '#title' => t('City'),
+    '#required' => TRUE,
+    '#maxlength' => 255,
+    '#size' => 35,
+  );
+
+  if (!empty($form_info['city'])) {
+    $form['addr_city']['#default_value'] = $form_info['city'];
+  }
+
+  $form['addr_state'] = array(
+    '#type' => $texttype,
+    '#title' => t('State'),
+    '#required' => TRUE,
+    '#maxlength' => 255,
+    '#size' => 35,
+  );
+
+  if (!empty($form_info['province'])) {
+    $form['addr_state']['#default_value'] = $form_info['province'];
+  }
+
+  $form['addr_zip'] = array(
+    '#type' => $texttype,
+    '#title' => t('Postal Code'),
+    '#required' => TRUE,
+    '#maxlength' => 5,
+    '#size' => 5,
+  );
+
+  if (!empty($form_info['postal_code'])) {
+    $form['addr_zip']['#default_value'] = $form_info['postal_code'];
+  }
+
+  $form['register'] = array(
+    '#type' => 'checkbox',
+    '#default_value' => 1,
+    '#description' => t('<strong>Create an account</strong>. An <a href="/why-you-should-create-account">account</a> allows you to officially support or oppose key legislation, sign petitions with a single click, and follow issues, committees, and bills that matter to you. When you create an account, you agree to this platform\'s <a href="/policies-and-waivers">terms of participation</a>.'),
+  );
+
+  if (user_is_logged_in()) {
+    unset($form['register']);
+  }
+  else {
+    // Senator NID as Sponsor in case out of state user.
+    $form['senator'] = array(
+      '#type' => 'hidden',
+    );
+  }
+
+  // Vote value for entries passed on submit to help with creating message
+  // subject.
+  $form['vote_value'] = array(
+    '#type' => 'hidden',
+  );
+
+  // Out of state users do not have a senator and therefore cannot send a
+  // message.
+  if (!user_is_logged_in() || !user_is_out_of_state()) {
+    $form['message'] = array(
+      '#type' => 'textarea',
+      '#description' => t('Use this box to enter a message to your senator.'),
+    );
+
+    if (user_is_logged_in()) {
+      $submit_value = 'Send Message';
+    }
+    else {
+      $submit_value = 'Submit';
+    }
+
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => $submit_value,
+      '#weight' => 15,
+      '#attributes' => array('class' => array('c-btn--cta c-btn--cta__sign flag-wrapper flag-sign-bill')),
+    );
+  }
+
+  honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
+
+  return $form;
+}
+
+/**
+ * Generates the bill vote thank you message form.
+ */
+function nys_bills_bill_voted_form($form, &$form_state, $vote_results) {
+
+  if ($vote_results === FALSE || $vote_results['voted'] == FALSE) {
+    return $form;
+  }
+
+  $alert = 'Thank you for your participation.';
+
+  $form['msg'] = array(
+    '#markup' => '<div class="clearfix"></div><div class="l-messages"><div class="alert-box icon-before__petition"><div class="alert-box-message"><p>' . $alert . '</p></div></div></div>',
+    '#weight' => 100,
+  );
+
+  $form['uid'] = array(
+    '#type' => 'hidden',
+    '#default_value' => $vote_results['uid'],
+  );
+
+  $form['vote_value'] = array(
+    '#type' => 'hidden',
+    '#default_value' => $vote_results['vote_value'],
+  );
+
+  // Adds the javascript to setup the bill and scroll users to the message.
+  $form['#attached']['js'] = array(
+    drupal_get_path('module', 'nys_bills') . '/js/after_vote.js',
+  );
+
+  return $form;
+}
+
+/**
+ * Vote Test -  Determines if you just voted on this bill.
+ */
+function nys_bills_just_voted($form, &$form_state, $node) {
+  global $user;
+  $results = array();
+
+  if ($user->uid == 0) {
+    // Anonymous user.
+    $vote_value = db_query("SELECT `value` FROM `votingapi_vote`, `nys_bills_anon` WHERE nys_bills_anon.vote_id = votingapi_vote.vote_id AND `bid` = :nid AND `vote_source` = :source AND votingapi_vote.timestamp > :recent",
+                          array(
+                            ':nid' => $node->nid,
+                            ':source' => ip_address(),
+                            ':recent' => time() - 4,
+                          )
+                            )->fetchField();
+
+    if ($vote_value === '0') {
+      return array('voted' => TRUE, 'uid' => $user->uid, 'vote_value' => '0');
+    }
+    elseif ($vote_value === '1') {
+      return array('voted' => TRUE, 'uid' => $user->uid, 'vote_value' => '1');
+    }
+    elseif (empty($vote_value) == TRUE && $vote_value !== '0') {
+      return FALSE;
+    }
+
+  }
+  elseif ($user->uid > 0) {
+    // Registered user.
+    $vote_value = db_query("SELECT `value` FROM `votingapi_vote` WHERE `entity_id` = :entid AND `uid` = :uid AND `timestamp` > :recent",
+                            array(
+                              ':entid' => $node->nid,
+                              ':uid' => $user->uid,
+                              ':recent' => time() - 4,
+                            )
+                              )->fetchField();
+
+    if ($vote_value === '0') {
+      return array('voted' => TRUE, 'uid' => $user->uid, 'vote_value' => '0');
+    }
+    elseif ($vote_value === '1') {
+      return array('voted' => TRUE, 'uid' => $user->uid, 'vote_value' => '1');
+    }
+    elseif (empty($vote_value) == TRUE && $vote_value !== '0') {
+      return FALSE;
+    }
+
+  }
+
+}
+
+/**
+ * Validates the bills form submission.
+ */
+function nys_bills_bill_form_validate($form, &$form_state) {
+  nyslog(__FUNCTION__);
+
+  $email = $form_state['values']['email'];
+  $return_destination = NULL;
+
+  if (!empty($form_state['values']['pass_thru_url'])) {
+    $return_destination = '?destination=/' . $form_state['values']['pass_thru_url'];
+  }
+
+  if (!valid_email_address($email)) {
+    form_set_error('email', t('Please enter a valid email address.'));
+  }
+  elseif (user_load_by_mail($email) && !user_is_logged_in()) {
+    $href = '/user/login' . $return_destination;
+    form_set_error('email', t('Our records show you already have an account. Please <a href="@href">log in</a> to continue', array('@href' => $href)));
+  }
+  elseif (!user_is_logged_in()) {
+    nyslog('checking unauthenticated user');
+    $node = $form['#node'];
+
+    $existing_email = _nys_bills_select_single_anonymous_user(
+      array('email' => $email, 'bid' => $node->nid),
+      array('fid', 'message')
+    );
+
+    if (!empty($existing_email)) {
+      nyslog('existing email');
+      form_set_error('email', t('You have already supported or opposed this bill.'));
+    }
+  }
+  nyslog('done checking, errors=' . var_export(form_get_errors(), 1));
+  if (empty(form_get_errors())) {
+    $form_state['validated'] = TRUE;
+  }
+}
+
+/**
+ * Saves the bills form submission.
+ */
+function nys_bills_bill_form_submit($form, &$form_state) {
+  nyslog(__FUNCTION__);
+
+  // Need the global user object.
+  global $user;
+
+  // Set up some easy references for later.
+  $node = $form['#node'];
+  $values = $form_state['values'];
+  nyslog("Received values=\n" . var_export($values, 1));
+
+  // Get the vote options.
+  $vote_options = nys_bill_vote_get_options();
+
+  // Get the values for this vote.
+  // TODO: this if() may not be necessary once the "maybe" vote is removed.
+  if ($values['vote_value'] == 2) {
+    $values['vote_value'] = '';
+  }
+
+  $vote_index = nys_bill_vote_get_val($values['vote_value']);
+  $vote_label = $vote_options[$vote_index];
+
+  // Check for an existing vote.  The method differs based on login status.
+  $anon_user_record = NULL;
+  $the_vote = NULL;
+  if (user_is_logged_in()) {
+    // For users, check votingapi_vote with uid/entity_id/tag.
+    $the_vote = votingapi_select_votes(array(
+      'uid' => $user->uid,
+      'entity_id' => $node->nid,
+      'tag' => 'nys_bill_vote',
+    ));
+
+    // Note the user's senator's node id.
+    $senator_nid = user_get_senator_nid($user);
+  }
+  else {
+    // For non-users, check nys_bills_anon with email.
+    $anon_user_record = _nys_bills_select_single_anonymous_user(
+      array('email' => $values['email'], 'bid' => $node->nid)
+    );
+
+    // If no record was found, add a new entry.
+    if (!$anon_user_record) {
+      $new_record_id = _nys_bills_record_anonymous_user($node, $values);
+      nyslog("anon record added: " . var_export($new_record_id, 1));
+      $anon_user_record = _nys_bills_select_single_anonymous_user(
+        array('sid' => $new_record_id)
+      );
+    }
+
+    // If a record is found, then get the vote based on vote_id and entity_id.
+    if ($anon_user_record->vote_id) {
+      $the_vote = votingapi_select_votes(array(
+        'vote_id' => $anon_user_record->vote_id,
+        'entity_id' => $node->nid,
+      ));
+    }
+
+    // Note the senator's node.
+    $senator_nid = $anon_user_record->senator;
+
+  }
+
+  // Voting API returns an array.  We only need the first record.
+  $the_vote = (count($the_vote) > 0) ? $the_vote[0] : NULL;
+  nyslog("tried to discover existing vote, found:\n" . var_export($the_vote, 1));
+
+  // If there is no existing vote, or the vote value differs from
+  // the existing vote, record the new vote.
+  nyslog("vote value={$the_vote->value}, vote_index={$vote_index}");
+  if (is_null($the_vote) || $the_vote->value != $vote_index) {
+    $new_vote = nys_bill_vote_process_vote('node', $node->nid, $vote_index);
+    nyslog("registered new vote=\n" . var_export($new_vote, 1));
+  }
+
+  // Commit the follow flag.  If it does not work, report.
+  $bills_flag = flag_get_flag('follow_this_bill');
+  if (!$bills_flag->flag('flag', $node->nid, $user, TRUE)) {
+    $flag_errors = implode(' ', $bills_flag->get_errors());
+    nyslog("could not flag! dumping ...\n" . var_export($flag_errors, 1));
+    drupal_set_message($flag_errors, 'error');
+    watchdog('nys_bills_form', $flag_errors);
+  }
+
+  // Array for return warnings/errors/success.
+  $bills_flag_message = array();
+
+  // Now deal with any message being passed.
+  // Validation for the ability to send a message *SHOULD* have been
+  // taken care of in nys_bills_bill_form_validate().  This process
+  // is now restricted to logged in users only.
+  if (user_is_logged_in() && !empty($values['message'])) {
+    // The user must have a senator associated with their address.
+    if (empty($senator_nid)) {
+      $bills_flag_message[] = t('You must be a NY resident to send messages to a Senator.');
+    }
+    else {
+      // Prepare array for sending a bills message.
+      $message = array(
+        'senator_nid' => $senator_nid,
+        'author' => $user,
+        'vote_label' => $vote_label,
+        'values' => $values,
+        'node' => $node,
+      );
+
+      $bills_flag_message[] = nys_bills_send_private_message($message);
+    }
+  }
+
+  // Destroy anonymous session only.
+  if (user_is_anonymous()) {
+    nys_utils_regenerate_session();
+  }
+
+  // Finally, deal with anonymous users creating an account right now.
+  // This will pass flow control over to the registration system and
+  // out of the voting/flagging hooks.
+  nyslog("check account creation");
+  if (!user_is_logged_in() && !empty($values['register'])) {
+    $registration_form_state = _nys_registration_create_form_object($values);
+
+    $registration_form_state['values'] = $values;
+    $registration_form_state['values']['agree_terms'] = TRUE;
+
+    // Create the registration form, then call the registration SAGE
+    // district lookup.
+    drupal_form_submit('nys_registration_form_start', $registration_form_state);
+    if (form_get_errors()) {
+      nyslog("form errors=\n" . var_export(form_get_errors(), 1));
+      ctools_object_cache_set('nys_registration', 'regform', $registration_form_state['object']);
+      $form_state['redirect'] = 'registration/nojs/form/start';
+    }
+    else {
+      nyslog("no errors");
+
+      // Create new user object.
+      nys_registration_wizard_next($registration_form_state);
+      $new_user = _nys_registration_create_user($registration_form_state['object']);
+
+      // As a newly registered user, send a message to your senator.
+      if (!empty($values['message'])) {
+        // Prepare array to send message as an anon user that is registering.
+        $message = array(
+          'senator_nid' => $senator_nid,
+          'author' => $new_user->value(),
+          'vote_label' => $vote_label,
+          'values' => $values,
+          'node' => $node,
+        );
+
+        $bills_flag_message[] = nys_bills_send_private_message($message);
+      }
+    }
+
+    // If the form redirect is blocked due to ajax usage, then use the ajax
+    // responder mechanism to effect an ajax redirect.
+    nyslog('checking redirect');
+    if ($form_state['no_redirect']) {
+      nyslog('implementing ajax redirect');
+      ctools_add_js('ajax-responder');
+      print ajax_render(array(ctools_ajax_command_redirect($form_state['redirect'])));
+      drupal_exit();
+    }
+    nyslog("creation complete");
+  }
+
+  // If there are errors or message has been sent, convert to item list.
+  if (!empty($bills_flag_message)) {
+    $bills_items = theme('item_list', array(
+      'items' => $bills_flag_message,
+      'type' => 'ul',
+    ));
+    drupal_set_message($bills_items);
+  }
+
+  drupal_add_js(drupal_get_path('module', 'nys_bills') . '/js/form_validated.js');
+}

@@ -1,0 +1,72 @@
+.c-adv-search-container {
+  margin-bottom: 40px;
+}
+.c-adv-search-filter select {
+  background: url('/sites/all/themes/nysenate/images/svg/see-less.svg') no-repeat 96% center;
+  background-size: 14px;
+  height: 55px;
+}
+.c-adv-search--title {
+  text-transform: capitalize;
+  font-family: "Adelle Bold";
+  font-size: 32px;
+  width: 100%;
+  float: left;
+  margin-bottom: 20px;
+}
+.c-block-legislation {
+  margin-bottom: 0;
+}
+@media (min-width: 642px) {
+  .row .columns.l-padded-column {
+    padding-right: 10px;
+  }
+  .row .columns.r-padded-column {
+    padding-left: 10px;
+  }
+}
+.adv-search-ctrls {
+  display: none;
+  overflow: auto;
+}
+h2.search-results {
+  line-height: 1;
+  margin-bottom: 10px;
+  text-transform: capitalize;
+  font-family: "Adelle Regular";
+  width: 100%;
+  float: left;
+}
+.c-adv-search--results {
+  padding: 20px;
+  background: #f5f5f5;
+  margin-bottom: 20px;
+}
+.ds-search-extra {
+  text-transform: uppercase;
+  font-family: "Proxima Nova Semibold";
+  font-size: 12px;
+  line-height: 1em;
+  color: #888888;
+  margin-bottom: 30px;
+  width: 100%;
+  float: left;
+}
+.c-adv-search--no-results, .ds-search-extra.c-no-results {
+  color: red;
+}
+.c-btn--adv-search {
+  float: right;
+  margin-right: 0;
+  text-align: center;
+  padding: 0;
+  display: none;
+}
+.c-btn--adv-search-wide {
+  width: 210px;
+}
+.c-adv-search--searching {
+  display: none;
+  float: right;
+  margin-left: 20px;
+}

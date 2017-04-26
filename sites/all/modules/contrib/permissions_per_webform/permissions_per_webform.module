@@ -1,0 +1,343 @@
+<?php
+
+/**
+ * @file
+ * This module adds checkboxes for each role under each standard Webform
+ * permission to each Webform node.
+ *
+ * @author Daniel Imhoff
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function permissions_per_webform_permission() {
+  return array(
+    'grant per webform permissions' => array(
+      'title' => t('Grant permissions per Webform'),
+      'description' => t('View and modify webform permissions for any webforms.'),
+    ),
+    'grant per own webform permissions' => array(
+      'title' => t('Grant permissions per own Webform'),
+      'description' => t('View and modify webform permissions for own webforms.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_webform_results_access().
+ */
+function permissions_per_webform_webform_results_access($node, $account) {
+  // Respect user 1.
+  if ($account->uid == 1) {
+    return TRUE;
+  }
+
+  $existing = _permissions_per_webform_existing_permissions($node->nid);
+
+  if (isset($existing['access_webform_results'])) {
+    // If user has access to results tab, they have access to everything.
+    if (_permissions_per_webform_access($existing['access_webform_results'], $account)) {
+      return TRUE;
+    }
+  }
+}
+
+/**
+ * Implements hook_webform_submission_access().
+ */
+function permissions_per_webform_webform_submission_access($node, $submission, $op, $account) {
+  // Respect user 1.
+  if ($account->uid == 1) {
+    return TRUE;
+  }
+
+  $existing = _permissions_per_webform_existing_permissions($node->nid);
+
+  switch ($op) {
+    case 'list':
+      if (isset($existing['access_own_webform_submissions'])) {
+        return _permissions_per_webform_access($existing['access_own_webform_submissions'], $account);
+      }
+
+      break;
+    case 'view':
+      if (isset($existing['access_webform_results'])) {
+        if (_permissions_per_webform_access($existing['access_webform_results'], $account)) {
+          return TRUE;
+        }
+      }
+
+      if (isset($existing['access_own_webform_submissions'])) {
+        if ($submission->uid == $account->uid) {
+          return _permissions_per_webform_access($existing['access_own_webform_submissions'], $account);
+        }
+      }
+
+      break;
+    case 'edit':
+      if (isset($existing['edit_webform_submissions'])) {
+        if (_permissions_per_webform_access($existing['edit_webform_submissions'], $account)) {
+          return TRUE;
+        }
+      }
+
+      if (isset($existing['edit_own_webform_submissions'])) {
+        if ($submission->uid == $account->uid) {
+          return _permissions_per_webform_access($existing['edit_own_webform_submissions'], $account);
+        }
+      }
+
+      break;
+    case 'delete':
+      if (isset($existing['delete_webform_submissions'])) {
+        if (_permissions_per_webform_access($existing['delete_webform_submissions'], $account)) {
+          return TRUE;
+        }
+      }
+
+      if (isset($existing['delete_own_webform_submissions'])) {
+        if ($submission->uid == $account->uid) {
+          return _permissions_per_webform_access($existing['delete_own_webform_submissions'], $account);
+        }
+      }
+
+      break;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for webform_configure_form().
+ */
+function permissions_per_webform_form_webform_configure_form_alter(&$form, &$form_state) {
+  global $user;
+
+  $nid =& $form['#node']->nid;
+
+  if (!user_access('grant per webform permissions') && ($form['#node']->uid != $user->uid || !user_access('grant per own webform permissions'))) {
+    return;
+  }
+
+  $form['#submit'][] = 'permissions_per_webform_form_webform_configure_form_submit';
+  $form['#attached']['css'][] = drupal_get_path('module', 'permissions_per_webform') . '/permissions_per_webform.admin.css';
+
+  $operations = _permissions_per_webform_operations();
+  $existing = _permissions_per_webform_existing_permissions($nid);
+
+  $user_roles = array_map('filter_xss_admin', user_roles());
+
+  foreach ($user_roles as $rid => $rname) {
+    if ($rid == DRUPAL_ANONYMOUS_RID || $rid == DRUPAL_AUTHENTICATED_RID) {
+      continue;
+    }
+
+    $user_roles[$rid] = webform_tt("user:rid:$rid:name", $rname);
+  }
+
+  $form['permissions_per_webform'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Permission settings'),
+    '#weight' => -2.5,
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+    '#tree' => TRUE,
+  );
+
+  $form['permissions_per_webform']['enable'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable permissions per webform'),
+    '#description' => t('Check to enable permissions per webform functionality.'),
+    '#default_value' => !empty($existing) ? 1 : 0,
+  );
+
+  $form['permissions_per_webform']['container'] = array(
+    '#type' => 'container',
+    '#states' => array(
+      'visible' => array(':input[name="permissions_per_webform[enable]"]' => array('checked' => TRUE)),
+    ),
+    '#parents' => array('permissions_per_webform'),
+  );
+
+  $form['permissions_per_webform']['container']['description'] = array(
+    '#markup' => t('Assign permissions to roles to grant access to that permission for only this Webform. Permissions are done on an add only basis; if a role is granted one of the corresponding global permissions, that role cannot be removed from that permission for this Webform.'),
+    '#theme_wrappers' => array('container'),
+  );
+
+  $form['permissions_per_webform']['container']['access_webform_results'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Access webform results'),
+    '#description' => t('Grants access to the "Results" tab on this Webform\'s node. Generally an administrative permission.'),
+    '#options' => $user_roles,
+    '#default_value' => isset($existing['access_webform_results']) ? $existing['access_webform_results'] : array_keys(user_roles(FALSE, $operations['access_webform_results'])),
+  );
+
+  $form['permissions_per_webform']['container']['edit_webform_submissions'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Edit webform submissions'),
+    '#description' => t('Allows editing of any submission of this Webform. Generally an administrative permission.'),
+    '#options' => $user_roles,
+    '#default_value' => isset($existing['edit_webform_submissions']) ? $existing['edit_webform_submissions'] : array_keys(user_roles(FALSE, $operations['edit_webform_submissions'])),
+  );
+
+  $form['permissions_per_webform']['container']['delete_webform_submissions'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Delete webform submissions'),
+    '#description' => t('Allows deleting of any submission of this Webform. Generally an administrative permission.'),
+    '#options' => $user_roles,
+    '#default_value' => isset($existing['delete_webform_submissions']) ? $existing['delete_webform_submissions'] : array_keys(user_roles(FALSE, $operations['delete_webform_submissions'])),
+  );
+
+  $form['permissions_per_webform']['container']['access_own_webform_submissions'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Access own webform submissions'),
+    '#options' => $user_roles,
+    '#default_value' => isset($existing['access_own_webform_submissions']) ? $existing['access_own_webform_submissions'] : array_keys(user_roles(FALSE, $operations['access_own_webform_submissions'])),
+  );
+
+  $form['permissions_per_webform']['container']['edit_own_webform_submissions'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Edit own webform submissions'),
+    '#options' => $user_roles,
+    '#default_value' => isset($existing['edit_own_webform_submissions']) ? $existing['edit_own_webform_submissions'] : array_keys(user_roles(FALSE, $operations['edit_own_webform_submissions'])),
+  );
+
+  $form['permissions_per_webform']['container']['delete_own_webform_submissions'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Delete own webform submissions'),
+    '#options' => $user_roles,
+    '#default_value' => isset($existing['delete_own_webform_submissions']) ? $existing['delete_own_webform_submissions'] : array_keys(user_roles(FALSE, $operations['delete_own_webform_submissions'])),
+  );
+
+  $form['permissions_per_webform']['container']['permissions_description'] = array(
+    '#markup' => t('The %authenticated role applies to any user signed into the site, regardless of other assigned roles.', array('%authenticated' => $user_roles[2])),
+    '#theme_wrappers' => array('container'),
+    '#attributes' => array(
+      'class' => array('description'),
+    ),
+  );
+}
+
+/**
+ * Custom submit handler for webform_configure_form().
+ */
+function permissions_per_webform_form_webform_configure_form_submit(&$form, &$form_state) {
+  $nid =& $form['#node']->nid;
+
+  $operations = _permissions_per_webform_operations();
+
+  db_delete('permissions_per_webform')
+    ->condition('nid', $nid)
+    ->execute();
+
+  if ($form_state['values']['permissions_per_webform']['enable']) {
+    $query = db_insert('permissions_per_webform')
+      ->fields(array('nid', 'oid', 'rid'));
+
+    foreach ($form_state['values']['permissions_per_webform'] as $fid => $values) {
+      $oid = array_search($fid, array_keys($operations));
+
+      if (FALSE !== $oid) {
+        $values = array_keys(array_filter($values));
+        $default = array_keys(user_roles(FALSE, $operations[$fid]));
+        $diff = array_diff($values, $default);
+
+        if (!empty($diff)) {
+          foreach ($values as $rid) {
+            $query->values(array(
+              'nid' => $nid,
+              'oid' => $oid,
+              'rid' => $rid,
+            ));
+          }
+        }
+      }
+    }
+
+    $query->execute();
+  }
+}
+
+/**
+ * Returns the existing permissions of a webform by node ID.
+ *
+ * @param int $nid
+ *   The node ID of this webform.
+ *
+ * @return array
+ *   An associative array with operation names as keys and an array of role IDs
+ *   as the values.
+ */
+function _permissions_per_webform_existing_permissions($nid) {
+  $existing =& drupal_static(__FUNCTION__ . '_nid_' . $nid);
+
+  if (!isset($existing)) {
+    $operations = array_keys(_permissions_per_webform_operations());
+    $permissions = _permissions_per_webform_permissions($nid);
+
+    $existing = array();
+
+    foreach ($permissions as $row) {
+      $existing[$operations[$row['oid']]][] = $row['rid'];
+    }
+  }
+
+  return $existing;
+}
+
+/**
+ * Fetch the permissions per webform for this webform by node ID.
+ *
+ * @param int $nid
+ *   The node ID of this webform.
+ *
+ * @return array
+ *   The array of permissions for this webform.
+ */
+function _permissions_per_webform_permissions($nid) {
+  return db_select('permissions_per_webform', 'w', array('fetch' => PDO::FETCH_ASSOC))
+    ->fields('w')
+    ->condition('w.nid', $nid)
+    ->execute()
+    ->fetchAll();
+}
+
+/**
+ * Checks to see if a user is a member of one of the given roles.
+ *
+ * @param array $roles
+ *   An array of role IDs.
+ * @param object $user
+ *   The user object to check.
+ *
+ * @return TRUE if the user is a member of one of the roles, FALSE otherwise.
+ */
+function _permissions_per_webform_access($roles, $user = NULL) {
+  if ($user == NULL) {
+    global $user;
+  }
+
+  $allowed_roles = array();
+
+  foreach ($roles as $rid) {
+    $allowed_roles[$rid] = isset($user->roles[$rid]) ? TRUE : FALSE;
+  }
+
+  return array_search(TRUE, $allowed_roles) !== FALSE;
+}
+
+/**
+ * Maps the permissions per webform checkbox form id with their corresponding
+ * global webform permission.
+ */
+function _permissions_per_webform_operations() {
+  return array(
+    'access_webform_results' => 'access all webform results',
+    'edit_webform_submissions' => 'edit all webform submissions',
+    'delete_webform_submissions' => 'delete all webform submissions',
+    'access_own_webform_submissions' => 'access own webform submissions',
+    'edit_own_webform_submissions' => 'edit own webform submissions',
+    'delete_own_webform_submissions' => 'delete own webform submissions',
+  );
+}

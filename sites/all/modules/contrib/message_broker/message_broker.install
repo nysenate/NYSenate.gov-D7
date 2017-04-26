@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Enable and uninstall message broker module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function message_broker_uninstall() {
+  variable_del('message_broker_implementation');
+  variable_del('message_broker_self');
+}
+
+/**
+ * Implements hook_enable().
+ */
+function message_broker_enable() {
+  drupal_set_message(t('See the configuration page !url for the message broker to get started.',
+    array(
+      '!url' => l('admin/config/system/message_broker',
+                      'admin/config/system/message_broker'))));
+
+  $old_variables_found = FALSE;
+  $variable_names = array(
+      'message_broker_integration_implementation' => 'message_broker_implementation',
+      'message_broker_integration_self' => 'message_broker_self'
+  );
+
+  foreach ($variable_names as $old_name => $new_name) {
+    $variable_value = variable_get($old_name);
+
+    if ($variable_value !== NULL) {
+      $old_variables_found = TRUE;
+      variable_set($new_name, $variable_value);
+    }
+  }
+
+  if ($old_variables_found) {
+    drupal_set_message(t('Old configuration data from the module message_broker_integration was found and migrated!'));
+  }
+}

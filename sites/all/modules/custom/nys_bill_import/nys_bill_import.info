@@ -1,0 +1,6 @@
+name = Bill Import
+description = Imports bills from OpenLeg into Drupal.
+core = 7.x
+
+dependencies[] = entity
+dependencies[] = views

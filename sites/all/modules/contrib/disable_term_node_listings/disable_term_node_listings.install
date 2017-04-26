@@ -1,0 +1,67 @@
+<?php
+/**
+ * @file
+ * Install, uninstall and enable functions for the Term Disable Listing module.
+ */
+
+/**
+ * Implements hook_enable().
+ */
+function disable_term_node_listings_enable() {
+  drupal_set_message(st('To disable a node listings for terms in a selected vocabulary, edit a vocabulary from the !url.', array('!url' => l(st('taxonomy page'), 'admin/structure/taxonomy'))));
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function disable_term_node_listings_requirements($phase) {
+  $requirements = array();
+  // Ensure translations don't break during installation.
+  $t = get_t();
+
+  if ($phase == 'runtime') {
+    $requirements['disable_term_node_listings_page_control'] = array(
+      'title' => $t('Disable Term Node Listings'),
+      'severity' => REQUIREMENT_OK,
+      'value' => $t('Working'),
+      'description' => $t('Other modules that control term pages can block this module from working'),
+    );
+
+    $result = db_query("SELECT * from {menu_router} where path = :path", array(':path' => 'taxonomy/term/%'));
+    foreach ($result as $record) {
+      if ($record->page_callback != 'disable_term_node_listings_term_page') {
+        $requirements['disable_term_node_listings_page_control']['value'] = $t('Blocked by') . ': ' . $record->page_callback;
+        $requirements['disable_term_node_listings_page_control']['severity'] = REQUIREMENT_ERROR;
+      }
+    }
+  }
+  return $requirements;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function disable_term_node_listings_uninstall() {
+  // Delete term disable listing variables.
+  db_delete('variable')
+      ->condition('name', db_like('disable_term_node_listings_') . '%', 'LIKE')
+      ->execute();
+}
+
+/**
+ * Converting booleans to new named values.
+ * 
+ * Disabled listing to 'hide_listings' and inactive to 'default'.
+ */
+function disable_term_node_listings_update_7100() {
+  $result = db_query("SELECT * from {variable} WHERE {name} like 'disable_term_node_listings_%'");
+  foreach ($result as $record) {
+    $value = unserialize($record->value);
+    if ($value == 1) {
+      variable_set($record->name, 'hide_listing');
+    }
+    elseif ($value == 0) {
+      variable_set($record->name, 'default');
+    }
+  }
+}

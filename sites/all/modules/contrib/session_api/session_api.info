@@ -1,0 +1,12 @@
+name = Session API
+description = Provides an interface for storing session information.
+core = 7.x
+files[] = session_api.test
+configure = admin/config/development/session-api
+
+; Information added by Drupal.org packaging script on 2015-09-21
+version = "7.x-1.0-rc1+13-dev"
+core = "7.x"
+project = "session_api"
+datestamp = "1442846643"
+

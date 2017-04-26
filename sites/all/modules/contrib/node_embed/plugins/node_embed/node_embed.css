@@ -1,0 +1,50 @@
+.node_embed_dialog {
+  background:#e9e9e9;
+  border:2px solid #333;
+  border-radius:5px;
+  -moz-border-radius:5px;
+  -webkit-border-radius:5px;
+  padding:5px;
+}
+
+.node_embed_dialog .ui-dialog-titlebar {
+  margin:0;
+  padding:5px;
+  background-color:#333;
+  color:#fff;
+  border-radius:5px;
+  -moz-border-radius:5px;
+  -webkit-border-radius:5px;
+  position:relative;
+}
+
+.node_embed_dialog .ui-dialog-titlebar-close {
+  position:absolute;
+  right:5px;
+  color:#fff;
+}
+
+#nodeEmbedDialog {
+  margin:10px 0 0 0;
+}
+
+.node_embed_dialog .nodeEmbedButtons {
+  margin:0;
+  padding: 0;
+}
+
+.node_embed_dialog .nodeEmbedButtons button {
+  background: #333;
+  color: #fff;
+  border-radius:5px;
+  -moz-border-radius:5px;
+  -webkit-border-radius:5px;
+  border:1px solid #444;
+  padding:3px 10px;
+  margin:5px 5px 0 0;
+  cursor: pointer;
+}
+
+.node_embed_dialog .nodeEmbedButtons button:hover {
+  border:1px solid #999;
+}

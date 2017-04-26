@@ -1,0 +1,8 @@
+Disable Term Node Term Listings 7.x-1.2
+--------------------------------
+#1955320 by nmudgal: Fix query syntax for status report
+
+Disable Term Node Term Listings 7.x-1.1
+--------------------------------
+by akeemw: Add a status report item to notify if another module controls /taxonomy/term/%
+#1828208 by mmilo: Allow accessing Taxonomy term pages to return a 404/403

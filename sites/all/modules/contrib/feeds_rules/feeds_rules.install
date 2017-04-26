@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ *  Installation and schema defintion for feeds_rules.
+ */
+
+
+/**
+ * Implements hook_schema().
+ */
+function feeds_rules_schema() {
+  $schema = array();
+  $schema['feeds_rules_action'] = array(
+    'description' => 'Stores user data.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'The primary identifier for a feeds processed rules action.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'component' => array(
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => TRUE,
+        'description' => 'The name of the rules component.',
+      ),
+      'executed' => array(
+        'description' => 'The Unix timestamp when the rules action was processed',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'params' => array(
+        'type' => 'blob',
+        'size' => 'big',
+        'not null' => FALSE,
+        'serialize' => TRUE,
+        'description' => 'Parameters passed to the action, serialized.',
+      ),
+      'provided' => array(
+        'type' => 'blob',
+        'size' => 'big',
+        'not null' => FALSE,
+        'serialize' => TRUE,
+        'description' => 'Provided data returned by the action/component.',
+      ),
+    ),
+    'indexes' => array(
+      'compontent' => array('component'),
+      'executed' => array('executed'),
+    ),
+    'unique keys' => array(
+      // Currently we got now unique keys, as this is simply a log table.
+    ),
+    'primary key' => array('id'),
+  );
+  return $schema;
+}

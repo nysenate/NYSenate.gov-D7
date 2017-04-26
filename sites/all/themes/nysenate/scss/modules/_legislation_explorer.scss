@@ -1,0 +1,284 @@
+/*----------------------------------------------
+/ NYS Legislation Explorer
+/ covers: NYS Laws, Advanced Legislation 
+/         search, and Find My Senator
+/---------------------------------------------*/
+
+/* Laws */
+
+.c-law--law-title {
+  font-family: "Adelle SemiBold";
+  color: #444444;
+}
+
+.c-law-link {
+  display: block;
+  padding: 20px 0;
+  border-bottom: 1px solid #e3e8ec;
+  font-family: "Proxima Nova Regular";
+  font-size: 14px;
+  color: #2B6A90; 
+}
+
+.c-law--law-type, .c-law--action-heading {
+  display: block;
+  margin-bottom: 20px;
+  font-family: "Adelle Semibold";
+  margin-top: 40px;
+  border-bottom: 1px solid #AAAAAA;
+  padding: 0 0 10px 0;
+  font-size: 18px;
+  color: #444444;
+}
+
+.c-law--law-type {
+  a {
+    color: #444444;
+    &:hover {
+      color: #2B6A90;    
+    };
+  }
+}
+
+.c-law-descript {
+  margin-bottom: 20px;
+}
+
+.c-law--action-heading, .c-law--action-heading-sm {
+  font-size: 18px;
+  color: #444;
+  margin-top: 0;
+  margin-bottom: 10px;
+  border-bottom: none;
+}
+
+.c-law--search-loader {
+  height: 20px;
+  width: 20px;
+  margin: auto;
+  display: none;
+}
+
+.c-law--search-container {
+  padding: 25px 40px;;
+  background: #EEEEEE;
+  margin-bottom: 40px;
+}
+
+.c-law--search-results-container {
+  background: #fbfbfb;
+  padding: 20px;
+  display: none;
+  margin-bottom: 20px;
+}
+
+.c-law-search-field {
+  position: relative;
+  padding-bottom: 20px;
+}
+
+input[type="text"].c-law-search-field-input {
+  margin-bottom: 0;
+  height: 45px; 
+}
+
+.c-site-search--btn.c-law-search-field--icon-glass, 
+.c-site-search--btn.c-law-search-field--icon-glass:focus {
+  top: 0;
+  right: 0;
+}
+
+.c-law--search-results-container.c-law--searching {
+  opacity: 0.3;
+}
+
+.c-law--search-result-msg, .c-law--search-result-warnmsg {
+  font-size: 18px;
+  font-family: "Adelle Semibold";
+  color: #444;
+  padding-top: 10px;
+}
+
+.c-law--search-result-warnmsg {
+  color: red;
+}
+
+.c-law--search-result-container {
+  padding: 20px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.c-law--search-result-location {
+  text-transform: capitalize;
+  text-decoration: underline;
+  font-weight: bold;
+  font-size: 16px;
+  color: #2B6A90;
+}
+
+.c-law--search-result-title {
+  margin-top: 0;
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+.c-law--search-result-highlight {
+  color: #555;
+  font-size: 14px;
+}
+
+.c-law--search-result-highlight {
+  em {
+    font-weight: bold;
+    background: rgb(255, 247, 189);
+    padding: 5px;
+    font-style: normal;
+  }
+}
+
+.c-law--show-more {
+  font-size: 18px;
+  text-align: center;
+  padding: 10px;
+}
+
+.c-law-link-container {
+  display: block;
+  overflow: auto;
+  border-bottom: 1px solid #AAAAAA;
+  padding: 20px 0;
+}
+
+.c-law-link-container:last-of-type {
+  border-bottom: none;
+}
+
+.c-law-link-left {
+  width: 30%;
+  float: left;
+}
+
+.c-law-link-loc-id {
+  margin-bottom: 0.50em;
+  font-family: "Adelle Bold";
+  line-height: 1em;
+  font-size: 20px;
+  letter-spacing: 0.05em;
+  color: #444444;
+}
+
+.c-law-link-loc-id {
+  a {
+    color: #444444;
+    &:hover {
+      color: #2B6A90;
+    }
+  }
+}
+
+.c-law-link-title {
+  margin: 0 0 10px 0;
+  color: #444444;
+}  
+
+.c-law-link-contained-sections {
+  display: inline-block;
+  margin: 0 0.25em 0 0;
+  font-family: "Proxima Nova Regular";
+  font-size: 14px;
+}
+
+.c-law--law-name, .c-law--law-id {
+  font-size: 16px;
+  line-height: 20px;
+  margin-bottom: 10px;
+}
+
+.c-law--law-name a {
+  color: #444444;
+}
+.c-law--law-id {
+  color: #999999;
+}
+
+.breadcrumbs.c-law-breadcrumbs {
+  border-style: solid none solid none;
+  border-radius: 0;
+  color: #2B6A90;
+  margin-bottom: 20px;
+  padding: 20px 1px;
+  background: none;
+}
+
+.breadcrumbs.c-law-breadcrumbs a {
+  font-size: 14px;
+  line-height: 1.5rem;
+}
+
+a.c-law--inactive-breadcrumb {
+  color: #333;
+  cursor: default;
+  font-weight: bold;
+}
+
+.c-law-doc-text {
+  margin-top: 2em;
+  font-size: 16px;
+  line-height: 1.5em;
+  padding: 1em;
+  font-family: "Adelle Light";
+}
+
+.c-law-sibling-links {
+  font-size: 14px;
+}
+
+.c-law-sibling-links .columns {
+  padding: 10px;
+}
+
+.c-law-sibling-links a {
+  text-transform: uppercase;
+}
+
+@media only screen and (min-width: 40.063em) {
+  .c-law-link {
+    font-size: 20px;
+  }
+
+  .c-law--law-type {
+    font-size: 24px;
+  }
+
+  .c-law--action-heading {
+    font-size: 26px;
+  }
+
+  .c-law--action-heading.sm-heading {
+    font-size: 20px;
+  }
+
+  .c-law--law-name, .c-law--law-id {
+    font-size: 20px;
+  }
+
+  .c-law--search-result-title {
+    font-size: 17px;
+  }
+
+  .c-law-link-loc-id {
+    font-size: 26px;
+  }
+
+  .c-law-doc-text {
+    font-size: 20px;
+  }
+}
+@media only print {
+  header, footer, .c-law--search-container, .icon-after__right, .icon-after__left {
+    display: none;
+  }
+  .l-row.l-row--main.l-main {
+    max-width: 100%;
+  }
+}

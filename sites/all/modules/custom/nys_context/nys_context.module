@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * @file
+ * Adds entity field value as context condiction
+ */
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function nys_context_ctools_plugin_api($module, $api) {
+  if ($module == 'context' && $api == 'plugins') {
+    return array('version' => 3);
+  }
+}
+
+/**
+ * Implements hook_context_plugins().
+ */
+function nys_context_context_plugins() {
+  $plugins = array();
+  $plugins['assigned_senator'] = array(
+    'handler' => array(
+      'path'   => drupal_get_path('module', 'nys_context') . '/plugins',
+      'file'   => 'nys_context_condition_assigned_senator.inc',
+      'class'  => 'nys_context_condition_assigned_senator',
+      'parent' => 'context_condition',
+    ),
+  );
+  $plugins['assigned_committee'] = array(
+    'handler' => array(
+      'path'   => drupal_get_path('module', 'nys_context') . '/plugins',
+      'file'   => 'nys_context_condition_assigned_committee.inc',
+      'class'  => 'nys_context_condition_assigned_committee',
+      'parent' => 'context_condition',
+    ),
+  );
+  return $plugins;
+}
+
+/**
+ * Implements hook_context_registry().
+ */
+function nys_context_context_registry() {
+  $registry['conditions'] = array(
+    'assigned_senator' => array(
+      'title'       => t('Assigned Senator'),
+      'description' => t('Set context based on content type having field senator filled'),
+      'plugin'      => 'assigned_senator',
+    ),
+    'assigned_committee' => array(
+      'title'       => t('Assigned Committee'),
+      'description' => t('Set context based on content type having field committee filled'),
+      'plugin'      => 'assigned_committee',
+    ),
+  );
+
+  return $registry;
+}
+
+/**
+ * Implements of hook_entity_view().
+ */
+function nys_context_entity_view($entity, $type, $view_mode, $langcode) {
+  if ($plugin = context_get_plugin('condition', 'assigned_senator')) {
+    $plugin->execute($type, $entity);
+  }
+  if ($plugin = context_get_plugin('condition', 'assigned_committee')) {
+    $plugin->execute($type, $entity);
+  }
+}

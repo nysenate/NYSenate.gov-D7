@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * Uninstall hook.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function message_broker_dummy_uninstall() {
+  variable_del('message_broker_dummy_config');
+}
+
+/**
+ * Implements hook_enable().
+ */
+function message_broker_dummy_enable() {
+  $variable_value = variable_get('message_broker_dummy_integration_config');
+
+  if ($variable_value !== NULL) {
+    variable_set('message_broker_dummy_config', $variable_value);
+
+    drupal_set_message(t('Old configuration data from the module message_broker_dummy_integration was found and migrated!'));
+  }
+}

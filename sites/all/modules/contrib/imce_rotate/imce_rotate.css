@@ -1,0 +1,12 @@
+/**
+ * @file
+ *
+ * This css file formats the IMCE Rotate formset.
+ */
+#op-item-rotate a,
+#imce-content #edit-rotate {
+  background-image: url(transform-rotate.png);
+  /*For IMCE 1.x*/
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}

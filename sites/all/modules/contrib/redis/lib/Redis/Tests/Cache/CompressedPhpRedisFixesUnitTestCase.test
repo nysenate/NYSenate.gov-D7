@@ -1,0 +1,27 @@
+<?php
+
+if (!class_exists('Redis_Tests_Cache_FixesUnitTestCase')) {
+  require_once(__DIR__ . '/FixesUnitTestCase.php');
+}
+
+class Redis_Tests_Cache_CompressedPhpRedisFixesUnitTestCase extends Redis_Tests_Cache_FixesUnitTestCase
+{
+    public static function getInfo()
+    {
+        return array(
+            'name'        => 'Compressed PhpRedis cache fixes',
+            'description' => 'Tests Redis module cache fixes feature.',
+            'group'       => 'Redis',
+        );
+    }
+
+    protected function createCacheInstance($name = null)
+    {
+        return new Redis_CacheCompressed($name);
+    }
+
+    protected function getClientInterface()
+    {
+        return 'PhpRedis';
+    }
+}

@@ -1,0 +1,6 @@
+name = Email Digest
+description = Send a weekly digest to all users.
+core = 7.x
+
+dependencies[] = entity
+dependencies[] = views

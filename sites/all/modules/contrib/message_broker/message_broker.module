@@ -1,0 +1,157 @@
+<?php
+
+/**
+ * @file
+ * Implementation of configuration page and hooks.
+ */
+
+/**
+ * Returns all known message broker implementations.
+ *
+ * @return array
+ *   Infos about message broker implementations collected via the hook.
+ */
+function _message_broker_get_implementations() {
+  return module_invoke_all('message_broker_implementation');
+}
+
+/**
+ * Returns all consumers.
+ *
+ * @return array
+ *   All registered consumers.
+ */
+function _message_broker_get_consumers() {
+  return module_invoke_all('message_broker_consumers',
+          variable_get('message_broker_self', ''));
+}
+
+/**
+ * Returns the implementation of the message broker interface.
+ *
+ * @return MessageBrokerInterface
+ *   The message broker implementation.
+ * @throws MessageBrokerException
+ *   If no implementation is configured
+ */
+function message_broker_get() {
+  static $cached_implementation = NULL;
+
+  if ($cached_implementation == NULL) {
+    $implementations = _message_broker_get_implementations();
+    $implementation_key = variable_get('message_broker_implementation', '');
+
+    if (empty($implementation_key) || empty($implementations[$implementation_key])) {
+      throw new MessageBrokerException('No message broker implementation set!');
+    }
+
+    $implementation = $implementations[$implementation_key];
+    $cached_implementation = call_user_func($implementation['factoryMethod'],
+            _message_broker_get_consumers(),
+            variable_get('message_broker_self', ''));
+
+    if (!$cached_implementation instanceof MessageBrokerInterface) {
+      throw new MessageBrokerException('Creating the message broker implementation failed!');
+    }
+  }
+
+  return $cached_implementation;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function message_broker_menu() {
+  $items = array();
+
+  $items['admin/config/system/message_broker'] = array(
+    'title' => 'Message Broker Implementation',
+    'description' => 'Configure the message broker implementation',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('message_broker_settings'),
+    'type' => MENU_NORMAL_ITEM,
+    'access arguments' => array('administer site configuration'),
+  );
+
+  return $items;
+}
+
+/**
+ * Settings form for the message broker.
+ *
+ * @param array $form
+ *   Form.
+ * @param array $form_state
+ *   Form state.
+ *
+ * @return array
+ *   Settings form.
+ */
+function message_broker_settings($form, &$form_state) {
+  $implementations = _message_broker_get_implementations();
+  $options = array();
+
+  foreach ($implementations as $key => $settings) {
+    $options[$key] = $settings['title'];
+
+    if (!empty($settings['description'])) {
+      $options[$key] .= ' <i> - ' . $settings['description'] . '</i>';
+    }
+  }
+
+  $form['intro'] = array(
+    '#markup' => '<p>' . t('Choose the implementation you
+      want to use for sending and receiving messages.<br />Visit the configuration
+      page for the chosen implementation to see more options.') . '</p>');
+
+  $form['message_broker_implementation'] = array(
+    '#type' => 'radios',
+    '#options' => $options,
+    '#title' => t('Message broker implementation'),
+    '#default_value' => variable_get('message_broker_implementation', ''),
+  );
+
+  $form['message_broker_self'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Instance name'),
+    '#description' => t('This value gets passed to the consumers hook,
+      enabling modules to consume queues that contain this name.'),
+    '#default_value' => variable_get('message_broker_self', ''),
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+ * Gets the instance name of this drupal instance.
+ *
+ * @return string
+ *   Name of this instance.
+ */
+function message_broker_get_instance_name() {
+  return variable_get('message_broker_self', '');
+}
+
+/**
+ * Creates a CriticalErrorException for usage within your consumer.
+ *
+ * This method creates the desired instance reliable even if the database
+ * connection was lost.
+ *
+ * @param string $message
+ *   Exception message.
+ * @param string $code
+ *   Exception code.
+ * @param mixed $previous
+ *   Previous exception.
+ *
+ * @return \CriticalErrorException
+ *   Creates exception instance.
+ */
+function message_broker_throw_critical_error($message = NULL, $code = NULL, $previous = NULL) {
+  // We include the file manually to prevent drupal autoloading, which
+  // relies on DB calls.
+  require_once 'message_broker_exception.inc';
+
+  return new CriticalErrorException($message, $code, $previous);
+}

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the NYS CMS feature.
+ */
+
+include_once 'nys_cms.features.inc';

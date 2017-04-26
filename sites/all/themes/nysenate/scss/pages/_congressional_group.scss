@@ -1,0 +1,51 @@
+
+.node-type-misc-cong-group {
+	.field-name-field-group-types {
+		color: $orange01;
+		text-transform: uppercase;
+		font-family: 'Proxima Nova SemiBold';
+		font-size: 14px;
+	}
+	.field-name-field-group-status,
+	.field-name-field-meeting-frequency {
+		text-transform: uppercase;
+		font-family: 'Proxima Nova Regular';
+		color: $grey04;
+		font-size: 14px;
+		line-height: 1.3em;
+		margin-bottom: 2px;
+	}
+	.c-cong-member-role,
+	.c-cong-member-url {
+		color: #AAAAAA;
+		text-transform: uppercase;
+		font-family: "Proxima Nova Regular";
+		font-size: 10px;
+		line-height: 1.2em;
+	}
+	.c-cong-member-name {
+		margin: 0;
+		color: #444444;
+		text-transform: capitalize;
+		font-family: "Adelle Light";
+		font-size: 16px;
+		line-height: 1.2em;
+	}
+	.c-members-title {
+		border-top: 2px solid $grey05;
+		font-family: "Proxima Nova Regular";
+		font-size: 14px;
+		font-weight: normal;
+		text-transform: uppercase;
+		padding-top: 20px;
+		margin: 40px 0 20px 0;
+	}
+	.c-learn-more-group-link {
+		font-family: "Proxima Nova SemiBold";
+		font-size: 16px;
+	}
+}
+
+@media #{$tablet} {
+	
+}

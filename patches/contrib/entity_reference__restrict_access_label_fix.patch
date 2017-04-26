@@ -1,0 +1,15 @@
+diff --git a/plugins/selection/EntityReference_SelectionHandler_Generic.class.php b/plugins/selection/EntityReference_SelectionHandler_Generic.class.php
+index 444a74c..c808fb7 100644
+--- a/plugins/selection/EntityReference_SelectionHandler_Generic.class.php
++++ b/plugins/selection/EntityReference_SelectionHandler_Generic.class.php
+@@ -304,8 +304,8 @@ class EntityReference_SelectionHandler_Generic implements EntityReference_Select
+    * Implements EntityReferenceHandler::getLabel().
+    */
+   public function getLabel($entity) {
+-    $target_type = $this->field['settings']['target_type'];
+-    return entity_access('view', $target_type, $entity) ? entity_label($target_type, $entity) : t('- Restricted access -');
++    // undoing change -- see https://www.drupal.org/node/2153463
++    return entity_label($this->field['settings']['target_type'], $entity);
+   }
+ 
+   /**

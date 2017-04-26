@@ -1,0 +1,42 @@
+<?php
+/**
+ * @file
+ * Include the only file of the library.
+ *
+ * There are 5-6 funcs there and their names are not prefixed.
+ * But these names are quite rare to cause collisions.
+ */
+
+// Include the helper file.
+module_load_include('inc', 'simplehtmldom', 'helper');
+
+if (!function_exists('str_get_html')) {
+  $simplehtmldom_library_path = _simplhtmldom_get_library_path();
+  if (!empty($simplehtmldom_library_path)) {
+    require_once $simplehtmldom_library_path;
+  }
+}
+else {
+  drupal_set_message(t('The simplehtmldom API module found that you define its functions before it does itself! Somewhere in your drupal files there must be a copy of the PHP Simple HTML DOM Parser library that you do not need if you use this module. Please remove the old library or move it to sites/all/libraries/simplehtmldom folder.'), 'error');
+}
+
+
+/**
+ * Implements hook_libraries_info().
+ */
+function simplehtmldom_libraries_info() {
+  $libraries['simplehtmldom'] = array(
+    'name' => 'PHP Simple HTML DOM Parser',
+    'vendor url' => 'http://simplehtmldom.sourceforge.net',
+    'download url' => 'http://sourceforge.net/projects/simplehtmldom/files/',
+    'version arguments' => array(
+      'file' => 'simple_html_dom.php',
+      'pattern' => '/version ([0-9\.]+)/',
+      'lines' => 40,
+    ),
+    'files' => array(
+      'php' => array('simple_html_dom.php'),
+    ),
+  );
+  return $libraries;
+}

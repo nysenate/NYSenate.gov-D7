@@ -1,0 +1,21 @@
+name = Feeds Tamper: String to ID
+description = feeds_tamper_string2id resolves strings pulled in from feeds importers and maps them to Drupal entity IDs, so they can be used as entity references.
+package = Feeds
+core = 7.x
+dependencies[] = feeds
+
+; This is now a soft requirement.
+;dependencies[] = feeds_tamper
+
+; The -dev version was incompatible, 
+; it returned autocomplete results in a different form.
+; This is tricky, removing the requirement for now http://drupal.org/node/1957412#comment-7248574
+; dependencies[] = entityreference (>7.x-1.0)
+
+
+; Information added by drupal.org packaging script on 2013-05-15
+version = "7.x-1.0"
+core = "7.x"
+project = "feeds_tamper_string2id"
+datestamp = "1368618913"
+

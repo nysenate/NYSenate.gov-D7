@@ -1,0 +1,143 @@
+/* @file
+ * This file is a custom file that loads all files. Each non-base layer
+ * can be disabled.
+ *
+ * Do not name this file "STARTER.scss". This file should be named
+ * THEMENAME.scss. If you used the drush command to generate this subtheme,
+ * it should be named for you.
+ *
+ * This application file (THEMENAME.scss) is where all the partials are
+ * imported.
+ *
+ * Theme styles are categorized using SMACSS standards. They utilize
+ * categorization of styles into various categories. Those categories are the
+ * following:
+ *
+ * - Base: CSS reset/normalize plus HTML element styling.
+ * - Layout: Macro arrangement of a web page, including any grid systems.
+ * - Modules: Dictate minor layout modules or reusable elements.
+ * - States: Describe the appearance of a module in various states.
+ * - Theme: Specific customizations for your subtheme.
+ * For more information about this new Drupal css file standard, please review
+ * the following:
+ * - https://drupal.org/node/1887922
+ * - http://smacss.com/
+ */
+
+// Make sure the charset is set appropriately
+@charset "UTF-8";
+
+// Import our mixins early so they can be used by other partials.
+// Optional.
+//@import "base/mixins";
+
+// base variables for senator pages
+@import "base/variables";
+@import "base/mixins";
+@import "base/senators_pallettes";
+@import "base/fonts";
+@import "base/elements";
+@import "globals/pagination";
+//@import "vendor/selectric";
+
+// MAIN LAYOUT - controls global styles
+// and widths 
+@import "globals/main";
+
+// Common file is where you place common utility classes to extend or
+// parametrics.
+// Optional.
+@import "base/common";
+@import "base/buttons";
+
+
+// Layout
+// site wide elements - large things
+@import "globals/header";
+@import "globals/aside";
+@import "globals/footer";
+@import "globals/topbar";
+@import "globals/actionbar";
+@import "globals/nav";
+
+
+// Modules
+@import "modules/hero";
+@import "modules/chapters";
+@import "modules/legislation";
+@import "modules/legislation_explorer";
+@import "modules/initiatives";
+@import "modules/downloads";
+@import "modules/block.scss";
+@import "modules/press_releases";
+@import "modules/committee_updates";
+@import "modules/how_the_senate_works";
+@import "modules/senator_list";
+@import "modules/committee_list";
+@import "modules/news_cluster";
+@import "modules/featured_story_video";
+@import "modules/featured_video";
+@import "modules/events_cluster";
+@import "modules/map_block";
+@import "modules/calendar_download_block";
+@import "modules/committee_status_bar";
+@import "modules/listing_block";
+@import "modules/fullwidth_video";
+@import "modules/event_block";
+@import "modules/committee_referred";
+@import "modules/twitter_user";
+@import "modules/issues";
+@import "modules/views";
+@import "modules/stats_container";
+@import "modules/want_to";
+@import "modules/login_registration";
+@import "modules/accordion_lists";
+@import "modules/footer_promo_blocks";
+@import "modules/bill_vote_widget";
+@import "modules/wtis";
+@import "modules/district";
+
+
+// Page specific styles
+@import "pages/legislation";
+@import "pages/homepage";
+@import "pages/articles";
+@import "pages/initiatives";
+@import "pages/petitions";
+@import "pages/committee_detail";
+@import "pages/congressional_group";
+@import "pages/district";
+@import "pages/calendars";
+@import "pages/new_calendar";
+@import "vendor/datepicker/glDatePicker.scss";
+@import "pages/dashboard";
+@import "pages/detail_pages";
+@import "pages/about_senate";
+@import "pages/issue_detail";
+@import "pages/explore_issues";
+@import "pages/student_programs.scss";
+@import "pages/student_submissions.scss";
+@import "pages/search_results.scss";
+@import "pages/session_detail.scss";
+@import "pages/meeting_detail.scss";
+@import "pages/public_hearing_detail.scss";
+@import "pages/questionnaire_detail.scss";
+@import "pages/open_data.scss";
+@import "pages/senator-contact.scss";
+@import "pages/transcript_detail.scss";
+@import "pages/resolution_detail.scss";
+@import "pages/user_edit.scss";
+@import "pages/event_detail";
+// @import "pages/node_type_page_content";
+@import "pages/contact";
+@import "pages/news_and_issues";
+
+// Fix for some Drupal CSS quirks (Drupalisms).
+@import "base/drupal";
+
+// Styling for elements.
+// Optional.
+// @import "base/elements";
+
+@import "base/browser-hacks.scss";
+

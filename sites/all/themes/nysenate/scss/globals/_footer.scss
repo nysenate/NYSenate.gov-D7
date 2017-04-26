@@ -1,0 +1,552 @@
+// Non-modular or client styles for .l-footer region.
+
+.l-row--footer {
+	max-width: 1040px;
+}
+
+// #footer-first {
+// 	max-width: 440px;
+// 	padding: 0 20px;
+// 	margin: 0 auto;
+// }
+
+// @media #{$tablet} {
+// 	#footer-first {
+// 		max-width: 840px;
+// 		padding: 0 40px;
+// 	}
+// }
+/*------------------------------
+/ SENATOR PAGE FOOTER
+/-------------------------------*/
+.c-senator-footer {
+	padding: 0px 20px 30px 20px;
+	background: $grey06;
+
+	.l-row {
+		max-width: 440px;
+	}
+
+	a {
+		font-size: 11px;
+		letter-spacing: 0.1em;
+		font-family: "Proxima Nova SemiBold";
+		text-transform: uppercase;
+	}
+
+	.c-nav---list {
+		padding: 0;
+
+		li {
+			width: auto;
+		}
+	}
+}
+
+.c-senator-footer-col {
+	width: 25%;
+	float: left;
+}
+.c-senator-footer-col__home {
+	width: 100%;
+	padding-bottom: 10px;
+	border-bottom: 2px solid #e1e1e3;
+	margin-bottom: 20px;
+
+	a {
+		float: left;
+		width: 100%;
+		margin-top: 25px;
+		color: $grey02;
+		span {
+			color: $grey02;
+			padding-left: 20px;
+			&:before {
+				display: none;
+			}
+		}
+	}
+	img.c-seal-footer {
+		width: 42px;
+		height: 42px;
+		float: left;
+		margin-top: -15px;
+		background: none;
+	}
+}
+.c-senator-footer-col__nav {
+	width: 70%;
+	border-right: 2px solid #e1e1e3;
+	min-height: 150px;
+
+	ul {
+		margin: 0;
+		padding-left: 0;
+		list-style: none;
+	}
+	li {
+		font-size: 11px;
+		line-height: 1em;
+		margin-bottom: 25px;
+		
+		&:last-child { margin-bottom: 0; }
+
+		a {
+			color: $grey02;
+		}
+
+	}
+
+
+	.c-nav--list {
+		height: auto;
+		display: block;
+		width: auto;
+		padding: 0;
+
+		li {
+			border: none;
+			width: 100%;
+			margin-bottom: 25px;
+
+			&:last-child { margin-bottom : 0; }
+
+			a {
+				padding: 0;
+				text-align: left;
+				@extend .med-text;
+
+			}
+		}
+	}
+}
+.senator-inactive {
+	.c-senator-footer-col__nav {
+		.c-nav--list {
+			li {
+				display: inline-block;
+				width: auto;
+				padding-right: 0;
+				&:nth-child(1),
+				&:nth-child(2),
+				&:nth-child(3) {
+					display: none;
+				}
+				a {
+					display: none;
+					&.visible {
+						display: block;
+					}
+				}
+			}
+		}
+	}
+}
+.c-senator-footer-col__social {
+	width: 30%;
+	padding-left: 30px;
+
+	ul {
+		margin: 0;
+		padding: 0;
+	}
+	li {
+		display: block;
+		float: left;
+		clear: left;
+		margin-top: 10px;
+		height: 25px;
+		&:first-child {
+			margin-top: 0;
+		}
+		a {
+			font-size: 26px;
+			display: block;
+			width: 40px;
+			&.icon-replace__twitter {
+				&:after {
+					margin-left: 5px;
+				}
+			}
+		}
+	}
+}
+.c-senator-footer-col__newsletter {
+	width: 100%;
+	margin-top: 25px;
+
+	.c-btn__newsletter,
+	.c-btn__contact {
+		height: 50px;
+		margin: 0 0 10px 0;
+		padding: 0;
+		text-transform: uppercase;
+		font-size: 14px;
+		line-height: 14px;
+		letter-spacing: 0.1em;
+		font-family: "Proxima Nova SemiBold";
+		width: 100%;
+		display: block;
+		color: #fff;
+		text-decoration: none;
+		text-align: center;
+
+		@extend .lgt-bg;
+
+		span {
+			@extend .icon-before__mail;
+
+			&:before {
+				margin-right: 5px;
+				font-size: 34px;
+				line-height: 14px;
+			}
+		}
+	}
+}
+.c-senator-footer-caption {
+	color: #666;
+	font-size: 11px;
+	line-height: 1em;
+	font-family: 'Proxima Nova Regular';
+	display: none;
+	span.full-name {
+		display: none;
+	}
+}
+
+// inactive footer
+.inactive-pallette {
+	.c-senator-footer--legislation,
+	.c-senator-footer--calendar,
+	.c-senator-footer--contact,
+	.c-senator-footer-col__social,
+	.c-senator-footer-col__newsletter, {
+		display: none;
+	}
+	.c-senator-footer-col__nav {
+		border: none;
+	}
+}
+
+@media #{$tablet} {
+	.c-senator-footer {
+		clear: both;
+		padding: 0;
+
+		.l-row {
+			max-width: 840px;
+			padding: 35px 40px 30px;
+		}
+
+		a {
+			font-size: 12px;
+		}
+	}
+	.c-senator-footer-col {
+		float: left;
+		min-height: 165px;
+	}
+	.c-senator-footer-col__home {
+		width: 29%;
+		border-bottom: none;
+		margin-bottom: 0;
+		padding-bottom: 0;
+
+		a {
+			display: block;
+			float: none;
+			margin-top: 0;
+			text-align: center;
+
+			> span {
+				display: block;
+				padding: 0;
+			}
+		}
+		img.c-seal-footer {
+			display: inline-block;
+			float: none;
+			width: 100px;
+			height: 100px;
+			margin-top: 25px;
+		}
+	}
+
+	.c-senator-footer-col__nav,
+	.c-senator-footer-col__social {
+		padding-left: 35px;
+	}
+	.c-senator-footer-col__nav {
+		width: 37%;
+		padding-right: 35px;
+		border-left: 2px solid #e1e1e3;
+
+		@include box-sizing(border-box);
+	}
+	.c-senator-footer-col__social {
+		width: 33%;
+
+		li {
+			display: inline-block;
+			clear: none;
+			margin-right: 15px;
+			
+			&:first-child {
+				margin-left: -5px;
+				margin-top: 10px;
+			}
+		}
+	}
+	.c-senator-footer-caption {
+		display: block;
+		font-size: 12px;
+
+		span.full-name {
+			display: inline;
+		}
+	}
+
+	.microsite {
+		.c-senator-footer-col {
+			min-height: 230px;
+		}
+		.c-senator-footer-col__nav {
+			width: 38%;
+		}
+		.c-senator-footer-col__social {
+			width: 33%;
+		}
+	}
+}
+
+@media #{$desktop} {
+	.c-senator-footer {
+		clear: both;
+		padding: 0 0 45px;
+
+		.l-row {
+			padding-top: 50px;
+			padding-bottom: 0;
+		}
+	}
+	.c-senator-footer-col {
+		min-height: 180px;
+	}
+
+	.c-senator-footer-col__home {
+		width: 31%;
+		padding-right: 35px;
+
+		img.c-seal-footer {
+			float: none;
+			width: 112px;
+			height: 112px;
+		}
+	}
+	.c-senator-footer-col__nav,
+	.c-senator-footer-col__social {
+		padding-left: 30px;
+	}
+
+	.c-senator-footer-col__social {
+		width: 31%;
+	}
+
+	.microsite {
+		.c-senator-footer-col {
+			min-height: 170px;
+		}
+		.c-senator-footer-col__nav {
+
+			nav {
+				overflow: hidden;
+				width: 100%;
+
+				ul {
+					position: relative;
+					display: block;
+					width: 100%;
+				}
+			}
+			li {
+				display: block;
+				float: left;
+				width: 50%;
+			}
+		}
+		.c-senator-footer-col__social {
+			width: 31%;
+		}
+	}
+}
+
+
+/*------------------------------
+/ SITE FOOTER
+/-------------------------------*/
+.c-site-footer {
+	overflow: hidden;
+	min-height: 75px;
+	background: #eaeaec;
+	padding: 0px 20px 25px;
+
+	.l-row {
+		max-width: 440px;
+		overflow: hidden;
+	}
+
+	a {
+		font-family: 'Proxima Nova Regular';
+		font-size: 11px;
+		text-decoration: none;
+		color: #444444;
+	}
+
+	ul {
+		max-width: 440px;
+		margin: 0 auto;
+		padding: 0;
+		list-style: none;
+
+		li {
+			margin-top: 15px;
+			width: 50%;
+			float: left;
+
+			& + li {
+				margin-top: 15px;
+			}
+		}
+	}
+}
+.c-senator-footer-caption {
+	margin: 0;
+}
+
+@media #{$tablet} {
+	.c-site-footer {
+		height: 75px;
+		padding: 0;
+
+		.l-row {
+			max-width: none;
+		}
+
+		ul {
+			width: 100%;
+			height: 100%;
+			max-width: 100%;
+
+			li {
+				display: inline-block;
+				text-align: center;
+				width: 25%;
+				margin: 15px 0 0 0;
+				line-height: 75px;
+
+				& + li { margin-top: 15px; }
+
+				a {
+					display: block;
+					width: 100%;
+					line-height: 1.2em;
+				}
+			}
+		}
+	}
+
+}
+
+@media #{$desktop} {
+	.c-site-footer {
+		padding: 0 9%;
+		
+		ul {
+			height: 75px;
+			width: 100%;
+			-ms-box-orient: horizontal;
+			display: -webkit-box;
+			display: -moz-box;
+			display: -ms-flexbox;
+			display: -moz-flex;
+			display: -webkit-flex;
+			display: flex;
+
+			-webkit-justify-content: space-between; 
+	  		justify-content: space-between; 
+
+	  		li {
+	  			float: none;
+	  			width: auto;
+	  			margin: 0;
+
+	  			& + li {
+	  				margin-top: 0;
+	  			}
+
+	  			&:before {
+	  				content: "";
+	  				height: 75px;
+	  				width: 0;
+	  				display: inline-block;
+	  				vertical-align: middle;
+	  			}
+
+	  			a {
+	  				display: inline-block;
+	  				vertical-align: middle;	
+	  			}
+	  		}
+	  	}
+
+		.l-row {
+			max-width: 880px;
+		}
+	}
+
+	// ie9 + 10
+	.no-flexboxlegacy {
+
+		.c-site-footer {
+			padding: 0;
+				ul {
+					width: 100%;
+					text-align: center;
+					
+					li {
+						display: inline;
+						margin: 0 1%;
+
+						a {
+							width: auto;
+						}
+					}
+				}
+			}
+		}
+}
+// CUSTOM BREAKPOINTS
+@media screen and (min-width: 1050px) {
+	.c-site-footer {
+		.l-row {
+			max-width: 970px;
+		}
+	}
+}
+
+@media screen and (min-width: 1200px) {
+	.c-site-footer {
+		.l-row {
+			max-width: 1120px;
+		}
+	}
+}
+
+@media screen and (min-width: 1280px) {
+	.c-site-footer {
+		.l-row {
+			max-width: 1200px;
+		}
+	}
+}

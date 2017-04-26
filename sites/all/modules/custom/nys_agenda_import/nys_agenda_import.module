@@ -1,0 +1,302 @@
+<?php
+
+/**
+ * @file
+ * A module to import agendas from OpenLeg.
+ */
+
+/**
+ * Implements hook_help().
+ *
+ * Displays help and module information.
+ *
+ * @param path 
+ *   Which path of the site we're using to display help
+ * @param arg 
+ *   Array that holds the current path as returned from arg() function
+ */
+function nys_agenda_import_help($path, $arg) {
+  if ($path == "admin/help#nys_agenda_import") {
+    return '<p>' . t("A module to import agendas from OpenLeg.") . '</p>';
+  }
+}
+
+/**
+ * Maps the API's response to agenda fields.
+ * @param node
+ *  The node entity we're mapping values to.
+ * @param agenda
+ *  The result returned from the agenda API.
+ * @param committee
+ *  The committee for this agenda.
+ * @param year
+ *  The year for this agenda.
+ * @param week
+ *  The week for this agenda.
+ */
+function nys_agenda_import_set_values(&$node, $agenda, $committee, $year, $week) {
+  if (!empty($agenda->addendumId)) {
+    $node->field_ol_agenda_addendum[LANGUAGE_NONE][0]['value'] = $agenda->addendumId;
+  }
+  $node->field_ol_year[LANGUAGE_NONE][0]['value'] = $year;
+  $node->field_ol_week[LANGUAGE_NONE][0]['value'] = $week;
+  $node->field_ol_meeting_date[LANGUAGE_NONE][0]['value'] = strtotime($agenda->meeting->meetingDateTime);
+  $node->field_ol_agenda_location[LANGUAGE_NONE][0]['value'] = $agenda->meeting->location;
+  $node->field_ol_agenda_notes[LANGUAGE_NONE][0]['value'] = $agenda->meeting->notes;
+
+  // Reference committee, if possible.
+  $vocabulary_id = 11;
+  $committee_tid = db_query("SELECT tid FROM {taxonomy_term_data} WHERE name = :myname AND vid = :myvocabulary", array(":myname" => $committee, ":myvocabulary" => $vocabulary_id))->fetchField();
+  if ($committee_tid !== false) {
+    $node->field_ol_committee[LANGUAGE_NONE][0]['target_id'] = $committee_tid;
+  }
+  $node->field_ol_committee_name[LANGUAGE_NONE][0]['value'] = $committee;
+
+  $node->field_from_openleg[LANGUAGE_NONE][0]['value'] = TRUE;
+}
+
+/**
+ * Maps the API's response to field collections.
+ * @param node
+ *  The node entity we're mapping values to.
+ * @param agenda
+ *  The result returned from the agenda API.
+ */
+function nys_agenda_import_set_field_collection(&$node, $agenda) {
+  if (isset($agenda->bills->items)) {
+    foreach ($agenda->bills->items as $index => $bill) {
+      // Create the new field collection.
+      $field_collection_item = entity_create('field_collection_item', array('field_name' => 'field_ol_agenda_bills'));
+      $field_collection_item->setHostEntity('node', $node);
+
+      // Reference the bill, if possible.
+      $bill_nid = db_query("SELECT node.nid FROM node, field_data_field_ol_session WHERE node.title = :mytitle AND node.nid = field_data_field_ol_session.entity_id AND field_data_field_ol_session.field_ol_session_value = :mysession", array(":mytitle" => $bill->billId->printNo, ":mysession" => $bill->billId->session))->fetchField();
+      if ($bill_nid !== false) {
+        $field_collection_item->field_ol_bill["und"][$index]["target_id"]  = $bill_nid;
+      }
+
+      $field_collection_item->field_ol_bill_name["und"][0]["value"] = json_encode($bill);
+
+      // Store any votes on that bill.
+      $vote_found = false;
+      $vote_index = 0;
+
+      if (isset($agenda->voteInfo->votesList->items)) {
+        foreach ($agenda->voteInfo->votesList->items as $vote_index => $vote) {
+          if ($vote->bill->printNo == $bill->billId->printNo) {
+            $vote_found = true;
+            break;
+          }
+        }
+      }
+
+      if ($vote_found) {
+        $current_vote = $agenda->voteInfo->votesList->items[$vote_index];
+
+        $field_collection_item->field_ol_aye_count["und"][0]["value"]       = isset($current_vote->vote->memberVotes->items->AYE->size) ? $current_vote->vote->memberVotes->items->AYE->size : 0;
+        $field_collection_item->field_ol_nay_count["und"][0]["value"]       = isset($current_vote->vote->memberVotes->items->NAY->size) ? $current_vote->vote->memberVotes->items->NAY->size : 0;
+        $field_collection_item->field_ol_aye_wr_count["und"][0]["value"]    = isset($current_vote->vote->memberVotes->items->AYEWR->size) ? $current_vote->vote->memberVotes->items->AYEWR->size : 0;
+        $field_collection_item->field_ol_excused_count["und"][0]["value"]   = isset($current_vote->vote->memberVotes->items->EXC->size) ? $current_vote->vote->memberVotes->items->EXC->size : 0;
+        $field_collection_item->field_ol_abstained_count["und"][0]["value"] = isset($current_vote->vote->memberVotes->items->ABS->size) ? $current_vote->vote->memberVotes->items->ABS->size : 0;
+
+        // Store the action.
+        if ($current_vote->action == "REFERRED_TO_COMMITTEE" && isset($current_vote->referCommittee->name)) {
+          $field_collection_item->field_ol_bill_message["und"][$index]["value"] = $current_vote->referCommittee->name;
+        }
+      }
+
+      // Save the field collection.
+      $field_collection_item->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_cron.
+ */
+function nys_agenda_import_cron() {
+
+  $interval  = variable_get("agenda_import_interval", 60 * 5);
+  $timestamp = variable_get("agenda_import_last_update", "2000-01-01T00:00:00");
+
+  // Check the lock.
+  $is_locked      = variable_get("agenda_import_is_locked", FALSE);
+  $last_lock_time = variable_get("agenda_import_last_lock_time", strtotime("now"));
+
+  // If another process isn't running or that process has been locked > 5 minutes.
+  if (!$is_locked || (strtotime("now") - $last_lock_time) > 300) {
+    // Update the lock.
+    variable_set("agenda_import_is_locked", TRUE);
+    variable_set("agenda_import_last_lock_time", strtotime("now"));
+
+    nys_agenda_import_run($timestamp);
+    variable_set('agenda_import_next_execution', time() + $interval);
+  }
+}
+
+/**
+ * First, fetch results from the updates API.
+ * Iterate and paginate those results and, per agenda, make a request to the agenda API.
+ * Finally, map values and save each agenda as a node.
+ */
+function nys_agenda_import_run($timestamp) {
+  $ol_base_url     = variable_get("openleg_base_url");
+  $base_agenda_url = $ol_base_url . "/api/3/agendas/";
+  $agenda_updates_base_url = $base_agenda_url . "/updates/";
+  $limit           = 1000;  // 1000 maximum.
+  $offset          = variable_get("agenda_import_offset", 1);
+  $offset=1;
+  $start_record    = $offset;
+  $throttle        = 100000; // Only pull in $throttle per run agendas.
+  $count           = 0;
+  $more_results    = true;
+  $bad_result      = false;
+  $openleg_key     = variable_get("openleg_key");
+  $last_processed_datetime = variable_get("agenda_import_last_update");
+
+  // We don't need to retrieve more than the $throttle.
+  if ($throttle < $limit) {
+    $limit = $throttle;
+  }
+
+  while ($more_results) {
+    echo "Fetching: " . $agenda_updates_base_url . $timestamp . "?offset=" . $offset . "&limit=" . $limit . "&order=asc&key=" . $openleg_key . "\r\n";
+    $base_result   = file_get_contents($agenda_updates_base_url . $timestamp . "?offset=" . $offset . "&limit=" . $limit . "&order=asc&key=" . $openleg_key);
+    $base_result   = json_decode($base_result);
+
+    if (isset($base_result->success) && $base_result->success) {
+      foreach ($base_result->result->items as $item) {
+        // Update the lock.
+        variable_set("agenda_import_last_lock_time", strtotime("now"));
+
+        $last_processed_datetime = $item->processedDateTime;
+        $agenda_year = $item->id->year;
+        $agenda_week = $item->id->number;
+        $agenda_url  = $base_agenda_url . $agenda_year . "/" . $agenda_week . "?key=" . $openleg_key;
+
+        echo "Fetching: " . $agenda_url . "\r\n";
+        $agenda_result = file_get_contents($agenda_url);
+        $agenda_result = json_decode($agenda_result);
+
+        if (isset($agenda_result->success) && $agenda_result->success) {
+          // Iterate through each committee.
+          foreach ($agenda_result->result->committeeAgendas->items as $agendas_by_committee) {
+            $committee_name = $agendas_by_committee->committeeId->name;
+            $has_default_addendum = false;
+
+            // Iterate through each of that committee's meetings.
+            foreach ($agendas_by_committee->addenda->items as $agenda) {
+              $count++;
+              $addendum_id = $agenda->addendumId;
+
+              // Create or update existing agenda record.
+              $agenda_query = db_select('node');
+              $agenda_query->join('field_data_field_ol_meeting_date', 'date', 'date.entity_id = node.nid');
+              $agenda_query->join('field_data_field_ol_committee_name', 'comm_name', 'comm_name.entity_id = node.nid');
+              $agenda_query->leftJoin('field_data_field_ol_agenda_addendum', 'addendum', 'addendum.entity_id = node.nid');
+              $agenda_query = $agenda_query->fields('node', array('nid'))
+                  ->condition('date.field_ol_meeting_date_value', strtotime($agenda->meeting->meetingDateTime))
+                  ->condition('comm_name.field_ol_committee_name_value', $committee_name);
+              
+              // Addendum query parameters
+              if (empty($addendum_id)) {
+                // Look for no addendum id if this is default addendum
+                $agenda_query->isNull('addendum.entity_id');
+                $has_default_addendum = true;
+              } else if ($has_default_addendum === false) {
+                // If there is no default addendum, query for any existing meetings with a default addendum
+                //   (written 4/8/2016) This will only be applicable for the next import, where we are first adding the addendum field
+                //   As of now, all meetings are considered base addendum even though some meetings do not have a base addendum
+                //   This will cause those meetings to be assigned the proper addendum id
+                $db_or = db_or();
+                $db_or->isNull('addendum.entity_id');
+                $db_or->condition('addendum.field_ol_agenda_addendum_value', $addendum_id);
+                $agenda_query->condition($db_or);
+              } else {
+                $agenda_query->condition('addendum.field_ol_agenda_addendum_value', $addendum_id);
+              }
+              $agenda_nid = $agenda_query->execute()->fetchField();
+
+              if ($agenda_nid === false) {
+                // Create a new agenda.
+                $node        = new stdClass;
+                $node->title = $agenda_year . " Week " . $agenda_week . " " . $committee_name . " (" . $agenda->meeting->meetingDateTime . ")";
+                $node->type  = "agenda";
+              } else {
+                // Update the existing agenda.
+                $node = node_load($agenda_nid);
+
+                // Remove existing collections, those will be recreated.
+                if (isset($node->field_ol_agenda_bills["und"]) && is_array($node->field_ol_agenda_bills["und"])) {
+                  $fields = array();
+                  foreach ($node->field_ol_agenda_bills["und"] as $index => $value) {
+                    $fields[] = $value["value"];
+                    unset($node->field_ol_agenda_bills["und"][$index]);
+                  }
+                  entity_delete_multiple('field_collection_item', $fields);
+                }
+              }
+
+              // Map the agenda's fields.
+              nys_agenda_import_set_values($node, $agenda, $committee_name, $agenda_year, $agenda_week);
+
+              // echo "<pre>"; var_dump($node); die;
+
+              if ($agenda_nid === false) {
+                // Create a new agenda.
+                node_object_prepare($node);
+                $node->uid = "1";
+              }
+
+              node_save($node);
+
+              // Map the agenda's field collections.
+              nys_agenda_import_set_field_collection($node, $agenda);
+            }
+          }
+        } else {
+          $bad_result = true;
+          break;
+        }
+
+        if ($count >= $throttle) {
+          // Hit the $throttle limit, break.
+          break;
+        }
+
+        // Take a break between each request.
+        usleep(100000);
+      }
+
+      if ($bad_result) {
+        // Bad base result. Stop the update prematurely.
+        $more_results = false;
+        $offset       = $start_record + $count;
+        variable_set("agenda_import_offset", $offset);
+      } else if ($count >= $throttle) {
+        // Hit the $throttle limit, don't continue, for now.
+        $more_results = false;
+        $offset       = $start_record + $throttle;
+        variable_set("agenda_import_offset", $offset);
+      } else if ($base_result->offsetEnd < $base_result->total) {
+        // Hit the end of this page and there are more pages to go.
+        $offset = $base_result->offsetEnd + 1;
+        variable_set("agenda_import_offset", $offset);
+      } else {
+        // Hit the end of this page and there are no more pages to go.
+        $more_results = false;
+        variable_set("agenda_import_last_update", $last_processed_datetime);
+        variable_set("agenda_import_last_run", date("Y-m-d\TH:i:s", strtotime("now")));
+        variable_set("agenda_import_offset", 1);
+      }
+    } else {
+      // Bad base result. Stop the update prematurely.
+      $more_results = false;
+      $offset       = $start_record + $count;
+      variable_set("agenda_import_offset", $offset);
+    }
+  }
+
+  // Update the lock.
+  variable_set("agenda_import_is_locked", false);
+}

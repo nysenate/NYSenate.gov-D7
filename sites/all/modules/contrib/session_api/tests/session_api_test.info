@@ -1,0 +1,15 @@
+name = "Session API test"
+description = "Helper module for Session API testing."
+package = Testing
+version = VERSION
+dependencies[] = session_api
+core = 7.x
+files[] = session_api_test.module
+hidden = TRUE
+
+; Information added by Drupal.org packaging script on 2015-09-21
+version = "7.x-1.0-rc1+13-dev"
+core = "7.x"
+project = "session_api"
+datestamp = "1442846643"
+

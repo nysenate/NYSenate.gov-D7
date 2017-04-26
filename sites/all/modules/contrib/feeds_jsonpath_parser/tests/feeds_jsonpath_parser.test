@@ -1,0 +1,131 @@
+<?php
+// $Id: feeds_jsonpath_parser.test,v 1.1.2.1 2011/02/05 18:12:18 twistor Exp $
+
+/**
+ * @file
+ * Tests for FeedsJSONPathParser.inc.
+ */
+
+/**
+ * Test single feeds.
+ */
+class FeedsJSONPathParserTestCase extends FeedsWebTestCase {
+
+  /**
+   * Describe this test.
+   */
+  public function getInfo() {
+    return array(
+      'name' => t('JSONPath Parser'),
+      'description' => t('Regression tests for Feeds JSONPath parser.'),
+      'group' => t('Feeds'),
+    );
+  }
+
+  /**
+   * Set up test.
+   */
+  public function setUp() {
+    parent::setUp(array('feeds', 'feeds_ui', 'ctools', 'job_scheduler', 'feeds_jsonpath_parser'));
+  }
+
+  /**
+   * Run tests.
+   */
+  public function test() {
+    $this->createImporterConfiguration('JSONPath', 'jsonpath');
+
+    $this->setPlugin('jsonpath', 'FeedsJSONPathParser');
+    $this->addMappings('jsonpath',
+      array(
+        array(
+          'source' => 'jsonpath_parser:0',
+          'target' => 'title',
+          'unique' => FALSE,
+        ),
+        array(
+          'source' => 'jsonpath_parser:1',
+          'target' => 'url',
+          'unique' => TRUE,
+        ),
+      )
+    );
+    // Set importer default settings.
+    $edit = array(
+      'jsonpath[context]' => '$.store.book[*]',
+      'jsonpath[sources][jsonpath_parser:0]' => 'author',
+      'jsonpath[sources][jsonpath_parser:1]' => 'price',
+    );
+    $this->drupalPost('admin/structure/feeds/edit/jsonpath/settings/FeedsJSONPathParser', $edit, 'Save');
+    $this->assertText('Your changes have been saved.');
+    $this->assertRaw('$.store.book[*]');
+    $this->assertRaw('author');
+    $this->assertRaw('price');
+
+    // Test import.
+    $path = $GLOBALS['base_url'] .'/'. drupal_get_path('module', 'feeds_jsonpath_parser') .'/tests/feeds_jsonpath_parser/';
+    $nid = $this->createFeedNode('jsonpath', $path . 'test.json', 'Testing JSONPath Parser');
+    $this->assertText('Created 4 nodes');
+
+    // Import again, this verifies url field was mapped correctly.
+    $this->drupalPost('node/'. $nid .'/import', array(), 'Import');
+    $this->assertText('There are no new nodes');
+
+    // Assert accuracy of aggregated content. I find humor in using our own
+    // issue queue to run tests against.
+    $this->drupalGet('node');
+    $this->assertText('Nigel Rees');
+    $this->assertText('Evelyn Waugh');
+    $this->assertText('Herman Melville');
+    $this->assertText('J. R. R. Tolkien');
+
+    // Test that overriding default settings works.
+    $edit = array(
+      'feeds[FeedsJSONPathParser][jsonpath][context]' => '/foo',
+      'feeds[FeedsJSONPathParser][jsonpath][sources][jsonpath_parser:0]' => 'bar',
+      'feeds[FeedsJSONPathParser][jsonpath][sources][jsonpath_parser:1]' => 'baz',
+    );
+    $this->drupalPost('node/'. $nid .'/edit', $edit, 'Save');
+    $this->drupalGet('node/'. $nid .'/edit');
+    // Why not use XPath to test JSONPath?
+    $this->assertFieldByXPath('//input[@id="edit-feeds-feedsjsonpathparser-jsonpath-context"][1]/@value', '/foo');
+    $this->assertFieldByXPath('//input[@id="edit-feeds-feedsjsonpathparser-jsonpath-sources-jsonpath-parser0"][1]/@value', 'bar');
+    $this->assertFieldByXPath('//input[@id="edit-feeds-feedsjsonpathparser-jsonpath-sources-jsonpath-parser1"][1]/@value', 'baz');
+
+    // Assert the we don't create an empty node when XPath values don't return anything.
+    // That happened at one point.
+    $this->drupalPost('node/'. $nid .'/import', array(), 'Import');
+    $this->assertText('There are no new nodes');
+
+    // Put the values back so we can test inheritance if the form was changed
+    // and then changed back.
+    $edit = array(
+      'feeds[FeedsJSONPathParser][jsonpath][context]' => '$.store.book[*]',
+      'feeds[FeedsJSONPathParser][jsonpath][sources][jsonpath_parser:0]' => 'author',
+      'feeds[FeedsJSONPathParser][jsonpath][sources][jsonpath_parser:1]' => 'price',
+    );
+    $this->drupalPost('node/'. $nid .'/edit', $edit, 'Save');
+    $this->drupalGet('node/'. $nid .'/edit');
+    $this->assertFieldByXPath('//input[@id="edit-feeds-feedsjsonpathparser-jsonpath-context"][1]/@value', '$.store.book[*]');
+    $this->assertFieldByXPath('//input[@id="edit-feeds-feedsjsonpathparser-jsonpath-sources-jsonpath-parser0"][1]/@value', 'author');
+    $this->assertFieldByXPath('//input[@id="edit-feeds-feedsjsonpathparser-jsonpath-sources-jsonpath-parser1"][1]/@value', 'price');
+
+    // Change importer defaults.
+    $edit = array(
+      'jsonpath[context]' => '//tr',
+      'jsonpath[sources][jsonpath_parser:0]' => 'booya',
+      'jsonpath[sources][jsonpath_parser:1]' => 'boyz',
+    );
+    $this->drupalPost('admin/structure/feeds/edit/jsonpath/settings/FeedsJSONPathParser', $edit, 'Save');
+    $this->assertText('Your changes have been saved.');
+    $this->assertRaw('//tr');
+    $this->assertRaw('booya');
+    $this->assertRaw('boyz');
+
+    // Make sure the changes propigated.
+    $this->drupalGet('node/'. $nid .'/edit');
+    $this->assertFieldByXPath('//input[@id="edit-feeds-feedsjsonpathparser-jsonpath-context"][1]/@value', '//tr');
+    $this->assertFieldByXPath('//input[@id="edit-feeds-feedsjsonpathparser-jsonpath-sources-jsonpath-parser0"][1]/@value', 'booya');
+    $this->assertFieldByXPath('//input[@id="edit-feeds-feedsjsonpathparser-jsonpath-sources-jsonpath-parser1"][1]/@value', 'boyz');
+  }
+}

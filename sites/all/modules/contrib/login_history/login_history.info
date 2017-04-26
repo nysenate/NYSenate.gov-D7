@@ -1,0 +1,12 @@
+name = Login History
+description = A history of the site's user logins.
+core = 7.x
+files[] = tests/login_history.test
+configure = admin/reports/login-history
+
+; Information added by Drupal.org packaging script on 2016-11-11
+version = "7.x-1.0"
+core = "7.x"
+project = "login_history"
+datestamp = "1478903376"
+

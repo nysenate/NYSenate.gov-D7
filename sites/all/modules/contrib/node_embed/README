@@ -1,0 +1,47 @@
+
+======================================================
+INSTALLATION
+======================================================
+1. Unpack the node_embed folder and contents in the appropriate modules directory 
+   of your Drupal installation.  Normally sites/all/modules/
+   
+2. Enable the node_embed module on the Modules admin page (admin/modules)
+
+3. Next, configure your sites' text formats (admin/config/content/formats) to use the 
+   'Insert node' filter. 
+
+======================================================
+CKEditor INTEGRATION
+======================================================
+Under the node_embed directory, there is the 'ckeditor/NodeEmbed' directory, 
+that will provide a tool bar plugin for ckeditor.
+
+To configure the plugin:
+1. Copy the NodeEmbed directory to sites/all/modules/ckeditor/plugins directory.
+ 
+2. Add lines below to ckeditor.config.js to enable NodeEmbed as a plugin: 
+  config.extraPlugins += (config.extraPlugins ? ',NodeEmbed' : 'NodeEmbed' );
+  CKEDITOR.plugins.addExternal('NodeEmbed', Drupal.settings.ckeditor.module_path+'/plugins/NodeEmbed/');
+
+3. Then add the NodeEmbed plugin to a ToolbarSet for your tool set, e.g.
+   ['Link','Unlink','NodeEmbed','Anchor','LinkToNode', 'LinkToMenu'], 
+   For more information, see http://docs.cksource.com/CKEditor_3.x/Developers_Guide/Toolbar
+
+4. Select the correct Drupal toolbar from the CKEditor settings page.
+
+5. Enable the default view 'ckeditor-node-embed' (if its not already enabled).  This view provides the content of the 
+   plugin dialog box.
+
+======================================================
+Wysiwyg INTEGRATION
+======================================================
+Node Embed implements the Wysiwyg API and can be easily integrated with Wysiwyg editors through
+that interface.
+
+To configure the plugin:
+1. Install the Node Embed Module
+2. Go to the Wysiwyg configuration page - Site Configuration -> Wysiwyg and add the node embed button to the 
+   proper profiles.
+3. Enable the default view 'ckeditor-node-embed' (if its not already enabled).  This view provides the content of the 
+   plugin dialog box.
+4. That's it - you should now see the Embed node button in the editor.

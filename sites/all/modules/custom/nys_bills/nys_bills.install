@@ -1,0 +1,159 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the NYS Bills module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function nys_bills_schema() {
+  $schema['nys_bills_anon'] = array(
+    'description' => 'Bills Metadata for anonymous submissions.',
+    'fields' => array(
+      'sid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique signature ID.',
+      ),
+      'bid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Bills Node ID.',
+      ),
+      'vote_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Voting API ID.',
+        'default' => 0,
+      ),
+      'fid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Bills Flag ID.',
+      ),
+      'session_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Session Identifier ID.',
+      ),
+      'email' => array(
+        'type' => 'varchar',
+        'length' => 254,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Email address.',
+      ),
+      'first_name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'First name.',
+      ),
+      'last_name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Last name.',
+      ),
+      'addr_street' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => 'Street Address.',
+      ),
+      'addr_opt' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => 'Optional Address.',
+      ),
+      'addr_city' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'City Address.',
+      ),
+      'addr_state' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'State Address.',
+      ),
+      'addr_zip' => array(
+        'type' => 'varchar',
+        'length' => 31,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Zip Address.',
+      ),
+      'senator' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'description' => 'Senator NID.',
+      ),
+      'district_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'description' => 'District Taxonomy term ID.',
+      ),
+      'district_number' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'District number.',
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'unsigned' => FALSE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "Timestamp of the vote.",
+      ),
+      'message' => array(
+        'type' => 'int',
+        'unsigned' => FALSE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "Message sent or not sent.",
+      ),
+    ),
+    'primary key' => array('sid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function nys_bills_uninstall() {
+  drupal_set_message('Successfully uninstalled NYS Bills.');
+}
+
+/**
+ * Add the 'vote_id' column to nys_bills_anon table.
+ */
+function nys_bills_update_7100() {
+  $schema['vote_id'] = array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'unsigned' => TRUE,
+    'description' => 'Voting API ID.',
+    'default' => 0,
+  );
+
+  // Add new column 'vote_id' to the 'nys_bill_anon' table.
+  db_add_field('nys_bills_anon', 'vote_id', $schema['vote_id']);
+}

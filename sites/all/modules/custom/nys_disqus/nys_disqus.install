@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * nys_disqus module install/schema/update hooks.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function nys_disqus_install() {
+  // Get the weight of the module we want to compare against.
+  $weight = (int)(db_select('system', 's')
+    ->fields('s', array('weight'))
+    ->condition('name', 'disqus', '=')
+    ->execute()
+    ->fetchField());
+
+  // Set our module to a weight 1 heavier, so ours moves lower in execution order.
+  db_update('system')
+    ->fields(array('weight' => $weight + 1))
+    ->condition('name', 'nys_disqus', '=')
+    ->execute();
+}
+
+/**
+ * Implements hook_requirements($phase).
+ */
+function nys_disqus_requirements($phase) {
+  if ($phase == 'install') {
+    if (module_exists('nys_disqus_identifier_bypass') == TRUE) {
+			$requirements['nys_disqus'] = array(
+				'title' 		=> 'The nys_disqus module is enabled.',
+				'description'	=> 'The nys_disqus and nys_disqus_identifier_bypass modules can not be enabled at the same time.',
+				'severity'		=> REQUIREMENT_ERROR
+			);
+			return $requirements;
+    }
+  }
+}
