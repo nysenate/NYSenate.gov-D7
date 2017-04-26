@@ -33,7 +33,7 @@ Conspicuously missing from this repository is a link to a demo database. We susp
 This implementation is customized to serve the esoteric requirements of NY’s lawmaking process. We would love to generalize some of our custom modules so that they could serve as turnkey solutions for other legislatures looking to implement similar functionality. If you work with a legislature that would be interested in partnering with us, please [get in touch.](mailto:blair@nysenate.gov)
 
 ## Credits
-This platform would not exist without conceptualization and ongoing stewardship from the web development team at the New York State Senate, ongoing Drupal consulting from [MediaCurrent](https://www.mediacurrent.com), product design and initial implementation from [Code and Theory](http://www.codeandtheory.com), and a challenging D6 -> D7 data migration executed by [NuCivic (now Granicus)](http://www.granicus.com).
+This platform would not exist without conceptualization and ongoing stewardship from the web development team at the New York State Senate, ongoing Drupal consulting from [MediaCurrent](https://www.mediacurrent.com), product design and initial implementation from [Code and Theory](http://www.codeandtheory.com), and a challenging D6 -> D7 data migration executed by [NuCivic (now Granicus)](http://www.granicus.com). This platform his hosted on [Pantheon](https://www.pantheon.io).
 
 Of course, we’d be remiss not to recognize the [members of the New York State Senate](https://www.nysenate.gov/senators-committees) and the chamber leadership for their unwavering support and commitment to innovation in this space.
 
