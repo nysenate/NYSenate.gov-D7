@@ -1,0 +1,23 @@
+name = Media CKEditor
+description = Provides a bridge between Media and the stand-alone CKEditor module.
+package = Media
+core = 7.x
+
+dependencies[] = ckeditor
+dependencies[] = media_wysiwyg
+files[] = tests/media_ckeditor.test
+
+test_dependencies[] = token
+test_dependencies[] = media_wysiwyg
+test_dependencies[] = media
+test_dependencies[] = file_entity
+test_dependencies[] = ckeditor
+test_dependencies[] = views
+test_dependencies[] = ctools
+
+; Information added by Drupal.org packaging script on 2017-01-15
+version = "7.x-2.0-rc3"
+core = "7.x"
+project = "media_ckeditor"
+datestamp = "1484494686"
+

@@ -32,9 +32,9 @@
 </div>
 <div class="l-right">
   <h3 class="c-story-name"><?php echo $fields['title']->content;?></h3>
-  <a href="#" class="c-story-link">
+  <div class="c-story-link">
   <?php echo $fields['term_node_tid']->content;?>
-  </a>
+  </div>
 </div>
 
 <!-- end Featured Story / Video -->

@@ -21,6 +21,7 @@
 	font-family: "Adelle Bold";
 	font-size: 16px;
 	line-height: 1em;
+  color: $grey10;
 }
 .c-press-release--topic,
 .c-featured-story-issue-tag a {
@@ -46,6 +47,7 @@
 	margin-bottom: 10px;
 	font-size: 18px;
 	line-height: 1.3em;
+  font-family: "Adelle Light";
 	a{
 		color:$grey02;
 	}
@@ -94,6 +96,7 @@
 	.c-press-release--descript {
 		font-size: 24px;
 		line-height: 30px;
+    font-family: "Adelle Light";
 	}
 	.c-press-release--senator {
 		font-size: 14px;
@@ -110,3 +113,12 @@
 		margin-left: 20px;
 	}
 }
+
+.trad_blue .c-press-release--descript a { color: $trad_blue_lgt; }
+.cont_blue .c-press-release--descript a { color: $cont_blue_lgt; }
+.purple .c-press-release--descript a { color: $purple_lgt; }
+.trad_red .c-press-release--descript a { color: $trad_red_lgt; }
+.cont_red .c-press-release--descript a { color: $cont_red_lgt; }
+.orange .c-press-release--descript a { color: $orange_lgt; }
+.trad_green .c-press-release--descript a { color: $trad_green_lgt; }
+.cont_green .c-press-release--descript a { color: $cont_green_lgt; }

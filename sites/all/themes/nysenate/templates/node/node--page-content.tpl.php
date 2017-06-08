@@ -79,7 +79,7 @@
   <?php print render($title_prefix); ?>
   <?php if ($page): ?>
     <div class="c-news--head">
-      <h2 class="nys-article-title"><?php print $title; ?></h2>
+      <h1 class="nys-article-title"><?php print $title; ?></h1>
       <div class="c-news--head-meta">
         <?php if(isset($content['field_issues'])): ?>
         <ul class="nys-associated-topics">
@@ -96,9 +96,9 @@
   <div class="c-news--body">
 
     <?php if(isset($content['field_subtitle'])): ?>
-      <h3 class="c-news--subtitle">
+      <div class="c-news--subtitle">
         <?php print render($content['field_subtitle']); ?>
-      </h3>
+      </div>
     <?php endif; ?>
 
     <?php if(isset($content['body'])): ?>

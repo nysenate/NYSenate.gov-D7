@@ -13,6 +13,7 @@ function nys_legislation_metatag_export_default() {
   // Exported Metatag config instance: node:bill.
   $config['node:bill'] = array(
     'instance' => 'node:bill',
+    'disabled' => FALSE,
     'config' => array(
       'title' => array(
         'value' => 'NY State [node:field_ol_chamber] Bill [node:title]',

@@ -415,6 +415,7 @@
 .icon-after__right,
 .icon-after__arrow,
 .icon-after__recruit-friends,
+.icon-after__user-guide,
 .icon-after__see-less,
 .icon-after__see-more,
 .flag-action,
@@ -612,6 +613,10 @@
 
 .icon-after__recruit-friends:after {
 	content: "\66";
+}
+
+.icon-after__user-guide:after {
+	content: "\69";
 }
 
 .icon-after__right:after {

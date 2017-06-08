@@ -1579,6 +1579,18 @@ function nys_news_views_default_views() {
     'multiple_from' => '',
     'multiple_to' => '',
   );
+  /* Field: Content: Youtube Video */
+  $handler->display->display_options['fields']['field_yt']['id'] = 'field_yt';
+  $handler->display->display_options['fields']['field_yt']['table'] = 'field_data_field_yt';
+  $handler->display->display_options['fields']['field_yt']['field'] = 'field_yt';
+  $handler->display->display_options['fields']['field_yt']['label'] = '';
+  $handler->display->display_options['fields']['field_yt']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_yt']['click_sort_column'] = 'video_url';
+  $handler->display->display_options['fields']['field_yt']['type'] = 'video_embed_field_thumbnail';
+  $handler->display->display_options['fields']['field_yt']['settings'] = array(
+    'image_style' => '200x125',
+    'image_link' => '',
+  );
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
@@ -1906,6 +1918,7 @@ function nys_news_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'semanticviews_default';
+  $handler->display->display_options['style_options']['row']['element_type'] = 'article';
   $handler->display->display_options['style_options']['row']['class'] = 'c-news-block';
   $handler->display->display_options['style_options']['row']['striping_classes'] = 'u-odd u-even';
   $handler->display->display_options['defaults']['style_options'] = FALSE;

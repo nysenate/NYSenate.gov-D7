@@ -30,7 +30,7 @@
 <?php
 $newsroom_path = (isset($view->args[0])) ? '/'.drupal_get_path_alias('node/'.$view->args[0]).'/newsroom' : '/news-and-issues';
 ?>
-<div class="c-news-container <?php print $classes; ?>">
+<aside class="c-news-container <?php print $classes; ?>">
   <div class="c-container--header"><h2 class="c-container--title">Newsroom</h2>
     <a href="<?php echo $newsroom_path;?>" class="c-container--link">Go to Newsroom</a>
   </div>
@@ -93,4 +93,4 @@ $newsroom_path = (isset($view->args[0])) ? '/'.drupal_get_path_alias('node/'.$vi
     </div>
   <?php endif; ?>
 
-</div><?php /* class view */ ?>
+</aside><?php /* class view */ ?>

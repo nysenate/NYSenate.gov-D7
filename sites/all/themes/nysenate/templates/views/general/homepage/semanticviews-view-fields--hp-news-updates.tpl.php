@@ -30,15 +30,15 @@ $associated_senators_array = explode(", ", $fields['field_associated_senator']->
 $associated_senators_count = count($associated_senators_array);
 ?>
 <?php if($fields['type']->content === 'Article'): ?>
-	<h3 class="c-title">Story <span class="c-news-date"><?php echo $fields['field_date']->content; ?></span></h3> 
+	<div class="c-title">Story <span class="c-news-date"><?php echo $fields['field_date']->content; ?></span></div> 
 	
 	<?php if(isset($fields['field_image_main']->content)): ?>
 		<div class="c-newsroom-image">
 			<?php echo $fields['field_image_main']->content; ?>
 		</div>
 	<?php endif; ?>
-	<p class="c-newsroom-name"><?php echo $fields['title']->content; ?></p>
-	<a href="" class="c-newsroom-link"><?php echo $fields['term_node_tid']->content; ?></a>
+	<h3 class="c-newsroom-name"><?php echo $fields['title']->content; ?></h3>
+	<div class="c-newsroom-link"><?php echo $fields['term_node_tid']->content; ?></div>
 	<?php if(isset($fields['field_senator']->content)): ?>
 		<div class="c-senator-card">
 			<?php echo $fields['field_senator']->content; ?>
@@ -46,28 +46,28 @@ $associated_senators_count = count($associated_senators_array);
 	<?php endif; ?>
 	
 <?php elseif($fields['type']->content === 'Video'): ?>
-	<h3 class="c-title">Video <span class="c-news-date"><?php echo $fields['field_date']->content; ?></span></h3>
+	<div class="c-title">Video <span class="c-news-date"><?php echo $fields['field_date']->content; ?></span></div>
 	<?php if(isset($fields['field_yt']->content)): ?>
 		<div class="c-newsroom-image">
 			<?php echo $fields['field_yt']->content; ?>
 		</div>
 	<?php endif; ?>
-	<p class="c-newsroom-name"><?php echo $fields['title']->content; ?></p>
-	<a href="" class="c-newsroom-link"><?php echo $fields['term_node_tid']->content; ?></a>
+	<h3 class="c-newsroom-name"><?php echo $fields['title']->content; ?></h3>
+	<div class="c-newsroom-link"><?php echo $fields['term_node_tid']->content; ?></div>
 	<?php if(isset($fields['field_senator']->content)): ?>
 		<div class="c-senator-card">
 			<?php echo $fields['field_senator']->content; ?>
 		</div>
 	<?php endif; ?>
 <?php elseif($fields['type']->content === 'Press Release'): ?>
-	<h3 class="c-title"><?php echo $fields['type']->content; ?> <span class="c-news-date"><?php echo $fields['field_date']->content; ?></span></h3>
+	<div class="c-title"><?php echo $fields['type']->content; ?> <span class="c-news-date"><?php echo $fields['field_date']->content; ?></span></div>
 	<?php if(isset($fields['field_image_main']->content)): ?>
 		<div class="c-newsroom-image">
 			<?php echo $fields['field_image_main']->content; ?>
 		</div>
 	<?php endif; ?>	
-	<p class="c-newsroom-name"><?php echo $fields['title']->content; ?></p>
-	<a href="" class="c-newsroom-link"><?php echo $fields['term_node_tid']->content; ?></a>
+	<h3 class="c-newsroom-name"><?php echo $fields['title']->content; ?></h3>
+	<div class="c-newsroom-link"><?php echo $fields['term_node_tid']->content; ?></div>
 	<?php if(isset($fields['field_associated_senator']->content)): ?>
 		<div class="c-senator-card">
 			<h4 class="nys-senator--involved"><?php echo count($associated_senators_array).' Senators Involved'; ?></h4>
@@ -82,14 +82,14 @@ $associated_senators_count = count($associated_senators_array);
 		</div>
 	<?php endif; ?>
 <?php else: ?>
-		<h3 class="c-title"><?php echo $fields['type']->content; ?> <span class="c-news-date"><?php echo $fields['field_date']->content; ?></span></h3>
+		<div class="c-title"><?php echo $fields['type']->content; ?> <span class="c-news-date"><?php echo $fields['field_date']->content; ?></span></div>
 		<?php if(isset($fields['field_image_main']->content)): ?>
 			<div class="c-newsroom-image">
 				<?php echo $fields['field_image_main']->content; ?>
 			</div>
 		<?php endif; ?>
-		<p class="c-newsroom-name"><?php echo $fields['title']->content; ?></p>
-		<a href="" class="c-newsroom-link"><?php echo $fields['term_node_tid']->content; ?></a>
+		<h3 class="c-newsroom-name"><?php echo $fields['title']->content; ?></h3>
+		<div class="c-newsroom-link"><?php echo $fields['term_node_tid']->content; ?></div>
 		<?php if(isset($fields['field_senator']->content)): ?>
 		<div class="c-senator-card">
 			<?php echo $fields['field_senator']->content; ?>

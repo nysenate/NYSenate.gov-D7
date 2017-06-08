@@ -3447,7 +3447,7 @@ function nys_sitewide_elements_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 2,
+        'weight' => 5,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -3488,7 +3488,7 @@ function nys_sitewide_elements_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 4,
+        'weight' => 3,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -3650,12 +3650,9 @@ function nys_sitewide_elements_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'entityreference',
-        'settings' => array(
-          'link' => FALSE,
-        ),
-        'type' => 'entityreference_label',
-        'weight' => 5,
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 4,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -3732,7 +3729,6 @@ function nys_sitewide_elements_field_default_field_instances() {
   t('Associating Senators triggers the Associated Senators module to appear on the front-end of this initiative page. You can associate multiple senators, but this does not give any associated Senators ownership of this initiative.');
   t('Attach teasers for bills related to this article. Use the autocomplete to find the bill (e.g. "S120 . . .").');
   t('Attachment');
-  t('Bill');
   t('Body');
   t('Chapters');
   t('Committee Member Name');

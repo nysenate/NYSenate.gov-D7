@@ -75,11 +75,11 @@
  * @see template_process()
  */
 ?>
-<section id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
+<article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
   <?php print render($title_prefix); ?>
   <?php if ($page): ?>
-    <div class="c-news--head">
-      <h2 class="nys-article-title"><?php print $title; ?></h2>
+    <header class="c-news--head">
+      <h1 class="nys-article-title"><?php print $title; ?></h1>
       <div class="c-news--head-meta">
         <?php if(!empty($author)):?>
           <p class="c-news--author"><?php print $author; ?></p>
@@ -110,13 +110,13 @@
         <?php endif; ?>
 
       </div>
-    </div>
+    </header>
   <?php endif; ?>
   <?php print render($title_suffix); ?>
 
 
 
-  <div class="c-news--body">
+  <section class="c-news--body">
     <?php if($node->field_image_main): ?>
       <div class="c-block c-block--img">
         <?php print theme('image_style', array( 'path' =>  $field_image_main[0]['uri'], 'style_name' => '760x377')); ?>
@@ -129,39 +129,28 @@
 
     <div class="c-block">
       <?php if(isset($content['field_subheading'])): ?>
-        <h3 class="c-news--subtitle">
+        <div class="c-news--subtitle">
           <?php print $content['field_subheading'][0]['#markup']; ?>
-        </h3>
+        </div>
       <?php endif; ?>
 
       <?php print render($content['body']);?>
     </div>
 
     <?php if(isset($content['field_chapters'])): ?>
-      <div class="c-block">
+      <section class="c-block">
         <?php print render($content['field_chapters']); ?>
-      </div>
+      </section>
     <?php endif; ?>
 
     <?php if(isset($content['field_bills'])): ?>
-      <div class="c-container--header__top-border">
-        <h3 class="c-container--title">related legislation</h3>
-      </div>
+      <aside>
+		  <div class="c-container--header__top-border">
+			<h2 class="c-container--title">related legislation</h2>
+		  </div>
       <?php print render($content['field_bills']); ?>
+      </aside>
     <?php endif; ?>
-
-    <?php
-      $view = views_get_view('featured_legislation');
-      $view->set_display('news_type_related_legislation');
-      $view->pre_execute();
-      $view->execute();
-
-      if($view->result != NULL) : ?>
-      <div class="c-container--header__top-border">
-        <h3 class="c-container--title">related legislation</h3>
-      </div>
-        <!-- Related Content -->
-    <?php print $view->render(); endif; ?>
 
     <!-- Featured Legislations -->
     <?php print render($content['field_featured_legislation_commi']); ?>
@@ -181,16 +170,16 @@
 
 
     <?php if(isset($content['field_associated_senator'])): ?>
-      <div class="c-block c-block--associated-senators">
+      <section class="c-block c-block--associated-senators">
         <div class="c-container--header__top-border">
-          <h3 class="c-container--title">Senators Involved</h3>
+          <h2 class="c-container--title">Senators Involved</h2>
         </div>
 
         <?php print render($content['field_associated_senator']); ?>
-      </div>
+      </section>
     <?php endif; ?>
 
 
 
-  </div>
-</section>
+  </section>
+</article>

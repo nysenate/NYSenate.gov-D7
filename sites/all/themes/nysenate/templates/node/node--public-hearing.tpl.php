@@ -27,7 +27,7 @@
  */
 
 ?>
-<div class="c-block c-meeting-detail--header">
+<article class="c-block c-meeting-detail--header">
 
   <div class="c-meeting-detail--meta">
     <?php if (isset($node->field_event_status[LANGUAGE_NONE][0]['value']) && $node->field_event_status[LANGUAGE_NONE][0]['value'] === "live_now"): ?>
@@ -38,7 +38,7 @@
     <?php endif; ?>
   </div>
 
-  <div class="c-meeting-detail--overview">
+  <div>
     <p class="c-meeting-detail--date">
       <span class="c-meeting-date--num">
         <?php print date("d", $node->field_date[LANGUAGE_NONE][0]['value']); ?>
@@ -52,9 +52,9 @@
     </p>
 
     <div class="c-meeting-detail--info">
-      <h2 class="c-meeting-detail--title">
+      <h1 class="c-meeting-detail--title">
         <?php print $title; ?>
-      </h2>
+      </h1>
       <p class="c-meeting-detail--location">
         <?php print $node->field_meeting_location[LANGUAGE_NONE][0]['safe_value']; ?>
       </p>
@@ -110,4 +110,4 @@
     <?php endif; ?>
 
   </div>
-</div>
+</article>

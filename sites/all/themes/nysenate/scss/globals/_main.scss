@@ -1,3 +1,4 @@
+
 // Non-modular or client styles for the .l-content region.
 /*-------------------------------------
 / ELEMENT GLOBALS
@@ -56,7 +57,32 @@ select {
 / GLOBAL STYLES
 /
 /-------------------------------------------------------*/
-p{
+
+.c-meeting-detail--descript, .c-news--body, .c-questionnaire--body, .node-event, .pane-senator-about, .node-chapter div {  
+  h2, h3, h4 {
+    font-family: 'Proxima Nova SemiBold';
+    color: $grey02;
+  }
+  h2 {
+    font-size: 30px;
+    margin: 36px 0 24px;
+  }
+  
+  h3 {
+    font-size: 22px;
+    margin: 24px 0 0;
+  }
+  
+  h4 {
+    font-size: 21px;
+    font-style: italic;
+    margin: 24px 0 0;
+    color: $grey03;
+  }
+}
+  
+
+p {
   font-family: "Adelle Light";
   line-height: 1.5em;
   color: #666;
@@ -91,6 +117,9 @@ ol {
     & + li {
       margin-top: 5px;
     }
+    a {
+    @extend .link-text;
+  }
   }
 
   &.menu {
@@ -109,10 +138,12 @@ ol {
 .c-block ul {
   list-style-position: outside;
   margin-bottom:20px;
+  margin-top:20px;
 }
 
 .c-block ol {
   margin-bottom:20px;
+  margin-top:20px;
 }
 
 .nys-title {
@@ -262,7 +293,12 @@ UL.nys-associated-topics {
   }
   .l-main {
     strong {
-      font-family: "Adelle SemiBold"
+      font-family: "Adelle SemiBold";
+    }
+    h2, h3, h4 {
+      strong {
+      font-family: 'Proxima Nova SemiBold';
+      }
     }
   }
   .nys-title {

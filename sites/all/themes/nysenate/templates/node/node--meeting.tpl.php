@@ -31,7 +31,7 @@
  */
 
 ?>
-<div class="c-block c-meeting-detail--header">
+<article class="c-block c-meeting-detail--header">
   <div class="c-meeting-detail--meta">
     <?php if ($field_event_status[0]['value'] === "live_now"): ?>
     <p class="c-meeting-detail--live-flag"><?php print render($content['field_event_status']); ?></p>
@@ -57,9 +57,9 @@
       </p>
 
       <div class="c-meeting-detail--info">
-        <h2 class="c-meeting-detail--title">
+        <h1 class="c-meeting-detail--title">
           <?php print $title; ?>
-        </h2>
+        </h1>
         <a class="c-meeting-detail--location-link" href="https://www.google.com/maps/place/New+York+State+Capitol/@42.652602,-73.757388,17z/data=!3m1!4b1!4m2!3m1!1s0x89de0a3aa5dc0b2b:0x72aed557f8df2510" title="NYS Capitol Building" target="_blank" >NYS Capitol Building</a>
         <p class="c-meeting-detail--location">
           <?php if (!empty($field_meeting_location[0]['value'])): print $field_meeting_location[0]['value']; endif; ?>
@@ -100,8 +100,8 @@
       </div>
       <?php endif; ?>
       </div>
-
     </div>
+  
       <?php if (!empty($field_video_status) && $field_video_status[0]['value'] === "streaming_live_now" && !empty($field_ustream_url)): ?>
       <div class="c-meeting-detail--descript flex-video">
         <?php print render($content['field_ustream_url']); ?>
@@ -116,5 +116,4 @@
     </div>
     <?php endif; ?>
 
-  </div>
-</div>
+</article>

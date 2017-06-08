@@ -22,6 +22,12 @@ function nys_users_user_default_roles() {
     'weight' => 11,
   );
 
+  // Exported role: Expert MCP.
+  $roles['Expert MCP'] = array(
+    'name' => 'Expert MCP',
+    'weight' => 20,
+  );
+
   // Exported role: FOIL Administrator.
   $roles['FOIL Administrator'] = array(
     'name' => 'FOIL Administrator',

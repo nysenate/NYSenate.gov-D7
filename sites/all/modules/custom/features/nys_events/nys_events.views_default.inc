@@ -2080,6 +2080,7 @@ function nys_events_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'semanticviews_default';
   $handler->display->display_options['style_options']['group']['element_type'] = '';
   $handler->display->display_options['style_options']['group']['class'] = '';
+  $handler->display->display_options['style_options']['row']['element_type'] = 'article';
   $handler->display->display_options['style_options']['row']['class'] = 'c-event-block c-event-block--upcoming';
   $handler->display->display_options['style_options']['row']['striping_classes'] = 'u-odd u-even';
   $handler->display->display_options['defaults']['style_options'] = FALSE;

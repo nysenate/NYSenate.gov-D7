@@ -27,7 +27,7 @@ function nys_bill_active_amendment_help($path, $arg) {
  */
 function nys_bill_active_amendment_node_insert($node) {
   if ($node->type === 'bill') {
-    nys_bill_active_amendment_save_alias($node);
+    nys_bill_active_amendment_validate_aliases($node);
   }
 }
 
@@ -36,40 +36,100 @@ function nys_bill_active_amendment_node_insert($node) {
  */
 function nys_bill_active_amendment_node_update($node) {
   if ($node->type === 'bill') {
-    nys_bill_active_amendment_save_alias($node);
+    nys_bill_active_amendment_validate_aliases($node);
   }
 }
 
-/**
- * Adds the active amendment url as an alias to the given updated node if it is the active amendment
- *
- * @param $node The node.
- */
-function nys_bill_active_amendment_save_alias($node) {
+function nys_bill_active_amendment_fetch_existing_alias($pattern = NULL, $reset = FALSE) {
+  static $cached = array('pattern' => '', 'existing' => array());
+
+  if (!$pattern && $cached['pattern']) {
+    $pattern = $cached['pattern'];
+  }
+
+  if ($pattern && ($pattern != $cached['pattern'] || $reset)) {
+    $cached['pattern'] = $pattern;
+    // Get existing aliases, indexed by the alias.
+    $existing_alias = db_select('url_alias', 'urlas')
+      ->condition('urlas.alias', (string) $pattern, 'LIKE');
+    $existing_alias->addExpression('LOWER(alias)', 'alias');
+    $existing_alias->fields('urlas', array('pid', 'source'));
+    $cached['existing'] = $existing_alias->execute()->fetchAllAssoc('alias');
+  }
+
+  return $cached['existing'];
+}
+
+function nys_bill_active_amendment_test_for_alias($check_url, $source_nid) {
+  $existing = nys_bill_active_amendment_fetch_existing_alias();
+  $path = array(
+    'source' => 'node/' . $source_nid,
+    'alias' => strtolower($check_url),
+  );
+
+  if (array_key_exists($path['alias'], $existing)) {
+    if ($existing[$path['alias']]->source != $path['source']) {
+      $path['pid'] = $existing[$path['alias']]->pid;
+    }
+    else {
+      // Alias exists, and matches.  Stop the processing.
+      $path = array();
+    }
+  }
+
+  if ($path) {
+    path_save($path);
+  }
+}
+
+function nys_bill_active_amendment_validate_aliases($node) {
   if ($node->type === 'bill') {
+    // Turn off pathauto processing for this node.
+    // See also: pathauto_node_update_alias().
+    $node->path['pathauto'] = '';
+
+    // Need the year to search for existing aliases.
     $bill_session_year = $node->field_ol_session[LANGUAGE_NONE][0]['value'];
-    $base_print_no = $node->field_ol_base_print_no[LANGUAGE_NONE][0]['value'];
-    $active_version = $node->field_ol_active_version[LANGUAGE_NONE][0]['value'];
-    // If the bill's print number matches that of the active version, assign the base print no alias to the bill node
-    if (!empty($node->title) && strcasecmp($node->title, $base_print_no . $active_version) === 0) {
-      $path = array(
-        'source' => 'node/' . $node->nid,
-        'alias' => 'legislation/bills/' . $bill_session_year . '/' . $base_print_no,
-      );
 
-      // Determine if the alias is in the `url_alias` table already.
-      $num_aliai = db_select('url_alias', 'urlas')
-                   ->condition('urlas.alias', 'legislation/bills/' . $bill_session_year . '/' . $base_print_no ,'=')
-                   ->condition('urlas.source', 'node/' . $node->nid ,'=')
-                   ->countQuery()
-                   ->execute()
-                   ->fetchField();
+    // Need the base print to search for similar existing aliases.
+    $base_print_no = strtolower($node->field_ol_base_print_no[LANGUAGE_NONE][0]['value']);
 
-      // If it's not in there and the source has a node id add alias.
-      if ($num_aliai == 0) {
-        path_save($path);
+    // Reference variables.
+    $base_url = 'legislation/bills/' . $bill_session_year . '/' . $base_print_no;
+    $search_pattern = $base_url . '%';
+
+    // Active version will receive the shortcut alias 'legislation/bills/{year}/{base_print}'
+    $active_version = strtolower($node->field_ol_active_version[LANGUAGE_NONE][0]['value']);
+
+    // If a bill has no amendments, active version will be an empty string.
+    if (!$active_version) {
+      $active_version = 'original';
+    }
+
+    // Fetch all known versions of the current bill.
+    $all_versions = nysenate_get_bill_versions($node->type, $base_print_no, $bill_session_year);
+
+    // Fetch existing aliases for this bill, based on a search pattern.
+    $existing_result = nys_bill_active_amendment_fetch_existing_alias($search_pattern);
+
+    // For each version of this bill, test that the alias is well-constructed and
+    // pointing to the proper place.
+    foreach ($all_versions as $key => $val) {
+      /* 0 => array ('nid' => '6194920', 'title' => 'S6400') */
+      // Identify the current version.  Account for 'original'.
+      $current_version = strtolower(preg_replace("/^{$base_print_no}/i", '', $val['title']));
+      if (!$current_version) {
+        $current_version = 'original';
       }
 
+      // Does 'legislation/bills/{year}/{title}/amendment/{version}' exist?
+      $check_url = "{$base_url}/amendment/{$current_version}";
+      nys_bill_active_amendment_test_for_alias($check_url, $val['nid']);
+
+      // If this version is the "active" version, check the base_url as well.
+      if ($current_version == $active_version) {
+        nys_bill_active_amendment_test_for_alias($base_url, $val['nid']);
+      }
     }
   }
 }

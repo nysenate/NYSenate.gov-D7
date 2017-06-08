@@ -28,13 +28,13 @@
 ?>
 
 <div class="l-left">
-  <?php echo $fields['field_image_main']->content; ?>
+  <?php if (isset($fields['field_image_main']->content)) echo $fields['field_image_main']->content; ?>
 </div>
 <div class="l-right">
   <h3 class="c-story-name"><?php echo $fields['title']->content;?></h3>
-  <a href="#" class="c-story-link">
-  <?php echo $fields['term_node_tid']->content;?>
-  </a>
+  <div class="c-story-link">
+  <?php if (isset($fields['term_node_tid']->content)) echo $fields['term_node_tid']->content;?>
+  </div>
 </div>
 
 <!-- end Featured Story / Video -->

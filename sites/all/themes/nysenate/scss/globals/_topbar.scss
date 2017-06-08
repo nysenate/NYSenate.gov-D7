@@ -193,6 +193,55 @@ $logInDropDown: 0.3s;
 				}
 			}
 		}
+
+		&.c-header--btn__taking_action {
+			position: relative;
+			height: 100%;
+			margin-left: -1px;
+			padding: 0 15px 0 20px;
+			background-color: transparent;
+			line-height: 55px;
+
+			@extend .lgt-text;
+			@extend .icon-after__user-guide;
+			@include transition(background, 0.2s, ease);
+
+			&:after {
+				height: 30px;
+				width: 30px;
+				line-height: 30px;
+				text-align: center;
+				font-size: 20px;
+				margin-left: 8px;
+				padding-left: 3px;
+				color: #fff;
+				@include border-radius(50%);
+				@extend .lgt-bg;
+			}
+
+			&:hover {
+				color: #fff;
+				@extend .lgt-bg;
+			}
+
+			// if the user has an avatar
+			&.has-avatar {
+				&:after {
+					display: none;
+				}
+				> span,
+				> img {
+					display: inline-block;
+					vertical-align: middle;
+				}
+				img {
+					height: 30px;
+					width: 30px;
+					margin-left: 8px;
+					@include border-radius(50%);
+				}
+			}
+		}
 	}
 	// inactive pallette shoule be general pallette
 	.inactive-pallette {
@@ -323,6 +372,9 @@ $logInDropDown: 0.3s;
 			&.c-header--btn__primary {
 				line-height: 40px;
 			}
+			&.c-header--btn__taking_action {
+				line-height: 40px;
+			}
 		}
 		.c-header--connect {
 			height: 40px;
@@ -382,6 +434,7 @@ $logInDropDown: 0.3s;
 			text-transform: capitalize;
 			font-size: 12px;
 			font-family: "Proxima Nova SemiBold";
+      margin: 0;
 		}
 		.nys-senator--name {
 			font-family: "Adelle SemiBold";

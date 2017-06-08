@@ -77,11 +77,11 @@
 
   $author = (isset($content['field_article_author'][0]['#markup'])) ? $content['field_article_author'][0]['#markup'] : ( isset($content['field_senator'][0]['#markup']) ? $content['field_senator'][0]['#markup'] : FALSE);
 ?>
-<section id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
+<article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
   <?php print render($title_prefix); ?>
   <?php if ($page): ?>
-    <div class="c-news--head">
-      <h2 class="nys-article-title"><?php print $title; ?></h2>
+    <header class="c-news--head">
+      <h1 class="nys-article-title"><?php print $title; ?></h1>
       <div class="c-news--head-meta">
         <?php if(isset($content['field_article_author'])): ?>
             <p class="c-news--author"><?php print render($content['field_article_author'][0]['#markup']); ?></p>
@@ -111,19 +111,19 @@
         <?php endif; ?>
 
       </div>
-    </div>
+    </header>
   <?php endif; ?>
   <?php print render($title_suffix); ?>
   <div class="c-news--body c-in-the-news--body">
     <?php if (!empty($field_publication_source_link) && !empty($field_publication_title)): ?>
-    <h3 class="c-news--body-title">Originally published in
+    <div class="c-news--body-title">Originally published in
       <a href="<?php print $field_publication_source_link[0]['safe_value']; ?>" title="<?php print $field_publication_title[0]['safe_value']; ?>" target="_blank">
         <?php print $field_publication_title[0]['safe_value']; ?>
       </a>
       <?php if (!empty($field_itn_publication_date)): ?>
       on
       <?php print render($content['field_itn_publication_date'][0]['#markup']); endif; ?>
-    </h3>
+    </div>
     <?php endif; ?>
 
     <?php if($node->field_image_main): ?>
@@ -137,18 +137,18 @@
 
     <div class="c-block c-block-quoted-body">
       <?php if(isset($content['field_subheading'])): ?>
-        <h3 class="c-news--subtitle">
+        <p class="c-news--subtitle">
           <?php print $content['field_subheading'][0]['#markup']; ?>
-        </h3>
+        </p>
       <?php endif; ?>
 
       <?php print render($content['body']);?>
     </div>
 
     <?php if(isset($content['field_chapters'])): ?>
-      <div class="c-block">
+      <section class="c-block">
         <?php print render($content['field_chapters']); ?>
-      </div>
+      </section>
     <?php endif; ?>
 
     <?php
@@ -160,7 +160,7 @@
 
     <?php if(isset($content['field_attachment'])): ?>
       <div class="c-block c-news--download">
-        <h4 class="c-initiative--subtitle">More Information:</h4>
+        <h2 class="c-initiative--subtitle">More Information:</h2>
         <?php print render($content['field_attachment']); ?>
       </div>
 
@@ -172,4 +172,4 @@
 
 
   </div>
-</section>
+</article>

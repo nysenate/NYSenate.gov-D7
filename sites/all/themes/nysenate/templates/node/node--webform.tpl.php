@@ -79,7 +79,7 @@
   <?php print render($title_prefix); ?>
   <?php if ($page): ?>
       <div class="c-block">
-        <h2 class="c-page-header--title"><?php print $title; ?></h2>
+        <h1 class="c-page-header--title"><?php print $title; ?></h1>
       </div>
     <?php endif; ?>
   <?php print render($title_suffix); ?>

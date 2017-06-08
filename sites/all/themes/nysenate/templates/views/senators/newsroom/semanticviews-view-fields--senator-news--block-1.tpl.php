@@ -27,39 +27,39 @@
 */
 ?>
 <?php if($fields['type']->content === 'Article'): ?>
-	<h3 class="c-title">Story</h3>
+  <div class="c-title">Story</div>
 	<?php if(isset($fields['field_image_main']->content)): ?>
 		<div class="c-newsroom-image">
 			<?php echo $fields['field_image_main']->content; ?>
 		</div>
 	<?php endif; ?>
-	<div class="c-newsroom-name"><?php echo $fields['title']->content; ?></div>
-	<a href="" class="c-newsroom-link"><?php echo $fields['term_node_tid']->content; ?></a>
+	<h3 class="c-newsroom-name"><?php echo $fields['title']->content; ?></h3>
+	<div class="c-newsroom-link"><?php echo $fields['term_node_tid']->content; ?></div>
 <?php elseif($fields['type']->content === 'Video'): ?>
-	<h3 class="c-title">Video</h3>
+	<div class="c-title">Video</div>
 	<?php if(isset($fields['field_yt']->content)): ?>
 		<div class="c-newsroom-image">
 			<?php echo $fields['field_yt']->content; ?>
 		</div>
 	<?php endif; ?>
-	<p class="c-newsroom-name"><?php echo $fields['title']->content; ?></p>
-	<a href="" class="c-newsroom-link"><?php echo $fields['term_node_tid']->content; ?></a>
+	<h3 class="c-newsroom-name"><?php echo $fields['title']->content; ?></h3>
+  <div class="c-newsroom-link"><?php echo $fields['term_node_tid']->content; ?></div> 
 <?php elseif($fields['type']->content === 'Press Release'): ?>
-	<h3 class="c-title"><?php echo $fields['type']->content; ?></h3>
+	<div class="c-title"><?php echo $fields['type']->content; ?></div>
 	<?php if(isset($fields['field_image_main']->content)): ?>
 		<div class="c-newsroom-image">
 			<?php echo $fields['field_image_main']->content; ?>
 		</div>
 	<?php endif; ?>
-	<div class="c-newsroom-name"><?php echo $fields['title']->content; ?></div>
-	<a href="" class="c-newsroom-link"><?php echo $fields['term_node_tid']->content; ?></a>
+	<h3 class="c-newsroom-name"><?php echo $fields['title']->content; ?></h3>
+	<div class="c-newsroom-link"><?php echo $fields['term_node_tid']->content; ?></div>
 <?php else: ?>
-		<h3 class="c-title"><?php echo $fields['type']->content; ?></h3>
+		<div class="c-title"><?php echo $fields['type']->content; ?></div>
 		<?php if(isset($fields['field_image_main']->content)): ?>
 			<div class="c-newsroom-image">
 				<?php echo $fields['field_image_main']->content; ?>
 			</div>
 		<?php endif; ?>
-		<div class="c-newsroom-name"><?php echo $fields['title']->content; ?></div>
-		<a href="" class="c-newsroom-link"><?php echo $fields['term_node_tid']->content; ?></a>
+		<h3 class="c-newsroom-name"><?php echo $fields['title']->content; ?></h3>
+		<div class="c-newsroom-link"><?php echo $fields['term_node_tid']->content; ?></div>
 <?php endif; ?>

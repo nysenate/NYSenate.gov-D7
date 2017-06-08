@@ -42,7 +42,7 @@
  */
 ?>
 
-<div class="c-block c-container c-senate-works-container c-senate-works-container--law">
+<section class="c-block c-container c-senate-works-container c-senate-works-container--law">
   <div class="c-container--header">
     <h2 class="c-container--title">How a Bill Becomes Law</h2>
     <a href="/how-bill-becomes-law" class="c-container--link">Learn More</a>
@@ -75,5 +75,5 @@
       <p class="c-senate-works-step-description">Bill is signed by Governor</p>
     </li>
   </ul>
-</div>
+</section>
 

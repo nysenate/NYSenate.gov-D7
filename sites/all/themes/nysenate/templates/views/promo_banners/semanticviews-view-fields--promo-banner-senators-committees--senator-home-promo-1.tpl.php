@@ -28,7 +28,7 @@
 
 
 ?>
-<div class="c-block c-block--initiative <?php if (!empty($fields['field_image_main']->content)): echo 'c-block--initiative__has-img'; endif; if (!empty($fields['counter']->content)): echo ' lgt-bg c-block-position--' . $fields['counter']->content; endif; ?>">
+<article class="c-block c-block--initiative <?php if (!empty($fields['field_image_main']->content)): echo 'c-block--initiative__has-img'; endif; if (!empty($fields['counter']->content)): echo ' lgt-bg c-block-position--' . $fields['counter']->content; endif; ?>">
   <?php if (!empty($fields['field_image_main']->content) && !empty($fields['path']->content)): ?>
   <a href="<?php $fields['field_link_type']->content == 'external' ? print $fields['field_external_web_page']->content : print $fields['path']->content; ?>">
 	<?php print $fields['field_image_main']->content; ?>
@@ -37,7 +37,7 @@
   <div class="c-initiative--content">
     <div class="c-initiative--inner">
   	  <?php if (!empty($fields['path']->content) && !empty($fields['title']->content)): ?>
-      <a href="<?php $fields['field_link_type']->content == 'external' ? print $fields['field_external_web_page']->content : print $fields['path']->content; ?>"><h4 class="c-initiative--title"><?php echo $fields['title']->content; ?></h4></a>
+      <a href="<?php $fields['field_link_type']->content == 'external' ? print $fields['field_external_web_page']->content : print $fields['path']->content; ?>"><h3 class="c-initiative--title"><?php echo $fields['title']->content; ?></h3></a>
       <?php endif; ?>
     </div>
   </div>
@@ -46,4 +46,4 @@
   <?php endif; ?>
     <span><?php if (!empty($fields['field_call_to_action']->content)): echo $fields['field_call_to_action']->content; endif; ?></span>
   </a>
-</div>
+</article>

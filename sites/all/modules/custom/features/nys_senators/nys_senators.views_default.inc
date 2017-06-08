@@ -1318,7 +1318,7 @@ function nys_senators_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['strip_tags'] = TRUE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['element_default_classes'] = FALSE;
-  /* Field: Content: FOIL Request Form */
+  /* Field: Content: Active Senator */
   $handler->display->display_options['fields']['field_active']['id'] = 'field_active';
   $handler->display->display_options['fields']['field_active']['table'] = 'field_data_field_active';
   $handler->display->display_options['fields']['field_active']['field'] = 'field_active';
@@ -2337,7 +2337,7 @@ function nys_senators_views_default_views() {
       'class' => '',
     ),
   );
-  /* Relationship: : field_openleg_actions (field_openleg_actions) */
+  /* Relationship: Broken/missing handler */
   $handler->display->display_options['relationships']['field_openleg_actions_value']['id'] = 'field_openleg_actions_value';
   $handler->display->display_options['relationships']['field_openleg_actions_value']['table'] = 'field_data_field_openleg_actions';
   $handler->display->display_options['relationships']['field_openleg_actions_value']['field'] = 'field_openleg_actions_value';
@@ -2534,7 +2534,7 @@ function nys_senators_views_default_views() {
   $handler->display->display_options['empty']['area']['content'] = 'You have no bills so far';
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Relationship: : field_openleg_actions (field_openleg_actions) */
+  /* Relationship: Broken/missing handler */
   $handler->display->display_options['relationships']['field_openleg_actions_value']['id'] = 'field_openleg_actions_value';
   $handler->display->display_options['relationships']['field_openleg_actions_value']['table'] = 'field_data_field_openleg_actions';
   $handler->display->display_options['relationships']['field_openleg_actions_value']['field'] = 'field_openleg_actions_value';

@@ -79,16 +79,6 @@ function nys_homepage_views_default_views() {
     'homepage_hero' => 'homepage_hero',
     'sitewide_footer_promotional_bann' => 0,
   );
-  /* Relationship: Entity Reference: Referenced Entity */
-  $handler->display->display_options['relationships']['field_session_calendars_target_id']['id'] = 'field_session_calendars_target_id';
-  $handler->display->display_options['relationships']['field_session_calendars_target_id']['table'] = 'field_data_field_session_calendars';
-  $handler->display->display_options['relationships']['field_session_calendars_target_id']['field'] = 'field_session_calendars_target_id';
-  /* Relationship: Content: Calendar (field_ol_cal) */
-  $handler->display->display_options['relationships']['field_ol_cal_value']['id'] = 'field_ol_cal_value';
-  $handler->display->display_options['relationships']['field_ol_cal_value']['table'] = 'field_data_field_ol_cal';
-  $handler->display->display_options['relationships']['field_ol_cal_value']['field'] = 'field_ol_cal_value';
-  $handler->display->display_options['relationships']['field_ol_cal_value']['relationship'] = 'field_session_calendars_target_id';
-  $handler->display->display_options['relationships']['field_ol_cal_value']['delta'] = '-1';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -120,7 +110,7 @@ function nys_homepage_views_default_views() {
     'image_style' => '1280x510',
     'image_link' => 'content',
   );
-  /* Field: Content: Publish Date */
+  /* Field: Content: Published on */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -165,21 +155,6 @@ function nys_homepage_views_default_views() {
     'link' => 1,
   );
   $handler->display->display_options['fields']['field_session_calendars']['delta_offset'] = '0';
-  /* Field: Field collection item: Bill */
-  $handler->display->display_options['fields']['field_ol_bill']['id'] = 'field_ol_bill';
-  $handler->display->display_options['fields']['field_ol_bill']['table'] = 'field_data_field_ol_bill';
-  $handler->display->display_options['fields']['field_ol_bill']['field'] = 'field_ol_bill';
-  $handler->display->display_options['fields']['field_ol_bill']['relationship'] = 'field_ol_cal_value';
-  $handler->display->display_options['fields']['field_ol_bill']['label'] = '';
-  $handler->display->display_options['fields']['field_ol_bill']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_ol_bill']['type'] = 'entityreference_entity_view';
-  $handler->display->display_options['fields']['field_ol_bill']['settings'] = array(
-    'view_mode' => 'token',
-    'links' => 1,
-  );
-  $handler->display->display_options['fields']['field_ol_bill']['delta_limit'] = '5';
-  $handler->display->display_options['fields']['field_ol_bill']['delta_offset'] = '0';
-  $handler->display->display_options['fields']['field_ol_bill']['multi_type'] = 'ul';
   /* Field: Content: Type */
   $handler->display->display_options['fields']['type']['id'] = 'type';
   $handler->display->display_options['fields']['type']['table'] = 'node';
@@ -199,16 +174,6 @@ function nys_homepage_views_default_views() {
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Filter criterion: Field collection item: Type (field_ol_type) */
-  $handler->display->display_options['filters']['field_ol_type_value']['id'] = 'field_ol_type_value';
-  $handler->display->display_options['filters']['field_ol_type_value']['table'] = 'field_data_field_ol_type';
-  $handler->display->display_options['filters']['field_ol_type_value']['field'] = 'field_ol_type_value';
-  $handler->display->display_options['filters']['field_ol_type_value']['relationship'] = 'field_ol_cal_value';
-  $handler->display->display_options['filters']['field_ol_type_value']['operator'] = 'not';
-  $handler->display->display_options['filters']['field_ol_type_value']['value'] = array(
-    'supplemental_calendar' => 'supplemental_calendar',
-    'floor_calendar' => 'floor_calendar',
-  );
 
   /* Display: Homepage Hero */
   $handler = $view->new_display('block', 'Homepage Hero', 'homepage_hero');
@@ -382,6 +347,7 @@ function nys_homepage_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'semanticviews_default';
+  $handler->display->display_options['style_options']['row']['element_type'] = 'article';
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'semanticviews_fields';
@@ -460,15 +426,16 @@ function nys_homepage_views_default_views() {
   $handler->display->display_options['fields']['term_node_tid']['alter']['replace_spaces'] = TRUE;
   $handler->display->display_options['fields']['term_node_tid']['alter']['path_case'] = 'lower';
   $handler->display->display_options['fields']['term_node_tid']['alter']['trim_whitespace'] = TRUE;
-  $handler->display->display_options['fields']['term_node_tid']['alter']['link_class'] = 'c-story-link';
+  $handler->display->display_options['fields']['term_node_tid']['alter']['link_class'] = 'c-press-release--topic lgt-text';
   $handler->display->display_options['fields']['term_node_tid']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['term_node_tid']['element_default_classes'] = FALSE;
-  $handler->display->display_options['fields']['term_node_tid']['link_to_taxonomy'] = FALSE;
   $handler->display->display_options['fields']['term_node_tid']['limit'] = TRUE;
   $handler->display->display_options['fields']['term_node_tid']['vocabularies'] = array(
     'issues' => 'issues',
     'committees' => 0,
+    'content_experiments' => 0,
     'districts' => 0,
+    'nys_counties' => 0,
   );
   $handler->display->display_options['defaults']['sorts'] = FALSE;
   /* Sort criterion: Nodequeue: Position */
@@ -511,6 +478,7 @@ function nys_homepage_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'semanticviews_default';
+  $handler->display->display_options['style_options']['row']['element_type'] = 'article';
   $handler->display->display_options['style_options']['row']['class'] = 'c-news-block';
   $handler->display->display_options['style_options']['row']['striping_classes'] = 'u-odd u-even';
   $handler->display->display_options['defaults']['style_options'] = FALSE;
@@ -609,7 +577,7 @@ function nys_homepage_views_default_views() {
   $handler->display->display_options['fields']['type']['field'] = 'type';
   $handler->display->display_options['fields']['type']['label'] = '';
   $handler->display->display_options['fields']['type']['element_label_colon'] = FALSE;
-  /* Field: Content: Publish Date */
+  /* Field: Content: Published on */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';

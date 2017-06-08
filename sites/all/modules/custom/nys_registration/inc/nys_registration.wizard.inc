@@ -165,6 +165,7 @@ function nys_registration_form_start($form, &$form_state) {
     }
   }
 
+  $form['#attributes']['class'] = array('registration-form');
   $form['registration_teaser'] = array(
     '#markup' => '<div class="c-block c-login">
                   <h2 class="nys-title">' . $title_text . '</h2>
@@ -181,8 +182,6 @@ function nys_registration_form_start($form, &$form_state) {
     '#title'         => t('First name'),
     '#default_value' => isset($form_state['object']->first_name) ? $form_state['object']->first_name : '',
     '#required'      => TRUE,
-    '#prefix' => '<div class="c-block--left">',
-    '#suffix' => '</div>',
   );
 
   $form['last_name'] = array(
@@ -190,8 +189,6 @@ function nys_registration_form_start($form, &$form_state) {
     '#title' => t('Last name'),
     '#default_value' => isset($form_state['object']->last_name) ? $form_state['object']->last_name : '',
     '#required' => TRUE,
-    '#prefix' => '<div class="c-block--right">',
-    '#suffix' => '</div>',
   );
 
   $form['email'] = array(
@@ -199,53 +196,14 @@ function nys_registration_form_start($form, &$form_state) {
     '#title'         => t('Email Address'),
     '#default_value' => isset($form_state['object']->email) ? $form_state['object']->email : '',
     '#required'      => TRUE,
-    '#prefix' => '<div class="c-block--left">',
+    '#prefix' => '<div class="c-block--full"><div class="c-block--left">',
     '#suffix' => '</div>',
   );
   $form['note'] = array(
-    '#markup' => '<div class="c-block--right"><div class="c-block--field-desc c-block--field--desc-email">A valid email address is required in order to confirm your account.</div></div>',
+    '#markup' => '<div class="c-block--right"><div class="c-block--field-desc c-block--field--desc-email">A valid email address is required in order to confirm your account.</div></div></div>',
   );
-  $form['street'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Street Address'),
-    '#default_value' => isset($form_state['object']->street) ? $form_state['object']->street : '',
-    '#required' => TRUE,
-    '#prefix' => '<div class="c-block--full"><div class="c-block--left">',
-    '#suffix' => '</div>',
-  );
-  $form['additional'] = array(
-    '#type' => 'textfield',
-    '#title' => t('apt/suite/floor (optional)'),
-    '#default_value' => isset($form_state['object']->additional) ? $form_state['object']->additional : '',
-    '#prefix' => '<div class="c-block--right">',
-    '#suffix' => '</div><div class="c-block--field-desc">Your valid home address is used to determine which NY State Senator represents you.</div></div>',
-  );
-  $form['city'] = array(
-    '#type' => 'textfield',
-    '#title' => t('City'),
-    '#default_value' => isset($form_state['object']->city) ? $form_state['object']->city : '',
-    '#required' => TRUE,
-    '#prefix' => '<div class="c-block--full"><div class="c-block--left">',
-    '#suffix' => '</div>',
-  );
-
-  $form['state'] = array(
-    '#type' => 'textfield',
-    '#title' => t('State'),
-    '#default_value' => isset($form_state['object']->state) ? $form_state['object']->state : '',
-    '#required' => TRUE,
-    '#prefix' => '<div class="c-block--right"><div class="c-block--left">',
-    '#suffix' => '</div>',
-  );
-
-  $form['postal_code'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Postal Code'),
-    '#default_value' => isset($form_state['object']->postal_code) ? $form_state['object']->postal_code : '',
-    '#required' => TRUE,
-    '#maxlength' => 15,
-    '#prefix' => '<div class="c-block--right">',
-    '#suffix' => '</div></div>',
+  $form['address'] = array(
+    '#type' => 'auto_address',
   );
 
   $form['agree_terms'] = array(
@@ -266,6 +224,9 @@ function nys_registration_form_start($form, &$form_state) {
  * Validation for the user registration form.
  */
 function _nys_registration_form_validation($form, &$form_state) {
+  nyslog();
+  $form_state['object'] = _nys_registration_map_object_values($form_state['values']);
+
   $mail = $form_state['values']['email'];
 
   if (!valid_email_address($mail)) {
@@ -282,7 +243,7 @@ function _nys_registration_form_validation($form, &$form_state) {
     form_set_error('mail', t('The email address you entered is already in use. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password', array('query' => array('name' => $form_state['values']['email']))))));
   }
 
-  if (!_nys_registration_validate_zipcode($form_state['values']['postal_code'])) {
+  if (!_nys_registration_validate_zipcode($form_state['object']->postal_code)) {
     form_set_error('postal_code', t('Please enter a valid zip code.'));
   };
 
@@ -299,15 +260,14 @@ function _nys_registration_validate_zipcode($zipcode) {
  * Handles submit of first form.
  */
 function nys_registration_form_start_submit($form, &$form_state) {
-  $form_state['object']->email = $form_state['values']['email'];
-  $form_state['object']->first_name = $form_state['values']['first_name'];
-  $form_state['object']->last_name = $form_state['values']['last_name'];
-  $form_state['object']->street = $form_state['values']['street'];
-  $form_state['object']->additional = $form_state['values']['additional'];
-  $form_state['object']->city = $form_state['values']['city'];
-  $form_state['object']->state = $form_state['values']['state'];
-  $form_state['object']->postal_code = $form_state['values']['postal_code'];
-  $form_state['object']->agree_terms = $form_state['values']['agree_terms'];
+  $fields = array('email', 'first_name', 'last_name', 'street',
+    'additional', 'city', 'state', 'postal_code', 'agree_terms');
+  foreach ($fields as $one_field) {
+    if (array_key_exists($one_field, $form_state['values']) &&
+    $form_state['values'][$one_field]) {
+      $form_state['object']->{$one_field} = $form_state['values'][$one_field];
+    }
+  }
 }
 
 /**
@@ -420,7 +380,6 @@ function nys_registration_cache_get($id) {
  *   Form state.
  */
 function nys_registration_wizard_next(&$form_state) {
-  nyslog();
 
   // If an address is available, do a SAGE lookup.
   if (isset($form_state['object']->street)) {
@@ -510,9 +469,7 @@ function _nys_registration_create_user($object) {
   $new_user->status = 1;
 
   // Set district for the user?
-  // 2 is authenticated user and 5 is member.
-  $roles           = array(2, 5);
-  $new_user->roles = drupal_map_assoc($roles + array(DRUPAL_AUTHENTICATED_RID));
+  $new_user->roles = drupal_map_assoc(array(DRUPAL_AUTHENTICATED_RID));
 
   $new_user = entity_metadata_wrapper('user', $new_user);
 
@@ -536,7 +493,6 @@ function _nys_registration_create_user($object) {
   nys_registration_activation_email($uid);
 
   return $new_user;
-
 }
 
 /**
@@ -607,16 +563,45 @@ function nys_registration_unique_username($name, $uid = 0) {
  * @return form state array
  */
 function _nys_registration_create_form_object($values, $object_id = FALSE) {
+  nyslog();
   // Create a default registration form for SAGE validation & user creation.
   $registration_form_state = form_state_defaults();
 
   // Set the object id, if provided.
   $object_id = (string) ($object_id === FALSE ? 'regform' : $object_id);
 
-  // Leverage the ctools cache.
+  // Make sure the ctools cache is clear.
   nys_registration_cache_clear($object_id);
-  $object = nys_registration_cache_get($object_id);
 
+  // Create the mapped-value object.  This is necessary because of changes
+  // to field names on the form which were not propagated to the module
+  // code.
+  $object = _nys_registration_map_object_values($values);
+
+  // Add the object, object_id to the form.  Default to no ajax.
+  $registration_form_state += array(
+    'ajax' => 'nojs',
+    'object_id' => $object_id,
+    'object' => &$object,
+  );
+
+  // Build the form.
+  drupal_retrieve_form('nys_registration_form_start', $registration_form_state);
+
+  return $registration_form_state;
+}
+
+/**
+ * This function translates from the new, standardized form field names into
+ * the legacy field names expected by nys_registration.  This is necessary
+ * until refactoring rids us of this plague.
+ *
+ * @param $values Submitted/cached form values.
+ *
+ * @return object A new object, to be used as $values['object'], with the
+ *                translated field names.
+ */
+function _nys_registration_map_object_values($values) {
   // A mapping from common form control names to object names.
   $map = array(
     'first_name'   => 'first_name',
@@ -630,6 +615,8 @@ function _nys_registration_create_form_object($values, $object_id = FALSE) {
     'agree_terms'  => 'agree_terms',
   );
 
+  $object = new stdClass();
+
   // Assign all passed values using the above map.
   foreach ($map as $key => $val) {
     $tval = array_key_exists($val, $values) ? $values[$val] : '';
@@ -639,15 +626,5 @@ function _nys_registration_create_form_object($values, $object_id = FALSE) {
   // Make sure agree_terms is a boolean value.
   $object->agree_terms = (boolean) $object->agree_terms;
 
-  // Add the object, object_id to the form.  Default to no ajax.
-  $registration_form_state += array(
-    'ajax' => 'nojs',
-    'object_id' => $object_id,
-    'object' => &$object,
-  );
-
-  // Build the form.
-  drupal_retrieve_form('nys_registration_form_start', $registration_form_state);
-
-  return $registration_form_state;
+  return $object;
 }

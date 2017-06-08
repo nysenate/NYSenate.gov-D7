@@ -1,5 +1,5 @@
-<div class="c-twitter-block-container">
-  <h3 class="c-container--title">The New York State Senate on Twitter</h3>
+<section class="c-twitter-block-container">
+  <h2 class="c-container--title">The New York State Senate on Twitter</h2>
   <div class="l-tweets">
 
     
@@ -57,4 +57,4 @@
       </div>
     <?php endif; ?>
   </div>
-</div>
+</section>

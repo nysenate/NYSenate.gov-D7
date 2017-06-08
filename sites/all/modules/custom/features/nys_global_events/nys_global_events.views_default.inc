@@ -1185,12 +1185,13 @@ function nys_global_events_views_default_views() {
       'rendered_strip' => 0,
     ),
   );
+  $handler->display->display_options['style_options']['group']['element_type'] = 'div';
   $handler->display->display_options['style_options']['group']['class'] = 'date-title';
   $handler->display->display_options['row_plugin'] = 'semanticviews_fields';
   $handler->display->display_options['row_options']['skip_blank'] = 0;
   $handler->display->display_options['row_options']['semantic_html'] = array(
     'title' => array(
-      'element_type' => 'div',
+      'element_type' => 'h3',
       'class' => 'event-title',
     ),
   );
@@ -1509,7 +1510,7 @@ function nys_global_events_views_default_views() {
   $handler->display->display_options['arguments']['field_calendar_type_value']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_calendar_type_value']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_calendar_type_value']['summary_options']['items_per_page'] = '25';
-  /* Contextual filter: Field: Vote Date (field_publication_date) */
+  /* Contextual filter: Field: Publication Date (field_publication_date) */
   $handler->display->display_options['arguments']['field_publication_date_value']['id'] = 'field_publication_date_value';
   $handler->display->display_options['arguments']['field_publication_date_value']['table'] = 'field_data_field_publication_date';
   $handler->display->display_options['arguments']['field_publication_date_value']['field'] = 'field_publication_date_value';
@@ -1564,7 +1565,7 @@ function nys_global_events_views_default_views() {
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Field: Vote Date (field_publication_date) */
+  /* Filter criterion: Field: Publication Date (field_publication_date) */
   $handler->display->display_options['filters']['field_publication_date_value']['id'] = 'field_publication_date_value';
   $handler->display->display_options['filters']['field_publication_date_value']['table'] = 'field_data_field_publication_date';
   $handler->display->display_options['filters']['field_publication_date_value']['field'] = 'field_publication_date_value';

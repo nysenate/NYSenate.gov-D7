@@ -28,18 +28,18 @@
 
  
 ?>
-<div class="c-block c-block--initiative <?php echo ($fields['field_image_main']->content) ? 'c-block--initiative__has-img':''?> lgt-bg c-block-position--<?php echo $fields['counter']->content; ?>">
-  <?php if($fields['field_image_main']->content): ?>
+<article class="c-block c-block--initiative <?php if (isset($fields['field_image_main']->content)) echo ($fields['field_image_main']->content) ? 'c-block--initiative__has-img' : '' ?> lgt-bg c-block-position--<?php echo $fields['counter']->content; ?>">
+  <?php if(isset($fields['field_image_main']->content) && $fields['field_image_main']->content): ?>
   <a href="<?php $fields['field_link_type']->content == 'external' ? print $fields['field_external_web_page']->content : print $fields['path']->content; ?>">
     <?php print $fields['field_image_main']->content; ?>
   </a>
   <?php endif; ?>
   <div class="c-initiative--content">
     <div class="c-initiative--inner">
-      <a href="<?php $fields['field_link_type']->content == 'external' ? print $fields['field_external_web_page']->content : print $fields['path']->content; ?>"><h4 class="c-initiative--title"><?php echo $fields['title']->content; ?></h4></a>
+      <a href="<?php $fields['field_link_type']->content == 'external' ? print $fields['field_external_web_page']->content : print $fields['path']->content; ?>"><h3 class="c-initiative--title"><?php echo $fields['title']->content; ?></h3></a>
     </div>
   </div>
   <a href="<?php $fields['field_link_type']->content == 'external' ? print $fields['field_external_web_page']->content : print $fields['path']->content; ?>" class="c-block--btn icon-before__<?php echo $fields['field_call_to_action_1']->content; ?> med-bg">
     <span><?php echo $fields['field_call_to_action']->content; ?></span>
   </a>
-</div>
+</article>

@@ -80,13 +80,13 @@ if (
 
 $passed_other_house = $fields['field_ol_chamber']->content == 'senate' ? strrpos($fields['field_ol_all_statuses']->content, 'PASSED_ASSEMBLY') !== false : strrpos($fields['field_ol_all_statuses']->content, 'PASSED_SENATE') !== false;
 ?>
-<div class="c-block c-list-item c-legislation-block">
+<article class="c-block c-list-item c-legislation-block">
   <div class="c-bill-meta">
     <h3 class="c-bill-num"><?php echo $fields['title']->content; ?></h3>
-    <h4 class="c-bill-topic"><?php echo $fields['field_issues']->content; ?></h4>
+    <p class="c-bill-topic"><?php echo $fields['field_issues']->content; ?></p>
   </div>
   <div class="c-bill-body">
-    <p class="c-bill-descript"><?php echo $fields['field_ol_name']->content; ?></p>
+    <h4 class="c-bill-descript"><?php echo $fields['field_ol_name']->content; ?></h4>
       <?php if(isset($row->graph_html)) echo $row->graph_html; // See /sites/all/themes/nysenate/template.php ?>
       <div class="c-bill-update">
         <?php if(isset($fields['field_ol_last_status_date']) && $fields['field_ol_last_status_date']): ?>
@@ -95,4 +95,4 @@ $passed_other_house = $fields['field_ol_chamber']->content == 'senate' ? strrpos
         <p class="c-bill-update--location"><?php if(isset($row->display_status)) echo $row->display_status; ?></p>
       </div>
   </div>
-</div>
+</article>

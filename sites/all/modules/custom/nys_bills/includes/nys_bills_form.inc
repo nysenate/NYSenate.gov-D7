@@ -87,6 +87,8 @@ function nys_bills_bill_form($form, &$form_state, $node) {
     $form_markup = $form_state['errors'];
   }
 
+  $form['#attributes']['class'] = array('registration-form');
+
   $form['header_text'] = array(
     '#markup' => $form_markup,
   );
@@ -128,6 +130,12 @@ function nys_bills_bill_form($form, &$form_state, $node) {
     $form['email']['#default_value'] = $form_info['email'];
   }
 
+  $form['address'] = array(
+    '#type' => ($texttype == 'hidden' ? $texttype : 'auto_address'),
+  );
+
+
+  /*
   $form['addr_street'] = array(
     '#type' => $texttype,
     '#title' => 'Street Address',
@@ -137,57 +145,57 @@ function nys_bills_bill_form($form, &$form_state, $node) {
     '#size' => 40,
   );
 
-  if (!empty($form_info['street'])) {
-    $form['addr_street']['#default_value'] = $form_info['street'];
-  }
+    if (!empty($form_info['street'])) {
+      $form['addr_street']['#default_value'] = $form_info['street'];
+    }
 
-  $form['addr_opt'] = array(
-    '#type' => $texttype,
-    '#title' => t('Apt/Suite/Floor (Optional)'),
-    '#maxlength' => 1023,
-    '#size' => 12,
-  );
+    $form['addr_opt'] = array(
+      '#type' => $texttype,
+      '#title' => t('Apt/Suite/Floor (Optional)'),
+      '#maxlength' => 1023,
+      '#size' => 12,
+    );
 
-  if (!empty($form_info['additional'])) {
-    $form['addr_opt']['#default_value'] = $form_info['additional'];
-  }
+    if (!empty($form_info['additional'])) {
+      $form['addr_opt']['#default_value'] = $form_info['additional'];
+    }
 
-  $form['addr_city'] = array(
-    '#type' => $texttype,
-    '#title' => t('City'),
-    '#required' => TRUE,
-    '#maxlength' => 255,
-    '#size' => 35,
-  );
+    $form['addr_city'] = array(
+      '#type' => $texttype,
+      '#title' => t('City'),
+      '#required' => TRUE,
+      '#maxlength' => 255,
+      '#size' => 35,
+    );
 
-  if (!empty($form_info['city'])) {
-    $form['addr_city']['#default_value'] = $form_info['city'];
-  }
+    if (!empty($form_info['city'])) {
+      $form['addr_city']['#default_value'] = $form_info['city'];
+    }
 
-  $form['addr_state'] = array(
-    '#type' => $texttype,
-    '#title' => t('State'),
-    '#required' => TRUE,
-    '#maxlength' => 255,
-    '#size' => 35,
-  );
+    $form['addr_state'] = array(
+      '#type' => $texttype,
+      '#title' => t('State'),
+      '#required' => TRUE,
+      '#maxlength' => 255,
+      '#size' => 35,
+    );
 
-  if (!empty($form_info['province'])) {
-    $form['addr_state']['#default_value'] = $form_info['province'];
-  }
+    if (!empty($form_info['province'])) {
+      $form['addr_state']['#default_value'] = $form_info['province'];
+    }
 
-  $form['addr_zip'] = array(
-    '#type' => $texttype,
-    '#title' => t('Postal Code'),
-    '#required' => TRUE,
-    '#maxlength' => 5,
-    '#size' => 5,
-  );
+    $form['addr_zip'] = array(
+      '#type' => $texttype,
+      '#title' => t('Postal Code'),
+      '#required' => TRUE,
+      '#maxlength' => 5,
+      '#size' => 5,
+    );
 
-  if (!empty($form_info['postal_code'])) {
-    $form['addr_zip']['#default_value'] = $form_info['postal_code'];
-  }
-
+    if (!empty($form_info['postal_code'])) {
+      $form['addr_zip']['#default_value'] = $form_info['postal_code'];
+    }
+  */
   $form['register'] = array(
     '#type' => 'checkbox',
     '#default_value' => 1,
@@ -330,13 +338,22 @@ function nys_bills_just_voted($form, &$form_state, $node) {
 function nys_bills_bill_form_validate($form, &$form_state) {
   nyslog(__FUNCTION__);
 
-  $email = $form_state['values']['email'];
-  $return_destination = NULL;
+  // Detect a logged-in user's email address.
+  global $user;
+  if (isset($user->mail) && !empty($user->mail)) {
+    $email = $user->mail;
+  }
+  else {
+    $email = $form_state['values']['email'];
+  }
 
+  // Reset the return destination.
+  $return_destination = NULL;
   if (!empty($form_state['values']['pass_thru_url'])) {
     $return_destination = '?destination=/' . $form_state['values']['pass_thru_url'];
   }
 
+  // Validate the email address.
   if (!valid_email_address($email)) {
     form_set_error('email', t('Please enter a valid email address.'));
   }
@@ -503,7 +520,7 @@ function nys_bills_bill_form_submit($form, &$form_state) {
       $form_state['redirect'] = 'registration/nojs/form/start';
     }
     else {
-      nyslog("no errors");
+      nyslog("no form errors, invoking wizard_next");
 
       // Create new user object.
       nys_registration_wizard_next($registration_form_state);
@@ -530,6 +547,8 @@ function nys_bills_bill_form_submit($form, &$form_state) {
     if ($form_state['no_redirect']) {
       nyslog('implementing ajax redirect');
       ctools_add_js('ajax-responder');
+      nyslog("Setting redirect to {$form_state['redirect']}");
+      nyslog(var_export(ajax_render(array(ctools_ajax_command_redirect($form_state['redirect'])))));
       print ajax_render(array(ctools_ajax_command_redirect($form_state['redirect'])));
       drupal_exit();
     }

@@ -26,22 +26,6 @@ function nys_users_user_default_permissions() {
     'module' => 'nys_blocks',
   );
 
-  // Exported permission: 'access administration menu'.
-  $permissions['access administration menu'] = array(
-    'name' => 'access administration menu',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'FOIL Administrator' => 'FOIL Administrator',
-      'Frontpage Editor' => 'Frontpage Editor',
-      'Legislative Correspondent' => 'Legislative Correspondent',
-      'Microsite Content Producer' => 'Microsite Content Producer',
-      'Student Contest Judge' => 'Student Contest Judge',
-      'Student Programs' => 'Student Programs',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'admin_menu',
-  );
-
   // Exported permission: 'access administration pages'.
   $permissions['access administration pages'] = array(
     'name' => 'access administration pages',
@@ -698,6 +682,15 @@ function nys_users_user_default_permissions() {
       'Administrator' => 'Administrator',
     ),
     'module' => 'sendgrid_integration',
+  );
+
+  // Exported permission: 'administer simplify'.
+  $permissions['administer simplify'] = array(
+    'name' => 'administer simplify',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'simplify',
   );
 
   // Exported permission: 'administer site configuration'.
@@ -2090,15 +2083,6 @@ function nys_users_user_default_permissions() {
     'module' => 'disqus',
   );
 
-  // Exported permission: 'display drupal links'.
-  $permissions['display drupal links'] = array(
-    'name' => 'display drupal links',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'admin_menu',
-  );
-
   // Exported permission: 'download any audio files'.
   $permissions['download any audio files'] = array(
     'name' => 'download any audio files',
@@ -3148,33 +3132,6 @@ function nys_users_user_default_permissions() {
     'module' => 'webform',
   );
 
-  // Exported permission: 'execute flag_comment_action'.
-  $permissions['execute flag_comment_action'] = array(
-    'name' => 'execute flag_comment_action',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'actions_permissions',
-  );
-
-  // Exported permission: 'execute flag_node_action'.
-  $permissions['execute flag_node_action'] = array(
-    'name' => 'execute flag_node_action',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'actions_permissions',
-  );
-
-  // Exported permission: 'execute flag_user_action'.
-  $permissions['execute flag_user_action'] = array(
-    'name' => 'execute flag_user_action',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'actions_permissions',
-  );
-
   // Exported permission: 'execute node_assign_owner_action'.
   $permissions['execute node_assign_owner_action'] = array(
     'name' => 'execute node_assign_owner_action',
@@ -3262,28 +3219,6 @@ function nys_users_user_default_permissions() {
     'name' => 'execute node_unpublish_by_keyword_action',
     'roles' => array(
       'Administrator' => 'Administrator',
-    ),
-    'module' => 'actions_permissions',
-  );
-
-  // Exported permission: 'execute nodequeue_add_action'.
-  $permissions['execute nodequeue_add_action'] = array(
-    'name' => 'execute nodequeue_add_action',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Frontpage Editor' => 'Frontpage Editor',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'actions_permissions',
-  );
-
-  // Exported permission: 'execute nodequeue_remove_action'.
-  $permissions['execute nodequeue_remove_action'] = array(
-    'name' => 'execute nodequeue_remove_action',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Frontpage Editor' => 'Frontpage Editor',
-      'Web Administrator' => 'Web Administrator',
     ),
     'module' => 'actions_permissions',
   );
@@ -3564,15 +3499,6 @@ function nys_users_user_default_permissions() {
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'flag',
-  );
-
-  // Exported permission: 'flush caches'.
-  $permissions['flush caches'] = array(
-    'name' => 'flush caches',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'admin_menu',
   );
 
   // Exported permission: 'generate features'.
@@ -3881,15 +3807,6 @@ function nys_users_user_default_permissions() {
     'module' => 'flag',
   );
 
-  // Exported permission: 'use PHP for settings'.
-  $permissions['use PHP for settings'] = array(
-    'name' => 'use PHP for settings',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'php',
-  );
-
   // Exported permission: 'use advanced search'.
   $permissions['use advanced search'] = array(
     'name' => 'use advanced search',
@@ -3991,11 +3908,13 @@ function nys_users_user_default_permissions() {
     'module' => 'filter',
   );
 
-  // Exported permission: 'use text format php_code'.
-  $permissions['use text format php_code'] = array(
-    'name' => 'use text format php_code',
+  // Exported permission: 'use text format source_html'.
+  $permissions['use text format source_html'] = array(
+    'name' => 'use text format source_html',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Expert MCP' => 'Expert MCP',
+      'Frontpage Editor' => 'Frontpage Editor',
     ),
     'module' => 'filter',
   );
@@ -4200,6 +4119,17 @@ function nys_users_user_default_permissions() {
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'file_entity',
+  );
+
+  // Exported permission: 'view hidden fields'.
+  $permissions['view hidden fields'] = array(
+    'name' => 'view hidden fields',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Expert MCP' => 'Expert MCP',
+      'Frontpage Editor' => 'Frontpage Editor',
+    ),
+    'module' => 'simplify',
   );
 
   // Exported permission: 'view location directory'.

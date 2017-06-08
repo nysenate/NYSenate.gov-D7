@@ -39,9 +39,9 @@
   </div>
 
   <div class="l-col l-col-2-of-2">
-    <h4 class="c-meeting-detail--title">
+    <h3 class="c-meeting-detail--title">
       <?php echo $fields['title']->content; ?>
-    </h4>
+    </h3>
     <div class="c-meeting-detail--related">
       <?php echo $fields['field_issues']->content; ?>
     </div>

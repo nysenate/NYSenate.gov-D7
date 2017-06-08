@@ -306,6 +306,14 @@ function nys_dashboard_menu() {
     'access callback' => 'user_is_logged_in',
     'type' => MENU_CALLBACK,
   );
+  
+  $items['dashboard'] = array(
+    'title' => 'dashboard redirect',
+    'page arguments' => array(1),
+    'page callback' => 'nys_dashboard_redirector',
+    'access callback' => 'user_is_logged_in',
+    'type' => MENU_CALLBACK,
+  );
 
   $items['nys-dashboard/get-issues'] = array(
     'title' => 'Pagination for Issues',
@@ -423,7 +431,7 @@ function nys_dashboard_menu_alter(&$menu) {
 }
 
 /**
- * Dashboard redirect function.
+ * Dashboard inbox redirect function.
  */
 function nys_dashboard_redirect() {
   global $user;
@@ -443,6 +451,19 @@ function nys_dashboard_redirect() {
     drupal_goto('user/' . $user->uid . '/dashboard/' . $rest, $options);
   }
 
+  return '';
+}
+
+/**
+ * Dashboard redirect function.
+ */
+function nys_dashboard_redirector($which_dashboard) {
+  global $user;
+  $path = 'user/' . $user->uid;
+  $path_start = drupal_get_path_alias($path);
+  if ($path_start != $path) {
+    drupal_goto($path_start . '/dashboard/' . $which_dashboard . '/');
+  }
   return '';
 }
 
@@ -1032,7 +1053,7 @@ function _nys_dashboard_senator_card_block_content() {
 
   $managed_links = array();
 
-  if (user_has_role(LEGISLATIVE_CORRESPONDENT, $account) && !empty($account->field_senator_inbox_access[LANGUAGE_NONE])) {
+  if (user_has_role(_nys_utils_get_rid_by_name('Legislative Correspondent'), $account) && !empty($account->field_senator_inbox_access[LANGUAGE_NONE])) {
     $managed_links = nys_dashboard_legislative_correspondent_get_links($account->field_senator_inbox_access[LANGUAGE_NONE]);
   }
 
@@ -1580,7 +1601,7 @@ function nys_dashboard_views_pre_render(&$view) {
     foreach($view->result as $key => $item) {
       $a_s_replace_view = null;
       $view->result[$key]->overridden = null;
-      if (strtolower($item->field_field_ol_chamber[0]['raw']['value']) == 'assembly') {
+      if (isset($item->field_field_ol_chamber[0]['raw']['value']) && strtolower($item->field_field_ol_chamber[0]['raw']['value']) == 'assembly') {
         // Assembly bills should show their Senate same-as's
         $same_as_info = json_decode($item->field_field_ol_same_as[0]['raw']['value'])[0];
 
@@ -1646,7 +1667,13 @@ function nys_dashboard_views_pre_render(&$view) {
 
       // Is bill substituted?  We need to check first, and if so, replace the bill with the substituted one
       if (!$row->overridden) {
-        $check_for_sub = $bill->field_ol_substituted_by[LANGUAGE_NONE][0]['value'] ? $bill->field_ol_substituted_by[LANGUAGE_NONE][0]['value'] : NULL;
+        if (isset($bill->field_ol_substituted_by[LANGUAGE_NONE][0]['value'])) {
+          $check_for_sub = $bill->field_ol_substituted_by[LANGUAGE_NONE][0]['value'];
+        }
+        else {
+          $check_for_sub = null;
+        }
+                
         if (!is_null($check_for_sub)) {
           // Replace bill loaded for purposes of vote information
           // From here, the vote should populate correctly if the bill was substituted
@@ -2059,7 +2086,7 @@ function nys_dashboard_variant_access($role, $variant) {
       return TRUE;
     }
     // Admin's can view Senator's dashboard tabs.
-    elseif (user_has_role(ADMINISTRATOR, $viewing_user) && user_is_senator($account)) {
+    elseif (user_has_role(_nys_utils_get_rid_by_name('Administrator'), $viewing_user) && user_is_senator($account)) {
       return TRUE;
     }
     // Legislative correspondents can view Senator's dashboard tabs.
@@ -2080,7 +2107,7 @@ function nys_dashboard_variant_access($role, $variant) {
       // Constituents can view their own dashboard tabs.
       return TRUE;
     }
-    elseif (user_has_role(ADMINISTRATOR, $viewing_user) && user_is_constituent($account)) {
+    elseif (user_has_role(_nys_utils_get_rid_by_name('Administrator'), $viewing_user) && user_is_constituent($account)) {
       // Admin's can view constituent's dashboard tabs.
       return TRUE;
     }
@@ -2139,7 +2166,7 @@ function user_manages_this_inbox($account, $user) {
   if (!empty($user->field_senator_inbox_access)) {
     if (is_array($user->field_senator_inbox_access[LANGUAGE_NONE]) || is_object($user->field_senator_inbox_access[LANGUAGE_NONE])) {
       foreach ($user->field_senator_inbox_access[LANGUAGE_NONE] as $item) {
-        if ($item['target_id'] == $account->uid && user_has_role(LEGISLATIVE_CORRESPONDENT, $user)) {
+        if ($item['target_id'] == $account->uid && user_has_role(_nys_utils_get_rid_by_name('Legislative Correspondent'), $user)) {
           return TRUE;
         }
       }
@@ -2223,8 +2250,11 @@ function theme_nys_dashboard_user_link($variables) {
   if (!empty($user['first_name']) && !empty($user['last_name'])) {
     $name_output = $user['first_name'] . ' ' . $user['last_name'];
   }
-  else {
+  elseif (isset($user['name']) && !empty($user['name'])) {
     $name_output = $user['name'];
+  }
+  else {
+    $name_output = '';
   }
 
   $link = 'user/' . $uid . '/dashboard/issues';

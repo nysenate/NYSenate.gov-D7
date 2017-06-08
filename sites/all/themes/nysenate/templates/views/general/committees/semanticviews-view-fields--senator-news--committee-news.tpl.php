@@ -1,5 +1,5 @@
 <?php if(isset($fields['field_image_main']->content)): ?>
-<div class="c-update-block c-update-block--image">
+<article class="c-update-block c-update-block--image">
   <div class="l-left">
     <?php if ($fields['type']->content !== 'Event'): ?>
       <div class="c-date"><div class="c-type"><?php echo $fields['type']->content; ?></div></div>
@@ -17,9 +17,9 @@
     <?php endif?>
   </div>
   <div class="c-image"><?php echo $fields['field_image_main']->content;?></div>
-</div>
+</article>
 <?php else: ?>
-  <div class="c-update-block">
+  <article class="c-update-block">
     <div class="l-left">
       <?php if ($fields['type']->content !== 'Event'): ?>
         <div class="c-date"><div class="c-type"><?php echo $fields['type']->content; ?></div></div>
@@ -36,5 +36,5 @@
         <div class="c-date"><?php echo $fields['field_date']->content; ?></div>
       <?php endif?>
     </div>
-  </div>
+  </article>
 <?php endif;?>

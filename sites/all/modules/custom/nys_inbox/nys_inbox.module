@@ -940,7 +940,7 @@ function nys_inbox_preprocess_panels_pane(&$vars) {
           return;
         }
         // Hide inbox link from Senator's when Senator.
-        if (user_is_constituent($account) && $user->uid != $account->uid && user_has_role(LEGISLATIVE_CORRESPONDENT, $user)) {
+        if (user_is_constituent($account) && $user->uid != $account->uid && user_has_role(_nys_utils_get_rid_by_name('Legislative Correspondent'), $user)) {
           unset($vars['content'][$key]);
           return;
         }
@@ -1364,4 +1364,12 @@ function nys_inbox_block_view_alter(&$data, $block) {
       }
     }
   }
+}
+
+/**
+ * Implements hook_privatemsg_message_presave_alter
+ */
+function nys_inbox_privatemsg_message_presave_alter(&$message) {
+  $message->subject = filter_xss($message->subject, array());
+  $message->body = filter_xss($message->body, array());
 }

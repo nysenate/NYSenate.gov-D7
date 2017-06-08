@@ -114,6 +114,7 @@ function nys_sitewide_elements_strongarm() {
     'press_release' => 0,
     'video' => 0,
     'open_data' => 0,
+    'school' => 0,
     'chapter' => 0,
     'promotional_banner' => 0,
     'senator' => 0,
@@ -124,6 +125,7 @@ function nys_sitewide_elements_strongarm() {
     'student_program' => 0,
     'timeline_item' => 0,
     'webform' => 0,
+    'statute' => 0,
   );
   $export['disqus_nodetypes'] = $strongarm;
 
@@ -529,6 +531,21 @@ function nys_sitewide_elements_strongarm() {
         'custom_settings' => FALSE,
       ),
       'sponsor_list' => array(
+        'custom_settings' => FALSE,
+      ),
+      'bill_list_item' => array(
+        'custom_settings' => FALSE,
+      ),
+      'agenda_senator_sponsors' => array(
+        'custom_settings' => FALSE,
+      ),
+      'senator_search_list' => array(
+        'custom_settings' => FALSE,
+      ),
+      'senators_involved' => array(
+        'custom_settings' => FALSE,
+      ),
+      'sponsor_list_bill_detail' => array(
         'custom_settings' => FALSE,
       ),
     ),

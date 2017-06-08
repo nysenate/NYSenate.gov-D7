@@ -1,7 +1,7 @@
 name = nys_events
 core = 7.x
 package = NY STATE SENATE
-version = 7.x-1.63
+version = 7.x-1.64
 project = nys_events
 dependencies[] = better_exposed_filters
 dependencies[] = ctools
@@ -74,8 +74,6 @@ features[field_instance][] = node-event-field_yt
 features[metatag][] = node:session
 features[node][] = event
 features[page_manager_pages][] = senator_calendar
-features[taxonomy][] = event_types
-features[taxonomy][] = initiatives
 features[variable][] = comment_anonymous_event
 features[variable][] = comment_default_mode_event
 features[variable][] = comment_default_per_page_event

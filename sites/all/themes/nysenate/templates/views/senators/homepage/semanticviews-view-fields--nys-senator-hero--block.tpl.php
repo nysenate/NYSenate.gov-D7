@@ -69,8 +69,8 @@ $senator_microsite_link = substr(url('node/' . $row->nid),1);
 
     <div class="c-senator-hero--info">
       <div>
-        <h2 class="c-senator-hero--title"><?php if($fields['field_active']->content !== 'active'): ?>former <?php endif; ?>new york state senator</h2>
-        <h3 class="c-senator-hero--name"><?php echo $fields['title']->content;?></h3>
+        <h2 class="c-senator-hero--title"><?php if($fields['field_active']->content !== 'active'): ?>former <?php endif; ?>new york state senator<br>
+        <span class="c-senator-hero--name"><?php echo $fields['title']->content;?></span></h2>
         <div class="c-senator-hero--info-secondary">
           <p class="c-senator-hero--roles">
 

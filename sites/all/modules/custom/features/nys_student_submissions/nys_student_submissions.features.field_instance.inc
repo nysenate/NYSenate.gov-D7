@@ -186,7 +186,7 @@ function nys_student_submissions_field_default_field_instances() {
     'entity_type' => 'entityform',
     'field_name' => 'field_school_stud_earthday_subm',
     'label' => 'Student Submissions',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'custom_add_another' => '',
       'custom_remove' => '',

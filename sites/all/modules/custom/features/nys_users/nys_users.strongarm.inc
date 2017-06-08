@@ -15,7 +15,7 @@ function nys_users_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'update_notify_emails';
   $strongarm->value = array(
-    0 => 'johndoe@nysenate.gov',
+    0 => 'info@nysenate.gov',
   );
   $export['update_notify_emails'] = $strongarm;
 
@@ -213,7 +213,7 @@ Your account on [site:name] has been canceled.
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'webform_default_from_address';
-  $strongarm->value = 'johndoe@nysenate.gov';
+  $strongarm->value = 'info@nysenate.gov';
   $export['webform_default_from_address'] = $strongarm;
 
   $strongarm = new stdClass();

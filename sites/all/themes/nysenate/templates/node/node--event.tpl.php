@@ -78,9 +78,9 @@
 // Set up reference variable indicating if this event spans multiple days.
 $is_multiday = !(date('Ymd',$node->field_date[LANGUAGE_NONE][0]['value'])==date('Ymd',$node->field_date[LANGUAGE_NONE][0]['value2']));
 ?>
-<section id="node-<?php print $node->nid; ?>" class="event_detail_page <?php print $classes; ?>"<?php print $attributes; ?>>
+<article id="node-<?php print $node->nid; ?>" class="event_detail_page <?php print $classes; ?>"<?php print $attributes; ?>>
 
-  <h2 class="nys-event-title"><?php print $title; ?></h2>
+  <h1 class="nys-event-title"><?php print $title; ?></h1>
   <div class="c-event-block c-event-block--featured<?php if ($node->field_image_main) print "-image"; ?>">
     <?php if($node->field_image_main): ?>
     <div class="c-event-image"><?php print theme('image_style', array( 'path' =>  $field_image_main[0]['uri'], 'style_name' => '380x215')); ?></div>
@@ -116,7 +116,7 @@ $is_multiday = !(date('Ymd',$node->field_date[LANGUAGE_NONE][0]['value'])==date(
 
   <?php if(isset($node->field_issues[LANGUAGE_NONE])): ?>
   <div class="nys-associated-topics">
-    <h4 class="nys-associated-topics--label">related issues: </h4>
+    <div class="nys-associated-topics--label">related issues: </div>
     <ul>
     <?php
       foreach ($node->field_issues[LANGUAGE_NONE] as $value) : ?>
@@ -157,4 +157,4 @@ $is_multiday = !(date('Ymd',$node->field_date[LANGUAGE_NONE][0]['value'])==date(
     <?php print $social_buttons; ?>
   <?php endif; ?>
 
-</section>
+</article>

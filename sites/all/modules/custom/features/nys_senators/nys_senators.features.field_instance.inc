@@ -2499,6 +2499,8 @@ Quotes are also printed on bill pages where the member is a sponsor.',
   // Exported field_instance: 'node-senator-field_image_hero'.
   $field_instances['node-senator-field_image_hero'] = array(
     'bundle' => 'senator',
+    'custom_add_another' => '',
+    'custom_remove' => '',
     'deleted' => 0,
     'description' => 'Image that appears at the top of the Senator About page.
 Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (for retina)',
@@ -2558,6 +2560,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'weight' => 16,
       ),
     ),
+    'ds_extras_field_template' => '',
     'entity_type' => 'node',
     'field_name' => 'field_image_hero',
     'label' => 'Front Page Header Image',

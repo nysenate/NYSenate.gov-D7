@@ -76,11 +76,11 @@
 ctools_include('ajax');
 ctools_include('modal');
 ?>
-<section id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
+<article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
   <?php print render($title_prefix); ?>
   <?php if ($page): ?>
-    <div class="c-petition--head">
-      <h2 class="nys-title"><?php print $title; ?></h2>
+    <header class="c-petition--head">
+      <h1 class="nys-title"><?php print $title; ?></h1>
       <?php if (isset($content['field_senator'])): ?>
         <p class="c-news--author">
           SEN. <?php print $content['field_senator']['#object']->field_senator
@@ -111,10 +111,10 @@ ctools_include('modal');
       <?php endif; ?>
 
       <?php if (isset($content['field_subheading'])): ?>
-        <h3
-          class="nys-subtitle-title"><?php print $content['field_subheading'][0]['#markup']; ?></h3>
+        <div
+          class="nys-subtitle-title"><?php print $content['field_subheading'][0]['#markup']; ?></div>
       <?php endif; ?>
-    </div>
+    </header>
   <?php endif; ?>
   <?php print render($title_suffix); ?>
 
@@ -133,7 +133,7 @@ ctools_include('modal');
     </div>
   <?php endif; ?>
 
-  <div class="c-news--body">
+  <section class="c-news--body">
 
     <?php if (isset($content['body'])) : ?>
       <div class="c-block">
@@ -166,10 +166,12 @@ ctools_include('modal');
       </div>
     <?php endif; ?>
 
-  </div>
+  </section>
 
   <?php if (!empty($social_buttons)): ?>
+    <section>
     <?php print $social_buttons; ?>
+    </section>
   <?php endif; ?>
 
-</section>
+</article>

@@ -52,3 +52,39 @@
 .contextual-links-region{
   clear:both;
 }
+
+//CKeditor body
+.cke_editable {
+  padding: 1%!important;
+  h2, h3, h4 {
+    font-family: 'Proxima Nova SemiBold';
+    color: $grey02;
+  }
+  h2 {
+    font-size: 30px;
+    margin: 36px 0 24px;
+  }
+  
+  h3 {
+    font-size: 22px;
+    margin: 24px 0 0;
+  }
+  
+  h4 {
+    font-size: 21px;
+    font-style: italic;
+    margin: 24px 0 0;
+    color: $grey03;
+  }
+  }
+
+//Ckeditor source code wrap
+.cke_source {
+    white-space: pre-wrap!important;
+}
+
+.form-textarea-wrapper textarea {
+  .cke_source {
+      white-space: pre-wrap!important;
+  }
+}

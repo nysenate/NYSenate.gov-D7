@@ -6,7 +6,7 @@
  * @ingroup views_templates
  */
 ?>
-<div class="c-event-block c-event-block--list">
+<article class="c-event-block c-event-block--list">
 <?php $row_count = 0; $row_count = count($rows);?>
 <?php if (!empty($title)): ?>
 <div class="c-event-date">
@@ -26,4 +26,4 @@
 		<?php print $row; ?>
 	</div>
 <?php endforeach; ?>
-</div>
+</article>
