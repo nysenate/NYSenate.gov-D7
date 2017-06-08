@@ -105,7 +105,7 @@
  * @see template_process()
  */
 
- $node_url = $GLOBALS['base_url'].'/'.drupal_get_path_alias('node/'.$node->nid, array('absolute' => TRUE));
+ $node_url = $GLOBALS['base_url'].'/'.drupal_get_path_alias('node/'.$node->nid);
  $ol_base_url = variable_get('openleg_base_url');
 ?>
 <!-- RESOLUTION TEMPLATE -->

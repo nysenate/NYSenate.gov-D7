@@ -27,7 +27,7 @@
  * @ingroup views_templates
  */
 ?>
-<div class="<?php print $classes; ?> c-updates-container">
+<aside class="<?php print $classes; ?> c-updates-container">
   <?php print render($title_prefix); ?>
   <?php if ($title): ?>
     <?php print $title; ?>
@@ -87,4 +87,4 @@
     </div>
   <?php endif; ?>
 
-</div><?php /* class view */ ?>
+</aside><?php /* class view */ ?>

@@ -414,10 +414,39 @@ function nys_bills_send_private_message($message) {
   else {
     // Get the senator's user object.
     $senator = user_load(nys_utils_senator_get_uid($message['senator_nid']));
+
+    // Get the proper language for the vote type.
+    switch ($message['vote_label']) {
+      case 'Aye':
+        $vote_type = 'supported';
+        break;
+      case 'Nay':
+        $vote_type = 'opposed';
+        break;
+      default:
+        $vote_type = 'sent a message regarding';
+        break;
+    }
+
     // Create the subject.
-    $subject = "{$values['first_name']} {$values['last_name']} has voted {$message['vote_label']} on {$message['node']->title}";
+    $subject = "{$values['first_name']} {$values['last_name']} {$vote_type} " .
+      $message['node']->title;
+
     // Create the body.
-    $body = filter_xss($values['message']);
+    $body = '';
+    if ($values['message']) {
+      $body .= "<div style=\"border-left:5px solid #aaaaaa;border-radius:.2em;padding-left:1em\">" .
+        filter_xss($values['message']) . "</div>\n\n- - - - - - - - -\n";
+    }
+    $body .= $message['node']->title;
+    if ($sponsor_name = $message['node']->field_ol_sponsor_name[LANGUAGE_NONE][0]['value']) {
+      $body .= " - " . $sponsor_name;
+    }
+    $body .= "\n" .
+      field_get_items('node', $message['node'], 'field_ol_name')[0]['value'] .
+      "\n" . url($values['pass_thru_url'], array('absolute' => TRUE));
+
+
     // Set author and timestamp options.
     $options = array('timestamp' => REQUEST_TIME, 'author' => $message['author']);
 

@@ -149,7 +149,7 @@ function nys_legislation_views_default_views() {
   $handler->display->display_options['fields']['field_issues']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_issues']['type'] = 'ds_taxonomy_separator';
   $handler->display->display_options['fields']['field_issues']['delta_offset'] = '0';
-  /* Field: Content: Publish Date */
+  /* Field: Content: Published on */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -235,7 +235,7 @@ function nys_legislation_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'session' => 'session',
   );
-  /* Filter criterion: Content: Publish Date -  start date (field_date) */
+  /* Filter criterion: Content: Published on -  start date (field_date) */
   $handler->display->display_options['filters']['field_date_value']['id'] = 'field_date_value';
   $handler->display->display_options['filters']['field_date_value']['table'] = 'field_data_field_date';
   $handler->display->display_options['filters']['field_date_value']['field'] = 'field_date_value';
@@ -368,7 +368,7 @@ function nys_legislation_views_default_views() {
   $handler->display->display_options['fields']['field_committee_status']['relationship'] = 'field_ol_bill_target_id';
   $handler->display->display_options['fields']['field_committee_status']['label'] = '';
   $handler->display->display_options['fields']['field_committee_status']['element_label_colon'] = FALSE;
-  /* Field: Content: Publish Date */
+  /* Field: Content: Published on */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -580,7 +580,7 @@ function nys_legislation_views_default_views() {
   $handler->display->display_options['fields']['field_committee_status']['relationship'] = 'field_ol_bill_target_id';
   $handler->display->display_options['fields']['field_committee_status']['label'] = '';
   $handler->display->display_options['fields']['field_committee_status']['element_label_colon'] = FALSE;
-  /* Field: Content: Publish Date */
+  /* Field: Content: Published on */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -745,7 +745,7 @@ function nys_legislation_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'session' => 'session',
   );
-  /* Filter criterion: Content: Publish Date -  start date (field_date) */
+  /* Filter criterion: Content: Published on -  start date (field_date) */
   $handler->display->display_options['filters']['field_date_value']['id'] = 'field_date_value';
   $handler->display->display_options['filters']['field_date_value']['table'] = 'field_data_field_date';
   $handler->display->display_options['filters']['field_date_value']['field'] = 'field_date_value';
@@ -801,7 +801,7 @@ function nys_legislation_views_default_views() {
     'session' => 'session',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Content: Publish Date -  start date (field_date) */
+  /* Filter criterion: Content: Published on -  start date (field_date) */
   $handler->display->display_options['filters']['field_date_value']['id'] = 'field_date_value';
   $handler->display->display_options['filters']['field_date_value']['table'] = 'field_data_field_date';
   $handler->display->display_options['filters']['field_date_value']['field'] = 'field_date_value';
@@ -939,7 +939,7 @@ function nys_legislation_views_default_views() {
   $handler->display->display_options['fields']['field_issues']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_issues']['type'] = 'ds_taxonomy_separator';
   $handler->display->display_options['fields']['field_issues']['delta_offset'] = '0';
-  /* Field: Content: Publish Date */
+  /* Field: Content: Published on */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -1182,7 +1182,7 @@ function nys_legislation_views_default_views() {
     'view_mode' => 'agenda_senator_sponsors',
     'links' => 0,
   );
-  /* Field: Content: Publish Date */
+  /* Field: Content: Published on */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -1385,7 +1385,7 @@ function nys_legislation_views_default_views() {
   $handler->display->display_options['fields']['field_issues']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_issues']['type'] = 'ds_taxonomy_separator';
   $handler->display->display_options['fields']['field_issues']['delta_offset'] = '0';
-  /* Field: Content: Publish Date */
+  /* Field: Content: Published on */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -1599,7 +1599,7 @@ function nys_legislation_views_default_views() {
   $handler->display->display_options['fields']['field_committee_status']['relationship'] = 'field_ol_bill_target_id';
   $handler->display->display_options['fields']['field_committee_status']['label'] = '';
   $handler->display->display_options['fields']['field_committee_status']['element_label_colon'] = FALSE;
-  /* Field: Content: Publish Date */
+  /* Field: Content: Published on */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';

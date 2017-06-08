@@ -76,11 +76,11 @@
  */
  ?>
 
-<section id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
+<article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
   <?php print render($title_prefix); ?>
   <?php if ($page): ?>
-    <div class="c-questionnaire--head">
-      <h2 class="nys-article-title"><?php print $title; ?></h2>
+    <header class="c-questionnaire--head">
+      <h1 class="nys-article-title"><?php print $title; ?></h1>
       <div class="c-news--head-meta">
         <?php if(isset($content['field_article_author'])): ?>
           <p class="c-news--author">
@@ -104,7 +104,7 @@
         <?php endif; ?>
 
       </div>
-    </div>
+    </header>
   <?php endif; ?>
 
   <?php print render($title_suffix); ?>
@@ -120,9 +120,9 @@
     <?php endif; ?>
 
     <?php if(isset($content['field_byline'])): ?>
-    <h3 class="c-news--subtitle">
+    <div class="c-news--subtitle">
       <?php print $content['field_byline'][0]['#markup']; ?>
-    </h3>
+    </div>
     <?php endif; ?>
 
     <div class="c-block">
@@ -130,9 +130,9 @@
     </div>
 
     <?php if(!empty($embedded_webform)): ?>
-      <div class="c-block">
+      <section class="c-block">
         <?php print $embedded_webform; ?>
-      </div>
+      </section>
     <?php endif; ?>
 
     <?php
@@ -143,9 +143,11 @@
     ?>
 
   <?php if(!empty($social_buttons)): ?>
+    <section>
     <?php print $social_buttons; ?>
+    </section>
   <?php endif; ?>
 
 
   </div>
-</section>
+</article>

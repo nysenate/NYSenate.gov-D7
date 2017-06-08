@@ -26,8 +26,8 @@
 	}
 }
 
-// Petitions form
-.petition-form {
+// All registration forms
+.registration-form {
   margin-top: 0;
 
   .form-item-first-name,
@@ -61,7 +61,6 @@
   }
 
   @media #{$tablet} {
-    margin-top: -40px;
 
     .form-item-first-name,
     .form-item-addr-street,

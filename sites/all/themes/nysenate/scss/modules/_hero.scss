@@ -12,10 +12,10 @@
 }
 .c-hero--tout {
 	position: relative;
-	padding: 0; 
+	padding: 0;
 	&.c-hero--featured{
-		padding: 20px;	
-		max-width: 440px;	
+		padding: 20px;
+		max-width: 440px;
 		background: #fff;
 	}
 }
@@ -32,7 +32,7 @@
 		border-bottom: 1px dotted;
 		font-style: italic;
 		@include transition(color, 0.2s, ease);
-		
+
 		&:hover {
 			color: $yellow01;
 		}
@@ -103,8 +103,8 @@
 	.c-hero--tout {
 		margin-top: -15%; //temp
 		&.c-hero--featured{
-			padding: 40px 70px 60px;	
-			max-width: 760px;	
+			padding: 40px 70px 60px;
+			max-width: 760px;
 			background: #fff;
 		}
 	}
@@ -191,7 +191,7 @@
 }
 .c-docket {
 	max-width: 60%;
-	height: 148px; // 4 items high	
+	height: 148px; // 4 items high
 	list-style: none;
 	overflow-y: scroll;
 	overflow-x: hidden;
@@ -206,7 +206,7 @@
 	color: $yellow02;
 
 	&:after {
-		content: "-"; 
+		content: "-";
 		margin: 0 0.4em 0 0.7em;
 		color: $grey04;
 	}
@@ -274,12 +274,12 @@
 
 }
 .c-senator-hero--info {
-	padding: 20px 20px 60px; 
+	padding: 20px 20px 60px;
 }
 
 .c-senator-hero--title {
 	margin: 0 0 3px 0;
-	
+
 	font-family: "Proxima Nova Regular";
 	text-transform: uppercase;
 	line-height: 1em;
@@ -295,6 +295,7 @@
 	letter-spacing: 0.05em;
 	font-size: 26px;
 	margin: 0 0 15px 0;
+  text-transform: capitalize;
 	a{
 		color: #fff;
 	}
@@ -394,6 +395,31 @@
 				color: $grey04;
 			}
 		}
+		.c-hero-livestream-description {
+			display: block;
+			font-weight: normal;
+			line-height: 1.5;
+			margin-bottom: 0.5rem;
+			font-family: 'Proxima Nova Regular';
+			font-size: 16px;
+		}
+		.c-hero-livestream-links {
+			margin: 20px 0 20px 0;
+			padding: 0;
+			width: 90%;
+          li {
+            line-height: 16px;
+            font-size: 16px;
+            font-family: 'Proxima Nova Regular';
+          }
+          a {
+            color: #CB8D37;
+            //margin-left: -10px;
+            display: inline-block;
+            width: 89%;
+            vertical-align: top;
+          }
+		}
 		.c-hero-session-link {
 			font-family: "Proxima Nova Regular";
 			font-size: 12px;
@@ -446,7 +472,7 @@
 	.c-senator-hero--img {
 		position: relative;
 		width: 54%;
-		
+
 		&:before {
 			content: "";
 			display: block;
@@ -548,7 +574,7 @@
 				}
 				.livestream-date {
 					font-size: 11px;
-				}			
+				}
 			}
 			.c-hero-session-link {
 				font-size: 12px;
@@ -621,7 +647,7 @@
 				height: 100%;
 				color: white;
 			}
-		}	
+		}
 		// twitter needs to be centered
 		&.twitter {
 			a:after {
@@ -676,10 +702,10 @@
 					font-size: 24px;
 					line-height: 34px;
 					margin-bottom: 10px;
-				}		
+				}
 				.livestream-date {
-					font-size: 16px;	
-				}	
+					font-size: 16px;
+				}
 			}
 			.c-hero-livestream-sched {
 				label {
@@ -757,7 +783,7 @@
 				h3 {
 					font-size: 34px;
 					line-height: 47px;
-				}				
+				}
 			}
 			.c-hero-livestream-sched {
 				label {

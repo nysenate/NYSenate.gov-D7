@@ -31,7 +31,7 @@
   <?php print $fields['field_offices']->content; ?>
 
   <div class="c-block--senator-email">
-    <h4 class="c-office-info--title">Email Address:</h4>
+    <h3 class="c-office-info--title">Email Address:</h3>
     <?php print $fields['field_email']->content; ?>
   </div>
 
@@ -39,7 +39,7 @@
   if (!empty($fields['office_contacts'])):
   ?>
     <div class="c-block--senator-office-contacts">
-      <h4 class="c-office-info--title">Office Contacts:</h4>
+      <h3 class="c-office-info--title">Office Contacts:</h3>
       <?php
       foreach ($fields['office_contacts'] as $contact):
       ?>

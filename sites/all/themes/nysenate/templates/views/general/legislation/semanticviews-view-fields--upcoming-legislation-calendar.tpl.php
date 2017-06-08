@@ -1,11 +1,11 @@
-<div class="c-update-block">
+<article class="c-update-block">
 	<div class="l-panel-col l-panel-col--lft">
-		<h4 class="c-listing--bill-num"><?php echo $fields['title']->content; ?></h4>
+		<h3 class="c-listing--bill-num"><?php echo $fields['title']->content; ?></h3>
 		<a href="#" class="c-committee-link"></a>
 		<div class="c-listing--related-issues"><?php echo $fields['field_issues']->content; ?></div>
 	</div><!-- .l-panel-col -->
 	<div class="l-panel-col l-panel-col--ctr">
-		<p class="c-press-release--descript"><?php echo $fields['field_ol_name']->content; ?></p>
+		<h4 class="c-press-release--descript"><?php echo $fields['field_ol_name']->content; ?></h4>
 		<?php if(isset($fields['field_ol_sponsor']->content)): ?>
 			<?php echo $fields['field_ol_sponsor']->content; ?>
 		<?php elseif(!isset($fields['field_ol_sponsor']->content) && $fields['field_ol_sponsor_name']->content): ?>
@@ -32,4 +32,4 @@
 			</div>
 		<?php endif; ?>
 	</div>
-</div>
+</article>

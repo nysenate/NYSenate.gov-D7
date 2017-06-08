@@ -78,13 +78,13 @@
 
 <section id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
 	<div class="c-initiative--header">
-		<h2 class="nys-article-title"><?php echo $title; ?></h2>
-		<h4 class="c-initiative--subtitle">Initiative</h4>
+		<h1 class="nys-article-title"><?php echo $title; ?></h1>
+		<h2 class="c-initiative--subtitle">Initiative</h2>
 
 		<?php if(isset($content['field_subheading'])): ?>
-			<h3 class="c-initiative--section-title">
+			<p class="c-initiative--section-title">
 				<?php print render($content['field_subheading']); ?>
-			</h3>
+			</p>
 		<?php endif; ?>
 	</div>
 
@@ -118,14 +118,14 @@
 
 	<?php if(isset($content['field_honorees'])): ?>
 		<div class="c-block c-block--initiative-honorees">
-			<h3 class="c-initiative--section-title"><?php echo $content['field_honoree_section_title'][0]['#markup']; ?></h3>
+			<h2 class="c-initiative--section-title"><?php echo $content['field_honoree_section_title'][0]['#markup']; ?></h2>
 			<?php print render($content['field_honorees']); ?>
 		</div>
 	<?php endif; ?>
 
 	<?php if(isset($content['field_attachment'][0]['#markup'])): ?>
 		<div class="c-block c-download-file">
-			<h4 class="c-initiative--subtitle">To learn more about this initiative:</h4>
+			<h2 class="c-initiative--subtitle">To learn more about this initiative:</h2>
 			<a href="<?php echo $content['field_attachment'][0]['#markup'];?>" class="c-download--link" target="_blank">Download PDF</a>
 		</div>
 	<?php endif; ?>

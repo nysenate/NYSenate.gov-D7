@@ -4,7 +4,7 @@
   </div>
   <div class="nys-senator--info">
     <span>Senator</span>
-    <h4 class="nys-senator--name"><a href="/<?php echo drupal_get_path_alias('node/'.$node->nid)?>"><?php print $title; ?></a></h4>
+    <h3 class="nys-senator--name"><a href="/<?php echo drupal_get_path_alias('node/'.$node->nid)?>"><?php print $title; ?></a></h3>
     <p class="nys-senator--district">
       <span class="nys-senator--party">
       <?php echo nys_utils_get_senator_district($node->nid) . '&nbsp;Senate District'; ?>

@@ -24,7 +24,7 @@
 ?>
 <?php !empty($css_id) ? print '<div id="' . $css_id . '">' : ''; ?>
   
-  <h3 class="nys-title">Legislation</h3>
+  <h2 class="nys-title">Legislation</h2>
 
   <div class="row">
     <div class="large-12 columns"><?php print $content['top']; ?></div>

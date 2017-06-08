@@ -74,6 +74,43 @@
  * @see template_preprocess_node()
  * @see template_process()
  */
+ 
+if (isset($node->field_image_main[LANGUAGE_NONE][0]['uri'])) {
+  $field_image_main_uri = $node->field_image_main[LANGUAGE_NONE][0]['uri'];
+}
+else {
+  $field_image_main_uri = '';
+}
+ 
+if (isset($field_link_type[0]['value'])) {
+  $link_type_value = $field_link_type[0]['value'];
+}
+else {
+  $link_type_value = '';
+}
+
+if (isset($field_external_web_page[0]['safe_value'])) {
+  $external_web_page_safe_value = $field_external_web_page[0]['safe_value'];
+}
+else {
+  $external_web_page_safe_value = '';
+}
+
+if (isset($node->field_call_to_action[LANGUAGE_NONE][0]['value'])) {
+  $call_to_action_value = $node->field_call_to_action[LANGUAGE_NONE][0]['value'];
+}
+else {
+  $call_to_action_value = '';
+}
+
+if (isset($node->field_promotional_content[LANGUAGE_NONE][0]['target_id'])) {
+  $promotional_content_target_id = $node->field_promotional_content[LANGUAGE_NONE][0]['target_id'];
+}
+else {
+  $promotional_content_target_id = FALSE;
+}
+
+
 ?>
 <?php if($teaser): ?>
 
@@ -84,7 +121,7 @@
 
     <div class="c-initiative--content">
       <div class="c-initiative--inner">
-	       <?php if( $node->field_call_to_action[LANGUAGE_NONE][0]['value'] == "petition") {; ?>
+	       <?php if( $call_to_action_value == "petition") {; ?>
 	       	<?php if(!empty($node->field_senator[LANGUAGE_NONE][0]['entity'])): ?>
 	       		<h4 class="senator-name"><?php echo $node->field_senator[LANGUAGE_NONE][0]['entity']->title; ?>'s petition</h4>
 	       	<?php endif; ?>
@@ -92,10 +129,10 @@
         <h4 class="c-initiative--title"><?php print $title; ?></h4>
       </div>
     </div>
-    <a href="<?php $field_link_type[0]['value'] == 'external' ? print $field_external_web_page[0]['safe_value'] : print url('node/' . $node->field_promotional_content[LANGUAGE_NONE][0]['target_id']); ?>" class="c-block--btn icon-before__<?php echo $node->field_call_to_action[LANGUAGE_NONE][0]['value']; ?> med-bg">
-	    <?php if( $node->field_call_to_action[LANGUAGE_NONE][0]['value'] == "petition") {; ?>
+    <a href="<?php $link_type_value == 'external' ? print $external_web_page_safe_value : print url('node/' . $promotional_content_target_id); ?>" class="c-block--btn icon-before__<?php echo $call_to_action_value; ?> med-bg">
+	    <?php if( $call_to_action_value == "petition") {; ?>
 	    	review the petition
-	    <?php  } else if ($node->field_call_to_action[LANGUAGE_NONE][0]['value'] == "questionaire") {; ?>
+	    <?php  } else if ($call_to_action_value == "questionaire") {; ?>
 		    take the questionnaire
 	    <?php } else {; ?>
 	    	View the report
@@ -106,7 +143,7 @@
 
 <?php elseif($view_mode == 'full'): ?>
 
-  <?php if (!$node->field_image_main[LANGUAGE_NONE][0]['uri']): ?>
+  <?php if (!$field_image_main_uri): ?>
 
     <div class="c-initiative-block lgt-bg">
       <h4 class="c-initiative-block--title">No Free College for Convicts</h4>
@@ -120,7 +157,7 @@
         <!-- INITIATIVE BLOCK - TWO UP -->
   <div class="c-block c-block--initiative c-block--initiative__has-img lgt-bg">
 
-    <a href="<?php $field_link_type[0]['value'] == 'external' ? print $field_external_web_page[0]['safe_value'] : print url('node/' . $node->field_promotional_content[LANGUAGE_NONE][0]['target_id']); ?>"><?php print theme('image_style', array( 'path' =>  $node->field_image_main[LANGUAGE_NONE][0]['uri'], 'style_name' => '280x280')); ?></a>
+    <a href="<?php $link_type_value == 'external' ? print $external_web_page_safe_value : print url('node/' . $promotional_content_target_id); ?>"><?php print theme('image_style', array( 'path' =>  $field_image_main_uri, 'style_name' => '280x280')); ?></a>
 
     <div class="c-initiative--content">
       <div class="c-initiative--inner">
@@ -137,8 +174,8 @@
       );
 
     ?>
-    <a href="<?php $field_link_type[0]['value'] == 'external' ? print $field_external_web_page[0]['safe_value'] : print url('node/' . $node->field_promotional_content[LANGUAGE_NONE][0]['target_id']); ?>" class="c-block--btn icon-before__awards icon-before__<?php echo $node->field_call_to_action[LANGUAGE_NONE][0]['value']; ?> med-bg">
-	    <?php print $allowed_values[$node->field_call_to_action[LANGUAGE_NONE][0]['value']]; ?>
+    <a href="<?php $link_type_value == 'external' ? print $external_web_page_safe_value : print url('node/' . $promotional_content_target_id); ?>" class="c-block--btn icon-before__awards icon-before__<?php echo $call_to_action_value; ?> med-bg">
+	    <?php print $allowed_values[$call_to_action_value]; ?>
     </a>
   </div>
   <!-- end initiative block two up -->

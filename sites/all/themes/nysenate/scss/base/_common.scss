@@ -500,13 +500,16 @@
 	padding: 20px 0;
 	position: relative;
 }
-.c-container--title {
-	color: $grey02;
-	text-transform: uppercase;
-	font-family: "Proxima Nova Regular";
-	font-size: 12px;
-	letter-spacing: 0.1em;
-	line-height: 1em;
+h2, h3 {
+  &.c-container--title {
+   color: $grey02;
+   text-transform: uppercase;
+   font-family: "Proxima Nova Regular";
+   font-size: 12px;
+   letter-spacing: 0.1em;
+   line-height: 1em;
+   margin: 0;
+ }
 }
 .c-container--link {
 	position: absolute;
@@ -568,9 +571,11 @@
 	}
 }
 @media #{$tablet} {
-	.c-container--title {
-		font-size: 16px;
-	}
+	h2, h3 {
+    &.c-container--title {
+      font-size: 16px;
+    }
+  }
 	.c-container--link {
 		font-size: 16px;
 		line-height: 16px;
@@ -679,7 +684,7 @@
 /	Subpage Header styles
 /-------------------------------------*/
 
-.c-subpage-header--title {
+h2.c-subpage-header--title {
 	margin: 0;
 	font-family: "Adelle Bold";
 	line-height: 1em;
@@ -740,7 +745,7 @@
 }
 
 @media #{$tablet} {
-	.c-subpage-header--title {
+	h2.c-subpage-header--title {
 		font-size: 32px;
 	}
 	.c-subpage-header--title02 {

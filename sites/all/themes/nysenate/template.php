@@ -326,7 +326,9 @@ function nysenate_preprocess_node(&$variables) {
     $og_url = array('#tag' => 'meta', '#attributes' => array('property' => 'og:url','content' => url($variables['node_url'])));
     $og_type = array('#tag' => 'meta', '#attributes' => array('property' => 'og:type','content' => 'article'));
     $og_title = array('#tag' => 'meta', '#attributes' => array('property' => 'og:title','content' => $variables['title']));
-    $og_description = array('#tag' => 'meta', '#attributes' => array('property' => 'og:description','content' => $variables['body'][0]['value']));
+    if (isset($variables['body'][0]['value'])) {
+      $og_description = array('#tag' => 'meta', '#attributes' => array('property' => 'og:description','content' => $variables['body'][0]['value']));
+    }
     $og_image = !empty($variables['field_image_main'][0]['uri']) ? array(
       '#tag' => 'meta',
       '#attributes' => array(
@@ -339,7 +341,9 @@ function nysenate_preprocess_node(&$variables) {
     drupal_add_html_head($og_url, 'og_url');
     drupal_add_html_head($og_type, 'og_type');
     drupal_add_html_head($og_title, 'og_title');
-    drupal_add_html_head($og_description, 'og_description');
+    if (isset($og_description) && !empty($og_description)) {
+      drupal_add_html_head($og_description, 'og_description');
+    }
     drupal_add_html_head($og_image, 'og_image');
 
   }
@@ -361,7 +365,11 @@ function nysenate_preprocess_node(&$variables) {
 
   /** --- Transcripts --- */
 
-  if ($variables['type'] === 'transcript') {
+  if ($variables['type'] === 'transcript' &&
+      isset($variables['field_ol_filename'][0]['value']) &&
+      isset($variables['field_ol_transcript_type'][0]['value']) &&
+      isset($variables['field_ol_session_type'][0]['value']) &&
+      isset($variables['field_ol_publish_date'][0]['value'])) {
     $transcript_file_name = $variables['field_ol_filename'][0]['value'];
     $is_hearing = ($variables['field_ol_transcript_type'][0]['value'] === 'public_hearing');
 
@@ -654,6 +662,10 @@ function nysenate_preprocess_node(&$variables) {
     }
     $variables['same_as'] = $same_as;
 
+    // Initialize previous version data points.
+    $variables['previous_versions_multiyear'] = NULL;
+    $variables['previous_versions'] = NULL;
+
     // Print out previous versions of bill if there are any.
     $previous_versions = drupal_json_decode($bill_wrapper->field_ol_previous_versions->value());
 
@@ -747,9 +759,8 @@ function nysenate_preprocess_node(&$variables) {
       }
 
       $variables['prev_vers_prefix'] = t('Versions Introduced in Previous Legislative Sessions:');
-      $variables['previous_versions_multiyear'] = NULL;
 
-      if (count($prev_vers_array) == 1) {
+      if (count($prev_vers_array) == 1 && $variables['previous_versions'] != NULL && is_array($variables['previous_versions']) ) {
         $variables['prev_vers_prefix'] = t('Versions Introduced in ' . key($variables['previous_versions']) . ' Legislative Session:');
       }
       else {
@@ -1348,7 +1359,6 @@ function _nysenate_render_bill_amendments($amendments, $base_print_no, &$bill_wr
       <?php
       // This is a list of Assembly co-sponsors and multi-sponsors.
       $sponsors_array = _nysenate_resolve_amendment_sponsors($amendment, $bill_wrapper->field_ol_chamber->value());
-      nyslog("resolved sponsors=\n".var_export($sponsors_array, 1));
 
       // For co- OR multi- sponsored bills
       if (count($sponsors_array['co']) || count($sponsors_array['multi'])) {
@@ -1403,9 +1413,11 @@ function _nysenate_render_bill_amendments($amendments, $base_print_no, &$bill_wr
               $path = drupal_get_path_alias('taxonomy/term/'.reset($term)->tid);
             }
           ?>
+          <?php if (isset($com_status_prefix) && !empty($path)): ?>
           <dt>Current Committee:</dt>
-          <dd><?php if (isset($com_status_prefix) && empty($path) == FALSE): print $com_status_prefix; endif; ?></dd>
+          <dd><?php print $com_status_prefix; ?></dd>
           <?php
+          endif;
           endif;
 
           if ($bill_wrapper->field_ol_law_section->value()):
@@ -1635,7 +1647,7 @@ function nysenate_preprocess_semanticviews_view_fields(&$vars) {
 
   if (isset($vars['fields']['field_date']->content) && strpos($vars['fields']['field_date']->content, 'to')) {
     $date_array = explode('to', $vars['fields']['field_date']->content);
-    $pre_date = trim($date_array[0]);
+    $pre_date = intval(trim($date_array[0]));
     $vars['field_date_month'] = date('M', $pre_date);
     $vars['field_date_day'] = date('d', $pre_date);
     $vars['field_date_year'] = date('Y', $pre_date);

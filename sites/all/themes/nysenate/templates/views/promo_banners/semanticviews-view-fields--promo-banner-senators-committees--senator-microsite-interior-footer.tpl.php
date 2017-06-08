@@ -27,12 +27,13 @@
  */
 
 ?>
-<div class="c-block c-block--initiative c-block--initiative__half lgt-bg <?php print ($fields['counter']->content % 2 == 0 ? 'c-block--odd' : 'c-block--even') ?>">
+<article class="c-block c-block--initiative c-block--initiative__half lgt-bg <?php print ($fields['counter']->content % 2 == 0 ? 'c-block--odd' : 'c-block--even') ?>">
   <div class="c-initiative--content">
-    <a href="<?php $fields['field_link_type']->content == 'external' ? print $fields['field_external_web_page']->content : print $fields['path']->content; ?>"><h4 class="c-initiative--title"><?php print $fields['title']->content; ?></h4></a>
+    <a href="<?php $fields['field_link_type']->content == 'external' ? print $fields['field_external_web_page']->content : print $fields['path']->content; ?>">
+    <h3 class="c-initiative--title"><?php print $fields['title']->content; ?></h3></a>
   </div>
 
   <a href="<?php $fields['field_link_type']->content == 'external' ? print $fields['field_external_web_page']->content : print $fields['path']->content; ?>" class="c-block--btn icon-before__<?php print $fields['field_call_to_action_1']->content; ?> med-bg">
     <span><?php print $fields['field_call_to_action']->content; ?></span>
   </a>
-</div>
+</article>

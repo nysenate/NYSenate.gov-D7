@@ -404,10 +404,6 @@ function nys_cms_views_default_views() {
   $handler->display->display_options['empty']['area_text_custom']['field'] = 'area_text_custom';
   $handler->display->display_options['empty']['area_text_custom']['empty'] = TRUE;
   $handler->display->display_options['empty']['area_text_custom']['content'] = 'No content available.';
-  /* Relationship: Content: Author */
-  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
-  $handler->display->display_options['relationships']['uid']['table'] = 'node';
-  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   /* Relationship: Content: Taxonomy terms on node */
   $handler->display->display_options['relationships']['term_node_tid']['id'] = 'term_node_tid';
   $handler->display->display_options['relationships']['term_node_tid']['table'] = 'node';
@@ -420,6 +416,10 @@ function nys_cms_views_default_views() {
   $handler->display->display_options['relationships']['field_senator_target_id']['id'] = 'field_senator_target_id';
   $handler->display->display_options['relationships']['field_senator_target_id']['table'] = 'field_data_field_senator';
   $handler->display->display_options['relationships']['field_senator_target_id']['field'] = 'field_senator_target_id';
+  /* Relationship: Content: Author */
+  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   /* Field: Bulk operations: Content */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'node';
@@ -544,7 +544,7 @@ function nys_cms_views_default_views() {
   $handler->display->display_options['fields']['delete_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['delete_node']['field'] = 'delete_node';
   $handler->display->display_options['fields']['delete_node']['label'] = '';
-  /* Field: Content: Publish Date */
+  /* Field: Content: Published on */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -762,7 +762,8 @@ function nys_cms_views_default_views() {
   $handler->display->display_options['fields']['changed']['table'] = 'node';
   $handler->display->display_options['fields']['changed']['field'] = 'changed';
   $handler->display->display_options['fields']['changed']['label'] = 'Updated';
-  $handler->display->display_options['fields']['changed']['date_format'] = 'short';
+  $handler->display->display_options['fields']['changed']['date_format'] = 'privatemsg_years';
+  $handler->display->display_options['fields']['changed']['second_date_format'] = 'month_only';
   /* Field: Content: Edit link */
   $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
@@ -773,7 +774,7 @@ function nys_cms_views_default_views() {
   $handler->display->display_options['fields']['delete_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['delete_node']['field'] = 'delete_node';
   $handler->display->display_options['fields']['delete_node']['label'] = '';
-  /* Field: Content: Publish Date */
+  /* Field: Content: Published on */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -1126,7 +1127,7 @@ function nys_cms_views_default_views() {
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['label'] = '';
   $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
-  /* Field: Content: Publish Date */
+  /* Field: Content: Published on */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -1341,7 +1342,7 @@ function nys_cms_views_default_views() {
   $handler->display->display_options['fields']['field_committee']['table'] = 'field_data_field_committee';
   $handler->display->display_options['fields']['field_committee']['field'] = 'field_committee';
   $handler->display->display_options['fields']['field_committee']['label'] = 'Committee';
-  /* Field: Content: Publish Date */
+  /* Field: Content: Published on */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -1528,7 +1529,7 @@ function nys_cms_views_default_views() {
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['label'] = '';
   $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
-  /* Field: Content: Publish Date */
+  /* Field: Content: Published on */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -1813,6 +1814,251 @@ function nys_cms_views_default_views() {
   $handler->display->display_options['menu']['title'] = 'Admin Committee Content';
   $handler->display->display_options['menu']['weight'] = '0';
   $handler->display->display_options['menu']['name'] = 'menu-microsite-content-editor';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
+
+  /* Display: Manage Bills */
+  $handler = $view->new_display('page', 'Manage Bills', 'page_4');
+  $handler->display->display_options['defaults']['exposed_form'] = FALSE;
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['exposed_form']['options']['reset_button'] = TRUE;
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Bulk operations: Content */
+  $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
+  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'node';
+  $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
+  $handler->display->display_options['fields']['views_bulk_operations']['label'] = '';
+  $handler->display->display_options['fields']['views_bulk_operations']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['views_bulk_operations']['hide_alter_empty'] = FALSE;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '0';
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['row_clickable'] = 1;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
+    'action::views_bulk_operations_modify_action' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 1,
+      'override_label' => 1,
+      'label' => 'Update values',
+      'settings' => array(
+        'show_all_tokens' => 1,
+        'display_values' => array(
+          'session::field_live_message_override' => 'session::field_live_message_override',
+          'session::field_live_message_status' => 'session::field_live_message_status',
+          'session::field_yt' => 'session::field_yt',
+          'session::field_ustream' => 'session::field_ustream',
+          'session::field_video_status' => 'session::field_video_status',
+        ),
+      ),
+    ),
+    'action::node_publish_action' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 1,
+      'override_label' => 1,
+      'label' => 'Publish',
+    ),
+    'action::node_unpublish_action' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 1,
+      'override_label' => 1,
+      'label' => 'Unpublish',
+    ),
+  );
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  /* Field: Content: Session */
+  $handler->display->display_options['fields']['field_ol_session']['id'] = 'field_ol_session';
+  $handler->display->display_options['fields']['field_ol_session']['table'] = 'field_data_field_ol_session';
+  $handler->display->display_options['fields']['field_ol_session']['field'] = 'field_ol_session';
+  $handler->display->display_options['fields']['field_ol_session']['settings'] = array(
+    'thousand_separator' => '',
+    'prefix_suffix' => 1,
+  );
+  /* Field: Content: Name */
+  $handler->display->display_options['fields']['field_ol_name']['id'] = 'field_ol_name';
+  $handler->display->display_options['fields']['field_ol_name']['table'] = 'field_data_field_ol_name';
+  $handler->display->display_options['fields']['field_ol_name']['field'] = 'field_ol_name';
+  $handler->display->display_options['fields']['field_ol_name']['label'] = 'Description';
+  $handler->display->display_options['fields']['field_ol_name']['type'] = 'text_plain';
+  /* Field: Content: Has new content */
+  $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
+  $handler->display->display_options['fields']['timestamp']['table'] = 'history';
+  $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
+  $handler->display->display_options['fields']['timestamp']['label'] = '';
+  $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
+  /* Field: Content: Type */
+  $handler->display->display_options['fields']['type']['id'] = 'type';
+  $handler->display->display_options['fields']['type']['table'] = 'node';
+  $handler->display->display_options['fields']['type']['field'] = 'type';
+  /* Field: Content: Published */
+  $handler->display->display_options['fields']['status']['id'] = 'status';
+  $handler->display->display_options['fields']['status']['table'] = 'node';
+  $handler->display->display_options['fields']['status']['field'] = 'status';
+  $handler->display->display_options['fields']['status']['not'] = 0;
+  /* Field: Content: Updated date */
+  $handler->display->display_options['fields']['changed']['id'] = 'changed';
+  $handler->display->display_options['fields']['changed']['table'] = 'node';
+  $handler->display->display_options['fields']['changed']['field'] = 'changed';
+  $handler->display->display_options['fields']['changed']['label'] = 'Updated';
+  $handler->display->display_options['fields']['changed']['date_format'] = 'short';
+  /* Field: Content: Edit link */
+  $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
+  $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
+  $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
+  $handler->display->display_options['fields']['edit_node']['label'] = 'Operations';
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Content: Session (field_ol_session) */
+  $handler->display->display_options['sorts']['field_ol_session_value']['id'] = 'field_ol_session_value';
+  $handler->display->display_options['sorts']['field_ol_session_value']['table'] = 'field_data_field_ol_session';
+  $handler->display->display_options['sorts']['field_ol_session_value']['field'] = 'field_ol_session_value';
+  $handler->display->display_options['sorts']['field_ol_session_value']['order'] = 'DESC';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Title */
+  $handler->display->display_options['filters']['title']['id'] = 'title';
+  $handler->display->display_options['filters']['title']['table'] = 'node';
+  $handler->display->display_options['filters']['title']['field'] = 'title';
+  $handler->display->display_options['filters']['title']['operator'] = 'contains';
+  $handler->display->display_options['filters']['title']['group'] = 1;
+  $handler->display->display_options['filters']['title']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['title']['expose']['operator_id'] = 'title_op';
+  $handler->display->display_options['filters']['title']['expose']['label'] = 'Title';
+  $handler->display->display_options['filters']['title']['expose']['operator'] = 'title_op';
+  $handler->display->display_options['filters']['title']['expose']['identifier'] = 'title';
+  $handler->display->display_options['filters']['title']['expose']['remember'] = TRUE;
+  $handler->display->display_options['filters']['title']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    16 => 0,
+    17 => 0,
+    18 => 0,
+    19 => 0,
+  );
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_min_chars'] = '0';
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_field'] = 'title';
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_raw_dropdown'] = 1;
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_dependent'] = 0;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type_1']['id'] = 'type_1';
+  $handler->display->display_options['filters']['type_1']['table'] = 'node';
+  $handler->display->display_options['filters']['type_1']['field'] = 'type';
+  $handler->display->display_options['filters']['type_1']['value'] = array(
+    'bill' => 'bill',
+    'resolution' => 'resolution',
+  );
+  $handler->display->display_options['filters']['type_1']['group'] = 1;
+  $handler->display->display_options['filters']['type_1']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['type_1']['expose']['operator_id'] = 'type_1_op';
+  $handler->display->display_options['filters']['type_1']['expose']['label'] = 'Type';
+  $handler->display->display_options['filters']['type_1']['expose']['operator'] = 'type_1_op';
+  $handler->display->display_options['filters']['type_1']['expose']['identifier'] = 'type_1';
+  $handler->display->display_options['filters']['type_1']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    16 => 0,
+    17 => 0,
+    18 => 0,
+    19 => 0,
+  );
+  $handler->display->display_options['filters']['type_1']['expose']['reduce'] = TRUE;
+  /* Filter criterion: Content: Session (field_ol_session) */
+  $handler->display->display_options['filters']['field_ol_session_value']['id'] = 'field_ol_session_value';
+  $handler->display->display_options['filters']['field_ol_session_value']['table'] = 'field_data_field_ol_session';
+  $handler->display->display_options['filters']['field_ol_session_value']['field'] = 'field_ol_session_value';
+  $handler->display->display_options['filters']['field_ol_session_value']['group'] = 1;
+  $handler->display->display_options['filters']['field_ol_session_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_ol_session_value']['expose']['operator_id'] = 'field_ol_session_value_op';
+  $handler->display->display_options['filters']['field_ol_session_value']['expose']['label'] = 'Session Year';
+  $handler->display->display_options['filters']['field_ol_session_value']['expose']['operator'] = 'field_ol_session_value_op';
+  $handler->display->display_options['filters']['field_ol_session_value']['expose']['identifier'] = 'field_ol_session_value';
+  $handler->display->display_options['filters']['field_ol_session_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    16 => 0,
+    17 => 0,
+    18 => 0,
+    19 => 0,
+  );
+  /* Filter criterion: Content: Chamber (field_ol_chamber) */
+  $handler->display->display_options['filters']['field_ol_chamber_value']['id'] = 'field_ol_chamber_value';
+  $handler->display->display_options['filters']['field_ol_chamber_value']['table'] = 'field_data_field_ol_chamber';
+  $handler->display->display_options['filters']['field_ol_chamber_value']['field'] = 'field_ol_chamber_value';
+  $handler->display->display_options['filters']['field_ol_chamber_value']['group'] = 1;
+  $handler->display->display_options['filters']['field_ol_chamber_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_ol_chamber_value']['expose']['operator_id'] = 'field_ol_chamber_value_op';
+  $handler->display->display_options['filters']['field_ol_chamber_value']['expose']['label'] = 'Chamber';
+  $handler->display->display_options['filters']['field_ol_chamber_value']['expose']['operator'] = 'field_ol_chamber_value_op';
+  $handler->display->display_options['filters']['field_ol_chamber_value']['expose']['identifier'] = 'field_ol_chamber_value';
+  $handler->display->display_options['filters']['field_ol_chamber_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    16 => 0,
+    17 => 0,
+    18 => 0,
+    19 => 0,
+  );
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 'All';
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['status']['expose']['operator_id'] = '';
+  $handler->display->display_options['filters']['status']['expose']['label'] = 'Published';
+  $handler->display->display_options['filters']['status']['expose']['operator'] = 'status_op';
+  $handler->display->display_options['filters']['status']['expose']['identifier'] = 'status';
+  $handler->display->display_options['filters']['status']['expose']['remember'] = TRUE;
+  $handler->display->display_options['path'] = 'admin/content/legislation';
+  $handler->display->display_options['menu']['type'] = 'tab';
+  $handler->display->display_options['menu']['title'] = 'Legislation';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'management';
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
   $export['admin_views_node_custom'] = $view;
@@ -4034,7 +4280,7 @@ You can also use this edit button to manage the Senator\'s Featured Legislation 
   $handler->display->display_options['fields']['field_senator']['settings'] = array(
     'link' => 1,
   );
-  /* Field: Content: Publish Date */
+  /* Field: Content: Published on */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';

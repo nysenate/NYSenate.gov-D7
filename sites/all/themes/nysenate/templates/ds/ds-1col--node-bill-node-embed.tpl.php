@@ -1,13 +1,21 @@
 <?php
 // Get Sponsors list
-foreach($node->field_ol_sponsor['und'] as $sponsor) {
-  $sponsors[] = $sponsor['entity']->title;
+if (isset($node->field_ol_sponsor['und'])) {
+  foreach($node->field_ol_sponsor['und'] as $sponsor) {
+    $sponsors[] = $sponsor['entity']->title;
+  }
 }
-foreach($content['field_ol_co_sponsors']['#items'] as $sponsor) {
-  $sponsors[] = $sponsor['entity']->title;
+
+if (isset($content['field_ol_co_sponsors']['#items'])) {
+  foreach($content['field_ol_co_sponsors']['#items'] as $sponsor) {
+    $sponsors[] = $sponsor['entity']->title;
+  }
 }
-foreach($content['field_ol_multi_sponsors']['#items'] as $sponsor) {
-  $sponsors[] = $sponsor['entity']->title;
+
+if (isset($content['field_ol_multi_sponsors']['#items'])) {
+  foreach($content['field_ol_multi_sponsors']['#items'] as $sponsor) {
+    $sponsors[] = $sponsor['entity']->title;
+  }
 }
 
 ?>
@@ -19,7 +27,7 @@ foreach($content['field_ol_multi_sponsors']['#items'] as $sponsor) {
     <?php echo $variables['graph_html']; ?>
     <?php //if(!empty($statuses)): ?>
     <div class="c-bill-update">
-      <p class="c-bill-update--date"><?php echo $latest_status_date; ?></p>
+      <p class="c-bill-update--date"><?php if (isset($latest_status_date)) echo $latest_status_date; ?></p>
       <p class="c-bill-update--location"><?php echo $variables['display_status']; ?></p>
     </div>
     <?php //endif; ?>

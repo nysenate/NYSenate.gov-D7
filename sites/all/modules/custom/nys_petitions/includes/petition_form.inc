@@ -20,6 +20,8 @@
 function nys_petitions_petition_form($form, &$form_state, $node) {
   $form['#node'] = $node;
 
+  $form['#attributes']['class'] = array('registration-form');
+
   $form['first_name'] = array(
     '#type' => 'textfield',
     '#title' => 'First Name',

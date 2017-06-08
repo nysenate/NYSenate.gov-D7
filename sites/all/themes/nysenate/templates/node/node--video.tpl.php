@@ -77,11 +77,11 @@
 ?>
 
 
-<section id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
+<article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
 	<?php print render($title_prefix); ?>
 	<?php if ($page): ?>
-		<div class="c-news--head">
-			<h2 class="nys-article-title"><?php print $title; ?></h2>
+		<header class="c-news--head">
+			<h1 class="nys-article-title"><?php print $title; ?></h1>
 			<div class="c-news--head-meta">
 				<?php if(isset($content['field_article_author'])): ?>
 					<p class="c-news--author">
@@ -104,11 +104,11 @@
 					</ul>
 				<?php endif; ?>
 			</div>
-		</div>
+		</header>
 	<?php endif; ?>
 	<?php print render($title_suffix); ?>
 
-	<div class="c-news--body">
+	<section class="c-news--body">
 		<?php if(isset($content['field_yt']) && $content['field_yt']): ?>
 			<div class="flex-video widescreen">
   			<?php print render($content['field_yt']); ?>
@@ -116,9 +116,9 @@
 		<?php endif; ?>
 
 		<?php if(isset($content['field_subtitle'])): ?>
-			<h3 class="c-news--subtitle">
+			<div class="c-news--subtitle">
 				<?php print $content['field_subtitle'][0]['#markup']; ?>
-			</h3>
+			</div>
 		<?php endif; ?>
 
     <?php if (isset($body[$language][0]['value'])): $allowed_tags = array('p', 'span', 'strong', 'b', 'u', 'i', 'em', 'ul', 'ol', 'li', 'a', 'blockquote', 'img'); ?>
@@ -128,29 +128,18 @@
 		<?php endif; ?>
 
 		<?php if(isset($content['field_bills'])): ?>
+		<aside>
 			<div class="c-container--header__top-border">
-				<h3 class="c-container--title">related legislation</h3>
+				<h2 class="c-container--title">related legislation</h2>
 			</div>
 			<?php print render($content['field_bills']); ?>
+		</aside>
 		<?php endif; ?>
 
-		<?php
-        $view = views_get_view('featured_legislation');
-        $view->set_display('news_type_related_legislation');
-        $view->pre_execute();
-        $view->execute();
-
-        if($view->result != NULL) : ?>
-			<div class="c-container--header__top-border">
-				<h3 class="c-container--title">related legislation</h3>
-			</div>
-			<!-- Related Content -->
-			<?php print $view->render(); endif; ?>
-
 		<?php if(isset($content['field_chapters']) && $content['field_chapters']): ?>
-		<div class="c-block">
+		<section class="c-block">
 			<?php print render($content['field_chapters']); ?>
-		</div>
+		</section>
 		<?php endif; ?>
 
 		<?php
@@ -164,5 +153,5 @@
 	    <?php print $social_buttons; ?>
 	  <?php endif; ?>
     
-	</div>
-</section>
+	</section>
+</article>

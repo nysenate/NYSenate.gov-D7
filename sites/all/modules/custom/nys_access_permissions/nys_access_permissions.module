@@ -512,7 +512,7 @@ function nys_access_permissions_node_access($node, $op, $account) {
 
   // MCPs without a Senator should not have any access to create content since
   // they do not have permission to create site-wide content.
-  $is_mcp = user_has_role(MICROSITE_CONTENT_PRODUCER);
+  $is_mcp = user_has_role(_nys_utils_get_rid_by_name('Microsite Content Producer'));
   $edit_any = user_access('Edit any content');
   $senators_array = nys_access_permissions_get_allowed_senators_dropdown($account->uid);
   // Remove the 'none' option from the list.
@@ -543,7 +543,7 @@ function nys_access_permissions_node_access($node, $op, $account) {
       }
     }
 
-    if (user_has_role(MICROSITE_CONTENT_PRODUCER, $editor) && $op == 'update') {
+    if (user_has_role(_nys_utils_get_rid_by_name('Microsite Content Producer'), $editor) && $op == 'update') {
 
       if ($node->type == 'senator' && user_is_senators_microsite_producer($node->nid, $editor->uid)) {
         return NODE_ACCESS_ALLOW;
@@ -577,7 +577,7 @@ function nys_access_permissions_node_access($node, $op, $account) {
       return NODE_ACCESS_DENY;
     }
 
-    if (user_has_role(FOIL_ADMINISTRATOR, $editor) && $op == 'update') {
+    if (user_has_role(_nys_utils_get_rid_by_name('FOIL Administrator'), $editor) && $op == 'update') {
       if ($node->nid == 143167) {
         return NODE_ACCESS_ALLOW;
       }
@@ -588,7 +588,7 @@ function nys_access_permissions_node_access($node, $op, $account) {
     }
 
     /* allow access to bulk operations manipulation of data from /admin/accessible-sitewide */
-    if (user_has_role(FRONTPAGE_EDITOR, $editor) && $op == 'update' && arg(0) == 'batch') {
+    if (user_has_role(_nys_utils_get_rid_by_name('Frontpage Editor'), $editor) && $op == 'update' && arg(0) == 'batch') {
       return NODE_ACCESS_ALLOW;
     }
   }
@@ -623,12 +623,12 @@ function nys_access_permissions_form_alter(&$form, &$form_state, $form_id) {
     $edit_any = 'edit any ' . $form['type']['#value'] . ' content';
   }
 
-  if (user_has_role(MICROSITE_CONTENT_PRODUCER, $user) && $form_id == 'questionnaire_node_form') {
+  if (user_has_role(_nys_utils_get_rid_by_name('Microsite Content Producer'), $user) && $form_id == 'questionnaire_node_form') {
     $form['field_webform'][LANGUAGE_NONE][0]['target_id']['#autocomplete_path'] = 'ajax/only-my-nodes/webform';
   }
 
   // If Senator MCP only allow them to set Senators listed in $user->field_senator_management.
-  if (user_has_role(MICROSITE_CONTENT_PRODUCER, $user) && (
+  if (user_has_role(_nys_utils_get_rid_by_name('Microsite Content Producer'), $user) && (
     $form_id === 'article_node_form'
     || $form_id === 'event_node_form'
     || $form_id === 'in_the_news_node_form'
@@ -641,7 +641,7 @@ function nys_access_permissions_form_alter(&$form, &$form_state, $form_id) {
     // Alter field_senator to only display allowed senator(s) for editing user.
     $senators_array = nys_access_permissions_get_allowed_senators_dropdown($user->uid);
     // Remove "None" option for everyone except front page editors.
-    if (!user_has_role(FRONTPAGE_EDITOR, $user)) {
+    if (!user_has_role(_nys_utils_get_rid_by_name('Frontpage Editor'), $user)) {
       foreach ($senators_array as $key => $value) {
         if ($value === "- None -") {
           unset($senators_array[$key]);
@@ -651,8 +651,8 @@ function nys_access_permissions_form_alter(&$form, &$form_state, $form_id) {
     $form['field_senator'][LANGUAGE_NONE]['#options'] = $senators_array;
   }
 
-  if ((user_has_role(MICROSITE_CONTENT_PRODUCER, $user)
-    || user_has_role(LEGISLATIVE_CORRESPONDENT, $user))
+  if ((user_has_role(_nys_utils_get_rid_by_name('Microsite Content Producer'), $user)
+    || user_has_role(_nys_utils_get_rid_by_name('Legislative Correspondent'), $user))
     && ($form_id === 'bill_node_form' && !user_access($edit_any))) {
     $form['title']['#disabled'] = 1;
     $form['metatags']['#access'] = FALSE;
@@ -667,9 +667,14 @@ function nys_access_permissions_form_alter(&$form, &$form_state, $form_id) {
     }
   }
 
-  if ((user_has_role(MICROSITE_CONTENT_PRODUCER,$user) || user_has_role(LEGISLATIVE_CORRESPONDENT,$user)) && (
+  if (
+    (
+    user_has_role(_nys_utils_get_rid_by_name('Microsite Content Producer'),$user) ||
+    user_has_role(_nys_utils_get_rid_by_name('Legislative Correspondent'),$user)
+    ) && (
     $form_id === 'resolution_node_form'
-  )) {
+  )
+  ) {
       $form['title']['#disabled'] = 1;
       $form['metatags']['#access'] = FALSE;
       $form['revision_information']['#access'] = FALSE;
@@ -684,7 +689,7 @@ function nys_access_permissions_form_alter(&$form, &$form_state, $form_id) {
   }
 
   // Restrict committees to those that the MCP has Senators for as chair or co-chair.
-  if (user_has_role(MICROSITE_CONTENT_PRODUCER, $user) && ($form_id == 'meeting_node_form' || $form_id == 'public_hearing_node_form')) {
+  if (user_has_role(_nys_utils_get_rid_by_name('Microsite Content Producer'), $user) && ($form_id == 'meeting_node_form' || $form_id == 'public_hearing_node_form')) {
     if (!empty($form['field_committee'][LANGUAGE_NONE]['#options'])) {
       $options = $form['field_committee'][LANGUAGE_NONE]['#options'];
       $senators_array = microsite_content_producer_get_senator_nids($user);
@@ -701,7 +706,7 @@ function nys_access_permissions_form_alter(&$form, &$form_state, $form_id) {
       $form['field_senator']['#access'] = FALSE;
     }
     // Only Constituents that are not also Senators should be able to receive emails.
-    if (!user_has_role(CONSTITUENT, $user) || user_has_role(SENATOR, $user)) {
+    if (!user_has_role(_nys_utils_get_rid_by_name('Constituent'), $user) || user_has_role(_nys_utils_get_rid_by_name('Senator'), $user)) {
       $form['field_user_receive_emails']['#access'] = FALSE;
     }
   }

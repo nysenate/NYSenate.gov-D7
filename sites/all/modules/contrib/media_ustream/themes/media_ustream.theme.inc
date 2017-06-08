@@ -87,11 +87,11 @@ function media_ustream_preprocess_media_ustream_video(&$variables) {
   // Build the iframe's src URL, with playback options set via query string
   // and construct the video / channel title for alternative content.
   if ($parameters['recorded']) {
-    $url = "//www.ustream.tv/embed/recorded/{$variables['video_id']}";
+    $url = "//www.ustream.tv/embed/recorded/{$variables['video_id']}?html5ui&volume=0&autoplay=true";
     $link_title = t('Video of @title', array('@title' => $variables['title']));
   }
   else {
-    $url = "//www.ustream.tv/embed/{$variables['video_id']}";
+    $url = "//www.ustream.tv/embed/{$variables['video_id']}?html5ui&volume=0&autoplay=true";
     $link_title = t('Channel @title on Ustream', array('@title' => $variables['title']));
   }
   $variables['url'] = url($url, array('query' => $query, 'external' => TRUE));

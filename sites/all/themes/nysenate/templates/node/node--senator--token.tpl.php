@@ -89,7 +89,7 @@ $theme_path = '/'.drupal_get_path('theme', variable_get('theme_default', NULL));
         <h4 class="nys-senator--name" <?php print $title_attributes; ?> >
           <a href="<?php print $node_url; ?>"><?php print $title; ?></a>
         </h4>
-        <p class="nys-senator--district"><?php echo $content['field_district']['#items'][0]['entity']->name;?></p>
+        <p class="nys-senator--district"><?php if (isset($content['field_district']['#items'][0]['entity']->name)) echo $content['field_district']['#items'][0]['entity']->name;?></p>
       </div>
     </div>
   <?php endif; ?>

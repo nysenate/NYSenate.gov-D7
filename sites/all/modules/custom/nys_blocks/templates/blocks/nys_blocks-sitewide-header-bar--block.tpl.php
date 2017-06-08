@@ -13,7 +13,8 @@
         </ul>
 
         <?php if ($user->uid == 0): ?>
-          <a class="c-header--btn c-header--btn__primary u-tablet-plus" href="/user/login">login</a>
+            <a class="c-header--btn c-header--btn__taking_action u-tablet-plus" href="/citizen-guide">get involved</a>
+            <a class="c-header--btn c-header--btn__primary u-tablet-plus" href="/user/login">login</a>
         <?php else: ?>
           <ul class="c-login--list u-tablet-plus">
             <li>
@@ -63,7 +64,7 @@
             <a class="c-header--btn c-senator-header--btn" href="<?php print $senator_microsite_link; ?>">
               <div class="nys-senator">
                 <div class="nys-senator--info">
-                  <h3 class="nys-senator--title">My Senator</h3>
+                  <span class="nys-senator--title">My Senator</span>
                 </div>
                 <div class="nys-senator--thumb">
                   <?php print $senator_image; ?>

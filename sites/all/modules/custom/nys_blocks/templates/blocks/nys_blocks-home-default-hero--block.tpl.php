@@ -36,7 +36,7 @@
             <span class="c-docket--bill-cat">parks</span>
           </li>
           <?php //endfor; ?>
-        </dl>
+        </ul>
       </div>
     </div>
   </div>

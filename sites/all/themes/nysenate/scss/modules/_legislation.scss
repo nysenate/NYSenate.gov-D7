@@ -102,18 +102,20 @@
   margin-bottom:10px;
 }
 
-.c-bill-num {
-  margin-bottom: 0.25em;
+
+h3.c-bill-num {
+  margin: 0 0 0.25em;
   color: $grey02;
   font-family: "Adelle Bold";
   line-height: 1em;
   font-size: 20px;
   letter-spacing: 0.05em;
-
+  
   a {
     color: $grey02;
   }
 }
+
 
 .c-bill-topic {
   margin-bottom: 1.5em;
@@ -127,6 +129,9 @@
 .c-bill-descript {
   margin: 0 0 10px 0;
   color: $grey02;
+  font-family: 'Adelle Light';
+  font-size: 20px;
+  line-height: 32px;
 }
 
 .c-bill-path {
@@ -398,7 +403,7 @@
     float: left;
   }
 
-  .c-bill-num {
+  h3.c-bill-num {
     font-size: 36px;
   }
 

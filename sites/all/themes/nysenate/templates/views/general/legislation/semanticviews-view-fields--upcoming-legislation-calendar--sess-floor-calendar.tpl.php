@@ -5,7 +5,7 @@ $cal_no_array = explode(", ", $fields['field_ol_bill_cal_number']->content);
   <div class="l-panel-col l-panel-col--lft">
     <h4 class="c-listing--bill-num"><?php echo $fields['title']->content; ?></h4>
     <a href="#" class="c-committee-link"></a>
-    <div class="c-listing--related-issues"><?php echo $fields['field_issues']->content; ?></div>
+    <div class="c-listing--related-issues"><?php if(isset($fields['field_issues']->content)) echo $fields['field_issues']->content; ?></div>
   </div><!-- .l-panel-col -->
   <div class="l-panel-col l-panel-col--ctr">
     <p class="c-press-release--descript"><?php echo $fields['field_ol_name']->content; ?></p>

@@ -68,7 +68,7 @@ class nys_context_condition_assigned_senator extends context_condition {
             $this->condition_met($context);
           }
         }
-        elseif (arg(0) == 'taxonomy' && arg(1) == 'term' && $entity_type = 'taxonomy_term' && $entity->vid == 8) {
+        elseif (arg(0) == 'taxonomy' && arg(1) == 'term' && $entity_type = 'taxonomy_term' && isset($entity->vid) && $entity->vid == 8) {
           if (!empty($entity->field_senator[LANGUAGE_NONE][0]['target_id'])) {
             $this->condition_met($context);
           }

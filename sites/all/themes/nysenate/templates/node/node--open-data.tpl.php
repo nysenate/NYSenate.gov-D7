@@ -80,7 +80,7 @@
   <div class="c-news--body">
     <?php if ($page): ?>
     <div class="c-news--head">
-      <h2 class="nys-article-title"><?php print $title; ?></h2>
+      <h1 class="nys-article-title"><?php print $title; ?></h1>
       <div class="c-news--head-meta">
           <p class="c-news--pub-date"><?php print render($content['field_date']); ?></p>
           <p class="c-news--author"><?php print render($content['field_open_date_type']); ?></p>

@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * Provides Media Ckeditor module pages for testing purposes.
+ */
+
+/**
+ * Implements hook_media_ckeditor_info().
+ */
+function media_ckeditor_test_info() {
+  // Allow tests to enable or disable this hook.
+  if (!variable_get('media_ckeditor_test_info', FALSE)) {
+    return array();
+  }
+
+  $info['media_ckeditor_test'] = array(
+    'title' => t('Media Ckeditor module test'),
+    'class' => 'MediaModuleTest',
+    'weight' => 50,
+  );
+
+  return $info;
+}
+
+/**
+ * Implements hook_media_ckeditor_info_alter().
+ */
+function media_ckeditor_test_info_alter(&$info) {
+  // Allow tests to enable or disable this hook.
+  if (!variable_get('media_ckeditor_test_info_alter', FALSE)) {
+    return;
+  }
+
+  $info['media_ckeditor_test']['title'] = t('Altered test title');
+}
+
+/**
+ * Implements hook_menu().
+ */
+function media_ckeditor_test_menu() {
+  $items = array();
+
+  $items['media_ckeditor/test'] = array(
+    'title' => 'Media Ckeditor test',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('media_ckeditor_test_form'),
+    'access arguments' => array('view files'),
+  );
+
+  return $items;
+}

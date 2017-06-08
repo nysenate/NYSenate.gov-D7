@@ -1327,6 +1327,15 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['filters']['created']['field'] = 'created';
   $handler->display->display_options['filters']['created']['operator'] = '>=';
   $handler->display->display_options['filters']['created']['value']['value'] = '2017-02-07';
+  /* Filter criterion: Field collection item: Show? (field_school_show_student) */
+  $handler->display->display_options['filters']['field_school_show_student_value']['id'] = 'field_school_show_student_value';
+  $handler->display->display_options['filters']['field_school_show_student_value']['table'] = 'field_data_field_school_show_student';
+  $handler->display->display_options['filters']['field_school_show_student_value']['field'] = 'field_school_show_student_value';
+  $handler->display->display_options['filters']['field_school_show_student_value']['relationship'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['filters']['field_school_show_student_value']['operator'] = 'not';
+  $handler->display->display_options['filters']['field_school_show_student_value']['value'] = array(
+    0 => '0',
+  );
   $handler->display->display_options['path'] = 'student-export.csv';
   $handler->display->display_options['displays'] = array(
     'page' => 'page',

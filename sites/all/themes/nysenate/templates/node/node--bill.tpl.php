@@ -74,6 +74,9 @@
  * @see template_process()
  */
 ?>
+<div>
+    <?php nys_bill_active_amendment_validate_aliases($variables['node']); ?>
+</div>
 <!-- BILL TEMPLATE -->
 <div class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
 

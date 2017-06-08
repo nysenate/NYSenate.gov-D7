@@ -50,7 +50,7 @@
 <div class="c-nav--wrap c-senator-nav--wrap">
   <div class="c-nav c-senator-nav l-row l-row--nav">
     
-    <nav>
+    <nav role="navigation">
       <?php
         $main_menu = module_invoke('menu', 'block_view', 'menu-senator-s-microsite-menu'); 
         print render($main_menu['content']);    

@@ -76,9 +76,9 @@
     </p>
 
     <div class="c-meeting-detail--info">
-      <h2 class="c-meeting-detail--title">
+      <h1 class="c-meeting-detail--title">
         <?php print $title; ?>
-      </h2>
+      </h1>
       <a class="c-meeting-detail--location-link" href="https://www.google.com/maps/place/New+York+State+Capitol/@42.652602,-73.757388,17z/data=!3m1!4b1!4m2!3m1!1s0x89de0a3aa5dc0b2b:0x72aed557f8df2510" title="NYS Capitol Building" target="_blank" >NYS Capitol Building</a>
       <p class="c-meeting-detail--location">
         <?php if (!empty($field_location[0]['name'])): echo $field_location[0]['name']; endif; ?>
@@ -123,11 +123,11 @@
     </div>
     <?php endif; ?>
 
-    <?php if ($field_video_status[0]['value'] === "streaming_live_now" && !empty($field_ustream)): ?>
+    <?php if (isset($field_video_status[0]['value']) && $field_video_status[0]['value'] === "streaming_live_now" && !empty($field_ustream)): ?>
     <div class="c-meeting-detail--descript">
       <?php print render($content['field_ustream']); ?>
     </div>
-    <?php elseif ($field_video_status[0]['value'] === "streaming_redirect" && !empty($field_video_redirect)): ?>
+    <?php elseif (isset($field_video_status[0]['value']) && $field_video_status[0]['value'] === "streaming_redirect" && !empty($field_video_redirect)): ?>
       <?php print render($content['field_ustream']); ?>
     <?php endif; ?>
 
