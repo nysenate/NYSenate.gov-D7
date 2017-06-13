@@ -90,7 +90,7 @@ $handler->display->display_options['empty']['area_text_custom']['id'] = 'area_te
 $handler->display->display_options['empty']['area_text_custom']['table'] = 'views';
 $handler->display->display_options['empty']['area_text_custom']['field'] = 'area_text_custom';
 $handler->display->display_options['empty']['area_text_custom']['empty'] = TRUE;
-$handler->display->display_options['empty']['area_text_custom']['content'] = 'There are no submissions for this form. <a href="/node/!1">View this form</a>.';
+$handler->display->display_options['empty']['area_text_custom']['content'] = t('There are no submissions for this form. <a href="!url!1">View this form</a>.', array('!url' => url('node/')));
 $handler->display->display_options['empty']['area_text_custom']['tokenize'] = TRUE;
 /* Relationship: Webform submissions: User */
 $handler->display->display_options['relationships']['uid']['id'] = 'uid';
@@ -142,7 +142,7 @@ $handler->display->display_options['arguments']['nid']['summary_options']['items
 $handler->display->display_options['arguments']['nid']['specify_validation'] = TRUE;
 $handler->display->display_options['arguments']['nid']['validate']['type'] = 'node';
 $translatables['webform_results'] = array(
- t('Master'),
+  t('Master'),
   t('more'),
   t('Apply'),
   t('Reset'),

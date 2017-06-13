@@ -111,7 +111,7 @@ function nys_news_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 9,
+      'weight' => 12,
     ),
   );
 
@@ -270,7 +270,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'progress_indicator' => 'throbber',
       ),
       'type' => 'file_generic',
-      'weight' => 23,
+      'weight' => 4,
     ),
   );
 
@@ -320,7 +320,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'apply_chosen' => 0,
       ),
       'type' => 'options_select',
-      'weight' => 31,
+      'weight' => 16,
     ),
   );
 
@@ -335,6 +335,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'module' => 'entityreference',
         'settings' => array(
           'links' => 1,
+          'use_content_language' => TRUE,
           'view_mode' => 'full',
         ),
         'type' => 'entityreference_entity_view',
@@ -426,7 +427,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'size' => 60,
       ),
       'type' => 'options_select',
-      'weight' => 4,
+      'weight' => 6,
     ),
   );
 
@@ -477,7 +478,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'display_label' => 0,
       ),
       'type' => 'options_onoff',
-      'weight' => 5,
+      'weight' => 7,
     ),
   );
 
@@ -528,7 +529,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'display_label' => 0,
       ),
       'type' => 'options_onoff',
-      'weight' => 5,
+      'weight' => 6,
     ),
   );
 
@@ -642,7 +643,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 10,
+      'weight' => 13,
     ),
   );
 
@@ -805,7 +806,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 1,
+      'weight' => 3,
     ),
   );
 
@@ -820,6 +821,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -829,6 +831,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => 1,
         ),
         'type' => 'entityreference_label',
@@ -857,7 +860,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 4,
+      'weight' => 5,
     ),
   );
 
@@ -963,7 +966,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 9,
+      'weight' => 13,
     ),
   );
 
@@ -1014,7 +1017,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 12,
+      'weight' => 35,
     ),
   );
 
@@ -1215,7 +1218,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 6,
+      'weight' => 7,
     ),
   );
 
@@ -1266,7 +1269,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'display_label' => 0,
       ),
       'type' => 'options_onoff',
-      'weight' => 7,
+      'weight' => 8,
     ),
   );
 
@@ -1287,6 +1290,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 1,
@@ -1300,6 +1304,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 1,
@@ -1337,7 +1342,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 5,
+      'weight' => 9,
     ),
   );
 
@@ -1451,7 +1456,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 13,
+      'weight' => 36,
     ),
   );
 
@@ -1565,7 +1570,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 7,
+      'weight' => 11,
     ),
   );
 
@@ -1639,6 +1644,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 23,
@@ -1682,7 +1688,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 2,
+      'weight' => 11,
     ),
   );
 
@@ -1733,7 +1739,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 4,
+      'weight' => 13,
     ),
   );
 
@@ -1784,7 +1790,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 3,
+      'weight' => 12,
     ),
   );
 
@@ -1799,6 +1805,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -1808,6 +1815,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => 1,
         ),
         'type' => 'entityreference_label',
@@ -1839,7 +1847,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'size' => 60,
       ),
       'type' => 'options_select',
-      'weight' => 5,
+      'weight' => 34,
     ),
   );
 
@@ -1887,7 +1895,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 8,
+      'weight' => 12,
     ),
   );
 
@@ -2120,6 +2128,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -2255,7 +2264,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 18,
+      'weight' => 11,
     ),
   );
 
@@ -2303,7 +2312,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 12,
+      'weight' => 11,
     ),
   );
 
@@ -2319,6 +2328,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'module' => 'entityreference',
         'settings' => array(
           'links' => 1,
+          'use_content_language' => TRUE,
           'view_mode' => 'token',
         ),
         'type' => 'entityreference_entity_view',
@@ -2355,7 +2365,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'size' => 60,
       ),
       'type' => 'entityreference_autocomplete',
-      'weight' => 17,
+      'weight' => 10,
     ),
   );
 
@@ -2477,6 +2487,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'module' => 'entityreference',
         'settings' => array(
           'links' => 1,
+          'use_content_language' => TRUE,
           'view_mode' => 'node_embed',
         ),
         'type' => 'entityreference_entity_view',
@@ -2560,7 +2571,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 12,
+      'weight' => 11,
     ),
   );
 
@@ -2611,7 +2622,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'display_label' => 0,
       ),
       'type' => 'options_onoff',
-      'weight' => 10,
+      'weight' => 12,
     ),
   );
 
@@ -2630,6 +2641,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 13,
@@ -2643,6 +2655,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 2,
@@ -2679,7 +2692,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'year_range' => '-3:+3',
       ),
       'type' => 'date_select',
-      'weight' => 13,
+      'weight' => 12,
     ),
   );
 
@@ -2730,7 +2743,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 8,
+      'weight' => 18,
     ),
   );
 
@@ -2844,7 +2857,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 19,
+      'weight' => 12,
     ),
   );
 
@@ -3007,7 +3020,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 6,
+      'weight' => 7,
     ),
   );
 
@@ -3022,6 +3035,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => 0,
         ),
         'type' => 'entityreference_label',
@@ -3031,6 +3045,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => 1,
         ),
         'type' => 'entityreference_label',
@@ -3059,7 +3074,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 7,
+      'weight' => 17,
     ),
   );
 
@@ -3300,6 +3315,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 13,
@@ -3357,6 +3373,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => 1,
         ),
         'type' => 'entityreference_label',
@@ -3366,6 +3383,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => 1,
         ),
         'type' => 'entityreference_label',

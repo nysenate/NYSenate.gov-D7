@@ -116,10 +116,9 @@ class MigrateLocationFieldHandler extends MigrateFieldHandler {
       if (isset($instance_arguments['country'])) {
         $instance_arguments['country'] = strtolower($instance_arguments['country']);
       }
-
       // Ensure we have at least one location field besides 'is_primary' before saving.
       if (!empty($instance_arguments)) {
-        $instance_arguments['is_primary'] = $value;
+        $instance_arguments['is_primary'] = ($delta == 0);
         $instance_arguments['inhibit_geocode'] = TRUE;
 
         // Only save the location if saved successfully.

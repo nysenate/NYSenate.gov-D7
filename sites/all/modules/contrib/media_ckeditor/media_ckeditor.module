@@ -10,6 +10,7 @@
  */
 function media_ckeditor_element_info_alter(&$types) {
   $types['text_format']['#pre_render'][] = 'media_ckeditor_pre_render_text_format';
+  $types['media']['#pre_render'][] = 'media_ckeditor_pre_render_media';
 }
 
 /**
@@ -36,7 +37,19 @@ function media_ckeditor_pre_render_text_format($element) {
     'data' => drupal_get_path('module', 'media_ckeditor') . '/js/plugins/media/library.js',
     'type' => 'file',
     'scope' => 'footer',
-    'weight' => -20,
+    // It's important that this javascript fire after CKEditor.
+    'weight' => 20,
+  );
+
+  // Communicate to javascript whether we will be displaying fully rendered
+  // file entities in the WYSIWYG.
+  $element['#attached']['js'][] = array(
+    'data' => array(
+      'media_ckeditor' => array(
+        'fully_rendered_files' => _media_ckeditor_fully_rendered_files_in_wysiwyg(),
+      ),
+    ),
+    'type' => 'setting',
   );
 
   return $element;
@@ -71,5 +84,161 @@ function media_ckeditor_media_browser_params_alter(&$stored_params) {
         'document'
       ));
     }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function media_ckeditor_form_field_ui_field_edit_form_alter(&$form, &$form_state) {
+  // Add a checkbox that marks this field as needing an "Insert" button.
+  if (!empty($form['#instance']['widget']['module'])) {
+    if ('media' === $form['#instance']['widget']['module']) {
+      $form['instance']['settings']['wysiwyg_insert'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Show button for inserting files into WYSIWYG editor'),
+        '#description' => t('If checked, then an "Insert" button will be available to put attached files into the active WYSIWYG editor.'),
+        '#default_value' => isset($form['#instance']['settings']['wysiwyg_insert']) ? $form['#instance']['settings']['wysiwyg_insert'] : FALSE,
+      );
+    }
+  }
+}
+
+/**
+ * Pre-render callback for media elements.
+ */
+function media_ckeditor_pre_render_media($element) {
+  // If the media widget has been configured to have an Insert button, we'll
+  // communicate that information through javascript settings.
+  $instance = field_info_instance($element['#entity_type'], $element['#field_name'], $element['#bundle']);
+  if (!empty($instance['settings']['wysiwyg_insert'])) {
+    $element['#attached']['js'][] = array(
+      'type' => 'setting',
+      'data' => array(
+        'media_ckeditor' => array(
+          'wysiwyg_insert' => array(
+            $element['#field_name'] => TRUE,
+          ),
+        ),
+      ),
+    );
+  }
+  return $element;
+}
+
+
+/**
+ * Helper function to tell whether we should render full entities in WYSIWYGs.
+ */
+function _media_ckeditor_fully_rendered_files_in_wysiwyg() {
+  if (variable_get('media_ckeditor_fully_rendered_files', FALSE) &&
+      user_access('view overridden file entities in wysiwyg')) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function media_ckeditor_menu() {
+  $items = array();
+
+  // Add our AJAX-friendly route for rendering the file entities for use in
+  // the WYSIWYG editor.
+  $items['media/rendered-in-wysiwyg'] = array(
+    'page callback' => 'media_ckeditor_rendered_file_in_wysiwyg',
+    'access callback' => '_media_ckeditor_fully_rendered_files_in_wysiwyg',
+    'file' => 'includes/media_ckeditor.pages.inc',
+    'theme callback' => 'ajax_base_page_theme',
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * A permission to allow users to view overridden files in the WYSIWYG.
+ */
+function media_ckeditor_permission() {
+  return array(
+    'view overridden file entities in wysiwyg' => array(
+      'title' => t('View overridden file entities in wysiwyg'),
+      'description' => t('When users are embedding files in WYSIWYGs, the file entities will be displayed with whatever overrides the user may have specified in the Media popup.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function media_ckeditor_form_media_admin_config_browser_alter(&$form, &$form_state) {
+
+  // Add our optional settings to the Media Browser admin form.
+  $form['media_ckeditor'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Ckeditor WYSIWYG configuration'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+    '#weight' => 50,
+  );
+  $form['media_ckeditor']['media_ckeditor_fully_rendered_files'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Display fully rendered files in WYSIWYG'),
+    '#description' => t('Check this box to render files in the WYSIWYG dynamically, to reflect any field overrides the user may have specified. Note that this requires the user has the corresponding permission: "View overridden file entities in wysiwyg"'),
+    '#default_value' => variable_get('media_ckeditor_fully_rendered_files', FALSE),
+  );
+}
+
+/**
+ * Implements hook_media_wysiwyg_token_to_markup_alter().
+ */
+function media_ckeditor_media_wysiwyg_token_to_markup_alter(&$element, $tag_info, $settings) {
+
+  // Check to see if files embedded in WYSIWYG should be fully rendered. If so,
+  // replace the simpler Media placeholder with a fully rendered file entity.
+  if (!empty($settings['wysiwyg']) &&
+      _media_ckeditor_fully_rendered_files_in_wysiwyg()) {
+    $file = $tag_info['file'];
+    $file->override['wysiwyg'] = TRUE;
+    $view_mode = $tag_info['view_mode'];
+    $fields = (!empty($settings['fields'])) ? $settings['fields'] : array();
+    $element = media_ckeditor_render_file_with_overrides($file, $view_mode, $fields);
+  }
+}
+
+/**
+ * Helper function to get a fully rendered file entity with optional overrides.
+ */
+function media_ckeditor_render_file_with_overrides($file, $view_mode, $fields = array()) {
+
+  foreach ($fields as $field_name => $value) {
+    if (isset($file->{$field_name})) {
+      $file->{$field_name} = $value;
+    }
+  }
+
+  $file_array = array($file->fid => $file);
+  $build = file_entity_metadata_view_file($file_array, $view_mode);
+
+  // Manually remove contextual links.
+  if (!empty($build['file'][$file->fid]['#contextual_links'])) {
+    unset($build['file'][$file->fid]['#contextual_links']);
+  }
+
+  return $build;
+}
+
+/**
+ * Implements hook_preprocess_file_entity().
+ */
+function media_ckeditor_preprocess_file_entity(&$vars) {
+
+  // If we are rendering this as a fully rendered file entity in a WYSIWYG,
+  // set $page to TRUE so that the title doesn't display.
+  // @see file_entity/file_entity.tpl.php.
+  if (!empty($vars['override']['wysiwyg']) &&
+      _media_ckeditor_fully_rendered_files_in_wysiwyg()) {
+    $vars['page'] = TRUE;
   }
 }

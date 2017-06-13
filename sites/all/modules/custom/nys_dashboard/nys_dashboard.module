@@ -632,7 +632,7 @@ function nys_dashboard_get_petitions_users() {
  * Used by the AJAX call in script.js.
  */
 function nys_dashboard_get_bills_users() {
-  $page = ($_REQUEST['page']) ? $_REQUEST['page'] : 0;
+  $page = (isset($_REQUEST['page']) && $_REQUEST['page']) ? $_REQUEST['page'] : 0;
   $comm_status = (isset($_REQUEST['comm_status'])) ? $_REQUEST['comm_status'] : 'all';
   $vote_type = (isset($_REQUEST['vote_type'])) ? $_REQUEST['vote_type'] : 'all';
   $bill_name = (isset($_REQUEST['bill_name'])) ? $_REQUEST['bill_name'] : '';
@@ -895,6 +895,8 @@ function _nys_dashboard_sen_bills_msg_block_content() {
  * Helper function for senator issues block content.
  */
 function _nys_dashboard_sen_issues_block_content() {
+  global $user;
+  
   // Find senator ID.
   $senator_nid = user_get_senator_nid($user);
 
@@ -936,7 +938,7 @@ function _nys_dashboard_const_issues_flw_block_content() {
  */
 function _nys_dashboard_const_bills_flw_block_content() {
   // Retrieve all updates by issues user is following.
-  $bill_news_updates = views_embed_view('constituent_updates', 'constituent_all_bill_updates', $args);
+  $bill_news_updates = views_embed_view('constituent_updates', 'constituent_all_bill_updates');
 
   return theme('nys_dashboard_const_bills_flw_block', array('bill_news_updates' => $bill_news_updates));
 }
@@ -953,7 +955,7 @@ function _nys_dashboard_const_bills_flw_wdgt_block_content() {
  */
 function _nys_dashboard_const_comm_flw_block_content() {
   // Retrieve all updates by committees user is following.
-  $all_committee_updates = views_embed_view('constituent_updates', 'constituent_all_committees_updates', $args);
+  $all_committee_updates = views_embed_view('constituent_updates', 'constituent_all_committees_updates');
   // var_dump($all_committee_updates);exit;
   return theme('nys_dashboard_const_comm_flw_block', array('all_committee_updates' => $all_committee_updates));
 }
@@ -962,8 +964,8 @@ function _nys_dashboard_const_comm_flw_block_content() {
  * Helper function for petition questionnaire block content.
  */
 function _nys_dashboard_const_pet_quest_block_content() {
-  $petitions_view = views_embed_view('constituent_petitions_and_questionairres', 'constituent_petitions_signed', $args);
-  $questionnaires_view = views_embed_view('constituent_petitions_and_questionairres', 'constituent_questionnaires_submitted', $args);
+  $petitions_view = views_embed_view('constituent_petitions_and_questionairres', 'constituent_petitions_signed');
+  $questionnaires_view = views_embed_view('constituent_petitions_and_questionairres', 'constituent_questionnaires_submitted');
 
   return theme('nys_dashboard_const_pet_quest_block', array('petitions_view' => $petitions_view, 'questionnaires_view' => $questionnaires_view));
 }
@@ -1501,8 +1503,15 @@ function nys_dashboard_views_query_alter(&$view, &$query) {
  * Helper function for rendering output on search textfield.
  */
 function nys_dashboard_search_textfield_post_render($content, $element) {
+  if (isset($element['#title'])) {
+    $title = $element['#title'];
+  }
+  else {
+    $title = '';
+  }
+  
   $content = str_replace('type="text"', 'type="search"', $content);
-  $content = '<label for="' . $element['#name'] . '">' . $element['#title'] . '</label>' .
+  $content = '<label for="' . $element['#name'] . '">' . $title . '</label>' .
     '<div class="container-inline form-wrapper">' . $content;
   $content .= '<button class="c-site-search--btn form-submit" id="edit-submit" name="op" value="Search" type="submit">Search</button>';
   $content .= '</div>';
@@ -1679,7 +1688,7 @@ function nys_dashboard_views_pre_render(&$view) {
           // From here, the vote should populate correctly if the bill was substituted
           $sub_bill_versions = nysenate_get_bill_versions($bill->type, $check_for_sub, $bill->field_ol_session[LANGUAGE_NONE][0]['value']);
           $sub_bill = node_load(end($sub_bill_versions)['nid']);
-          if ((is_array($sub_bill->field_ol_votes[LANGUAGE_NONE]) || is_object($sub_bill->field_ol_votes[LANGUAGE_NONE]))) {
+          if (isset($sub_bill->field_ol_votes[LANGUAGE_NONE]) && (is_array($sub_bill->field_ol_votes[LANGUAGE_NONE]) || is_object($sub_bill->field_ol_votes[LANGUAGE_NONE]))) {
             $bill = $sub_bill;
             $row->current_status = nys_dashboard_render_bill_status($bill->nid)->display_status;
           }
@@ -1694,7 +1703,7 @@ function nys_dashboard_views_pre_render(&$view) {
 
       $row->status_date = date('F d, Y', $bill->field_ol_last_status_date[LANGUAGE_NONE][0]['value']);
 
-      if (is_array($bill->field_ol_votes[LANGUAGE_NONE]) || is_object($bill->field_ol_votes[LANGUAGE_NONE])) {
+      if (isset($bill->field_ol_votes[LANGUAGE_NONE]) && (is_array($bill->field_ol_votes[LANGUAGE_NONE]) || is_object($bill->field_ol_votes[LANGUAGE_NONE]))) {
         foreach ($bill->field_ol_votes[LANGUAGE_NONE] as $vote) {
           $vote_query = "SELECT field_ol_vote_type_value FROM `field_data_field_ol_vote_type` WHERE `entity_id` = :nid AND `field_ol_vote_type_value` = 'floor' LIMIT 1";
           $vote_result = db_query($vote_query, array(':nid' => $vote['value']))->fetchField();
@@ -2217,7 +2226,7 @@ function nys_dashboard_bill_autocomplete($search_term) {
   $suggestions = array();
   foreach ($result as $r) {
     $name = $r->title;
-    if (strpos($prefix, $name) === FALSE) {
+    if (strpos($search_term, $name) === FALSE) {
       // Prevent duplicates.
       $suggestions[$name] = $name;
     }

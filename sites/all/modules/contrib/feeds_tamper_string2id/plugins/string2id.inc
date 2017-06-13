@@ -223,7 +223,6 @@ function feeds_tamper_string2id_resolve_target_form($importer, $element_key, $se
       This view will then be invoked each time a string input is being
       processed. If it returns one or more valid reults, those IDs will be
       returned.
-      The target for this data should be an entityreference field or similar.
       </p>
       ",
   );
@@ -375,6 +374,10 @@ function feeds_tamper_string2id_resolve_target_callback_via_autocomplete($source
 
   // Field is already an array (maybe of just one). Run lookups for each.
   foreach ($field as $field_string) {
+    if (! is_string($field_string)) {
+      watchdog(__FUNCTION__, 'Expected string, got <pre>!data</pre>', array('!data' => print_r(get_defined_vars(), 1)), WATCHDOG_NOTICE);
+      continue;
+    }
     $field_string = trim($field_string);
 
     if (empty($field_string)) {
@@ -424,17 +427,22 @@ function feeds_tamper_string2id_resolve_target_callback_via_views($source, $item
 
   // field is already an array (maybe of just one). Run lookups for each value.
   foreach ($field as $field_string) {
-
-    $view_args = array($field_string);
     // Load and run the view in one go
-    $results = views_get_view_result($view_id, $display_id, $view_args);
+    $results = views_get_view_result($view_id, $display_id, $field_string);
     // The result better include a row we can make use of.
     // Support multiples.
     foreach ($results as $row) {
       // This is an object, we may know the id of the attribute/col to use.
       if (!empty($col_id)) {
-        if (isset($row->$col_id)) {
-          $found[] = $row->$col_id;
+        if (isset($row->{$col_id})) {
+          $found[] = $row->{$col_id};
+        }
+        elseif (is_numeric($col_id)) {
+          $vals = get_object_vars($row);
+          $values = array_values($vals);
+          if (!empty($values[$col_id])) {
+            $found[] = $values[$col_id];
+          }
         }
       }
       else {

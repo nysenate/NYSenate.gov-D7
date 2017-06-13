@@ -72,6 +72,46 @@ abstract class field_validation_validator {
       '#type' => 'checkbox',
       '#default_value' => isset($default_settings['errors']) ? $default_settings['errors'] : FALSE,
     );
+    $form['settings']['condition'] = array(
+      '#title' => t('Conditional validation'),
+      '#type' => 'checkbox',
+      '#default_value' => isset($default_settings['condition']) ? $default_settings['condition'] : FALSE,
+    );
+    $form['settings']['condition_wrapper'] = array(
+      '#type' => 'fieldset',
+      //'#collapsible' => TRUE,
+      '#collapsed' => FALSE,
+	  //'#tree' => TRUE,
+	  //'#title' => t('Replacement patterns'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="settings[condition]"]' => array('checked' => TRUE),
+        ), 
+      ),
+    );
+    $form['settings']['condition_wrapper']['condition_field'] = array(
+      '#title' => t('Condition field'),
+      '#type' => 'textfield',
+      '#default_value' => isset($default_settings['condition_wrapper']['condition_field']) ? $default_settings['condition_wrapper']['condition_field'] : '',
+    );
+    $operator_options = array(
+      'equals' => t('equals'),
+      'not_equals' => t('not equals'),
+      'greater_than' => t('greater than'),
+      'less_than' => t('less than'),
+      'greater_or_equal' => t('greater or equal'),
+      'less_or_equal' => t('less or equal'),
+	);
+    $form['settings']['condition_wrapper']['condition_operator'] = array(
+      '#type' => 'select',
+      '#options' => $operator_options,
+      '#default_value' => isset($default_settings['condition_wrapper']['condition_operator']) ? $default_settings['condition_wrapper']['condition_operator'] : '',
+
+    );
+    $form['settings']['condition_wrapper']['condition_value'] = array(
+      '#type' => 'textfield',
+      '#default_value' => isset($default_settings['condition_wrapper']['condition_value']) ? $default_settings['condition_wrapper']['condition_value'] : '',
+    );	
   }
 
   /**
@@ -158,5 +198,59 @@ abstract class field_validation_validator {
       }
     }
     return FALSE;
+  }
+  
+  /**
+   * Get token type.
+   */ 
+  public function get_token_type() {
+    $mappings = token_get_entity_mapping('entity');
+	//print debug($mappings);
+    $token_type = isset($mappings[$this->entity_type]) ? $mappings[$this->entity_type] : "";
+    return $token_type;
+  }
+  
+  /**
+   * pass condition.
+   */
+  public function pass_condition() {
+    $settings = $this->rule->settings;
+    //print debug($settings);
+    if (!empty($settings['condition'])) {
+	  $condition_field = "";
+      if (isset($settings['condition_wrapper']['condition_field']) && $settings['condition_wrapper']['condition_field'] != '' ) {
+        $condition_field = token_replace($settings['condition_wrapper']['condition_field'], array($this->get_token_type() => $this->entity));
+      }
+	  $condition_operator = "equals";
+      if (isset($settings['condition_wrapper']['condition_operator']) && $settings['condition_wrapper']['condition_operator'] != '' ) {
+        $condition_operator = $settings['condition_wrapper']['condition_operator'];
+      }
+	  $condition_value = "";
+      if (isset($settings['condition_wrapper']['condition_value']) && $settings['condition_wrapper']['condition_value'] != '' ) {
+        $condition_value = token_replace($settings['condition_wrapper']['condition_value'], array($this->get_token_type() => $this->entity));
+      }
+      switch ($condition_operator){
+        case 'equals':
+          return $condition_field == $condition_value;
+          break;  
+        case 'not_equals':
+          return $condition_field != $condition_value;
+          break;
+        case 'greater_than':
+          return $condition_field > $condition_value;
+          break;  
+        case 'less_than':
+          return $condition_field != $condition_value;
+          break;
+        case 'greater_or_equal':
+          return $condition_field >= $condition_value;
+          break;  
+        case 'less_or_equal':
+          return $condition_field <= $condition_value;
+          break;		  
+      }  
+      return FALSE;
+    }
+    return TRUE;
   }
 }

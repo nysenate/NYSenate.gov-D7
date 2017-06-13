@@ -650,6 +650,7 @@ class PrivatemsgTestCase extends PrivatemsgBaseTestCase {
     }
 
     // Mid 4 should have been flushed.
+    entity_get_controller('privatemsg_message')->resetCache();
     $message = privatemsg_message_load(4, $author);
     $this->assertTrue(empty($message), t('Message #4 has been flushed'));
   }
@@ -754,7 +755,7 @@ class PrivatemsgTestCase extends PrivatemsgBaseTestCase {
     $this->drupalPost(NULL, NULL, t('Cancel account'));
 
     // Confirm account cancellation request.
-    $this->drupalGet("user/$recipient2->uid/cancel/confirm/$timestamp/" . user_pass_rehash($recipient2->pass, $timestamp, $recipient2->login));
+    $this->drupalGet("user/$recipient2->uid/cancel/confirm/$timestamp/" . user_pass_rehash($recipient2->pass, $timestamp, $recipient2->login, $recipient2->uid));
 
     // Simpletest thinks that we are still logged in.
     $this->loggedInUser = NULL;
@@ -790,7 +791,7 @@ class PrivatemsgTestCase extends PrivatemsgBaseTestCase {
     $this->drupalPost(NULL, NULL, t('Cancel account'));
 
     // Confirm account cancellation request.
-    $this->drupalGet("user/$dummy->uid/cancel/confirm/$timestamp/" . user_pass_rehash($dummy->pass, $timestamp, $dummy->login));
+    $this->drupalGet("user/$dummy->uid/cancel/confirm/$timestamp/" . user_pass_rehash($dummy->pass, $timestamp, $dummy->login, $dummy->uid));
   }
 
   function checkThreadDelete($message) {
@@ -1500,7 +1501,9 @@ class PrivatemsgAPITestCase extends PrivatemsgBaseTestCase {
 
     // Create some global and role default settings.
     privatemsg_set_setting('global', 0, 'test', 1);
-    privatemsg_set_setting('role', array_shift(array_keys($user->roles)), 'test', 2);
+    $roles = array_keys($user->roles);
+    $first_role = array_shift($roles);
+    privatemsg_set_setting('role', $first_role, 'test', 2);
 
     // Add some user specific setting.
     privatemsg_set_setting('user', $admin->uid, 'test', 3);
@@ -1523,7 +1526,7 @@ class PrivatemsgAPITestCase extends PrivatemsgBaseTestCase {
     $this->assertEqual(privatemsg_get_setting('test2', $user2_ids), 0, t('Negative values are ignored.'));
 
     // Update existing settings, verify that the updated value is used now.
-    privatemsg_set_setting('role', array_shift(array_keys($user->roles)), 'test', 5);
+    privatemsg_set_setting('role', $first_role, 'test', 5);
     privatemsg_set_setting('user', $admin->uid, 'test', 6);
     privatemsg_set_setting('user', $user2->uid, 'test', 7);
 
@@ -1532,7 +1535,7 @@ class PrivatemsgAPITestCase extends PrivatemsgBaseTestCase {
     $this->assertEqual(privatemsg_get_setting('test', $user2_ids), 7, t('The second user uses the new setting.'));
 
     // Default some settings.
-    privatemsg_del_setting('role', array_shift(array_keys($user->roles)), 'test');
+    privatemsg_del_setting('role', $first_role, 'test');
     privatemsg_del_setting('user', $admin->uid, 'test');
 
     $this->assertEqual(privatemsg_get_setting('test', $admin_ids), 1, t('The user level setting was deleted, the default is now used.'));

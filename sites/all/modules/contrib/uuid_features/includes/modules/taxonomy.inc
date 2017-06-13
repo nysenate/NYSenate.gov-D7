@@ -5,9 +5,11 @@
  */
 
 /**
- * Implements hook_uuid_node_features_export_render().
+ * Implements hook_uuid_node_features_export_render_alter().
  */
-function taxonomy_uuid_node_features_export_alter(&$export, &$pipe, $node) {
+function taxonomy_uuid_node_features_export_alter(&$export, $node) {
+  // Access / modify the pipe.
+  $pipe = &$export['__drupal_alter_by_ref']['pipe'];
   if (!empty($node->taxonomy)) {
     foreach ($node->taxonomy as $term) {
       $vocabulary = taxonomy_vocabulary_load($term->vid);
@@ -21,41 +23,19 @@ function taxonomy_uuid_node_features_export_alter(&$export, &$pipe, $node) {
 }
 
 /**
- * Implements hook_uuid_node_features_export_render_alter().
+ * Implements hook_uuid_entity_features_export_render_alter().
  */
-function taxonomy_uuid_node_features_export_render_alter(&$export, &$node, $module) {
-  if (!empty($node->taxonomy)) {
-    $export->uuid_term = array();
-    foreach ($node->taxonomy as $term) {
-      $export->uuid_term[] = $term->uuid;
-    }
-  }
+function taxonomy_uuid_entity_features_export_render_alter($entity_type, &$export, &$entity, $module) {
+  $fields = uuid_features_get_field_items_iterator($export, $entity_type, 'taxonomy_term_reference');
+  uuid_features_set_uuid_references($fields, 'taxonomy_term');
 }
 
 /**
- * Implements hook_uuid_node_features_rebuild_alter().
- * Build a taxonomy array suitable for node_save() from the uuid_term array.
+ * Implements hook_uuid_entity_features_rebuild_alter().
  */
-function taxonomy_uuid_node_features_rebuild_alter(&$node, $module) {
-  if (!empty($node->uuid_term)) {
-    $node->taxonomy = array();
-    foreach ($node->uuid_term as $uuid) {
-      $tid = uuid_taxonomy_term_find($uuid);
-      if (empty($tid)) {
-        // If no tid was found, then the term doesn't exist, and most likely
-        // the uuid_term rebuild needs to run first.
-        // TODO: figure out how to weight feature components.
-        uuid_term_features_rebuild($module);
-
-        // Now try again.
-        $tid = uuid_taxonomy_term_find($uuid);
-        if (empty($tid)) {
-          watchdog('uuid_features', 'The term specified by %uuid could not be found.', array('%uuid' => $uuid));
-          continue;
-        }
-      }
-
-      $node->taxonomy[] = $tid;
-    }
-  }
+function taxonomy_uuid_entity_features_rebuild_alter($entity_type, &$entity, $data, $module) {
+  $fields = uuid_features_get_field_items_iterator($entity, $entity_type, 'taxonomy_term_reference');
+  uuid_features_fetch_uuid_references($fields, 'taxonomy_term', array(
+    'tid' => 'tid',
+  ));
 }

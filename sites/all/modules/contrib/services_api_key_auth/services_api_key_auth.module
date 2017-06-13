@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Extend services to allow API key authentication on endponts.
+ * Extend services to allow API key authentication on endpoints.
  */
 
 /**
@@ -9,8 +9,8 @@
  */
 function services_api_key_auth_services_authentication_info() {
   return array(
-    'title' => 'API Key Authentications',
-    'description' => 'Enable API Key authentication for an endpoint.',
+    'title' => t('API key authentication'),
+    'description' => t('Enable API Key authentication for an endpoint.'),
     'authenticate_call' => 'services_api_key_auth_services_authenticate',
     'security_settings' => 'services_api_key_auth_services_settings_form',
   );
@@ -22,37 +22,81 @@ function services_api_key_auth_services_authentication_info() {
 function services_api_key_auth_services_authenticate() {
   // Get function arguments.
   $args = func_get_args();
+
   // Get the key from the request.
-  $api_key = (!empty($_REQUEST['api-key'])) ? $_REQUEST['api-key'] : '';
-  // Validate request
-  $valid = (services_api_key_auth_compare_key($api_key, $args[0]['api_key'])) ? TRUE : FALSE;
+  $api_key = '';
+  switch ($args[0]['api_key_source']) {
+    case 'request':
+      $api_key = empty($_REQUEST['api-key']) ? '' : $_REQUEST['api-key'];
+      break;
+
+    case 'header':
+      $api_key = empty($_SERVER['HTTP_API_KEY']) ? '' : $_SERVER['HTTP_API_KEY'];
+      break;
+  }
+
+  // Validate request.
+  $valid = (bool) services_api_key_auth_compare_key($api_key, $args[0]['api_key']);
+  // Allow other modules to have their say.
+  drupal_alter('services_api_key_valid', $valid, $args);
   if ($valid) {
-    // If a valid request, witch to user to perform drupal response.
+    // If a valid request, switch to user to perform drupal response.
     if (!empty($args[0]['user'])) {
       global $user;
-      $current_user = user_load($args[0]['user']);
+      $current_user = user_load_by_name($args[0]['user']);
       if (!empty($current_user)) {
         $user = $current_user;
         drupal_session_regenerate();
+        drupal_add_http_header('Cache-Control', 'no-cache, must-revalidate, post-check=0, pre-check=0');
       }
     }
     return FALSE;
   }
-  return services_error('Unauthorised access.', 401);
+  return services_error('Unauthorised access.', 403);
 }
 
 /**
  * Build form for authentication settings.
+ *
+ * @param $settings
+ *   The settings as they exist currently.
+ * @return
+ *   The form definition.
  */
 function services_api_key_auth_services_settings_form($settings) {
   $form = array();
+
+  // Generate an API key for the user.
+  $key = drupal_random_key(16);
+
   // Text field for api key.
   $form['api_key'] = array(
     '#type' => 'textfield',
     '#title' => t('API Key'),
-    '#description' => t('Enter an API key to allow access to this endpoint.'),
-    '#default_value' => (!empty($settings['api_key'])) ? $settings['api_key'] : '',
+    '#description' => t('Enter an API key to allow access to this endpoint. You can use a secure pseudo-random key generated on your behalf, "!key", entered automatically if the field was empty.', array(
+      '!key' => $key,
+    )),
+    '#default_value' => (!empty($settings['api_key'])) ? $settings['api_key'] : $key,
   );
+
+  // Define where we should look up of the API key value.
+  $form['api_key_source'] = array(
+    '#type' => 'select',
+    '#title' => t('API Key source'),
+    '#description' => t('Where the API key can be found, either in the request parameters or in the HTTP header. Note that the <a href="@href_php_net" target="_blank">@var_request</a> variable contains the contents of @var_get, @var_post and @var_cookie, and that for the header option, <em>api-key</em> should still be the parameter passed in the request. The Web server will convert this to <em>HTTP_API_KEY</em> on receipt.', array(
+      '@href_php_net' => 'http://php.net/manual/en/reserved.variables.request.php',
+      '@var_request' => '$_REQUEST',
+      '@var_cookie' => '$_COOKIE',
+      '@var_post' => '$_POST',
+      '@var_get' => '$_GET',
+    )),
+    '#options' => array(
+      'request' => t("Request (\$_REQUEST['api-key'])"),
+      'header' => t("Header (\$_SERVER['HTTP_API_KEY'])"),
+    ),
+    '#default_value' => empty($settings['api_key_source']) ? 'request' : $settings['api_key_source'],
+  );
+
   // Get list of users with given role.
   $role = user_role_load_by_name(variable_get('service_api_key_role', 'administrator'));
   $query = 'SELECT DISTINCT(ur.uid) FROM {users_roles} AS ur WHERE ur.rid = :rids';
@@ -60,7 +104,7 @@ function services_api_key_auth_services_settings_form($settings) {
   $options = array('' => 'Select user');
   while ($uid = $result->fetchColumn()) {
     $user = user_load($uid);
-    $options[$uid] = $user->name;
+    $options[$user->name] = $user->name;
     unset($user);
   }
   // Build select field.
@@ -85,12 +129,12 @@ function services_api_key_auth_services_settings_form($settings) {
  * @return boolean
  */
 function services_api_key_auth_compare_key($a, $b) {
-  if ( strlen( $a ) !== strlen( $b ) ) {
+  if (strlen($a) !== strlen($b)) {
     return FALSE;
   }
   $result = 0;
-  for ( $i = 0; $i < strlen( $a ); $i++ ) {
-    $result |= ord( $a[$i] ) ^ ord( $b[$i] );
+  for ($i = 0; $i < strlen($a); $i++) {
+    $result |= ord($a[$i]) ^ ord($b[$i]);
   }
   return $result == 0;
 }
@@ -101,8 +145,8 @@ function services_api_key_auth_compare_key($a, $b) {
 function services_api_key_auth_menu() {
   return array(
     'admin/structure/services/api_key_settings' => array(
-      'title' => t('API Key settings'),
-      'description' => t('Set user role for user list in API Key authentication settings.'),
+      'title' => 'API Key settings',
+      'description' => 'Set user role for user list in API Key authentication settings.',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('services_api_key_auth_admin_settings'),
       'access arguments' => array('administer services'),

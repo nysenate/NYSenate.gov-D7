@@ -48,7 +48,7 @@ function feeds_ui_mapping_help() {
 /**
  * Build overview of available configurations.
  */
-function feeds_ui_overview_form($form, &$form_status) {
+function feeds_ui_overview_form($form, array &$form_state) {
   $form = $form['enabled'] = $form['disabled'] = array();
 
   $form['#header'] = array(
@@ -513,6 +513,9 @@ function feeds_ui_mapping_form($form, &$form_state, $importer) {
   if ($sources = $importer->parser->getMappingSources()) {
     $source_options = _feeds_ui_format_options($sources);
     foreach ($sources as $k => $source) {
+      if (!empty($source['deprecated'])) {
+        continue;
+      }
       $legend['sources'][$k]['name']['#markup'] = empty($source['name']) ? $k : $source['name'];
       $legend['sources'][$k]['description']['#markup'] = empty($source['description']) ? '' : $source['description'];
     }
@@ -524,6 +527,9 @@ function feeds_ui_mapping_form($form, &$form_state, $importer) {
   $target_options = _feeds_ui_format_options($targets);
   $legend['targets'] = array();
   foreach ($targets as $k => $target) {
+    if (!empty($target['deprecated'])) {
+      continue;
+    }
     $legend['targets'][$k]['name']['#markup'] = empty($target['name']) ? $k : $target['name'];
     $legend['targets'][$k]['description']['#markup'] = empty($target['description']) ? '' : $target['description'];
   }
@@ -645,6 +651,9 @@ function feeds_ui_mapping_settings_form($form, $form_state, $i, $mapping, $targe
 
     return array(
       '#type' => 'container',
+      '#attributes' => array(
+        'class' => array('feeds-target-config'),
+      ),
       'settings' => $settings_form,
       'save_settings' => $base_button + array(
         '#type' => 'submit',
@@ -830,11 +839,17 @@ function feeds_ui_mapping_form_submit($form, &$form_state) {
  * FeedsProcessor::getMappingTargets() and format them into
  * a Form API options array.
  */
-function _feeds_ui_format_options($options) {
+function _feeds_ui_format_options($options, $show_deprecated = FALSE) {
   $result = array();
   foreach ($options as $k => $v) {
+    if (!$show_deprecated && is_array($v) && !empty($v['deprecated'])) {
+      continue;
+    }
     if (is_array($v) && !empty($v['name'])) {
       $result[$k] = $v['name'] . ' (' . $k . ')';
+      if (!empty($v['deprecated'])) {
+        $result[$k] .= ' - ' . t('DEPRECATED');
+      }
     }
     elseif (is_array($v)) {
       $result[$k] = $k;
@@ -930,7 +945,7 @@ function theme_feeds_ui_edit_page($variables) {
   drupal_add_css(drupal_get_path('module', 'feeds_ui') . '/feeds_ui.css');
 
   // Outer wrapper.
-  $output = '<div class="feeds-settings clear-block">';
+  $output = '<div class="feeds-settings clearfix">';
 
   // Build left bar.
   $output .= '<div class="left-bar">';
@@ -1017,6 +1032,13 @@ function theme_feeds_ui_container($variables) {
 function theme_feeds_ui_mapping_form($variables) {
   $form = $variables['form'];
 
+  $targets = feeds_importer($form['#importer'])->processor->getMappingTargets();
+  $targets = _feeds_ui_format_options($targets, TRUE);
+
+  $sources = feeds_importer($form['#importer'])->parser->getMappingSources();
+  // Some parsers do not define source options.
+  $sources = $sources ? _feeds_ui_format_options($sources, TRUE) : array();
+
   // Build the actual mapping table.
   $header = array(
     t('Source'),
@@ -1028,16 +1050,15 @@ function theme_feeds_ui_mapping_form($variables) {
   $rows = array();
   if (is_array($form['#mappings'])) {
     foreach ($form['#mappings'] as $i => $mapping) {
-      // Some parsers do not define source options.
-      $source = isset($form['source']['#options'][$mapping['source']]) ? $form['source']['#options'][$mapping['source']] : $mapping['source'];
-      $target = isset($form['target']['#options'][$mapping['target']]) ? check_plain($form['target']['#options'][$mapping['target']]) : '<em>' . t('Missing') . '</em>';
+      $source = isset($sources[$mapping['source']]) ? check_plain($sources[$mapping['source']]) : check_plain($mapping['source']);
+      $target = isset($targets[$mapping['target']]) ? check_plain($targets[$mapping['target']]) : '<em>' . t('Missing') . '</em>';
       // Add indicator to target if target configuration changed.
       if (isset($form['#mapping_settings'][$i])) {
         $target .= '<span class="warning">*</span>';
       }
       $rows[] = array(
         'data' => array(
-          check_plain($source),
+          $source,
           $target,
           drupal_render($form['config'][$i]),
           drupal_render($form['remove_flags'][$i]),
@@ -1180,9 +1201,7 @@ function feeds_ui_importer_import_validate($form, &$form_state) {
   $exists = feeds_ui_importer_machine_name_exists($feeds_importer->id);
 
   if ($exists && !$form_state['values']['id_override']) {
-    if (feeds_importer($feeds_importer->id)->export_type != EXPORT_IN_CODE) {
-      return form_error($form['id'], t('Feeds importer already exists with that id.'));
-    }
+    return form_error($form['id'], t('Feeds importer already exists with that id.'));
   }
 
   if (!$form_state['values']['bypass_validation']) {

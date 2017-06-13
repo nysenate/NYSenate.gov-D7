@@ -108,7 +108,7 @@ function nys_wasteland_blog_default_page_manager_handlers() {
   $display->title = 'My title';
   $display->uuid = '04d24cfd-c9a8-4b62-b585-b8d45151b063';
   $display->storage_type = 'page_manager';
-  $display->storage_id = 'term_view_panel_context_3';
+  $display->storage_id = 'term_view__investigations-cmte-experimental';
   $display->content = array();
   $display->panels = array();
   $pane = new stdClass();
@@ -1112,7 +1112,7 @@ function nys_wasteland_blog_default_page_manager_pages() {
   $display->title = 'Letters from the Chair';
   $display->uuid = '4fd36ccb-ebc3-4206-8078-a20ade9141b4';
   $display->storage_type = 'page_manager';
-  $display->storage_id = 'page_gov_ops_waste_blog__panel';
+  $display->storage_id = 'page_gov_ops_letter_list__panel_context_ca2ecca3-8baa-416a-aa55-3bd2f8829fb9';
   $display->content = array();
   $display->panels = array();
   $pane = new stdClass();

@@ -86,24 +86,10 @@ function location_context_location_convert_list() {
  * Convert a context into a string.
  */
 function location_context_location_convert($context, $type) {
-  switch ($type) {
-    case 'name':
-    case 'street':
-    case 'additional':
-    case 'city':
-    case 'province':
-    case 'postal_code':
-    case 'country':
-    case 'latitude':
-    case 'longitude':
-    case 'province_name':
-    case 'country_name':
-      if (isset($context->data[$type])) {
-        return check_plain($context->data[$type]);
-      }
-
-    default:
-      return t('Unknown location keyword');
-
+  $fields = location_context_location_convert_list();
+  if (isset($fields[$type]) && isset($context->data[$type])) {
+    return check_plain($context->data[$type]);
   }
+
+  return t('Unknown location keyword');
 }

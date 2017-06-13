@@ -1,7 +1,7 @@
 name = nys_districts
 core = 7.x
 package = NY STATE SENATE
-version = 7.x-1.13
+version = 7.x-1.15
 project = nys_districts
 dependencies[] = ctools
 dependencies[] = ctools_custom_content
@@ -49,7 +49,6 @@ features[feeds_tamper][] = senator_importer_debug-jsonpath_parser_13-efq_finder
 features[field_base][] = field_district_number
 features[field_base][] = field_map_url
 features[field_base][] = field_subheading
-features[field_group][] = group_district_description|taxonomy_term|districts|form
 features[field_instance][] = taxonomy_term-districts-field_chapters
 features[field_instance][] = taxonomy_term-districts-field_district_number
 features[field_instance][] = taxonomy_term-districts-field_map_url

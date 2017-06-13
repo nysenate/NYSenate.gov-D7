@@ -127,7 +127,13 @@ class apachesolr_views_query extends views_plugin_query {
       }
 
       $solr = apachesolr_get_solr($env_id);
-      $query = new ApachesolrViewsSolrBaseQuery('apachesolr', $solr, $this->query_params, '', current_path());
+      $context = array(
+        'search_type' => 'apachesolr_views_query',
+        'view_name' => $view->name,
+        'current_display' => $view->current_display,
+      );
+
+      $query = new ApachesolrViewsSolrBaseQuery('apachesolr', $solr, $this->query_params, '', current_path(), $context, $view);
 
       // Add sorting. The setSolrsort method can't be used, because it doesn't support multiple sorting criteria.
       $query->replaceParam('sort', $this->orderby);

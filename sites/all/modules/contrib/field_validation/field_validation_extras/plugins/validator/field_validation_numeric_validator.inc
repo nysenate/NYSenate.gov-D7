@@ -25,27 +25,34 @@ class field_validation_numeric_validator extends field_validation_validator {
         $flag = FALSE;
       }
       else{
-        if (isset($settings['min']) && $settings['min'] != '' && $this->value < $settings['min']) {
-          $flag = FALSE;
+        if (isset($settings['min']) && $settings['min'] != '') {
+          $min = token_replace($settings['min'], array($this->get_token_type() => $this->entity));
+		  if ($this->value < $min) {
+            $flag = FALSE;
+          }
         }
-        if (isset($settings['max']) && $settings['max'] != '' && $this->value > $settings['max']) {
-          $flag = FALSE;
+        if (isset($settings['max']) && $settings['max'] != '') {
+          $max = token_replace($settings['max'], array($this->get_token_type() => $this->entity));
+		  if ($this->value > $max) {
+            $flag = FALSE;
+          }
         }
-        if (isset($settings['step']) && strtolower($settings['step']) != 'any' && $settings['step'] > 0) {
+        if (isset($settings['step']) && strtolower($settings['step']) != 'any') {
           // Check that the input is an allowed multiple of #step (offset by #min if
           // #min is set).
           $offset = isset($settings['min']) ? $settings['min'] : 0.0;
+          $step = token_replace($settings['step'], array($this->get_token_type() => $this->entity));
           //The logic code was copied from Drupal 8 core.
-          if (!$this->valid_number_step($this->value, $settings['step'], $offset)) {
+          if ($step > 0 && !$this->valid_number_step($this->value, $step, $offset)) {
            $flag = FALSE;
           }
         }
       }
       if (!$flag) {
         $token = array(
-          '[min]' => isset($settings['min']) ? $settings['min'] : '',
-          '[max]' => isset($settings['max']) ? $settings['max'] : '',
-          '[step]' => isset($settings['step']) ? $settings['step'] : '',
+          '[min]' => isset($min) ? $min : '',
+          '[max]' => isset($max) ? $max : '',
+          '[step]' => isset($step) ? $step : '',
         );
         $this->set_error($token);
       }

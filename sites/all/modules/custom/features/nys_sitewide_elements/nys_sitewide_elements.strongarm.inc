@@ -97,6 +97,111 @@ function nys_sitewide_elements_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'diff_enable_revisions_page_node_initiative';
+  $strongarm->value = 0;
+  $export['diff_enable_revisions_page_node_initiative'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_enable_revisions_page_node_page_content';
+  $strongarm->value = 0;
+  $export['diff_enable_revisions_page_node_page_content'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_enable_revisions_page_node_petition';
+  $strongarm->value = 1;
+  $export['diff_enable_revisions_page_node_petition'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_enable_revisions_page_node_questionnaire';
+  $strongarm->value = 1;
+  $export['diff_enable_revisions_page_node_questionnaire'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_enable_revisions_page_node_student_program';
+  $strongarm->value = 1;
+  $export['diff_enable_revisions_page_node_student_program'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_show_preview_changes_node_initiative';
+  $strongarm->value = 0;
+  $export['diff_show_preview_changes_node_initiative'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_show_preview_changes_node_page_content';
+  $strongarm->value = 0;
+  $export['diff_show_preview_changes_node_page_content'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_show_preview_changes_node_petition';
+  $strongarm->value = 1;
+  $export['diff_show_preview_changes_node_petition'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_show_preview_changes_node_questionnaire';
+  $strongarm->value = 1;
+  $export['diff_show_preview_changes_node_questionnaire'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_show_preview_changes_node_student_program';
+  $strongarm->value = 1;
+  $export['diff_show_preview_changes_node_student_program'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_view_mode_preview_node_initiative';
+  $strongarm->value = 'full';
+  $export['diff_view_mode_preview_node_initiative'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_view_mode_preview_node_page_content';
+  $strongarm->value = '';
+  $export['diff_view_mode_preview_node_page_content'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_view_mode_preview_node_petition';
+  $strongarm->value = 'full';
+  $export['diff_view_mode_preview_node_petition'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_view_mode_preview_node_questionnaire';
+  $strongarm->value = 'full';
+  $export['diff_view_mode_preview_node_questionnaire'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_view_mode_preview_node_student_program';
+  $strongarm->value = 'full';
+  $export['diff_view_mode_preview_node_student_program'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'disqus_nodetypes';
   $strongarm->value = array(
     'bill' => 'bill',
@@ -533,21 +638,6 @@ function nys_sitewide_elements_strongarm() {
       'sponsor_list' => array(
         'custom_settings' => FALSE,
       ),
-      'bill_list_item' => array(
-        'custom_settings' => FALSE,
-      ),
-      'agenda_senator_sponsors' => array(
-        'custom_settings' => FALSE,
-      ),
-      'senator_search_list' => array(
-        'custom_settings' => FALSE,
-      ),
-      'senators_involved' => array(
-        'custom_settings' => FALSE,
-      ),
-      'sponsor_list_bill_detail' => array(
-        'custom_settings' => FALSE,
-      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -575,6 +665,27 @@ function nys_sitewide_elements_strongarm() {
     ),
   );
   $export['field_bundle_settings_node__webform'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'file_entity_file_upload_wizard_skip_fields';
+  $strongarm->value = 1;
+  $export['file_entity_file_upload_wizard_skip_fields'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'file_entity_file_upload_wizard_skip_file_type';
+  $strongarm->value = 1;
+  $export['file_entity_file_upload_wizard_skip_file_type'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'file_entity_file_upload_wizard_skip_scheme';
+  $strongarm->value = 1;
+  $export['file_entity_file_upload_wizard_skip_scheme'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -876,39 +987,6 @@ function nys_sitewide_elements_strongarm() {
   $strongarm->name = 'page_manager_term_view_disabled';
   $strongarm->value = FALSE;
   $export['page_manager_term_view_disabled'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'uuid_features_entity_node';
-  $strongarm->value = array(
-    'page_content' => 'page_content',
-    'webform' => 'webform',
-    'agenda' => 0,
-    'article' => 0,
-    'bill' => 0,
-    'calendar' => 0,
-    'chapter' => 0,
-    'event' => 0,
-    'in_the_news' => 0,
-    'initiative' => 0,
-    'meeting' => 0,
-    'open_data' => 0,
-    'petition' => 0,
-    'photo' => 0,
-    'press_release' => 0,
-    'promotional_banner' => 0,
-    'public_hearing' => 0,
-    'questionnaire' => 0,
-    'resolution' => 0,
-    'senator' => 0,
-    'session' => 0,
-    'student_program' => 0,
-    'timeline_item' => 0,
-    'transcript' => 0,
-    'video' => 0,
-  );
-  $export['uuid_features_entity_node'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

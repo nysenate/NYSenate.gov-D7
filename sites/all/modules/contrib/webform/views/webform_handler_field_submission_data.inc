@@ -188,7 +188,7 @@ class webform_handler_field_submission_data extends views_handler_field {
           $this->view->_webform_components[$nid][$submission->nid][$cid] = $component;
           $submission_node = node_load($submission->nid);
           foreach ($submission_node->webform['components'] as $sub_cid => $sub_component) {
-            if ($sub_component['form_key'] == $component['form_key'] && $sub_component['type'] == $component['type']) {
+            if ((string) $sub_component['form_key'] === (string) $component['form_key'] && $sub_component['type'] == $component['type']) {
               $this->view->_webform_components[$nid][$submission->nid]['webform'] = $submission_node;
               $this->view->_webform_components[$nid][$submission->nid][$cid] = $sub_component;
               break;
@@ -202,7 +202,7 @@ class webform_handler_field_submission_data extends views_handler_field {
       }
 
       if ($this->options['format'] == 'html') {
-        $render = array();
+        $render = array('#submission' => $submission);
         _webform_client_form_add_component($webform, $component, NULL, $render, $render, $submission->data, 'html');
         $render = $render[$component['form_key']];
         // Remove display label.
@@ -212,6 +212,13 @@ class webform_handler_field_submission_data extends views_handler_field {
         // Plain text format is generated via invoking the table output to ensure output is sanitised.
         $data = isset($submission->data[$component['cid']]) ? $submission->data[$component['cid']] : NULL;
         $render = webform_component_invoke($component['type'], 'table', $component, $data);
+      }
+      // Webform renders empty values as a space, which prevents views empty
+      // rewriting from being used. If empty is in use, change result to an
+      // actual empty string.
+      $render = render($render);
+      if ($render === ' ' && strlen($this->options['empty'])) {
+        $render = '';
       }
       return $render;
     }

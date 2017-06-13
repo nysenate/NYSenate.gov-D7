@@ -1,6 +1,6 @@
 <?php
 
-function nys_inbox_senator_constituents_form($form, &$form_state, $argument, $account) {
+function nys_inbox_senator_constituents_form($form, &$form_state) {
   $form = array();
 
   $getvars = array(
@@ -209,7 +209,12 @@ function nys_dashboard_senators_constituents_table($form_state) {
 
   $limit = 10;
 
-  $start = $_REQUEST['page'] * $limit;
+  if (isset($_REQUEST['page'])) {
+    $start = $_REQUEST['page'] * $limit;
+  }
+  else {
+    $start = 1 * $limit;
+  }
 
   $data = nys_dashboard_constituents_query($form_state['input']);
   if(empty($data)) {

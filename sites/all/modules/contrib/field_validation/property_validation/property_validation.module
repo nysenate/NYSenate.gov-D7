@@ -31,7 +31,7 @@ function property_validation_field_attach_validate($entity_type, $entity, &$erro
         continue;
       }
       $property_name = $rule->property_name;
-      $value = $entity->{$property_name};
+      $value = isset($entity->{$property_name}) ? $entity->{$property_name} : '';
       $validator = new $class($entity_type, $entity, $value, $rule, $errors);
       $validator->validate();
     }

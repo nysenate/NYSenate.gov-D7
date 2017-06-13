@@ -62,10 +62,11 @@ function uuid_file_features_revert($module) {
 
 /**
  * Implements hook_features_rebuild().
+ *
  * Rebuilds files based on UUID from code defaults.
  */
 function uuid_file_features_rebuild($module) {
-  $files = module_invoke($module, 'uuid_features_default_files');
+  $files = features_get_default('uuid_file', $module);
   if (!empty($files)) {
     $source_dir = drupal_get_path('module', $module) . '/uuid_file';
     foreach ($files as $data) {

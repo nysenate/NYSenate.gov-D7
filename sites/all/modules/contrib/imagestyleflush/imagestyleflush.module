@@ -48,7 +48,7 @@ function imagestyleflush_image_style_list($variables) {
   $rows = array();
   foreach ($styles as $style) {
     $row = array();
-    $row[] = l($style['name'], 'admin/config/media/image-styles/edit/' . $style['name']);
+    $row[] = l($style['label'], 'admin/config/media/image-styles/edit/' . $style['name']);
     $link_attributes = array(
       'attributes' => array(
         'class' => array('image-style-link'),
@@ -79,7 +79,7 @@ function imagestyleflush_image_style_list($variables) {
     $rows[] = array(array(
       'colspan' => 4,
       'data' => t('There are currently no styles. <a href="!url">Add a new one</a>.', array('!url' => url('admin/config/media/image-styles/add'))),
-      ));
+    ));
   }
 
   return theme('table', array('header' => $header, 'rows' => $rows));
@@ -103,7 +103,7 @@ function imagestyleflush_form($form, &$form_state, $style = NULL) {
           '#value' => $style['name'],
         ),
       ),
-      t('Are you sure you want to flush @style image style?', array('@style' => $style['name'])),
+      t('Are you sure you want to flush the %style image style?', array('%style' => $style['label'])),
       'admin/config/media/image-styles',
        t('This action cannot be undone.'),
       t('Flush'), t('Cancel')
@@ -151,10 +151,10 @@ function imagestyleflush_form_submit($form, &$form_state) {
  */
 function imagestyleflush_batch_finished($success, $results, $operations) {
   if ($success) {
-    drupal_set_message(t('Image styles was successfully flushed.'));
+    drupal_set_message(t('Image styles were successfully flushed.'));
   }
   else {
-    drupal_set_message(t('An error occurred while flushing the image caches.', 'error'));
+    drupal_set_message(t('An error occurred while flushing the image caches.'), 'error');
   }
   drupal_goto('admin/config/media/image-styles');
 }

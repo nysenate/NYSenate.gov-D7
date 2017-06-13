@@ -474,6 +474,7 @@ function location_cck_field_widget_form(&$form, &$form_state, $field, $instance,
       '#required' => $instance['required'],
       '#location_settings' => $settings,
       '#default_value' => $location,
+      '#delta' => $delta,
     );
 
     return $element;

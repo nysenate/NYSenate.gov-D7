@@ -1,0 +1,42 @@
+<?php
+/**
+ * @file
+ * Install, update, and uninstall functions for Services API Key Authentication.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function services_api_key_auth_uninstall() {
+  // Remove any set variables.
+  variable_del('service_api_key_role');
+}
+
+/**
+ * Convert user IDs to usernames for configuration portability.
+ */
+function services_api_key_auth_update_7001() {
+  // Load Services to easily modify endpoints.
+  module_load_include('module', 'services');
+
+  // Iterate though each one.
+  foreach (services_endpoint_load_all() as $endpoint) {
+
+    // Ignore endpoints using other authentication types.
+    if (isset($endpoint->authentication['services_api_key_auth']['user'])) {
+
+      // Load the user from its ID.
+      $userId = &$endpoint->authentication['services_api_key_auth']['user'];
+      $user = user_load($userId);
+
+      // Silently fail if the user can't be loaded from the ID.
+      if ($user) {
+
+        // Get the username from the ID and save it instead.
+        $userName = format_username($user);
+        $userId = $userName;
+        services_endpoint_save($endpoint);
+      }
+    }
+  }
+}

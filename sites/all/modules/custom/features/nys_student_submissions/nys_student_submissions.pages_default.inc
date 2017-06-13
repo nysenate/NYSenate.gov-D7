@@ -88,7 +88,7 @@ function nys_student_submissions_default_page_manager_handlers() {
   $display->title = '';
   $display->uuid = 'cf271ace-12ae-4f90-bb50-9e452f9dfdfb';
   $display->storage_type = 'page_manager';
-  $display->storage_id = 'node_view__panel_context_ab9928f3-417f-4796-90d4-37e407f0c3b1';
+  $display->storage_id = 'node_view__earth-day';
   $display->content = array();
   $display->panels = array();
   $pane = new stdClass();

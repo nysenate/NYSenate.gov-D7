@@ -101,7 +101,7 @@ function nys_districts_feeds_tamper_default() {
   $export['senator_importer-jsonpath_parser_15-trim'] = $feeds_tamper;
 
   $feeds_tamper = new stdClass();
-  $feeds_tamper->disabled = FALSE; /* Edit this to true to make a default feeds_tamper disabled initially */
+  $feeds_tamper->disabled = TRUE; /* Edit this to true to make a default feeds_tamper disabled initially */
   $feeds_tamper->api_version = 2;
   $feeds_tamper->id = 'senator_importer-jsonpath_parser_16-efq_finder';
   $feeds_tamper->importer = 'senator_importer';

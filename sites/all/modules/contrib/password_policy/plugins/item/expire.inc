@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Expiration plugin for Password Policy module.
@@ -10,9 +11,9 @@ $plugin = array(
   'class' => 'PasswordPolicyExpire',
   'config' => array(
     'expire_enabled' => FALSE,
-    'expire_limit' => "6 months",
+    'expire_limit' => '6 months',
     'expire_warning_message' => 'Your password has expired. Please change it now.',
-    'expire_warning_email_sent' => "-14 days",
+    'expire_warning_email_sent' => '-14 days',
     'expire_warning_email_message' => '',
     'expire_warning_email_subject' => '[user:name], your password on [site:name] shall expire in [password_expiration_date:interval] ',
   ),
@@ -50,7 +51,7 @@ function password_policy_expire_admin_form($form, &$form_state, $constraint) {
     '#type' => 'textfield',
     '#title' => 'Expire limit',
     '#default_value' => $constraint->config['expire_limit'],
-    '#description' => t("Password will expire after being used for this long. (Use normal English, like 90 days or 5 hours.)"),
+    '#description' => t('Password will expire after being used for this long. (Use normal English, like 90 days or 5 hours.)'),
   );
   $enabled_container['expire_warning_message'] = array(
     '#type' => 'textfield',
@@ -163,10 +164,10 @@ function _password_policy_expire_query_users($notice_int, $policy_name) {
   $query->join($current_pw_query, 'c', 'p.created = c.created AND p.uid = c.uid');
 
   // Add negative join to remove all items that have already sent this notice.
-  // @TODO findout why we cannot use arguments here
-  // $query->leftJoin('password_policy_notice_history', 'nh', "nh.hid = p.hid AND nh.timeframe = '%s' AND nh.name='%s'", array($notice_int, $policy_name));
-  $condition = t("nh.hid = p.hid AND nh.name='@name' AND nh.timeframe = '@timeframe'", array('@name' => $policy_name, '@timeframe' => $notice_int));
-  $query->leftJoin('password_policy_notice_history', 'nh', $condition);
+  $query->leftJoin('password_policy_notice_history', 'nh', 'nh.hid = p.hid AND nh.name = :policy_name AND nh.timeframe = :notice_int', array(
+    ':policy_name' => $policy_name,
+    ':notice_int' => $notice_int,
+  ));
   $query->isNull('nh.hid');
 
   // Check to see if the password needs a warning notification.

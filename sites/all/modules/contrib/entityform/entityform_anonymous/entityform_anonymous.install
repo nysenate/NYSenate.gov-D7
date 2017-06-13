@@ -1,8 +1,10 @@
 <?php
+
 /**
  * @file
  * Install Functions
  */
+
 /**
  * Implements hook_install().
  */
@@ -25,7 +27,6 @@ function entityform_anonymous_uninstall() {
 
 /**
  * Implements hook_schema_alter().
- * @param $schema
  */
 function entityform_anonymous_schema_alter(&$schema) {
   // Add field to existing schema.

@@ -10,7 +10,7 @@
 function nys_committees_conditional_fields_default_fields() {
   $items = array();
 
-  $items[] = array(
+  $items["field_collection_item:field_group_members:0"] = array(
     'entity' => 'field_collection_item',
     'bundle' => 'field_group_members',
     'dependent' => 'field_committee_member_name',
@@ -182,7 +182,7 @@ function nys_committees_conditional_fields_default_fields() {
     ),
   );
 
-  $items[] = array(
+  $items["field_collection_item:field_group_members:1"] = array(
     'entity' => 'field_collection_item',
     'bundle' => 'field_group_members',
     'dependent' => 'field_committee_member_url',
@@ -354,7 +354,7 @@ function nys_committees_conditional_fields_default_fields() {
     ),
   );
 
-  $items[] = array(
+  $items["field_collection_item:field_group_members:2"] = array(
     'entity' => 'field_collection_item',
     'bundle' => 'field_group_members',
     'dependent' => 'field_misc_committee_member_role',
@@ -526,7 +526,7 @@ function nys_committees_conditional_fields_default_fields() {
     ),
   );
 
-  $items[] = array(
+  $items["field_collection_item:field_group_members:3"] = array(
     'entity' => 'field_collection_item',
     'bundle' => 'field_group_members',
     'dependent' => 'field_senator',
@@ -698,7 +698,7 @@ function nys_committees_conditional_fields_default_fields() {
     ),
   );
 
-  $items[] = array(
+  $items["field_collection_item:field_members:0"] = array(
     'entity' => 'field_collection_item',
     'bundle' => 'field_members',
     'dependent' => 'field_other_member_role',

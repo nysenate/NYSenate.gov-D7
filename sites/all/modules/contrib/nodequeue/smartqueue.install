@@ -24,6 +24,12 @@ function smartqueue_schema() {
         'size' => 'tiny',
         'default' => 0,
       ),
+      'use_parents_all' => array(
+        'description' => 'Whether a queue is to use all the terms ancestors when displaying the queue selection.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'default' => 0,
+      ),
     ),
     'primary key' => array('qid'),
   );
@@ -89,4 +95,26 @@ function smartqueue_update_7001() {
       ->condition('qid', $result->qid)
       ->execute();
   }
+}
+
+/**
+ * Clean-up leftovers from the {smartqueue} table.
+ */
+function smartqueue_update_7002() {
+  db_query('DELETE FROM {smartqueue} WHERE qid NOT IN (SELECT qid FROM {nodequeue_queue})');
+
+  return t('The {smartqueue} table has been cleaned.');
+}
+
+/**
+ * Add use_parents_all.
+ */
+function smartqueue_update_7003() {
+  $spec = array(
+    'description' => 'Whether a queue is to use all the terms ancestors when displaying the queue selection.',
+    'type' => 'int',
+    'size' => 'tiny',
+    'default' => 0,
+  );
+  db_add_field('smartqueue', 'use_parents_all', $spec);
 }

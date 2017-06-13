@@ -1,17 +1,13 @@
 <?php
-
 /**
  * @file
- *   uuid_features module drush integration.
+ * uuid_features module drush integration.
  */
 
 /**
  * Implements hook_drush_command().
  *
  * @See drush_parse_command() for a list of recognized keys.
- *
- * @return
- *   An associative array describing your command(s).
  */
 function uuid_features_drush_command() {
   $items = array();
@@ -22,7 +18,12 @@ function uuid_features_drush_command() {
     'arguments' => array(
       'feature' => 'Feature name to export.',
     ),
-    'drupal dependencies' => array('features', 'uuid', 'uuid_features', 'filefield'),
+    'drupal dependencies' => array(
+      'features',
+      'uuid',
+      'uuid_features',
+      'filefield',
+    ),
     'aliases' => array('ufuf'),
   );
 
@@ -57,7 +58,7 @@ function uuid_features_command_update_files($feature = NULL) {
           }
         }
       }
-      else if ($feature) {
+      elseif ($feature) {
         _features_drush_set_error($module, 'FEATURES_FEATURE_NOT_ENABLED');
       }
       else {
@@ -79,7 +80,9 @@ function uuid_features_command_update_files($feature = NULL) {
  * Copy the file identified by $uuid into the feature specified by $module.
  *
  * @param string $module
+ *   The module.
  * @param string $uuid
+ *   The uuid.
  */
 function _uuid_features_drush_update_file($module, $uuid) {
   $fid = uuid_get_serial_id('files', 'fid', $uuid);

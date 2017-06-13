@@ -93,7 +93,7 @@ function nys_sage_log($data = array()) {
     $log_fields['form_data'] = json_encode($log_fields['form_data']);
     $log_fields['headers'] = json_encode($log_fields['headers']);
     // TODO: This one should be unnecessary after schema is restored in stage 2.
-    $log_fields['is_validated'] = (int) $log_fields['is_validate'];
+    $log_fields['is_validated'] = (int) $log_fields['is_validated'];
 
     // Make sure the autonumber field is not set.
     if (array_key_exists('sage_id', $log_fields)) {

@@ -181,7 +181,7 @@ class FeedsXPathParserXMLTestCase extends FeedsXPathParserWebTestCase {
     $this->assertFieldByName('feeds[FeedsXPathParserXML][xpath][sources][xpathparser:1]', 'boyz');
     $this->assertFieldByName('feeds[FeedsXPathParserXML][xpath][sources][xpathparser:2]', 'woot');
     // Check that our message comes out correct.
-    $this->assertText('Field guid is mandatory and considered unique: only one item per guid value will be created.');
+    $this->assertRaw('Field <strong>GUID</strong> is mandatory and considered unique: only one item per GUID value will be created.');
 
     // Check that allow_override works as expected.
     $this->setSettings('xpath_xml', 'FeedsXPathParserXML', array('xpath[allow_override]' => FALSE));

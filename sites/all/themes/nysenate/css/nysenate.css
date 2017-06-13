@@ -13154,6 +13154,20 @@ body.node-type-transcript .field-name-field-ol-text {
   white-space: pre-wrap !important;
 }
 
+.cke_editable img.media-element.file-media-landscape-image {
+  float: left;
+  width: 400px;
+  height: auto;
+  padding: 1% 1% 1% 0;
+}
+
+.cke_editable img.media-element.file-media-portrait-image {
+  float: left;
+  width: 225px;
+  height: auto;
+  padding: 1% 1% 1% 0;
+}
+
 .has-nys-captcha .form-managed-file button.ajax-processed {
   display: none !important;
   visibility: hidden !important;

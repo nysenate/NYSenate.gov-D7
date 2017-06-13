@@ -33,7 +33,7 @@
 ?>
 <article class="c-block c-meeting-detail--header">
   <div class="c-meeting-detail--meta">
-    <?php if ($field_event_status[0]['value'] === "live_now"): ?>
+    <?php if (isset($field_event_status[0]['value']) && $field_event_status[0]['value'] === "live_now"): ?>
     <p class="c-meeting-detail--live-flag"><?php print render($content['field_event_status']); ?></p>
     <?php endif; ?>
     <?php if ($field_off_the_floor[0]['value'] === "1"): ?>

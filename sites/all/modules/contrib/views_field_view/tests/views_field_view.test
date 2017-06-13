@@ -67,6 +67,45 @@ class viewsFieldViewTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test a child view using a fieldapi field.
+   */
+  public function testChildViewWithFieldapiField() {
+    // Setup a fieldapi field.
+    $field_name = 'field_test_name';
+    field_create_field(array('field_name' => $field_name, 'type' => 'text'));
+    field_create_instance(array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'page',
+    ));
+
+    foreach ($this->nodes as $node) {
+      // "Reference" to itself to ensure that query aggregation works for
+      // fieldapi fields as well.
+      $node->{$field_name}[LANGUAGE_NONE][0]['value'] = $node->nid;
+      node_save($node);
+    }
+
+    // Get the child view and add it to the database, so it can be used later.
+    $child_view = $this->view_child_field_api();
+    $child_view->save();
+    views_invalidate_cache();
+
+    $parent_view = $this->view_parent_field_api();
+    $parent_view->save();
+    views_invalidate_cache();
+
+    $parent_view->preview();
+
+    // Check that the child view has the same title as the parent one
+    foreach ($parent_view->result as $index => $values) {
+      $title = $parent_view->style_plugin->get_field($index, 'title');
+      $child_view_field = $parent_view->style_plugin->get_field($index, 'view');
+      $this->assertContains($title, $child_view_field);
+    }
+  }
+
+  /**
    * Test field handler methods in a unit test like way.
    */
   function testFieldHandlerMethods() {
@@ -187,6 +226,63 @@ class viewsFieldViewTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Contains a view used by the fieldapi fields testcase.
+   *
+   * @see \viewsFieldViewTestCase::testChildViewWithFieldapiField
+   */
+  protected function view_child_field_api() {
+    $view = new view;
+    $view->name = 'test_vfv_child_normal';
+    $view->description = '';
+    $view->tag = 'default';
+    $view->base_table = 'node';
+    $view->human_name = 'test_vfv_child_normal';
+    $view->core = 7;
+    $view->api_version = '3.0';
+    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+    /* Display: Master */
+    $handler = $view->new_display('default', 'Master', 'default');
+    $handler->display->display_options['access']['type'] = 'perm';
+    $handler->display->display_options['cache']['type'] = 'none';
+    $handler->display->display_options['query']['type'] = 'views_query';
+    $handler->display->display_options['query']['options']['query_comment'] = FALSE;
+    $handler->display->display_options['exposed_form']['type'] = 'basic';
+    $handler->display->display_options['pager']['type'] = 'full';
+    $handler->display->display_options['style_plugin'] = 'default';
+    $handler->display->display_options['row_plugin'] = 'fields';
+    /* Field: Content: Title */
+    $handler->display->display_options['fields']['title']['id'] = 'title';
+    $handler->display->display_options['fields']['title']['table'] = 'node';
+    $handler->display->display_options['fields']['title']['field'] = 'title';
+    $handler->display->display_options['fields']['title']['label'] = '';
+    $handler->display->display_options['fields']['title']['alter']['alter_text'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['make_link'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['absolute'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['word_boundary'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['ellipsis'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['strip_tags'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['trim'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['html'] = 0;
+    $handler->display->display_options['fields']['title']['hide_empty'] = 0;
+    $handler->display->display_options['fields']['title']['empty_zero'] = 0;
+    $handler->display->display_options['fields']['title']['link_to_node'] = 1;
+    /* Contextual filter: Content: Nid */
+    $handler->display->display_options['arguments']['field_test_name']['id'] = 'nid';
+    $handler->display->display_options['arguments']['field_test_name']['table'] = 'field_data_field_test_name';
+    $handler->display->display_options['arguments']['field_test_name']['field'] = 'field_test_name_value';
+    $handler->display->display_options['arguments']['field_test_name']['default_argument_type'] = 'fixed';
+    $handler->display->display_options['arguments']['field_test_name']['default_argument_skip_url'] = 0;
+    $handler->display->display_options['arguments']['field_test_name']['summary']['number_of_records'] = '0';
+    $handler->display->display_options['arguments']['field_test_name']['summary']['format'] = 'default_summary';
+    $handler->display->display_options['arguments']['field_test_name']['summary_options']['items_per_page'] = '25';
+    $handler->display->display_options['arguments']['field_test_name']['break_phrase'] = 1;
+    $handler->display->display_options['arguments']['field_test_name']['not'] = 0;
+
+    return $view;
+  }
+
+  /**
    * Contains a normal parent view used for the normal view testcase.
    * @see viewsFieldViewTestCase::testNormalView
    * @return view
@@ -273,4 +369,88 @@ class viewsFieldViewTestCase extends DrupalWebTestCase {
 
     return $view;
   }
+
+  protected function view_parent_field_api() {
+    $view = new view;
+    $view->name = 'test_vfv_parent_normal';
+    $view->description = '';
+    $view->tag = 'default';
+    $view->base_table = 'node';
+    $view->human_name = 'test_vfv_parent_normal';
+    $view->core = 7;
+    $view->api_version = '3.0';
+    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+    /* Display: Master */
+    $handler = $view->new_display('default', 'Master', 'default');
+    $handler->display->display_options['access']['type'] = 'perm';
+    $handler->display->display_options['cache']['type'] = 'none';
+    $handler->display->display_options['query']['type'] = 'views_query';
+    $handler->display->display_options['query']['options']['query_comment'] = FALSE;
+    $handler->display->display_options['exposed_form']['type'] = 'basic';
+    $handler->display->display_options['pager']['type'] = 'full';
+    $handler->display->display_options['style_plugin'] = 'default';
+    $handler->display->display_options['row_plugin'] = 'fields';
+    /* Field: Content: Title */
+    $handler->display->display_options['fields']['title']['id'] = 'title';
+    $handler->display->display_options['fields']['title']['table'] = 'node';
+    $handler->display->display_options['fields']['title']['field'] = 'title';
+    $handler->display->display_options['fields']['title']['label'] = '';
+    $handler->display->display_options['fields']['title']['alter']['alter_text'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['make_link'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['absolute'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['word_boundary'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['ellipsis'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['strip_tags'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['trim'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['html'] = 0;
+    $handler->display->display_options['fields']['title']['hide_empty'] = 0;
+    $handler->display->display_options['fields']['title']['empty_zero'] = 0;
+    $handler->display->display_options['fields']['title']['link_to_node'] = 1;
+    /* Field: Content: Nid */
+    $handler->display->display_options['fields']['nid']['id'] = 'nid';
+    $handler->display->display_options['fields']['nid']['table'] = 'node';
+    $handler->display->display_options['fields']['nid']['field'] = 'nid';
+    $handler->display->display_options['fields']['nid']['alter']['alter_text'] = 0;
+    $handler->display->display_options['fields']['nid']['alter']['make_link'] = 0;
+    $handler->display->display_options['fields']['nid']['alter']['absolute'] = 0;
+    $handler->display->display_options['fields']['nid']['alter']['external'] = 0;
+    $handler->display->display_options['fields']['nid']['alter']['replace_spaces'] = 0;
+    $handler->display->display_options['fields']['nid']['alter']['trim_whitespace'] = 0;
+    $handler->display->display_options['fields']['nid']['alter']['nl2br'] = 0;
+    $handler->display->display_options['fields']['nid']['alter']['word_boundary'] = 1;
+    $handler->display->display_options['fields']['nid']['alter']['ellipsis'] = 1;
+    $handler->display->display_options['fields']['nid']['alter']['more_link'] = 0;
+    $handler->display->display_options['fields']['nid']['alter']['strip_tags'] = 0;
+    $handler->display->display_options['fields']['nid']['alter']['trim'] = 0;
+    $handler->display->display_options['fields']['nid']['alter']['html'] = 0;
+    $handler->display->display_options['fields']['nid']['element_label_colon'] = 1;
+    $handler->display->display_options['fields']['nid']['element_default_classes'] = 1;
+    $handler->display->display_options['fields']['nid']['hide_empty'] = 0;
+    $handler->display->display_options['fields']['nid']['empty_zero'] = 0;
+    $handler->display->display_options['fields']['nid']['hide_alter_empty'] = 1;
+    $handler->display->display_options['fields']['nid']['link_to_node'] = 0;
+    /* Field: Global: View */
+    $handler->display->display_options['fields']['view']['id'] = 'view';
+    $handler->display->display_options['fields']['view']['table'] = 'views';
+    $handler->display->display_options['fields']['view']['field'] = 'view';
+    $handler->display->display_options['fields']['view']['element_label_colon'] = 1;
+    $handler->display->display_options['fields']['view']['element_default_classes'] = 1;
+    $handler->display->display_options['fields']['view']['hide_empty'] = 0;
+    $handler->display->display_options['fields']['view']['empty_zero'] = 0;
+    $handler->display->display_options['fields']['view']['hide_alter_empty'] = 1;
+    $handler->display->display_options['fields']['view']['view'] = 'test_vfv_child_normal';
+    $handler->display->display_options['fields']['view']['arguments'] = '[nid]';
+    $handler->display->display_options['fields']['view']['query_aggregation'] = 1;
+    /* Filter criterion: Content: Published */
+    $handler->display->display_options['filters']['status']['id'] = 'status';
+    $handler->display->display_options['filters']['status']['table'] = 'node';
+    $handler->display->display_options['filters']['status']['field'] = 'status';
+    $handler->display->display_options['filters']['status']['value'] = 1;
+    $handler->display->display_options['filters']['status']['group'] = 1;
+    $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+
+    return $view;
+  }
+
 }

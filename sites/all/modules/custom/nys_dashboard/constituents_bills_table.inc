@@ -1,6 +1,6 @@
 <?php
 
-function nys_dashboard_senator_bills_form($form, &$form_state, $argument, $account) {
+function nys_dashboard_senator_bills_form($form, &$form_state) {
   $form = array();
 
   $getvars = array(
@@ -175,6 +175,8 @@ function nys_dashboard_senator_bills_form_submit($form, &$form_state) {
 
 
 function nys_dashboard_senators_bills_table($form_state) {
+  $messaged_bills_string = array();
+  $vote_type = '';
 
   $queryArgs = array();
   $comm_status = 'all';
@@ -295,8 +297,8 @@ function nys_dashboard_senators_bills_table($form_state) {
       $bills_query->condition('f.uid', $constituents, 'IN');
   }
 
-  if($vote_type !== 'all') $bills_query->condition('v.value', $vote_type, '=');
-  if($bill_name != '') $bills_query->condition('n.title', '%'.$bill_name.'%', 'LIKE');
+  if(isset($vote_type) && $vote_type !== 'all') $bills_query->condition('v.value', $vote_type, '=');
+  if(isset($bill_name) && $bill_name != '') $bills_query->condition('n.title', '%'.$bill_name.'%', 'LIKE');
 
   $bills_query->orderBy('f.timestamp', 'DESC');
   $bills_query->range($start, $limit);

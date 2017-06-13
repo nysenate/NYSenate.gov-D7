@@ -6,7 +6,6 @@
  * the entity types.
  */
 
-
 /**
  * Implements hook_schema().
  */
@@ -73,7 +72,7 @@ function entityform_schema() {
     ),
     'primary key' => array('entityform_id'),
     'indexes' => array(
-      'type' => array('type'),
+      'type_index' => array('type'),
       'uid' => array('uid'),
     ),
     'foreign keys' => array(
@@ -143,6 +142,7 @@ function entityform_update_7001(&$sandbox = NULL) {
     drupal_get_schema('entityform', TRUE);
   }
 }
+
 /**
  * Switch emails settings to Rules invoke settings.
  */
@@ -171,6 +171,7 @@ function entityform_update_7002(&$sandbox = NULL) {
   }
   return $ret;
 }
+
 /**
  * Enable entityform_notifications if necessary
  */
@@ -192,6 +193,7 @@ function entityform_update_7003(&$sandbox = NULL) {
   }
   return $ret;
 }
+
 /**
  * Change textarea values to support filters.
  */
@@ -211,7 +213,36 @@ function entityform_update_7004(&$sandbox = NULL) {
     $entityform_type->save();
   }
 }
+
 /**
  * Update 7005 is unused.
  */
 function entityform_update_7005(&$sandbox = NULL) { }
+
+/**
+ * Delete old Entityform menu links.
+ */
+function entityform_update_7006(&$sandbox) {
+  $message = NULL;
+  $entityform_types = db_query("SELECT type FROM {entityform_type}")->fetchCol();
+  $result = db_query("SELECT mlid, link_path FROM {menu_links} WHERE router_path = 'eform/submit/%'", array(), array('fetch' => PDO::FETCH_ASSOC));
+  foreach ($result as $m) {
+    $link_parts = explode('/', $m['link_path']);
+    $entityform_type = str_replace('-', '_', $link_parts[2]);
+    if (!in_array($entityform_type, $entityform_types)) {
+      $message = t('Deleted old entityform type menu links.');
+      menu_link_delete($m['mlid']);
+    }
+
+  }
+  return $message;
+}
+
+/**
+ * Add and drop unique index to rename to type_index.
+ */
+function entityform_update_7007(&$sandbox) {
+  db_drop_index('entityform_type', 'type');
+  db_add_index('entityform_type', 'type_index', array('type'));
+  return st('Dropping index type name to rename.');
+}

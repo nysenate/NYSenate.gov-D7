@@ -24,6 +24,7 @@ function _webform_defaults_number() {
       'unique' => 0,
       'title_display' => 0,
       'description' => '',
+      'description_above' => FALSE,
       'attributes' => array(),
       'private' => FALSE,
       'analysis' => FALSE,
@@ -116,7 +117,7 @@ function _webform_edit_number($component) {
     '#type' => 'checkbox',
     '#title' => t('Disabled'),
     '#return_value' => 1,
-    '#description' => t('Make this field non-editable. Useful for setting an unchangeable default value.'),
+    '#description' => t('Make this field non-editable. Useful for displaying default value. Changeable via JavaScript or developer tools.'),
     '#weight' => 11,
     '#default_value' => $component['extra']['disabled'],
     '#parents' => array('extra', 'disabled'),
@@ -170,7 +171,7 @@ function _webform_edit_number($component) {
     '#type' => 'checkbox',
     '#title' => t('Integer'),
     '#return_value' => 1,
-    '#description' => t('Permit only integer values as input. e.g. 12.34 would be invalid.'),
+    '#description' => t('Permit only integer values as input. For example, 12.34 would be invalid.'),
     '#weight' => 1.5,
     '#default_value' => $component['extra']['integer'],
     '#parents' => array('extra', 'integer'),
@@ -179,7 +180,7 @@ function _webform_edit_number($component) {
     '#type' => 'textfield',
     '#title' => t('Minimum'),
     '#default_value' => $component['extra']['min'],
-    '#description' => t('Minimum numeric value. e.g. 0 would ensure positive numbers.'),
+    '#description' => t('Minimum numeric value. For example, 0 would ensure positive numbers.'),
     '#size' => 5,
     '#maxlength' => 10,
     '#weight' => 2.1,
@@ -201,7 +202,7 @@ function _webform_edit_number($component) {
     '#type' => 'textfield',
     '#title' => t('Step'),
     '#default_value' => $component['extra']['step'],
-    '#description' => t('Limit options to a specific increment. e.g. a step of "5" would allow values 5, 10, 15, etc.'),
+    '#description' => t('Limit options to a specific increment. For example, a step of "5" would allow values 5, 10, 15, etc.'),
     '#size' => 5,
     '#maxlength' => 10,
     '#weight' => 3,
@@ -272,7 +273,7 @@ function theme_webform_number($variables) {
 /**
  * Implements _webform_render_component().
  */
-function _webform_render_number($component, $value = NULL, $filter = TRUE) {
+function _webform_render_number($component, $value = NULL, $filter = TRUE, $submission = NULL) {
   $node = isset($component['nid']) ? node_load($component['nid']) : NULL;
 
   $element = array(
@@ -296,6 +297,10 @@ function _webform_render_number($component, $value = NULL, $filter = TRUE) {
     '#decimals' => $component['extra']['decimals'],
     '#translatable' => array('title', 'description', 'field_prefix', 'field_suffix'),
   );
+
+  if ($component['required']) {
+    $element['#attributes']['required'] = 'required';
+  }
 
   // Set the decimal count to zero for integers.
   if ($element['#integer'] && $element['#decimals'] === '') {
@@ -373,7 +378,7 @@ function _webform_render_number($component, $value = NULL, $filter = TRUE) {
 /**
  * Implements _webform_display_component().
  */
-function _webform_display_number($component, $value, $format = 'html') {
+function _webform_display_number($component, $value, $format = 'html', $submission = array()) {
   $empty = !isset($value[0]) || $value[0] === '';
   return array(
     '#title' => $component['name'],
@@ -403,16 +408,20 @@ function theme_webform_display_number($variables) {
 /**
  * Implements _webform_analysis_component().
  */
-function _webform_analysis_number($component, $sids = array(), $single = FALSE) {
+function _webform_analysis_number($component, $sids = array(), $single = FALSE, $join = NULL) {
   $advanced_stats = $single;
 
   $query = db_select('webform_submitted_data', 'wsd', array('fetch' => PDO::FETCH_ASSOC))
     ->fields('wsd', array('data'))
-    ->condition('nid', $component['nid'])
-    ->condition('cid', $component['cid']);
+    ->condition('wsd.nid', $component['nid'])
+    ->condition('wsd.cid', $component['cid']);
 
   if (count($sids)) {
-    $query->condition('sid', $sids, 'IN');
+    $query->condition('wsd.sid', $sids, 'IN');
+  }
+
+  if ($join) {
+    $query->innerJoin($join, 'ws2_', 'wsd.sid = ws2_.sid');
   }
 
   $population = array();
@@ -469,7 +478,7 @@ function _webform_analysis_number($component, $sids = array(), $single = FALSE) 
   if ($advanced_stats && $population_count && $sum != 0) {
     // Standard deviation.
     $stddev = 0;
-    foreach($population as $value) {
+    foreach ($population as $value) {
       // Obtain the total of squared variances.
       $stddev += pow(($value - $average), 2);
     }
@@ -514,21 +523,21 @@ function _webform_analysis_number($component, $sids = array(), $single = FALSE) 
     $stddev = _webform_number_format($component, $stddev);
     $low = _webform_number_format($component, $population[0]);
     $high = _webform_number_format($component, end($population));
-    foreach($limit as $key => $value) {
+    foreach ($limit as $key => $value) {
       $limit[$key] = _webform_number_format($component, $value);
     }
 
-    // Column headings (override potential theme uppercase, e.g. Seven in D7).
+    // Column headings (override potential theme uppercase, for example, Seven in D7).
     $header = array(
       t('Normal Distribution'),
-      array('data' => '-4' . $sigma, 'style' => 'text-transform: lowercase;',),
-      array('data' => '-3' . $sigma, 'style' => 'text-transform: lowercase;',),
-      array('data' => '-2' . $sigma, 'style' => 'text-transform: lowercase;',),
-      array('data' => '-1' . $sigma, 'style' => 'text-transform: lowercase;',),
-      array('data' => '+1' . $sigma, 'style' => 'text-transform: lowercase;',),
-      array('data' => '+2' . $sigma, 'style' => 'text-transform: lowercase;',),
-      array('data' => '+3' . $sigma, 'style' => 'text-transform: lowercase;',),
-      array('data' => '+4' . $sigma, 'style' => 'text-transform: lowercase;',),
+      array('data' => '-4' . $sigma, 'style' => 'text-transform: lowercase;'),
+      array('data' => '-3' . $sigma, 'style' => 'text-transform: lowercase;'),
+      array('data' => '-2' . $sigma, 'style' => 'text-transform: lowercase;'),
+      array('data' => '-1' . $sigma, 'style' => 'text-transform: lowercase;'),
+      array('data' => '+1' . $sigma, 'style' => 'text-transform: lowercase;'),
+      array('data' => '+2' . $sigma, 'style' => 'text-transform: lowercase;'),
+      array('data' => '+3' . $sigma, 'style' => 'text-transform: lowercase;'),
+      array('data' => '+4' . $sigma, 'style' => 'text-transform: lowercase;'),
     );
 
     // Insert row labels.
@@ -554,6 +563,14 @@ function _webform_analysis_number($component, $sids = array(), $single = FALSE) 
  */
 function _webform_table_number($component, $value) {
   return isset($value[0]) ? _webform_number_format($component, $value[0]) : '';
+}
+
+/**
+ * Implements _webform_action_set_component().
+ */
+function _webform_action_set_number($component, &$element, &$form_state, $value) {
+  $element['#value'] = $value;
+  form_set_value($element, $value, $form_state);
 }
 
 /**
@@ -585,8 +602,6 @@ function _webform_csv_data_number($component, $export_options, $value) {
  *   The form element. May either be a select or a webform_number element.
  * @param $form_state
  *   The full form state for the webform.
- * @return
- *   None. Calls a form_set_error if the number is not valid.
  */
 function _webform_validate_number($element, &$form_state) {
   // Trim spaces for basic cleanup.
@@ -785,7 +800,35 @@ function _webform_number_format($component, $value) {
  * Based on http://stackoverflow.com/questions/5917082/regular-expression-to-match-numbers-with-or-without-commas-and-decimals-in-text.
  */
 function webform_number_format_match($value, $point, $separator) {
-  return preg_match('/^-? ?\d{1,3}(?:' . ($separator ? (preg_quote($separator, '/') . '?') : '') . '\d{2,3})*(?:' . preg_quote($point, '/') . '\d+)?$/', $value);
+  // A valid number is:
+  //   1. optional minus sign
+  //   2. optional space
+  //   3. the rest of the string can't be just a decimal or blank.
+  //   3. optional integer portion, with thousands separators
+  //   4. optional decimal portion, starting is a decimal separator
+
+  // Don't use preg_quote because a space is a valid thousands separator and
+  // needs quoting for the 'x' option to preg_match.
+  $thousands = $separator ? "\\$separator?" : '';
+  $decimal = "\\$point";
+  return preg_match("/
+                    ^               # Start of string
+                    -?              # Optional minus sign
+                    \ ?             # Optional space
+                    (?!\.?$)        # Assert looking ahead, not just a decimal or nothing
+                      (?:           # Interger portion (non-grouping)
+                        \d{1,3}     #   1 to 3 digits
+                        (?:         #   Thousands group(s)
+                        $thousands  #     Optional thousands separator
+                        \d{2,3}     #     2 or 3 digits. Some countries use groups of 2 sometimes
+                      )*            #   0 or more of these thousands groups
+                    )?              # End of optional integer portion
+                    (?:             # Decimal portion (non-grouping)
+                      $decimal      #   Decimal point
+                      \d*           #   0 or more digits
+                    )?              # End of optional decimal portion
+                    $
+                    /x", $value);
 }
 
 /**
@@ -824,6 +867,8 @@ function webform_number_format($value, $decimals = NULL, $point = '.', $separato
  *   The string value to be standardized into a numeric string.
  * @param $point
  *   The point separator between the whole number and the decimals.
+ *
+ * @return mixed|string
  */
 function webform_number_standardize($value, $point) {
   // For simplicity, strip everything that's not the decimal point.
@@ -865,10 +910,10 @@ function webform_modulo($a, $b) {
  * See @link http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm @endlink
  * See @link http://floating-point-gui.de/errors/comparison/ @endlink
  * See @link http://en.wikipedia.org/wiki/IEEE_754-1985#Denormalized_numbers @endlink
-
- * @param $number_1 float
+ *
+ * @param float $number_1
  *   The first number.
- * @param $number_2 float
+ * @param float $number_2
  *   The second number.
  *
  * @return int|null

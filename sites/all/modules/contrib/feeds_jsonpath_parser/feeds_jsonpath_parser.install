@@ -1,5 +1,4 @@
 <?php
-// $Id: feeds_jsonpath_parser.install,v 1.1.2.1 2010/09/28 20:18:46 twistor Exp $
 
 /**
  * @file
@@ -7,27 +6,34 @@
  */
 
 /**
- * Implementation of hook_requirements().
+ * Implements hook_requirements().
  */
 function feeds_jsonpath_parser_requirements($phase) {
   $requirements = array();
 
-  if ($phase == 'install') {
-    $t = get_t();
-    $requirements['feeds_jsonpath_parser']['title'] = $t('Feeds JSONPath Parser');
-
-    if (file_exists(dirname(__FILE__) . '/jsonpath-0.8.1.php')) {
-      $requirements['feeds_jsonpath_parser']['severity'] = REQUIREMENT_OK;
-      $requirements['feeds_jsonpath_parser']['value'] = '0.8.1';
-    }
-    else {
-      $requirements['feeds_jsonpath_parser']['severity'] = REQUIREMENT_ERROR;
-      $requirements['feeds_jsonpath_parser']['value'] = $t('Not found');
-      $requirements['feeds_jsonpath_parser']['description'] = $t('The <a href="@jsonpath">JSONPath</a> plugin is missing. <a href="@download">Download</a> and place in your module directory.', array(
-        '@jsonpath' => 'http://goessner.net/articles/JsonPath/',
-	'@download' => 'http://jsonpath.googlecode.com/files/jsonpath-0.8.1.php',
-      ));
-    }
+  if ($phase !== 'runtime' && $phase !== 'install') {
+    return $requirements;
   }
+
+  drupal_load('module', 'feeds_jsonpath_parser');
+
+  $t = get_t();
+  $requirements['feeds_jsonpath_parser']['title'] = $t('JSONPath library');
+  $requirements['feeds_jsonpath_parser']['severity'] = REQUIREMENT_OK;
+  $requirements['feeds_jsonpath_parser']['value'] = $t('Installed');
+
+  if (!feeds_jsonpath_parser_library_path()) {
+    $requirements['feeds_jsonpath_parser']['severity'] = REQUIREMENT_ERROR;
+    $requirements['feeds_jsonpath_parser']['description'] = $t('The <a href="@jsonpath">JSONPath</a> plugin is missing. Download <a href="@download">this file</a> and place in sites/all/libraries/jsonpath.', array(
+      '@jsonpath' => 'http://goessner.net/articles/JsonPath/',
+      '@download' => 'http://jsonpath.googlecode.com/svn/trunk/src/php/jsonpath.php',
+    ));
+    $requirements['feeds_jsonpath_parser']['value'] = $t('Not installed');
+  }
+
+  if ($phase === 'install') {
+    unset($requirements['feeds_jsonpath_parser']['value']);
+  }
+
   return $requirements;
 }

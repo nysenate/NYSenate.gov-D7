@@ -26,20 +26,26 @@
  * brackets, the label element, slashes and whitespace.
  */
 
- 
+if (isset($fields['field_image_main']->content)) {
+	$field_image_main = $fields['field_image_main']->content;
+} else {
+	$field_image_main = '';
+}
+
 ?>
-<article class="c-block c-block--initiative <?php echo ($fields['field_image_main']->content) ? 'c-block--initiative__has-img':''?> lgt-bg c-block-position--<?php echo $fields['counter']->content; ?>">
-	<?php if($fields['field_image_main']->content): ?>
-	<a href="<?php $fields['field_link_type']->content == 'external' ? print $fields['field_external_web_page']->content : print $fields['path']->content; ?>">
-		<?php print $fields['field_image_main']->content; ?>
+
+<article class="c-block c-block--initiative <?php echo ($field_image_main) ? 'c-block--initiative__has-img' : '' ?> lgt-bg c-block-position--<?php echo $fields['counter']->content; ?>">
+	<?php if ($field_image_main): ?>
+	<a href="<?php $fields['field_link_type']->content == 'external' ? print $fields['field_external_web_page']->content : print $fields['path']->content;?>">
+		<?php print $field_image_main;?>
 	</a>
-	<?php endif; ?>
+	<?php endif;?>
 	<div class="c-initiative--content">
 	  <div class="c-initiative--inner">
-	    <a href="<?php $fields['field_link_type']->content == 'external' ? print $fields['field_external_web_page']->content : print $fields['path']->content; ?>"><h3 class="c-initiative--title"><?php echo $fields['title']->content; ?></h3></a>
+	    <a href="<?php $fields['field_link_type']->content == 'external' ? print $fields['field_external_web_page']->content : print $fields['path']->content;?>"><h3 class="c-initiative--title"><?php echo $fields['title']->content; ?></h3></a>
 	  </div>
 	</div>
-	<a href="<?php $fields['field_link_type']->content == 'external' ? print $fields['field_external_web_page']->content : print $fields['path']->content; ?>" class="c-block--btn icon-before__<?php echo $fields['field_call_to_action_1']->content; ?> med-bg">
+	<a href="<?php $fields['field_link_type']->content == 'external' ? print $fields['field_external_web_page']->content : print $fields['path']->content;?>" class="c-block--btn icon-before__<?php echo $fields['field_call_to_action_1']->content; ?> med-bg">
 		<span><?php echo $fields['field_call_to_action']->content; ?></span>
 	</a>
 </article>

@@ -21,7 +21,7 @@ function nys_schools_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Contact Details',
-    'weight' => '11',
+    'weight' => '10',
     'children' => array(
       0 => 'field_school_ceo_email',
       1 => 'field_school_ceo_first_name',
@@ -40,7 +40,7 @@ function nys_schools_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_contact_details|node|school|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -53,10 +53,10 @@ function nys_schools_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Location',
-    'weight' => '9',
+    'weight' => '8',
     'children' => array(
-      0 => 'field_district',
-      1 => 'field_county',
+      0 => 'field_county',
+      1 => 'field_district',
       2 => 'field_school_address',
     ),
     'format_type' => 'fieldset',
@@ -70,7 +70,7 @@ function nys_schools_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_location|node|school|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -83,7 +83,7 @@ function nys_schools_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'School Details',
-    'weight' => '10',
+    'weight' => '9',
     'children' => array(
       0 => 'body',
       1 => 'field_school_community_type',
@@ -103,7 +103,7 @@ function nys_schools_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_school_details|node|school|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   // Translatables
   // Included for use with string extractors like potx.

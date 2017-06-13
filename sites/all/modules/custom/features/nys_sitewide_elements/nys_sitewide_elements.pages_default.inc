@@ -74,7 +74,7 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   $export['contact_user_panel_context'] = $handler;
 
   $handler = new stdClass();
-  $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
+  $handler->disabled = TRUE; /* Edit this to true to make a default handler disabled initially */
   $handler->api_version = 1;
   $handler->name = 'node_edit__panel_context_1e953563-e4d7-431c-9c07-da2e5a6d9f78';
   $handler->task = 'node_edit';

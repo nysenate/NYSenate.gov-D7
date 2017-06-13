@@ -1,0 +1,14 @@
+name = Display Suite Disqus
+description = Adds Disqus support to Display Suite.
+core = 7.x
+package = Display Suite
+
+dependencies[] = ds
+dependencies[] = disqus
+
+; Information added by Drupal.org packaging script on 2015-06-18
+version = "7.x-1.12"
+core = "7.x"
+project = "disqus"
+datestamp = "1434655387"
+

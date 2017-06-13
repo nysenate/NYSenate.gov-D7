@@ -1,12 +1,27 @@
 <?php
-/*
+
+/**
  * @file
  * Update functions for Entityform Notifications
  */
+
+/**
+ * Implements hook_enable().
+ *
+ * Make sure Entityform is enabled from for entity_rules
+ */
+function entityform_notifications_enable() {
+  $enabled_types = variable_get('entity_rules_types', explode(',' , ENTITY_RULES_DEFAULT_TYPES));
+  if (!in_array('entityform', $enabled_types, TRUE)) {
+    $enabled_types[] = 'entityform';
+    variable_set('entity_rules_types', $enabled_types);
+  }
+}
+
 /**
  * Change email variables to use new tokens from Rules.
  */
-function entityform_notifications_update_7001(&$sandbox = NULL) {
+function entityform_notifications_update_7001(&$sandbox) {
   $old_token = '[submitted-entityform';
   $new_token = '[entityform';
   $var_names = array(
@@ -30,14 +45,9 @@ function entityform_notifications_update_7001(&$sandbox = NULL) {
 }
 
 /**
- * Implements hook_enable().
- *
- * Make sure Entityform is enabled from for entity_rules
+ * Enabling new dependencies (entity_rules, entity2text).
  */
-function entityform_notifications_enable() {
-  $enabled_types = variable_get('entity_rules_types', explode(',' , ENTITY_RULES_DEFAULT_TYPES));
-  if (!in_array('entityform', $enabled_types, TRUE)) {
-    $enabled_types[] = 'entityform';
-    variable_set('entity_rules_types', $enabled_types);
-  }
+function entityform_notifications_update_7002(&$sandbox) {
+  module_enable(array('entity_rules', 'entity2text'));
+  drupal_set_message(t('Entityforms Notifications new dependencies: entity_rules and entity2text.'));
 }

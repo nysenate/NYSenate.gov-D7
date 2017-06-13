@@ -9,9 +9,11 @@
  * Implements hook_field_info_alter().
  */
 function location_entity_field_info_alter(&$field_info) {
-  // Define location field type.
-  $field_info['location']['property_type'] = 'field_item_location';
-  $field_info['location']['property_callbacks'][] = 'location_entity_field_item_location_property_callback';
+  // Location field type is defined in the location_cck module.
+  if (isset($field_info['location'])) {
+    $field_info['location']['property_type'] = 'field_item_location';
+    $field_info['location']['property_callbacks'][] = 'location_entity_field_item_location_property_callback';
+  }
 }
 
 /**
@@ -61,5 +63,8 @@ function location_entity_key_map() {
     'province_name' => array('type' => 'text', 'label' => t('Province name')),
     'country_name' => array('type' => 'text', 'label' => t('Country name')),
     'phone' => array('type' => 'text', 'label' => t('Phone number')),
+    'fax' => array('type' => 'text', 'label' => t('Fax number')),
+    'email' => array('type' => 'text', 'label' => t('Email')),
+    'www' => array('type' => 'text', 'label' => t('Website')),
   );
 }

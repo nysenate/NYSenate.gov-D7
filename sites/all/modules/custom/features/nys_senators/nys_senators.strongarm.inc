@@ -111,6 +111,48 @@ function nys_senators_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'diff_enable_revisions_page_node_chapter';
+  $strongarm->value = 1;
+  $export['diff_enable_revisions_page_node_chapter'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_enable_revisions_page_node_promotional_banner';
+  $strongarm->value = 0;
+  $export['diff_enable_revisions_page_node_promotional_banner'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_show_preview_changes_node_chapter';
+  $strongarm->value = 1;
+  $export['diff_show_preview_changes_node_chapter'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_show_preview_changes_node_promotional_banner';
+  $strongarm->value = 0;
+  $export['diff_show_preview_changes_node_promotional_banner'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_view_mode_preview_node_chapter';
+  $strongarm->value = '';
+  $export['diff_view_mode_preview_node_chapter'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_view_mode_preview_node_promotional_banner';
+  $strongarm->value = '';
+  $export['diff_view_mode_preview_node_promotional_banner'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'features_admin_show_component_field_validation_rule';
   $strongarm->value = 1;
   $export['features_admin_show_component_field_validation_rule'] = $strongarm;
@@ -159,16 +201,22 @@ function nys_senators_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'locations' => array(
-          'weight' => '8',
+          'weight' => '13',
         ),
         'title' => array(
           'weight' => '1',
         ),
         'path' => array(
-          'weight' => '7',
+          'weight' => '12',
         ),
         'metatags' => array(
-          'weight' => '9',
+          'weight' => '14',
+        ),
+        'redirect' => array(
+          'weight' => '15',
+        ),
+        'xmlsitemap' => array(
+          'weight' => '16',
         ),
       ),
       'display' => array(
@@ -333,25 +381,25 @@ function nys_senators_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'locations' => array(
-          'weight' => '17',
+          'weight' => '16',
         ),
         'title' => array(
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '16',
+          'weight' => '15',
         ),
         'flag' => array(
-          'weight' => '14',
+          'weight' => '13',
         ),
         'metatags' => array(
-          'weight' => '18',
+          'weight' => '17',
         ),
         'redirect' => array(
-          'weight' => '21',
+          'weight' => '20',
         ),
         'xmlsitemap' => array(
-          'weight' => '22',
+          'weight' => '21',
         ),
       ),
       'display' => array(),

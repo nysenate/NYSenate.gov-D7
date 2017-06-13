@@ -30,6 +30,14 @@ class views_field_view_handler_field_view extends views_handler_field {
   public $child_view = FALSE;
 
   /**
+   * Stores a static cache of views. This will only cache views that contain no
+   * arguments.
+   *
+   * @var array
+   */
+  protected $cached = array();
+
+  /**
    * Disable this handler from being used as a 'group by'.
    */
   function use_group_by() {
@@ -56,8 +64,7 @@ class views_field_view_handler_field_view extends views_handler_field {
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
-    $view_options = views_get_views_as_options(TRUE);
-
+    $view_options = views_get_views_as_options(TRUE, 'all', NULL, FALSE, TRUE);
     $form['views_field_view'] = array(
       '#type' => 'fieldset',
       '#title' => t("View settings"),
@@ -81,7 +88,8 @@ class views_field_view_handler_field_view extends views_handler_field {
 
     // If there is no view set, use the first one for now.
     if (count($view_options) && empty($this->options['view'])) {
-      $this->options['view'] = reset(array_keys($view_options));
+      $keys = array_keys($view_options);
+      $this->options['view'] = reset($keys);
     }
 
     if ($this->options['view']) {
@@ -274,7 +282,7 @@ class views_field_view_handler_field_view extends views_handler_field {
           }
         }
 
-        $argument_ids = array();
+        $argument_field_aliases = array();
 
         foreach ($this->child_arguments as $child_argument_name => $child_argument) {
           // Work with the arguments on the child view in the order they are
@@ -282,13 +290,34 @@ class views_field_view_handler_field_view extends views_handler_field {
           $configured_argument = array_shift($configured_arguments);
           // To be able to later split up our results among the appropriate rows,
           // we need to add whatever argument fields we're using to the query.
-          $argument_ids[$child_argument_name] = $child_view->add_item($child_view_display, 'field', $configured_argument['table'], $configured_argument['field'], array('exclude' => TRUE));
+
+          // Sadly the table and field from the argument does not always match
+          // the corresponding field. One common usecase are fieldapi fields,
+          // so let's special case them.
+          $table_name = $configured_argument['table'];
+          $table_field = $configured_argument['field'];
+          $views_data = views_fetch_data($table_name);
+          $argument_views_data = $views_data[$table_field];
+          // This is the condition how we find out that we deal with a fieldapi
+          // field.
+          if (isset($argument_views_data['argument']['field_name'])) {
+            $table_field = $argument_views_data['argument']['field_name'];
+          }
+
+          // We first the field, so we can ensure the table properly. Later we
+          //
+          $argument_field_id = $child_view->add_item($child_view_display, 'field', $table_name, $table_field, array('exclude' => TRUE));
 
           if (isset($child_view->pager['items_per_page'])) {
             $child_view->pager['items_per_page'] = 0;
           }
 
+          $child_view->field[$argument_field_id]->definition['add fields to query'] = TRUE;
+
           $child_view->build();
+
+          // Also add the field we want to use later to split the result up.
+          $argument_field_aliases[$child_argument_name] = $child_view->query->add_field($configured_argument['table'], $configured_argument['field']);
           // Add the WHERE IN clause to this query.
           $child_view->query->add_where(0, $configured_argument['table'] . '.' . $configured_argument['field'], $child_argument['values']);
         }
@@ -303,8 +332,9 @@ class views_field_view_handler_field_view extends views_handler_field {
 
         // Now that the query has run, we need to get the field alias for each argument field
         // so that it can be identified later.
-        foreach ($argument_ids as $child_argument_name => $argument_id) {
-          $child_alias = (isset($child_view->field[$argument_id]->field_alias) && $child_view->field[$argument_id]->field_alias !== 'unknown') ? $child_view->field[$argument_id]->field_alias : $child_view->field[$argument_id]->real_field;
+        foreach ($argument_field_aliases as $child_argument_name => $argument_field_alias) {
+          $child_alias = $argument_field_alias;
+
           $this->child_arguments[$child_argument_name]['child_view_field_alias'] = $child_alias;
         }
         $results = $child_view->result;
@@ -355,17 +385,23 @@ class views_field_view_handler_field_view extends views_handler_field {
   }
 
   function render($values) {
+    static $running = array();
     $output = NULL;
+
     // If it's not a field handler and there are no values
     // Get the first result row from the view and use that.
     if (($this->handler_type !== 'field') && empty($values) && isset($this->view->result)) {
       $values = reset($this->view->result);
     }
 
-    static $running = array();
-    // Protect against the evil / recursion.
-    // Set the variable for yourself, this is not for the normal "user".
-    if (empty($running[$this->options['view']][$this->options['display']]) || variable_get('views_field_view_evil', FALSE)) {
+    if (empty($this->options['arguments']) && isset($this->cached[$this->options['view']][$this->options['display']])) {
+      // If there are no arguments, and we already cached this view, then
+      // our work here is done.
+      $output = $this->cached[$this->options['view']][$this->options['display']];
+    }
+    // Protect against the evil / recursion. Set the variable for yourself, this
+    // is not for the normal "user".
+    elseif (empty($running[$this->options['view']][$this->options['display']]) || variable_get('views_field_view_evil', FALSE)) {
       if ($this->options['view'] && !$this->options['query_aggregation']) {
         $running[$this->options['view']][$this->options['display']] = TRUE;
         $args = array();
@@ -455,6 +491,12 @@ class views_field_view_handler_field_view extends views_handler_field {
     }
     else {
       $output = t('Recursion, stop!');
+    }
+
+    if (empty($this->options['arguments']) && !isset($this->cached[$this->options['view']][$this->options['display']])) {
+      // If there are no arguments and no existing static cache then set a
+      // static cache for this view.
+      $this->cached[$this->options['view']][$this->options['display']] = $output;
     }
 
     // We only add the output to the $values object for field handlers. Area

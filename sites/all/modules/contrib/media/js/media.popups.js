@@ -213,6 +213,7 @@ Drupal.media.popups.mediaStyleSelector = function (mediaFile, onSelect, options)
   dialogOptions.buttons[ok] = function () {
     // Find the current file selection.
     var formattedMedia = this.contentWindow.Drupal.media.formatForm.getFormattedMedia();
+    formattedMedia.options = $.extend({}, mediaFile.attributes, formattedMedia.options);
 
     // Alert the user if a selection has yet to be made.
     if (!formattedMedia) {

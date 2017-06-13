@@ -12,15 +12,19 @@ $abstained_count = ($fields['field_ol_abstained_count']->content) ? $fields['fie
 	</div><!-- .l-panel-col -->
 	<div class="l-panel-col l-panel-col--ctr">
 		<p><?php echo truncate_utf8($fields['field_ol_name']->content, 135, TRUE, TRUE, 132); ?></p>
-		<?php if(isset($fields['field_ol_sponsor']->content)): ?>
-			<?php echo $fields['field_ol_sponsor']->content; ?>
-		<?php elseif(!isset($fields['field_ol_sponsor']->content) && $fields['field_ol_sponsor_name']->content): ?>
-			<br />
-			<label>Sponsor: <?php echo $fields['field_ol_sponsor_name']->content; ?></label>
-		<?php else: ?>
-			<br />
-			<label><?php echo $fields['field_ol_sponsor_name']->content; ?></label>		
-		<?php endif; ?>
+      <?php
+      if (isset($fields['field_ol_sponsor']->content)):
+        echo $fields['field_ol_sponsor']->content;
+        if (isset($fields['field_ol_add_sponsors']->content)):
+          echo "<br />" . $fields['field_ol_add_sponsors']->content;
+        endif;
+      elseif (!isset($fields['field_ol_sponsor']->content) && $fields['field_ol_sponsor_name']->content): ?>
+          <br/>
+          <label>Sponsor: <?php echo $fields['field_ol_sponsor_name']->content; ?></label>
+      <?php else: ?>
+          <br/>
+          <label><?php echo $fields['field_ol_sponsor_name']->content; ?></label>
+      <?php endif; ?>
 	</div><!-- .l-panel-col -->
 	<div class="l-right-actions">
 		<?php if(isset($fields['field_ol_cal_no']->content) && $fields['field_ol_cal_no']->content): ?>

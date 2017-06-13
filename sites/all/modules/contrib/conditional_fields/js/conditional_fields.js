@@ -119,14 +119,15 @@ Drupal.behaviors.conditionalFields = {
       return;
     }
     // Override state change handlers for dependents with special effects.
-    $.each($(document).data('events'), function(i, events) {
+    var eventsData = $.hasOwnProperty('_data') ? $._data(document, 'events') : $(document).data('events');
+    $.each(eventsData, function(i, events) {
       if (i.substring(0, 6) === 'state:') {
         var originalHandler = events[0].handler;
         events[0].handler = function(e) {
           var effect = conditionalFields.effects['#' + e.target.id];
           if (typeof effect !== 'undefined') {
             var effectEvent = i + '-' + effect.effect;
-            if (typeof $(document).data('events')[effectEvent] !== 'undefined') {
+            if (typeof eventsData[effectEvent] !== 'undefined') {
               $(e.target).trigger({ type : effectEvent, trigger : e.trigger, value : e.value, effect : effect.options });
               return;
             }

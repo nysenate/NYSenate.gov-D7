@@ -179,7 +179,8 @@ function field_validation_ui_manage_rule($form, $form_state, $instance, $action 
   ctools_include('plugins');
   $plugin = ctools_get_plugins('field_validation', 'validator', $validator);
   $class = ctools_plugin_get_class($plugin, 'handler');
-  $validator_class = new $class();
+  $entity_type = $instance['entity_type'];
+  $validator_class = new $class($entity_type);
   $validator_class->settings_form($form, $form_state);
 
   $form['error_message'] = array(
@@ -217,7 +218,17 @@ function field_validation_ui_manage_rule($form, $form_state, $instance, $action 
     '#suffix' => '</div>',
     '#weight' => 6,
   );
-
+  
+	if (module_exists("token")) {  
+    $mappings = token_get_entity_mapping('entity');
+	//print debug($mappings);
+    $token_type = isset($mappings[$instance['entity_type']]) ? $mappings[$instance['entity_type']] : "";	
+      $form['token_help']['tokens'] = array(
+        '#theme' => 'token_tree',
+        '#token_types' => array($token_type),
+      );
+    }
+	
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => (isset($rule->ruleid)) ? t('Save rule') : t('Add rule'),

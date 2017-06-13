@@ -1359,7 +1359,7 @@ function nys_inbox_block_view_alter(&$data, $block) {
     global $user;
     $has_messages = (boolean) nys_inbox_get_message_count($user);
     foreach ($data['content'] as $mlid => $item) {
-      if ($item['#title'] == 'Inbox') {
+      if (isset($item['#title']) && $item['#title'] == 'Inbox') {
         $data['content'][$mlid]['#access'] = $has_messages;
       }
     }

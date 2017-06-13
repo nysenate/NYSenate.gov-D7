@@ -134,3 +134,7 @@ table.location-search-form-table tbody tr td table tbody tr td table tbody tr td
 .location .description {
     white-space: normal;
 }
+
+.location-hidden {
+   display: none;
+ }

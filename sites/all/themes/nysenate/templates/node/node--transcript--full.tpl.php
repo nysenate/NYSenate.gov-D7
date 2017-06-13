@@ -82,7 +82,7 @@
   <?php if ($page): ?>
     <div class="c-news--head">
       <h2 class="nys-title">
-        <?php print $transcript_title; ?>
+        <?php if (isset($transcript_title)) print $transcript_title; ?>
       </h2>
       <div class="c-news--head-meta">
         <?php if (isset($node->field_senator[LANGUAGE_NONE][0]['value']) && $node->field_senator[LANGUAGE_NONE][0]['value']): ?>
@@ -95,7 +95,7 @@
   <?php endif; ?>
 
   <div>
-    <a href="<?php print $pdf_url; ?>" class="c-detail--download" target="_blank">Download PDF</a>
+    <a href="<?php if (isset($pdf_url)) print $pdf_url; ?>" class="c-detail--download" target="_blank">Download PDF</a>
   </div>
 
   <pre class="c-bill-fulltext">
