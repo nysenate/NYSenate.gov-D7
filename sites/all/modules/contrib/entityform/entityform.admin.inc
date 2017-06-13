@@ -36,11 +36,11 @@ class EntityformUIController extends EntityDefaultUIController {
 
     // Change the overview menu type for the list of entityforms.
     $items[$this->path]['type'] = MENU_LOCAL_TASK;
-    $items['eform/submit/%entityform_empty'] = array(
+    $items['eform/submit/%entityform_type'] = array(
       'title callback' => 'entityform_page_title',
       'title arguments' => array(2, 1),
-      'page callback' => 'entityform_form_wrapper',
-      'page arguments' => array(2, 'submit'),
+      'page callback' => 'entityform_type_submit_page',
+      'page arguments' => array(2),
       'access callback' => 'entityform_access',
       'access arguments' => array('submit', 2),
       'file' => 'entityform.admin.inc',
@@ -191,6 +191,42 @@ class EntityformUIController extends EntityDefaultUIController {
 
 }
 
+/**
+ * Page callback: Displays the entityform submission page
+ *
+ * Handle the display of the entityform submission page. If the form is marked
+ * as closed then display the form intro text instead with a 'submissions are
+ * now closed' message. Users with 'administer entityform types'
+ * permission can still view the form as it would be inaccessible otherwise.
+ *
+ * @param $entityform_type
+ *   The entityform type to output.
+ *
+ * @return
+ *   A render array from entity_view or a string message.
+ */
+function entityform_type_submit_page($entityform_type) {
+  $view = entity_view('entityform_type', array($entityform_type), 'full', NULL, TRUE);
+
+  // The form is not closed for new submissions.
+  if (!isset($entityform_type->data['form_status']) || $entityform_type->data['form_status'] != ENTITYFORM_STATUS_CLOSED) {
+    return $view;
+  }
+  else {
+    // The form is closed but show it for administrators anyway with a warning
+    // message.
+    if (user_access('administer entityform types')) {
+      drupal_set_message(t('This form is closed for new submissions and is only being shown because of your administrator role.'));
+      return $view;
+    }
+    else {
+      // When closed display the form intro text instead of the form or access
+      // denied.
+      drupal_set_message(t('Submissions for this form are now closed.'));
+      return empty($entityform_type->data['instruction_pre']['value']) ? '' : $entityform_type->data['instruction_pre']['value'];
+    }
+  }
+}
 
 /**
  * Form callback wrapper: create or edit a entityform.
@@ -208,11 +244,13 @@ class EntityformUIController extends EntityDefaultUIController {
  *     'preview' - Preview on Entityform type management
  * @see entityform_edit_form()
  */
-function entityform_form_wrapper($entityform, $mode = 'submit', $form_context = 'page') {
+function entityform_form_wrapper(Entityform $entityform, $mode = 'submit', $form_context = 'page') {
   $make_form = TRUE;
+
   $entityform_type = entityform_type_load($entityform->type);
+
   if ($form_context == 'page') {
-    drupal_set_title($entityform_type->label);
+    drupal_set_title($entityform_type->getTranslation('label'));
   }
   if (!empty($entityform->is_new)) {
     $draft = FALSE;
@@ -261,17 +299,12 @@ function entityform_form_wrapper($entityform, $mode = 'submit', $form_context = 
   if (!empty($entityform_type->data['instruction_pre'])) {
     $output['intro'] = array(
       '#type' => 'markup',
-      '#markup' => "<div class='pre-instructions' >" . _entityform_format_text($entityform_type->data['instruction_pre'], array('entityform_type' => $entityform_type)) . "</div>",
+      '#markup' => "<div class='pre-instructions' >" . $entityform_type->get_prop('instruction_pre') . "</div>",
       '#weight' => -100,
     );
   }
   if ($make_form) {
-    $form = drupal_get_form($entityform->type . '_entityform_edit_form', $entityform, $mode, $form_context);
-    $form['#attributes']['class'][] = 'entityform';
-    if (!empty($entityform->type)) {
-      $form['#attributes']['class'][] = 'entitytype-' . $entityform->type . '-form';
-    }
-    $output += $form;
+    $output += drupal_get_form($entityform->type . '_entityform_edit_form', $entityform, $mode, $form_context);
   }
   if (user_access('administer entityform types')) {
     // Make contextual links if user has access.
@@ -285,6 +318,17 @@ function entityform_form_wrapper($entityform, $mode = 'submit', $form_context = 
   return $output;
 }
 
+/**
+ * Form callback wrapper: preview an entityform.
+ *
+ * @param $entityform_type
+ *   The entityform type object being edited by this form.
+ * @see entityform_edit_form()
+ */
+function entityform_form_wrapper_preview(EntityformType $entityform_type) {
+  $entityform = entityform_empty_load($entityform_type->type);
+  return entityform_form_wrapper($entityform, 'submit', 'preview');
+}
 
 /**
  * Form callback wrapper: delete a entityform.
@@ -298,13 +342,12 @@ function entityform_delete_form_wrapper($entityform) {
   return drupal_get_form('entityform_delete_form', $entityform);
 }
 
-
 /**
  * Form callback: create or edit a entityform.
  *
  * @param $entityform
- *   The entityform object to edit or for a create form an empty entityform object
- *     with only a entityform type defined.
+ *   The entityform object to edit or for a create form an empty entityform
+ *   object with only a entityform type defined.
  */
 function entityform_edit_form($form, &$form_state, $entityform, $mode = 'submit', $form_context = 'page') {
   global $user;
@@ -329,6 +372,10 @@ function entityform_edit_form($form, &$form_state, $entityform, $mode = 'submit'
   if (!$is_review) {
     field_attach_form('entityform', $entityform, $form, $form_state);
   }
+
+  // Add CSS classes to the form for styling.
+  $form['#attributes']['class'][] = 'entityform';
+  $form['#attributes']['class'][] = 'entitytype-' . $entityform->type . '-form';
 
   $form['actions'] = array(
     '#type' => 'container',

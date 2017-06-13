@@ -22,17 +22,23 @@ class field_validation_length_validator extends field_validation_validator {
     if ($this->value != '') {
       $flag = TRUE;
       $length = drupal_strlen($this->value);
-      if (isset($settings['min']) && $settings['min'] != '' && $length < $settings['min']) {
-        $flag = FALSE;
+      if (isset($settings['min']) && $settings['min'] != '') {
+        $min = token_replace($settings['min'], array($this->get_token_type() => $this->entity));
+		if ($length < $min) {
+          $flag = FALSE;
+        }
       }
-      if (isset($settings['max']) && $settings['max'] != '' && $length > $settings['max']) {
-        $flag = FALSE;
+      if (isset($settings['max']) && $settings['max'] != '') {
+        $max = token_replace($settings['max'], array($this->get_token_type() => $this->entity));
+		if ($length > $max) {
+          $flag = FALSE;
+        }
       }       
 
       if (!$flag) {
         $token = array(
-          '[min]' => isset($settings['min']) ? $settings['min'] : '',
-          '[max]' => isset($settings['max']) ? $settings['max'] : '',
+          '[min]' => isset($min) ? $min : '',
+          '[max]' => isset($max) ? $max : '',
           '[length]' => $length,
         );
         $this->set_error($token);
@@ -57,7 +63,7 @@ class field_validation_length_validator extends field_validation_validator {
       '#description' => t("Optionally specify the maximum length to validate the user-entered value against."),
       '#type' => 'textfield',
       '#default_value' => isset($default_settings['max']) ? $default_settings['max'] : '',
-    );
+    );	
     parent::settings_form($form, $form_state);
   }
   

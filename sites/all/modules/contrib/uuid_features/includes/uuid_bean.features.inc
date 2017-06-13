@@ -9,13 +9,22 @@
  */
 function uuid_bean_features_export_options() {
   $options = array();
-  $types = variable_get('uuid_features_entity_bean', FALSE);
+
+  // Check what bean types are enabled for uuid features export.
+  $types = array();
+  $entity_info = entity_get_info('bean');
+  foreach ($entity_info['bundles'] as $key => $value) {
+    if (variable_get("uuid_features_entity_bean_${key}", FALSE)) {
+      $types[$key] = $key;
+    }
+  }
   if (module_exists("bean_uuid") && !empty($types)) {
     $query = db_select('bean', 'n');
     $query->fields('n', array('bid', 'delta', 'type', 'uuid'))
       ->condition('type', $types)
       ->orderBy('type')
-      ->orderBy('delta', 'ASC');
+      ->orderBy('delta', 'ASC')
+      ->addTag('uuid_bean_features_export_options');
     $beans = $query->execute()->fetchAll();
     foreach ($beans as $bean) {
       $options[$bean->uuid] = t('@type: @delta', array(
@@ -24,6 +33,7 @@ function uuid_bean_features_export_options() {
       ));
     }
   }
+  drupal_alter('uuid_bean_features_export_options', $options);
   return $options;
 }
 
@@ -37,13 +47,11 @@ function uuid_bean_features_export($data, &$export, $module_name = '') {
   $export['dependencies']['bean_uuid'] = 'bean_uuid';
   $export['dependencies']['uuid_features'] = 'uuid_features';
 
-  uuid_features_load_module_includes();
-
   $bids = entity_get_id_by_uuid('bean', $data);
   foreach ($bids as $uuid => $bid) {
     // Load the bean matching the $bid.
     $query = new EntityFieldQuery();
-    $bean = $query
+    $beans = $query
       // We just want one bean: the one matching
       // the current $bid.
       ->entityCondition('entity_type', 'bean')
@@ -52,14 +60,15 @@ function uuid_bean_features_export($data, &$export, $module_name = '') {
       ->execute();
 
     $export['features']['uuid_bean'][$uuid] = $uuid;
-    $pipe['bean'][$bean['bean'][$bid]->type] = $bean['bean'][$bid]->type;
+    $bean = $beans['bean'][$bid];
+    $pipe['bean'][$bean->type] = $bean->type;
 
     // Check for additional bean plugin module dependencies.
     foreach (module_implements('bean_types') as $module) {
       $result = call_user_func_array($module . '_bean_types', array());
       if (isset($result) && is_array($result)) {
         foreach ($result as $type => $values) {
-          if ($type == $bean['bean'][$bid]->type) {
+          if ($type == $bean->type) {
             $export['dependencies'][$module] = $module;
           }
         }
@@ -72,8 +81,11 @@ function uuid_bean_features_export($data, &$export, $module_name = '') {
     // for the hook_*_alter() implementations.  The hook_alter signature is
     // hook_uuid_bean_features_export_alter(&$export, &$pipe, $bean).
     $data = &$export;
-    $data['__drupal_alter_by_ref'] = array(&$pipe);
-    drupal_alter('uuid_bean_features_export', $data, $bean);
+    $data['__drupal_alter_by_ref']['pipe'] = &$pipe;
+    $entity_type = 'bean';
+    drupal_alter('uuid_entity_features_export', $entity_type, $data, $bean, $module);
+    drupal_alter('uuid_bean_features_export', $data, $bean, $module);
+    unset($data['__drupal_alter_by_ref']);
   }
 
   return $pipe;
@@ -85,8 +97,6 @@ function uuid_bean_features_export($data, &$export, $module_name = '') {
 function uuid_bean_features_export_render($module, $data) {
   $translatables = $code = array();
 
-  uuid_features_load_module_includes();
-
   $code[] = '  $beans = array();';
   $code[] = '';
   foreach ($data as $uuid) {
@@ -95,6 +105,7 @@ function uuid_bean_features_export_render($module, $data) {
       continue;
     }
     $first_bean = reset($beans);
+    // Clone entity to avoid changes by reference.
     $export = clone $first_bean;
 
     // Unset some things that dont need to be exported.
@@ -106,10 +117,9 @@ function uuid_bean_features_export_render($module, $data) {
     // Enable file field exports.
     uuid_features_file_field_export($export, 'bean');
 
-    // Allow other modules to alter the export rendering.
-    // The hook_alter signature is:
-    // hook_uuid_bean_features_export_render_alter(&$export, $bean, $module);
-    drupal_alter('uuid_bean_features_export_render', $export, $bean, $module);
+    $entity_type = 'bean';
+    drupal_alter('uuid_entity_features_export_render', $entity_type, $export, $first_bean, $module);
+    drupal_alter('uuid_bean_features_export_render', $export, $first_bean, $module);
 
     $json = json_encode($export);
     $export_array = json_decode($json, TRUE);
@@ -145,6 +155,8 @@ function uuid_bean_features_rebuild($module) {
   if (!empty($beans)) {
     // Get info about current beans types available in system.
     $entity_info = bean_entity_info();
+    $entity_type = 'bean';
+
     // Loop through the export.
     foreach ($beans as $data) {
       // Double-check that bean can be created/reverted.
@@ -153,9 +165,17 @@ function uuid_bean_features_rebuild($module) {
       }
       else {
         // If this is an update, there will be a by-UUID matching bean.
-        $existing = entity_get_id_by_uuid('bean', array($data['uuid']));
-        if (!empty($existing)) {
-          $bean = entity_load_single('bean', $existing[$data['uuid']]);
+        // Also update if there's a bean with same delta.
+        $uuid_exists = entity_get_id_by_uuid('bean', array($data['uuid']));
+        $delta_exists = FALSE;
+        if (!empty($uuid_exists)) {
+          $bean = entity_load_single('bean', $uuid_exists[$data['uuid']]);
+          foreach ($data as $key => $value) {
+            $bean->$key = $value;
+          }
+        }
+        elseif ($bean = bean_load_delta($data['delta'])) {
+          $delta_exists = TRUE;
           foreach ($data as $key => $value) {
             $bean->$key = $value;
           }
@@ -164,12 +184,28 @@ function uuid_bean_features_rebuild($module) {
           // Create a new bean.
           $bean = entity_create('bean', $data);
         }
+
+        drupal_alter('uuid_entity_features_rebuild', $entity_type, $bean, $data, $module);
+
         // Import file fields.
         uuid_features_file_field_import($bean, 'bean');
-        if (!$bean->save()) {
-          drupal_set_message('Failed to create ' . $data['type'] . ' bean ' . $data['label'], 'error');
+
+        if (!empty($delta_exists)) {
+          // Overwrite old UUID. This is ugly and drops the very idea of UUID.
+          // But the idea of having UUID *and* delta as unique keys is flawed
+          // from the very beginning.
+          $success = entity_save('bean', $bean);
+        }
+        else {
+          $success = entity_uuid_save('bean', $bean);
+        }
+        // Old entity_uuid_save() returned NULL, now result of entity_save().
+        // This should work with both.
+        if ($success === FALSE) {
+          drupal_set_message(t('Failed to create %type bean %label', array('%type' => $data['type'], '%label' => $data['label'])), 'error');
         }
       }
     }
+    module_invoke_all('uuid_entity_features_rebuild_complete', $entity_type, $beans, $module);
   }
 }

@@ -101,10 +101,12 @@ function _image_features_style_sanitize(array &$style) {
   // which holds all the style-specific configuration. Other keys are assumed
   // to belong to the definition of the effect itself, so not configuration.
   foreach ($style['effects'] as $id => $effect) {
-    $style['effects'][$id] = array_intersect_key($effect, array_flip(array(
-      'name',
-      'data',
-      'weight',
-    )));
+    if (is_array($effect)) {
+      $style['effects'][$id] = array_intersect_key($effect, array_flip(array(
+        'name',
+        'data',
+        'weight',
+      )));
+    }
   }
 }

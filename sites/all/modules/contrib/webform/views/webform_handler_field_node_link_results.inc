@@ -30,8 +30,8 @@ class webform_handler_field_node_link_results extends views_handler_field_node_l
    * Renders the link.
    */
   function render_link($node, $values) {
-    // Ensure user has access to edit this node.
-    if (!webform_results_access($node)) {
+    // Ensure node is webform-enabled and user has access node's webform results.
+    if (!in_array($node->type, webform_node_types()) || !webform_results_access($node)) {
       return;
     }
 
@@ -41,7 +41,7 @@ class webform_handler_field_node_link_results extends views_handler_field_node_l
     }
 
     $this->options['alter']['make_link'] = TRUE;
-    $this->options['alter']['path'] = "node/$node->nid/webform-results".
+    $this->options['alter']['path'] = "node/$node->nid/webform-results" .
                                       (strlen($this->options['subpath']) ? '/' . $this->options['subpath'] : '');
 
     $text = !empty($this->options['text']) ? $this->options['text'] : t('results');

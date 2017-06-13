@@ -991,6 +991,20 @@ function nys_legislation_views_default_views() {
   $handler->display->display_options['fields']['nid']['relationship'] = 'field_ol_bill_target_id';
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
+  /* Field: Content: Additional Sponsors */
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['id'] = 'field_ol_add_sponsors';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['table'] = 'field_data_field_ol_add_sponsors';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['field'] = 'field_ol_add_sponsors';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['relationship'] = 'field_ol_bill_target_id';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['label'] = '';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['type'] = 'entityreference_entity_view';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['settings'] = array(
+    'view_mode' => 'agenda_senator_sponsors',
+    'links' => 0,
+  );
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['delta_offset'] = '0';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['separator'] = '<br />';
   $handler->display->display_options['defaults']['sorts'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Content: Nid */
@@ -1227,6 +1241,20 @@ function nys_legislation_views_default_views() {
   $handler->display->display_options['fields']['counter']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['counter']['counter_start'] = '0';
   $handler->display->display_options['fields']['counter']['reverse'] = 0;
+  /* Field: Content: Additional Sponsors */
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['id'] = 'field_ol_add_sponsors';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['table'] = 'field_data_field_ol_add_sponsors';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['field'] = 'field_ol_add_sponsors';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['relationship'] = 'field_ol_bill_target_id';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['label'] = '';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['type'] = 'entityreference_entity_view';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['settings'] = array(
+    'view_mode' => 'agenda_senator_sponsors',
+    'links' => 0,
+  );
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['delta_offset'] = '0';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['separator'] = '<br />';
   $handler->display->display_options['defaults']['sorts'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Content: Nid */
@@ -1458,6 +1486,20 @@ function nys_legislation_views_default_views() {
   $handler->display->display_options['fields']['field_ol_substituted_by']['relationship'] = 'field_ol_bill_target_id';
   $handler->display->display_options['fields']['field_ol_substituted_by']['label'] = '';
   $handler->display->display_options['fields']['field_ol_substituted_by']['element_label_colon'] = FALSE;
+  /* Field: Content: Additional Sponsors */
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['id'] = 'field_ol_add_sponsors';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['table'] = 'field_data_field_ol_add_sponsors';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['field'] = 'field_ol_add_sponsors';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['relationship'] = 'field_ol_bill_target_id';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['label'] = '';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['type'] = 'entityreference_entity_view';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['settings'] = array(
+    'view_mode' => 'agenda_senator_sponsors',
+    'links' => 0,
+  );
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['delta_offset'] = '0';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['separator'] = '<br />';
   $handler->display->display_options['defaults']['sorts'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Content: Nid */

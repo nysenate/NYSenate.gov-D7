@@ -13,6 +13,111 @@ function nys_legislation_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'diff_enable_revisions_page_node_bill';
+  $strongarm->value = 0;
+  $export['diff_enable_revisions_page_node_bill'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_enable_revisions_page_node_calendar';
+  $strongarm->value = 0;
+  $export['diff_enable_revisions_page_node_calendar'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_enable_revisions_page_node_resolution';
+  $strongarm->value = 0;
+  $export['diff_enable_revisions_page_node_resolution'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_enable_revisions_page_node_session';
+  $strongarm->value = 1;
+  $export['diff_enable_revisions_page_node_session'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_enable_revisions_page_node_transcript';
+  $strongarm->value = 0;
+  $export['diff_enable_revisions_page_node_transcript'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_show_preview_changes_node_bill';
+  $strongarm->value = 0;
+  $export['diff_show_preview_changes_node_bill'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_show_preview_changes_node_calendar';
+  $strongarm->value = 0;
+  $export['diff_show_preview_changes_node_calendar'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_show_preview_changes_node_resolution';
+  $strongarm->value = 0;
+  $export['diff_show_preview_changes_node_resolution'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_show_preview_changes_node_session';
+  $strongarm->value = 1;
+  $export['diff_show_preview_changes_node_session'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_show_preview_changes_node_transcript';
+  $strongarm->value = 0;
+  $export['diff_show_preview_changes_node_transcript'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_view_mode_preview_node_bill';
+  $strongarm->value = 'full';
+  $export['diff_view_mode_preview_node_bill'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_view_mode_preview_node_calendar';
+  $strongarm->value = '';
+  $export['diff_view_mode_preview_node_calendar'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_view_mode_preview_node_resolution';
+  $strongarm->value = 'full';
+  $export['diff_view_mode_preview_node_resolution'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_view_mode_preview_node_session';
+  $strongarm->value = 'full';
+  $export['diff_view_mode_preview_node_session'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'diff_view_mode_preview_node_transcript';
+  $strongarm->value = '';
+  $export['diff_view_mode_preview_node_transcript'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'field_bundle_settings_node__bill';
   $strongarm->value = array(
     'view_modes' => array(
@@ -58,6 +163,9 @@ function nys_legislation_strongarm() {
       'senators_involved' => array(
         'custom_settings' => FALSE,
       ),
+      'agenda_senator_sponsors' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -74,10 +182,10 @@ function nys_legislation_strongarm() {
           'weight' => '2',
         ),
         'redirect' => array(
-          'weight' => '30',
+          'weight' => '34',
         ),
         'xmlsitemap' => array(
-          'weight' => '30',
+          'weight' => '33',
         ),
       ),
       'display' => array(),
@@ -206,7 +314,7 @@ function nys_legislation_strongarm() {
           'weight' => '5',
         ),
         'redirect' => array(
-          'weight' => '30',
+          'weight' => '31',
         ),
         'xmlsitemap' => array(
           'weight' => '30',

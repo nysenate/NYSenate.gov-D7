@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Letter count constraint for Password Policy module.

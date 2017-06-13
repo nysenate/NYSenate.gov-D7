@@ -296,7 +296,7 @@ function nys_global_events_views_default_views() {
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Filter criterion: Content: Committees (field_committee) */
+  /* Filter criterion: Content: Committee (field_committee) */
   $handler->display->display_options['filters']['field_committee_tid']['id'] = 'field_committee_tid';
   $handler->display->display_options['filters']['field_committee_tid']['table'] = 'field_data_field_committee';
   $handler->display->display_options['filters']['field_committee_tid']['field'] = 'field_committee_tid';
@@ -694,7 +694,7 @@ function nys_global_events_views_default_views() {
   $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
-  /* Contextual filter: Content: Committees (field_committee) */
+  /* Contextual filter: Content: Committee (field_committee) */
   $handler->display->display_options['arguments']['field_committee_tid']['id'] = 'field_committee_tid';
   $handler->display->display_options['arguments']['field_committee_tid']['table'] = 'field_data_field_committee';
   $handler->display->display_options['arguments']['field_committee_tid']['field'] = 'field_committee_tid';
@@ -839,7 +839,7 @@ function nys_global_events_views_default_views() {
     'multiple_to' => '',
   );
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Contextual filter: Content: Committees (field_committee) */
+  /* Contextual filter: Content: Committee (field_committee) */
   $handler->display->display_options['arguments']['field_committee_tid']['id'] = 'field_committee_tid';
   $handler->display->display_options['arguments']['field_committee_tid']['table'] = 'field_data_field_committee';
   $handler->display->display_options['arguments']['field_committee_tid']['field'] = 'field_committee_tid';
@@ -1302,305 +1302,6 @@ function nys_global_events_views_default_views() {
   $export['legislative_events'] = $view;
 
   $view = new view();
-  $view->name = 'meeting_agenda';
-  $view->description = '';
-  $view->tag = 'default';
-  $view->base_table = 'bill';
-  $view->human_name = 'Meeting Agenda';
-  $view->core = 7;
-  $view->api_version = '3.0';
-  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-  /* Display: Master */
-  $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'none';
-  $handler->display->display_options['cache']['type'] = 'none';
-  $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['pager']['type'] = 'none';
-  $handler->display->display_options['style_plugin'] = 'semanticviews_default';
-  $handler->display->display_options['row_plugin'] = 'semanticviews_fields';
-  /* Relationship: Broken/missing handler */
-  $handler->display->display_options['relationships']['reverse_field_agenda_bills_node']['id'] = 'reverse_field_agenda_bills_node';
-  $handler->display->display_options['relationships']['reverse_field_agenda_bills_node']['table'] = 'bill';
-  $handler->display->display_options['relationships']['reverse_field_agenda_bills_node']['field'] = 'reverse_field_agenda_bills_node';
-  /* Relationship: Broken/missing handler */
-  $handler->display->display_options['relationships']['field_openleg_sponsor_target_id']['id'] = 'field_openleg_sponsor_target_id';
-  $handler->display->display_options['relationships']['field_openleg_sponsor_target_id']['table'] = 'field_data_field_openleg_sponsor';
-  $handler->display->display_options['relationships']['field_openleg_sponsor_target_id']['field'] = 'field_openleg_sponsor_target_id';
-  /* Relationship: Content: Member Headshot (field_image_headshot:fid) */
-  $handler->display->display_options['relationships']['field_image_headshot_fid']['id'] = 'field_image_headshot_fid';
-  $handler->display->display_options['relationships']['field_image_headshot_fid']['table'] = 'field_data_field_image_headshot';
-  $handler->display->display_options['relationships']['field_image_headshot_fid']['field'] = 'field_image_headshot_fid';
-  $handler->display->display_options['relationships']['field_image_headshot_fid']['relationship'] = 'field_openleg_sponsor_target_id';
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_bill_id']['id'] = 'field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['table'] = 'field_data_field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['field'] = 'field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['label'] = '';
-  $handler->display->display_options['fields']['field_bill_id']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_openleg_issues']['id'] = 'field_openleg_issues';
-  $handler->display->display_options['fields']['field_openleg_issues']['table'] = 'field_data_field_openleg_issues';
-  $handler->display->display_options['fields']['field_openleg_issues']['field'] = 'field_openleg_issues';
-  $handler->display->display_options['fields']['field_openleg_issues']['label'] = '';
-  $handler->display->display_options['fields']['field_openleg_issues']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['name']['id'] = 'name';
-  $handler->display->display_options['fields']['name']['table'] = 'bill';
-  $handler->display->display_options['fields']['name']['field'] = 'name';
-  $handler->display->display_options['fields']['name']['label'] = '';
-  $handler->display->display_options['fields']['name']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['name']['alter']['path'] = 'legislation/bills/[field_bill_id]';
-  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
-  /* Field: Content: Title */
-  $handler->display->display_options['fields']['title']['id'] = 'title';
-  $handler->display->display_options['fields']['title']['table'] = 'node';
-  $handler->display->display_options['fields']['title']['field'] = 'title';
-  $handler->display->display_options['fields']['title']['relationship'] = 'field_openleg_sponsor_target_id';
-  $handler->display->display_options['fields']['title']['label'] = '';
-  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
-  /* Field: Content: Member Headshot */
-  $handler->display->display_options['fields']['field_image_headshot']['id'] = 'field_image_headshot';
-  $handler->display->display_options['fields']['field_image_headshot']['table'] = 'field_data_field_image_headshot';
-  $handler->display->display_options['fields']['field_image_headshot']['field'] = 'field_image_headshot';
-  $handler->display->display_options['fields']['field_image_headshot']['relationship'] = 'field_openleg_sponsor_target_id';
-  $handler->display->display_options['fields']['field_image_headshot']['label'] = '';
-  $handler->display->display_options['fields']['field_image_headshot']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_image_headshot']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_image_headshot']['settings'] = array(
-    'image_style' => '60x60',
-    'image_link' => 'content',
-  );
-  /* Field: File: Path */
-  $handler->display->display_options['fields']['uri']['id'] = 'uri';
-  $handler->display->display_options['fields']['uri']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['uri']['field'] = 'uri';
-  $handler->display->display_options['fields']['uri']['relationship'] = 'field_image_headshot_fid';
-  $handler->display->display_options['fields']['uri']['label'] = '';
-  $handler->display->display_options['fields']['uri']['element_label_colon'] = FALSE;
-  /* Contextual filter: Content: Nid */
-  $handler->display->display_options['arguments']['nid']['id'] = 'nid';
-  $handler->display->display_options['arguments']['nid']['table'] = 'node';
-  $handler->display->display_options['arguments']['nid']['field'] = 'nid';
-  $handler->display->display_options['arguments']['nid']['relationship'] = 'reverse_field_agenda_bills_node';
-  $handler->display->display_options['arguments']['nid']['default_action'] = 'default';
-  $handler->display->display_options['arguments']['nid']['default_argument_type'] = 'node';
-  $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
-
-  /* Display: Meeting Page Block */
-  $handler = $view->new_display('block', 'Meeting Page Block', 'meeting_page');
-  $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Header: Global: Text area */
-  $handler->display->display_options['header']['area']['id'] = 'area';
-  $handler->display->display_options['header']['area']['table'] = 'views';
-  $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['content'] = '<h3 class="c-meeting-section--title">Meeting Agenda</h3>
-<h4 class="l-col l-col-1-of-2 bill-id">Bill #</h4><h4 class="l-col l-col-2-of-3 bill-title">Title & Sponsor</h4>';
-  $handler->display->display_options['header']['area']['format'] = 'full_html';
-
-  /* Display: Upcoming Legislation */
-  $handler = $view->new_display('block', 'Upcoming Legislation', 'upcoming_legislation');
-  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
-  $handler->display->display_options['style_plugin'] = 'semanticviews_default';
-  $handler->display->display_options['defaults']['style_options'] = FALSE;
-  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
-  $handler->display->display_options['row_plugin'] = 'semanticviews_fields';
-  $handler->display->display_options['defaults']['row_options'] = FALSE;
-  $handler->display->display_options['defaults']['header'] = FALSE;
-  $handler->display->display_options['defaults']['empty'] = FALSE;
-  /* No results behavior: Global: Text area */
-  $handler->display->display_options['empty']['area']['id'] = 'area';
-  $handler->display->display_options['empty']['area']['table'] = 'views';
-  $handler->display->display_options['empty']['area']['field'] = 'area';
-  $handler->display->display_options['empty']['area']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area']['content'] = 'No items for these dates';
-  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
-  $handler->display->display_options['empty']['area']['tokenize'] = TRUE;
-  $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Relationship: Broken/missing handler */
-  $handler->display->display_options['relationships']['reverse_field_agenda_bills_node']['id'] = 'reverse_field_agenda_bills_node';
-  $handler->display->display_options['relationships']['reverse_field_agenda_bills_node']['table'] = 'bill';
-  $handler->display->display_options['relationships']['reverse_field_agenda_bills_node']['field'] = 'reverse_field_agenda_bills_node';
-  /* Relationship: Broken/missing handler */
-  $handler->display->display_options['relationships']['field_openleg_sponsor_target_id']['id'] = 'field_openleg_sponsor_target_id';
-  $handler->display->display_options['relationships']['field_openleg_sponsor_target_id']['table'] = 'field_data_field_openleg_sponsor';
-  $handler->display->display_options['relationships']['field_openleg_sponsor_target_id']['field'] = 'field_openleg_sponsor_target_id';
-  /* Relationship: Content: Member Headshot (field_image_headshot:fid) */
-  $handler->display->display_options['relationships']['field_image_headshot_fid']['id'] = 'field_image_headshot_fid';
-  $handler->display->display_options['relationships']['field_image_headshot_fid']['table'] = 'field_data_field_image_headshot';
-  $handler->display->display_options['relationships']['field_image_headshot_fid']['field'] = 'field_image_headshot_fid';
-  $handler->display->display_options['relationships']['field_image_headshot_fid']['relationship'] = 'field_openleg_sponsor_target_id';
-  $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_bill_id']['id'] = 'field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['table'] = 'field_data_field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['field'] = 'field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['label'] = '';
-  $handler->display->display_options['fields']['field_bill_id']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_openleg_issues']['id'] = 'field_openleg_issues';
-  $handler->display->display_options['fields']['field_openleg_issues']['table'] = 'field_data_field_openleg_issues';
-  $handler->display->display_options['fields']['field_openleg_issues']['field'] = 'field_openleg_issues';
-  $handler->display->display_options['fields']['field_openleg_issues']['label'] = '';
-  $handler->display->display_options['fields']['field_openleg_issues']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['name']['id'] = 'name';
-  $handler->display->display_options['fields']['name']['table'] = 'bill';
-  $handler->display->display_options['fields']['name']['field'] = 'name';
-  $handler->display->display_options['fields']['name']['label'] = '';
-  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
-  /* Field: Content: Title */
-  $handler->display->display_options['fields']['title']['id'] = 'title';
-  $handler->display->display_options['fields']['title']['table'] = 'node';
-  $handler->display->display_options['fields']['title']['field'] = 'title';
-  $handler->display->display_options['fields']['title']['relationship'] = 'field_openleg_sponsor_target_id';
-  $handler->display->display_options['fields']['title']['label'] = '';
-  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
-  /* Field: Field: District */
-  $handler->display->display_options['fields']['field_district']['id'] = 'field_district';
-  $handler->display->display_options['fields']['field_district']['table'] = 'field_data_field_district';
-  $handler->display->display_options['fields']['field_district']['field'] = 'field_district';
-  $handler->display->display_options['fields']['field_district']['relationship'] = 'field_openleg_sponsor_target_id';
-  $handler->display->display_options['fields']['field_district']['label'] = '';
-  $handler->display->display_options['fields']['field_district']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_district']['settings'] = array(
-    'link' => 1,
-  );
-  /* Field: Content: Member Headshot */
-  $handler->display->display_options['fields']['field_image_headshot']['id'] = 'field_image_headshot';
-  $handler->display->display_options['fields']['field_image_headshot']['table'] = 'field_data_field_image_headshot';
-  $handler->display->display_options['fields']['field_image_headshot']['field'] = 'field_image_headshot';
-  $handler->display->display_options['fields']['field_image_headshot']['relationship'] = 'field_openleg_sponsor_target_id';
-  $handler->display->display_options['fields']['field_image_headshot']['label'] = '';
-  $handler->display->display_options['fields']['field_image_headshot']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_image_headshot']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_image_headshot']['settings'] = array(
-    'image_style' => '60x60',
-    'image_link' => 'content',
-  );
-  /* Field: File: Path */
-  $handler->display->display_options['fields']['uri']['id'] = 'uri';
-  $handler->display->display_options['fields']['uri']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['uri']['field'] = 'uri';
-  $handler->display->display_options['fields']['uri']['relationship'] = 'field_image_headshot_fid';
-  $handler->display->display_options['fields']['uri']['label'] = '';
-  $handler->display->display_options['fields']['uri']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_openleg_bill_call_no_']['id'] = 'field_openleg_bill_call_no_';
-  $handler->display->display_options['fields']['field_openleg_bill_call_no_']['table'] = 'field_data_field_openleg_bill_call_no_';
-  $handler->display->display_options['fields']['field_openleg_bill_call_no_']['field'] = 'field_openleg_bill_call_no_';
-  $handler->display->display_options['fields']['field_openleg_bill_call_no_']['label'] = '';
-  $handler->display->display_options['fields']['field_openleg_bill_call_no_']['element_label_colon'] = FALSE;
-  $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Contextual filter: Calendar Type */
-  $handler->display->display_options['arguments']['field_calendar_type_value']['id'] = 'field_calendar_type_value';
-  $handler->display->display_options['arguments']['field_calendar_type_value']['table'] = 'field_data_field_calendar_type';
-  $handler->display->display_options['arguments']['field_calendar_type_value']['field'] = 'field_calendar_type_value';
-  $handler->display->display_options['arguments']['field_calendar_type_value']['relationship'] = 'reverse_field_agenda_bills_node';
-  $handler->display->display_options['arguments']['field_calendar_type_value']['ui_name'] = 'Calendar Type';
-  $handler->display->display_options['arguments']['field_calendar_type_value']['default_action'] = 'default';
-  $handler->display->display_options['arguments']['field_calendar_type_value']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['field_calendar_type_value']['default_argument_options']['argument'] = 'active';
-  $handler->display->display_options['arguments']['field_calendar_type_value']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['field_calendar_type_value']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['field_calendar_type_value']['summary_options']['items_per_page'] = '25';
-  /* Contextual filter: Field: Publication Date (field_publication_date) */
-  $handler->display->display_options['arguments']['field_publication_date_value']['id'] = 'field_publication_date_value';
-  $handler->display->display_options['arguments']['field_publication_date_value']['table'] = 'field_data_field_publication_date';
-  $handler->display->display_options['arguments']['field_publication_date_value']['field'] = 'field_publication_date_value';
-  $handler->display->display_options['arguments']['field_publication_date_value']['relationship'] = 'reverse_field_agenda_bills_node';
-  $handler->display->display_options['arguments']['field_publication_date_value']['default_argument_type'] = 'date';
-  $handler->display->display_options['arguments']['field_publication_date_value']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['field_publication_date_value']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['field_publication_date_value']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['arguments']['field_publication_date_value']['granularity'] = 'day';
-  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
-  $handler->display->display_options['defaults']['filters'] = FALSE;
-
-  /* Display: Today's Active List */
-  $handler = $view->new_display('block', 'Today\'s Active List', 'today_active_list');
-  $handler->display->display_options['defaults']['use_more'] = FALSE;
-  $handler->display->display_options['use_more'] = TRUE;
-  $handler->display->display_options['defaults']['use_more_always'] = FALSE;
-  $handler->display->display_options['defaults']['use_more_always'] = FALSE;
-  $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['defaults']['use_more_text'] = FALSE;
-  $handler->display->display_options['defaults']['link_display'] = FALSE;
-  $handler->display->display_options['link_display'] = 'custom_url';
-  $handler->display->display_options['link_url'] = 'legislation';
-  $handler->display->display_options['defaults']['pager'] = FALSE;
-  $handler->display->display_options['pager']['type'] = 'some';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '6';
-  $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
-  $handler->display->display_options['style_plugin'] = 'semanticviews_default';
-  $handler->display->display_options['defaults']['style_options'] = FALSE;
-  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
-  $handler->display->display_options['row_plugin'] = 'semanticviews_fields';
-  $handler->display->display_options['defaults']['row_options'] = FALSE;
-  $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Relationship: Broken/missing handler */
-  $handler->display->display_options['relationships']['reverse_field_agenda_bills_node']['id'] = 'reverse_field_agenda_bills_node';
-  $handler->display->display_options['relationships']['reverse_field_agenda_bills_node']['table'] = 'bill';
-  $handler->display->display_options['relationships']['reverse_field_agenda_bills_node']['field'] = 'reverse_field_agenda_bills_node';
-  $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_bill_id']['id'] = 'field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['table'] = 'field_data_field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['field'] = 'field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['label'] = '';
-  $handler->display->display_options['fields']['field_bill_id']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_openleg_issues']['id'] = 'field_openleg_issues';
-  $handler->display->display_options['fields']['field_openleg_issues']['table'] = 'field_data_field_openleg_issues';
-  $handler->display->display_options['fields']['field_openleg_issues']['field'] = 'field_openleg_issues';
-  $handler->display->display_options['fields']['field_openleg_issues']['label'] = '';
-  $handler->display->display_options['fields']['field_openleg_issues']['element_label_colon'] = FALSE;
-  $handler->display->display_options['defaults']['arguments'] = FALSE;
-  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
-  $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Field: Publication Date (field_publication_date) */
-  $handler->display->display_options['filters']['field_publication_date_value']['id'] = 'field_publication_date_value';
-  $handler->display->display_options['filters']['field_publication_date_value']['table'] = 'field_data_field_publication_date';
-  $handler->display->display_options['filters']['field_publication_date_value']['field'] = 'field_publication_date_value';
-  $handler->display->display_options['filters']['field_publication_date_value']['relationship'] = 'reverse_field_agenda_bills_node';
-  $handler->display->display_options['filters']['field_publication_date_value']['default_date'] = 'now';
-  /* Filter criterion: Content: Type (field_calendar_type) */
-  $handler->display->display_options['filters']['field_calendar_type_value']['id'] = 'field_calendar_type_value';
-  $handler->display->display_options['filters']['field_calendar_type_value']['table'] = 'field_data_field_calendar_type';
-  $handler->display->display_options['filters']['field_calendar_type_value']['field'] = 'field_calendar_type_value';
-  $handler->display->display_options['filters']['field_calendar_type_value']['relationship'] = 'reverse_field_agenda_bills_node';
-  $handler->display->display_options['filters']['field_calendar_type_value']['value'] = array(
-    'active' => 'active',
-  );
-
-  /* Display: Meeting Results */
-  $handler = $view->new_display('block', 'Meeting Results', 'block_1');
-  $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
-  $handler->display->display_options['style_plugin'] = 'semanticviews_default';
-  $handler->display->display_options['defaults']['style_options'] = FALSE;
-  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
-  $handler->display->display_options['row_plugin'] = 'semanticviews_fields';
-  $handler->display->display_options['defaults']['row_options'] = FALSE;
-  $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Header: Global: Text area */
-  $handler->display->display_options['header']['area']['id'] = 'area';
-  $handler->display->display_options['header']['area']['table'] = 'views';
-  $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['content'] = '<h3 class="c-meeting-section--title">Meeting Results</h3>
-<h4 class="l-col l-col-1-of-3 bill-id">Bill #</h4><h4 class="l-col l-col-2-of-3 bill-title">Title & Sponsor</h4><h4 class="l-col l-col-3-of-3 bill-actions">Votes & Actions</h4>';
-  $handler->display->display_options['header']['area']['format'] = 'full_html';
-  $handler->display->display_options['block_description'] = 'Meeting Results';
-  $export['meeting_agenda'] = $view;
-
-  $view = new view();
   $view->name = 'meeting_agenda_block';
   $view->description = '';
   $view->tag = 'default';
@@ -1835,6 +1536,27 @@ function nys_global_events_views_default_views() {
   $handler->display->display_options['fields']['field_ol_bill_message']['relationship'] = 'field_ol_agenda_bills_value';
   $handler->display->display_options['fields']['field_ol_bill_message']['label'] = '';
   $handler->display->display_options['fields']['field_ol_bill_message']['element_label_colon'] = FALSE;
+  /* Field: Content: Additional Sponsor Names */
+  $handler->display->display_options['fields']['field_ol_add_sponsor_names']['id'] = 'field_ol_add_sponsor_names';
+  $handler->display->display_options['fields']['field_ol_add_sponsor_names']['table'] = 'field_data_field_ol_add_sponsor_names';
+  $handler->display->display_options['fields']['field_ol_add_sponsor_names']['field'] = 'field_ol_add_sponsor_names';
+  $handler->display->display_options['fields']['field_ol_add_sponsor_names']['relationship'] = 'field_ol_bill_target_id';
+  $handler->display->display_options['fields']['field_ol_add_sponsor_names']['label'] = '';
+  $handler->display->display_options['fields']['field_ol_add_sponsor_names']['element_label_colon'] = FALSE;
+  /* Field: Content: Additional Sponsors */
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['id'] = 'field_ol_add_sponsors';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['table'] = 'field_data_field_ol_add_sponsors';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['field'] = 'field_ol_add_sponsors';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['relationship'] = 'field_ol_bill_target_id';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['label'] = '';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['type'] = 'entityreference_entity_view';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['settings'] = array(
+    'view_mode' => 'agenda_senator_sponsors',
+    'links' => 1,
+  );
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['delta_offset'] = '0';
+  $handler->display->display_options['fields']['field_ol_add_sponsors']['separator'] = '<br />';
   /* Contextual filter: Content: Nid */
   $handler->display->display_options['arguments']['nid']['id'] = 'nid';
   $handler->display->display_options['arguments']['nid']['table'] = 'node';
@@ -2007,7 +1729,7 @@ function nys_global_events_views_default_views() {
   $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
-  /* Contextual filter: Content: Committees (field_committee) */
+  /* Contextual filter: Content: Committee (field_committee) */
   $handler->display->display_options['arguments']['field_committee_tid']['id'] = 'field_committee_tid';
   $handler->display->display_options['arguments']['field_committee_tid']['table'] = 'field_data_field_committee';
   $handler->display->display_options['arguments']['field_committee_tid']['field'] = 'field_committee_tid';

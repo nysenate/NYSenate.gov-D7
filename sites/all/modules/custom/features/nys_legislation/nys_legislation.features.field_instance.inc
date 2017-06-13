@@ -22,6 +22,7 @@ function nys_legislation_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -305,6 +306,7 @@ function nys_legislation_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -423,6 +425,7 @@ function nys_legislation_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -548,6 +551,7 @@ function nys_legislation_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -673,6 +677,7 @@ function nys_legislation_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -751,6 +756,7 @@ function nys_legislation_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -874,6 +880,7 @@ function nys_legislation_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -962,6 +969,7 @@ function nys_legislation_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -1080,6 +1088,7 @@ function nys_legislation_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 17,
@@ -1132,7 +1141,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'nys_bill_vote',
         'settings' => array(),
         'type' => 'nys_bill_vote_formatter_default',
-        'weight' => 52,
+        'weight' => 31,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -1168,7 +1177,7 @@ function nys_legislation_field_default_field_instances() {
       'module' => 'nys_bill_vote',
       'settings' => array(),
       'type' => 'nys_bill_vote_exposed',
-      'weight' => 35,
+      'weight' => 39,
     ),
   );
 
@@ -1215,7 +1224,7 @@ function nys_legislation_field_default_field_instances() {
           'textformatter_type' => 'ul',
         ),
         'type' => 'textformatter_list',
-        'weight' => 49,
+        'weight' => 28,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -1289,7 +1298,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 19,
+        'weight' => 3,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -1331,6 +1340,125 @@ function nys_legislation_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-bill-field_ol_add_sponsor_names'.
+  $field_instances['node-bill-field_ol_add_sponsor_names'] = array(
+    'bundle' => 'bill',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'bill_list_item' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 11,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_ol_add_sponsor_names',
+    'label' => 'Additional Sponsor Names',
+    'required' => 0,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 16,
+    ),
+  );
+
+  // Exported field_instance: 'node-bill-field_ol_add_sponsors'.
+  $field_instances['node-bill-field_ol_add_sponsors'] = array(
+    'bundle' => 'bill',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'bill_list_item' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'links' => 0,
+          'use_content_language' => TRUE,
+          'view_mode' => 'sponsor_list_bill_detail',
+        ),
+        'type' => 'entityreference_entity_view',
+        'weight' => 10,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_ol_add_sponsors',
+    'label' => 'Additional Sponsors',
+    'required' => 0,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 15,
+    ),
+  );
+
   // Exported field_instance: 'node-bill-field_ol_all_actions'.
   $field_instances['node-bill-field_ol_all_actions'] = array(
     'bundle' => 'bill',
@@ -1349,7 +1477,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 53,
+        'weight' => 33,
       ),
       'node_embed' => array(
         'label' => 'above',
@@ -1387,7 +1515,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 16,
+      'weight' => 18,
     ),
   );
 
@@ -1410,7 +1538,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 26,
+        'weight' => 12,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -1449,7 +1577,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 15,
+      'weight' => 17,
     ),
   );
 
@@ -1471,7 +1599,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 30,
+        'weight' => 16,
       ),
       'node_embed' => array(
         'label' => 'inline',
@@ -1510,7 +1638,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 22,
+      'weight' => 24,
     ),
   );
 
@@ -1532,7 +1660,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 18,
+        'weight' => 2,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -1593,7 +1721,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 17,
+        'weight' => 1,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -1653,7 +1781,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_plain',
-        'weight' => 37,
+        'weight' => 23,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -1691,7 +1819,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 31,
+      'weight' => 35,
     ),
   );
 
@@ -1713,15 +1841,17 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'entityreference',
         'settings' => array(
           'links' => 0,
+          'use_content_language' => TRUE,
           'view_mode' => 'sponsor_list_bill_detail',
         ),
         'type' => 'entityreference_entity_view',
-        'weight' => 43,
+        'weight' => 25,
       ),
       'node_embed' => array(
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -1759,7 +1889,7 @@ function nys_legislation_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'options_select',
-      'weight' => 30,
+      'weight' => 32,
     ),
   );
 
@@ -1781,7 +1911,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 36,
+        'weight' => 22,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -1819,7 +1949,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 29,
+      'weight' => 31,
     ),
   );
 
@@ -1845,7 +1975,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 32,
+        'weight' => 18,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -1882,7 +2012,7 @@ function nys_legislation_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 24,
+      'weight' => 26,
     ),
   );
 
@@ -1908,7 +2038,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 58,
+        'weight' => 37,
       ),
       'node_embed' => array(
         'label' => 'above',
@@ -1945,7 +2075,7 @@ function nys_legislation_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 39,
+      'weight' => 43,
     ),
   );
 
@@ -1971,7 +2101,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 20,
+        'weight' => 4,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -2031,7 +2161,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 51,
+        'weight' => 30,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -2070,7 +2200,7 @@ function nys_legislation_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 18,
+      'weight' => 20,
     ),
   );
 
@@ -2089,6 +2219,7 @@ function nys_legislation_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 9,
@@ -2102,9 +2233,10 @@ function nys_legislation_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
-        'weight' => 52,
+        'weight' => 32,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -2115,6 +2247,7 @@ function nys_legislation_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 12,
@@ -2128,6 +2261,7 @@ function nys_legislation_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 8,
@@ -2164,7 +2298,7 @@ function nys_legislation_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 19,
+      'weight' => 21,
     ),
   );
 
@@ -2186,7 +2320,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 27,
+        'weight' => 13,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -2224,7 +2358,7 @@ function nys_legislation_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 17,
+      'weight' => 19,
     ),
   );
 
@@ -2247,7 +2381,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 28,
+        'weight' => 14,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -2287,7 +2421,7 @@ function nys_legislation_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 20,
+      'weight' => 22,
     ),
   );
 
@@ -2309,7 +2443,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 34,
+        'weight' => 20,
       ),
       'node_embed' => array(
         'label' => 'inline',
@@ -2347,7 +2481,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 27,
+      'weight' => 29,
     ),
   );
 
@@ -2369,7 +2503,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 33,
+        'weight' => 19,
       ),
       'node_embed' => array(
         'label' => 'inline',
@@ -2407,7 +2541,7 @@ function nys_legislation_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 26,
+      'weight' => 28,
     ),
   );
 
@@ -2429,7 +2563,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 35,
+        'weight' => 21,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -2467,7 +2601,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 28,
+      'weight' => 30,
     ),
   );
 
@@ -2489,7 +2623,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_plain',
-        'weight' => 38,
+        'weight' => 24,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -2527,7 +2661,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 33,
+      'weight' => 37,
     ),
   );
 
@@ -2549,15 +2683,17 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'entityreference',
         'settings' => array(
           'links' => 0,
+          'use_content_language' => TRUE,
           'view_mode' => 'sponsor_list_bill_detail',
         ),
         'type' => 'entityreference_entity_view',
-        'weight' => 44,
+        'weight' => 26,
       ),
       'node_embed' => array(
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -2595,7 +2731,7 @@ function nys_legislation_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'options_select',
-      'weight' => 32,
+      'weight' => 36,
     ),
   );
 
@@ -2618,7 +2754,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 21,
+        'weight' => 5,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -2680,7 +2816,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 31,
+        'weight' => 17,
       ),
       'node_embed' => array(
         'label' => 'inline',
@@ -2718,7 +2854,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 23,
+      'weight' => 25,
     ),
   );
 
@@ -2741,7 +2877,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 22,
+        'weight' => 6,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -2802,7 +2938,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 55,
+        'weight' => 35,
       ),
       'node_embed' => array(
         'label' => 'above',
@@ -2840,7 +2976,7 @@ function nys_legislation_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 37,
+      'weight' => 41,
     ),
   );
 
@@ -2867,7 +3003,7 @@ function nys_legislation_field_default_field_instances() {
           'thousand_separator' => '',
         ),
         'type' => 'number_integer',
-        'weight' => 56,
+        'weight' => 36,
       ),
       'node_embed' => array(
         'label' => 'above',
@@ -2906,7 +3042,7 @@ function nys_legislation_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 38,
+      'weight' => 42,
     ),
   );
 
@@ -2931,9 +3067,10 @@ function nys_legislation_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
-        'weight' => 23,
+        'weight' => 7,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -3001,7 +3138,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 16,
+        'weight' => 0,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -3039,7 +3176,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 25,
+      'weight' => 27,
     ),
   );
 
@@ -3072,7 +3209,7 @@ function nys_legislation_field_default_field_instances() {
           'thousand_separator' => ' ',
         ),
         'type' => 'number_integer',
-        'weight' => 49,
+        'weight' => 27,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -3130,6 +3267,8 @@ function nys_legislation_field_default_field_instances() {
   // Exported field_instance: 'node-bill-field_ol_sponsor'.
   $field_instances['node-bill-field_ol_sponsor'] = array(
     'bundle' => 'bill',
+    'custom_add_another' => '',
+    'custom_remove' => '',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -3139,6 +3278,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'entityreference',
         'settings' => array(
           'links' => 0,
+          'use_content_language' => TRUE,
           'view_mode' => 'sponsor_list',
         ),
         'type' => 'entityreference_entity_view',
@@ -3149,16 +3289,18 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'entityreference',
         'settings' => array(
           'links' => 0,
+          'use_content_language' => TRUE,
           'view_mode' => 'sponsor_list_bill_detail',
         ),
         'type' => 'entityreference_entity_view',
-        'weight' => 24,
+        'weight' => 8,
       ),
       'node_embed' => array(
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
           'links' => 0,
+          'use_content_language' => TRUE,
           'view_mode' => 'sponsor_list_bill_detail',
         ),
         'type' => 'entityreference_entity_view',
@@ -3168,6 +3310,7 @@ function nys_legislation_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => 1,
         ),
         'type' => 'entityreference_label',
@@ -3180,6 +3323,7 @@ function nys_legislation_field_default_field_instances() {
         'weight' => 0,
       ),
     ),
+    'ds_extras_field_template' => '',
     'entity_type' => 'node',
     'field_name' => 'field_ol_sponsor',
     'label' => 'Sponsor',
@@ -3221,7 +3365,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_plain',
-        'weight' => 25,
+        'weight' => 9,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -3283,7 +3427,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 54,
+        'weight' => 34,
       ),
       'node_embed' => array(
         'label' => 'above',
@@ -3321,7 +3465,7 @@ function nys_legislation_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 36,
+      'weight' => 40,
     ),
   );
 
@@ -3343,7 +3487,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 29,
+        'weight' => 15,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -3381,7 +3525,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 21,
+      'weight' => 23,
     ),
   );
 
@@ -3416,7 +3560,7 @@ function nys_legislation_field_default_field_instances() {
           'view_mode' => 'full',
         ),
         'type' => 'field_collection_view',
-        'weight' => 50,
+        'weight' => 29,
       ),
       'node_embed' => array(
         'label' => 'hidden',
@@ -3458,7 +3602,7 @@ function nys_legislation_field_default_field_instances() {
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 34,
+      'weight' => 38,
     ),
   );
 
@@ -3473,6 +3617,7 @@ function nys_legislation_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -3625,6 +3770,7 @@ function nys_legislation_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 7,
@@ -3794,6 +3940,7 @@ function nys_legislation_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 1,
@@ -3807,6 +3954,7 @@ function nys_legislation_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 1,
@@ -3859,7 +4007,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 15,
+        'weight' => 17,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -3909,7 +4057,7 @@ function nys_legislation_field_default_field_instances() {
           'image_style' => '',
         ),
         'type' => 'image',
-        'weight' => 23,
+        'weight' => 25,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -4005,7 +4153,7 @@ function nys_legislation_field_default_field_instances() {
           'textformatter_type' => 'ul',
         ),
         'type' => 'textformatter_list',
-        'weight' => 22,
+        'weight' => 24,
       ),
       'search_index' => array(
         'label' => 'hidden',
@@ -4090,6 +4238,109 @@ function nys_legislation_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-resolution-field_ol_add_sponsor_names'.
+  $field_instances['node-resolution-field_ol_add_sponsor_names'] = array(
+    'bundle' => 'resolution',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 11,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_ol_add_sponsor_names',
+    'label' => 'Additional Sponsor Names',
+    'required' => FALSE,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 18,
+    ),
+  );
+
+  // Exported field_instance: 'node-resolution-field_ol_add_sponsors'.
+  $field_instances['node-resolution-field_ol_add_sponsors'] = array(
+    'bundle' => 'resolution',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'links' => 0,
+          'use_content_language' => TRUE,
+          'view_mode' => 'sponsor_list_bill_detail',
+        ),
+        'type' => 'entityreference_entity_view',
+        'weight' => 10,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_ol_add_sponsors',
+    'label' => 'Additional Sponsors',
+    'required' => 0,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 17,
+    ),
+  );
+
   // Exported field_instance: 'node-resolution-field_ol_all_statuses'.
   $field_instances['node-resolution-field_ol_all_statuses'] = array(
     'bundle' => 'resolution',
@@ -4102,7 +4353,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 10,
+        'weight' => 12,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -4135,7 +4386,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 17,
+      'weight' => 19,
     ),
   );
 
@@ -4151,7 +4402,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 12,
+        'weight' => 14,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -4183,7 +4434,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 19,
+      'weight' => 21,
     ),
   );
 
@@ -4295,7 +4546,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 19,
+        'weight' => 21,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -4327,7 +4578,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 25,
+      'weight' => 27,
     ),
   );
 
@@ -4343,10 +4594,11 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'entityreference',
         'settings' => array(
           'links' => 0,
+          'use_content_language' => TRUE,
           'view_mode' => 'sponsor_list_bill_detail',
         ),
         'type' => 'entityreference_entity_view',
-        'weight' => 18,
+        'weight' => 20,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -4380,7 +4632,7 @@ function nys_legislation_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'options_select',
-      'weight' => 24,
+      'weight' => 26,
     ),
   );
 
@@ -4396,7 +4648,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 17,
+        'weight' => 19,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -4428,7 +4680,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 23,
+      'weight' => 25,
     ),
   );
 
@@ -4448,7 +4700,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 24,
+        'weight' => 26,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -4548,7 +4800,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 14,
+        'weight' => 16,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -4580,7 +4832,7 @@ function nys_legislation_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 21,
+      'weight' => 23,
     ),
   );
 
@@ -4596,7 +4848,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 16,
+        'weight' => 18,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -4628,7 +4880,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 22,
+      'weight' => 24,
     ),
   );
 
@@ -4644,7 +4896,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 21,
+        'weight' => 23,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -4676,7 +4928,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 27,
+      'weight' => 29,
     ),
   );
 
@@ -4691,10 +4943,11 @@ function nys_legislation_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
-        'weight' => 20,
+        'weight' => 22,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -4728,7 +4981,7 @@ function nys_legislation_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'options_select',
-      'weight' => 26,
+      'weight' => 28,
     ),
   );
 
@@ -4793,7 +5046,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 13,
+        'weight' => 15,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -4825,7 +5078,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 20,
+      'weight' => 22,
     ),
   );
 
@@ -4893,6 +5146,7 @@ function nys_legislation_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 7,
@@ -4951,7 +5205,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 25,
+        'weight' => 27,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -4984,7 +5238,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 34,
+      'weight' => 33,
     ),
   );
 
@@ -5060,6 +5314,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'entityreference',
         'settings' => array(
           'links' => 0,
+          'use_content_language' => TRUE,
           'view_mode' => 'sponsor_list_bill_detail',
         ),
         'type' => 'entityreference_entity_view',
@@ -5069,6 +5324,7 @@ function nys_legislation_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => 1,
         ),
         'type' => 'entityreference_label',
@@ -5164,7 +5420,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 11,
+        'weight' => 13,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -5196,7 +5452,7 @@ function nys_legislation_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 18,
+      'weight' => 20,
     ),
   );
 
@@ -5505,6 +5761,7 @@ function nys_legislation_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -5557,6 +5814,7 @@ function nys_legislation_field_default_field_instances() {
         'module' => 'entityreference',
         'settings' => array(
           'links' => 1,
+          'use_content_language' => TRUE,
           'view_mode' => 'teaser',
         ),
         'type' => 'entityreference_entity_view',
@@ -5834,6 +6092,7 @@ function nys_legislation_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -5843,6 +6102,7 @@ function nys_legislation_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -6041,6 +6301,7 @@ function nys_legislation_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 2,
@@ -6054,6 +6315,7 @@ function nys_legislation_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 2,
@@ -6247,6 +6509,8 @@ function nys_legislation_field_default_field_instances() {
   t('Abstained Members');
   t('Abstained Names');
   t('Active Version');
+  t('Additional Sponsor Names');
+  t('Additional Sponsors');
   t('All Actions');
   t('All Statuses');
   t('Amendments');

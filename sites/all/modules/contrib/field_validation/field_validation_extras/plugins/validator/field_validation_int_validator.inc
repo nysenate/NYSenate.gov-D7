@@ -22,15 +22,17 @@ class field_validation_int_validator extends field_validation_validator {
     if ($this->value !== '' && !is_null($this->value)) {
       $options = array();
       if (isset($settings['min']) && $settings['min'] != '') {
-        $options['options']['min_range'] = $settings['min'];
+        $min = token_replace($settings['min'], array($this->get_token_type() => $this->entity));
+        $options['options']['min_range'] = $min;
       }
       if (isset($settings['max']) && $settings['max'] != '') {
-        $options['options']['max_range'] = $settings['max'];
+        $max = token_replace($settings['max'], array($this->get_token_type() => $this->entity));
+        $options['options']['max_range'] = $max;
       }       
       if (FALSE === filter_var($this->value, FILTER_VALIDATE_INT, $options)) {
         $token = array(
-          '[min]' => isset($settings['min']) ? $settings['min'] : '',
-          '[max]' => isset($settings['max']) ? $settings['max'] : '',
+          '[min]' => isset($min) ? $min : '',
+          '[max]' => isset($max) ? $max : '',
         );
         $this->set_error($token);
       }

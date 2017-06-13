@@ -9,9 +9,8 @@
 
 /**
  * Returns an array of available nodequeue "channels" available.
- *
- * @return
- * array with key of nodequeue ids and all settings within
+ * @return array
+ *   array with key of nodequeue ids and all settings within
  */
 function nodequeue_service_get_nodequeues() {
   if (module_exists('nodequeue')) {

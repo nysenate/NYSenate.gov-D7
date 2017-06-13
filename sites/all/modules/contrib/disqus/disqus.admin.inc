@@ -60,6 +60,19 @@ function disqus_admin_settings() {
       ),
     ),
   );
+  // Enable by default settings.
+  $form['default_options'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Default options'),
+    '#group' => 'settings',
+  );
+  $form['default_options']['disqus_nodetypes_default'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Node Types'),
+    '#description' => t('Select disqus comments by default to only the following node types.'),
+    '#default_value' => variable_get('disqus_nodetypes_default', array_keys($options)),
+    '#options' => $options,
+  );
   // Behavior settings.
   $form['behavior'] = array(
     '#type' => 'fieldset',
@@ -109,45 +122,47 @@ function disqus_admin_settings() {
     '#title' => t('Secret Key'),
     '#default_value' => variable_get('disqus_secretkey', ''),
   );
-  if (!module_exists('libraries') || (module_exists('libraries') && ($library = libraries_detect('disqusapi')) && empty($library['installed']))) {
-    $form['advanced']['api'] = array(
-      '#weight' => 4,
-      '#type' => 'fieldset',
-      '#title' => t('Disqus API Settings'),
-      '#description' => t('These setting pertain to the official Disqus PHP API. You will need to install the <a href="@libraries">libraries module</a> and upload the <a href="@disqusapi">api files</a> to /sites/all/libraries/disqusapi to enable api functionality.', array(
-        '@libraries' => 'http://drupal.org/project/libraries',
-        '@disqusapi' => 'https://github.com/disqus/disqus-php',
-      )),
-      '#collapsible' => FALSE,
-      '#collapsed' => FALSE,
-    );
-    $form['advanced']['api']['disqus_api_update'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Update Threads'),
-      '#description' => t('Update node titles and links via the disqus api when saving. (Requires your user access token.)'),
-      '#default_value' => variable_get('disqus_api_update', FALSE),
-      '#states' => array(
-        'enabled' => array(
-          'input[name="disqus_useraccesstoken"]' => array('empty' => FALSE),
+  $form['advanced']['api'] = array(
+    '#weight' => 4,
+    '#type' => 'fieldset',
+    '#title' => t('Disqus API Settings'),
+    '#description' => t('These setting pertain to the official Disqus PHP API. You will need to install the <a href="@libraries">libraries module</a> and upload the <a href="@disqusapi">api files</a> to /sites/all/libraries/disqusapi to enable api functionality.', array(
+      '@libraries' => 'http://drupal.org/project/libraries',
+      '@disqusapi' => 'https://github.com/disqus/disqus-php',
+    )),
+    '#collapsible' => FALSE,
+    '#collapsed' => FALSE,
+  );
+  if(module_exists('libraries') && $library = libraries_detect('disqusapi')) {
+    if($library['installed']) {
+      $form['advanced']['api']['disqus_api_update'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Update Threads'),
+        '#description' => t('Update node titles and links via the disqus api when saving. (Requires your user access token.)'),
+        '#default_value' => variable_get('disqus_api_update', FALSE),
+        '#states' => array(
+          'enabled' => array(
+            'input[name="disqus_useraccesstoken"]' => array('empty' => FALSE),
+          ),
         ),
-      ),
-    );
-    $form['advanced']['api']['disqus_api_delete'] = array(
-      '#type' => 'select',
-      '#title' => t('Close/Remove Threads'),
-      '#description' => t('Action to take when deleting a node. (Requires your user access token.)'),
-      '#default_value' => variable_get('disqus_api_delete', 'no_action'),
-      '#options' => array(
-        DISQUS_API_NO_ACTION => t('No Action'),
-        DISQUS_API_CLOSE => t('Close Thread'),
-        DISQUS_API_REMOVE => t('Remove Thread'),
-      ),
-      '#states' => array(
-        'enabled' => array(
-          'input[name="disqus_useraccesstoken"]' => array('empty' => FALSE),
+      );
+      $form['advanced']['api']['disqus_api_delete'] = array(
+        '#type' => 'select',
+        '#title' => t('Close/Remove Threads'),
+        '#description' => t('Action to take when deleting a node. (Requires your user access token.)'),
+        '#default_value' => variable_get('disqus_api_delete', 'no_action'),
+        '#options' => array(
+          DISQUS_API_NO_ACTION => t('No Action'),
+          DISQUS_API_CLOSE => t('Close Thread'),
+          DISQUS_API_REMOVE => t('Remove Thread'),
         ),
-      ),
-    );
+        '#states' => array(
+          'enabled' => array(
+            'input[name="disqus_useraccesstoken"]' => array('empty' => FALSE),
+          ),
+        ),
+      );
+    }
   }
   $form['advanced']['sso'] = array(
     '#weight' => 5,
@@ -195,6 +210,7 @@ function disqus_admin_settings() {
       ),
     ),
   );
+
   // Make sure the validation is called to handle the custom sso logo.
   $form['#submit'][] = 'disqus_admin_settings_submit';
   return system_settings_form($form);

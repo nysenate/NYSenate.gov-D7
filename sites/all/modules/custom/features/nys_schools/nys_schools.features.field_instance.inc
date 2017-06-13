@@ -52,7 +52,7 @@ function nys_schools_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 24,
+      'weight' => 18,
     ),
   );
 
@@ -116,6 +116,7 @@ function nys_schools_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -240,7 +241,7 @@ function nys_schools_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 21,
+      'weight' => 15,
     ),
   );
 
@@ -282,7 +283,7 @@ function nys_schools_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 18,
+      'weight' => 12,
     ),
   );
 
@@ -324,7 +325,7 @@ function nys_schools_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 19,
+      'weight' => 13,
     ),
   );
 
@@ -366,7 +367,7 @@ function nys_schools_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 20,
+      'weight' => 14,
     ),
   );
 
@@ -408,7 +409,7 @@ function nys_schools_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 17,
+      'weight' => 11,
     ),
   );
 
@@ -450,7 +451,7 @@ function nys_schools_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 20,
+      'weight' => 14,
     ),
   );
 
@@ -534,7 +535,7 @@ function nys_schools_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 22,
+      'weight' => 16,
     ),
   );
 
@@ -618,7 +619,7 @@ function nys_schools_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 23,
+      'weight' => 17,
     ),
   );
 
@@ -660,7 +661,7 @@ function nys_schools_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 21,
+      'weight' => 15,
     ),
   );
 
@@ -702,7 +703,7 @@ function nys_schools_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 19,
+      'weight' => 13,
     ),
   );
 

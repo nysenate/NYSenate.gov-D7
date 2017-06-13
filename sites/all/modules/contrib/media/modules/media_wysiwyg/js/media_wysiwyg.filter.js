@@ -175,7 +175,8 @@
       Drupal.media.filter.ensure_tagmap();
 
       // Locate and process all the media placeholders in the WYSIWYG content.
-      var contentElements = $('<div/>').html(content);  // TODO: once baseline jQuery is 1.8+, switch to using $.parseHTML(content)
+      var contentElements = $('<div/>');  // TODO: once baseline jQuery is 1.8+, switch to using $.parseHTML(content)
+      contentElements.get(0).innerHTML = content;
       var mediaElements = contentElements.find('.media-element');
       if (mediaElements) {
         $(mediaElements).each(function (i) {

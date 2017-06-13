@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Blacklist constraint for Password Policy module.

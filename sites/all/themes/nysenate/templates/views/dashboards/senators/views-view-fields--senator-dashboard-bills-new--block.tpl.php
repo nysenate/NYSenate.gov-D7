@@ -81,7 +81,7 @@ $const_no_votes = ($row->votes['const_aye']+$row->votes['const_nay'] < 1) ? 'no-
 		</div>
 	</td>
 	<td class="<?php echo $total_no_votes?>">
-		<?php if(($data['main_sponsor'] === TRUE) || ($data['co_sponsor'] === TRUE)):?>
+		<?php if((isset($data['main_sponsor']) && $data['main_sponsor'] === TRUE) || (isset($data['co_sponsor']) && $data['co_sponsor'] === TRUE)):?>
 			<h3 class="active-list-header">All Votes</h3>
 			<div class="pieContainer"> 
 				<div class="aye"><?php echo $row->votes['all_aye']; ?></div>

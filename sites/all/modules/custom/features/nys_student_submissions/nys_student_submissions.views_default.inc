@@ -664,7 +664,7 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['fields']['field_school_submission_upload']['settings'] = array(
     'file_view_mode' => 'default',
   );
-  /* Field: Field: District */
+  /* Field: Field: Senate District */
   $handler->display->display_options['fields']['field_district']['id'] = 'field_district';
   $handler->display->display_options['fields']['field_district']['table'] = 'field_data_field_district';
   $handler->display->display_options['fields']['field_district']['field'] = 'field_district';
@@ -918,7 +918,7 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['fields']['field_school_grade']['field'] = 'field_school_grade';
   $handler->display->display_options['fields']['field_school_grade']['label'] = '';
   $handler->display->display_options['fields']['field_school_grade']['element_label_colon'] = FALSE;
-  /* Field: Entityform Submission: Contact Name */
+  /* Field: Entityform Submission: Teacher's Name */
   $handler->display->display_options['fields']['field_school_contact_name']['id'] = 'field_school_contact_name';
   $handler->display->display_options['fields']['field_school_contact_name']['table'] = 'field_data_field_school_contact_name';
   $handler->display->display_options['fields']['field_school_contact_name']['field'] = 'field_school_contact_name';
@@ -986,7 +986,7 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
   /* Field: Bulk operations: Field collection item */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
-  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'field_collection_item';
+  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_field_collection_item';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['relationship'] = 'field_school_stud_earthday_subm_value';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '0';
@@ -1103,7 +1103,7 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['filters']['created']['field'] = 'created';
   $handler->display->display_options['filters']['created']['operator'] = '>=';
   $handler->display->display_options['filters']['created']['value']['value'] = '2017-02-07';
-  /* Filter criterion: Entityform Submission: Contact Name (field_school_contact_name) */
+  /* Filter criterion: Entityform Submission: Teacher&#039;s Name (field_school_contact_name) */
   $handler->display->display_options['filters']['field_school_contact_name_value']['id'] = 'field_school_contact_name_value';
   $handler->display->display_options['filters']['field_school_contact_name_value']['table'] = 'field_data_field_school_contact_name';
   $handler->display->display_options['filters']['field_school_contact_name_value']['field'] = 'field_school_contact_name_value';
@@ -1220,7 +1220,7 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['fields']['field_school_grade']['table'] = 'field_data_field_school_grade';
   $handler->display->display_options['fields']['field_school_grade']['field'] = 'field_school_grade';
   $handler->display->display_options['fields']['field_school_grade']['element_label_colon'] = FALSE;
-  /* Field: Entityform Submission: Contact Name */
+  /* Field: Entityform Submission: Teacher's Name */
   $handler->display->display_options['fields']['field_school_contact_name']['id'] = 'field_school_contact_name';
   $handler->display->display_options['fields']['field_school_contact_name']['table'] = 'field_data_field_school_contact_name';
   $handler->display->display_options['fields']['field_school_contact_name']['field'] = 'field_school_contact_name';
@@ -1285,7 +1285,7 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['fields']['field_senator']['settings'] = array(
     'link' => 0,
   );
-  /* Field: Field: District */
+  /* Field: Field: Senate District */
   $handler->display->display_options['fields']['field_district']['id'] = 'field_district';
   $handler->display->display_options['fields']['field_district']['table'] = 'field_data_field_district';
   $handler->display->display_options['fields']['field_district']['field'] = 'field_district';

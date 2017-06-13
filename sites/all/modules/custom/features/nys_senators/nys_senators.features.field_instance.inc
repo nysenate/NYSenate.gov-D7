@@ -22,6 +22,7 @@ function nys_senators_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -329,7 +330,7 @@ function nys_senators_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 6,
+      'weight' => 7,
     ),
   );
 
@@ -396,6 +397,7 @@ function nys_senators_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 7,
@@ -409,6 +411,7 @@ function nys_senators_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 1,
@@ -496,7 +499,7 @@ function nys_senators_field_default_field_instances() {
         'display_label' => 0,
       ),
       'type' => 'options_onoff',
-      'weight' => 7,
+      'weight' => 8,
     ),
   );
 
@@ -587,7 +590,7 @@ function nys_senators_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 4,
+      'weight' => 5,
     ),
   );
 
@@ -636,7 +639,7 @@ function nys_senators_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 5,
+      'weight' => 6,
     ),
   );
 
@@ -658,6 +661,7 @@ function nys_senators_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => 1,
         ),
         'type' => 'entityreference_label',
@@ -686,7 +690,7 @@ function nys_senators_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 6,
+      'weight' => 7,
     ),
   );
 
@@ -734,7 +738,7 @@ function nys_senators_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 5,
+      'weight' => 6,
     ),
   );
 
@@ -1006,6 +1010,7 @@ function nys_senators_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -1016,6 +1021,7 @@ function nys_senators_field_default_field_instances() {
         'module' => 'entityreference',
         'settings' => array(
           'links' => TRUE,
+          'use_content_language' => TRUE,
           'view_mode' => 'default',
         ),
         'type' => 'entityreference_entity_view',
@@ -1025,6 +1031,7 @@ function nys_senators_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -1069,6 +1076,7 @@ function nys_senators_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 6,
@@ -1120,6 +1128,7 @@ function nys_senators_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -1129,6 +1138,7 @@ function nys_senators_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -1138,6 +1148,7 @@ function nys_senators_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -1251,7 +1262,7 @@ function nys_senators_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 10,
+      'weight' => 8,
     ),
   );
 
@@ -1272,6 +1283,7 @@ function nys_senators_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -1338,7 +1350,7 @@ function nys_senators_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'options_buttons',
-      'weight' => 19,
+      'weight' => 18,
     ),
   );
 
@@ -1425,7 +1437,7 @@ function nys_senators_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 20,
+      'weight' => 19,
     ),
   );
 
@@ -1682,7 +1694,7 @@ function nys_senators_field_default_field_instances() {
         ),
       ),
       'type' => 'inline_entity_form',
-      'weight' => 11,
+      'weight' => 9,
     ),
   );
 
@@ -1817,7 +1829,7 @@ function nys_senators_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 6,
+      'weight' => 7,
     ),
   );
 
@@ -1902,7 +1914,7 @@ function nys_senators_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 5,
+      'weight' => 6,
     ),
   );
 
@@ -1985,7 +1997,7 @@ function nys_senators_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 9,
+      'weight' => 7,
     ),
   );
 
@@ -2069,7 +2081,7 @@ function nys_senators_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 15,
+      'weight' => 14,
     ),
   );
 
@@ -2152,7 +2164,7 @@ function nys_senators_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 15,
+      'weight' => 34,
     ),
   );
 
@@ -2234,7 +2246,7 @@ Quotes are also printed on bill pages where the member is a sponsor.',
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 33,
+      'weight' => 6,
     ),
   );
 
@@ -2317,7 +2329,7 @@ Quotes are also printed on bill pages where the member is a sponsor.',
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 1,
+      'weight' => 2,
     ),
   );
 
@@ -2492,15 +2504,13 @@ Quotes are also printed on bill pages where the member is a sponsor.',
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 3,
+      'weight' => 4,
     ),
   );
 
   // Exported field_instance: 'node-senator-field_image_hero'.
   $field_instances['node-senator-field_image_hero'] = array(
     'bundle' => 'senator',
-    'custom_add_another' => '',
-    'custom_remove' => '',
     'deleted' => 0,
     'description' => 'Image that appears at the top of the Senator About page.
 Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (for retina)',
@@ -2560,7 +2570,6 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'weight' => 16,
       ),
     ),
-    'ds_extras_field_template' => '',
     'entity_type' => 'node',
     'field_name' => 'field_image_hero',
     'label' => 'Front Page Header Image',
@@ -2639,7 +2648,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 30,
+      'weight' => 38,
     ),
   );
 
@@ -2782,7 +2791,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 9,
+      'weight' => 7,
     ),
   );
 
@@ -2949,7 +2958,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 18,
+      'weight' => 37,
     ),
   );
 
@@ -3032,7 +3041,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 2,
+      'weight' => 3,
     ),
   );
 
@@ -3112,7 +3121,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
       'module' => 'location_cck',
       'settings' => array(),
       'type' => 'location',
-      'weight' => 6,
+      'weight' => 5,
     ),
   );
 
@@ -3196,7 +3205,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 12,
+      'weight' => 8,
     ),
   );
 
@@ -3283,7 +3292,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 12,
+      'weight' => 9,
     ),
   );
 
@@ -3364,7 +3373,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
       'module' => 'location_cck',
       'settings' => array(),
       'type' => 'location',
-      'weight' => 13,
+      'weight' => 17,
     ),
   );
 
@@ -3448,7 +3457,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 15,
+      'weight' => 14,
     ),
   );
 
@@ -3530,7 +3539,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 29,
+      'weight' => 37,
     ),
   );
 
@@ -3653,7 +3662,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 4,
+      'weight' => 5,
     ),
   );
 
@@ -3737,7 +3746,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 10,
+      'weight' => 8,
     ),
   );
 
@@ -3832,7 +3841,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'progress_indicator' => 'bar',
       ),
       'type' => 'file_generic',
-      'weight' => 7,
+      'weight' => 6,
     ),
   );
 
@@ -3922,7 +3931,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         ),
       ),
       'type' => 'inline_entity_form',
-      'weight' => 9,
+      'weight' => 10,
     ),
   );
 
@@ -4005,7 +4014,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 8,
+      'weight' => 6,
     ),
   );
 
@@ -4088,7 +4097,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 13,
+      'weight' => 12,
     ),
   );
 
@@ -4186,7 +4195,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 34,
+      'weight' => 22,
     ),
   );
 
@@ -4284,7 +4293,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 35,
+      'weight' => 23,
     ),
   );
 
@@ -4311,6 +4320,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => 1,
         ),
         'type' => 'entityreference_label',
@@ -4376,7 +4386,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'size' => 60,
       ),
       'type' => 'entityreference_autocomplete_tags',
-      'weight' => 31,
+      'weight' => 39,
     ),
   );
 
@@ -4459,7 +4469,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 16,
+      'weight' => 35,
     ),
   );
 
@@ -4481,6 +4491,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'module' => 'entityreference',
         'settings' => array(
           'links' => TRUE,
+          'use_content_language' => TRUE,
           'view_mode' => 'default',
         ),
         'type' => 'entityreference_entity_view',
@@ -4547,7 +4558,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'size' => 60,
       ),
       'type' => 'entityreference_autocomplete',
-      'weight' => 14,
+      'weight' => 10,
     ),
   );
 
@@ -4630,7 +4641,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 17,
+      'weight' => 36,
     ),
   );
 

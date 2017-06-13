@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Consecutive character count constraint for Password Policy module.

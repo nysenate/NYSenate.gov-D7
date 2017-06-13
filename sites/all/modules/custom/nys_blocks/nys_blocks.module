@@ -1087,6 +1087,8 @@ function _nys_blocks_up_to_block_content() {
  */
 function _nys_blocks_want_to_block_content() {
   global $user;
+  $senator_url = '';
+  $senator_img = '';
 
   nys_registration_add_ctools_login();
 

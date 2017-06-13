@@ -1,5 +1,4 @@
 <?php
-// $Id: feeds_jsonpath_parser.test,v 1.1.2.1 2011/02/05 18:12:18 twistor Exp $
 
 /**
  * @file
@@ -14,11 +13,11 @@ class FeedsJSONPathParserTestCase extends FeedsWebTestCase {
   /**
    * Describe this test.
    */
-  public function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('JSONPath Parser'),
       'description' => t('Regression tests for Feeds JSONPath parser.'),
-      'group' => t('Feeds'),
+      'group' => t('Feeds JSONPath Parser'),
     );
   }
 
@@ -26,7 +25,56 @@ class FeedsJSONPathParserTestCase extends FeedsWebTestCase {
    * Set up test.
    */
   public function setUp() {
-    parent::setUp(array('feeds', 'feeds_ui', 'ctools', 'job_scheduler', 'feeds_jsonpath_parser'));
+    parent::setUp(array('feeds_jsonpath_parser'));
+    $this->downloadJsonPath();
+  }
+
+  /**
+   * Downloads JSONPath.
+   */
+  protected function downloadJsonPath() {
+    // We don't use a variable_set() here since we want this to be a unit test.
+    if (variable_get('feeds_jsonpath_library_dir')) {
+      return;
+    }
+    $url = 'https://jsonpath.googlecode.com/svn/trunk/src/php/jsonpath.php';
+    $filename = 'jsonpath.php';
+
+    // Avoid downloading the file dozens of times.
+    $library_dir = $this->originalFileDirectory . '/simpletest/feeds_jsonpath_parser';
+    $jsonpath_library_dir = DRUPAL_ROOT . '/' . $library_dir . '/jsonpath';
+
+    if (!file_exists(DRUPAL_ROOT . '/' . $library_dir)) {
+      drupal_mkdir(DRUPAL_ROOT . '/' . $library_dir);
+    }
+
+    if (!file_exists($jsonpath_library_dir)) {
+      drupal_mkdir($jsonpath_library_dir);
+    }
+
+    // Local file name.
+    $local_file = $jsonpath_library_dir . '/' . $filename;
+
+    // Begin single threaded code.
+    if (function_exists('sem_get')) {
+      $semaphore = sem_get(ftok(__FILE__, 1));
+      sem_acquire($semaphore);
+    }
+
+    // Download and extact the archive, but only in one thread.
+    if (!file_exists($local_file)) {
+      $local_file = system_retrieve_file($url, $local_file, FALSE, FILE_EXISTS_REPLACE);
+    }
+
+    if (function_exists('sem_get')) {
+      sem_release($semaphore);
+    }
+
+    // Verify that the file was successfully downloaded.
+    $this->assertTrue(file_exists($local_file), format_string('@file found.', array('@file' => $local_file)));
+
+    // Set the library directory.
+    variable_set('feeds_jsonpath_library_dir', $jsonpath_library_dir);
   }
 
   /**
@@ -55,20 +103,20 @@ class FeedsJSONPathParserTestCase extends FeedsWebTestCase {
       'jsonpath[context]' => '$.store.book[*]',
       'jsonpath[sources][jsonpath_parser:0]' => 'author',
       'jsonpath[sources][jsonpath_parser:1]' => 'price',
+      'jsonpath[allow_override]' => TRUE,
     );
-    $this->drupalPost('admin/structure/feeds/edit/jsonpath/settings/FeedsJSONPathParser', $edit, 'Save');
-    $this->assertText('Your changes have been saved.');
-    $this->assertRaw('$.store.book[*]');
-    $this->assertRaw('author');
-    $this->assertRaw('price');
+    $edit_url = 'admin/structure/feeds/jsonpath/settings/FeedsJSONPathParser';
+    $node_save_text = 'Basic page Testing JSONPath Parser has been updated.';
+
+    $this->postAndCheck($edit_url, $edit, 'Save', 'Your changes have been saved.');
 
     // Test import.
-    $path = $GLOBALS['base_url'] .'/'. drupal_get_path('module', 'feeds_jsonpath_parser') .'/tests/feeds_jsonpath_parser/';
-    $nid = $this->createFeedNode('jsonpath', $path . 'test.json', 'Testing JSONPath Parser');
+    $path = $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'feeds_jsonpath_parser') . '/tests/feeds_jsonpath_parser';
+    $nid = $this->createFeedNode('jsonpath', $path . '/test.json', 'Testing JSONPath Parser');
     $this->assertText('Created 4 nodes');
 
     // Import again, this verifies url field was mapped correctly.
-    $this->drupalPost('node/'. $nid .'/import', array(), 'Import');
+    $this->drupalPost('node/' . $nid . '/import', array(), 'Import');
     $this->assertText('There are no new nodes');
 
     // Assert accuracy of aggregated content. I find humor in using our own
@@ -85,16 +133,11 @@ class FeedsJSONPathParserTestCase extends FeedsWebTestCase {
       'feeds[FeedsJSONPathParser][jsonpath][sources][jsonpath_parser:0]' => 'bar',
       'feeds[FeedsJSONPathParser][jsonpath][sources][jsonpath_parser:1]' => 'baz',
     );
-    $this->drupalPost('node/'. $nid .'/edit', $edit, 'Save');
-    $this->drupalGet('node/'. $nid .'/edit');
-    // Why not use XPath to test JSONPath?
-    $this->assertFieldByXPath('//input[@id="edit-feeds-feedsjsonpathparser-jsonpath-context"][1]/@value', '/foo');
-    $this->assertFieldByXPath('//input[@id="edit-feeds-feedsjsonpathparser-jsonpath-sources-jsonpath-parser0"][1]/@value', 'bar');
-    $this->assertFieldByXPath('//input[@id="edit-feeds-feedsjsonpathparser-jsonpath-sources-jsonpath-parser1"][1]/@value', 'baz');
+    $this->postAndCheck('node/' . $nid . '/edit', $edit, 'Save', $node_save_text);
 
-    // Assert the we don't create an empty node when XPath values don't return anything.
+    // Assert the we don't create an empty node when JSONPath values don't return anything.
     // That happened at one point.
-    $this->drupalPost('node/'. $nid .'/import', array(), 'Import');
+    $this->drupalPost('node/' . $nid . '/import', array(), 'Import');
     $this->assertText('There are no new nodes');
 
     // Put the values back so we can test inheritance if the form was changed
@@ -104,11 +147,7 @@ class FeedsJSONPathParserTestCase extends FeedsWebTestCase {
       'feeds[FeedsJSONPathParser][jsonpath][sources][jsonpath_parser:0]' => 'author',
       'feeds[FeedsJSONPathParser][jsonpath][sources][jsonpath_parser:1]' => 'price',
     );
-    $this->drupalPost('node/'. $nid .'/edit', $edit, 'Save');
-    $this->drupalGet('node/'. $nid .'/edit');
-    $this->assertFieldByXPath('//input[@id="edit-feeds-feedsjsonpathparser-jsonpath-context"][1]/@value', '$.store.book[*]');
-    $this->assertFieldByXPath('//input[@id="edit-feeds-feedsjsonpathparser-jsonpath-sources-jsonpath-parser0"][1]/@value', 'author');
-    $this->assertFieldByXPath('//input[@id="edit-feeds-feedsjsonpathparser-jsonpath-sources-jsonpath-parser1"][1]/@value', 'price');
+    $this->postAndCheck('node/' . $nid . '/edit', $edit, 'Save', $node_save_text);
 
     // Change importer defaults.
     $edit = array(
@@ -116,16 +155,35 @@ class FeedsJSONPathParserTestCase extends FeedsWebTestCase {
       'jsonpath[sources][jsonpath_parser:0]' => 'booya',
       'jsonpath[sources][jsonpath_parser:1]' => 'boyz',
     );
-    $this->drupalPost('admin/structure/feeds/edit/jsonpath/settings/FeedsJSONPathParser', $edit, 'Save');
-    $this->assertText('Your changes have been saved.');
-    $this->assertRaw('//tr');
-    $this->assertRaw('booya');
-    $this->assertRaw('boyz');
+    $this->drupalPost($edit_url, $edit, 'Save');
+    $this->postAndCheck($edit_url, $edit, 'Save', 'Your changes have been saved.');
 
     // Make sure the changes propigated.
-    $this->drupalGet('node/'. $nid .'/edit');
-    $this->assertFieldByXPath('//input[@id="edit-feeds-feedsjsonpathparser-jsonpath-context"][1]/@value', '//tr');
-    $this->assertFieldByXPath('//input[@id="edit-feeds-feedsjsonpathparser-jsonpath-sources-jsonpath-parser0"][1]/@value', 'booya');
-    $this->assertFieldByXPath('//input[@id="edit-feeds-feedsjsonpathparser-jsonpath-sources-jsonpath-parser1"][1]/@value', 'boyz');
+    $this->drupalGet('node/' . $nid . '/edit');
+    $this->assertFieldByName('feeds[FeedsJSONPathParser][jsonpath][context]', '//tr');
+    $this->assertFieldByName('feeds[FeedsJSONPathParser][jsonpath][sources][jsonpath_parser:0]', 'booya');
+    $this->assertFieldByName('feeds[FeedsJSONPathParser][jsonpath][sources][jsonpath_parser:1]', 'boyz');
+
+    // Turn off allow_override.
+    $edit = array(
+      'jsonpath[allow_override]' => FALSE,
+    );
+    $this->postAndCheck($edit_url, $edit, 'Save', 'Your changes have been saved.');
+    $this->drupalGet('node/' . $nid . '/edit');
+    $this->assertNoText('JSONPath Parser Settings');
+
+    // Test byte replacement.
+    $this->assertEqual('ࡇ abc ʦ &#135361;', FeedsJSONPathParser::convertFourBytes('ࡇ abc ʦ 𡃁'));
+    $this->assertEqual('ࡇ abc ʦ ', FeedsJSONPathParser::stripFourBytes('ࡇ abc ʦ 𡃁'));
   }
+
+  public function postAndCheck($url, $edit, $button, $saved_text) {
+    $this->drupalPost($url, $edit, $button);
+    $this->assertText($saved_text);
+    $this->drupalGet($url);
+    foreach ($edit as $key => $value) {
+      $this->assertFieldByName($key, $value);
+    }
+  }
+
 }

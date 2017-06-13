@@ -1,5 +1,4 @@
 <?php
-// $Id: feeds_jsonpath_parser.module,v 1.1.4.1 2011/02/05 18:12:18 twistor Exp $
 
 /**
  * Implements hook_feeds_plugins().
@@ -27,4 +26,43 @@ function feeds_jsonpath_parser_feeds_plugins() {
  */
 function feeds_jsonpath_parser_enable() {
   cache_clear_all('plugins:feeds:plugins', 'cache');
+}
+
+/**
+ * Returns the path of the JSONPath library.
+ *
+ * @return string|bool
+ *   The relative path of the JSONPath directory, or false if not found.
+ */
+function feeds_jsonpath_parser_library_path() {
+  $libraries_path = module_exists('libraries') ? libraries_get_path('jsonpath') : FALSE;
+  if ($libraries_path && is_dir($libraries_path)) {
+    $path = $libraries_path;
+  }
+  elseif (is_dir(DRUPAL_ROOT . '/sites/all/libraries/jsonpath')) {
+    $path = DRUPAL_ROOT . '/sites/all/libraries/jsonpath';
+  }
+  // This is defined when simpletest downloads the library for us.
+  elseif (variable_get('feeds_jsonpath_library_dir')) {
+    $path = variable_get('feeds_jsonpath_library_dir');
+  }
+  else {
+    $search = glob(dirname(__FILE__) . '/jsonpath*.php');
+    return is_array($search) ? reset($search) : FALSE;
+  }
+
+  if (!isset($path)) {
+    return FALSE;
+  }
+
+  // Newer forks of JSONPath are all modern and fancy with their autoloaders.
+  if (is_file($path . '/vendor/autoload.php')) {
+    return $path . '/vendor/autoload.php';
+  }
+  // Old school. Look for multiple versions.
+  foreach (glob($path . '/jsonpath*.php') as $file) {
+    return $file;
+  }
+
+  return FALSE;
 }

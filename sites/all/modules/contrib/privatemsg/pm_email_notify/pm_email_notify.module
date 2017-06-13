@@ -475,10 +475,17 @@ function pm_email_notify_form_privatemsg_admin_settings_alter(&$form, &$form_sta
     );
   }
   else {
-    $form['pm_email_notify']['tokens'] = array(
-      '#type' => 'item',
-      '#value' => t('Available variables are: !author, !author_uid, !pm_subject, !pm_body, !thread, !site, !login_url, !uri, !uri_brief, !message (URL) and !settings (URL).'),
+    $form['pm_email_notify']['token'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Token Suggestions'),
+      '#weight' => -1,
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
       '#weight' => 6,
+    );
+    $form['pm_email_notify']['token']['suggestions'] = array(
+      '#type' => 'item',
+      '#markup' => t('Many tokens may be used, including: [privatemsg_message:url], [privatemsg_message:thread-id], [privatemsg_message:author:name], [privatemsg_message:author:uid], [privatemsg_message:recipient:name], [privatemsg_message:subject], [privatemsg_message:body]. Enable the <a href="https://drupal.org/project/token">Token module</a> to see all available.'),
     );
   }
 

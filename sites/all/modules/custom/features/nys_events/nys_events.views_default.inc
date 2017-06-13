@@ -515,7 +515,7 @@ function nys_events_views_default_views() {
     7 => 0,
   );
   $handler->display->display_options['filters']['type']['expose']['reduce'] = TRUE;
-  /* Filter criterion: Content: Committees (field_committee) */
+  /* Filter criterion: Content: Committee (field_committee) */
   $handler->display->display_options['filters']['field_committee_tid']['id'] = 'field_committee_tid';
   $handler->display->display_options['filters']['field_committee_tid']['table'] = 'field_data_field_committee';
   $handler->display->display_options['filters']['field_committee_tid']['field'] = 'field_committee_tid';
@@ -666,7 +666,7 @@ function nys_events_views_default_views() {
     7 => 0,
   );
   $handler->display->display_options['filters']['type']['expose']['reduce'] = TRUE;
-  /* Filter criterion: Content: Committees (field_committee) */
+  /* Filter criterion: Content: Committee (field_committee) */
   $handler->display->display_options['filters']['field_committee_tid']['id'] = 'field_committee_tid';
   $handler->display->display_options['filters']['field_committee_tid']['table'] = 'field_data_field_committee';
   $handler->display->display_options['filters']['field_committee_tid']['field'] = 'field_committee_tid';
@@ -804,7 +804,7 @@ function nys_events_views_default_views() {
     7 => 0,
   );
   $handler->display->display_options['filters']['type']['expose']['reduce'] = TRUE;
-  /* Filter criterion: Content: Committees (field_committee) */
+  /* Filter criterion: Content: Committee (field_committee) */
   $handler->display->display_options['filters']['field_committee_tid']['id'] = 'field_committee_tid';
   $handler->display->display_options['filters']['field_committee_tid']['table'] = 'field_data_field_committee';
   $handler->display->display_options['filters']['field_committee_tid']['field'] = 'field_committee_tid';
@@ -2331,7 +2331,7 @@ function nys_events_views_default_views() {
   $handler->display->display_options['sorts']['field_date_value']['table'] = 'field_data_field_date';
   $handler->display->display_options['sorts']['field_date_value']['field'] = 'field_date_value';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Contextual filter: Content: Committees (field_committee) */
+  /* Contextual filter: Content: Committee (field_committee) */
   $handler->display->display_options['arguments']['field_committee_tid']['id'] = 'field_committee_tid';
   $handler->display->display_options['arguments']['field_committee_tid']['table'] = 'field_data_field_committee';
   $handler->display->display_options['arguments']['field_committee_tid']['field'] = 'field_committee_tid';

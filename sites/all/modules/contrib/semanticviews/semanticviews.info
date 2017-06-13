@@ -7,9 +7,9 @@ package = Views
 files[] = semanticviews_plugin_row_fields.inc
 files[] = semanticviews_plugin_style_default.inc
 
-; Information added by Drupal.org packaging script on 2014-10-28
-version = "7.x-1.0-rc2"
+; Information added by Drupal.org packaging script on 2017-03-26
+version = "7.x-1.0"
 core = "7.x"
 project = "semanticviews"
-datestamp = "1414540129"
+datestamp = "1490540586"
 

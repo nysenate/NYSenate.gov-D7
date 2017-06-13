@@ -54,21 +54,48 @@ function date_facets_associate_widget(array &$facet_info) {
  *
  * Just added a basic functionality.
  * Might need to be expanded for more functionality.
- *
- * @param array $values
- * @param array $options
- * @return array
  */
 function _date_facets_api_facet_create_label(array $values, array $options) {
   $map = array();
 
+  $ranges = date_facets_get_ranges($options['field']['key'], $options['index id']);
+
+  // Default ranges.
+  if (empty($ranges)) {
+    $ranges = date_facets_get_ranges_render_arrays(date_facets_default_ranges());
+  }
+
   // Loop through all the values to create a map.
-  // It does nothing yet but more functionality might be added.
-  foreach ($values as $key => $value) {
-    $map[$key] = $value;
+  // Pull the correct display value from the range definitions.
+  foreach ($values as $value) {
+    $map[$value] = $ranges[$value]['#markup'];
   }
 
   return $map;
+}
+
+/**
+ * Returns configured ranges or default range if none are configured.
+ */
+function date_facets_get_ranges($facet_name, $index_id) {
+  $ranges = array();
+  $searchers = facetapi_get_active_searchers();
+  if (!empty($index_id)) {
+    foreach ($searchers as $searcher) {
+      // Get current searcher.
+      if (strpos($searcher, '@' . $index_id) !== FALSE) {
+        $adapter = facetapi_adapter_load($searcher);
+        $settings = $adapter->getFacetSettings(facetapi_facet_load($facet_name, $searcher), facetapi_realm_load('block'));
+        // Get the configured date ranges, or the default ranges if none have been
+        // set up already.
+        $ranges = (isset($settings->settings['ranges']) ? $settings->settings['ranges'] : date_facets_default_ranges());
+        // Sort ranges.
+        $ranges = date_facets_get_ranges_render_arrays($ranges);
+      }
+    }
+  }
+
+  return $ranges;
 }
 
 /**
@@ -77,15 +104,23 @@ function _date_facets_api_facet_create_label(array $values, array $options) {
  * @return array
  *   An associative array of date ranges.
  */
-function date_facets_get_ranges($ranges) {
+function date_facets_get_ranges_render_arrays($ranges) {
   $build = array();
 
   uasort($ranges, 'drupal_sort_weight');
   foreach ($ranges as $range_data) {
-    $build[$range_data['machine_name']] = array(
+    $markup = $range_data['label'];
+    // Translate through i18n if it's possible.
+    if (function_exists('i18n_string_translate')) {
+      $markup = i18n_string_translate(
+        array('date_facets', 'facet_label', $range_data['machine_name'], 'label'),
+        $markup
+      );
+    }
+
+    $build[$range_data['machine_name']] = $range_data + array(
       '#count' => NULL,
-      '#markup' => check_plain($range_data['label']),
-      '#weight' => $range_data['weight'],
+      '#markup' => $markup,
     );
   }
 
@@ -193,6 +228,24 @@ function date_facets_tabledrag_form_validate($form, &$form_state) {
 }
 
 /**
+ * Submit callback for the facet settings form.
+ */
+function date_facets_facet_settings_form_submit($form, $form_state) {
+  if (!empty($form_state['values']['widget'])) {
+    // Update i18n_strings only when one of date facets widgets is active.
+    if (in_array($form_state['values']['widget'], array('date_range', 'date_range_checkboxes'))) {
+      // Update the i18n string if need.
+      if (function_exists('i18n_string_update')) {
+        foreach ($form_state['values']['ranges'] as $key => $range) {
+          $name = array('date_facets', 'facet_label', $range['machine_name'], 'label');
+          i18n_string_update($name, $range['label']);
+        }
+      }
+    }
+  }
+}
+
+/**
  * Date range machine name existence check.
  * @TODO: Make this actually work.
  */
@@ -269,4 +322,19 @@ function date_facets_default_ranges() {
       'weight' => 4,
     ),
   );
+}
+
+/**
+ * Implements hook_i18n_string_info().
+ */
+function date_facets_i18n_string_info() {
+  $groups['date_facets'] = array(
+    'title' => t('Date facets'),
+    'description' => t('Translatable date facets: label.'),
+    // This group doesn't have strings with format.
+    'format' => FALSE,
+    // This group can list all strings.
+    'list' => TRUE,
+  );
+  return $groups;
 }

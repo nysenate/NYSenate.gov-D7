@@ -13,7 +13,12 @@ function nys_dashboard_constituents_query($filters) {
 
   $limit = 10;
 
-  $start = $_REQUEST['page'] * $limit;
+  if (isset($_REQUEST['page'])) {
+    $start = $_REQUEST['page'] * $limit;
+  }
+  else {
+    $start = 1 * $limit;
+  }
 
 
 

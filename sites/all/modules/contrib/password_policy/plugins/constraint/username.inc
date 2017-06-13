@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Username constraint for Password Policy module.

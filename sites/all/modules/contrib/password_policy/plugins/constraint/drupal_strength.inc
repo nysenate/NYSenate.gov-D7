@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Drupal strength constraint for Password Policy module.

@@ -503,7 +503,7 @@ function location_views_proximity_get_reference_location($view, $options) {
       // If at this stage we don't have coordinates then check for a distance contextual filter.
       if (!count(
           $coordinates
-        ) && !empty($view->argument) && !empty($argument->value['latitude']) && !empty($argument->value['longitude'])
+        ) && !empty($view->argument) && !empty($view->argument->value['latitude']) && !empty($view->argument->value['longitude'])
       ) {
         foreach ($view->argument as $argument) {
           if ($argument->table == 'location' && $argument->field == 'distance') {

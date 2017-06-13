@@ -62,6 +62,26 @@ class EntityformTypeMetadataController extends EntityDefaultMetadataController {
     $info = parent::entityPropertyInfo();
     $properties = &$info[$this->type]['properties'];
     $properties['type']['type'] = 'text';
+    // Add properties for translatable fields.
+    $labels = entity_get_controller('entityform_type')->get_text_labels();
+    foreach ($labels as $text_prop => $label) {
+      if (!isset($properties[$text_prop])) {
+        $properties[$text_prop] = array();
+      }
+      $properties[$text_prop] += array(
+        'label' => $label,
+        'getter callback' => 'entityformtype_metadata_get_properties',
+        'setter callback' => 'entityformtype_metadata_set_properties',
+        'type' => 'text',
+        'translatable' => TRUE,
+        'i18n string' => TRUE,
+      );
+      // Testing if this will allow property to be translated.
+      // @todo remove flag all formatted properties.
+      if (in_array($text_prop, array('instruction_pre', 'submission_text'))) {
+        $properties[$text_prop]['format'] = 'format';
+      }
+    }
     return $info;
   }
 }

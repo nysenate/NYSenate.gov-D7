@@ -23,6 +23,7 @@ function nys_committees_field_default_field_instances() {
         'module' => 'entityreference',
         'settings' => array(
           'links' => 1,
+          'use_content_language' => TRUE,
           'view_mode' => 'node_embed',
         ),
         'type' => 'entityreference_entity_view',
@@ -34,6 +35,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Featured Bill',
     'required' => 1,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -70,6 +73,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Quote',
     'required' => 1,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -98,6 +103,7 @@ function nys_committees_field_default_field_instances() {
         'module' => 'entityreference',
         'settings' => array(
           'links' => 1,
+          'use_content_language' => TRUE,
           'view_mode' => 'sponsor_list_bill_detail',
         ),
         'type' => 'entityreference_entity_view',
@@ -109,6 +115,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Senator',
     'required' => 1,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -145,12 +153,16 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Committee Member Role Type',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
       'module' => 'options',
-      'settings' => array(),
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
       'type' => 'options_select',
       'weight' => 0,
     ),
@@ -168,6 +180,7 @@ function nys_committees_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -179,12 +192,15 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Senator',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
       'module' => 'options',
       'settings' => array(
+        'apply_chosen' => '',
         'match_operator' => 'CONTAINS',
         'path' => '',
         'size' => 60,
@@ -215,6 +231,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Assemblymen Name',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -250,6 +268,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Assemblymen URL',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -285,12 +305,16 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Role',
     'required' => 1,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
       'module' => 'options',
-      'settings' => array(),
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
       'type' => 'options_select',
       'weight' => 3,
     ),
@@ -317,6 +341,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Other Member Role',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -343,6 +369,7 @@ function nys_committees_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -354,12 +381,16 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Senator',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
       'module' => 'options',
-      'settings' => array(),
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
       'type' => 'options_select',
       'weight' => 0,
     ),
@@ -391,6 +422,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Abstained Count',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'max' => '',
       'min' => '',
       'prefix' => '',
@@ -432,6 +465,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Aye Count',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'max' => '',
       'min' => '',
       'prefix' => '',
@@ -473,6 +508,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Aye With Reservations Count',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'max' => '',
       'min' => '',
       'prefix' => '',
@@ -500,6 +537,7 @@ function nys_committees_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -511,6 +549,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Bill',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -547,6 +587,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Bill Message',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -582,6 +624,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Bill Name',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -622,6 +666,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Excused Count',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'max' => '',
       'min' => '',
       'prefix' => '',
@@ -663,6 +709,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Nay Count',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'max' => '',
       'min' => '',
       'prefix' => '',
@@ -708,6 +756,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'From Openleg',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -747,6 +797,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Agenda Addendum',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -793,6 +845,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Agenda Bills',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -830,6 +884,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Agenda Location',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -870,6 +926,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Agenda Notes',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -895,6 +953,7 @@ function nys_committees_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -917,6 +976,8 @@ function nys_committees_field_default_field_instances() {
           'status' => TRUE,
         ),
       ),
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -958,6 +1019,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Committee Name',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -987,6 +1050,7 @@ function nys_committees_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 14,
@@ -1003,6 +1067,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Meeting Date',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'default_value' => 'now',
       'default_value2' => 'same',
       'default_value_code' => '',
@@ -1056,6 +1122,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Week',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'max' => '',
       'min' => '',
       'prefix' => '',
@@ -1102,6 +1170,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Year',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'max' => '',
       'min' => '',
       'prefix' => '',
@@ -1146,6 +1216,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Body',
     'required' => FALSE,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'display_summary' => TRUE,
       'text_processing' => 1,
       'user_register_form' => FALSE,
@@ -1187,6 +1259,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Committee Status',
     'required' => 1,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -1229,6 +1303,8 @@ function nys_committees_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'default_image' => 0,
       'file_directory' => '',
       'file_extensions' => 'png gif jpg jpeg',
@@ -1294,6 +1370,8 @@ function nys_committees_field_default_field_instances() {
         0 => 'youtube',
         1 => 'vimeo',
       ),
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'description_field' => 0,
       'description_length' => 128,
       'user_register_form' => FALSE,
@@ -1339,6 +1417,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Has Assemblymen Chair',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -1364,6 +1444,7 @@ function nys_committees_field_default_field_instances() {
         'module' => 'entityreference',
         'settings' => array(
           'links' => TRUE,
+          'use_content_language' => TRUE,
           'view_mode' => 'default',
         ),
         'type' => 'entityreference_entity_view',
@@ -1373,6 +1454,7 @@ function nys_committees_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => 1,
         ),
         'type' => 'entityreference_label',
@@ -1384,6 +1466,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Chair',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -1426,12 +1510,16 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Committee Type',
     'required' => 1,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
       'module' => 'options',
-      'settings' => array(),
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
       'type' => 'options_select',
       'weight' => 2,
     ),
@@ -1470,6 +1558,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Committee Featured Legislation',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -1512,6 +1602,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Frontend Display Type',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -1558,6 +1650,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Misc Legislative Group Members',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -1598,6 +1692,8 @@ function nys_committees_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'default_image' => 0,
       'file_directory' => '',
       'file_extensions' => 'png gif jpg jpeg',
@@ -1684,6 +1780,7 @@ function nys_committees_field_default_field_instances() {
         'module' => 'entityreference',
         'settings' => array(
           'links' => 1,
+          'use_content_language' => TRUE,
           'view_mode' => 'token',
         ),
         'type' => 'entityreference_entity_view',
@@ -1701,6 +1798,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Learn More Page',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -1743,6 +1842,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Meeting Frequency',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -1789,6 +1890,8 @@ function nys_committees_field_default_field_instances() {
     'label' => 'Members',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(

@@ -38,7 +38,7 @@ function nys_student_submissions_field_group_info() {
       'formatter' => 'open',
     ),
   );
-  $field_groups['group_admin|field_collection_item|field_school_stud_earthday_subm|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   // Translatables
   // Included for use with string extractors like potx.

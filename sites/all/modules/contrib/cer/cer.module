@@ -187,6 +187,18 @@ function cer_processing_entity($op, $entity, $entity_type = NULL, array &$contex
     return;
   }
 
+  // Don't process anything that hasn't got the cer data structure: this provides an
+  // opportunity for other modules to opt their entities out of CER processing.
+  if ($entity instanceof EntityStructureWrapper) {
+    try {
+      // If there is no such a property an exception will be thrown.
+      $entity->getPropertyInfo('cer');
+    }
+    catch (EntityMetadataWrapperException $e) {
+      return;
+    }
+  }
+
   if ($entity instanceof EntityDrupalWrapper) {
     // Under certain circumstances, the cer struct may not be known to Entity
     // API. So check for that before doing any actual processing. If it's not

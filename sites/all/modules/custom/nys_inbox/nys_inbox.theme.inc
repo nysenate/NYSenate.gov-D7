@@ -9,6 +9,7 @@
  * Add a doc comment here.
  */
 function theme_privatemsg_list_field__nys_inbox_subject($variables) {
+  $is_new = '';
 
   if (empty($variables['message'])) {
     $thread = $variables['thread'];
@@ -27,9 +28,11 @@ function theme_privatemsg_list_field__nys_inbox_subject($variables) {
     $account = user_load($variables['thread']['dash_uid']);
   }
 
-  foreach ($message->field_issues[LANGUAGE_NONE] as $issue) {
-    $term = taxonomy_term_load($issue['tid']);
-    $items[] = $term->name;
+  if (isset($message->field_issues[LANGUAGE_NONE])) {
+    foreach ($message->field_issues[LANGUAGE_NONE] as $issue) {
+      $term = taxonomy_term_load($issue['tid']);
+      $items[] = $term->name;
+    }
   }
 
   if (empty($items)) {
@@ -87,6 +90,7 @@ function theme_privatemsg_list_field__downarrow($variables) {
  * Theme the subject of the thread.
  */
 function theme_privatemsg_list_field__name($variables) {
+  $subject = '';
 
   if (is_numeric(arg(1))) {
     $account = user_load(arg(1));
@@ -121,7 +125,7 @@ function theme_privatemsg_list_field__name($variables) {
       ":inbox_user" => $account->uid,
     );
 
-    if ($_GET['sent'] == 1) {
+    if (isset($_GET['sent']) && $_GET['sent'] == 1) {
       $query = 'SELECT MAX(pmi.mid) FROM pm_index pmi JOIN pm_message pm ON pm.mid = pmi.mid WHERE pmi.thread_id = :thread_id AND pm.author = :inbox_user;';
       $most_recent_message_mid = (int) db_query($query, $params)->fetchField();
     }
@@ -196,7 +200,7 @@ function theme_nys_inbox_district($variables) {
   $district = $variables['thread']['district'];
 
   $field['class'][] = 'privatemsg-list-district';
-  if ($variables['thread']['in_district']) {
+  if (isset($variables['thread']['in_district']) && $variables['thread']['in_district']) {
     $field['class'][] = 'marker';
   }
 

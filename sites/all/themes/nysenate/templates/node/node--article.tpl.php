@@ -90,10 +90,11 @@
             <?php print $content['field_article_author'][0]['#markup']; ?>
           </p>
         <?php endif; ?>
-        <p class="c-news--pub-date">
-          <?php print $content['field_date'][0]['#markup']; ?>
-        </p>
-
+        <?php if(isset($content['field_date'][0]['#markup'])): ?>
+          <p class="c-news--pub-date">
+            <?php print $content['field_date'][0]['#markup']; ?>
+          </p>
+        <?php endif; ?>
         <?php if(isset($content['field_issues'])): ?>
         <ul class="nys-associated-topics">
           ISSUE: 

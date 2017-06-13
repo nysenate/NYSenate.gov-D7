@@ -38,7 +38,7 @@
         <<?php print $field->label_element_type; ?><?php print drupal_attributes($field->label_attributes); ?>>
       <?php endif; ?>
 
-          <?php print $field->label; ?>:
+          <?php print $field->label; ?><?php if ($field->handler->options['element_label_colon']): ?>:<?php endif; ?>
 
       <?php if (!empty($field->label_element_type)): ?>
         </<?php print $field->label_element_type; ?>>

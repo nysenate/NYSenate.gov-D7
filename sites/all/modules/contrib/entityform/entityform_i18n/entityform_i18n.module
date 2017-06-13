@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * @file
+ * Entityform i18n integration module via entity API i18n support.
+ *
+ * @see EntityDefaultI18nController
+ */
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function entityform_i18n_entity_info_alter(&$info) {
+  // Enable i18n support via the entity API.
+  $info['entityform_type']['i18n controller class'] = 'EntityDefaultI18nStringController';
+}
+
+/**
+ * Implements hook_i18n_object_info_alter().
+ */
+function entityform_i18n_i18n_object_info_alter(&$info) {
+  if (empty($info['entityform_type']['string translation']['properties'])) {
+    return;
+  }
+  $properties = &$info['entityform_type']['string translation']['properties'];
+  foreach ($properties as $key => $property) {
+    if (in_array($key, array('submission_text', 'instruction_pre', 'draft_save_text'))) {
+      $properties[$key]['format'] = "data.{$key}.format";
+    }
+  }
+}
+
+/**
+ * Implements hook_i18n_string_list_TEXTGROUP_alter().
+ */
+function entityform_i18n_i18n_string_list_entityform_alter(&$strings, $type = NULL, $object = NULL) {
+  if ($type == 'entityform_type' && $object && !empty($strings['entityform'][$type])) {
+    foreach ($strings['entityform'][$type] as $entityform_type => $string_keys) {
+      foreach ($string_keys as $string_key => $string) {
+        if (empty($string['string'])) {
+          $strings['entityform'][$type][$entityform_type][$string_key]['string'] = '';
+          if (!empty($object->data[$string_key])) {
+            if (is_array($object->data[$string_key]) && isset($object->data[$string_key]['value'])) {
+              $strings['entityform'][$type][$entityform_type][$string_key]['string'] = $object->data[$string_key]['value'];
+            }
+            else {
+              $strings['entityform'][$type][$entityform_type][$string_key]['string'] = $object->data[$string_key];
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_entityform_type_insert().
+ */
+function entityform_i18n_entityform_type_insert($entityform_type) {
+  i18n_string_object_update('entityform_type', $entityform_type);
+}
+
+/**
+ * Implements hook_entityform_type_update().
+ */
+function entityform_i18n_entityform_type_update($entityform_type) {
+  // Account for name changes.
+  if ($entityform_type->original->type != $entityform_type->type) {
+    i18n_string_update_context("entityform:entityform_type:{$entityform_type->original->type}:*", "entityform:entityform_type:{$entityform_type->type}:*");
+  }
+  i18n_string_object_update('entityform_type', $entityform_type);
+}
+
+/**
+ * Implements hook_entityform_type_delete().
+ */
+function entityform_i18n_entityform_type_delete($entityform_type) {
+  i18n_string_object_remove('entityform_type', $entityform_type);
+}

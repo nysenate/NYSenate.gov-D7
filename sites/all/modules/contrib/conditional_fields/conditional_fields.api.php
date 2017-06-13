@@ -123,6 +123,23 @@ function hook_conditional_fields_conditions_alter(&$conditions) {
 }
 
 /**
+ * Alter the list of states handlers.
+ *
+ * State handlers are callbacks that are executed when adding the #states
+ * information to a form element.
+ *
+ * @param $handlers
+ *  An associative array of handlers, with callback as keys and an associative
+ *  array of form element properties that are used to match the element with
+ *  the right handler.
+ *
+ * @see conditional_fields_states_handlers()
+ */
+function hook_conditional_fields_states_handlers_alter(&$handlers) {
+  // See conditional_fields_states_handlers() for examples.
+}
+
+/**
  * Alter the list of available behaviors.
  *
  * @param $behaviors

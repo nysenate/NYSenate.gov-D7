@@ -1223,6 +1223,7 @@ function media_set_browser_params() {
       'plugins',
       'render',
       'types',
+      'render_multi_edit_form',
     );
     $params = array_intersect_key($params, array_flip($safe_options));
 

@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-function nys_inbox_form($form, &$form_state, $argument, $account) {
+function nys_inbox_form($form, &$form_state) {
 
   $query_cache = &drupal_static(__FUNCTION__);
 
@@ -18,16 +18,16 @@ function nys_inbox_form($form, &$form_state, $argument, $account) {
   $is_senator = user_is_senator($user->uid);
 
   $allowed_get_vars = array(
-    'messagesearch', 
-    'issuesearch', 
+    'messagesearch',
+    'issuesearch',
     'billsearch',
     'usersearch'
   );
-  
+
   foreach($allowed_get_vars as $var) {
     if (isset($_GET[$var]) && empty($form_state['input'][$var])) {
       $form_state['input'][$var] = $_GET[$var];
-    }   
+    }
   }
 
   // Load the themed list headers based on the available data.
@@ -38,7 +38,8 @@ function nys_inbox_form($form, &$form_state, $argument, $account) {
 
 
   $form = array(
-    '#list_argument' => $argument,
+    // '#list_argument' => $argument,
+    '#list_argument' => '',
     //'#submit' => array('privatemsg_list_submit'),
     'updated' => array(
       '#prefix' => '<div id="nys_inbox></h2>',
@@ -48,23 +49,23 @@ function nys_inbox_form($form, &$form_state, $argument, $account) {
     '#prefix' => '<div id="nys_inbox">',
     '#suffix' => '</div>',
   );
-  
-  
+
+
     $unread_messages = nys_inbox_unread_count($user);
-  
+
   $title = "INBOX";
   if(!empty($_GET['sent']) && $_GET['sent'] == 1) {
      $title = 'SENT MESSAGES';
   }
- 
- 
+
+
   if($unread_messages) {
     $form['title'] = array('#markup' => '<h2 class="c-container--title">' . $title . ' (' . $unread_messages .' NEW)</h2>');
   } else {
     $form['title'] = array('#markup' => '<h2 class="c-container--title">' . $title . '</h2>');
   }
-  
-  
+
+
   if(empty($_GET['sent'])) {
    $form['sent'] = array(
      '#markup' => l('View Sent Messages', 'user/' . arg(1) . '/dashboard/inbox', array('attributes' => array('class' => array('back-to-inbox icon-after__right')), 'query' => array('sent' => 1))),
@@ -72,10 +73,10 @@ function nys_inbox_form($form, &$form_state, $argument, $account) {
  } else {
    $form['sent'] = array(
      '#markup' => nys_inbox_back_to_inbox_button(),
-   );   
+   );
  }
 
- 
+
  $form['uid'] = array(
    '#type' => 'hidden',
    '#value' => $user->uid,
@@ -89,25 +90,25 @@ function nys_inbox_form($form, &$form_state, $argument, $account) {
   }
 
  $form['messagesearch'] = array(
-    '#type' => 'textfield', 
+    '#type' => 'textfield',
     '#title' => t('Message Search'),
     '#title_display' => 'invisible',
-    '#default_value' => isset($form_state['input']['messagesearch']) ? $form_state['input']['messagesearch'] : '', 
-    '#size' => 60, 
+    '#default_value' => isset($form_state['input']['messagesearch']) ? $form_state['input']['messagesearch'] : '',
+    '#size' => 60,
     '#maxlength' => 128,
     '#attributes' => array('class' => array('c-site-search--box', 'icon_after__search', 'form-text'), 'type' => 'search'),
     '#prefix' => '<div class="search-wrapper">',
     '#suffix' => '</div>',
     '#post_render' => array('nys_dashboard_search_textfield_post_render'),
   );
- 
+
  if(user_access('dashboard inbox search names', $user)) {
    $form['usersearch'] = array(
-      '#type' => 'textfield', 
+      '#type' => 'textfield',
       '#title' => t('Name Search'),
       '#title_display' => 'invisible',
-      '#default_value' => isset($form_state['input']['usersearch']) ? $form_state['input']['usersearch'] : '', 
-      '#size' => 60, 
+      '#default_value' => isset($form_state['input']['usersearch']) ? $form_state['input']['usersearch'] : '',
+      '#size' => 60,
       '#maxlength' => 128,
       '#attributes' => array('class' => array('c-site-search--box', 'icon_after__search', 'form-text'), 'type' => 'search'),
       '#prefix' => '<div class="search-wrapper">',
@@ -115,25 +116,25 @@ function nys_inbox_form($form, &$form_state, $argument, $account) {
       '#post_render' => array('nys_dashboard_search_textfield_post_render'),
     );
  }
-  
+
   if(user_access('dashboard inbox search issues', $user)) {
 
     $form['issuesearch'] = array(
-       '#type' => 'textfield', 
+       '#type' => 'textfield',
        '#title' => t('Issue Search'),
        '#title_display' => 'invisible',
        '#default_value' => isset($form_state['input']['issuesearch']) ? $form_state['input']['issuesearch'] : '',
-       '#size' => 60, 
+       '#size' => 60,
        '#maxlength' => 128,
-       '#autocomplete_path' => 'taxonomy/autocomplete/field_issues', 
+       '#autocomplete_path' => 'taxonomy/autocomplete/field_issues',
        '#attributes' => array('class' => array('c-site-search--box', 'icon_after__search', 'form-text')),
        '#prefix' => '<div class="search-wrapper">',
        '#suffix' => '</div>',
        '#post_render' => array('nys_dashboard_search_textfield_post_render'),
       );
-  
+
    }
-  
+
   if (user_access('dashboard inbox search bills', $user)) {
 
     $form['billsearch'] = array(
@@ -166,11 +167,11 @@ function nys_inbox_form($form, &$form_state, $argument, $account) {
 
   $form['inbox_action_links'] = array(
     '#prefix' => '<div class="inbox-action-links">',
-    '#suffix' => '</div>',  
+    '#suffix' => '</div>',
   );
 
   if(user_access('dashboard inbox check all', $user)) {
-  
+
     $form['inbox_action_links']['check_all'] = array(
       '#type' => 'checkbox',
       '#title' => t('Check All'),
@@ -178,7 +179,7 @@ function nys_inbox_form($form, &$form_state, $argument, $account) {
       '#suffix' => '</div>',
       '#attributes' => array('id' => 'checkall'),
     );
-  
+
   }
 
   if ($is_senator) {
@@ -230,9 +231,9 @@ function nys_inbox_form($form, &$form_state, $argument, $account) {
   hide($form['delete_submit']);
 
   $form['confirm_placeholder'] = array(
-    '#markup' => '<div id="inbox_confirmation_div"></div>', 
+    '#markup' => '<div id="inbox_confirmation_div"></div>',
   );
-  
+
   $form['updated'] = array(
     '#weight' => 2,
   );
@@ -249,9 +250,9 @@ function nys_inbox_form($form, &$form_state, $argument, $account) {
     '#prefix' => '<div id="inbox_message_table">',
     '#suffix' => '</div>',
   );
-  
+
   /*if (!$total_message_count) { // hide actions if no results
-    unset($form['inbox_action_links']); 
+    unset($form['inbox_action_links']);
   }*/
 
   if(!empty($_GET['sent']) && $_GET['sent'] == 1) {
@@ -319,7 +320,7 @@ function nys_inbox_form($form, &$form_state, $argument, $account) {
     if (!empty($form_state['input']['usersearch'])) {
 
       $userquery = "SELECT uid, fn.field_first_name_value, fl.field_last_name_value from users u
-     LEFT JOIN field_data_field_first_name fn ON fn.entity_id = u.uid and fn.entity_type = 'user' 
+     LEFT JOIN field_data_field_first_name fn ON fn.entity_id = u.uid and fn.entity_type = 'user'
      LEFT JOIN field_data_field_last_name fl ON fl.entity_id = u.uid and fl.entity_type = 'user'
      WHERE CONCAT(u.name, fn.field_first_name_value, ' ', fl.field_last_name_value) LIKE :q";
 
@@ -379,7 +380,12 @@ function nys_inbox_form($form, &$form_state, $argument, $account) {
       ));
     }
     foreach ($query_cache['last_message'] as $row) {
-      $form['updated']['list']['#options'][$row->thread_id]['dash_uid'] = $form_state['input']['uid'];
+      if (isset($form_state['input']['uid'])) {
+        $form['updated']['list']['#options'][$row->thread_id]['dash_uid'] = $form_state['input']['uid'];
+      }
+      else {
+        $form['updated']['list']['#options'][$row->thread_id]['dash_uid'] = 0;
+      }
       // Set replied flag if there is no newer message from another user than
       // the last replied.
       if ($row->last_message <= $form['updated']['list']['#options'][$row->thread_id]['last_reply_to_mid']) {
@@ -419,13 +425,13 @@ function nys_inbox_form($form, &$form_state, $argument, $account) {
 
 function nys_inbox_form_submit($form, &$form_state) {
 
-    
+
   $user = user_load(arg(1));
   if(empty($user)) {
     return;
   }
   $account = clone $user;
-  
+
   $dashboard_link = substr(url('user/' . $user->uid . '/dashboard'), 1);
 
   if (isset($form_state['input']['op']) && $form_state['input']['op'] == 'Delete') {
@@ -441,44 +447,44 @@ function nys_inbox_form_submit($form, &$form_state) {
     }
     return;
   }
-  
+
   else if (isset($form_state['input']['op']) && $form_state['input']['op'] == 'Message') {
 
     if ($form_state['input']['check_all'] == 1 && $form_state['input']['in_district'] != 1) {
-      
-      
+
+
       $queryArgs = array(
         'context' => 'inbox',
       );
-              
+
       $allowed_get_vars = array('messagesearch', 'issuesearch', 'billsearch', 'usersearch');
-      
+
       $has_query_args = 0;
       foreach($allowed_get_vars as $var) {
         if (isset($form_state['input'][$var]) && !empty($form_state['input'][$var])) {
           $queryArgs[$var] = $form_state['input'][$var];
           $has_query_args = 1;
-        }   
+        }
       }
-      
+
       if(!$has_query_args) {
         $queryArgs['messageall'] = 1;
       }
-      
-                  
+
+
       $form_state['redirect'] = array(
         $dashboard_link . '/inbox/new',
         array(
           'query' => $queryArgs,
-        ),    
+        ),
       );
-      
+
       return;
     }
-    
-     
+
+
     else if (!empty($form_state['input']['list'])) {
-      
+
       // remove null values
       $array = array_filter($form_state['input']['list'], 'strlen');
       if(user_is_senator($user)) {
@@ -487,31 +493,31 @@ function nys_inbox_form_submit($form, &$form_state) {
         $uids = array('temp'); // redirect to reply form
       }
 
-      if(sizeof($uids) == 1) {      
-      
+      if(sizeof($uids) == 1) {
+
         $list = array_filter($form_state['input']['list']); // remove empty array elements
-        
+
         $thread_id = array_pop($list);
-        
+
         $form_state['redirect'] = array(
           $dashboard_link . '/inbox/reply/' . $thread_id,
           array(
             'query' => array()
-          ),    
+          ),
         );
-        return;       
+        return;
       }
-      
-      
+
+
       // message the list
       $form_state['redirect'] = array(
         $dashboard_link . '/inbox/new',
         array(
           'query' => array('uids' => $uids)
-        ),    
+        ),
       );
       return;
-    } 
+    }
   }
 
   else if ($form_state['input']['messagesearch'] != "") {
@@ -520,17 +526,17 @@ function nys_inbox_form_submit($form, &$form_state) {
       $dashboard_link . '/inbox',
       array(
         'query' => array('messagesearch' => $form_state['input']['messagesearch'])
-      ),    
+      ),
     );
-  } 
-  
+  }
+
   else if ($form_state['input']['issuesearch'] != "") {
 
     $form_state['redirect'] = array(
       $dashboard_link . '/inbox',
       array(
         'query' => array('issuesearch' => $form_state['input']['issuesearch'])
-      ),    
+      ),
     );
   } else if ($form_state['input']['billsearch'] != "") {
 
@@ -538,7 +544,7 @@ function nys_inbox_form_submit($form, &$form_state) {
       $dashboard_link . '/inbox',
       array(
         'query' => array('billsearch' => $form_state['input']['billsearch'])
-      ),    
+      ),
     );
   } else if ($form_state['input']['usersearch'] != "") {
 
@@ -546,35 +552,35 @@ function nys_inbox_form_submit($form, &$form_state) {
       $dashboard_link . '/inbox',
       array(
         'query' => array('usersearch' => $form_state['input']['usersearch'])
-      ),    
+      ),
     );
   } else {
-    // if there are no search terms passed in the form, we need to strip out $_GET search parameters, 
+    // if there are no search terms passed in the form, we need to strip out $_GET search parameters,
     // otherwise, you can't clear the form by emptying search field and submitting it
     $form_state['redirect'] = array(
-      $dashboard_link . '/inbox',  
+      $dashboard_link . '/inbox',
     );
-  } 
-  
+  }
+
 }
 
 /**
  * form callback to write a message to one or more user from the inbox
  */
 function nys_inbox_message_form($form, &$form_state, $recipients = '', $subject = '') {
-    
+
   $user = user_load(arg(1));
-  
+
   if(empty($user)) {
     return array();
   }
-  
+
   $form = array();
-  
+
   $form['backbutton'] = array(
     '#markup' => nys_inbox_back_to_inbox_button(),
   );
-  
+
   $form['header'] = array(
     '#markup' => '<div class="privatemsg-message-participants">Send Message</div>',
   );
@@ -585,40 +591,40 @@ function nys_inbox_message_form($form, &$form_state, $recipients = '', $subject 
     '#default_value'      => '',
     '#size'               => 50,
   );
-  
+
   $form['recipient_uid'] = array(
     '#type'               => 'hidden',
     '#value'              => '',
   );
-  
+
   $form['context'] = array(
     '#type'               => 'hidden',
     '#value'              => !empty($_GET['context']) ? $_GET['context'] : '',
 
   );
-  
+
   $form['bill_id'] = array(
     '#type'               => 'hidden',
     '#value'              => !empty($_GET['bill_id']) ? $_GET['bill_id'] : '',
   );
-  
+
   $form['issue_id'] = array(
     '#type'               => 'hidden',
     '#value'              => !empty($_GET['issue_id']) ? $_GET['issue_id'] : '',
   );
-  
+
   $form['committee_id'] = array(
     '#type'               => 'hidden',
     '#value'              => !empty($_GET['committee_id']) ? $_GET['committee_id'] : '',
   );
-  
+
   $form['subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
     '#default_value' => '',
 
   );
-  
+
   $form['body'] = array(
     '#type'               => 'text_format',
     '#title'              => t('Message'),
@@ -631,7 +637,7 @@ function nys_inbox_message_form($form, &$form_state, $recipients = '', $subject 
     '#type' => 'submit',
     '#value' => t('Send Message'),
   );
-  
+
   if (
       ($_GET['context'] == 'senators_constituents_tab')
       ||
@@ -644,13 +650,13 @@ function nys_inbox_message_form($form, &$form_state, $recipients = '', $subject 
       ($_GET['context'] == 'senators_bills_tab')
     ) {
     $to = nys_inbox_get_to_value_constituents_tab_context();
-  } 
+  }
   else if ($_GET['context'] == 'message_senator') {
     $senator_uid = user_get_senator_uid($user);
     $form['to']['#default_value'] = strip_tags(theme('nys_dashboard_user_link', array('uid' => $senator_uid)));
     $form['to']['#disabled'] = TRUE;
     $form['recipient_uid']['#value'] = array($senator_uid);
-  } 
+  }
   else if (in_array($_GET['context'], array('bill_vote', 'following_bill'))) {
     $senator_uid = user_get_senator_uid($user);
     $form['to']['#default_value'] = strip_tags(theme('nys_dashboard_user_link', array('uid' => $senator_uid)));
@@ -695,31 +701,31 @@ function nys_inbox_message_form($form, &$form_state, $recipients = '', $subject 
 
     $form['subject']['#disabled'] = TRUE;
     $form['recipient_uid']['#value'] = array($senator_uid);
-  } 
+  }
   else if ($_GET['context'] == 'issue') {
     $senator_uid = user_get_senator_uid($user);
     $form['to']['#default_value'] = strip_tags(theme('nys_dashboard_user_link', array('uid' => $senator_uid)));
     $form['to']['#disabled'] = TRUE;
-    $issue_tid = $_GET['issue_id'];    
+    $issue_tid = $_GET['issue_id'];
     $issue = taxonomy_term_load($issue_tid);
     $form['subject']['#default_value'] = $issue->name;
     $form['subject']['#disabled'] = TRUE;
     $form['recipient_uid']['#value'] = array($senator_uid);
-  } 
+  }
   else if ($_GET['context'] == 'following_committee') {
     $senator_uid = user_get_senator_uid($user);
     $form['to']['#default_value'] = strip_tags(theme('nys_dashboard_user_link', array('uid' => $senator_uid)));
     $form['to']['#disabled'] = TRUE;
-    $committee_id = $_GET['committee_id'];    
+    $committee_id = $_GET['committee_id'];
     $committee = taxonomy_term_load($committee_id);
     $form['subject']['#default_value'] = $committee->name;
     $form['subject']['#disabled'] = TRUE;
     $form['recipient_uid']['#value'] = array($senator_uid);
-  } 
+  }
   else if ($_GET['context'] == 'inbox') {
-    $to = nys_inbox_get_to_value_inbox_tab_context();    
-  } 
-  
+    $to = nys_inbox_get_to_value_inbox_tab_context();
+  }
+
   if (!empty($to)) {
     if (
       ($_GET['context'] == 'senators_constituents_tab')
@@ -736,18 +742,18 @@ function nys_inbox_message_form($form, &$form_state, $recipients = '', $subject 
     } else if ($_GET['context'] == 'inbox') {
       $form['to']['#default_value'] = implode(', ', $to);
     }
-    
+
     $form['to']['#disabled'] = TRUE;
     $form['recipient_uid']['#value'] = 'query';
-    
+
     $form['queryArgs'] = array(
       '#type'               => 'hidden',
       '#value'              => $_GET,
       '#weight'             => -10
     );
-    
+
   }
-  
+
   else if (!empty($_GET['uids'])) {
     if (!empty($_GET['uids'])) {
       $users = user_load_multiple($_GET['uids']);
@@ -755,13 +761,13 @@ function nys_inbox_message_form($form, &$form_state, $recipients = '', $subject 
       foreach($users as $account) {
         $names[] = $account->name;
       }
-      
+
       $form['to']['#default_value'] = ($_GET['all_constituents'] == 1) ? 'All Constituents' : implode(', ', $names);
       $form['to']['#disabled'] = TRUE;
       $form['recipient_uid']['#value'] = $_GET['uids'];
     }
   }
-  
+
   if(empty($_GET['context'])) {
     $form['to']['#autocomplete_path'] = 'nys-inbox/autocomplete/user';
   }
@@ -774,32 +780,32 @@ function nys_inbox_message_form($form, &$form_state, $recipients = '', $subject 
 function nys_inbox_message_form_validate($form, &$form_state) {
   $account = user_load(arg(1));
   $values = $form_state['values'];
-  
+
  // if user used autocomplete, parse the "to" field to fill the recipient_uid field
   if(empty($values['context']) && !empty($values['to']) && strpos($values['to'], '(')) {
     $users = nys_inbox_parse_autocomplete_to_list($values['to']);
     $form_state['values']['recipient_uid'] = $users;
-    
+
     $recipients = array();
     foreach($users as $key => $value) {
       $recipients['user_' . $key] = user_load($value);
     }
-  
+
     $blocked = nys_inbox_privatemsg_block_message($account,$recipients);
     if(!empty($blocked)) {
       form_set_error('to',$blocked[0]['message']);
     }
   }
-  
+
   if(empty($values['subject'])) {
-    form_set_error('subject', t('Subject field cannot be empty.')); 
+    form_set_error('subject', t('Subject field cannot be empty.'));
   }
-  
+
   if(empty($values['body']['value'])) {
     form_set_error('body', t('Body field cannot be empty.'));
   }
-  
-  
+
+
 }
 
 
@@ -810,36 +816,36 @@ function nys_inbox_message_form_submit($form, &$form_state) {
   if (!empty($values['message']) && empty($values['body']['value'])) {
     $values['body']['value'] = $values['message'];
   }
-  
-  
+
+
   if(arg(0) == 'user') {
     $user = user_load(arg(1)); // send message from this person's new message form
   } else if(arg(0) == 'node' && arg(2) == 'message') {
     global $user;
   }
-  
+
   $dashboard_link = substr(url('user/' . $user->uid . '/dashboard'),1);
-  
+
   if ($values['recipient_uid'] == 'query') {
 
     $form_state['redirect'] = array(
       $dashboard_link . '/inbox',
       array(
         'query' => array()
-      ),    
-    );  
-  
-    
+      ),
+    );
+
+
     $_SESSION['http_request_count'] = 0; // reset counter for debug information.
-    
+
     $_SESSION['bulk_message_filters'] = $_GET;
     $_SESSION['author_uid'] = $user->uid;
-  
+
     // Execute the function named batch_example_1 or batch_example_2.
     $batch = nys_inbox_bulk_message_by_query();
     batch_set($batch);
     return;
- 
+
   }
 
   if (!is_array($values['recipient_uid'])) {
@@ -851,8 +857,8 @@ function nys_inbox_message_form_submit($form, &$form_state) {
     'author' => $user,
   );
 
-  
-  
+
+
   $message = privatemsg_new_thread($recipients, $values['subject'], $values['body']['value'], $options);
 
   // Associate the issue to the message while saving
@@ -868,7 +874,7 @@ function nys_inbox_message_form_submit($form, &$form_state) {
   if(empty($_GET['bill_ids']) && !empty($_GET['bill_id'])) {
     $_GET['bill_ids'] = array($_GET['bill_id']);
   }
-  
+
   // Associate the bill(s) to the message while saving
   if(isset($_GET['bill_ids'])) {
     $mid = $message['message']->mid;
@@ -883,7 +889,7 @@ function nys_inbox_message_form_submit($form, &$form_state) {
   if(isset($_GET['petition_id'])) {
     $mid = $message['message']->mid;
     $loaded_message = privatemsg_message_load($mid);
-    
+
     $loaded_message->field_petitions_questionnaires['und'][]['target_id'] = $_GET['petition_id'];
     field_attach_update('privatemsg_message', $loaded_message);
   }
@@ -891,13 +897,13 @@ function nys_inbox_message_form_submit($form, &$form_state) {
   if (isset($message) && $message['success'] == 1) {
     drupal_set_message(t("Your message has been sent!"), 'status');
   }
-  
+
   // Set the right redirect URL based on the context
-  
+
   if(empty($_GET['context']) && !empty($values['context'])) {
     $_GET['context'] = $values['context'];
   }
-  
+
   switch($_GET['context']) {
     case 'senators_constituents_tab' : $redirect_url = $dashboard_link . '/constituents'; break;
     case 'senators_petitions_tab' : $redirect_url = $dashboard_link; break;
@@ -918,9 +924,9 @@ function nys_inbox_message_form_submit($form, &$form_state) {
     $redirect_url,
     array(
       'query' => array()
-    ),    
+    ),
   );
-  
+
   foreach (module_implements('nys_inbox_new_message_sent') as $module) {
     $function = $module . '_nys_inbox_new_message_sent';
     // will call all modules implementing hook_hook_name
@@ -935,17 +941,17 @@ function nys_inbox_message_form_submit($form, &$form_state) {
  * form callback to write a message to one or more user from the inbox
  */
 function nys_inbox_forward_form($form, &$form_state, $recipients = '', $subject = '') {
-    
+
   $user = user_load(arg(1));
-  
+
   $thread_id = arg(5);
 
-  $thread = privatemsg_thread_load($thread_id); 
-  
+  $thread = privatemsg_thread_load($thread_id);
+
   module_load_include('inc', 'privatemsg', 'privatemsg.pages');
-  
+
   $output = '';
-  
+
   foreach($thread['messages'] as $message) {
     $author = strip_tags(theme('nys_dashboard_user_link', array('uid' => $message->author->uid)));
     $output .= 'from: ' . $author . "\n\n";
@@ -954,17 +960,17 @@ function nys_inbox_forward_form($form, &$form_state, $recipients = '', $subject 
     $output .= '---';
   }
 
-  
+
   if(empty($user)) {
     return array();
   }
-  
+
   $form = array();
-  
+
   $form['backbutton'] = array(
     '#markup' => nys_inbox_back_to_inbox_button(),
   );
-  
+
   $form['header'] = array(
     '#markup' => '<div class="privatemsg-message-participants">Forward Message</div>',
   );
@@ -976,15 +982,15 @@ function nys_inbox_forward_form($form, &$form_state, $recipients = '', $subject 
     '#size'               => 50,
 
   );
-  
-  
+
+
   $form['subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
     '#default_value' => '',
 
   );
-  
+
   $form['message'] = array(
     '#title' => 'Message',
     '#type' => 'textarea',
@@ -992,12 +998,12 @@ function nys_inbox_forward_form($form, &$form_state, $recipients = '', $subject 
     '#default_value' => "---\n" . $output,
 
   );
-  
+
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Send Message'),
   );
-  
+
   return $form;
 
 }
@@ -1013,11 +1019,11 @@ function nys_inbox_forward_form_validate($form, &$form_state) {
 
 function nys_inbox_forward_form_submit($form, &$form_state) {
 
-  
+
   $form_values = $form_state['values'];
-  
+
   $user = user_load(arg(1)); // send message from this person's new message form
-  
+
   $module = 'nys_inbox';
   $key = 'nys_inbox_forward';
 
@@ -1046,7 +1052,7 @@ function nys_inbox_forward_form_submit($form, &$form_state) {
   else {
     drupal_set_message(t('There was a problem sending your message and it was not sent.'), 'error');
   }
-  
+
   $dashboard_link = substr(url('user/' . $user->uid . '/dashboard'),1);
   $redirect_url = $dashboard_link . '/inbox';
 
@@ -1054,7 +1060,7 @@ function nys_inbox_forward_form_submit($form, &$form_state) {
     $redirect_url,
     array(
       'query' => array()
-    ),    
+    ),
   );
 
 }
@@ -1062,68 +1068,68 @@ function nys_inbox_forward_form_submit($form, &$form_state) {
 function nys_inbox_reply_form($form, &$form_state) {
   $form = array();
   global $user;
-  
+
   $account = user_load(arg(1));
-  
+
   $thread_id = arg(5);
-  
+
   $original_author_uid = (int) db_query("SELECT author from pm_message WHERE mid = :thread_id", array(':thread_id' => $thread_id))->fetchField();
   $original_recipient_number = (int) db_query("select count(pmi.recipient) as count from pm_index pmi JOIN pm_message pm ON pm.mid = pmi.mid where pmi.mid = :thread_id AND pmi.recipient != pm.author;", array(':thread_id' => $thread_id))->fetchField();
-  
-  
+
+
   if($original_recipient_number > 1) {
     $is_bulk_message = 1;
   } else {
     $is_bulk_message = 0;
   }
-  
+
   $form['backbutton'] = array(
     '#markup' => nys_inbox_back_to_inbox_button(),
   );
- 
+
   $total_count = nys_inbox_thread_get_recipient_count($thread_id);
-  
-  
+
+
   if($is_bulk_message) {
     $account_themed = theme('nys_dashboard_user_link', array('uid' => $account->uid)); // theme dashboard user
     if (user_is_constituent($account)) {
       $author_themed = theme('nys_dashboard_user_link', array('uid' => $original_author_uid));
       $participants_themed = 'Message between ' . $author_themed . ' & ' . $account_themed;
     } else if (user_is_senator($account)) {
-      $participants_themed = 'Message from ' . $account_themed . ' to ' . ($total_count - 1) . ' constituents'; 
+      $participants_themed = 'Message from ' . $account_themed . ' to ' . ($total_count - 1) . ' constituents';
     }
-    
-  } 
+
+  }
 
   else if (!$is_bulk_message) {
-    
+
     $thread = privatemsg_thread_load($thread_id);
 
     $participants_themed =_nys_inbox_format_participants($thread['participants'], 4);
 
-  
+
   }
-  
+
       $form['participants'] = array(
       '#markup' => '<div class="privatemsg-message-participants">' . $participants_themed . '</h3>',
-    );  
+    );
 
-  
+
   $query = privatemsg_sql_messages(array($thread_id));
-  
-  
+
+
   $mids = array();
   foreach ($query->execute() as $row) {
-    $mids[$row->mid] = $row->mid; 
+    $mids[$row->mid] = $row->mid;
   }
-  
+
   $messages = array();
   if(!empty($mids)) {
       $messages = privatemsg_message_load_multiple($mids, array('account' => $account));
     // Render the messages.
   }
-  
-  
+
+
   $i = 1;
   $count = count($messages);
   foreach ($messages as $pmid => $message) {
@@ -1153,7 +1159,7 @@ function nys_inbox_reply_form($form, &$form_state) {
       ),
     );
   }
-  
+
   $reply_to_mid = (int) db_query("select min(mid) from pm_index WHERE thread_id = :thread_id", array(':thread_id' => $thread_id))->fetchField();
 
 
@@ -1161,17 +1167,17 @@ function nys_inbox_reply_form($form, &$form_state) {
     '#type' => 'value',
     '#value' => $reply_to_mid,
   );
-  
+
   $form['author'] = array(
     '#type' => 'value',
     '#value' => $account,
   );
-  
+
   $form['subject'] = array(
     '#type' => 'value',
     '#value' => $messages[$reply_to_mid]->subject,
   );
-    
+
   $form['body'] = array(
     '#type'               => 'text_format',
     '#title'              => t('Reply'),
@@ -1180,24 +1186,24 @@ function nys_inbox_reply_form($form, &$form_state) {
     '#format'             => 'plain_text',
     '#after_build'        => array('privatemsg_check_format_access'),
   );
-  
+
   $form['thread_id'] = array(
     '#type' => 'hidden',
     '#value' => arg(5),
   );
 
-  
+
   $form['submitbutton'] = array(
     '#type' => 'submit',
     '#value' => t('Send Reply'),
   );
-  
-  
+
+
   if(!$is_bulk_message || arg(1) == $original_author_uid) {
     $form['#submit'] = array('nys_inbox_reply_submit', 'privatemsg_new_submit');
     $form['#validate'] = array('privatemsg_new_validate');
   } else {
-    
+
     $form['recipient_uid'] = array(
       '#type'  => 'hidden',
       '#value' => array($original_author_uid),
@@ -1217,7 +1223,7 @@ function nys_inbox_reply_submit($form, &$form_state) {
     // by the function declaration
     $function($form_state["values"]);
   }
-  
+
 }
 
 function nys_inbox_reply_form_bulk_message_submit($form, &$form_state) {
@@ -1229,35 +1235,35 @@ function nys_inbox_reply_form_bulk_message_submit($form, &$form_state) {
     'author' => $values['author'],
   );
 
-  $recipients = user_load_multiple($values['recipient_uid']); 
+  $recipients = user_load_multiple($values['recipient_uid']);
   $return = privatemsg_new_thread($recipients, $values['subject'], $values['body']['value'], $options);
-  
+
   $dashboard_link = substr(url('user/' . $user->uid . '/dashboard'),1);
 
   $form_state['redirect'] = array(
     $dashboard_link . '/inbox/reply/' . $return['message']->thread_id,
     array(
       'query' => array()
-    ),    
+    ),
   );
-  
+
 }
 
 
 function nys_inbox_delete($form, $form_state) {
-  
+
   $account = user_load(arg(1));
 
-  
+
   $thread = privatemsg_thread_load(arg(5), $account);
-  
+
   $inbox_link = substr(url('user/' . $account->uid . '/dashboard/inbox'),1);
-  
-  if(empty($thread)) {   
+
+  if(empty($thread)) {
     drupal_set_message(t('That is not a valid thread'),'warning');
     drupal_goto($inbox_link);
   }
-  
+
   $form['pmid'] = array(
     '#type' => 'value',
     '#value' => arg(6),

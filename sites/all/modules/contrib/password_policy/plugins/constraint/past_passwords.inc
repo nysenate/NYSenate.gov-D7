@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Password history constraint for Password Policy module.

@@ -396,7 +396,6 @@ function nysenate_preprocess_node(&$variables) {
   /** --- Bills / Resolutions --- */
 
   if ($variables['type'] === 'bill') {
-
     // Set up the user's senator or the sponsor of the bill if user has no senator.
     if (user_is_logged_in()) {
       global $user;
@@ -836,35 +835,8 @@ function nysenate_preprocess_node(&$variables) {
     $variables['active_amend_url'] = $GLOBALS['base_url'].'/legislation/bills/' . $bill_wrapper->field_ol_session->value() . '/' . $bill_wrapper->field_ol_base_print_no->value();
     $variables['ol_base_url'] = variable_get('openleg_base_url');
 
-    $variables['sponsor_present'] = isset($node->field_ol_sponsor[LANGUAGE_NONE][0]['target_id']);
-    $variables['sponsor_name_present'] = !empty($bill_wrapper->field_ol_sponsor_name->value());
-
-    $sponsor_present = $bill_wrapper->field_ol_sponsor->raw() != '' ? true : false;
-    $sponsor_name_present = $bill_wrapper->field_ol_sponsor_name->raw() != '' ? true : false;
-
-    $variables['sponsored_by'] = '';
-
-    // Build Bill Sponsor(s) Content Section
-    if ($sponsor_present || $sponsor_name_present) {
-      $variables['sponsored_by'] = '<h3 style="margin-top:20px;margin-bottom:0;" class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">Sponsored By</h3>';
-      if ($sponsor_present) {
-        $this_node = node_load($bill_wrapper->getIdentifier());
-        $this_output = field_view_field('node', $this_node, 'field_ol_sponsor', 'sponsor_list');
-        $variables['sponsored_by'] .= '<div class="c-sponsor" style="overflow:auto;">'
-          . $sponsor_id = isset($content['field_ol_sponsor']['#items'][0]['target_id'])
-          ? $content['field_ol_sponsor']['#items'][0]['target_id'] : '' .
-          render($this_output)  . '</div>';
-      }
-      elseif($sponsor_name_present) {
-        $variables['sponsored_by'] .= '<div class="c-sponsor" style="overflow:auto;">
-            <div class="nys-senator sponsor-list c-bill--nys-senator">
-              <div class="nys-senator--info">
-                <h4 class="nys-senator--name">' . $variables['field_ol_sponsor_name'][0]['value']. '</h4>
-              </div>
-            </div>
-          </div>';
-      }
-    }
+    // Get the rendered sponsor block.
+    $variables['sponsored_by'] = _nysenate_render_bill_sponsor_list($bill_wrapper);
 
     // Build Bill Status Content Section
     $bill_status_graph = nys_dashboard_render_bill_status($bill_nid, '', true);
@@ -934,35 +906,13 @@ function nysenate_preprocess_node(&$variables) {
   }
 
   if ($variables['type'] == 'resolution') {
-      // Get a wrapper for the current node.
-      $bill_nid = $variables['node']->nid;
-      $bill_wrapper = entity_metadata_wrapper('node', $bill_nid);
-      $chamber = $bill_wrapper->field_ol_chamber->value();
+    // Get a wrapper for the current node.
+    $bill_nid = $variables['node']->nid;
+    $bill_wrapper = entity_metadata_wrapper('node', $bill_nid);
+    $chamber = $bill_wrapper->field_ol_chamber->value();
 
-    $sponsor_present = $bill_wrapper->field_ol_sponsor->raw() != '' ? true : false;
-    $sponsor_name_present = $bill_wrapper->field_ol_sponsor_name->raw() != '' ? true : false;
-
-    // Build Bill Sponsor(s) Content Section
-    if ($sponsor_present || $sponsor_name_present) {
-      $variables['sponsored_by'] = '<h3 style="margin-top:20px;margin-bottom:0;" class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">Sponsored By</h3>';
-      if ($sponsor_present) {
-        $this_node = node_load($bill_wrapper->getIdentifier());
-        $this_output = field_view_field('node', $this_node, 'field_ol_sponsor', 'sponsor_list');
-        $variables['sponsored_by'] .= '<div class="c-sponsor" style="overflow:auto;">'
-          . $sponsor_id = isset($content['field_ol_sponsor']['#items'][0]['target_id'])
-            ? $content['field_ol_sponsor']['#items'][0]['target_id'] : '' .
-            render($this_output)  . '</div>';
-      }
-      elseif($sponsor_name_present) {
-        $variables['sponsored_by'] .= '<div class="c-sponsor" style="overflow:auto;">
-            <div class="nys-senator sponsor-list c-bill--nys-senator">
-              <div class="nys-senator--info">
-                <h4 class="nys-senator--name">' . $variables['field_ol_sponsor_name'][0]['value']. '</h4>
-              </div>
-            </div>
-          </div>';
-      }
-    }
+    // Get the rendered sponsor block.
+    $variables['sponsored_by'] = _nysenate_render_bill_sponsor_list($bill_wrapper);
 
     // Build multi/co-sponsor blocks
     $sponsor_array = _nysenate_resolve_amendment_sponsors(node_load($bill_nid), $chamber);
@@ -1883,26 +1833,27 @@ function nysenate_status_messages($variables) {
 }
 
 /**
- * Return a link to initiate a Facebook Connect login or association.
+ * Overrides theme_fboauth_action() from the fboauth module
  *
- * @param $link
- *   An array of properties to be used to generate a login link. Note that all
- *   provided properties are required for the Facebook login to succeed and
- *   must not be changed. If $link is FALSE, Facebook OAuth is not yet
- *   configured.
- * @see fboauth_link_properties()
+ * Forces class that gets us the FB Connect button that users would normally
+ * expect.
+ *
  */
-function nysenate_fboauth_action__connect($variables) {
+function nysenate_fboauth_action($variables) {
   $action = $variables['action'];
   $link = $variables['properties'];
+  // Because most Facebook actions initiate one-time actions, render it as a
+  // button instead of a link. This makes for expected behavior that buttons
+  // execute actions, not links.
+  $link['attributes']['class'] = '';
+  $link['attributes']['name'] = isset($link['attributes']['name']) ? $link['attributes']['name'] : 'facebook_action_' . $action['name'];
+  $link['attributes']['type'] = 'button';
+  $attributes = drupal_attributes($link['attributes']);
   $url = url($link['href'], array('query' => $link['query']));
-  $link['attributes']['class'] = isset($link['attributes']['class']) ? $link['attributes']['class'] : 'facebook-action-connect';
-  $link['attributes']['rel'] = 'nofollow';
-  $attributes = isset($link['attributes']) ? drupal_attributes($link['attributes']) : '';
-  $title = isset($link['title']) ? check_plain($link['title']) : '';
-  $src = ($GLOBALS['is_https'] ? 'https' : 'http') . '://www.facebook.com/images/fbconnect/login-buttons/connect_light_medium_short.gif';
-  return '<a ' . $attributes . ' href="' . $url . '">facebook connect</a>';
+  $content = '<button class="form-button facebook-button facebook-action-nys-registration-fb-connect"' . $attributes . ' onclick="window.location = \'' . $url . '\'; return false;">' . check_plain($action['title']) . '</button>';
+  return $content;
 }
+
 
 /**
  * given a bill or resolution, return bills (including current bill) with same base_version, bundle (bill vs resolution) and session_year
@@ -1945,4 +1896,57 @@ function nysenate_render_amended_versions_dd($results) {
     $output[] = '<dd class="amended-version">' . l($r['title'], 'node/' . $r['nid']) . '</dd>';
   }
   return implode('<dd>,&nbsp;</dd> ', $output);
+}
+
+/**
+ * Render the sponsor and additional sponsor lists for bill detail pages.
+ *
+ * @param $bill_wrapper An entity wrapper object of the bill being displayed.
+ *
+ * @return string HTML of the rendered sponsors.
+ */
+function _nysenate_render_bill_sponsor_list($wrapper) {
+  $ret = '';
+
+  $render_sponsors = ($wrapper->field_ol_sponsor->raw() != '') ||
+    ($wrapper->field_ol_sponsor_name->raw() != '') ||
+    ($wrapper->field_ol_add_sponsors->raw() != '') ||
+    ($wrapper->field_ol_add_sponsor_names->raw() != '');
+
+  if ($render_sponsors) {
+    $this_node = node_load($wrapper->getIdentifier());
+    $ret = '<h3 style="margin-top:20px;margin-bottom:0;" class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">Sponsored By</h3><div class="c-sponsor" style="overflow:auto;">';
+    if ($wrapper->field_ol_sponsor->raw()) {
+      $this_output = field_view_field('node', $this_node, 'field_ol_sponsor', 'sponsor_list');
+      $ret .= render($this_output);
+    }
+    elseif ($wrapper->field_ol_sponsor_name->raw()) {
+      $ret .= '<div class="nys-senator sponsor-list c-bill--nys-senator">' .
+        '<div class="nys-senator--info">' .
+        '<h4 class="nys-senator--name">' .
+        $wrapper->field_ol_sponsor_name->raw() .
+        '</h4></div></div></div>';
+    }
+    if ($wrapper->field_ol_add_sponsors->raw()) {
+      $this_output = field_view_field('node', $this_node, 'field_ol_add_sponsors', 'sponsor_list');
+      $ret .= render($this_output);
+    }
+    elseif ($wrapper->field_ol_add_sponsor_names->raw() != '') {
+      $added_sponsors = json_decode($wrapper->field_ol_add_sponsor_names->raw());
+      $sponsor_names = [];
+      foreach ($added_sponsors as $key => $val) {
+        $sponsor_names[] = $val->fullName;
+      }
+      if (count($sponsor_names)) {
+        $ret .= '<div class="nys-senator sponsor-list c-bill--nys-senator">' .
+          '<div class="nys-senator--info"><label>Additional Sponsors:</label>' .
+          '<h4 class="nys-senator--name">' .
+          implode(', ', $sponsor_names) .
+          '</h4></div></div></div>';
+      }
+    }
+    $ret .= '</div>';
+  }
+
+  return $ret;
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Character count constraint for Password Policy module.

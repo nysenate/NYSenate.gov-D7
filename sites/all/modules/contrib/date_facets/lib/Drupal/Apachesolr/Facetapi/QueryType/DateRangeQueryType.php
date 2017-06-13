@@ -24,7 +24,6 @@ class Drupal_Apachesolr_Facetapi_QueryType_DateRangeQueryType extends FacetapiQu
    */
   public function execute($query) {
     $active = $this->getActiveItems();
-    $field = $this->facet['field'];
 
     $settings = $this->adapter->getFacetSettings($this->facet, facetapi_realm_load('block'));
     // Get the configured date ranges, or the default ranges if none have been
@@ -97,7 +96,7 @@ class Drupal_Apachesolr_Facetapi_QueryType_DateRangeQueryType extends FacetapiQu
     $settings = $this->adapter->getFacetSettings($this->facet, facetapi_realm_load('block'));
     $ranges = (isset($settings->settings['ranges']) && !empty($settings->settings['ranges']) ? $settings->settings['ranges'] : date_facets_default_ranges());
     // Build the markup for the date ranges.
-    $build = date_facets_get_ranges($ranges);
+    $build = date_facets_get_ranges_render_arrays($ranges);
 
     if ($response = apachesolr_static_response_cache($this->adapter->getSearcher())) {
       $facet_global_settings = $this->adapter->getFacet($this->facet)->getSettings();

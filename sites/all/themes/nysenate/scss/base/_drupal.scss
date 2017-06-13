@@ -88,3 +88,19 @@
       white-space: pre-wrap!important;
   }
 }
+
+//CKEditor Image styles
+.cke_editable {
+  img.media-element.file-media-landscape-image {
+    float: left;
+    width: 400px;
+    height: auto;
+    padding: 1% 1% 1% 0;
+  }
+  img.media-element.file-media-portrait-image {
+    float: left;
+    width: 225px;
+    height: auto;
+    padding: 1% 1% 1% 0;
+  }
+}

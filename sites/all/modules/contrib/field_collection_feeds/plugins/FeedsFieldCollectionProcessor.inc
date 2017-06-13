@@ -14,7 +14,7 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
   public function entityType() {
     return 'field_collection_item';
   }
-  
+
   /**
    * Implements parent::entityInfo().
    */
@@ -28,81 +28,39 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
    * Creates a new field collection item in memory and returns it.
    */
   protected function newEntity(FeedsSource $source) {
-    //$field_collection_item = entity_create('field_collection_item', array('field_name' => $this->config['field_name'], 'hostEntityType' => $this->config['host_entity_type']));
-    //$field_collection_item->setHostEntity($entity_type, $entity, LANGUAGE_NONE, FALSE);
-    $field_collection_item = new stdClass();
-    $field_collection_item->field_name = $this->config['field_name'];
-    $field_collection_item->hostEntityType = $this->config['host_entity_type'];
-
+    $field_collection_item = new FieldCollectionItemEntity(array('field_name' => $this->config['field_name']), $this->config['host_entity_type']);
+    $field_collection_item->is_new = TRUE;
     return $field_collection_item;
   }
 
   /**
    * Loads an existing entity.
    *
-   * If the update existing method is not FEEDS_UPDATE_EXISTING, only the entity
-   * table will be loaded, foregoing the entity_load API for better performance.
    */
   protected function entityLoad(FeedsSource $source, $id) {
-    $result = entity_load($this->entityType(), array($id));
-    return reset($result);
+    return entity_load_single($this->entityType(), $id);
   }
 
   /**
    * Save a entity.
    */
-  public function entitysave($entity) {
-
-//    $values = (array)$entity;
-      $values = array();
-      foreach ($entity as $key => $item) {
-          $values[str_replace('*', '', $key)] = $item;
-      }
-    $skip_host_save = FALSE;
-    $field_collection_item = entity_create('field_collection_item', $values);
-
-  	    if (method_exists($entity,'hostentityId')) {  $entityid=$entity->hostEntityId();  } else {  $entityid=NULL; }
-    if (!empty($entityid)) {
-      $hostEntity_array = entity_load($this->config['host_entity_type'], array($entity->hostEntityId()));
-      $hostEntity = reset($hostEntity_array);
-      $field_collection_item->setHostEntity($this->config['host_entity_type'], $hostEntity);
-      //update by set item_id
-
-      if ($this->config['update_existing'] == FEEDS_UPDATE_EXISTING && isset($field_collection_item->{$this->config['identifier_field_name']}['und'][0]['value']) && isset($this->config['identifier_field_name'])) {
-        $query = new EntityFieldQuery();
-        $query->entityCondition('entity_type', 'field_collection_item');
-        $query->entityCondition('bundle', $this->config['field_name']);
-        $items  = isset($hostEntity->{$this->config['field_name']}[LANGUAGE_NONE]) ? $hostEntity->{$this->config['field_name']}[LANGUAGE_NONE] : array();
-        $ids = field_collection_field_item_to_ids($items);
-		if(!empty($ids)){
-          $query->entityCondition('entity_id', $ids, 'IN');
-
-//          $query->fieldCondition($this->config['identifier_field_name'], 'value', $field_collection_item->identifier_field);
-          $query->fieldCondition($this->config['identifier_field_name'], 'value', $field_collection_item->{$this->config['identifier_field_name']}['und'][0]['value']);
-          $result = $query->execute();
-		
-          list($EntityType, $data) = each($result);
-          $field_collection_item->item_id = $data ? key($data) : FALSE;
-		}
-        if (!empty($field_collection_item->item_id)) {
-          $field_collection_item->is_new = NULL;
-		  $old_field_collection_item = field_collection_item_load($field_collection_item->item_id);
-		  $field_collection_item->revision_id = $old_field_collection_item->revision_id;
-          $skip_host_save = TRUE;
-        }
-        //drupal_set_message('123:'.$field_collection_item->item_id);
-      }
-	  
-
+  public function entitySave($entity) {
+    if(method_exists($entity, 'hostEntityId')) {
+      $entityid = $entity->hostEntityId();
     }
-
-    $field_collection_item->save($skip_host_save);
+    else {
+      $entityid = $entity->hostEntityId;
+    }
+    if (!empty($entityid)) {
+      $entity->save();
+    }
   }
 
   /**
    * Delete a series of entities.
    */
   protected function entityDeleteMultiple($ids) {
+    //Why not delete multiple?
     $entities = field_collection_item_load_multiple($ids);
     foreach ($entities as $entity) {
       $entity->delete();
@@ -115,9 +73,10 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
     return array(
       'field_name' => NULL,
       'host_entity_type' => NULL,
-      'is_field' => NULL,
+      'host_entity_importer_id' => NULL,
+      'host_entity_importer_nid' => NULL,
       'guid_field_name' => '',
-      'identifier_field_name' => '',
+      'is_field' => NULL,
     ) + parent::configDefaults();
   }
 
@@ -131,6 +90,8 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
     foreach (field_read_fields(array('type' => 'field_collection')) as $field_name => $field) {
       $field_names[$field_name] = $field_name;
     }
+
+    // This setting is redundant, can be derived from bundle name?
     $form['field_name'] = array(
       '#type' => 'select',
       '#title' => t('Field name'),
@@ -138,34 +99,46 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
       '#default_value' => isset($this->config['field_name']) ? $this->config['field_name'] : NULL,
       '#description' => t('The machine-readable name of the field collection field containing this item.'),
     );
+
+    //TODO: list only entity types with bundles with field collections?
     $entity_types = array();
     foreach (entity_get_info() as $entity_type => $entity_info) {
       $entity_types[$entity_type] = $entity_info['label'];
     }
-
+    //TODO: use states api for better ux
+    //TODO: these should really be replaced with targets with custom settings
+    // using form_callbacks/summary_callbacks
+    // this is a total kludge:
     $form['host_entity_type'] = array(
       '#type' => 'select',
       '#title' => t('Host entity type'),
       '#options' => $entity_types,
       '#default_value' => isset($this->config['host_entity_type']) ? $this->config['host_entity_type'] : NULL,
     );
-    $form['is_field'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Is field'),
-      '#description' => t('A flag that indicate that whether it is a property or field.'),
-      '#default_value' => isset($this->config['is_field']) ? $this->config['is_field'] : NULL,
+    $form['host_entity_importer_id'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Host entity importer id'),
+      '#description' => t('The importer feed id of the importer importing host entities. Can be left empty if host entity GUIDs are globally unique among importers or if feed item GUIDs are not used for host entity look-ups.'),
+      '#default_value' => isset($this->config['host_entity_importer_id']) ? $this->config['host_entity_importer_id'] : NULL,
+    );
+    $form['host_entity_importer_feed_nid'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Host entity feed nid'),
+      '#description' => t(''),
+      '#description' => t('The importer feed nid of the importer importing host entities. Can be left empty if host entity GUIDs are globally unique among importers, the importer is not attached a node, or if feed item GUIDs are not used for host entity look-ups.'),
+      '#default_value' => isset($this->config['host_entity_importer_feed_nid']) ? $this->config['host_entity_importer_feed_nid'] : NULL,
     );
     $form['guid_field_name'] = array(
       '#type' => 'textfield',
       '#title' => t('Field/property name of Host entity GUID'),
-      '#description' => t('Machine name of the field/property that used for Host Entity GUID.'),
+      '#description' => t('Machine name of the field/property that used for host entity GUID. If left empty GUID of the host entity feed item will be used for host entity lookup.'),
       '#default_value' => isset($this->config['guid_field_name']) ? $this->config['guid_field_name'] : '',
     );
-    $form['identifier_field_name'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Identifier field name'),
-      '#description' => t('Machine name of the identifier field which is unique in host entity.'),
-      '#default_value' => isset($this->config['identifier_field_name']) ? $this->config['identifier_field_name'] : '',
+    $form['is_field'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Is field'),
+      '#description' => t('A flag that indicate that whether it is a property or field. If field/property name of host entity GUID is left empty this setting has no effect.'),
+      '#default_value' => isset($this->config['is_field']) ? $this->config['is_field'] : NULL,
     );
     return $form;
   }
@@ -173,23 +146,52 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
   /**
    * Override setTargetElement to operate on a target item that is a entity.
    */
-  //public function setTargetElement(FeedsSource $source, $target_item, $target_element, $value, $mapping) {
   public function setTargetElement(FeedsSource $source, $target_item, $target_element, $value) {
-    
     switch ($target_element) {
       case 'host_entity_guid':
-        $query = new EntityFieldQuery();
-        $query->entityCondition('entity_type', $this->config['host_entity_type']);
-        if (!empty($this->config['is_field'])) {
-          $query->fieldCondition($this->config['guid_field_name'], 'value', $value);
+        $entity_id = NULL;
+        if (!empty($this->config['guid_field_name'])) {
+          $query = new EntityFieldQuery();
+          $query->entityCondition('entity_type', $this->config['host_entity_type']);
+          if (!empty($this->config['is_field'])) {
+            $query->fieldCondition($this->config['guid_field_name'], 'value', $value);
+          }
+          else{
+            $query->propertyCondition($this->config['guid_field_name'], $value);
+          }
+          $result = $query->execute();
+          if(!empty($result)) {
+            list(, $data) = each($result);
+            $entity_id = key($data);
+          }
         }
-        else{
-          $query->propertyCondition($this->config['guid_field_name'], $value);
+        else {
+          $query = db_select('feeds_item')
+            ->fields('feeds_item', array('entity_id'))
+            ->condition('entity_type', $this->config['host_entity_type']);
+          if (!empty($this->config['host_entity_importer_id'])) {
+            $query->condition('id', $this->config['host_entity_importer_id']);
+          }
+          if (!empty($this->config['host_entity_importer_feed_nid'])) {
+            $query->condition('feed_nid', $this->config['host_entity_importer_feed_nid']);
+          }
+          //TODO: make target configurable, guid/url?
+          $entity_id = $query->condition('guid', $value)
+            ->execute()
+            ->fetchField();
         }
-        $result = $query->execute();
-        list($hostEntityType, $data) = each($result);
-        if(!method_exists($target_item,'hostentityId')) //TODO: verify that this check is necessary
-            $target_item->hostEntityId = $data ? key($data) : FALSE;
+        if (!empty($entity_id)) {
+          //Load skipping cache with $reset = TRUE, or will static cache reset on
+          //save?
+          $host_entity = entity_load($this->config['host_entity_type'], array($entity_id), array(), TRUE);
+          $host_entity = current($host_entity);
+          if(!$target_item->hostEntityId()) {
+            $target_item->setHostEntity($this->config['host_entity_type'], $host_entity);
+          }
+          else {
+            $target_item->updateHostEntity($host_entity);
+          }
+        }
         break;
       default:
         parent::setTargetElement($source, $target_item, $target_element, $value);
@@ -214,12 +216,6 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
     $targets['host_entity_guid'] = array(
       'name' => t('Host Entity GUID'),
       'description' => t('The globally unique identifier of the host entity. Must be unique. We used this value to fetch hostEntityId.'),
-    );
-
-    // Add identifier field target
-    $targets['identifier_field'] = array(
-      'name' => t('Identifier Field'),
-      'description' => t("The field collection item's identifier field within host entity. We used this value to fetch item id."),
     );
 
     $targets['item_id'] = array(

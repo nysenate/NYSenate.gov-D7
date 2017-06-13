@@ -1518,7 +1518,7 @@ Please answer questionnaires on <a href="/">NYSenate.gov</a> to view updates.';
   $handler->display->display_options['fields']['field_article_author']['label'] = '';
   $handler->display->display_options['fields']['field_article_author']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_article_author']['type'] = 'text_plain';
-  /* Field: Content: Committees */
+  /* Field: Content: Committee */
   $handler->display->display_options['fields']['field_committee']['id'] = 'field_committee';
   $handler->display->display_options['fields']['field_committee']['table'] = 'field_data_field_committee';
   $handler->display->display_options['fields']['field_committee']['field'] = 'field_committee';
@@ -1573,7 +1573,7 @@ Please answer questionnaires on <a href="/">NYSenate.gov</a> to view updates.';
   $handler->display->display_options['sorts']['field_date_value']['table'] = 'field_data_field_date';
   $handler->display->display_options['sorts']['field_date_value']['field'] = 'field_date_value';
   $handler->display->display_options['sorts']['field_date_value']['order'] = 'DESC';
-  /* Contextual filter: Field: Top Issue (field_top_issue) */
+  /* Contextual filter: Field: Featured Issue (field_top_issue) */
   $handler->display->display_options['arguments']['field_top_issue_target_id']['id'] = 'field_top_issue_target_id';
   $handler->display->display_options['arguments']['field_top_issue_target_id']['table'] = 'field_data_field_top_issue';
   $handler->display->display_options['arguments']['field_top_issue_target_id']['field'] = 'field_top_issue_target_id';
@@ -1812,7 +1812,7 @@ Please answer questionnaires on <a href="/">NYSenate.gov</a> to view updates.';
     'multiple_from' => '',
     'multiple_to' => '',
   );
-  /* Field: Content: Committees */
+  /* Field: Content: Committee */
   $handler->display->display_options['fields']['field_committee']['id'] = 'field_committee';
   $handler->display->display_options['fields']['field_committee']['table'] = 'field_data_field_committee';
   $handler->display->display_options['fields']['field_committee']['field'] = 'field_committee';
@@ -2008,7 +2008,7 @@ Please answer questionnaires on <a href="/">NYSenate.gov</a> to view updates.';
   $handler->display->display_options['pager']['options']['advance']['content_class'] = '.top-issue-updates';
   $handler->display->display_options['pager']['options']['effects']['speed'] = 'slow';
   $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Relationship: Content: Committees (field_committee) */
+  /* Relationship: Content: Committee (field_committee) */
   $handler->display->display_options['relationships']['field_committee_tid']['id'] = 'field_committee_tid';
   $handler->display->display_options['relationships']['field_committee_tid']['table'] = 'field_data_field_committee';
   $handler->display->display_options['relationships']['field_committee_tid']['field'] = 'field_committee_tid';
@@ -2061,7 +2061,7 @@ Please answer questionnaires on <a href="/">NYSenate.gov</a> to view updates.';
     7 => 0,
   );
   $handler->display->display_options['filters']['type']['expose']['reduce'] = TRUE;
-  /* Filter criterion: Content: Committees (field_committee) */
+  /* Filter criterion: Content: Committee (field_committee) */
   $handler->display->display_options['filters']['field_committee_tid']['id'] = 'field_committee_tid';
   $handler->display->display_options['filters']['field_committee_tid']['table'] = 'field_data_field_committee';
   $handler->display->display_options['filters']['field_committee_tid']['field'] = 'field_committee_tid';
@@ -3174,7 +3174,7 @@ following any bills, or there are no updates related to the bills you are follow
       'empty_column' => 0,
     ),
   );
-  /* Relationship: Privatemsg: Recipient */
+  /* Relationship: Broken/missing handler */
   $handler->display->display_options['relationships']['recipient']['id'] = 'recipient';
   $handler->display->display_options['relationships']['recipient']['table'] = 'pm_index';
   $handler->display->display_options['relationships']['recipient']['field'] = 'recipient';
@@ -3183,29 +3183,16 @@ following any bills, or there are no updates related to the bills you are follow
   $handler->display->display_options['relationships']['reverse_field_user_account_node']['table'] = 'users';
   $handler->display->display_options['relationships']['reverse_field_user_account_node']['field'] = 'reverse_field_user_account_node';
   $handler->display->display_options['relationships']['reverse_field_user_account_node']['relationship'] = 'recipient';
-  /* Field: Bulk operations: Privatemsg */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'pm_message';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
-  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '0';
-  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
-  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
-  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
-  $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
-    'action::views_bulk_operations_delete_item' => array(
-      'selected' => 1,
-      'postpone_processing' => 0,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-    ),
-  );
-  /* Field: Privatemsg: Message ID */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['mid']['id'] = 'mid';
   $handler->display->display_options['fields']['mid']['table'] = 'pm_message';
   $handler->display->display_options['fields']['mid']['field'] = 'mid';
   $handler->display->display_options['fields']['mid']['exclude'] = TRUE;
-  /* Field: Privatemsg: Subject */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['subject']['id'] = 'subject';
   $handler->display->display_options['fields']['subject']['table'] = 'pm_message';
   $handler->display->display_options['fields']['subject']['field'] = 'subject';
@@ -3213,14 +3200,11 @@ following any bills, or there are no updates related to the bills you are follow
   $handler->display->display_options['fields']['subject']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['subject']['alter']['text'] = '<a href="inbox/message/[mid]">[subject]</a>';
   $handler->display->display_options['fields']['subject']['element_label_colon'] = FALSE;
-  /* Field: Privatemsg: Send date */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'pm_message';
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['label'] = 'Time Sent';
-  $handler->display->display_options['fields']['timestamp']['date_format'] = 'custom';
-  $handler->display->display_options['fields']['timestamp']['custom_date_format'] = 'M j G:i';
-  $handler->display->display_options['fields']['timestamp']['second_date_format'] = 'privatemsg_current_day';
   /* Contextual filter: User: Uid */
   $handler->display->display_options['arguments']['uid']['id'] = 'uid';
   $handler->display->display_options['arguments']['uid']['table'] = 'users';
@@ -3437,16 +3421,16 @@ following any bills, or there are no updates related to the bills you are follow
   $handler->display->display_options['pager']['options']['items_per_page'] = '1';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'semanticviews_fields';
-  /* Field: Privatemsg: Message */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'pm_message';
   $handler->display->display_options['fields']['body']['field'] = 'body';
-  /* Field: Privatemsg: Message ID */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['mid']['id'] = 'mid';
   $handler->display->display_options['fields']['mid']['table'] = 'pm_message';
   $handler->display->display_options['fields']['mid']['field'] = 'mid';
   $handler->display->display_options['fields']['mid']['exclude'] = TRUE;
-  /* Contextual filter: Privatemsg: Message ID */
+  /* Contextual filter: Broken/missing handler */
   $handler->display->display_options['arguments']['mid']['id'] = 'mid';
   $handler->display->display_options['arguments']['mid']['table'] = 'pm_message';
   $handler->display->display_options['arguments']['mid']['field'] = 'mid';

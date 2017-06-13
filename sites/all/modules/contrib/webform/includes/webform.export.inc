@@ -10,7 +10,7 @@
  *
  * Defines the exporters this module implements.
  *
- * @return
+ * @return array
  *   An "array of arrays", keyed by content-types. The 'handler' slot
  *   should point to the PHP class implementing this flag.
  */

@@ -153,6 +153,19 @@ function nys_bill_import_set_values(&$node, $bill_result, $bill_print_no, $is_re
     }
     $node->field_ol_multi_sponsor_names[LANGUAGE_NONE][0]["value"] = json_encode($bill_result->amendments->items->$current_version->multiSponsors->items);
   }
+
+  // Reference additional sponsors, if possible.
+  if (isset($bill_result->additionalSponsors->items)) {
+    foreach ($bill_result->additionalSponsors->items as $index => $add_sponsor) {
+      $sponsor_member_id = $add_sponsor->memberId;
+      $sponsor_shortname = $add_sponsor->shortName;
+      $sponsor_nid       = nys_bill_import_get_senator_nid($sponsor_member_id, $sponsor_shortname, $chamber);
+      if ($sponsor_nid !== false) {
+        $node->field_ol_add_sponsors[LANGUAGE_NONE][$index]["target_id"] = $sponsor_nid;
+      }
+    }
+    $node->field_ol_add_sponsor_names[LANGUAGE_NONE][0]["value"] = json_encode($bill_result->additionalSponsors->items);
+  }
 }
 
 /**
@@ -541,6 +554,7 @@ function nys_bill_import_save(&$bill_result) {
 
       // Clear out co sponsor and multi sponsor entity fields -- ensures when overwritten that data is stored correctly.
       $co_multi_clear_list = array(
+        'field_ol_add_sponsors',
         'field_ol_co_sponsors',
         'field_ol_co_sponsor_names', 
         'field_ol_multi_sponsor_name',

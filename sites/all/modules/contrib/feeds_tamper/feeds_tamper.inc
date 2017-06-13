@@ -150,10 +150,14 @@ function feeds_tamper_load_by_importer($importer, $disabled = FALSE) {
   if (is_scalar($importer)) {
     $importer = feeds_importer($importer);
   }
+
   ctools_include('export');
   $t = ctools_export_load_object('feeds_tamper', 'conditions', array('importer' => $importer->id));
+
   $sources = feeds_tamper_get_unique_source_list($importer, FALSE);
+
   $plugins = feeds_tamper_get_plugins();
+
   $instances = array();
   foreach ($t as $i) {
     // Add an empty settings array, if the plugin instance doesn't provide any settings itself.
@@ -169,6 +173,7 @@ function feeds_tamper_load_by_importer($importer, $disabled = FALSE) {
   foreach ($instances as &$instance_list) {
     usort($instance_list, '_feeds_tamper_cmp');
   }
+
   // Sort the plugins by the order they appear on the mapping page.
   $return = array();
   foreach ($sources as $source) {
@@ -176,6 +181,7 @@ function feeds_tamper_load_by_importer($importer, $disabled = FALSE) {
       $return[$source] = $instances[$source];
     }
   }
+
   return $return;
 }
 

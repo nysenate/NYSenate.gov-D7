@@ -34,7 +34,7 @@
   </div>
   <div class="body">
     <h3 class="entry-title"><a href="<?php echo $fields['path']->content?>"><?php echo $fields['field_ol_name']->content; ?></a></h3>
-    <?php echo $row->graph_html; // See /sites/all/themes/template.php ?>
+    <?php if (isset($row->graph_html)) echo $row->graph_html; // See /sites/all/themes/template.php ?>
     <div class="article-date">
       <?php echo $fields['field_ol_publish_date']->content; ?>
       <?php if(isset($fields['field_ol_latest_status_committee']->content)):?>
@@ -85,7 +85,7 @@
     <?php if ($fields['field_senator']->content): ?>
       <div class="author"><?php echo 'By: '. $fields['field_senator']->content; ?></div>
     <?php endif; ?>
-    <?php if ($fields['field_author']->content): ?>
+    <?php if (isset($fields['field_author']->content) && $fields['field_author']->content): ?>
       <div class="author"><?php echo 'By: '. $fields['field_author']->content; ?></div>
     <?php endif; ?>
     <?php if($fields['field_date']->content): ?>

@@ -6,7 +6,7 @@
       $("span.privatemsg-recipient-alternative").each(function() {
         $(this).after(
           // Replace the span with a link, add href and class.
-          $('<a>')
+          $('<a/>')
             .attr({'href' : '#'})
             .addClass('privatemsg-recipient-alternative')
             .text($(this).text())

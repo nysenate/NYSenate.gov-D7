@@ -1,5 +1,7 @@
 <?php
+
 /**
+ * @file
  * Base class defining the common methods available to exporters.
  */
 class webform_exporter {
@@ -37,7 +39,7 @@ class webform_exporter {
    */
   function wrappable($row, $column, $value) {
     return strpos($value, "\n") !== FALSE ||
-           $this->export_wordwrap && ($row > 2 || $column > 0 || $this->options['header_keys'] < 0);
+      $this->export_wordwrap && ($row > 2 || $column > 0 || $this->options['header_keys'] < 0);
   }
 
   /**
@@ -57,7 +59,7 @@ class webform_exporter {
    * Provide headers to the page when an export file is being downloaded.
    *
    * @param $filename
-   *   The name of the file being downloaded. e.g. export.xls.
+   *   The name of the file being downloaded, for example, export.xls.
    */
   function set_headers($filename) {
     drupal_add_http_header('Content-Type', 'application/force-download');

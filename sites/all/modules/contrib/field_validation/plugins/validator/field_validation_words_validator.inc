@@ -22,17 +22,23 @@ class field_validation_words_validator extends field_validation_validator {
     if ($this->value != '') {
       $flag = TRUE;
       $count = count(explode(' ', trim(preg_replace('/\s+/', ' ', str_replace('&nbsp;', ' ', (strip_tags(str_replace('<', ' <', $this->value))))))));
-      if (isset($settings['min']) && $settings['min'] != '' && $count < $settings['min']) {
-        $flag = FALSE;
+      if (isset($settings['min']) && $settings['min'] != '') {
+        $min = token_replace($settings['min'], array($this->get_token_type() => $this->entity));
+		if ($count < $min) {
+          $flag = FALSE;
+        }
       }
-      if (isset($settings['max']) && $settings['max'] != '' && $count > $settings['max']) {
-        $flag = FALSE;
+      if (isset($settings['max']) && $settings['max'] != '') {
+        $max = token_replace($settings['max'], array($this->get_token_type() => $this->entity));
+		if ($count > $max) {
+          $flag = FALSE;
+        }
       }       
 
       if (!$flag) {
         $token = array(
-          '[min]' => isset($settings['min']) ? $settings['min'] : '',
-          '[max]' => isset($settings['max']) ? $settings['max'] : '',
+          '[min]' => isset($min) ? $min : '',
+          '[max]' => isset($max) ? $max : '',
           '[count]' => $count,
         );
         $this->set_error($token);

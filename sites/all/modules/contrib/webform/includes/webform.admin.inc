@@ -155,7 +155,7 @@ function webform_admin_settings() {
       'strict' => t('Both cookie and IP address (most strict)'),
     ),
     '#default_value' => webform_variable_get('webform_tracking_mode'),
-    '#description' => t('<a href="http://www.wikipedia.org/wiki/HTTP_cookie">Cookies</a> can be used to help prevent the same user from repeatedly submitting a webform. Limiting by IP address is more effective against repeated submissions, but may result in unintentional blocking of users sharing the same address. Logged-in users are always tracked by their user ID and are not affected by this option.'),
+    '#description' => t('<a href="http://www.wikipedia.org/wiki/HTTP_cookie">Cookies</a> can be used to help prevent the same user from repeatedly submitting a webform. Limiting by IP address is more effective against repeated submissions, but may result in unintentional blocking of users sharing the same address. Confidential submissions are tracked by cookie only. Logged-in users are always tracked by their user ID and are not affected by this option.'),
   );
 
   $form['advanced']['webform_email_address_format'] = array(
@@ -167,6 +167,29 @@ function webform_admin_settings() {
     ),
     '#default_value' => webform_variable_get('webform_email_address_format'),
     '#description' => t('Most servers support the "long" format which will allow for more friendly From addresses in e-mails sent. However many Windows-based servers are unable to send in the long format. Change this option if experiencing problems sending e-mails with Webform.'),
+  );
+
+  $form['advanced']['webform_email_address_individual'] = array(
+    '#type' => 'radios',
+    '#title' => t('E-mailing multiple recipients'),
+    '#options' => array(
+      '0' => t('Send a single e-mail to all recipients'),
+      '1' => t('Send individual e-mails to each recipient'),
+    ),
+    '#default_value' => webform_variable_get('webform_email_address_individual'),
+    '#description' => t('Individual e-mails increases privacy by not revealing the addresses of other recipients. A single e-mail to all recipients lets them use "Reply All" to communicate.'),
+  );
+
+  $date_format_options = array();
+  foreach (system_get_date_types() as $type => $type_info) {
+    $date_format_options[$type] = t('@title — @sample', array('@title' => $type_info['title'], '@sample' => format_date(REQUEST_TIME, 'custom', webform_date_format($type))));
+  }
+  $form['advanced']['webform_date_type'] = array(
+    '#type' => 'select',
+    '#title' => t('Date format'),
+    '#options' => $date_format_options,
+    '#default_value' => webform_variable_get('webform_date_type'),
+    '#description' => t('Choose the format for the display of date components. Only the date portion of the format is used. Reporting and export use the short format.'),
   );
 
   $form['advanced']['webform_export_format'] = array(
@@ -214,11 +237,22 @@ function webform_admin_settings() {
     '#description' => t('By default, the configuration form for each webform allows the administrator to choose which roles may submit the form. You may want to allow users to always submit the form if you are using a separate node access module to control access to webform nodes themselves.'),
   );
 
+  $form['advanced']['webform_token_access']  = array(
+    '#type' => 'radios',
+    '#title' => t('Token access'),
+    '#options' => array(
+      '1' => t('Allow tokens to be used in Webforms.'),
+      '0' => t('Disable tokens in Webforms'),
+    ),
+    '#default_value' => webform_variable_get('webform_token_access'),
+    '#description' => t('Tokens can be used to reveal sensitive information. Allow tokens if Webform creators are trusted.'),
+  );
+
   $form['advanced']['webform_email_select_max'] = array(
     '#type' => 'textfield',
     '#title' => t("Select email mapping limit"),
     '#default_value' => webform_variable_get('webform_email_select_max'),
-    '#description' => t('When mapping emails addresses to a select component, limit the choice to components with less than the amount of options indicated. This is to avoid flooding the email settings form. '),
+    '#description' => t('When mapping emails addresses to a select component, limit the choice to components with less than the amount of options indicated. This is to avoid flooding the email settings form.'),
   );
 
   $form = system_settings_form($form);

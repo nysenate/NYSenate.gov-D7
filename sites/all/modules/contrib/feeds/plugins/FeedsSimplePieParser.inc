@@ -22,7 +22,7 @@ class FeedsSimplePieEnclosure extends FeedsEnclosure {
   /**
    * Serialization helper.
    *
-   * Handle the simplepie enclosure class seperately ourselves.
+   * Handle the simplepie enclosure class separately ourselves.
    */
   public function __sleep() {
     $this->_serialized_simplepie_enclosure = serialize($this->simplepie_enclosure);
@@ -213,6 +213,15 @@ class FeedsSimplePieParser extends FeedsParser {
         'description' => t('An array of enclosures attached to the feed item.'),
       ),
     ) + parent::getMappingSources();
+  }
+
+  /**
+   * Overrides FeedsParser::providesSourceTitle().
+   *
+   * This parser supports retrieving a title from the source.
+   */
+  public function providesSourceTitle() {
+    return TRUE;
   }
 
   /**

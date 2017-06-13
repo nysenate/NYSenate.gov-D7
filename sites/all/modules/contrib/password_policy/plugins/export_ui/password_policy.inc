@@ -1,9 +1,13 @@
 <?php
+
 /**
  * @file
  * Export UI Ctools plugin for Password Policy module.
  */
 
+// The following code is copied verbatim from the Ctools help with values
+// substituted. Coding standards violations in the copied code are ignored.
+// @codingStandardsIgnoreStart
 $plugin = array(
   // The name of the table as found in the schema in hook_install. This
   // must be an exportable type with the 'export' section defined.
@@ -47,3 +51,4 @@ $plugin = array(
     'submit' => 'password_policy_admin_submit',
   ),
 );
+// @codingStandardsIgnoreEnd

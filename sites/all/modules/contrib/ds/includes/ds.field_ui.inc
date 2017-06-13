@@ -770,6 +770,14 @@ function ds_field_ui_layouts_save($form, &$form_state) {
     $record->settings['layout_link_attribute'] = $form_state['values']['additional_settings']['region_wrapper']['layout_link_attribute'];
     $record->settings['layout_link_custom'] = $form_state['values']['additional_settings']['region_wrapper']['layout_link_custom'];
 
+    // Additional settings
+    if (isset($form_state['values']['additional_settings']['preview']['info']['settings']['disable_css'])) {
+      $record->settings['layout_disable_css'] = $form_state['values']['additional_settings']['preview']['info']['settings']['disable_css'];
+    }
+    else {
+      $record->settings['layout_disable_css'] = FALSE;
+    }
+
     $record->settings = $record->settings;
 
     // Let other modules alter the layout settings.
@@ -1754,6 +1762,9 @@ function _ds_field_ui_table_layouts($entity_type, $bundle, $view_mode, &$form, $
       if ($classes_access) {
         $form['additional_settings']['ds_classes']['info'] = array('#markup' => l(t('Manage region  and field CSS classes'), 'admin/structure/ds/classes', array('query' => drupal_get_destination())));
       }
+      elseif (user_access('admin_classes')) {
+        $form['additional_settings']['ds_classes']['info'] = array('#markup' => l(t('To manage region and field CSS classes, the Display Suite UI module should be enabled.'), 'admin/modules', array('query' => drupal_get_destination(), 'fragment' => 'edit-modules-display-suite')));
+      }
     }
     else {
       if ($classes_access) {
@@ -1889,13 +1900,14 @@ function _ds_field_ui_table_layouts_preview(&$form, &$form_state, $ds_layouts, $
 
       $suggestions_array[0] = $layout_string . '--' . $entity_type;
       $suggestions_array[2] = $layout_string . '--' . $entity_type . '-' . $bundle;
+      $suggestions_array[4] = $layout_string . '--' . $entity_type . '--{id}';
       if (!isset($form_state['no_view_mode_suggestions']) && $view_mode != 'default') {
         $suggestions_array[1] = $layout_string . '--' . $entity_type . '-' . $view_mode;
         $suggestions_array[3] = $layout_string . '--' . $entity_type . '-' . $bundle . '-' . $view_mode;
       }
 
       ksort($suggestions_array);
-      $suggestions = '<ul><li>' . implode('.tpl.php</li><li>', $suggestions_array) . '.tpl.php</li></ul>';
+      $suggestions .= '<ul><li>' . implode('.tpl.php</li><li>', $suggestions_array) . '.tpl.php</li></ul>';
     }
     else {
       $suggestions = '';
@@ -1916,9 +1928,28 @@ function _ds_field_ui_table_layouts_preview(&$form, &$form_state, $ds_layouts, $
       $form['additional_settings']['ds_layouts']['preview'] ['image'] = array(
         '#markup' => '<div class="ds-layout-preview-image"><img src="' . base_path() . $image . '"/></div>',
       );
-      $form['additional_settings']['ds_layouts']['preview'] ['suggestions'] = array(
-        '#markup' => '<div class="ds-layout-preview-suggestion"><p>' . $selected . '</p><p>' . t('!suggestions', array('!suggestions' => strtr($suggestions, '_', '-'))) . '</p></div>',
+      $form['additional_settings']['ds_layouts']['preview']['info'] = array(
+        '#type' => 'container',
+        '#attributes' => array(
+          'class' => array('ds-layout-preview-suggestion'),
+        ),
       );
+      $form['additional_settings']['ds_layouts']['preview']['info']['suggestions'] = array(
+        '#markup' => '<p>' . $selected . '</p><p>' . t('!suggestions', array('!suggestions' => strtr($suggestions, '_', '-'))) . '</p>',
+      );
+
+      if (!empty($chosen_layout['css'])) {
+        $disable_css = FALSE;
+        if (isset($layout->settings['layout_disable_css'])) {
+          $disable_css = $layout->settings['layout_disable_css'];
+        }
+
+        $form['additional_settings']['ds_layouts']['preview']['info']['settings']['disable_css'] = array(
+          '#type' => 'checkbox',
+          '#title' => t('Disable layout CSS styles'),
+          '#default_value' => $disable_css,
+        );
+      }
     }
 
     if (isset($form_state['values']['additional_settings']['layout']) && (!isset($layout->layout) || $form_state['values']['additional_settings']['layout'] != $layout->layout)) {
@@ -1976,9 +2007,30 @@ function ds_field_ui_change_layout_validate(&$form, &$form_state) {
  * Form submission handler for _ds_field_ui_table_layouts_preview().
  */
 function ds_field_ui_change_layout_submit($form, &$form_state) {
+  $values = $form_state['values'];
+  if (isset($values['additional_settings']['preview']['info']['settings']['disable_css'])) {
+    $disable_css = $values['additional_settings']['preview']['info']['settings']['disable_css'];
+  }
+  else {
+    $disable_css = FALSE;
+  }
+
+  $record = db_select('ds_layout_settings')
+    ->fields('ds_layout_settings')
+    ->condition('entity_type', $values['ds_entity_type'])
+    ->condition('bundle', $values['ds_bundle'])
+    ->condition('view_mode', $values['ds_view_mode'])
+    ->execute()
+    ->fetchObject();
+
+  $record->settings = unserialize($record->settings);
+  $record->settings['layout_disable_css'] = $disable_css;
+
+  drupal_write_record('ds_layout_settings', $record, array('id'));
+
   unset($_GET['destination']);
   global $base_url;
-  $url = $base_url . '/' . $form_state['values']['layout_changed_url'];
+  $url = $base_url . '/' . $values['layout_changed_url'];
   $form_state['redirect'] = $url;
 }
 

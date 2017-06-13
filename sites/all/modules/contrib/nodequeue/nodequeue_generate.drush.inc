@@ -10,7 +10,7 @@
  *
  * @See drush_parse_command() for a list of recognized keys.
  *
- * @return
+ * @return array
  *   An associative array describing your command(s).
  */
 function nodequeue_generate_drush_command() {

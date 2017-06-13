@@ -2,16 +2,23 @@
 /**
  * @file Token related hooks.
  */
+
 /**
  * Implements hook_token_info().
  */
 function entityform_token_info() {
-
+  $type = array(
+    'name' => t('Entityform Types'),
+    'description' => t('Tokens related to entityform types.'),
+    'needs-data' => 'entityform_type',
+  );
   $tokens['submit_url'] = array(
     'name' => t('Submission URL'),
     'description' => t('Submit URL for Entityform type.'),
   );
+
   return array(
+    'types' => array('entityform_type' => $type),
     'tokens' => array('entityform_type' => $tokens),
   );
 }

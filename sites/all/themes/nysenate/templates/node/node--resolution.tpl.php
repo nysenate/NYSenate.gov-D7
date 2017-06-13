@@ -149,8 +149,8 @@
   </div>
 
   <div class="c-block c-detail--sponsors">
-    <?php print $sponsored_by; ?>
-      <?php print $sponsor_block; ?>
+    <?php if (isset($sponsored_by)) print $sponsored_by; ?>
+      <?php if (isset($sponsor_block)) print $sponsor_block; ?>
       
   </div> <!-- .c-block -->
 

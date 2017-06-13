@@ -40,7 +40,7 @@ class EntityformTypeUIController extends EntityDefaultUIController {
  * Generates the entityform type editing form.
  */
 function entityform_type_form($form, &$form_state, $entityform_type, $op = 'edit') {
-
+  $labels = $entityform_type->getLabelsForTranslation();
   if ($op == 'clone') {
     $entityform_type->label .= ' (cloned)';
     $entityform_type->type = '';
@@ -82,13 +82,14 @@ function entityform_type_form($form, &$form_state, $entityform_type, $op = 'edit
 
   $form['data']['redirect_path'] = array(
     '#type' => 'textfield',
-    '#title' => t('Redirect path'),
+    '#title' => $labels['redirect_path'],
     '#default_value' => empty($entityform_type->data['redirect_path']) ? '' : $entityform_type->data['redirect_path'],
     '#description' => t('What relative path should the user be redirected to on a correct submission?  Leave blank for default action.'),
+    '#maxlength' => 500,
   );
   $form['data']['instruction_pre'] = array(
     '#type' => 'text_format',
-    '#title' => t('Intro form instructions'),
+    '#title' => $labels['instruction_pre'],
     '#default_value' => empty($entityform_type->data['instruction_pre']['value']) ? '' : $entityform_type->data['instruction_pre']['value'],
     '#format' => empty($entityform_type->data['instruction_pre']['format']) ? NULL : $entityform_type->data['instruction_pre']['format'],
     '#description' => t('These user instructions will appear at the top of every page within this form.'),
@@ -322,6 +323,8 @@ function entityform_settings($form, &$form_state) {
  */
 function _entityform_type_settings_elements($entityform_type, $op) {
   $default_value_message = $op != 'defaults' ? ' ' . ENTITYFORM_TYPE_DEFAULT_PROP_TEXT : '';
+  $labels = $entityform_type->getLabelsForTranslation();
+
   //****************DRAFT FIELDSET SETTINGS *********************//
   $form['data']['draft_set'] = array(
     '#type' => 'fieldset',
@@ -338,19 +341,19 @@ function _entityform_type_settings_elements($entityform_type, $op) {
   );
   $form['data']['draft_set']['draft_redirect_path'] = array(
     '#type' => 'textfield',
-    '#title' => t('Draft Redirect path'),
+    '#title' => $labels['draft_redirect_path'],
     '#default_value' => empty($entityform_type->data['draft_redirect_path']) ? '' : $entityform_type->data['draft_redirect_path'],
     '#description' => t('What relative path should the user be redirected to on draft submission?  Leave blank for default action.'),
   );
   $form['data']['draft_set']['draft_button_text'] = array(
     '#type' => 'textfield',
-    '#title' => t('Override draft button text'),
+    '#title' => $labels['draft_button_text'],
     '#default_value' => empty($entityform_type->data['draft_button_text']) ? '' : $entityform_type->data['draft_button_text'],
     '#description' => t('Text to use for draft save button.') . $default_value_message,
   );
   $form['data']['draft_set']['draft_save_text'] = array(
     '#type' => 'text_format',
-    '#title' => t('Draft save text'),
+    '#title' => $labels['draft_save_text'],
     '#default_value' => empty($entityform_type->data['draft_save_text']['value']) ? '' : $entityform_type->data['draft_save_text']['value'],
     '#format' => empty($entityform_type->data['draft_save_text']['format']) ? NULL : $entityform_type->data['draft_save_text']['format'],
     '#description' => t('This text will be displayed to the user when the form is saved as a draft.') . $default_value_message,
@@ -367,37 +370,37 @@ function _entityform_type_settings_elements($entityform_type, $op) {
   );
   $form['data']['formoverride_set']['submit_button_text'] = array(
     '#type' => 'textfield',
-    '#title' => t('Submit Button Text'),
+    '#title' => $labels['submit_button_text'],
     '#default_value' => empty($entityform_type->data['submit_button_text']) ? '' : $entityform_type->data['submit_button_text'],
     '#description' => t('Text to use for submit button.') . $default_value_message,
   );
   $form['data']['formoverride_set']['submit_confirm_msg'] = array(
     '#type' => 'textfield',
-    '#title' => t('Submission Confirmation Text'),
+    '#title' => $labels['submit_confirm_msg'],
     '#default_value' => empty($entityform_type->data['submit_confirm_msg']) ? '' : $entityform_type->data['submit_confirm_msg'],
-    '#description' => t('Text to use for Submission Conformation.') . $default_value_message,
+    '#description' => t('Text to use for Submission Confirmation.') . $default_value_message,
   );
   $form['data']['formoverride_set']['your_submissions'] = array(
     '#type' => 'textfield',
-    '#title' => t('Your Submissions Text'),
+    '#title' => $labels['your_submissions'],
     '#default_value' => empty($entityform_type->data['your_submissions']) ? '' : $entityform_type->data['your_submissions'],
     '#description' => t('Text to use for "Your Submissions".') . $default_value_message,
   );
   $form['data']['formoverride_set']['disallow_resubmit_msg'] = array(
     '#type' => 'textfield',
-    '#title' => t('Form Disallow Resubmit Text'),
+    '#title' => $labels['disallow_resubmit_msg'],
     '#default_value' => empty($entityform_type->data['disallow_resubmit_msg']) ? '' : $entityform_type->data['disallow_resubmit_msg'],
     '#description' => t('Text to use for "Your already submitted this form".') . $default_value_message,
   );
   $form['data']['formoverride_set']['delete_confirm_msg'] = array(
     '#type' => 'textfield',
-    '#title' => t('Submission Delete Text'),
+    '#title' => $labels['delete_confirm_msg'],
     '#default_value' => empty($entityform_type->data['delete_confirm_msg']) ? '' : $entityform_type->data['delete_confirm_msg'],
-    '#description' => t('Text to use for "Delete Conformation".') . $default_value_message,
+    '#description' => t('Text to use for "Delete Confirmation".') . $default_value_message,
   );
   $form['data']['formoverride_set']['page_title_view'] = array(
     '#type' => 'textfield',
-    '#title' => t('Submission View Title'),
+    '#title' => $labels['page_title_view'],
     '#default_value' => empty($entityform_type->data['page_title_view']) ? '' : $entityform_type->data['page_title_view'],
     '#description' => t('Text to use for page title of submission view.') . $default_value_message,
   );
@@ -418,14 +421,14 @@ function _entityform_type_settings_elements($entityform_type, $op) {
   );
   $form['data']['submission_page_set']['submission_page_title'] = array(
     '#type' => 'textfield',
-    '#title' => t('Submission page title'),
+    '#title' => $labels['submission_page_title'],
     '#default_value' => empty($entityform_type->data['submission_page_title']) ? '' : $entityform_type->data['submission_page_title'],
     '#description' => t('Page title for correct submission.') . $default_value_message,
   );
 
   $form['data']['submission_page_set']['submission_text'] = array(
     '#type' => 'text_format',
-    '#title' => t('Submission reply'),
+    '#title' => $labels['submission_text'],
     '#default_value' => empty($entityform_type->data['submission_text']['value']) ? '' : $entityform_type->data['submission_text']['value'],
     '#format' => empty($entityform_type->data['submission_text']['format']) ? NULL : $entityform_type->data['submission_text']['format'],
     '#description' => t('This text will be displayed to the user when a correct form is submitted.') . $default_value_message,
@@ -494,7 +497,7 @@ function _entityform_type_settings_elements($entityform_type, $op) {
     '#title' => t('Form status'),
     '#options' => array(
       ENTITYFORM_STATUS_OPEN => t('Open for new submissions'),
-      ENTITYFORM_STATUS_CLOSED => t('Closed form new form submissions'),
+      ENTITYFORM_STATUS_CLOSED => t('Closed for new form submissions'),
     ),
     '#default_value' => empty($entityform_type->data['form_status']) ? 'open' : $entityform_type->data['form_status'],
     '#description' => t('Can users submit this form?  Open means the users can submit this form.  Closed means the user can not submit the form.'),

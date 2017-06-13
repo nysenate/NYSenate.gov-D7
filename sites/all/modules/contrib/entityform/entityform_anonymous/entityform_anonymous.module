@@ -261,7 +261,7 @@ function entityform_anonymous_get_submissions($type = NULL, $draft = 0, $limit =
   }
   // Add session id
   $query->propertyCondition('sid', $sid);
-  if ($limit === NULL) {
+  if ($limit !== NULL) {
     $query->range(0, $limit);
   }
   $result = $query->execute();

@@ -67,7 +67,8 @@ function privatemsg_roles_write_access($recipient) {
 
   if ($recipient) {
     if (empty($recipient->name)) {
-      $recipient = array_shift(privatemsg_roles_load_multiple(array($recipient->recipient), $recipient->type));
+      $recipients = privatemsg_roles_load_multiple(array($recipient->recipient), $recipient->type);
+      $recipient = array_shift($recipients);
     }
     // Check permission for this recipient.
     return user_access('write privatemsg to role ' . $recipient->name);

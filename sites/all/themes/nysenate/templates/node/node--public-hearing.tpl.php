@@ -31,45 +31,50 @@
 
   <div class="c-meeting-detail--meta">
     <?php if (isset($node->field_event_status[LANGUAGE_NONE][0]['value']) && $node->field_event_status[LANGUAGE_NONE][0]['value'] === "live_now"): ?>
-      <p class="c-meeting-detail--live-flag"><?php print render($content['field_event_status']); ?></p>
-    <?php endif; ?>
+      <p class="c-meeting-detail--live-flag"><?php print render($content['field_event_status']);?></p>
+    <?php endif;?>
     <?php if (isset($node->field_off_the_floor[LANGUAGE_NONE][0]['value']) && $node->field_off_the_floor[LANGUAGE_NONE][0]['value'] === "1"): ?>
       <p class="c-meeting-detail--floor-flag">off the floor</p>
-    <?php endif; ?>
+    <?php endif;?>
   </div>
 
   <div>
     <p class="c-meeting-detail--date">
       <span class="c-meeting-date--num">
-        <?php print date("d", $node->field_date[LANGUAGE_NONE][0]['value']); ?>
+        <?php print date("d", $node->field_date[LANGUAGE_NONE][0]['value']);?>
       </span>
       <span class="c-meeting-date--month">
-        <?php print date("M", $node->field_date[LANGUAGE_NONE][0]['value']); ?>
+        <?php print date("M", $node->field_date[LANGUAGE_NONE][0]['value']);?>
       </span>
       <span class="c-meeting-date--year">
-        <?php print date("Y", $node->field_date[LANGUAGE_NONE][0]['value']); ?>
+        <?php print date("Y", $node->field_date[LANGUAGE_NONE][0]['value']);?>
       </span>
     </p>
 
     <div class="c-meeting-detail--info">
       <h1 class="c-meeting-detail--title">
-        <?php print $title; ?>
+        <?php print $title;?>
       </h1>
-      <p class="c-meeting-detail--location">
-        <?php print $node->field_meeting_location[LANGUAGE_NONE][0]['safe_value']; ?>
-      </p>
+      <?php if (!empty($node->field_meeting_location[LANGUAGE_NONE][0]['safe_value'])): ?>
+        <p class="c-meeting-detail--location">
+          <?php print $node->field_meeting_location[LANGUAGE_NONE][0]['safe_value'];?>
+        </p>
+      <?php endif;?>
       <p class="c-meeting-detail--time">
-        <?php print date("g:i A ", $node->field_date[LANGUAGE_NONE][0]['value']); ?> to <?php print date("g:i A ", $node->field_date[LANGUAGE_NONE][0]['value2']); ?>
+        <?php print date("g:i A ", $node->field_date[LANGUAGE_NONE][0]['value']);?> to <?php print date("g:i A ", $node->field_date[LANGUAGE_NONE][0]['value2']);?>
         <?php if (!empty($field_video_status) && $field_video_status[0]['value'] != 'streaming_redirect'): ?>
-          <span class="c-meeting-video--status icon-before__youtube"><?php print render($content['field_video_status']); ?></span>
-        <?php endif; ?>
+          <span class="c-meeting-video--status icon-before__youtube"><?php print render($content['field_video_status']);?></span>
+        <?php endif;?>
       <div title="Add to Calendar" class="addthisevent">
         Add to Calendar
-        <span class="start"><?php print format_date($node->field_date[LANGUAGE_NONE][0]['value'], "custom", "m/d/Y"); ?><?php print format_date($node->field_date[LANGUAGE_NONE][0]['value'], "custom", "g:i A"); ?></span>
-        <span class="end"><?php print format_date($node->field_date[LANGUAGE_NONE][0]['value2'], "custom", "m/d/Y"); ?><?php print format_date($node->field_date[LANGUAGE_NONE][0]['value2'], "custom", "g:i A"); ?></span>
+        <span class="start"><?php print format_date($node->field_date[LANGUAGE_NONE][0]['value'], "custom", "m/d/Y");?><?php print format_date($node->field_date[LANGUAGE_NONE][0]['value'], "custom", "g:i A");?></span>
+        <span class="end"><?php print format_date($node->field_date[LANGUAGE_NONE][0]['value2'], "custom", "m/d/Y");?><?php print format_date($node->field_date[LANGUAGE_NONE][0]['value2'], "custom", "g:i A");?></span>
         <span class="timezone">America/New_York</span>
-        <span class="title"><?php print $title; ?></span>
-        <span class="location"><?php if(isset($node->field_meeting_location[LANGUAGE_NONE][0]['name'])) print $node->field_meeting_location[LANGUAGE_NONE][0]['name']; ?></span>
+        <span class="title"><?php print $title;?></span>
+        <span class="location"><?php if (isset($node->field_meeting_location[LANGUAGE_NONE][0]['name'])) {
+	print $node->field_meeting_location[LANGUAGE_NONE][0]['name'];
+}
+?></span>
         <span class="date_format">MM/DD/YYYY</span>
         <span class="organizer">NY STATE SENATE</span>
         <span class="organizer_email">content@senate.state.ny.us</span>
@@ -78,36 +83,36 @@
     </div>
 
     <div class="c-meeting-detail--descript">
-      <?php print render($content['body']); ?>
+      <?php print render($content['body']);?>
     </div>
 
     <?php if (!empty($content['field_chapters'])): ?>
       <div class="c-meeting-detail--descript">
-        <?php print render($content['field_chapters']); ?>
+        <?php print render($content['field_chapters']);?>
       </div>
-    <?php endif; ?>
+    <?php endif;?>
 
     <?php if (!empty($content['field_issues'])): ?>
       <div class="c-meeting-detail--related">
         <p>related issues: </p>
-        <?php print render($content['field_issues']); ?>
+        <?php print render($content['field_issues']);?>
       </div>
-    <?php endif; ?>
+    <?php endif;?>
 
-    <?php if ($field_video_status[0]['value'] === "streaming_live_now" && !empty($field_ustream_url)): ?>
+    <?php if (isset($field_video_status[0]['value']) && $field_video_status[0]['value'] === "streaming_live_now" && !empty($field_ustream_url)): ?>
       <div class="c-meeting-detail--descript">
-        <?php print render($content['field_ustream_url']); ?>
+        <?php print render($content['field_ustream_url']);?>
       </div>
-    <?php elseif ($field_video_status[0]['value'] === "streaming_redirect" && !empty($field_video_redirect)): ?>
-      <?php print render($content['field_ustream_url']); ?>
-    <?php endif; ?>
+    <?php elseif (isset($field_video_status[0]['value']) && $field_video_status[0]['value'] === "streaming_redirect" && !empty($field_video_redirect)): ?>
+      <?php print render($content['field_ustream_url']);?>
+    <?php endif;?>
 
 
     <?php if (!empty($content['field_yt'])): ?>
       <div class="c-meeting-detail--descript">
-        <?php print render($content['field_yt']); ?>
+        <?php print render($content['field_yt']);?>
       </div>
-    <?php endif; ?>
+    <?php endif;?>
 
   </div>
 </article>
