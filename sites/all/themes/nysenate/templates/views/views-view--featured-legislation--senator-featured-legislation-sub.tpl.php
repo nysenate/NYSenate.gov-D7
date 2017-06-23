@@ -27,7 +27,7 @@
  * @ingroup views_templates
  */
 ?>
-<?php if (!$empty): ?>
+<?php if (isset($empty) && !$empty): ?>
 <div class="<?php print $classes; ?>">
   <?php print render($title_prefix); ?>
   <?php if ($title): ?>

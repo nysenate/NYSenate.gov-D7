@@ -1,0 +1,119 @@
+<?php
+/**
+ * @file
+ * Provides the Slick carousel export UI.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function slick_ui_menu() {
+  $items['admin/config/media/slick/ui'] = array(
+    'title' => 'UI',
+    'description' => 'Configure the Slick UI.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('slick_ui_form_settings'),
+    'access arguments' => array('administer slick'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 3,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_library().
+ */
+function slick_ui_library() {
+  $path = drupal_get_path('module', 'slick');
+  $info = system_get_info('module', 'slick_ui');
+
+  $libraries['slick.ui'] = array(
+    'title' => 'Slick UI',
+    'website' => 'http://drupal.org/project/slick_ui',
+    'version' => !empty($info['version']) ? $info['version'] : '7.x-2.x',
+    'js' => array(
+      $path . '/js/slick.admin.ui.min.js' => array('group' => JS_DEFAULT, 'weight' => 3),
+    ),
+    'css' => array(
+      $path . '/css/admin/slick.admin--ui--field.css' => array('group' => CSS_THEME + 1),
+      $path . '/css/admin/slick.admin--ui.css' => array('group' => CSS_THEME + 1, 'weight' => 9),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function slick_ui_ctools_plugin_directory($module, $plugin) {
+  if ($plugin == 'export_ui') {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function slick_ui_permission() {
+  return array(
+    'administer slick' => array(
+      'title' => t('Administer the Slick carousel module'),
+    ),
+  );
+}
+
+/**
+ * Form for Slick UI module settings.
+ */
+function slick_ui_form_settings() {
+  $form['slick_admin_css'] = array(
+    '#type'          => 'checkbox',
+    '#title'         => t('Enable Slick admin CSS'),
+    '#description'   => t('Uncheck if trouble with slick admin CSS compatibility for your admin theme.'),
+    '#default_value' => variable_get('slick_admin_css', TRUE),
+  );
+
+  $form['slick_module_css'] = array(
+    '#type'          => 'checkbox',
+    '#title'         => t('Enable Slick module slick.theme.css'),
+    '#description'   => t('Uncheck to permanently disable the module slick.theme.css, normally included along with skins.'),
+    '#default_value' => variable_get('slick_module_css', TRUE),
+  );
+
+  $form['slick_css'] = array(
+    '#type'          => 'checkbox',
+    '#title'         => t('Enable Slick library slick-theme.css'),
+    '#description'   => t('Uncheck to permanently disable the optional slick-theme.css, normally included along with skins.'),
+    '#default_value' => variable_get('slick_css', TRUE),
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+ * Implements hook_help().
+ */
+function slick_ui_help($path, $arg) {
+  $slick         = url(drupal_get_path('module', 'slick') . '/README.txt');
+  $slick_fields  = url(drupal_get_path('module', 'slick_fields') . '/README.txt');
+  $slick_views   = url(drupal_get_path('module', 'slick_views') . '/README.txt');
+  $slick_example = url(drupal_get_path('module', 'slick_example') . '/README.txt');
+  switch ($path) {
+    case 'admin/help#slick_ui':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t("The Slick carousel module is a field formatter to create carousels. Also available as Views style plugin. <br />To get up running quickly, <a href='@url'>enable Slick example</a> module.", array('@url' => url('admin/modules', array('fragment' => 'edit-modules-slick')))) . '</p>';
+      $output .= '<p>' . t('Read <a href="@url">more info about Slick example</a> before you proceed.', array('@url' => $slick_example)) . '</p>';
+      $output .= '<p>' . t('Read <a href="@url">more info about Slick</a> in general, including troubleshootings.', array('@url' => $slick)) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl><dt>' . t('Optionsets') . '</dt>';
+      $output .= '<dd>' . t('Manage optionsets at <a href="@url">Slick collection</a> page.', array('@url' => url('admin/config/media/slick'))) . '</dd>';
+      $output .= '<dt>' . t('Usage as a field formatter') . '</dt>';
+      $output .= '<dd>' . t('See relevant <a href="@url">README.txt</a> for Fields integration.', array('@url' => $slick_fields)) . '</dd>';
+      $output .= '<dt>' . t('Usage as a Views style plugin') . '</dt>';
+      $output .= '<dd>' . t('See relevant <a href="@url">README.txt</a> for Views integration.', array('@url' => $slick_views)) . '</dd></dl>';
+      return $output;
+  }
+}

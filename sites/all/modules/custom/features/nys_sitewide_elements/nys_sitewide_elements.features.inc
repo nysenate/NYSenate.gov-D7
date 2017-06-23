@@ -59,7 +59,6 @@ function nys_sitewide_elements_fe_nodequeue_export_fields() {
     'reference' => 0,
     'reverse' => 0,
     'i18n' => 0,
-    'insert_at_front' => 0,
     'subqueues' => 1,
     'types' => array(
       0 => 'session',
@@ -83,7 +82,6 @@ function nys_sitewide_elements_fe_nodequeue_export_fields() {
     'reference' => 0,
     'reverse' => 0,
     'i18n' => 0,
-    'insert_at_front' => 0,
     'subqueues' => 1,
     'types' => array(
       0 => 'promotional_banner',

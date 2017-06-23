@@ -24,7 +24,7 @@
 ?>
 
 <?php
-$separate_contents = array('event');
+$separate_contents = ['event'];
 $tid = $display->args[0];
 //check to see if we are on a node page.
 ctools_include('modal');
@@ -36,96 +36,118 @@ ctools_add_css('login_modal', 'nys_registration');
 ctools_add_js('login_modal', 'nys_registration');
 
 $issue = taxonomy_term_load($tid);
-$issue_url = drupal_lookup_path('alias',current_path());
-$absolute_url = $GLOBALS['base_url'].'/'.drupal_get_path_alias(current_path(), array('absolute' => TRUE));
+$issue_url = drupal_lookup_path('alias', current_path());
+$absolute_url = $GLOBALS['base_url'] . '/' . drupal_get_path_alias(current_path(), ['absolute' => TRUE]);
 
 // Get count of followers for the issue
 $flag_result = flag_get_counts('taxonomy_term', $tid);
-$flag_count = $flag_result['follow_issue'];
+if (isset($flag_result['follow_issue'])) {
+  $flag_count = $flag_result['follow_issue'];
+}
+else {
+  $flag_count = 0;
+}
 
 // Check if the user is senator
 // var_dump(user_is_senator($user->uid)); die();
-if(user_is_senator($user->uid) !== TRUE) $is_senator = FALSE; else $is_senator = TRUE;
+$is_senator = user_is_senator($user->uid);
 
 // Get details for Message block
-if(!$is_senator) {
+if (!$is_senator) {
   $senator = node_load(user_get_senator_nid($user));
   $senator_uid = user_get_senator_uid($user);
 }
 
-if(isset($senator)) {
+if (isset($senator)) {
   $image_uri = isset($senator->field_image_headshot[LANGUAGE_NONE][0]['uri']) ? $senator->field_image_headshot[LANGUAGE_NONE][0]['uri'] : '';
   // var_dump($image_uri);exit;
-  $senator_name = $senator->title;
-  $senator_image = (!empty($image_uri)) ? _nyss_img($image_uri, '60x60','') :'';
+  if (isset($senator->title)) {
+    $senator_name = $senator->title;
+  }
+  else {
+    $senator_name = '';
+  }
+  $senator_image = (!empty($image_uri)) ? _nyss_img($image_uri, '60x60', '') : '';
 }
 
+if (!empty($css_id)) {
+  print '<div id="' . $css_id . '">';
+}
 ?>
 
-<?php !empty($css_id) ? print '<div id="' . $css_id . '">' : ''; ?>
-
-  <div class="c-block c-detail--header">
+<div class="c-block c-detail--header">
     <h2 class="nys-title"><?php echo $issue->name; ?></h2>
-    <?php if($flag_count): ?><p class="c-issue--followers"><span><?php echo $flag_count; ?></span> followers</p><?php endif; ?>
-  </div>
-  <div class="c-detail--header-meta">
+  <?php if ($flag_count): ?><p class="c-issue--followers">
+      <span><?php echo $flag_count; ?></span> followers</p><?php endif; ?>
+</div>
+<div class="c-detail--header-meta">
     <!-- Check login state for action url -->
-    <?php if($is_senator === FALSE): ?>
-      <?php if($user && $user->uid !== 0 && !empty($senator)): ?>
-        <p>Contact your Senator about this issue</p>
-          <a class="c-issue--contact-btn" href="/user/dashboard/inbox/new?context=issue&issue_id=<?php print $tid; ?>" >
-            <div class="nys-senator--thumb">
-              <?php echo $senator_image; ?>
-            </div>
-            <span>contact <?php echo $senator_name; ?></span>
+  <?php if (!$is_senator): ?>
+    <?php if ($user && $user->uid !== 0 && !empty($senator)): ?>
+          <p>Contact your Senator about this issue</p>
+          <a class="c-issue--contact-btn"
+             href="/user/dashboard/inbox/new?context=issue&issue_id=<?php print $tid; ?>">
+              <div class="nys-senator--thumb">
+                <?php echo $senator_image; ?>
+              </div>
+              <span>contact <?php echo $senator_name; ?></span>
           </a>
-      <?php elseif(user_is_logged_in() && user_is_out_of_state($user)): ?>
-        <p>Contact the Senate about this issue</p>
-        <a class="c-issue--contact-btn" href="/contact">
-        <div class="nys-senator--thumb">
-          <?php echo $senator_image; ?>
-        </div>
-        <span>Contact Senate</span>
-        </a>
-      <?php elseif(user_is_anonymous()): ?>
-        <p>Find and contact your Senator about this issue</p>
-        <?php echo ctools_modal_text_button(t('find your senator'), 'registration/nojs/login', t('find your senator'),'c-block--btn c-issue--contact-btn no-senator ctools-modal-login-modal');?>
-      <?php endif; ?>
+    <?php elseif (user_is_logged_in() && user_is_out_of_state($user)): ?>
+          <p>Contact the Senate about this issue</p>
+          <a class="c-issue--contact-btn" href="/contact">
+              <div class="nys-senator--thumb">
+                <?php echo $senator_image; ?>
+              </div>
+              <span>Contact Senate</span>
+          </a>
+    <?php elseif (user_is_anonymous()): ?>
+          <p>Find and contact your Senator about this issue</p>
+      <?php echo ctools_modal_text_button(t('find your senator'), 'registration/nojs/login', t('find your senator'), 'c-block--btn c-issue--contact-btn no-senator ctools-modal-login-modal'); ?>
     <?php endif; ?>
-  </div>
+  <?php endif; ?>
+</div>
 
-   <div class="c-detail--social">
-      <h3 class="c-detail--subhead">raise awareness</h3>
-      <ul>
-        <li><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<?php print $absolute_url; ?>" class="c-detail--social-item facebook"></a></li>
-        <li><a target="_blank" href="https://twitter.com/home?status=<?php print $issue->name; ?> Via: @nysenate: <?php print $absolute_url; ?>" class="c-detail--social-item twitter"></a></li>
-        <li><a href="mailto:?&subject=From NYSenate.gov: <?php print $issue->name; ?>&body=Check out this issue: <?php print $issue->name; ?>: < <?php print $absolute_url; ?> >." class="c-detail--social-item email"></a></li>
-      </ul>
-    </div>
+<div class="c-detail--social">
+    <h3 class="c-detail--subhead">raise awareness</h3>
+    <ul>
+        <li><a target="_blank"
+               href="https://www.facebook.com/sharer/sharer.php?u=<?php print $absolute_url; ?>"
+               class="c-detail--social-item facebook"></a></li>
+        <li><a target="_blank"
+               href="https://twitter.com/home?status=<?php print $issue->name; ?> Via: @nysenate: <?php print $absolute_url; ?>"
+               class="c-detail--social-item twitter"></a></li>
+        <li>
+            <a href="mailto:?&subject=From NYSenate.gov: <?php print $issue->name; ?>&body=Check out this issue: <?php print $issue->name; ?>: < <?php print $absolute_url; ?> >."
+               class="c-detail--social-item email"></a></li>
+    </ul>
+</div>
 
-  <div class="l-row c-block c-top-content-wrapper">
-    <?php print $content['top']; ?>
-  </div>
+<div class="l-row c-block c-top-content-wrapper">
+  <?php print $content['top']; ?>
+</div>
 
 
-  <div class="l-row c-block">
-	  <h2 class="c-tab-block--title" id="issuesUpdatesHeader"><?php echo $issue->name;?> Updates</h2>
-      <dl class="l-tab-bar" data-tab>
+<div class="l-row c-block">
+    <h2 class="c-tab-block--title"
+        id="issuesUpdatesHeader"><?php echo $issue->name; ?> Updates</h2>
+    <dl class="l-tab-bar" data-tab>
         <div class="c-tab--arrow u-mobile-only"></div>
         <dd class="c-tab active">
-          <a class="c-tab-link first" href="#panel1" id="tab1">News</a></dd>
+            <a class="c-tab-link first" href="#panel1" id="tab1">News</a></dd>
         <dd class="c-tab">
-          <a class="c-tab-link" href="#panel2" id="tab2">Legislation</a>
+            <a class="c-tab-link" href="#panel2" id="tab2">Legislation</a>
         </dd>
         <dd class="c-tab">
-          <a class="c-tab-link" href="#panel3" id="tab3">Events</a>
+            <a class="c-tab-link" href="#panel3" id="tab3">Events</a>
         </dd>
-      </dl>
-      <div class="tabs-content"><?php print $content['tabs']; ?></div>
-  </div>
+    </dl>
+    <div class="tabs-content"><?php print $content['tabs']; ?></div>
+</div>
 
 
-  <div class="c-block l-row c-latest-issue-video">
-    <?php print $content['bottom']; ?>
-  </div>
-<?php !empty($css_id) ? print '</div>' : ''; ?>
+<div class="c-block l-row c-latest-issue-video">
+  <?php print $content['bottom']; ?>
+</div>
+<?php if (!empty($css_id)) {
+  print '</div>';
+} ?>

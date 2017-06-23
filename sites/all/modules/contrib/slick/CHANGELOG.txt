@@ -1,0 +1,1360 @@
+
+Slick 7.x-2.0-dev, 2015-12-12
+-----------------------------
+- Fixed for nested slicks with videos. The videos should be turned off when
+  either the nested slick, or the parent slick, with/without asnavfor, is
+  changing.
+
+Slick 7.x-2.0-dev, 2015-12-11
+-----------------------------
+- Updated for v1.5.9 with the new option useTransform.
+- Fixed for Navbar compatibility.
+
+Slick 7.x-2.0-dev, 2015-12-07
+-----------------------------
+- Updated slick.api.php with more samples, quick and asnavfor ones.
+- Respected empty centerPadding ('0' or '') to allow pure CSS controlled styled
+  rather than inline style. This removed inline padding: 0px, so CSS do not have
+  to use !important to override it.
+
+Slick 7.x-2.0-dev, 2015-12-02
+-----------------------------
+- Issue #2623396 by dalemoore, Spanners: Really wide View edit screen in admin
+  overlay
+- Removed too specific lines from most skin CSS, such as color, weight, etc.
+  where appropriate.
+- Fixed for Fullscreen skin thumbnail nav with asNavFor.
+- Removed over-specificity from slick.theme.css due to expected nested slicks
+  as it turned out to break some builtin layouts like Full width. Your overrides
+  should not be affected as the slick.theme.css is now less specific.
+
+Slick 7.x-2.0-dev, 2015-11-28
+-----------------------------
+- Cleaned up useless lines.
+- Fixed for FC nested slicks with iframe and media icons visibility.
+
+Slick 7.x-2.0-dev, 2015-11-26
+-----------------------------
+- Added more description on Slick Grid or multiple rows carousel.
+- Removed personal styling from slick.theme.css, mostly those testing rules
+  against Bartik.
+- Added "Lazy iframe" option to have truly lazyloaded iframes for Media and FC
+  to speed up loading time before JS fired.
+- Moved media icons and iframes after the image to allow using CSS siblings
+  selector (~) for spinner visibility in combination with [data-lazy] which is
+  removed when the image is fully loaded, e.g.:
+  .media-icon--spinner { display: none; }
+  img[data-lazy] ~ .media-icon--spinner { display: block; }
+
+Slick 7.x-2.0-dev, 2015-11-21
+-----------------------------
+- #2546614 by Dr.Osd: Colorbox integration has broken iframe width
+
+Slick 7.x-2.0-dev, 2015-11-16
+-----------------------------
+- Disabled thumbnail navigation if items < 2 to avoid gargantuan broken single
+  thumbnail nav since it will be unslicked anyway. The good thing is this allows
+  a combination of asnavfor at one page and/or a single image or slideshow
+  display at another without creating different fields.
+- Added caching per language to reflect the change at Slick Views per 2611838.
+
+Slick 7.x-2.0-dev, 2015-11-07
+-----------------------------
+- #2600970 by dalearyous: remove the image zoom or magnification for center
+  image slick carousel
+- #2610348 by IckZ: Colorbox not working when only one image is displayed.
+- #2596599 by mparker17: Add link to settings page in .info file
+  Oops, sorry, attribution!
+- #2596599 by mparker17: Add link to settings page in .info file
+
+Slick 7.x-2.0-dev, 2015-9-30
+----------------------------
+- Clarified several descriptions on form items, and elsewhere.
+- Moved some contents of slick.field.inc into slick.global.inc to share with
+  Slick views for its future enhancement with Media file like Slick fields.
+- Added configurable optional core slick-theme.css and module slick.theme.css
+  which are normally included by default along with skins.
+- Removed problematic Editor links for Media file, since it is not displayed
+  when cache enabled anyway.
+
+Slick 7.x-2.0-dev, 2015-9-12
+----------------------------
+- #2567233 by espacecode: Grid options require Visible slides, otherwise no
+  slides shown anymore.
+  Added more information on Grid options about requiring Visible slides.
+
+Slick 7.x-2.0-dev, 2015-9-11
+----------------------------
+- Issue #2566799 by quasi: Image linked to content should not be
+  removed without colorbox/photobox.
+- Cleaned up README.txt, and a few other things.
+
+Slick 7.x-2.0-dev, 2015-9-09
+----------------------------
+- Merged DRY stuffs into slick_get_image().
+
+Slick 7.x-2.0-dev, 2015-9-08
+----------------------------
+- Added hook_uninstall() since we now have a variable to delete.
+- Added a configurable option using slick_ui.module to toggle slick admin css
+  which can be accessed at: admin/config/media/slick/ui
+- #2553385 by gausarts, xtfer: Slick CSS admin compatibility with contrib admin
+  themes.
+
+Slick 7.x-2.0-dev, 2015-9-07
+----------------------------
+- Made slick admin css optional. Execute the following anywhere once to disable
+  slick admin stylings:
+  variable_set('slick_admin_css', FALSE);
+
+Slick 7.x-2.0-dev, 2015-9-06
+----------------------------
+- #2553385 by gausarts, heliogabal, esolitos: Slick CSS admin compatibility with
+  contrib admin themes
+  Added fixes for Ubuntu with FF 40 and Chrome 45, and a few cleanups.
+
+Slick 7.x-2.0-dev, 2015-9-03
+----------------------------
+- #2553385 by gausarts, heliogabal, esolitos: Slick CSS admin compatibility with
+  contrib admin themes
+
+Slick 7.x-2.0-dev, 2015-9-02
+----------------------------
+- Added a warning to Cache option: Only enable it when all is done, otherwise
+  cached options will be displayed while changing them.
+- Merged slick-current and arrows fixes into setPosition.
+
+Slick 7.x-2.0-dev, 2015-8-28
+----------------------------
+- Simplified cache option description.
+
+Slick 7.x-2.0-dev, 2015-8-27
+----------------------------
+- Moved slick stuffs out of unslick at template_preprocess_slick().
+- Updated slick.load.min.js to abandon inaccessible activeBreakpoint approach:
+  o Removed broken activeBreakpoint options, and use setPosition event instead.
+  o Moved all setCurrent to also be placed at setPosition event.
+  Note: setPosition was avoided so far because it is executed a lot, at least 4
+  times on init, but appears to be the guy to fix a few known issues at one
+  place with slick-current and arrows visibility with responsive options and
+  asNavFor.
+  Both are still kept till fixed by core, and finally dropped from the module.
+- Fixed for Notice: Undefined index: view_mode in
+  _slick_fields_field_formatter_settings_form() (line 224... due to the latest
+  admin Slick fields rearrangement.
+- Fixed for Notice: Undefined index: cache in slick_build() (line 376..
+
+Slick 7.x-2.0-dev, 2015-8-25
+----------------------------
+- Fixed for useless Media file entity editor links being cached for anonymous.
+- Improved Slick fields cache routines.
+- Fixed for slick-current with adjacent slicks with/without slick_wrapper,
+  block__no_wrapper/ views_view_no_wrapper, etc. No wonder core fails with it :(
+- Dropped slide--current, and pushed slick-current s planned instead to
+  reduce dup classes. If you use "slide--current", be sure to change it to
+  "slick-current". The workaround is still kept, only easier to drop later when
+  fixed.
+
+Slick 7.x-2.0-dev, 2015-8-23
+----------------------------
+- Added cache fallbacks:
+  o fetching from fresh contents if expiration time is provided, useful for
+    dynamic contents which value freshness.
+  o fetching from stale ones if "Persistent" is selected, useful for static
+    contents which value cache lifetime better than freshness.
+- Changed cache keys to a more reliable cid since keys will append active theme
+  which adds additional check.
+- Added configurable #cache property to slick_build() to cache render array.
+- Merged similar field formatter and Views default settings into
+  slick_get_global_default_settings().
+- Merged reusable form elements across field formatter and Views via
+  slick_get_top_elements() and slick_get_elements().
+
+Slick 7.x-2.0-dev, 2015-8-19
+----------------------------
+- #2553385 by gausarts, esolitos: Slick CSS admin compatibility with contrib
+  admin themes.
+- Fixed for arrows visibility with responsive options due to inaccessible
+  activeBreakpoint flag.
+- Fixed for Photobox "infinite true + slidesToShow > 1" incompatibility at the
+  price of dup thumbnails which however can be disabled by "thumbs: false".
+  This is less problematic than broken Photobox links.
+- Deprecated the following functions:
+  o _slick_fields_format_image() for slick_format_image().
+  o _slick_fields_format_media() for slick_format_media().
+  o _slick_fields_format_field_collection() for slick_format_field_collection().
+- Moved the contents of slick_fields includes files into core to re-use them
+  across field formatters and Views without hard dependency for slick_fields.
+  This is also to smoothen the transition out to Slick 3.x.
+- Added support for iframe only aspect ratio.
+- Added support for Youtube or Vimeo url using plain text field within file
+  entity of type image to display a video overlay over the main image background.
+  Provided as currently file entity doesn't support nested files.
+- Added slick_get_grid_elements() and slick_build_grids() to reuse grid for
+  field formatter and Views.
+- Removed Photobox "data-src" thumbnails to use global "data-thumb" instead.
+- Added slick_get_admin_assets() to re-use the admin assests across field
+  formatter and Views.
+
+Slick 7.x-2.0-dev, 2015-8-7
+---------------------------
+- Simplified slick.colorbox.css to use "colorbox-on--media" rather than
+  separate "colorbox-on--audio" + "colorbox-on--video" for the video/audio
+  colorbox body classes.
+- #2546614 by stefan.korn: Colorbox integration iframe width?
+- Removed 'slick-nav' classes since 'slick-arrow' was added at v1.5.6. If you
+  use 'slick-nav', be sure to update it to 'slick-arrow'.
+- Removed useless 'respondTo' option from responsive since it is always ignored/
+  hard-coded by core: _.respondTo = _.options.respondTo || 'window';
+- Fixed for video switcher image not being hidden when switched and a single
+  image, not carousel.
+- Added support to merge dots to .slick__arrow via appendDots: .slick__arrow, to
+  have this style: < o o o o o o o >
+- Added "Image linked to content" option to the "Media switcher" option to allow
+  aggregated small slick fields linked to their host entity while using the
+  Field formatter, not Views. E.g.: homepage small collages linked to contents.
+
+Slick 7.x-2.0-dev, 2015-7-4
+---------------------------
+- Fixed a rare edge case with improper/broken data_export_import media files.
+
+Slick 7.x-2.0-dev, 2015-6-30
+----------------------------
+- Allowed re-using slik.media.min.js outside slick.
+- Fixed bad markups (h2 > p) with Media slide title when plain text has HTML
+  filter enabled.
+- Fixed regression with FC thumbnail caption plain text not displayed with the
+  new EMW.
+- Fixed regression with FC slide title not displayed with the new EMW.
+- Fixed regression with Fullscreen single item/ unslick not displayed since no
+  slide wrappers in use.
+- Added support for Media multiple slide links, e.g.: Read more | Contact us.
+- Cleaned up field markups for Media/FC 'slide_caption' fields by default unless
+  'markup' set to TRUE. Use hook_slick_fields_default_settings_info_alter(), or
+  check the new option 'Keep field markups'  to keep deep field markups
+  (.field > .field-items > .field-item). Existing markups won't be affected till
+  Slick field settings re-saved.
+- Cleaned up field markups for Media/FC 'slide_link' fields since it is cleaner
+  to just have A tags within .slide__link DIV.
+- Renamed shit to s***, fire to f*** and rose to r***.
+  "And the f*** and the r*** are one." Little Gidding -- TS Eliot.
+- Renamed slick_fields_inline_css_output_info() to slick_inline_css_info().
+- Removed Fullscreen inline css building out of the field loop, and moved it
+  into slick_get_inline_css() instead since inline css is such an edge case.
+- Simplified admin repetitive lines for readability and consistency.
+
+Slick 7.x-2.0-dev, 2015-6-23
+----------------------------
+- Fixed regression with Fullscreen CSS output for Media and FC fields.
+- Moved all skin Fullwidth and Fullscreen stuffs out of the main slick.theme.css
+  into its own CSS: slick.theme--full.css to reduce clutters at the main CSS and
+  also allows easy overrides at this particular skin CSS file.
+  This file is re-used for both Fullscreen and Fullwidth skins.
+  This also removes redundant selectors where '.slide__constrained' is used.
+  It should be safe, whether you override or not, as it is less specificity
+  which means your overrides will always win.
+- Fixed for text only slides without images, that is, only applies absolute
+  positioning when a slide layout is explicitly chosen.
+- #2510528 by swinglo: array_merge(): Argument #2 is not an array dans
+  template_preprocess_slick_item()
+
+Slick 7.x-2.0-dev, 2015-6-22
+----------------------------
+- Fixed for most DRY with repetitive field tasks.
+- Fixed regression 'slick__arrow--' modifier class which should be like beta2.
+- Fixed for ESLint complaints to some extent, ignored coder_sniffer for JS.
+- Fixed Media failing file_view_file() when the formatter is not expected.
+  theme_file_entity_file_video() may take over other media, and cause the
+  expected youtube/vimeo/soundcloud fails given the same weight 0 (default).
+- Fixed regression with FC edge-cases with deleted, or non-existent main
+  slide/stage image.
+- Moved thumbnail out of theme_slick_media() business since it is always
+  theme_image_style().
+- Removed wasted settings.
+- Changed custom slide 'classes' to 'slide_classes' to reduce duplicate keys.
+- Added 'slick_classes' settings to remove shit classes, use
+  hook_slick_element_default_settings_info_alter() to disable it.
+- Post beta2 changes.
+
+Slick 7.x-2.0-dev, 2015-6-19
+----------------------------
+- Fixed for jQuery < 1.5 admin pages.
+- Changed hard-coded divities at slick-item.tpl.php to have leaner markups when
+  only one item given:
+  o Wrapper prefixes/suffixes can be DIV, or UL if grid.
+  o Content prefixes/suffixes can be DIV, or LI if grid.
+  This removes four useless HTML tags with a single item slick/unslick while
+  allowing more complex layout composition for more items.
+  These flexible wrappers are common to Views HTML list template.
+
+- Fixed for slick.photobox.min.js, the slick-photobox class leaking if there are
+  more than slicks even those without photobox.
+
+- Updated slick.media.tpl.php to move the item_prefix and item_suffix outside
+  the item. This allows proper display of a single item slick (unslick) given
+  proper divities.
+
+- Removed FC 'aspect_ratio_overlay' option, as it complicated things.
+  The two solidified options for the aspect ratio overlays/nested slicks are:
+  o Managed by the host entity (FC), requires 'Rendered file' formatter.
+    The File aspect ratio is manipulated from within the host directly.
+  o Managed by the File field itself outside FC, best with Slick formatter.
+    The File aspect ratio is manipulated within its own View mode outside FC.
+
+  This means FC:
+  o overlays/nested are enforced to be just on XOR off.
+  o field_type classes are dropped.
+  o is simple just like regular Media file without nested slicks.
+
+  Large background video is never implemented from the start as the doc comments
+  at slik_fields.formatters.field_colletion line 50:
+  // Large background video is not supported, any taker?
+  And no taker so far, hence why this 'aspect_ratio_overlay' is dropped.
+
+  The relevant classes are moved directly to the theme_slik_media() to reduce
+  redundant CSS, previously within theme_slick():
+    .slick--ratio--file
+    .slick--ratio--field-collection
+
+  The benefit is it solidifies layouts for a mix of image/audio/video files.
+  Please see slick.media.css for more detailed changes, only if you overrode it.
+  Although tested with several old overriden slick.media.css, and they display
+  fine, be sure to check this change as it removed lots of redundant CSS rules.
+
+- Refactored and simplified the slick aspect ratio handling.
+- Fixed for Field collection nested slicks managed by the host entity (FC).
+- Refactored and simplified Field collection part cutting down ~150 lines.
+
+- Fixed slide--current class for the most complex slicks, i.e.: asNavFor with
+  the main display containing nested slicks.
+
+- Renamed not-clear .slick__capture (based on icon) class to .slick__litebox.
+
+- Renamed 'attach_slick_element' to more meaningful 'attach_slick_css'.
+  Be sure to update it if you disable slick-theme.css.
+
+- Renamed 'attach_module' to 'attach_module_js' to be more meaningful like
+  'attach_module_css'. Prior to alpha, the CSS is part of 'attach_module'.
+- Renamed #asnavfor key to #display accordingly.
+  Changed theme_slick_media() variables 'asnavfor' to 'display' to reflect
+  the proper/meaningful displays. Displays can be:
+  o main (asnavfor)
+  o thumbnail (asnavfor)
+  o grid
+  o overlay
+  Be sure to update your variable if you already customize it.
+
+- Refactored arrow down to reduce clutters at slick.tpl.php.
+  If you customize it be sure to re-check it.
+- Moved 'layout' key one level up from within captions to the item.
+
+- Added media--ratio--on class to ease up managing ratio with the CSS, and
+  get consistent styling for the mix of image/video/audio files within a slick.
+  - Fixed collapsing slick overlay (nested slick) when only one item given.
+  This change should reduce headache with a mix of image/video/audio in a single
+  slick since they are now consistently styled with the same aspect ratio if so
+  configured.
+
+- Moved some contents of slick_fields.formatters.admin.inc to slick.admin.inc to
+  be reusable across fields formatter, non-existent slick_entityreference, and
+  the future slick_views, 3.x, without depending on slick_fields.
+  Renamed the following functions:
+  o _slick_fields_view_modes() to slick_get_view_modes()
+  o _slick_fields_get_fc_fields() to slick_get_fc_fields()
+  o _slick_fields_get_media_fields() to slick_get_media_fields()
+
+- Removed slick_fields.formatters.global.inc, and moved its contents to
+  core slick.fields.inc, and renamed the following functions:
+  o _slick_fields_get_picture() to slick_get_image() and decluttered settings.
+  o slick_fields_inline_css_skins() to slick_get_inline_css_skins().
+  o slick_fields_get_default_settings() to slick_get_fields_default_settings().
+
+  This change has two goals:
+  o Allows re-using them for future field based Views with lazyLoad which is
+    currently not supported, only Field formatter is.
+  o Compatibility with the slick_media sub-module to reuse the same codebase
+    for image to iframe switcher for field based Views for both 2.x. and 3.x.
+
+- Renamed _slick_fields_get_media_thumbnail() to slick_get_media_thumbnail()
+  since it is now in optional core file.
+- Removed appendArrows option, since the module can do nothing, but hardcoded it
+  which is already flexible enough to move around the arrows anywhere via CSS.
+- Moved mousewheel and inline css attachments to slick_fields.
+- Moved hook_permission() to the only module requiring it: slick_ui.module.
+- Moved hook_help() to slick_ui.module to de-clutter main module file.
+- Removed unused hook_libraries_info() since hook_library() suffices.
+  Use slick_attach(), drupal_add_library(), or drupal_add_js() to add relevant
+  assets with 3rd party integration. See the API, or slick_fields for samples.
+- Post beta2 changes.
+
+Slick 7.x-2.0-dev, 2015-6-6
+---------------------------
+- #2501507 by gausarts, rei: detect media module and jquery easing libraries
+  Removed 'attach_media' from anything, except when 'media_switch' iframe-switch
+  is explicitly chosen.
+- Cleaned up a few doc and wasted lines.
+
+Slick 7.x-2.0-dev, 2015-6-5
+---------------------------
+- Fixed for interrupted update process, when the process is reversed:
+  running /update.php prior to clearing cache.
+  The safe recommended process: clearing cache/registry -> /update.php.
+  Temporarily put back the slick_optionset_ui.inc to avoid the issue till we
+  figure out better process.
+
+Slick 7.x-2.0-dev, 2015-6-4
+---------------------------
+- Reached the cleanup threshold of below 500 lines of the main module file.
+- Removed _slick_optionset_defaults() in favor of slick_get_options(). One more
+  function down, one more function down! Call 119, er 911.
+
+Slick 7.x-2.0-dev, 2015-6-1
+---------------------------
+- Fixed slick_clean_options_info_alter() param.
+- Fixed Field collection background image style when it is core image, not media
+  file image type.
+- Fixed typo at slick.api.php, and added a hook_slick_attach_load_info_alter().
+- Moved slick_inline_css_skins() to slick_fields_inline_css_skins(), since it is
+  only specific to fields, not views.
+- Revived the "slick" class when it is "unslick" (a slideshow with a single
+  slide/image -- i.e. when a content editor can not meet design specs), to get
+  consistent CSS global styling. JS filters out the unslick instead.
+- Moved specific backend-related functions to slick.admin.inc:
+  o slick_get_responsive_options()
+  o slick_clean_options()
+  o slick_get_overridable_options()
+- Moved specific theme-related functions to slick.theme.inc.
+
+- #2497945 by gausarts: Move type juggling to backend only
+  A slick_update_7007() is provided, but not effective for stored codes.
+
+  Please re-save and re-export optionsets if you are a pre-alpha user who stored
+  optionsets in codes before alpha release on 2015-3-31, or precisely before
+  2015-3-2 commit: http://cgit.drupalcode.org/slick/commit/?id=f08c3b4
+
+  Please ignore if you:
+  o are a (pre-)alpha user who stored optionsets in codes after alpha.
+  o never stored/exported optionsets in codes.
+
+- Fixed single slide (unslick), and slick--float non-center slider, and a couple
+  of cleanup.
+
+Slick 7.x-2.0-dev, 2015-5-31
+----------------------------
+- #2497079: Move some sub-modules into separate projects
+- Removed slick_devel and slick_example to go to: http://dgo.to/slick_extras
+- Moved _slick_fields_get_media_thumbnail() to slick.extras.inc.
+
+Slick 7.x-2.0-dev, 2015-5-30
+----------------------------
+- Added slick_update_7006() for a beta2 to avoid WSOD with slick_views removal.
+- Removed libraries slick.easing, mousewheel, drupal.slick, and used one line JS
+  array instead.
+- Renamed libraries previously prefixed with "drupal" to be prefixed with
+  "slick", e.g.: "drupal.slick.colorbox" to "slick.colorbox".
+
+Slick 7.x-2.0-dev, 2015-5-29
+----------------------------
+- Removed slick_views, and moved it into http://dgo.to/slick_views
+- #2497079: Move some sub-modules into separate projects
+- Removed preprocess for theme_slick_wraper().
+- Removed unused slick_get_setting() and slick_get_default_value() from
+  slick.admin.inc.
+- Fixed Field collection complication with view modes.
+- Removed Sass for good. Thanks, and farewell, Sass!
+- #2496005 by gausarts: Refactor slick_image_lazy to merge
+  slick_image_formatter_lazy with it.
+
+Slick 7.x-2.0-dev, 2015-5-28
+----------------------------
+- Fixed double loading of optionsets when using fields. Now only loaded once.
+- Fixed edge case with media player positioning when not using the required
+  aspect ratio.
+- Fixed dotsClass JS error with asNavFor due to previous ignorant removal.
+
+Slick 7.x-2.0-dev, 2015-5-27
+----------------------------
+- Moved aka off-loaded Slick fields admin settings into separate existing file
+  slick_fields.formatters.admin.inc to reduce clutters at the module file.
+- Removed mousewheel and slick.easing libraries registrations since the only one
+  using them -- slick_add() -- was already removed, and slicks is just fine to
+  continue using the ones registered via core hook_library().
+
+Slick 7.x-2.0-dev, 2015-5-26
+----------------------------
+- Added key "inline css" at slick_slick_skins_info() to ease up registering a
+  skin expecting inline CSS, not images, see fullscreen skin. Previously using
+  a cumbersome hook_slick_inline_css_skins_info_alter().
+- #2494421 by gausarts: Decouple export UI from the main module.
+
+Slick 7.x-2.0-dev, 2015-5-25
+----------------------------
+- Removed over paranoid slick_filter_xss_admin() since Views UI has a more
+  flexible "Rewrite results" option with selective tags stripping.
+- Deprecated slick_get_default_value(), used slick_get_options() instead.
+  The function is temporarily moved to slick.admin.inc for future deletion.
+- Moved unused slick_optionset_load_all() into slick.admin.inc.
+- Removed slick_add(), recommended to start using #attached with slick_attach()
+  instead. This is never used and will be dropped at D8 anyway.
+- Removed unused slick_image_default_styles(), including default slick image
+  style, and moved it to slick_example.module instead.
+- Removed useless _slick_gettype().
+
+- #2494579 by gausarts: Merge slick.elements.inc contents into the module,
+  and clean out unused functions.
+
+Slick 7.x-2.0-dev, 2015-5-24
+----------------------------
+- Fixed for skin fullscreen after slick-wrapper removal.
+
+Slick 7.x-2.0-dev, 2015-5-23
+----------------------------
+- #2479199 by gausarts: Drop wasted slick-wrapper when no asNavFor in use.
+
+Slick 7.x-2.0-dev, 2015-5-19
+----------------------------
+- #2490528 by fragtom: Variable with doesn't display right.
+  Notes:
+- variableWidth is not compatible with slidesToShow > 1 if the container is
+  smaller than the amount of visible slide widths.
+  Best with uniform image heights to avoid jumpy empty space. Use scale height
+  image effect, and keep width empty/dynamic.
+  Useless with adaptiveHeight, and non-uniform image heights.
+  Useless with slidesToShow > 1 if the container is smaller than the amount of
+  visible slides.
+  Troubled with lazyLoad ondemand. Use progressive or none instead.
+- adaptiveHeight wants single visible slide (slidesToShow 1).
+  Useless with variableWidth.
+
+
+Slick 7.x-2.0-dev, 2015-5-13
+----------------------------
+- Fixed for slick_remove_wasted_dependent_options() not removing dependents.
+
+Slick 7.x-2.0-dev, 2015-5-2
+---------------------------
+- #2481577 by fragtom: Lazy load is not supported with Picture enabled
+  images
+- Fixed skin fullwidth with .slide__constrained being overriden with relative
+  position.
+
+Slick 7.x-2.0-dev, 2015-4-29
+----------------------------
+- #2479117 by fragtom: Fade option is not compatible with slidesToShow > 1.
+- Added meaningful info to the Fade option to avoid issue with multiple items.
+
+Slick 7.x-2.0-dev, 2015-4-25
+----------------------------
+- #2477507 by sashken2: Original image for Colorbox display is ignored.
+
+Slick 7.x-2.0-dev, 2015-4-24
+----------------------------
+- #2477065: jQuery.easing requirements
+- Added more information at README.txt to rename jquery.easing.1.3.js to
+  jquery.easing.min.js.
+- Fixed trivial spaces at slick.api.php.
+
+Slick 7.x-2.0-dev, 2015-4-14
+----------------------------
+- Fixed typo at slick.api.php.
+- Fixed edge cases Media Youtube, Vimeo, Soundcloud disabled while being used.
+- Fixed edge case Picture module disabled while being used by Slick.
+- Added a simple coded slick example to slick.api.php.
+- Added slick_build() to simplify building a slick programatically.
+
+Slick 7.x-2.0-dev, 2015-4-11
+----------------------------
+- #2466073 by gausarts: Use data-slick to store options.
+  Be sure to clear cache, or re-generate JS if aggregation is on.
+- #2466327 by rHOnDO: Allow alterable caption HTML tags.
+- Added slick_filter_xss_admin() to ease up extending allowed tags restrictively
+  which can be set using variable_set('slick_allowed_tags', $allowed_tags).
+  Be sure to clear cache.
+- Fixed slick_example hook_views_api() api version from Bulk exporter.
+- Updated slick.load.devel.js to test the options using data-slick.
+
+Slick 7.x-2.0-dev, 2015-4-6
+---------------------------
+- Updated slick.load.min.js slide--current class to reflect the new grid option.
+- Added info to Slick Views about the difference between Module grid and the
+  library grid. The module Grid feature has been around before the Slick library
+  officiallly supported it at Slick 1.5.
+- Added options for builtin Grid system: rows and slidesPerRow.
+- Updated the verticalScrolling option to verticalSwiping. Be sure to re-save it
+  to pick-up the newly renamed option.
+- Updated to Slick 1.5.
+
+Slick 7.x-2.0-dev, 2015-3-31
+----------------------------
+- \o/ at last .... happy for a great Alpha release ;)
+- Added various relevant useful info somewhere to clarify the intention.
+- Added relevant info on sanitization at slick.theme.inc which should be handled
+  by implementors since most are renderable array.
+- Added sanitization on Slick Views slide captions.
+- Updated slick_devel_preprocess_slick() to drop data-slick test to reflect its
+  removal at Slick 1.5, see:
+  https://github.com/kenwheeler/slick/issues/1058
+- Fixed wrong name slick_inline_css_output_info() to use the actual module name
+  slick_fields_inline_css_output_info().
+- Added slick_fields_inline_css_output_info_alter() to modify the inline CSS
+  outputs.
+- #2461693 by rfnbnkr: asNavFor stopped working with AJAX loaded slicks.
+- Moved sanitization for asnavfor_target to template_preprocess_slick().
+- Fixed trivial edge cases with extra white spaces for asnavfor targets.
+- Fixed line breaks after php tags.
+
+Slick 7.x-2.0-dev, 2015-3-30
+----------------------------
+- Fixed both phpcs and coder false positive with list() skipped value.
+- Fixed disappeared admin tooltip after AJAX which seemingly broke at some
+  point.
+- Fixed phpcs complains with Closing parenthesis of array declaration.
+- #2459669 by emcniece: Handle non-init'd jQuery Update module settings.
+- #2459657 by emcniece: Add better error message for missing files /
+  improper library install.
+- Updated SLICK_VERSION from 1.4 to 1.x to avoid chasing minor releases.
+- Changed slick_attach() to move slick_arrows() and slick_dots() invocation till
+  requested.
+
+Slick 7.x-2.0-dev, 2015-3-21
+----------------------------
+- Fixed edge-case issues with deleted optionset while being used.
+
+Slick 7.x-2.0-dev, 2015-3-14
+----------------------------
+- Changed "data-thumb" to be always available not only for dots thumbnail hover,
+  but also for custom advanced works with arrows containing thumbnails as long
+  as "Thumbnail style" option is provided. It is up to you to build such complex
+  arrows. See the current customPaging implementation on how to manipulate dots
+  with lazy-loaded thumbnails which appears on hovering dots. The similar
+  technique is also applied to build Photobox thumbnail navigation. If you
+  don't make use thumbnails dots, nor arrows, nor Photobox thumbnails, simply
+  leave the option empty.
+- Removed wasted slide--before and slide--after classes from
+  Drupal.slick.setCurrent() since it is never implemented so far.
+- Fixed skin arrows and dots not being recognized by slick_navigations(), and
+  dropped it in favor of slick_dots() and slick_arrows() instead.
+- Added slick_elements_info_alter(), slick_responsive_elements_info_alter(), and
+  slick_options_info_alter() to allow modifying slick options and form elements
+  by custom module after stable release without having to wait for the features
+  to be added or another release. Or when a module wants to modify slick options
+  internally such as when building a modular slick.
+- Fixed for duplicated/cloned thumbnails being displayed at Photobox.
+
+Slick 7.x-2.0-dev, 2015-3-10
+----------------------------
+- Added the bad boy verticalScrolling option to drag up and down the slide. Use
+  slick_devel module to test it. "Ken tired of this":
+  https://github.com/kenwheeler/slick/issues/1001
+  If you want your feature request fullfilled, make him tired ;)
+- Added info about the data-slick to be removed at Slick 1.5 to slick_devel.
+  See https://github.com/kenwheeler/slick/issues/1058
+  The data-slick is never used by the module unless for development purposes.
+- Fixed autoplay for Photobox videos, and moved the Colorbox autoplay logic from
+  JS to PHP to share between lightboxes.
+- Removed thumbnail_hover DOM markups -- thumbnails which appear on hovering
+  dots, and used data-thumb attributes managed by JS customPaging instead.
+
+Slick 7.x-2.0-dev, 2015-3-9
+---------------------------
+- Updated slick_example asNavFor to not use field template for the main display.
+- Removed extra ISSET checks by proper definitions in
+  slick_get_element_default_settings().
+- Removed wasted "slick--progressive" class, and only provided "slick--ondemand"
+  class only if the lazyLoad is ondemand to keep the current fix with excessive
+  height of dummy image.
+- Removed wasted "slick--display--main" class, and only provide one if it has
+  thumbnail navigation in companion with "slick--display--thumbnail".
+  Split "media-icon--lightbox" rules from "slick.colorbox.css" into
+  "slick.lightbox.css" to share icon stylings between Colorbox and Photobox.
+- Deprecated "media-icon--colorbox" for the more generic "media-icon--lightbox".
+- Updated slick-media.tpl.php to reflect the support for Photobox, adding
+  variable $is_lightbox to check for either Colorbox or Photobox.
+- Added Photobox integration.
+- Removed Drupal.slick.thumbnail(), and moved the relevant slick-dots--thumbnail
+  class to dotsClass option instead.
+- Deprecated "slick__thumbnail" class in favor of "slick-dots--thumbnail".
+  If you customized it, be sure to update to "slick-dots--thumbnail", as it will
+  be removed at proper release. It is a problematic class, since dotsClass is
+  actually alterable child element. However default "slick-dots" is the only
+  class to rely on now as a child block level element. If you change the
+  options, assumed you know how to handle them consistently anyway.
+- Added skin description and breakpoints to the slick collection page at:
+  admin/config/media/slick
+- Added slick_navigations(), hook_slick_dots_info() and hook_slick_arrows_info()
+  to add custom dots and arrows CSS programatically, similar to existing
+  hook_slick_skins_info(), only without defaults and cares for CSS. It reduces
+  repetitive tasks with different sets of re-usable arrows and dots skin assets.
+- Added an alterable slick_fields_get_default_settings() to avoid database
+  lookup just to check if a setting is already set, or not, reducing a few extra
+  ISSET checks at frontend.
+
+Slick 7.x-2.0-dev, 2015-3-5
+---------------------------
+- Fixed off-screen/ hidden dots with Fullscreen due to core negative margin
+  -45px.
+- Fixed Views admin preview with full screen skin by adding a min-height 320px.
+- Fixed various pareview.sh complains, and a few resolvable false positives.
+- Fixed CRUD typecasting with slick_optionset_save().
+- Fixed various tests failures locally sans codespell.
+- Added tests for simpletest based on flexslider.test, and corrected its
+  failures. Due credit to Flexslider.
+- Added hook_help().
+
+Slick 7.x-2.0-dev, 2015-3-2
+---------------------------
+- Fixed arrows not being recognized for the nested slicks.
+- Fixed JS settings typecast for slick_example_slick_default_presets().
+- Fixed Undefined index: rtl in template_preprocess_slick().
+- Fixed typecast values before storing. It doesn't affect slick, just cleanup.
+- Removed mousewheel data when disabled. It doesn't affect slick, just cleanup.
+- Removed useless options at slick_fields.module display Formatter form:
+  optionset and optionset thumbnail labels.
+
+Slick 7.x-2.0-dev, 2015-3-1
+---------------------------
+- Fixed left-over overridable options for Field collection.
+- Fixed PHPCS complains with CSS multiline selectors leaving ignorable
+  lowerCamel.
+- Fixed edge case asNavFor selectors -- non-empty, but not-used, asNavFor from
+  breaking the slide. When it has value, but not actually used, or forgot to
+  have the thumbnails. Otherwise breaking the slide.
+- Fixed arrows not being updated with different visibility and responsive
+  options, as this is said left to implementor/module when arrows customized.
+  With the fix, arrows are enforced, but updated accordingly based on option.
+- Changed module_load_include() to form_load_include() or ctools_load_include()
+  in the form context.
+- Added options to override optionset to re-use one optionset for a few
+  different common displays with/without: Arrows, Autoplay, Dots and Draggable.
+
+Slick 7.x-2.0-dev, 2015-2-27
+----------------------------
+- Fixed un-styled checkbox for grouping at Views UI.
+- Added relevant cursor to slick.theme.css for draggable slick: grab and
+  grabbing.
+- Changed dependencies on slick_example to make use of sub-modules instead.
+
+Slick 7.x-2.0-dev, 2015-2-26
+----------------------------
+- Fixed missing dependency on Views for Slick example module.
+- Fixed slick_example views with skin Rounded not being rounded due to option
+  "Use field template" under "Style settings" was checked.
+- Fixed cssEaseBezier value not being mapped from cssEaseOverride at Optionset
+  UI as part of optimization to move some logic to backend.
+- #2438041 by RAFA3L: - Fixed broken Views style plugin due to removal of
+  files array from slick_views.info:
+  files[] = slick_views_plugin_style_slick.inc
+  Be sure to clear cache to bring it back. The mistake was after PHPCS fixes.
+- Fixed edge cases for slide--current class by requesting anon parent selector
+  with/without theme_slick_wrapper(), and with/without asnavFor.
+- Optimized slick.elements.inc, and moved slick form elements from
+  slick_get_options() to the plugin page - SlickOptionsetUi.class.php.
+  The following functions are moved to slick.admin.inc:
+  - _slick_easing_options()
+  - _slick_css_easing_options()
+  - _slick_css_easing_mapping()
+- Fixed undefined $overlay_style notice with Field collection nested slicks.
+
+Slick 7.x-2.0-dev, 2015-2-25
+----------------------------
+- Fixed various PHPCS complains, except the helpless CTools lowerCamel formats
+  and CSS multiline selectors due to Sass bug :unix_newlines never applied, nor
+  proper line break after decendant selectors.
+
+Slick 7.x-2.0-dev, 2015-2-24
+----------------------------
+- Simplified slick.tpl.php markups for when only 1 item is available.
+- Fixed slick.theme.css and slick.load.min.js to support nested slicks. Be sure
+  to re-check your CSS with the new specifity introduced by nested slicks.
+  Mostly related to .slide__caption and .slide__media classes e.g.:
+  Before:
+  .slide--caption--below .slide__caption {}
+  After:
+  .slide--caption--below > .slide__content > .slide__caption {}
+
+  This allows child slicks within a slick to have proper skins, rather than
+  being overridden by the parent slick.
+
+- Fixed for nested slicks, slicks within a slick for Field collection and Views.
+- Fixed RTL attributes from the .slick to .slick-slider to reflect Slick 1.4.
+
+Slick 7.x-2.0-dev, 2015-2-20
+----------------------------
+- Changed admin assests to use slick.admin library. Clear cache if trouble to
+  see the admin styling.
+- Added slick.admin library.
+- Changed slick.load.js, slick.media.js and slick.colorbox.js with their
+  minified versions, slick.load.min.js, slick.media.min.js and
+  slick.colorbox.min.js, respectively to save some bytes.
+
+Slick 7.x-2.0-dev, 2015-2-17
+----------------------------
+- Updated to media_soundcloud 7.x-2.1 which removed ::getOEmbed method.
+- Fixed module slick.theme.css being overriden by library slick-theme.css.
+- Fixed media video/audio autoplay not being triggered when button play clicked.
+- Fixed media video carousel being sluggish due to the browser always request
+  iframe SRC even when empty (about:blank). The iframe is now removed and stored
+  in memory instead, and only made available when a play button clicked.
+
+- Updated slick.media.js to reflect the latest fix with afterChange.
+
+Slick 7.x-2.0-dev, 2015-2-15
+----------------------------
+- Fixed slide--current class not being applied when total <= slidesToShow, that
+  is when slick-center class is not really centered, and when asNavFor applies,
+  and when afterChange always fails.
+
+Slick 7.x-2.0-dev, 2015-2-14
+----------------------------
+- Added hook_slick_attach_info_alter() to alter slick_attach() before output.
+- Updated slick.api.php for the new skin CSS and JS array.
+- Fixed skin CSS overrides not being applied for multiple slick instances on the
+  same page, by changing the array of skin CSS and JS to be keyed by file names
+  rather than indeces. Relevant to Drupal 8 dynamic assets.
+  If you don't override the skin CSS, the change is ignorable.
+  Single instance or multiple without overriding skins are not effected.
+  Unless you have multiple slick instances on the same page, previous overrides
+  with indeces will still work though.
+  The change now allows proper overrides and respect the orders accordingly, see
+  hook_slick_skins_info_alter().
+  If you have overridden the skin CSS, be sure to update it accordingly, see
+  slick.api.php for the updated information.
+
+- Fixed skin Fullscreen inline CSS for slick_fields.module for Media and FC.
+
+- Fixed .slick__arrow parent selector relevant for Slick 1.4, see
+  Drupal.slick.arrows().
+  This core bug happens when total <= slidesTosShow and should be fixed by the
+  implementor/module as the author suggested.
+- Fixed for skin 3d back relevant to the latest fix with afterChange and proper
+  data-slick-index.
+- Updated slick.load.js to reflect the 1.4.1 fixes.
+
+Slick 7.x-2.0-dev, 2015-2-3
+---------------------------
+- Added more info related to ROADMAP and current delvelopment status at README.
+- #2418149 by nrutkowski: - Fixed for Slick 1.4 breaking changes.
+- Updated to Slick 1.4 with more tests and cleanups.
+- Fixed nullified edgeFriction due to typecast integer to float.
+- Updated the rest of year CHANGELOG from 2014 to 2015.
+
+Slick 7.x-2.0-dev, 2015-2-1
+---------------------------
+- Updated slick example to avoid Unslick and too large centerPadding which
+  screws up slidesToShow at small breakpoints.
+- Updated year CHANGELOG from 2014 to 2015.
+- Removed useless merged.prevArrow + merged.nextArrow from slick.load.js since
+  arrows already added by HTML whenever required.
+- Added hook_requirements() to slick.install.
+- Added thumbnail caption to slick_fields and slick_views like yahoo/youtube
+  thumbnail captioning.
+
+
+Slick 7.x-2.0-dev, 2015-1-30
+----------------------------
+- Please read below before upgrading to Slick 1.4:
+  Breaking changes: https://github.com/kenwheeler/slick/releases/tag/1.4.0
+  - slide - The default value of the slide option has been changed to blank.
+    This means that slick will use any direct children as slides, without having
+    to specify which tag or selector to target.
+    Consequencies:
+    * - Added direct child container within .slick to hold the slides, i.e.:
+      .slick__slider. Previously slides are direct children of .slick container.
+    * Slick consequently must be initilialized at .slick__slider, otherwise we
+      always have one slide.
+    * "slick__arrow" can not be placed within .slick container directly even
+      with the previous workaround by adding a specific class, and different
+      selector. To overcome this, added additional container .slick__slider
+      within .slick, so that .slick__arrow is not fetched as part of slides.
+    * focusOnSelect , e.g. with thumbnail navigation, will not work anymore, so
+      .slick__slide class added automatically only when needed now.
+    * All in all, this is mostly breaking asNavFor, so be sure to update the
+      asNavFor selectors accordingly at Field formatter and Views pages, e.g.:
+      Before: #slick-nodes targetting .slick container.
+      After: #slick-nodes-slider (note "-slider") targetting .slick__slider.
+
+      Or adding " .slick__slider" to your current selector should resolve, e.g.:
+      Before: #slick-nodes
+      After: #slick-nodes .slick__slider
+      Apply it to both asNavFor Main and asNavFor Thumbnail.
+
+      Or if you are using sub-modules, and unsure, simply check the new option:
+      "asNavFor auto selector" at:
+      - admin/structure/types/manage/CONTENT_TYPE/display
+      - admin/structure/views/view/VIEW
+      This will auto generate the proper asNavFor selectors accordingly instead.
+      See README.txt for the new HTML structure
+
+   - Methods replaced by events
+     Consequencies:
+     * Drupal.slick.callbacks dropped, encouraged to use events now, see
+     slick.media.js.
+     We can bring this callback back if any good reason other than placing
+     it somewhere in the slick.load.js, only then it is not specific to library.
+
+   - slick.css has been forked into two different files. slick.css is now the
+     core functional slick css file, while slick-theme.css are the default
+     styling.
+     Consequencies:
+     * slick-theme.css is optional, and only added if you have chosen a Skin.
+     This is a great plus for advanced work, e.g.: use own arrow icons.
+
+- Added "Unslick" option to disable Slick at a given breakpoint. Note, you can't
+  window shrink this, once you unslick, you are unslicked.
+- Added "asNavFor auto selectors" option to determine asNavFor selectors by the
+  current field/view ID selectors automatically as opposed to manual selectors.
+- Updated slick.load.js, slick.media.js to use events, not callback anymore.
+- Updated slick.tpl.php, SlickOptionsetUi, etc. to deal with the breaking
+  changes introduced at Slick 1.4.
+  Be sure to update slick.tpl.php, etc., if already customized.
+- Updated to Slick 1.4.
+
+Slick 7.x-2.0-dev, 2015-1-29
+----------------------------
+- Added unslick option for Slick 1.4 to disable Slick at breakpoint.
+- Added mobileFirst option for Slick 1.4.
+
+- Added Slick example sub-module, be sure to have field_image and field_images
+  as no fields installed by default, see admin/reports/fields.
+- Fixed for slick_devel_preprocess_slick() applied globally.
+
+Slick 7.x-2.0-dev, 2015-1-26
+----------------------------
+- Updated workarounds to become permanent, since core library leaves them to the
+  implementors for various reasons, such as: mousewheel, arrows issues, etc.
+- Added slick_devel.module to ease developing the latest features of the
+  library.
+- Updated data-slick-index reference to use static class with slide--N classes
+  instead to make it compatible with slick 1.4 and below.
+- Added edgeFriction option as Swipetoslide fix, requires slick 1.4.
+
+Slick 7.x-2.0-dev, 2015-1-25
+----------------------------
+- Updated invalid index attribute to data-slick-index as per
+  https://github.com/kenwheeler/slick/issues/825, requires slick 1.4.
+- Changed dummy image for lazyLoad to said more stable by user Layke.
+  See http://goo.gl/TJenKX
+- Added link field as option for slide title for both file and field collection.
+
+Slick 7.x-2.0-dev, 2015-1-24
+----------------------------
+- Added random option to randomize slide orders, useful to manipulate cached
+  blocks such ads rotation, or random products.
+  See https://github.com/kenwheeler/slick/issues/359
+  See http://reddit.com/r/slickcarousel/comments/2kyu51/random_slide_order
+
+Slick 7.x-2.0-dev, 2015-1-2
+---------------------------
+- Dropped too general .slick__caption absolute positioning if no layout defined
+  at slick.theme.css, to allow pure text slideshow such as testimonial, or
+  quotes without extra overrides.
+
+- Added Translate link to file entity if translatable, basically to trigger/
+  bring to translation tab as defined at:
+  admin/config/regional/entity_translation/translatable/FIELD_NAME
+- Added slide_classes to file entity and FC fields.
+
+Slick 7.x-2.0-dev, 2014-12-27
+-----------------------------
+- Fixed for Fatal error: Cannot access empty property in field.attach.inc on
+  line 324, if Media view_mode is not enabled.
+
+Slick 7.x-2.0-dev, 2014-12-26
+-----------------------------
+- Fixed compatibility with Entity translation for the Slick fields media by
+  dropping optional $langcode argument.
+- Added view mode "Slick carousel" to file and field collection entity view
+  modes.
+- Fixed next_arrow typo to nextArrow for JS.
+- Fixed slide_layout for Slick Views not being recognized if using List (text).
+- Fixed caption right placement being overriden by caption left.
+
+Slick 7.x-2.0-dev, 2014-12-24
+-----------------------------
+- Fixed coder review complain with missing asterix on the block comment.
+- Fixed Shiny admin theme issue clearing every form-item which should be
+  displayed inline.
+
+- Dropped workaround for "on demand" lazyLoad. The issue is no longer valid.
+  However if the issue persists at your end, try two possible fixes below.
+  Related old info:
+  Default lazyLoad "on demand" may have issue to generate newly created images,
+  causing 403.
+  Maybe related to itok: https://www.drupal.org/drupal-7.20-release-notes
+  Possible fixes without compromising security:
+  - https://www.drupal.org/project/imageinfo_cache
+- Use lazyLoad "progressive" instead.
+
+  lazyLoad ondemand also has issue with dummy image excessive height, so use it
+  with care. Dummy image is for valid HTML5.
+
+Slick 7.x-2.0-dev, 2014-12-18
+-----------------------------
+- Fixed wrong grid values for small devices.
+- Added more visible slides from 10 to 32.
+
+Slick 7.x-2.0-dev, 2014-12-17
+-----------------------------
+- Added various descriptive texts to clarify intention.
+- Fixed the list negative margin used at Foundation grid.
+- Added notice to README about the Grid skin.
+- Added new theme_slick_grid() to handle the Grid.
+- Added skin Grid to quickly build Slick grid carousel, slick.theme--grid.css
+  as a starter. Use your own grid system, and overrides the classes as needed.
+- Added new options to Slick Views related to the Grid, Views only by now.
+- #2392193 by chefnelone: Creating a grid Slick slider
+
+Slick 7.x-2.0-dev, 2014-11-28
+-----------------------------
+- Fixed for slick.theme--classic.css .slide--caption--bottom .slide__caption.
+- Updated slick.load.js to fix some regression at core library, and type error.
+- Updated slick.media.js to change empty iframe SRC attribute to about:blank.
+
+Slick 7.x-2.0-dev, 2014-11-20
+-----------------------------
+- Fixed for arrows not properly updated on resize with responsive settings.
+- Updated slick_views typo "slick_wrapper" class into "slick-wrapper".
+
+Slick 7.x-2.0-dev, 2014-11-15
+-----------------------------
+- #2375659 by jtwalters: - Fixed dots do not work with breakpoints.
+
+Slick 7.x-2.0-dev, 2014-11-14
+-----------------------------
+- Moved aka off-loaded dormant/optional functions into separate files:
+  - includes/slick.extras.inc
+  - includes/slick.admin.inc
+
+- Reorganized includes/slick.elements.inc file.
+- Simplified SLICK_VERSION to avoid chasing highly dynamic sub-minor releases.
+
+Slick 7.x-2.0-dev, 2014-11-11
+-----------------------------
+- #2372923 by Adam.Brown: slick.theme.css overriding custom slick themes
+
+Slick 7.x-2.0-dev, 2014-11-09
+-----------------------------
+- Updated to Slick version 1.3.14:
+  - Added respondTo, giving the ability to respond to slider width or window
+    width, or the smaller of the two
+  - Bumped the speed default to 500
+
+Slick 7.x-2.0-dev, 2014-11-08
+-----------------------------
+- #2371205 by estebant: Expand the ternary operator for PHP < 5.3
+  compatibility.
+
+Slick 7.x-2.0-dev, 2014-11-05
+-----------------------------
+- Added empty_option to all the Skins options. Now the Skin is optional.
+  Skins defined by sub-modules fallback to the Skin defined at the optionset.
+  Re-save existing Optionset to disable the skin at all.
+- #2369129 by bjmiller121: Option for no skin to be loaded.
+
+Slick 7.x-2.0-dev, 2014-10-31
+-----------------------------
+- Removed slick.theme--extra.txt containing unused pure CSS arrows.
+- Updated and cleaned up gems and Sass files.
+
+Slick 7.x-2.0-dev, 2014-10-30
+-----------------------------
+- Added a new option: initialSlide introduced at Slick 1.3.12
+- #2305949 by scottalan: Start carousel on specific item
+
+Slick 7.x-2.0-dev, 2014-10-28
+-----------------------------
+- Updated to Slick version 1.3.13:
+  Emergency Hotfix for slidesToScroll: 1 and infinite: false (#718)
+
+- Updated slick.theme.inc to load fallbacks only if slick items count > 1.
+- Updated slick.load.js to reflect the latest library fixes:
+  - Removed workaround with:
+    Responsive breakpoint change removes custom prev / next arrows
+    https://github.com/kenwheeler/slick/issues/480
+
+  - Removed workaround with:
+    asNavFor thumbnails stopped working with slidesToShow > total slides
+    https://github.com/kenwheeler/slick/issues/497
+
+    Leaving a single remaining use with centerMode disable:
+    http://jsfiddle.net/o4toq31q/18/
+
+- Updated to Slick version 1.3.12.
+
+Slick 7.x-2.0-dev, 2014-10-16
+-----------------------------
+- Fixed for vertical direction on Full screen skin.
+
+Slick 7.x-2.0-dev, 2014-10-15
+-----------------------------
+- Updated slick.colorbox.js to reflect fixes from Slick >= 1.3.11.
+- Refactored Slick Views.
+- Added a new basic Full screen skin.
+- Added a new skin CSS: slick.theme--fullscreen.css
+
+Slick 7.x-2.0-dev, 2014-10-11
+-----------------------------
+- Fixed core library hotfix 1.3.11 which removes pointer-events for Firefox
+  draggable issue from all images which in turn makes thumbnails non-clickable
+  anymore, nullifying focusOnSelect. Hence added the pointer-events back to
+  thumbnail images.
+- Fixed for JS error with Slick > 1.3.11 within responsive display clone:
+  Error: Syntax error, unrecognized expression: $(element).
+- Fixed for Notice: Undefined property: views_handler_field_node_*::
+  $field_info in SlickViewsPluginStyleSlick->options_form()
+- Fixed for sudden jump scroll from last to first slide and vice versa at
+  slick.theme--3d-back.css.
+- Updated to Slick 1.3.11
+
+Slick 7.x-2.0-dev, 2014-10-07
+-----------------------------
+- Added a new basic 3d skin: 3d back.
+- Added a new skin CSS: slick.theme--3d-back.css
+- Updated to Slick v1.3.9
+
+Slick 7.x-2.0-dev, 2014-10-04
+-----------------------------
+- Added option "CSS ease override" to use the pre-existing CSS3 easings based on
+  Native and Penner Equations transitions from http://matthewlein.com/ceaser/
+  to ease up cubic-bezier selection.
+
+- Refined easings and their option dependency to reflect the actual Slick
+  behavior, that is, cssEase and cssEaseOverride are now dependent on useCSS.
+
+Slick 7.x-2.0-dev, 2014-10-01
+-----------------------------
+- Simplified dots with static thumbnails which was previously dropped by
+  asNavFor.
+- Improved slick.theme--classic.css to only apply layout to large devices.
+- Improved some custom CSS to avoid issues with the existing library bugs.
+- Updated admin and caption placement CSS.
+- Updated to Slick v1.3.8
+- Added two new options: swipeToSlide and variableWidth.
+
+Slick 7.x-2.0-dev, 2014-09-27
+-----------------------------
+- #2345169 by ardnet: - Fixed for Can not set Breakpoints in admin settings
+  page by adding maxlength 1 to Breakpoints field.
+
+Slick 7.x-2.0-dev, 2014-09-26
+-----------------------------
+- #2344829 by SpadXIII: - Added "Support for adaptiveHeight".
+- Added drupal_static to slick_get_options().
+
+Slick 7.x-2.0-dev, 2014-09-23
+-----------------------------
+- Fixed for Soundcloud fatal error for when no internet connection available.
+
+Slick 7.x-2.0-dev, 2014-09-16
+-----------------------------
+- Updated slick.load.js to re-cache arrows to copy into responsives.
+- #2339379 by suldan: Change check_plain into filter_xss_admin.
+- #2339379 by suldan: - Fixed for Views plugin: Content:title not available.
+
+Slick 7.x-2.0-dev, 2014-09-12
+-----------------------------
+- Updated slick.colorbox.js to avoid unslick(), and use slickGoTo() like before.
+  Tested to work with the latest non-minified version from the master branch.
+
+- Added basic Scald atom_reference integration via Field collection overlay.
+
+Slick 7.x-2.0-dev, 2014-09-8
+----------------------------
+- Added new option: waitForAnimate. Only supported by non-minified version now.
+
+
+Slick 7.x-2.0-dev, 2014-09-4
+----------------------------
+- Added fixes for slick.media.js being screwed up after 1.3.7 update.
+- Added missing slick.theme--asnavfor.css
+
+Corrected misleading tips: Avoid centerMode for the thumbnails slideToShow > 3.
+It should say: Use odd numbers when centerMode on.
+
+
+Slick 7.x-2.0-dev, 2014-09-3
+----------------------------
+- Added fixes for asNavFor to Media and Field Collection.
+- Added skin asNavFor.
+- Updated slick.load.js to have proper .slide--current classes for the thumbnail
+  navigation since core don't provide one. With no centerMode .slick-active can
+  be as many as visible slides, and the current slide has no special class.
+  Temp tips till core fix: Avoid centerMode for the thumbnails slideToShow > 3.
+
+- Updated slick-media.tpl and slick-item.tpl to have no markups for thumbnails.
+
+- Added dummy/placeholder image to lazyLoad progressive.
+- Fixed for when lazyLoad is disabled, to allow sharing to Pinterest for small
+  slides.
+
+- Updated slick.colorbox.js to work with asNavFor.
+- Added new theme slick_wrapper to hold asNavFor, two slicks with thumbnail
+  navigation.
+- #2325225 by scottalan: - Added Slider as Nav for as the only last option
+  left for version 1.3.7.
+
+- Updated from v1.3.6 to v1.3.7
+
+Slick 7.x-2.0-dev, 2014-08-4
+----------------------------
+- Fixed for duplicated .slick__arrow on resizing.
+
+Slick 7.x-2.0-dev, 2014-08-2
+----------------------------
+- #2309681 by immoreel: - Added support for Omega 3 expecting classes_array.
+  Do not output slide__media wrapper if no main image and caption available. The
+  case, e.g., main image left empty, and overlay image/media populated.
+
+Slick 7.x-2.0-dev, 2014-07-25
+-----------------------------
+- Added empty_option to Lazyload to allow sharing to Pinterest for small slides,
+  since current Lazyload is a must, and img SRC attributes is always empty.
+
+Slick 7.x-2.0-dev, 2014-07-24
+-----------------------------
+- #2308591 by jmuzz:
+- Fixed for specificity of breakpoints states.
+- Remove wasted breakpoint dependent options if disabled, even if not empty.
+- Fixed CSS overriden checkboxes for admin settings.
+
+Slick 7.x-2.0-dev, 2014-07-18
+-----------------------------
+- Dropped slick-carousel.tpl.php, template_preprocess_slick_carousel() from
+  slick.theme.inc
+- Dropped theme_slick_carousel() in favor of the unified theme_slick()
+  for custom coded, Field formatter and Views for easy maintenance.
+
+Slick 7.x-2.0-dev, 2014-07-13
+-----------------------------
+- Added color_field support to Field Collection to colorize the slide text.
+- Fixed for Strict warning: Declaration of SlickViewsPluginStyleSlick::render()
+  should be compatible with views_plugin_style::render() in
+  _registry_check_code() (line 3139 ..., neglecting coder sniffs: "No scope
+  modifier specified for function "render"
+  [sniffer_squiz_scope_methodscope_missing]"
+- Added settings variables to template_preprocess_slick_item
+- Limit colorbox resize to non-images at slick.colorbox.js under onComplete.
+
+Slick 7.x-2.0-dev, 2014-07-05
+-----------------------------
+- Separated rules for slick.colorbox.css from slick.media.css
+- Started integration with Scald module as a separate project Scald Slick
+  module.
+
+Slick 7.x-2.0-dev, 2014-06-26
+-----------------------------
+- Marked this feature complete for 1.3.6.
+- Added new options for future 1.3.7:
+  - prevArrow
+  - nextArrow
+  - pauseOnDotsHover
+   Latest Slick 1.3.6 is currently still buggy with responsive options not being
+   read.
+
+- Added compatibility with Omega 4 which declares attributes_array already.
+
+Slick 7.x-2.0-dev, 2014-06-24
+-----------------------------
+- Added JS callbacks, see slick.api.js. Modules and themes may implement any of
+  the Slick methods to interact with the Slick using Drupal.slick.callbacks
+  namespace. JS Gurus, improvements are very much welcome.
+- Fixed inheritance issue with custom responsive options, including arrows
+  wrapper and thumbnails.
+- Removed the thumbnail markups from slick.tpl.php, and its related leftover
+  elsewhere.
+- Moved thumbnails inside slides, rather than separate list.
+
+Slick 7.x-2.0-dev, 2014-06-23
+-----------------------------
+- Removed two dup and useless problematic options from responsive options: slide
+  and lazyLoad, since both _must inherit from the main settings.
+- Fixed scrolling behavior on colorbox closing, Drupal.slickColorbox.jumpScroll.
+- Changed skin Classic to reveal captions on active-slide rather than hover. To
+  reveal it on hover, override and edit slick.theme--classic.css and replace
+  .slick-active starting from line #96, and use pseudo :hover instead.
+- Added mousewheel option to slick_fields.module.
+- Fixed undefined index media_switch at slick_fields form.
+- Changed <div class="slick__arrow"> to <nav class="slick__arrow"> at slick.tpl
+  as the last fail safe against the problematic anonymous DIV slide option. It
+  is not an issue if data is passed into theme_slick() already. However copying
+  the template and creating a custom theme without being aware of the issue will
+  break the slide.
+
+Slick 7.x-2.0-dev, 2014-06-16
+-----------------------------
+- Fixed broken arrows due to problematic default anonymous DIV by forcing
+  specific class .slick__slide to slide option.
+- Renamed and reorganized all CSS files to match Drupal 8 file organization, see
+  https://drupal.org/node/1887922
+
+Slick 7.x-2.0-dev, 2014-06-13
+-----------------------------
+- Added slick-views.tpl.php to satisfy Views UI template discovery.
+
+Slick 7.x-2.0-dev, 2014-06-11
+-----------------------------
+- Added thumbnail pager option.
+- Changed _slick_fields_get_media_thumbnail() to be reusable for thumbnail
+  pagers.
+- Fixed Youtube URL not playing inside Colorbox due to missing external params.
+- Fixed checkboxes states with checked attributes at admin pages.
+- Added autoplay to Colorbox audio/video.
+
+Slick 7.x-2.0-dev, 2014-06-09
+-----------------------------
+- Added API file containing skin information.
+- Added more Views options to have consistent markups with the Field version.
+
+Slick 7.x-2.0-dev, 2014-06-08
+-----------------------------
+- Added optional Colorbox intergration to display image or video inside
+  Colorbox, or as an image to iframe switcher.
+
+Slick 7.x-2.0-dev, 2014-06-07
+-----------------------------
+
+- Added Sass versions for slick.skin.css and slick.media.css.
+- Added basic skins to support various slide layouts.
+- Added direct layout options for core Image field. Media and Field collection
+  should use a separate field instead with some pre-defined options.
+- Added slick.make file to download relevant libraries. We don't name it.example
+  to allow simplytest.me download the library.
+- Added title, captions and overlay fields for Field Collection and Media
+- Added options to break down Media and Field collection fields to support
+  custom displays for slide title, description, overlay audio/video/image, link,
+  and layout fields.
+- Added supports for Field collection at slick_fields.module.
+- Added Picture module integration.
+
+Slick 7.x-1.0-dev, 2014-05-25
+-----------------------------
+- Added admin CSS and JS to make nice CTools UI.
+- Added responsive display options, and additional custom options.
+- Added slick.media.js to allow image to iframe switcher.
+- Reworked JS settings in the head to only output base defaults alone, with no
+  extra items. Individual JS settings are stored as data attributes, only single
+  one now.
+- Reworked the theme functions to merge HTML5 data attributes to store JS
+  settings as a single JSON object within the Slick container rather than
+  regular JS settings in the <head>.
+- Simplified logic at module slick.js. JS should not do hard work with typecast
+  or parse separate multiple data attributes, PHP does. JS is now ready to
+  consume valid JSON object, or nothing. This is relevant where bunch of JS
+  settings with responsive displays get in.
+- Renamed module slick.js into slick.load.js, to avoid conflict with the library
+  for debug purposes.
+- Renamed slick.css into slick.skin.css, otherwise Drupal overrides the library.
+- Renamed "theme" directory into "templates" for Drupal 8 auto discovery
+  goodness.
+- Deprecating theme_carousel in favor of theme_slick. Will deprecate it, not
+  yet.
+- Deleted slick.views.inc and slick_plugin_style_slick.inc files, and use a
+  separate slick_views.module instead.
+
+- Added CTools plugin for exportable configuration via optionsets.
+- Added dependencies on CTools, and libraries modules at slick.info file.
+- Added supports for Image, and Media at slick_fields.module.
+- Added 2 sub-modules: slick_views and slick_fields.
+- Added slick.install to install database table for optionsets.
+- Added the file CHANGELOG.txt.
+- by gausarts: Reworked some architecture.

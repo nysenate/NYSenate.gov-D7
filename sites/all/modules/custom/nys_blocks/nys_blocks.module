@@ -1122,7 +1122,7 @@ function _nys_blocks_user_dashboard_header_block_content() {
   global $user;
   $dashboard_accessed_user = is_numeric(arg(1)) ? user_load(arg(1)) : user_load_by_name(arg(1));
 
-  if ($user->uid != $dashboard_accessed_user->uid) {
+  if ($user->uid != $dashboard_accessed_user->uid && isset($dashboard_accessed_user->field_first_name[LANGUAGE_NONE][0]['safe_value']) && isset($dashboard_accessed_user->field_last_name[LANGUAGE_NONE][0]['safe_value'])) {
     $dashboard_display_name = $dashboard_accessed_user->field_first_name[LANGUAGE_NONE][0]['safe_value'] . ' ' . $dashboard_accessed_user->field_last_name[LANGUAGE_NONE][0]['safe_value'] . '&rsquo;s';
   }
   else {
@@ -1378,150 +1378,169 @@ function _nys_blocks_bill_detail_votes_block_content() {
   // Initialize block output.
   $output = '';
 
+  // Initialize the bill_node.
+  $bill_node = FALSE;
+
   // In the current request, arg() should be, e.g., '/node/5396461'.
+  $ent_type = arg(0);
   $bill_nid = arg(1);
 
-  // Get votes details of the bill and all of it's amendments
-  if ((arg(0) == 'node') && (is_numeric($bill_nid))) {
-    // Load the current bill.
+  // Load the current bill.
+  if (($ent_type == 'node') && (is_numeric($bill_nid))) {
     $bill_node = node_load($bill_nid);
-    if ($bill_node === FALSE || $bill_node->type != 'bill') {
-      return FALSE;
-    }
-
-    // Get some easy references.
-    $current_base_print = $bill_node->field_ol_base_print_no[LANGUAGE_NONE][0]['value'];
-    $current_session_year = $bill_node->field_ol_session[LANGUAGE_NONE][0]['value'];
-    $current_sub_print = $bill_node->field_ol_substituted_by[LANGUAGE_NONE][0]['value'];
-
-    // Array to hold all the node IDs to be loaded from {bill_vote_index}.
-    $search_for = array();
-
-    // Get the node IDs of all revisions of the current bill.
-    $current_revisions = nysenate_get_bill_versions('bill', $current_base_print, $current_session_year);
-    foreach ($current_revisions as $key => $val) {
-      $search_for[] = $val['nid'];
-    }
-
-    // If there is a substitution for this bill, we need to discover the
-    // node IDs for all revisions of the new bill.  Starting with the original
-    // bill's session year and substituted print number, follow the joins.
-    // We must verify against base print number and session year for a good match.
-    if ($current_sub_print) {
-      $query = "SELECT sess2.entity_id AS nid FROM " .
-        "field_data_field_ol_print_no pn " .
-        "INNER JOIN field_data_field_ol_session sess " .
-        "ON pn.entity_id=sess.entity_id " .
-        "INNER JOIN field_data_field_ol_base_print_no bpn " .
-        "ON pn.entity_id=bpn.entity_id " .
-        "INNER JOIN field_data_field_ol_base_print_no bpn2 " .
-        "ON bpn.field_ol_base_print_no_value = bpn2.field_ol_base_print_no_value " .
-        "INNER JOIN field_data_field_ol_session sess2 " .
-        "ON bpn2.entity_id = sess2.entity_id  " .
-        "AND sess2.field_ol_session_value = sess.field_ol_session_value " .
-        "WHERE pn.field_ol_print_no_value = :subd_print_no " .
-        "AND sess.field_ol_session_value = :session_year";
-      $params = array(
-        ':subd_print_no' => $current_sub_print,
-        ':session_year' => $current_session_year
-      );
-      $subd_revisions = db_query($query, $params);
-
-      // Add the discovered node IDs to the search array.
-      foreach ($subd_revisions as $key => $val) {
-        $search_for[] = $val->nid;
-      }
-    }
-
-    // Now load the bill vote information for the node IDs.
-    $all_votes = db_select('bill_vote_index', 'bvi')
-      ->fields('bvi')
-      ->orderBy('field_publication_date_value', 'DESC')
-      ->orderBy('type', 'DESC')
-      ->condition('bill_nid', $search_for, 'IN')
-      ->condition('type', array('committee', 'floor'), 'IN')
-      ->execute()
-      ->fetchAll();
-
-
-    $vote_ids = array();
-    $votes = array();
-    $vote_print_numbers = array();
-    $vote_nids = array();
-    foreach ($all_votes as $vote_key => $vote) {
-      array_push($vote_ids, $vote->field_ol_votes_value);
-      array_push($vote_print_numbers, $vote->print_no);
-      array_push($vote_nids, $vote->bill_nid);
-      $votes[$vote->field_ol_votes_value] = array(
-        'base_print_no' => $vote->base_print_no,
-        'print_no' => $vote->print_no,
-        'bill_nid' => $vote->bill_nid,
-        'committee_tid' => $vote->field_ol_committee_target_id,
-        'type' => $vote->type
-      );
-    }
-    $vote_instance = 1;
-    $votes_entities = entity_load('field_collection_item', $vote_ids);
-    foreach ($votes_entities as $votes_entity) {
-      $vote_ref = $votes[$votes_entity->item_id];
-
-      $content = array();
-
-      // Load the committee name separately, entity_load doesn't grab them for votes for other nodes.
-      $committee_name = '';
-      if (isset($vote_ref['committee_tid'])) {
-        $comm = taxonomy_term_load($vote_ref['committee_tid']);
-        if (isset($comm->name)) {
-          $committee_name = $comm->name;
-          $content['committee_name'] = $comm->name;
-        }
-      }
-
-      // Since the print number is not tied to the actual field collection item, we need to do a little
-      // magic to get the print number from our original query.
-      $content['vote_print_number'] = $vote_print_numbers[$vote_instance - 1];
-      $content['vote_bill_nid'] = $vote_nids[$vote_instance - 1];
-
-      $content['vote_date'] = (isset($votes_entity->field_publication_date[LANGUAGE_NONE][0]['value'])) ? date('M j, Y', strtotime($votes_entity->field_publication_date[LANGUAGE_NONE][0]['value'])) : FALSE;
-      $content['aye_count'] = (isset($votes_entity->field_ol_aye_count[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_aye_count[LANGUAGE_NONE][0]['value'] : 0;
-      $content['aye_wr_count'] = (isset($votes_entity->field_ol_aye_wr_count[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_aye_wr_count[LANGUAGE_NONE][0]['value'] : 0;
-      $content['nay_count'] = (isset($votes_entity->field_ol_nay_count[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_nay_count[LANGUAGE_NONE][0]['value'] : 0;
-      $content['excused_count'] = (isset($votes_entity->field_ol_excused_count[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_excused_count[LANGUAGE_NONE][0]['value'] : 0;
-      $content['abstained_count'] = (isset($votes_entity->field_ol_abstained_count[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_abstained_count[LANGUAGE_NONE][0]['value'] : 0;
-      $content['absent_count'] = (isset($votes_entity->field_ol_absent_count[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_absent_count[LANGUAGE_NONE][0]['value'] : 0;
-      $content['vote_type'] = (isset($votes_entity->field_ol_vote_type[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_vote_type[LANGUAGE_NONE][0]['value'] : '';
-      $content['committee_type'] = (!empty($votes_entity->field_ol_committee[LANGUAGE_NONE][0]['entity']->name)) ? t($votes_entity->field_ol_committee[LANGUAGE_NONE][0]['entity']->name) : '';
-      $content['#vote_instance'] = $vote_instance;
-      $content['#member_content_flag'] = FALSE;
-
-      $member_keys = array(
-        'field_ol_aye_members' => 'aye_members',
-        'field_ol_nay_members' => 'nay_members',
-        'field_ol_aye_wr_members' => 'aye_wr_members',
-        'field_ol_absent_members' => 'absent_members',
-        'field_ol_excused_members' => 'excused_members',
-        'field_ol_abstained_members' => 'abstained_members'
-      );
-
-      foreach ($member_keys as $index => $key) {
-        $members = $votes_entity->$index;
-        if (!empty($members) && count($members[LANGUAGE_NONE]) > 0) {
-          $content['#member_content_flag'] = TRUE;
-          foreach ($members[LANGUAGE_NONE] as $member) {
-            $senator_content = node_load($member['target_id']);
-            $content['all_members'][$key][] = l(field_get_items('node',$senator_content,'field_last_name')[0]['value'], drupal_get_path_alias('node/' . $member['target_id']));
-          }
-        }
-      }
-
-      $vars = array('content' => $content);
-      $output .= theme('nys_blocks_bill_detail_votes', $vars);
-      $vote_instance++;
-    }
-    drupal_add_js(path_to_theme().'/js/vendor/highcharts.js');
-    return $output;
   }
-  return FALSE;
+
+  // We only need to act on requests for bill nodes.  Make sure we
+  // are supposed to be here.
+  if ($bill_node === FALSE || $bill_node->type != 'bill') {
+    return FALSE;
+  }
+
+  // Get some easy references.
+  $current_base_print = '';
+  if (isset($bill_node->field_ol_base_print_no[LANGUAGE_NONE][0]['value'])) {
+    $current_base_print = $bill_node->field_ol_base_print_no[LANGUAGE_NONE][0]['value'];
+  }
+  $current_session_year = '';
+  if (isset($bill_node->field_ol_session[LANGUAGE_NONE][0]['value'])) {
+    $current_session_year = $bill_node->field_ol_session[LANGUAGE_NONE][0]['value'];
+  }
+  $current_sub_print = '';
+  if (isset($bill_node->field_ol_substituted_by[LANGUAGE_NONE][0]['value'])) {
+    $current_sub_print = $bill_node->field_ol_substituted_by[LANGUAGE_NONE][0]['value'];
+  }
+
+  // If there's not a good base print number and session year, just leave.
+  if (!$current_base_print || !$current_session_year) {
+    return FALSE;
+  }
+
+  // Array to hold all the node IDs to be loaded from {bill_vote_index}.
+  $search_for = array();
+
+  // Get the node IDs of all revisions of the current bill.
+  $current_revisions = nysenate_get_bill_versions('bill', $current_base_print, $current_session_year);
+  foreach ($current_revisions as $key => $val) {
+    $search_for[] = $val['nid'];
+  }
+
+  // If there is a substitution for this bill, we need to discover the
+  // node IDs for all revisions of the new bill.  Starting with the original
+  // bill's session year and substituted print number, follow the joins.
+  // We must verify against base print number and session year for a good match.
+  if ($current_sub_print) {
+    $query = "SELECT sess2.entity_id AS nid FROM " .
+      "field_data_field_ol_print_no pn " .
+      "INNER JOIN field_data_field_ol_session sess " .
+      "ON pn.entity_id=sess.entity_id " .
+      "INNER JOIN field_data_field_ol_base_print_no bpn " .
+      "ON pn.entity_id=bpn.entity_id " .
+      "INNER JOIN field_data_field_ol_base_print_no bpn2 " .
+      "ON bpn.field_ol_base_print_no_value = bpn2.field_ol_base_print_no_value " .
+      "INNER JOIN field_data_field_ol_session sess2 " .
+      "ON bpn2.entity_id = sess2.entity_id  " .
+      "AND sess2.field_ol_session_value = sess.field_ol_session_value " .
+      "WHERE pn.field_ol_print_no_value = :subd_print_no " .
+      "AND sess.field_ol_session_value = :session_year";
+    $params = array(
+      ':subd_print_no' => $current_sub_print,
+      ':session_year' => $current_session_year
+    );
+    $subd_revisions = db_query($query, $params);
+
+    // Add the discovered node IDs to the search array.
+    foreach ($subd_revisions as $key => $val) {
+      $search_for[] = $val->nid;
+    }
+  }
+
+  // Now load the bill vote information for the node IDs.
+  $all_votes = db_select('bill_vote_index', 'bvi')
+    ->fields('bvi')
+    ->orderBy('field_publication_date_value', 'DESC')
+    ->orderBy('type', 'DESC')
+    ->condition('bill_nid', $search_for, 'IN')
+    ->condition('type', array('committee', 'floor'), 'IN')
+    ->execute()
+    ->fetchAll();
+
+
+  $vote_ids = array();
+  $votes = array();
+  $vote_print_numbers = array();
+  $vote_nids = array();
+  foreach ($all_votes as $vote_key => $vote) {
+    array_push($vote_ids, $vote->field_ol_votes_value);
+    array_push($vote_print_numbers, $vote->print_no);
+    array_push($vote_nids, $vote->bill_nid);
+    $votes[$vote->field_ol_votes_value] = array(
+      'base_print_no' => $vote->base_print_no,
+      'print_no' => $vote->print_no,
+      'bill_nid' => $vote->bill_nid,
+      'committee_tid' => $vote->field_ol_committee_target_id,
+      'type' => $vote->type
+    );
+  }
+  $vote_instance = 1;
+  $votes_entities = entity_load('field_collection_item', $vote_ids);
+  foreach ($votes_entities as $votes_entity) {
+    $vote_ref = $votes[$votes_entity->item_id];
+
+    $content = array();
+
+    // Load the committee name separately, entity_load doesn't grab them for votes for other nodes.
+    $committee_name = '';
+    if (isset($vote_ref['committee_tid'])) {
+      $comm = taxonomy_term_load($vote_ref['committee_tid']);
+      if (isset($comm->name)) {
+        $committee_name = $comm->name;
+        $content['committee_name'] = $comm->name;
+      }
+    }
+
+    // Since the print number is not tied to the actual field collection item, we need to do a little
+    // magic to get the print number from our original query.
+    $content['vote_print_number'] = $vote_print_numbers[$vote_instance - 1];
+    $content['vote_bill_nid'] = $vote_nids[$vote_instance - 1];
+
+    $content['vote_date'] = (isset($votes_entity->field_publication_date[LANGUAGE_NONE][0]['value'])) ? date('M j, Y', strtotime($votes_entity->field_publication_date[LANGUAGE_NONE][0]['value'])) : FALSE;
+    $content['aye_count'] = (isset($votes_entity->field_ol_aye_count[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_aye_count[LANGUAGE_NONE][0]['value'] : 0;
+    $content['aye_wr_count'] = (isset($votes_entity->field_ol_aye_wr_count[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_aye_wr_count[LANGUAGE_NONE][0]['value'] : 0;
+    $content['nay_count'] = (isset($votes_entity->field_ol_nay_count[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_nay_count[LANGUAGE_NONE][0]['value'] : 0;
+    $content['excused_count'] = (isset($votes_entity->field_ol_excused_count[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_excused_count[LANGUAGE_NONE][0]['value'] : 0;
+    $content['abstained_count'] = (isset($votes_entity->field_ol_abstained_count[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_abstained_count[LANGUAGE_NONE][0]['value'] : 0;
+    $content['absent_count'] = (isset($votes_entity->field_ol_absent_count[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_absent_count[LANGUAGE_NONE][0]['value'] : 0;
+    $content['vote_type'] = (isset($votes_entity->field_ol_vote_type[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_vote_type[LANGUAGE_NONE][0]['value'] : '';
+    $content['committee_type'] = (!empty($votes_entity->field_ol_committee[LANGUAGE_NONE][0]['entity']->name)) ? t($votes_entity->field_ol_committee[LANGUAGE_NONE][0]['entity']->name) : '';
+    $content['#vote_instance'] = $vote_instance;
+    $content['#member_content_flag'] = FALSE;
+
+    $member_keys = array(
+      'field_ol_aye_members' => 'aye_members',
+      'field_ol_nay_members' => 'nay_members',
+      'field_ol_aye_wr_members' => 'aye_wr_members',
+      'field_ol_absent_members' => 'absent_members',
+      'field_ol_excused_members' => 'excused_members',
+      'field_ol_abstained_members' => 'abstained_members'
+    );
+
+    foreach ($member_keys as $index => $key) {
+      $members = $votes_entity->$index;
+      if (!empty($members) && count($members[LANGUAGE_NONE]) > 0) {
+        $content['#member_content_flag'] = TRUE;
+        foreach ($members[LANGUAGE_NONE] as $member) {
+          $senator_content = node_load($member['target_id']);
+          $content['all_members'][$key][] = l(field_get_items('node',$senator_content,'field_last_name')[0]['value'], drupal_get_path_alias('node/' . $member['target_id']));
+        }
+      }
+    }
+
+    $vars = array('content' => $content);
+    $output .= theme('nys_blocks_bill_detail_votes', $vars);
+    $vote_instance++;
+  }
+  drupal_add_js(path_to_theme().'/js/vendor/highcharts.js');
+  return $output;
 }
 
 function nys_blocks_get_message_senator_link($no_forward_slash = FALSE) {

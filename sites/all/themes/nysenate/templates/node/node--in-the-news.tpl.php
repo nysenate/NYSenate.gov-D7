@@ -74,8 +74,13 @@
  * @see template_preprocess_node()
  * @see template_process()
  */
-
-  $author = (isset($content['field_article_author'][0]['#markup'])) ? $content['field_article_author'][0]['#markup'] : ( isset($content['field_senator'][0]['#markup']) ? $content['field_senator'][0]['#markup'] : FALSE);
+$author = FALSE;
+if (isset($content['field_article_author'][0]['#markup'])) {
+  $author = $content['field_article_author'][0]['#markup'];
+}
+elseif (isset($content['field_senator'][0]['#markup'])) {
+  $author = $content['field_senator'][0]['#markup'];
+}
 ?>
 <article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
   <?php print render($title_prefix); ?>
@@ -128,7 +133,7 @@
 
     <?php if($node->field_image_main): ?>
     <div class="c-block c-block--img">
-      <?php print theme('image_style', array('path' => $field_image_main[0]['uri'], 'style_name' => '760x377')); ?>
+      <?php if (isset($field_image_main[0]['uri'])) print theme('image_style', array('path' => $field_image_main[0]['uri'], 'style_name' => '760x377')); ?>
         <?php if(!empty($node->field_image_main[LANGUAGE_NONE][0]['title'])): ?>
           <p class="c-img--caption"><?php print $node->field_image_main[LANGUAGE_NONE][0]['title']; ?></p>
         <?php endif; ?>

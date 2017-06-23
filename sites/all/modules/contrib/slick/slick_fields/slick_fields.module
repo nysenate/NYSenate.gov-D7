@@ -1,0 +1,226 @@
+<?php
+/**
+ * @file
+ * Provides fields integration for the Slick carousel.
+ */
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function slick_fields_field_formatter_info() {
+  module_load_include('inc', 'slick', 'includes/slick.fields');
+  $formatters['slick'] = array(
+    'label'       => t('Slick carousel'),
+    'field types' => array('image', 'file', 'field_collection'),
+    'settings'    => slick_get_fields_default_settings(),
+  );
+  return $formatters;
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function slick_fields_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = $build = $thumb = $js = array();
+  if (count($items) < 1) {
+    return $element;
+  }
+
+  module_load_include('inc', 'slick', 'includes/slick.fields');
+  list($entity_id, , $bundle) = entity_extract_ids($entity_type, $entity);
+
+  $slick_path = drupal_get_path('module', 'slick');
+  $field_name = $field['field_name'];
+  $slick_id   = &drupal_static('slick_id', 0);
+  $id         = drupal_clean_css_identifier("slick-{$entity_type}-{$entity_id}-{$bundle}-{$field_name}-" . ++$slick_id);
+  $thumb_id   = $id . '-thumbnail';
+  $entity_uri = entity_uri($entity_type, $entity);
+  $view       = empty($display['views_view']) ? NULL : $display['views_view'];
+
+  // Prepare settings.
+  $settings = array(
+    'count'       => count($items),
+    'bundle'      => $bundle,
+    'field_type'  => $field['type'],
+    'field_name'  => $field_name,
+    'entity_id'   => $entity_id,
+    'entity_type' => $entity_type,
+    'entity_uri'  => $entity_uri['path'],
+    'attributes'  => array('id' => $id),
+  ) + slick_get_fields_default_settings();
+
+  $settings    = array_merge($settings, $display['settings']);
+  $asnavfor    = $settings['optionset_thumbnail'];
+  $is_asnavfor = $asnavfor && count($items) > 1;
+  $cid         = $instance['id'] . $settings['current_view_mode'] . $settings['image_style'] . $langcode;
+
+  // Sniffs for Views to allow block__no_wrapper, views_view__no_wrapper, etc.
+  if ($view) {
+    $settings['attributes']['class'][] = drupal_clean_css_identifier('slick--view--' . $view->name);
+    $settings['attributes']['class'][] = drupal_clean_css_identifier('slick--view--' . $view->name . '--' . $view->current_display);
+    $cid .= $view->name . $view->current_display;
+  }
+
+  $settings['cid'] = $cid;
+
+  // Renders slicks quickly from cache if any, as render cache is just cache.
+  $render_cache = FALSE;
+  if (!empty($settings['cache']) && $cache = cache_get($id . ':' . $cid, 'cache')) {
+    $render_cache = $settings['cache'] == 'persistent' ? TRUE : REQUEST_TIME < $cache->expire;
+  }
+
+  if ($render_cache) {
+    $slick[0] = $cache->data;
+    if ($is_asnavfor && $thumb_cache = cache_get($thumb_id . ':' . $cid, 'cache')) {
+      $slick[1] = $thumb_cache->data;
+    }
+
+    // Passes slicks to theme_slick_wrapper() to clean up the field markups.
+    return array(
+      '#theme'    => 'slick_wrapper',
+      '#items'    => $slick,
+      '#settings' => $settings,
+    );
+  }
+
+  // Otherwise do the routines before a cache stored, or when disabled.
+  $optionset = slick_optionset_load($settings['optionset']);
+  $settings['lazy']          = $optionset->options['settings']['lazyLoad'];
+  $settings['has_pattern']   = !empty($optionset->options['general']['goodies']['pattern']);
+  $settings['slide_caption'] = is_array($settings['slide_caption']) ? array_filter($settings['slide_caption']) : $settings['slide_caption'];
+  $settings['box_style']     = $settings['colorbox_style'];
+
+  $config = array(
+    'items'       => $items,
+    'field'       => $field,
+    'entity_type' => $entity_type,
+    'entity'      => $entity,
+    'langcode'    => $langcode,
+  );
+  switch ($field['type']) {
+    case 'image':
+      module_load_include('inc', 'slick', 'includes/slick.image');
+      $build = slick_format_image($settings, $config);
+      $thumb = !$is_asnavfor ? '' : slick_format_image($settings, $config, TRUE);
+      break;
+
+    case 'file':
+      module_load_include('inc', 'slick', 'includes/slick.extras');
+      module_load_include('inc', 'slick', 'includes/slick.media');
+      $build = slick_format_media($settings, $config);
+      $thumb = !$is_asnavfor ? '' : slick_format_media($settings, $config, TRUE);
+      break;
+
+    case 'field_collection':
+      module_load_include('inc', 'slick', 'includes/slick.extras');
+      module_load_include('inc', 'slick', 'includes/slick.field_collection');
+      $build = slick_format_field_collection($settings, $config);
+      $thumb = !$is_asnavfor ? '' : slick_format_field_collection($settings, $config, TRUE);
+      break;
+  }
+
+  $attach = array(
+    'attach_skin'           => $settings['skin'],
+    'attach_skin_thumbnail' => $settings['skin_thumbnail'],
+    'attach_skin_arrows'    => $settings['skin_arrows'],
+    'attach_skin_dots'      => $settings['skin_dots'],
+    'attach_media'          => $settings['media_switch'] == 'iframe-switch',
+  );
+
+  if ($settings['media_switch'] && strpos($settings['media_switch'], 'box') !== FALSE) {
+    $lightbox = str_replace('-switch', '', $settings['media_switch']);
+    $attach += array(
+      'attach_' . $lightbox => $settings['media_switch'] == $lightbox . '-switch',
+    );
+  }
+  $attachments = slick_attach($attach, $settings);
+
+  // Inline CSS is to colorize FC individual slide, or Fullscreen skin.
+  if ($inline_css = slick_get_inline_css($settings, $build)) {
+    $attachments['css'][] = $inline_css;
+  }
+
+  if ($settings['mousewheel'] && $mousewheel = libraries_get_path('mousewheel')) {
+    $js['mousewheel'] = TRUE;
+    $attachments['js'] += array($mousewheel . '/jquery.mousewheel.min.js' => array('group' => JS_LIBRARY, 'weight' => -5));
+  }
+
+  if ($settings['skin'] && $settings['thumbnail_hover']) {
+    $attachments['css'] += array($slick_path . '/css/components/slick.dots--thumbnail.css' => array('weight' => -98));
+  }
+
+  // Overrides common options to re-use a single optionset.
+  if ($settings['override']) {
+    foreach ($settings['overridables'] as $key => $override) {
+      $js[$key] = empty($override) ? FALSE : TRUE;
+    }
+    unset($settings['overridables']);
+  }
+
+  // Build the Slick grid if provided.
+  if (!empty($settings['grid']) && !empty($settings['visible_slides'])) {
+    $build = slick_build_grids($build, $settings);
+  }
+
+  if ($is_asnavfor) {
+    $settings['asnavfor_target'] = empty($settings['asnavfor_auto']) ? $settings['asnavfor_main'] : "#{$thumb_id}-slider";
+  }
+
+  // Build the single/main display Slick.
+  $slick[0] = slick_build($build, $js, $settings, $attachments, $id, $optionset);
+
+  if ($is_asnavfor) {
+    $optionset = slick_optionset_load($asnavfor);
+    $settings['attributes']['id'] = $thumb_id;
+    $settings['optionset'] = $asnavfor;
+    $settings['current_display'] = 'thumbnail';
+    $settings['asnavfor_target'] = empty($settings['asnavfor_auto']) ? $settings['asnavfor_thumbnail'] : "#{$id}-slider";
+
+    // Build the thumbnail+/text navigation Slick.
+    $slick[1] = slick_build($thumb, array(), $settings, array(), $thumb_id, $optionset);
+    $element = array(
+      '#theme'    => 'slick_wrapper',
+      '#items'    => $slick,
+      '#settings' => $settings,
+    );
+  }
+  else {
+    // Views will flatten the array unless we add a key 0, useful for more work.
+    $element = $view && !empty($settings['markup']) ? $slick : $slick[0];
+  }
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function slick_fields_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  form_load_include($form_state, 'inc', 'slick_fields', 'includes/slick_fields.formatters.admin');
+
+  $elements = _slick_fields_field_formatter_settings_form($field, $instance, $view_mode, $form, $form_state);
+  return $elements;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function slick_fields_field_formatter_settings_summary($field, $instance, $view_mode) {
+  module_load_include('inc', 'slick', 'includes/slick.admin');
+
+  $summary = slick_get_admin_summary($field, $instance, $view_mode, 'slick_fields');
+  return implode('<br />', $summary);
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function slick_fields_entity_info_alter(&$entity_info) {
+  foreach ($entity_info as $key => $entity) {
+    if (in_array($key, array('file', 'field_collection_item')) && !isset($entity_info[$key]['view modes']['slick_carousel'])) {
+      $entity_info[$key]['view modes']['slick_carousel'] = array(
+        'label' => t('Slick carousel'),
+        'custom settings' => FALSE,
+      );
+    }
+  }
+}

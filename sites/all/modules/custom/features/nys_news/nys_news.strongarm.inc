@@ -411,26 +411,29 @@ function nys_news_strongarm() {
       'sponsor_list_bill_detail' => array(
         'custom_settings' => FALSE,
       ),
+      'thumbnail_preview' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
         'locations' => array(
-          'weight' => '9',
+          'weight' => '6',
         ),
         'title' => array(
           'weight' => '1',
         ),
         'path' => array(
-          'weight' => '8',
-        ),
-        'metatags' => array(
           'weight' => '5',
         ),
+        'metatags' => array(
+          'weight' => '4',
+        ),
         'redirect' => array(
-          'weight' => '14',
+          'weight' => '7',
         ),
         'xmlsitemap' => array(
-          'weight' => '15',
+          'weight' => '8',
         ),
       ),
       'display' => array(),
@@ -590,6 +593,9 @@ function nys_news_strongarm() {
       'senators_involved' => array(
         'custom_settings' => FALSE,
       ),
+      'thumbnail_preview' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -600,16 +606,16 @@ function nys_news_strongarm() {
           'weight' => '9',
         ),
         'path' => array(
-          'weight' => '6',
+          'weight' => '7',
         ),
         'metatags' => array(
           'weight' => '9',
         ),
         'redirect' => array(
-          'weight' => '15',
+          'weight' => '11',
         ),
         'xmlsitemap' => array(
-          'weight' => '16',
+          'weight' => '10',
         ),
       ),
       'display' => array(),
@@ -662,20 +668,35 @@ function nys_news_strongarm() {
       'senator_search_list' => array(
         'custom_settings' => FALSE,
       ),
+      'thumbnail_preview' => array(
+        'custom_settings' => TRUE,
+      ),
+      'agenda_senator_sponsors' => array(
+        'custom_settings' => FALSE,
+      ),
+      'senators_involved' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
         'locations' => array(
-          'weight' => '10',
+          'weight' => '11',
         ),
         'title' => array(
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '11',
+          'weight' => '12',
         ),
         'metatags' => array(
-          'weight' => '12',
+          'weight' => '13',
+        ),
+        'redirect' => array(
+          'weight' => '14',
+        ),
+        'xmlsitemap' => array(
+          'weight' => '15',
         ),
       ),
       'display' => array(),

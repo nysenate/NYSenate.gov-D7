@@ -13,6 +13,8 @@ function nys_news_field_default_field_instances() {
   // Exported field_instance: 'node-article-body'.
   $field_instances['node-article-body'] = array(
     'bundle' => 'article',
+    'custom_add_another' => '',
+    'custom_remove' => '',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -41,6 +43,7 @@ function nys_news_field_default_field_instances() {
         'weight' => 0,
       ),
     ),
+    'ds_extras_field_template' => '',
     'entity_type' => 'node',
     'field_name' => 'body',
     'label' => 'Body',
@@ -320,13 +323,15 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'apply_chosen' => 0,
       ),
       'type' => 'options_select',
-      'weight' => 16,
+      'weight' => 9,
     ),
   );
 
   // Exported field_instance: 'node-article-field_chapters'.
   $field_instances['node-article-field_chapters'] = array(
     'bundle' => 'article',
+    'custom_add_another' => '',
+    'custom_remove' => '',
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -354,6 +359,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'weight' => 0,
       ),
     ),
+    'ds_extras_field_template' => '',
     'entity_type' => 'node',
     'field_name' => 'field_chapters',
     'label' => 'Chapters',
@@ -369,7 +375,9 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
       'settings' => array(
         'fields' => array(),
         'type_settings' => array(
+          'allow_clone' => 0,
           'allow_existing' => 0,
+          'allow_new' => 1,
           'delete_references' => 1,
           'label_plural' => 'chapters',
           'label_singular' => 'chapter',
@@ -378,7 +386,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         ),
       ),
       'type' => 'inline_entity_form',
-      'weight' => 15,
+      'weight' => 16,
     ),
   );
 
@@ -807,6 +815,88 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
       ),
       'type' => 'taxonomy_autocomplete',
       'weight' => 3,
+    ),
+  );
+
+  // Exported field_instance: 'node-article-field_paragraphs'.
+  $field_instances['node-article-field_paragraphs'] = array(
+    'bundle' => 'article',
+    'custom_add_another' => 'Add another layout component',
+    'custom_remove' => 'Remove Layout Component',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Choose from selection of layout components to customize the layout of your page. You can drag & drop components into the order you would like them to be on the page.',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'paragraphs',
+        'settings' => array(
+          'view_mode' => 'full',
+        ),
+        'type' => 'paragraphs_view',
+        'weight' => 18,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_paragraphs',
+    'label' => 'Custom Layout Components',
+    'required' => 0,
+    'settings' => array(
+      'add_mode' => 'select',
+      'allowed_bundles' => array(
+        'feature_image' => -1,
+        'pg_accordion' => 'pg_accordion',
+        'pg_block_reference' => -1,
+        'pg_featured_bills' => 'pg_featured_bills',
+        'pg_file_uploads' => -1,
+        'pg_image_left' => -1,
+        'pg_image_slider' => 'pg_image_slider',
+        'pg_quick_facts' => -1,
+        'pg_text' => 'pg_text',
+        'pg_video' => 'pg_video',
+        'two_column_button_links' => -1,
+      ),
+      'bundle_weights' => array(
+        'feature_image' => -22,
+        'pg_accordion' => -16,
+        'pg_block_reference' => -21,
+        'pg_featured_bills' => -17,
+        'pg_file_uploads' => -15,
+        'pg_image_left' => -14,
+        'pg_image_slider' => -18,
+        'pg_quick_facts' => -13,
+        'pg_text' => -20,
+        'pg_video' => -19,
+        'two_column_button_links' => -12,
+      ),
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'default_edit_mode' => 'preview',
+      'default_edit_mode_override' => 1,
+      'separate_edit' => 1,
+      'title' => 'Layout Component',
+      'title_multiple' => 'Layout Components',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'paragraphs',
+      'settings' => array(),
+      'type' => 'paragraphs_embed',
+      'weight' => 15,
     ),
   );
 
@@ -2471,16 +2561,18 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'progress_indicator' => 'throbber',
       ),
       'type' => 'file_generic',
-      'weight' => 3,
+      'weight' => 4,
     ),
   );
 
   // Exported field_instance: 'node-press_release-field_bills'.
   $field_instances['node-press_release-field_bills'] = array(
     'bundle' => 'press_release',
+    'custom_add_another' => '',
+    'custom_remove' => '',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'If this Press Release is directly related to Senate actions on a bill, load a teaser for that bill along with support and opposition buttons. Start by typing the bill (e.g. "S21. . ."), and then wait for autocomplete options to appear before selecting the right bill and hitting "enter".',
+    'description' => 'If this Press Release is directly related to Senate actions on a bill, load a teaser for that bill along with support and opposition buttons. Start by typing the bill (e.g. "S21. . ."), and then wait for autocomplete options to appear before selecting the right bill and hitting "enter". The bill(s) will appear at bottom of Press Release. If you want to embed a bill alongside your related content, try the Custom Layout Components field and choose "Featured Bill."',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -2506,6 +2598,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'weight' => 0,
       ),
     ),
+    'ds_extras_field_template' => '',
     'entity_type' => 'node',
     'field_name' => 'field_bills',
     'label' => 'Featured Bills',
@@ -2524,7 +2617,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'size' => 60,
       ),
       'type' => 'entityreference_autocomplete',
-      'weight' => 4,
+      'weight' => 5,
     ),
   );
 
@@ -2756,7 +2849,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
     'description' => 'Image must be minimum 1280x510 and 16:9 ratio to be featured on the Homepage.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'image',
         'settings' => array(
           'image_link' => '',
@@ -3024,6 +3117,88 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
     ),
   );
 
+  // Exported field_instance: 'node-press_release-field_paragraphs'.
+  $field_instances['node-press_release-field_paragraphs'] = array(
+    'bundle' => 'press_release',
+    'custom_add_another' => 'Add another layout component',
+    'custom_remove' => 'Remove Layout Component',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Choose from selection of layout components to customize the layout of your page. You can drag & drop components into the order you would like them to be on the page.',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'paragraphs',
+        'settings' => array(
+          'view_mode' => 'full',
+        ),
+        'type' => 'paragraphs_view',
+        'weight' => 19,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_paragraphs',
+    'label' => 'Custom Layout Components',
+    'required' => 0,
+    'settings' => array(
+      'add_mode' => 'select',
+      'allowed_bundles' => array(
+        'feature_image' => -1,
+        'pg_accordion' => -1,
+        'pg_block_reference' => -1,
+        'pg_featured_bills' => 'pg_featured_bills',
+        'pg_file_uploads' => -1,
+        'pg_image_left' => -1,
+        'pg_image_slider' => 'pg_image_slider',
+        'pg_quick_facts' => -1,
+        'pg_text' => 'pg_text',
+        'pg_video' => 'pg_video',
+        'two_column_button_links' => -1,
+      ),
+      'bundle_weights' => array(
+        'feature_image' => -22,
+        'pg_accordion' => -21,
+        'pg_block_reference' => -20,
+        'pg_featured_bills' => -18,
+        'pg_file_uploads' => -15,
+        'pg_image_left' => -14,
+        'pg_image_slider' => -19,
+        'pg_quick_facts' => -13,
+        'pg_text' => -16,
+        'pg_video' => -17,
+        'two_column_button_links' => -12,
+      ),
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'default_edit_mode' => 'preview',
+      'default_edit_mode_override' => 1,
+      'separate_edit' => 1,
+      'title' => 'Layout Component',
+      'title_multiple' => 'Layout Components',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'paragraphs',
+      'settings' => array(),
+      'type' => 'paragraphs_embed',
+      'weight' => 3,
+    ),
+  );
+
   // Exported field_instance: 'node-press_release-field_senator'.
   $field_instances['node-press_release-field_senator'] = array(
     'bundle' => 'press_release',
@@ -3147,12 +3322,15 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
       ),
       'teaser' => array(
         'label' => 'hidden',
-        'module' => 'text',
-        'settings' => array(
-          'trim_length' => 600,
-        ),
-        'type' => 'text_summary_or_trimmed',
-        'weight' => 0,
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 1,
+      ),
+      'thumbnail_preview' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 6,
       ),
     ),
     'entity_type' => 'node',
@@ -3173,7 +3351,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 2,
+      'weight' => 3,
     ),
   );
 
@@ -3204,7 +3382,13 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 6,
+      ),
+      'thumbnail_preview' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 8,
       ),
     ),
     'entity_type' => 'node',
@@ -3223,7 +3407,67 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'display_label' => 0,
       ),
       'type' => 'options_onoff',
-      'weight' => 8,
+      'weight' => 9,
+    ),
+  );
+
+  // Exported field_instance: 'node-video-field_hide_feed'.
+  $field_instances['node-video-field_hide_feed'] = array(
+    'bundle' => 'video',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 14,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'thumbnail_preview' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_hide_feed',
+    'label' => 'Hide from News Feed',
+    'required' => 0,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 0,
+      ),
+      'type' => 'options_onoff',
+      'weight' => 2,
     ),
   );
 
@@ -3276,7 +3520,13 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 8,
+      ),
+      'thumbnail_preview' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 1,
       ),
     ),
     'entity_type' => 'node',
@@ -3296,7 +3546,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 6,
+      'weight' => 8,
     ),
   );
 
@@ -3330,7 +3580,13 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 4,
+      ),
+      'thumbnail_preview' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 4,
       ),
     ),
     'entity_type' => 'node',
@@ -3358,7 +3614,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'year_range' => '-3:+3',
       ),
       'type' => 'date_select',
-      'weight' => 4,
+      'weight' => 5,
     ),
   );
 
@@ -3393,7 +3649,13 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 7,
+      ),
+      'thumbnail_preview' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 2,
       ),
     ),
     'entity_type' => 'node',
@@ -3415,7 +3677,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'size' => 60,
       ),
       'type' => 'options_select',
-      'weight' => 5,
+      'weight' => 6,
     ),
   );
 
@@ -3444,9 +3706,26 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'weight' => 8,
       ),
       'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'label' => 'hidden',
+        'module' => 'video_embed_field',
+        'settings' => array(
+          'description' => 1,
+          'description_position' => 'bottom',
+          'video_style' => 'normal',
+        ),
+        'type' => 'video_embed_field',
+        'weight' => 0,
+      ),
+      'thumbnail_preview' => array(
+        'label' => 'hidden',
+        'module' => 'video_embed_field',
+        'settings' => array(
+          'description' => 1,
+          'description_position' => 'bottom',
+          'image_link' => '',
+          'image_style' => '200x125',
+        ),
+        'type' => 'video_embed_field_thumbnail',
         'weight' => 0,
       ),
     ),
@@ -3493,11 +3772,13 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
   t('Centrally Accessible');
   t('Chapters');
   t('Character Limit');
+  t('Choose from selection of layout components to customize the layout of your page. You can drag & drop components into the order you would like them to be on the page.');
   t('Committee');
   t('Committee Featured');
   t('Committees');
   t('Content');
   t('Controls whether article can appear on the nysenate.gov home page and the news and issues page. If a senator is not associated with the article, it will appear in the NYSenate.gov theme and navigation scheme.');
+  t('Custom Layout Components');
   t('Experimental Content Groupings');
   t('Feature Image');
   t('Feature for Associated Senator');
@@ -3505,9 +3786,10 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
   t('Featured Image');
   t('Features the article on the front page of the Senator\'s web site.');
   t('For committee use only. This is to feature this content on a Committee\'s detail page.');
+  t('Hide from News Feed');
   t('Homepage Hero');
   t('Homepage Hero Image');
-  t('If this Press Release is directly related to Senate actions on a bill, load a teaser for that bill along with support and opposition buttons. Start by typing the bill (e.g. "S21. . ."), and then wait for autocomplete options to appear before selecting the right bill and hitting "enter".');
+  t('If this Press Release is directly related to Senate actions on a bill, load a teaser for that bill along with support and opposition buttons. Start by typing the bill (e.g. "S21. . ."), and then wait for autocomplete options to appear before selecting the right bill and hitting "enter". The bill(s) will appear at bottom of Press Release. If you want to embed a bill alongside your related content, try the Custom Layout Components field and choose "Featured Bill."');
   t('Image Main');
   t('Image must be minimum 1280x510 and 16:9 ratio to be featured on the Homepage.');
   t('Image that appears at the top of the page. A scaled-down version appears on listing pages and constituent dashboards. This image is also the default <strong><em>Twitter/Facebook</strong></em> share image.');

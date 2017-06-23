@@ -255,18 +255,21 @@
     ?>
     <?php // BEGIN DESKTOP SECTION ?>
     <dl class="l-tab-bar u-tablet-plus">
-      <?php foreach ($amended_version_ids as $amendment_id): ?>
-        <?php
-        $base_print_no = $field_ol_base_print_no[0]['value'];
-        $version = str_replace($base_print_no, '', $amendment_id['title']);
+      <?php
+      $base_print_no = (!empty($field_ol_base_print_no[0]['value']))
+        ? $field_ol_base_print_no[0]['value'] : '';
+      foreach ($amended_version_ids as $amendment_id):
+        $version = $base_print_no ? str_replace($base_print_no, '', $amendment_id['title']) : '';
         ?>
-        <dd class="c-tab <?php print $bill_wrapper->label() === $amendment_id['title'] ? 'active': '' ?>" >
-          <a class="c-tab-link bill-version-tab" data-version="<?php print render($amendment_id['title']); ?>" data-target="/<?php print drupal_get_path_alias('node/' . $amendment_id['nid']); ?>">
-            <?php
-            print (empty($version) ? "Original" : "${version}") . ($version == $active_amendment_version ? " (Active) " : "");
-            ?>
-          </a>
-        </dd>
+          <dd class="c-tab <?php print $bill_wrapper->label() === $amendment_id['title'] ? 'active' : '' ?>">
+              <a class="c-tab-link bill-version-tab"
+                 data-version="<?php print render($amendment_id['title']); ?>"
+                 data-target="/<?php print drupal_get_path_alias('node/' . $amendment_id['nid']); ?>">
+                <?php
+                print (empty($version) ? "Original" : $version) . ($version == $active_amendment_version ? " (Active) " : "");
+                ?>
+              </a>
+          </dd>
       <?php endforeach; ?>
     </dl>
     <?php // END DESKTOP SECTION ?>
@@ -274,15 +277,13 @@
     <?php // BEGIN MOBILE SECTION ?>
     <dl class="l-tab-bar u-mobile-only" id="mobile-bill-tab"><?php //This is the MOBILE section. ?>
       <div class="c-tab--arrow u-mobile-only" id="mobile-bill-arrow"></div>
-      <?php foreach ($amended_version_ids as $amendment_id): ?>
-        <?php
-        $base_print_no = $field_ol_base_print_no[0]['value'];
-        $version = str_replace($base_print_no, '', $amendment_id['title']);
+      <?php foreach ($amended_version_ids as $amendment_id):
+        $version = $base_print_no ? str_replace($base_print_no, '', $amendment_id['title']) : '';
         ?>
         <dd data-isactive="<?php print $bill_wrapper->label() === $amendment_id['title'] ? 'active': 'inactive' ?>" class="c-tab <?php print $bill_wrapper->label() === $amendment_id['title'] ? 'active': '' ?>" >
           <a class="c-tab-link bill-version-tab-mobile" data-version="<?php print render($amendment_id['title']); ?>" data-target="/<?php print drupal_get_path_alias('node/' . $amendment_id['nid']); ?>">
             <?php
-            print (empty($version) ? "Original" : "${version}") . ($version == $active_amendment_version ? " (Active) " : "");
+            print (empty($version) ? "Original" : $version) . ($version == $active_amendment_version ? " (Active) " : "");
             ?>
           </a>
         </dd>

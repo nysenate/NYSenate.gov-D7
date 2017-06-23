@@ -36,7 +36,7 @@ function nys_committees_field_group_info() {
       'formatter' => 'collapsible',
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_comm_featured_legislation|taxonomy_term|committees|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -65,7 +65,7 @@ function nys_committees_field_group_info() {
       'formatter' => 'collapsible',
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_description|taxonomy_term|committees|form'] = $field_group;
 
   // Translatables
   // Included for use with string extractors like potx.

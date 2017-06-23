@@ -44,7 +44,7 @@ function nys_legislation_explorer_theme() {
  */
 
 function nys_legislation_explorer_process(&$variables, $hook) {
-  if ($hook == 'legislation_explorer_search_general') {
+  if ($hook == 'legislation_explorer_search_general' && isset($variables['resp']->response->docs)) {
     foreach($variables['resp']->response->docs as $key => $result) {
       $node_to_lookup = $result->entity_id;
       $bill_graph_output = nys_dashboard_render_bill_status($node_to_lookup, 'nys-bill-status__sml');

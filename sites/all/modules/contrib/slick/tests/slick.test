@@ -1,0 +1,294 @@
+<?php
+/**
+ * @file
+ * Provides test cases for Slick carousel based on flexslider.test.
+ *
+ * Due credit to Flexslider. Slick is just adjusting/correcting its failures.
+ */
+
+/**
+ * Tests the Slick optionsets, configuration options and permission controls.
+ *
+ * Usage:
+ * $ drush test-run --uri=http://test7.dev SlickTestCase
+ * Or check Slick tests at: admin/config/development/testing, and hit Run tests.
+ *
+ * @see https://www.drupal.org/simpletest-tutorial-drupal7
+ * @see https://www.drupal.org/node/645286
+ * @see https://www.drupal.org/node/265828
+ * @see DrupalTestCase
+ */
+class SlickTestCase extends DrupalWebTestCase {
+
+  protected $adminUser;
+  protected $anyUser;
+
+  /**
+   * Provides info for the UI.
+   */
+  public static function getInfo() {
+    // Note: getInfo() strings are not translated with t().
+    return array(
+      'name' => 'Slick tests',
+      'description' => 'Tests the Slick optionsets, configuration options and permission controls.',
+      'group' => 'Slick',
+    );
+  }
+
+  /**
+   * Overrides DrupalWebTestCase::setUp.
+   */
+  public function setUp() {
+    parent::setUp('libraries', 'ctools', 'jquery_update', 'slick', 'slick_ui');
+
+    // Create users.
+    $this->adminUser = $this->drupalCreateUser(array('administer slick'));
+    $this->anyUser = $this->drupalCreateUser(array('access administration pages'));
+  }
+
+  /**
+   * Tests Slick permission.
+   */
+  public function testAdminAccess() {
+
+    // Login as the admin user.
+    $this->drupalLogin($this->adminUser);
+
+    // Load admin page.
+    $this->drupalGet('admin/config/media/slick');
+    $this->assertResponse(200, 'Administrative permission allows access to administration page.');
+
+    // Logout as admin user.
+    $this->drupalLogout();
+
+    // Login as any user.
+    $this->drupalLogin($this->anyUser);
+
+    // Attempt to load Slick admin page.
+    $this->drupalGet('admin/config/media/slick');
+    $this->assertResponse(403, 'Regular users do not have access to administer Slick pages.');
+  }
+
+  /**
+   * Tests Slick optionset CRUD.
+   */
+  public function testOptionSetCrud() {
+    module_load_include('inc', 'slick', 'includes/slick.admin');
+
+    // Login as the admin user.
+    $this->drupalLogin($this->adminUser);
+    $testsets  = array('testset1', 'testset2');
+
+    foreach ($testsets as $name) {
+      // Create a new optionset with default settings.
+      $optionset = slick_optionset_create(array('name' => $name));
+      $this->assertTrue($optionset->name == $name, t('Optionset object created: <strong>@name</strong>', array('@name' => $optionset->name)));
+      $this->assertFalse(empty($optionset->options), 'Create optionset works.');
+
+      // Save the optionset to the database.
+      $optionset = slick_optionset_save($optionset, TRUE);
+      $this->assertFalse(FALSE === $optionset, 'Optionset saved to database.');
+
+      // Read the values from the database.
+      $optionset = slick_optionset_load($name);
+
+      $this->assertTrue(is_object($optionset), t('Loaded optionset: <strong>@name</strong>', array('@name' => $optionset->name)));
+      $this->assertEqual($name, $optionset->name, t('Loaded name matches: <strong>@name</strong>', array('@name' => $optionset->name)));
+
+      // Ensure defaults match the custom saved data when no overrides.
+      $default = slick_optionset_create();
+      foreach ((array) $default->options['settings'] as $key => $value) {
+        $new_value = $optionset->options['settings'][$key];
+        $read_value = $this->getPrintedValue($value);
+        $read_new_value = $this->getPrintedValue($new_value);
+
+        $message = t('<strong>@key</strong>: default:<strong>@value</strong> matches saved:<strong>@new_value</strong>.', array(
+          '@key' => $key,
+          '@value' => $read_value,
+          '@new_value' => $read_new_value,
+        ));
+        $this->assertEqual($value, $new_value, $message);
+      }
+    }
+
+    // Load all optionsets with a reset.
+    $optionsets = slick_optionset_load_all(TRUE);
+    $this->assertTrue(is_array($optionsets), 'Available optionsets loaded');
+    $message = t('Proper number of optionsets loaded (two created, one default): <strong>@count</strong>', array('@count' => count($optionsets)));
+    $this->assertTrue(count($optionsets) == 3, $message);
+
+    // Ensure they all loaded correctly.
+    foreach ($optionsets as $key => $optionset) {
+      $this->assertTrue(isset($optionset->name), t('<strong>@key</strong>: Loaded optionsets have a defined machine <strong>@name</strong>', array(
+        '@key' => $key,
+        '@name' => $optionset->name,
+      )));
+      $this->assertTrue(isset($optionset->label), t('<strong>@key</strong>: Loaded optionsets have a defined human readable name <strong>@label</strong>', array(
+        '@key' => $key,
+        '@label' => $optionset->label,
+      )));
+      $this->assertTrue(isset($optionset->options), t('<strong>@key</strong>: Loaded optionsets have a defined array of options', array(
+        '@key' => $key,
+      )));
+    }
+
+    // Update the optionset.
+    $test_options = $this->getOptions();
+    $test_options = $test_options['valid'];
+
+    // Load one of the test optionset.
+    $test = $testsets[1];
+    $optionset = slick_optionset_load($test);
+
+    // Compare saved options different from the set2 options.
+    foreach ($test_options['set2'] as $key => $value) {
+      $saved_value = $optionset->options['settings'][$key];
+      $read_value = $this->getPrintedValue($value);
+      $read_saved_value = $this->getPrintedValue($saved_value);
+
+      $message = t('<strong>@key</strong>: saved value:<strong>@saved_value</strong> can be overriden by set2:<strong>@value</strong>.', array(
+        '@key' => $key,
+        '@saved_value' => $read_saved_value,
+        '@value' => $read_value,
+      ));
+      $this->assertNotEqual($saved_value, $value, $message);
+    }
+
+    // Union the saved values to use the overrides now.
+    $optionset->options['settings'] = (array) $test_options['set2'] + (array) $optionset->options['settings'];
+
+    // Save the updated values.
+    $optionset = slick_optionset_save($optionset);
+    $this->assertFalse(FALSE == $optionset, 'Saved updates to optionset to database.');
+
+    // Load the values from the database again.
+    $optionset = slick_optionset_load($test);
+
+    // Compare saved options match the set2 options.
+    foreach ($test_options['set2'] as $key => $value) {
+      $saved_value = $optionset->options['settings'][$key];
+      $read_value = $this->getPrintedValue($value);
+      $read_saved_value = $this->getPrintedValue($saved_value);
+
+      $message = t('<strong>@key</strong>: saved value:<strong>@saved_value</strong> matches set2:<strong>@value</strong>.', array(
+        '@key' => $key,
+        '@saved_value' => $read_saved_value,
+        '@value' => $read_value,
+      ));
+      $this->assertEqual($saved_value, $value, $message);
+    }
+
+    // Delete the optionset.
+    $this->assertTrue(slick_optionset_exists($test), t('Optionset <strong>@name</strong> exists and is ready to be deleted and reverted.', array('@name' => $test)));
+
+    // Remove from db, but kept in code with slick_optionset_create() above.
+    slick_optionset_delete($optionset);
+
+    // Ensure the optionset is reverted to code after deletion from DB.
+    $this->assertTrue(slick_optionset_exists($test), t('Optionset <strong>@name</strong> is deleted from DB, and reverted to code.', array('@name' => $test)));
+  }
+
+  /**
+   * Tests Slick optionset form.
+   */
+  public function testOptionSetForm() {
+    module_load_include('inc', 'slick', 'includes/slick.admin');
+    // Login with admin user.
+    $this->drupalLogin($this->adminUser);
+
+    // Test the optionset add.
+    // Load create form.
+    $this->drupalGet('admin/config/media/slick/add');
+    $this->assertResponse(200, 'Administrative user can reach the "Add" form.');
+
+    // Save the new optionset.
+    $optionset = array();
+    $optionset['label'] = 'Testset';
+    $optionset['name'] = 'testset';
+
+    $this->drupalPost('admin/config/media/slick/add', $optionset, t('Save'));
+    $this->assertResponse(200);
+    $this->assertTrue(slick_optionset_exists($optionset['name']), t('Successfully created the new optionset: @label', array('@label' => $optionset['label'])));
+
+    // Attempt to save option set of the same name again.
+    $this->drupalPost('admin/config/media/slick/add', $optionset, t('Save'));
+    $this->assertResponse(200);
+    $this->assertText("The machine-readable name is already in use. It must be unique.", "Blocked the creation of duplicate named optionset.");
+
+    // Test the optionset edit.
+    $options = $this->getOptions();
+
+    foreach ($options['valid'] as $edit) {
+      // Attempts to save each option value.
+      $xpath = array();
+      foreach ($edit as $key => $value) {
+        $xpath["options[settings][$key]"] = $value;
+      }
+
+      $this->drupalPost('admin/config/media/slick/list/default/edit', $xpath, t('Save'));
+      $this->assertResponse(200, 'Default optionset overriden.');
+
+      // Test saved values loaded into form.
+      $this->drupalGet('admin/config/media/slick/list/default/edit');
+      $this->assertResponse(200, 'Default optionset reloaded.');
+
+      foreach ($edit as $v => $value) {
+        $read_value = $this->getPrintedValue($value);
+        $this->assertFieldByName("options[settings][$v]", $value, t("@v:<strong>@value</strong> inserted correctly.", array(
+          '@value' => $read_value,
+          '@v' => $v,
+        )));
+      }
+    }
+
+    // Test the optionset delete.
+    $testset = slick_optionset_load('testset');
+
+    // Test the delete workflow.
+    $this->drupalGet("admin/config/media/slick/list/$testset->name/delete");
+    $this->assertResponse(200);
+    $this->assertText("Are you sure you want to delete $testset->name?", 'Delete confirmation form loaded.');
+    $this->drupalPost("admin/config/media/slick/list/$testset->name/delete", '', 'Delete');
+    $this->assertResponse(200);
+    $this->assertText("The item has been deleted.", 'Deleted Testset using form.');
+  }
+
+  /**
+   * Test configuration options.
+   *
+   * @return array
+   *   Returns an array of options to test saving.
+   */
+  public function getOptions() {
+    // Valid optionset data.
+    $defaults = slick_get_options();
+    $valid = array(
+      'set1' => $defaults,
+      'set2' => array(
+        'autoplay' => TRUE,
+        'initialSlide' => 1,
+      ),
+    );
+
+    // Invalid edge cases.
+    $error = array();
+
+    return array('valid' => $valid, 'error' => $error);
+  }
+
+  /**
+   * Test configuration options.
+   *
+   * @param mixed $value
+   *   The given value.
+   *
+   * @return mixed
+   *   Returns printed value.
+   */
+  public function getPrintedValue($value) {
+    $read_value = $value === FALSE ? 'FALSE' : ($value === TRUE ? 'TRUE' : $value);
+    $read_value = empty($read_value) ? 'NULL' : $read_value;
+    return $read_value;
+  }
+
+}

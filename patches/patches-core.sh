@@ -15,3 +15,6 @@ curl  https://www.drupal.org/files/issues/drupal_render_array_checks-2884171-2.p
 # Pantheon apachesolr patches
 patch -p1 < patches/contrib/pantheon_apachesolr-handle_indexing_bills-123015.patch
 patch -p1 < patches/contrib/pantheon_apachesolr-curl_timeouts-123015.patch
+
+# Make tabledrag more performant.
+curl https://www.drupal.org/files/issues/tabledrag_performance_improvement-2888143-1-d7.patch | patch -p1

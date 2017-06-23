@@ -705,6 +705,47 @@ function nys_news_default_page_manager_pages() {
   $display->content['new-f213af00-8b2a-407a-ae61-5ee8180f4d17'] = $pane;
   $display->panels['tabs'][1] = 'new-f213af00-8b2a-407a-ae61-5ee8180f4d17';
   $pane = new stdClass();
+  $pane->pid = 'new-52e12f49-6730-439c-bf26-4d69e62d95c7';
+  $pane->panel = 'tabs';
+  $pane->type = 'views';
+  $pane->subtype = 'senator_news';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'override_pager_settings' => 0,
+    'use_pager' => 1,
+    'nodes_per_page' => '3',
+    'pager_id' => '0',
+    'offset' => '0',
+    'more_link' => 0,
+    'feed_icons' => 0,
+    'panel_args' => 0,
+    'link_to_view' => 0,
+    'args' => '',
+    'url' => '',
+    'display' => 'videos',
+    'context' => array(
+      0 => '',
+    ),
+    'override_title' => 0,
+    'override_title_text' => '',
+    'override_title_heading' => 'h2',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array(
+    'css_id' => 'panel3',
+    'css_class' => 'content',
+  );
+  $pane->extras = array();
+  $pane->position = 2;
+  $pane->locks = array();
+  $pane->uuid = '52e12f49-6730-439c-bf26-4d69e62d95c7';
+  $display->content['new-52e12f49-6730-439c-bf26-4d69e62d95c7'] = $pane;
+  $display->panels['tabs'][2] = 'new-52e12f49-6730-439c-bf26-4d69e62d95c7';
+  $pane = new stdClass();
   $pane->pid = 'new-2f05c08d-3879-4c2e-b86e-d935685690a0';
   $pane->panel = 'top';
   $pane->type = 'views';

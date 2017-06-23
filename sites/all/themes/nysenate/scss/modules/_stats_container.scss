@@ -195,6 +195,18 @@
 				}
 			}
 		}
+    &.c-senate-quick-facts--container {
+			.four-columns .c-carousel--item {
+				width: 25%;
+				margin: 0;
+				overflow: visible;
+			}
+      .three-columns .c-carousel--item {
+				width: 33%;
+				margin: 0;
+				overflow: visible;
+			}
+		}
 		&.c-senate-quick-facts--container {
 			.c-carousel--item {
 				width: 25%;

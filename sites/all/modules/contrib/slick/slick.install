@@ -1,0 +1,154 @@
+<?php
+/**
+ * @file
+ * Installation actions for Slick.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function slick_requirements($phase) {
+  $t = get_t();
+  $requirements = array();
+
+  // Check for the Slick library.
+  if ($phase == 'runtime') {
+    $path = libraries_get_path('slick');
+
+    if (!$path || !file_exists("{$path}/slick/slick.min.js")) {
+      $requirements['slick_library'] = array(
+        'description' => $t('The <a href="@url">Slick library</a> should be installed at [libraries-path]/slick: <strong>sites/../libraries/slick/slick/slick.min.js.</strong>', array('@url' => 'https://github.com/kenwheeler/slick/')),
+        'severity' => REQUIREMENT_ERROR,
+        'value' => $t('Not installed.'),
+        'title' => $t('Slick library'),
+      );
+    }
+
+    // Check for the minimum required jQuery version.
+    $jquery_version = variable_get('jquery_update_jquery_version', '1.10');
+    if (!version_compare($jquery_version, '1.7', '>=')) {
+      $requirements['slick_jquery_version'] = array(
+        'description' => $t('Incorrect jQuery version detected. Slick requires jQuery 1.7 or higher. Please change your <a href="!settings">jQuery Update settings</a>.', array('!settings' => url('admin/config/development/jquery_update'))),
+        'severity' => REQUIREMENT_ERROR,
+        'value' => $t('Not installed. Please enable jQuery 1.7 or higher.'),
+        'title' => $t('Slick jQuery version'),
+      );
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function slick_uninstall() {
+  db_query("DELETE FROM {variable} WHERE name LIKE 'slick_%'");
+}
+
+/**
+ * Returns schema for slick.
+ */
+function _slick_schema() {
+  return array(
+    'description' => 'Store option sets for slick instances.',
+    'export' => array(
+      'key' => 'name',
+      'key name' => 'Optionset',
+      'identifier' => 'preset',
+      'admin_title' => 'label',
+      'default hook' => 'slick_default_presets',
+      'bulk export' => TRUE,
+      'api' => array(
+        'owner' => 'slick',
+        'api' => 'slick_default_preset',
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+    ),
+    'fields' => array(
+      'name' => array(
+        'description' => 'The machine-readable option set name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'label' => array(
+        'description' => 'The human-readable label for this option set.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'breakpoints' => array(
+        'description' => 'The number of defined breakpoints.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'skin' => array(
+        'description' => 'The slick skin.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'options' => array(
+        'description' => 'The options array.',
+        'type' => 'blob',
+        'size' => 'big',
+        'serialize' => TRUE,
+      ),
+    ),
+    'primary key' => array('name'),
+  );
+}
+
+/**
+ * Implements hook_schema().
+ */
+function slick_schema() {
+  $schema = array();
+  $schema['slick_optionset'] = _slick_schema();
+  return $schema;
+}
+
+/**
+ * Create a table "slick_optionset" to store optionsets for CTools exportables.
+ */
+function slick_update_7005() {
+  if (!db_table_exists('slick_optionset')) {
+    $schema['slick_optionset'] = _slick_schema();
+    db_create_table('slick_optionset', $schema['slick_optionset']);
+  }
+}
+
+/**
+ * Rebuild the registry and theme registry.
+ *
+ * The slick_views is now a contrib. Be sure to download it separately.
+ */
+function slick_update_7006() {
+  // Attempts to make it sufficient without drupal_flush_all_caches().
+  // "Clear all caches" is more than enough, it is for careless beta2 update.
+  // Update the theme registry with the new theme_slick_image_lazy().
+  drupal_theme_rebuild();
+
+  // Remove old Slick views class registry.
+  registry_rebuild();
+}
+
+/**
+ * Typecast old optionset values (pre-alpha -- 2015-03-31).
+ *
+ * For alpha users forwards, please ignore, and just continue the update.
+ * For pre-alpha users, please re-export codes after this update 2015-5-31.
+ * Please see TROUBLESHOOTING at README.txt for more info.
+ */
+function slick_update_7007() {
+  module_load_include('inc', 'slick', 'includes/slick.admin');
+
+  $optionsets = slick_optionset_load_all();
+  foreach ($optionsets as $optionset) {
+    slick_optionset_save($optionset);
+  }
+}

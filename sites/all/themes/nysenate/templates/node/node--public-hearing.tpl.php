@@ -62,7 +62,7 @@
       <?php endif;?>
       <p class="c-meeting-detail--time">
         <?php print date("g:i A ", $node->field_date[LANGUAGE_NONE][0]['value']);?> to <?php print date("g:i A ", $node->field_date[LANGUAGE_NONE][0]['value2']);?>
-        <?php if (!empty($field_video_status) && $field_video_status[0]['value'] != 'streaming_redirect'): ?>
+        <?php if (isset($field_video_status[0]['value']) && $field_video_status[0]['value'] != 'streaming_redirect'): ?>
           <span class="c-meeting-video--status icon-before__youtube"><?php print render($content['field_video_status']);?></span>
         <?php endif;?>
       <div title="Add to Calendar" class="addthisevent">
@@ -99,11 +99,11 @@
       </div>
     <?php endif;?>
 
-    <?php if (isset($field_video_status[0]['value']) && $field_video_status[0]['value'] === "streaming_live_now" && !empty($field_ustream_url)): ?>
+    <?php if (isset($field_video_status[0]['value']) && $field_video_status[0]['value'] === "streaming_live_now"): ?>
       <div class="c-meeting-detail--descript">
         <?php print render($content['field_ustream_url']);?>
       </div>
-    <?php elseif (isset($field_video_status[0]['value']) && $field_video_status[0]['value'] === "streaming_redirect" && !empty($field_video_redirect)): ?>
+    <?php elseif (isset($field_video_status[0]['value']) && $field_video_status[0]['value'] === "streaming_redirect"): ?>
       <?php print render($content['field_ustream_url']);?>
     <?php endif;?>
 

@@ -1611,6 +1611,14 @@ function nys_news_views_default_views() {
     'video' => 'video',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
+  /* Filter criterion: Content: Hide from News Feed (field_hide_feed) */
+  $handler->display->display_options['filters']['field_hide_feed_value']['id'] = 'field_hide_feed_value';
+  $handler->display->display_options['filters']['field_hide_feed_value']['table'] = 'field_data_field_hide_feed';
+  $handler->display->display_options['filters']['field_hide_feed_value']['field'] = 'field_hide_feed_value';
+  $handler->display->display_options['filters']['field_hide_feed_value']['operator'] = 'not';
+  $handler->display->display_options['filters']['field_hide_feed_value']['value'] = array(
+    1 => '1',
+  );
   $handler->display->display_options['block_description'] = 'Senator All News Tab';
 
   /* Display: Feed */
@@ -2048,6 +2056,14 @@ function nys_news_views_default_views() {
     'in_the_news' => 'in_the_news',
     'press_release' => 'press_release',
     'video' => 'video',
+  );
+  /* Filter criterion: Content: Hide from News Feed (field_hide_feed) */
+  $handler->display->display_options['filters']['field_hide_feed_value']['id'] = 'field_hide_feed_value';
+  $handler->display->display_options['filters']['field_hide_feed_value']['table'] = 'field_data_field_hide_feed';
+  $handler->display->display_options['filters']['field_hide_feed_value']['field'] = 'field_hide_feed_value';
+  $handler->display->display_options['filters']['field_hide_feed_value']['operator'] = 'not';
+  $handler->display->display_options['filters']['field_hide_feed_value']['value'] = array(
+    1 => '1',
   );
 
   /* Display: Media Inquiries */
@@ -3349,6 +3365,140 @@ function nys_news_views_default_views() {
     'video' => 'video',
   );
   $handler->display->display_options['block_description'] = 'Committee News';
+
+  /* Display: Videos */
+  $handler = $view->new_display('block', 'Videos', 'videos');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'load_more';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '3';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['pager']['options']['more_button_text'] = 'See More Videos';
+  $handler->display->display_options['pager']['options']['effects']['type'] = 'fade';
+  $handler->display->display_options['pager']['options']['effects']['speed'] = 'slow';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'semanticviews_default';
+  $handler->display->display_options['style_options']['row']['striping_classes'] = 'u-odd u-even';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'semanticviews_fields';
+  $handler->display->display_options['row_options']['skip_blank'] = 0;
+  $handler->display->display_options['row_options']['semantic_html'] = array(
+    'field_article_type' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+    'title' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+    'field_image_main' => array(
+      'element_type' => 'div',
+      'class' => 'c-press-release--img',
+    ),
+    'term_node_tid' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+    'field_published' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+    'type' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+  );
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['empty'] = FALSE;
+  /* No results behavior: Global: Unfiltered text */
+  $handler->display->display_options['empty']['area_text_custom']['id'] = 'area_text_custom';
+  $handler->display->display_options['empty']['area_text_custom']['table'] = 'views';
+  $handler->display->display_options['empty']['area_text_custom']['field'] = 'area_text_custom';
+  $handler->display->display_options['empty']['area_text_custom']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area_text_custom']['content'] = 'No press releases so far';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Field: Content: All taxonomy terms */
+  $handler->display->display_options['fields']['term_node_tid']['id'] = 'term_node_tid';
+  $handler->display->display_options['fields']['term_node_tid']['table'] = 'node';
+  $handler->display->display_options['fields']['term_node_tid']['field'] = 'term_node_tid';
+  $handler->display->display_options['fields']['term_node_tid']['label'] = '';
+  $handler->display->display_options['fields']['term_node_tid']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['term_node_tid']['alter']['path'] = '[term_node_tid-vocabulary]/[term_node_tid-name]';
+  $handler->display->display_options['fields']['term_node_tid']['alter']['absolute'] = TRUE;
+  $handler->display->display_options['fields']['term_node_tid']['alter']['path_case'] = 'lower';
+  $handler->display->display_options['fields']['term_node_tid']['alter']['link_class'] = 'c-press-release--topic';
+  $handler->display->display_options['fields']['term_node_tid']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['term_node_tid']['limit'] = TRUE;
+  $handler->display->display_options['fields']['term_node_tid']['vocabularies'] = array(
+    'issues' => 'issues',
+    'committee_type' => 0,
+    'committee' => 0,
+    'conference' => 0,
+    'districts' => 0,
+    'event_types' => 0,
+    'initiatives' => 0,
+    'party' => 0,
+    'source_publication' => 0,
+    'tags' => 0,
+  );
+  /* Field: Content: Type */
+  $handler->display->display_options['fields']['type']['id'] = 'type';
+  $handler->display->display_options['fields']['type']['table'] = 'node';
+  $handler->display->display_options['fields']['type']['field'] = 'type';
+  $handler->display->display_options['fields']['type']['label'] = '';
+  $handler->display->display_options['fields']['type']['element_label_colon'] = FALSE;
+  /* Field: Content: Published on */
+  $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
+  $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
+  $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
+  $handler->display->display_options['fields']['field_date']['label'] = '';
+  $handler->display->display_options['fields']['field_date']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_date']['settings'] = array(
+    'format_type' => 'long',
+    'fromto' => 'value',
+    'multiple_number' => '',
+    'multiple_from' => '',
+    'multiple_to' => '',
+  );
+  /* Field: Content: Youtube Video */
+  $handler->display->display_options['fields']['field_yt']['id'] = 'field_yt';
+  $handler->display->display_options['fields']['field_yt']['table'] = 'field_data_field_yt';
+  $handler->display->display_options['fields']['field_yt']['field'] = 'field_yt';
+  $handler->display->display_options['fields']['field_yt']['label'] = '';
+  $handler->display->display_options['fields']['field_yt']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_yt']['click_sort_column'] = 'video_url';
+  $handler->display->display_options['fields']['field_yt']['type'] = 'video_embed_field_thumbnail';
+  $handler->display->display_options['fields']['field_yt']['settings'] = array(
+    'image_style' => '200x125',
+    'image_link' => 'content',
+  );
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'video' => 'video',
+  );
+  $handler->display->display_options['block_description'] = 'Senator Press Releases Tab';
   $export['senator_news'] = $view;
 
   return $export;

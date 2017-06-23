@@ -106,10 +106,11 @@ Drupal.tableDrag = function (table, tableSettings) {
 
   // Add mouse bindings to the document. The self variable is passed along
   // as event handlers do not have direct access to the tableDrag object.
-  $(document).bind('mousemove pointermove', function (event) { return self.dragRow(event, self); });
-  $(document).bind('mouseup pointerup', function (event) { return self.dropRow(event, self); });
-  $(document).bind('touchmove', function (event) { return self.dragRow(event.originalEvent.touches[0], self); });
-  $(document).bind('touchend', function (event) { return self.dropRow(event.originalEvent.touches[0], self); });
+  var $table = $(this.table);
+  $table.bind('mousemove pointermove', function (event) { return self.dragRow(event, self); });
+  $table.bind('mouseup pointerup', function (event) { return self.dropRow(event, self); });
+  $table.bind('touchmove', function (event) { return self.dragRow(event.originalEvent.touches[0], self); });
+  $table.bind('touchend', function (event) { return self.dropRow(event.originalEvent.touches[0], self); });
 };
 
 /**
@@ -863,10 +864,10 @@ Drupal.tableDrag.prototype.restripeTable = function () {
   // :even and :odd are reversed because jQuery counts from 0 and
   // we count from 1, so we're out of sync.
   // Match immediate children of the parent element to allow nesting.
-  $('> tbody > tr.draggable:visible, > tr.draggable:visible', this.table)
-    .removeClass('odd even')
-    .filter(':odd').addClass('even').end()
-    .filter(':even').addClass('odd');
+  $(this.table).find('> tbody > tr.draggable, > tr.draggable')
+    .filter(':visible')
+    .filter(':odd').removeClass('odd').addClass('even').end()
+    .filter(':even').removeClass('even').addClass('odd');
 };
 
 /**

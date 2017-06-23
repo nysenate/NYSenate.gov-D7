@@ -556,7 +556,7 @@ function nys_sitewide_elements_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
-  /* Field: Field: Senate District */
+  /* Field: Field: District */
   $handler->display->display_options['fields']['field_district']['id'] = 'field_district';
   $handler->display->display_options['fields']['field_district']['table'] = 'field_data_field_district';
   $handler->display->display_options['fields']['field_district']['field'] = 'field_district';
@@ -694,7 +694,7 @@ function nys_sitewide_elements_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
-  /* Field: Field: Senate District */
+  /* Field: Field: District */
   $handler->display->display_options['fields']['field_district']['id'] = 'field_district';
   $handler->display->display_options['fields']['field_district']['table'] = 'field_data_field_district';
   $handler->display->display_options['fields']['field_district']['field'] = 'field_district';
@@ -1478,7 +1478,7 @@ function nys_sitewide_elements_views_default_views() {
   $handler->display->display_options['fields']['path']['relationship'] = 'field_senator_target_id';
   $handler->display->display_options['fields']['path']['label'] = '';
   $handler->display->display_options['fields']['path']['element_label_colon'] = FALSE;
-  /* Field: Field: Senate District */
+  /* Field: Field: District */
   $handler->display->display_options['fields']['field_district']['id'] = 'field_district';
   $handler->display->display_options['fields']['field_district']['table'] = 'field_data_field_district';
   $handler->display->display_options['fields']['field_district']['field'] = 'field_district';
@@ -2476,7 +2476,7 @@ function nys_sitewide_elements_views_default_views() {
     'image_style' => '200x125',
     'image_link' => '',
   );
-  /* Field: Content: Published Date */
+  /* Field: Content: Published */
   $handler->display->display_options['fields']['field_published']['id'] = 'field_published';
   $handler->display->display_options['fields']['field_published']['table'] = 'field_data_field_published';
   $handler->display->display_options['fields']['field_published']['field'] = 'field_published';
@@ -3730,7 +3730,7 @@ function nys_sitewide_elements_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'senator' => 'senator',
   );
-  /* Filter criterion: Content: FOIL Request Form (field_active) */
+  /* Filter criterion: Content: Active Senator (field_active) */
   $handler->display->display_options['filters']['field_active_value']['id'] = 'field_active_value';
   $handler->display->display_options['filters']['field_active_value']['table'] = 'field_data_field_active';
   $handler->display->display_options['filters']['field_active_value']['field'] = 'field_active_value';
@@ -4065,7 +4065,7 @@ function nys_sitewide_elements_views_default_views() {
     'senator' => 'senator',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Content: FOIL Request Form (field_active) */
+  /* Filter criterion: Content: Active Senator (field_active) */
   $handler->display->display_options['filters']['field_active_value']['id'] = 'field_active_value';
   $handler->display->display_options['filters']['field_active_value']['table'] = 'field_data_field_active';
   $handler->display->display_options['filters']['field_active_value']['field'] = 'field_active_value';

@@ -2812,6 +2812,15 @@ body.sticky-actions .form-actions.form-wrapper {
   margin: 0;
   z-index: 999;
 }
+body.sticky-actions form .ajax-new-content .form-actions.form-wrapper {
+  position: inherit;
+  box-shadow: none;
+  border-top: none;
+  width: inherit;
+  padding: inherit;
+  padding-top: 2em;
+  background-color: transparent;
+}
 
 body.sticky-actions #page {
   margin-bottom: 60px;

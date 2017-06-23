@@ -89,6 +89,7 @@
   }
 }
 
+
 //CKEditor Image styles
 .cke_editable {
   img.media-element.file-media-landscape-image {
@@ -102,5 +103,27 @@
     width: 225px;
     height: auto;
     padding: 1% 1% 1% 0;
+  }
+}
+
+//Fix for paragraph form actions, not working w adminimal theme
+
+.body.sticky-actions {
+  #field-paragraphs-values {
+    .form-actions.form-wrapper {
+        box-shadow: none;
+    }
+  
+    .form-actions.form-wrapper {
+        position: inherit;
+        bottom: 0;
+        background: inherit;
+        border-top: none; 
+        width: inherit;
+        left: 0;
+        padding: 0;
+        margin: 0;
+        z-index: 999;
+    }
   }
 }

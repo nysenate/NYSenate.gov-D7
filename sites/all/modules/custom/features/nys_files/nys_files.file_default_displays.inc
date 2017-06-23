@@ -111,7 +111,7 @@ function nys_files_file_default_displays() {
   $file_display->weight = 0;
   $file_display->status = TRUE;
   $file_display->settings = array(
-    'image_style' => '400x240',
+    'image_style' => '760x377',
     'image_link' => '',
   );
   $export['image__full__file_field_image'] = $file_display;
@@ -121,7 +121,9 @@ function nys_files_file_default_displays() {
   $file_display->name = 'image__full__file_field_media_large_icon';
   $file_display->weight = 0;
   $file_display->status = FALSE;
-  $file_display->settings = '';
+  $file_display->settings = array(
+    'image_style' => '',
+  );
   $export['image__full__file_field_media_large_icon'] = $file_display;
 
   $file_display = new stdClass();
@@ -830,7 +832,9 @@ function nys_files_file_default_displays() {
   $file_display->name = 'video__teaser__file_field_media_large_icon';
   $file_display->weight = 0;
   $file_display->status = FALSE;
-  $file_display->settings = '';
+  $file_display->settings = array(
+    'image_style' => '',
+  );
   $export['video__teaser__file_field_media_large_icon'] = $file_display;
 
   $file_display = new stdClass();
@@ -865,7 +869,7 @@ function nys_files_file_default_displays() {
   $file_display->weight = 0;
   $file_display->status = TRUE;
   $file_display->settings = array(
-    'image_style' => '',
+    'image_style' => 'thumbnail',
   );
   $export['video__teaser__media_youtube_image'] = $file_display;
 

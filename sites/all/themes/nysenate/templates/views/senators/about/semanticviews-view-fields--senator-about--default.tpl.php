@@ -15,7 +15,7 @@
   print $committees_block['content'];
   ?>
 
-  <h4 class="c-blockquote"><?php print $fields['field_pull_quote']->content; ?></h4>
+  <h4 class="c-blockquote"><?php if (isset($fields['field_pull_quote']->content)) print $fields['field_pull_quote']->content; ?></h4>
   <?php print $fields['body']->content; ?>
 </div>
 

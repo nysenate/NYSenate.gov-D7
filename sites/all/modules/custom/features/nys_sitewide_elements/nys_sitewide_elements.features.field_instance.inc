@@ -321,7 +321,7 @@ function nys_sitewide_elements_field_default_field_instances() {
     'custom_remove' => '',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Attach teasers for bills related to this article. Use the autocomplete to find the bill (e.g. "S120 . . .").',
+    'description' => 'Attach teasers for bills related to this article. Use the autocomplete to find the bill (e.g. "S120 . . ."). The bill(s) in this field will show at bottom of the article. If you want to embed an associated bill next to where you reference the bill in the article, try using "Featured Bill" in the Custom Layout Components above.',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -1462,15 +1462,17 @@ function nys_sitewide_elements_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 7,
+      'weight' => 8,
     ),
   );
 
   // Exported field_instance: 'node-page_content-field_chapters'.
   $field_instances['node-page_content-field_chapters'] = array(
     'bundle' => 'page_content',
+    'custom_add_another' => '',
+    'custom_remove' => '',
     'deleted' => 0,
-    'description' => '',
+    'description' => 'This field is no longer being used. If you need the chapter functionality use the Custom Layout Component fields and choose "Accordion Chapters," which has the same functionality, but also gives you more flexibility as to where you can place your chapters on the page.',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -1507,6 +1509,7 @@ function nys_sitewide_elements_field_default_field_instances() {
         'weight' => 1,
       ),
     ),
+    'ds_extras_field_template' => '',
     'entity_type' => 'node',
     'field_name' => 'field_chapters',
     'label' => 'Chapters',
@@ -1523,6 +1526,7 @@ function nys_sitewide_elements_field_default_field_instances() {
         'fields' => array(),
         'type_settings' => array(
           'allow_existing' => 0,
+          'allow_new' => 1,
           'delete_references' => 1,
           'label_plural' => 'chapters',
           'label_singular' => 'chapter',
@@ -1531,7 +1535,7 @@ function nys_sitewide_elements_field_default_field_instances() {
         ),
       ),
       'type' => 'inline_entity_form',
-      'weight' => 4,
+      'weight' => 5,
     ),
   );
 
@@ -1724,7 +1728,95 @@ function nys_sitewide_elements_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 5,
+      'weight' => 7,
+    ),
+  );
+
+  // Exported field_instance: 'node-page_content-field_paragraphs'.
+  $field_instances['node-page_content-field_paragraphs'] = array(
+    'bundle' => 'page_content',
+    'custom_add_another' => 'Add another layout component',
+    'custom_remove' => 'Remove Layout Component',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Choose from selection of layout components below to customize the layout of your page. You can drag & drop components into the order you would like them to be on the page.',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'paragraphs',
+        'settings' => array(
+          'view_mode' => 'full',
+        ),
+        'type' => 'paragraphs_view',
+        'weight' => 6,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'token' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_paragraphs',
+    'label' => 'Custom Layout Components',
+    'required' => 0,
+    'settings' => array(
+      'add_mode' => 'select',
+      'allowed_bundles' => array(
+        'feature_image' => 'feature_image',
+        'pg_accordion' => 'pg_accordion',
+        'pg_block_reference' => 'pg_block_reference',
+        'pg_featured_bills' => 'pg_featured_bills',
+        'pg_file_uploads' => 'pg_file_uploads',
+        'pg_image_left' => 'pg_image_left',
+        'pg_image_slider' => 'pg_image_slider',
+        'pg_quick_facts' => 'pg_quick_facts',
+        'pg_text' => 'pg_text',
+        'pg_video' => 'pg_video',
+        'two_column_button_links' => 'two_column_button_links',
+      ),
+      'bundle_weights' => array(
+        'feature_image' => -18,
+        'pg_accordion' => -19,
+        'pg_block_reference' => -15,
+        'pg_featured_bills' => -14,
+        'pg_file_uploads' => -13,
+        'pg_image_left' => -20,
+        'pg_image_slider' => -17,
+        'pg_quick_facts' => -12,
+        'pg_text' => -22,
+        'pg_video' => -16,
+        'two_column_button_links' => -21,
+      ),
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'default_edit_mode' => 'preview',
+      'default_edit_mode_override' => 1,
+      'separate_edit' => 1,
+      'title' => 'Layout Component',
+      'title_multiple' => 'Layout Components',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'paragraphs',
+      'settings' => array(),
+      'type' => 'paragraphs_embed',
+      'weight' => 4,
     ),
   );
 
@@ -1782,7 +1874,7 @@ function nys_sitewide_elements_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 9,
+      'weight' => 10,
     ),
   );
 
@@ -3320,6 +3412,12 @@ function nys_sitewide_elements_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
+        'weight' => 3,
+      ),
+      'thumbnail_preview' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
         'weight' => 0,
       ),
     ),
@@ -3339,7 +3437,7 @@ function nys_sitewide_elements_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 9,
+      'weight' => 10,
     ),
   );
 
@@ -3367,6 +3465,12 @@ function nys_sitewide_elements_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
+        'weight' => 2,
+      ),
+      'thumbnail_preview' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
         'weight' => 0,
       ),
     ),
@@ -3386,7 +3490,7 @@ function nys_sitewide_elements_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 6,
+      'weight' => 7,
     ),
   );
 
@@ -3428,6 +3532,12 @@ function nys_sitewide_elements_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
+        'weight' => 5,
+      ),
+      'thumbnail_preview' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
         'weight' => 0,
       ),
     ),
@@ -3456,7 +3566,7 @@ function nys_sitewide_elements_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_select',
-      'weight' => 3,
+      'weight' => 4,
     ),
   );
 
@@ -3756,14 +3866,16 @@ function nys_sitewide_elements_field_default_field_instances() {
   t('Associated Bills');
   t('Associated Senators');
   t('Associating Senators triggers the Associated Senators module to appear on the front-end of this initiative page. You can associate multiple senators, but this does not give any associated Senators ownership of this initiative.');
-  t('Attach teasers for bills related to this article. Use the autocomplete to find the bill (e.g. "S120 . . .").');
+  t('Attach teasers for bills related to this article. Use the autocomplete to find the bill (e.g. "S120 . . ."). The bill(s) in this field will show at bottom of the article. If you want to embed an associated bill next to where you reference the bill in the article, try using "Featured Bill" in the Custom Layout Components above.');
   t('Attachment');
   t('Body');
   t('Chapters');
+  t('Choose from selection of layout components below to customize the layout of your page. You can drag & drop components into the order you would like them to be on the page.');
   t('Committee Member Name');
   t('Committee Member Role');
   t('Committee Member URL');
   t('Committees');
+  t('Custom Layout Components');
   t('Description');
   t('Details');
   t('End data. Not required. If not month or day is given or needed use January 1st of that year.');
@@ -3796,6 +3908,7 @@ function nys_sitewide_elements_field_default_field_instances() {
   t('Subheading');
   t('Subtitle');
   t('The date on which this item was published. Articles and other items in the Senate newsroom are sorted by Publish Date and time. If you\'d like to change the order in which items appear, change this value. Note that this does not enable the scheduling of posts. If you choose a date/time in the future, it will still be published now.');
+  t('This field is no longer being used. If you need the chapter functionality use the Custom Layout Component fields and choose "Accordion Chapters," which has the same functionality, but also gives you more flexibility as to where you can place your chapters on the page.');
   t('Used to manage the Honorees.');
   t('Video Redirect');
   t('Webform');

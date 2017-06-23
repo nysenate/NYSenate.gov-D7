@@ -117,7 +117,7 @@
 
 
   <section class="c-news--body">
-    <?php if($node->field_image_main): ?>
+    <?php if(!empty($field_image_main[0]) && $node->field_image_main): ?>
       <div class="c-block c-block--img">
         <?php print theme('image_style', array( 'path' =>  $field_image_main[0]['uri'], 'style_name' => '760x377')); ?>
 
@@ -136,6 +136,12 @@
 
       <?php print render($content['body']);?>
     </div>
+    
+    <?php if(isset($content['field_paragraphs'])): ?>
+      <div class="c-block-paragraph">
+        <?php print render($content['field_paragraphs']);?>
+      </div>
+    <?php endif; ?>
 
     <?php if(isset($content['field_chapters'])): ?>
       <section class="c-block">

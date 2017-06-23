@@ -41,7 +41,7 @@
       <?php echo $fields['field_senator']->content;?>
     </div>
   <?php endif;?>
-  <?php if($fields['name']->content):?>
+  <?php if(!empty($fields['name']->content)):?>
     <a class="c-event-location" href="http://maps.google.com/?q=<?php echo $fields['street']->content;?>+<?php echo $fields['city']->content;?>%2C+<?php echo $fields['province']->content;?>%2C+<?php echo $fields['postal_code']->content;?>" target="_blank">
       <span class="icon-before__circle-pin"></span><?php echo $fields['name']->content;?>
     </a>
@@ -56,7 +56,7 @@
       <?php if(!empty($fields['city']->content)) {echo $fields['city']->content;}?>
       <?php if(!empty($fields['province']->content)) {echo ', '.$fields['province']->content;}?>
     </div>
-    <?php if($view->current_display != 'page') echo $fields['field_date_1']->content;?>
+    <?php if($view->current_display != 'page' && isset($fields['field_date_1']->content)) echo $fields['field_date_1']->content;?>
     <?php if(isset($fields['field_video_status']->content)):?>
        <?php if($view->current_display != 'page'):?>| <?php endif;?><div class="c-video-status icon-before__youtube">
         <?php echo $fields['field_video_status']->content; ?>

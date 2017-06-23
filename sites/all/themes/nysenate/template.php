@@ -1867,21 +1867,23 @@ function nysenate_amended_versions($node_wrapper) {
 }
 
 function nysenate_get_bill_versions($node_type, $bill_base_print_no, $bill_session_year) {
-  $query = "select n.title, n.nid, os.field_ol_session_value
+  $results = [];
+  if ($bill_base_print_no && $bill_session_year && $node_type) {
+    $query = "SELECT n.title, n.nid, os.field_ol_session_value
       FROM field_data_field_ol_base_print_no pn JOIN node n ON n.nid = pn.entity_id
       JOIN field_data_field_ol_session os ON os.entity_id = pn.entity_id AND os.bundle = pn.bundle
       WHERE pn.field_ol_base_print_no_value = :base_print_no
       AND pn.bundle = :bundle AND os.field_ol_session_value = :session_year;";
-  $queryargs = array(
-    ':base_print_no' => $bill_base_print_no,
-    ':bundle' => $node_type,
-    ':session_year' => $bill_session_year
-  );
+    $queryargs = [
+      ':base_print_no' => $bill_base_print_no,
+      ':bundle' => $node_type,
+      ':session_year' => $bill_session_year,
+    ];
 
-  $db_results = db_query($query, $queryargs);
-  $results = array();
-  foreach($db_results as $key => $r) {
-    $results[] = array('nid' => $r->nid, 'title' => $r->title);
+    $db_results = db_query($query, $queryargs);
+    foreach ($db_results as $key => $r) {
+      $results[] = ['nid' => $r->nid, 'title' => $r->title];
+    }
   }
   return $results;
 }
