@@ -21,6 +21,7 @@ features[field_base][] = field_meeting_location
 features[field_base][] = field_off_the_floor
 features[field_base][] = field_transcript
 features[field_base][] = field_video_status
+features[field_group][] = group_members|taxonomy_term|committees|form
 features[field_instance][] = node-meeting-body
 features[field_instance][] = node-meeting-field_agenda_bills
 features[field_instance][] = node-meeting-field_bill

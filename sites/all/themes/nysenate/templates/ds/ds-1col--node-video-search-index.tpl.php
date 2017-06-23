@@ -12,13 +12,13 @@
     	<?php print drupal_render($content['title']); ?>
    	</div>
     <div class="c-search-result--date">
-    <?php if($node->field_date[LANGUAGE_NONE][0]['value']):?>
+    <?php if(isset($node->field_date[LANGUAGE_NONE][0]['value']) && $node->field_date[LANGUAGE_NONE][0]['value']):?>
       <?php print drupal_render($content['field_date']); ?>
     <?php endif; ?>
-    <?php if($node->field_senator[LANGUAGE_NONE][0]['target_id']):?>
+    <?php if(isset($node->field_senator[LANGUAGE_NONE][0]['target_id']) && $node->field_senator[LANGUAGE_NONE][0]['target_id']):?>
         <?php print '| <span>Senator </span>' .drupal_render($content['field_senator']); ?>
     <?php endif; ?>
-    <?php if($node->field_author[LANGUAGE_NONE][0]['value']):?>
+    <?php if(isset($node->field_author[LANGUAGE_NONE][0]['value']) && $node->field_author[LANGUAGE_NONE][0]['value']):?>
         <?php print '| <span>Author </span>' .drupal_render($content['field_senator']); ?>
     <?php endif; ?>
     <?php if($node->type == 'senator'):?>

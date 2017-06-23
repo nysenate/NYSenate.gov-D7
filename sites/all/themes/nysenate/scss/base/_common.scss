@@ -180,6 +180,10 @@
 / add 'passed' class to illustrate we're 
 /	passed that step	
 /----------------------------------------*/
+ul.nys-bill-status {
+  margin: 90px 0 60px;
+}
+
 .nys-bill-status {
 	position: relative;
 	margin: 25px 0;
@@ -865,7 +869,8 @@ blockquote {
 	}
 	.c-pullquote--citation {
 		font-size: 14px;
-		margin-top: 25px;
+		margin-top: -25px;
+    padding-left: 50px;
 	}
 	blockquote {
 		p {

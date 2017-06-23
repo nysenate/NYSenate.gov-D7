@@ -110,10 +110,10 @@
   <?php print render($title_suffix); ?>
 
   <div class="c-questionnaire--body">
-  <?php if($node->field_image_main): ?>
+  <?php if(!empty($node->field_image_main)): ?>
     <div class="c-block c-block--img">
       <?php print theme('image_style', array( 'path' =>  $field_image_main[0]['uri'], 'style_name' => '760x377')); ?>
-        <?php if(!empty($node->field_image_main[LANGUAGE_NONE][0]['title'])): ?>
+        <?php if (!empty($node->field_image_main[LANGUAGE_NONE][0]['title'])): ?>
           <p class="c-img--caption"><?php print $node->field_image_main[LANGUAGE_NONE][0]['title']; ?></p>
         <?php endif; ?>
     </div>

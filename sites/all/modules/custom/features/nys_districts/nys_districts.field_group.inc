@@ -37,7 +37,7 @@ function nys_districts_field_group_info() {
       ),
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_district_description|taxonomy_term|districts|form'] = $field_group;
 
   // Translatables
   // Included for use with string extractors like potx.

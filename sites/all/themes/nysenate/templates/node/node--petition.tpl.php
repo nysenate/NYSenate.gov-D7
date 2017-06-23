@@ -121,7 +121,7 @@ ctools_include('modal');
 
   <?php if (isset($node->field_image_main[LANGUAGE_NONE])) : ?>
     <div class="c-block c-block--img">
-      <?php print theme('image_style', array(
+      <?php if (isset($field_image_main[0]['uri'])) print theme('image_style', array(
         'path' => $field_image_main[0]['uri'],
         'style_name' => '760x377',
       )); ?>

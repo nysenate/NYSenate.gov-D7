@@ -82,7 +82,7 @@ $is_multiday = !(date('Ymd',$node->field_date[LANGUAGE_NONE][0]['value'])==date(
 
   <h1 class="nys-event-title"><?php print $title; ?></h1>
   <div class="c-event-block c-event-block--featured<?php if ($node->field_image_main) print "-image"; ?>">
-    <?php if($node->field_image_main): ?>
+    <?php if(!empty($field_image_main[0]['uri'])): ?>
     <div class="c-event-image"><?php print theme('image_style', array( 'path' =>  $field_image_main[0]['uri'], 'style_name' => '380x215')); ?></div>
     <?php endif; ?>
     <?php print theme('nysenate_event_date', array(
@@ -121,7 +121,7 @@ $is_multiday = !(date('Ymd',$node->field_date[LANGUAGE_NONE][0]['value'])==date(
     <?php
       foreach ($node->field_issues[LANGUAGE_NONE] as $value) : ?>
       <li>
-        <?php echo l($value['taxonomy_term']->name,drupal_get_path_alias('taxonomy/term/'.$value['tid'])); ?>
+        <?php if (isset($value['taxonomy_term']->name)) echo l($value['taxonomy_term']->name,drupal_get_path_alias('taxonomy/term/'.$value['tid'])); ?>
       </li>
     <?php endforeach; ?>
     </ul>
@@ -153,7 +153,7 @@ $is_multiday = !(date('Ymd',$node->field_date[LANGUAGE_NONE][0]['value'])==date(
       <?php print render($content['body']);?>
   </div>
 
-  <?php if(!empty($social_buttons)): ?>
+  <?php if (!empty($social_buttons)): ?>
     <?php print $social_buttons; ?>
   <?php endif; ?>
 

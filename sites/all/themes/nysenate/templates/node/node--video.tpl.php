@@ -89,7 +89,7 @@
 					</p>
 				<?php elseif(isset($content['field_senator'])): ?>
 					<p class="c-news--author">
-						<?php print $content['field_senator'][0]['#markup']; ?>
+						<?php if (isset($content['field_senator'][0]['#markup'])) print $content['field_senator'][0]['#markup']; ?>
 					</p>
 				<?php endif; ?>
 				<p class="c-news--pub-date">

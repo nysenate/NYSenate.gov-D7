@@ -117,17 +117,22 @@ function _nys_accumulator_extract_user_info($user) {
   // Quick reference to the user id.
   $user_id = isset($user->uid) ? $user->uid : 0;
 
+  // To avoid notices regarding unknown indices.
+  $address = isset($user->field_address[LANGUAGE_NONE][0]) ? $user->field_address[LANGUAGE_NONE][0] : [];
+  $fname = field_get_items('user', $user, 'field_first_name');
+  $lname = field_get_items('user', $user, 'field_last_name');
+
   // Initialize user info array.
-  $user_info = array(
-    'id'               => $user_id,
-    'email'            => isset($user->mail) ? $user->mail : '',
-    'first_name'       => isset($user->field_first_name) ? $user->field_first_name[LANGUAGE_NONE][0]['value'] : '',
-    'last_name'        => isset($user->field_last_name) ? $user->field_last_name[LANGUAGE_NONE][0]['value'] : '',
-    'address'          => isset($user->field_address) ? $user->field_address[LANGUAGE_NONE][0]['street'] : '',
-    'city'             => isset($user->field_address) ? $user->field_address[LANGUAGE_NONE][0]['city'] : '',
-    'state'            => isset($user->field_address) ? $user->field_address[LANGUAGE_NONE][0]['province'] : '',
-    'zipcode'          => isset($user->field_address) ? $user->field_address[LANGUAGE_NONE][0]['postal_code'] : '',
-  );
+  $user_info = [
+    'id' => $user_id,
+    'email' => isset($user->mail) ? $user->mail : '',
+    'first_name' => isset($fname[0]['value']) ? $fname[0]['value'] : '',
+    'last_name' => isset($lname[0]['value']) ? $lname[0]['value'] : '',
+    'address' => isset($address['street']) ? $address['street'] : '',
+    'city' => isset($address['city']) ? $address['city'] : '',
+    'state' => isset($address['province']) ? $address['province'] : '',
+    'zipcode' => isset($address['postal_code']) ? $address['postal_code'] : '',
+  ];
 
   // Retrieve the senator/district information.
   $district_info = user_get_district_senator_data_array($user);
@@ -197,6 +202,16 @@ function nys_accumulator_calculate_user_verified_bitflag($a_user = NULL) {
     global $user;
     $a_user =& $user;
   }
+
+  // Weird circumstances allow $a_user to not have access/uid properties?
+  // Don't know how/why, but we have to account for it.
+  if (!isset($a_user->access)) {
+    $a_user->access = 0;
+  }
+  if (!isset($a_user->uid)) {
+    $a_user->uid = 0;
+  }
+
   return ((int)$a_user->access ? NYSACCUM_USERVERIFY_EMAIL : 0)
          | (fboauth_fbid_load($a_user->uid) ? NYSACCUM_USERVERIFY_FACEBOOK : 0);
 }
@@ -360,6 +375,9 @@ function _nys_accumulator_process_flag($follow, $account, $flagging) {
   nyslog();
 
   // Initialize the user object, options array, and key response data points.
+  if (!isset($account->uid)) {
+    $account->uid = 0;
+  }
   $user = user_load($account->uid);
   $options = array();
   $msg_type = '';
@@ -415,6 +433,9 @@ function _nys_accumulator_process_flag($follow, $account, $flagging) {
     // Resolve the target shortname and district number.
     $target_district = $response['msg_info']['user_info']['district_number'] ? $response['msg_info']['user_info']['district_number'] : FALSE;
     $target_shortname = $response['msg_info']['user_info']['senator_shortname'] ? $response['msg_info']['user_info']['senator_shortname'] : FALSE;
+    if (!isset($user->field_district[LANGUAGE_NONE][0]['target_id'])) {
+      $user->field_district[LANGUAGE_NONE][0]['target_id'] = 0;
+    }
     nys_accumulator_retrieve_senator_and_district($user->field_district[LANGUAGE_NONE][0]['target_id'], $response, $target_district, $target_shortname);
 
     // Retrieve additional entity info (e.g., bill data).
@@ -475,6 +496,9 @@ function nys_accumulator_votingapi_preset_votes_alter(&$votes) {
   );
 
   // Load the user.
+  if (!isset($user->uid)) {
+    $user->uid = 0;
+  }
   $tmp_user = user_load($user->uid);
 
   // Set the options for user_info if this user is anonymous.
@@ -484,6 +508,9 @@ function nys_accumulator_votingapi_preset_votes_alter(&$votes) {
   }
 
   // Load the Senator's shortname and user's district.
+  if (!isset($tmp_user->field_district[LANGUAGE_NONE][0]['target_id'])) {
+    $tmp_user->field_district[LANGUAGE_NONE][0]['target_id'] = 0;
+  }
   nys_accumulator_retrieve_senator_and_district(
     $tmp_user->field_district[LANGUAGE_NONE][0]['target_id'], 
     $response
@@ -748,10 +775,10 @@ function nys_accumulator_user_update(&$edit, $account, $category) {
                           'mail'=>false,
                           'status'=>false,
                          );
-    foreach ($fields_to_compare as $key=>$val) {
+    foreach ($fields_to_compare as $key => $val) {
       // if field is an array, get the reference field.  Otherwise, check the whole value
-      $old_value = $val ? $account->original->{$key}[LANGUAGE_NONE][0][$val] : $account->original->{$key};
-      $new_value = $val ? $account->{$key}[LANGUAGE_NONE][0][$val]           : $account->{$key};
+      $old_value = $val !== FALSE ? $account->original->{$key}[LANGUAGE_NONE][0][$val] : $account->original->{$key};
+      $new_value = $val !== FALSE ? $account->{$key}[LANGUAGE_NONE][0][$val] : $account->{$key};
 
       // Any difference triggers a message.
       if ($new_value != $old_value) {
@@ -1015,6 +1042,10 @@ function nys_accumulator_action_insert($response) {
  */
 function nys_accumulator_nys_accumulator_preinsert($row) {
   nyslog();
+
+  if (!isset($row['form_info'])) {
+    $row['form_info'] = [];
+  }
 
   // At first log in, the access timestamp has not been set yet.
   // So we kludge it by setting the confirmation flag manually.

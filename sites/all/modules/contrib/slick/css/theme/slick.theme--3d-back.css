@@ -1,0 +1,96 @@
+/**
+ * @file.
+ * Adds 3d view with focal point at back, best with centerMode + 3 slidesToShow.
+ * Detailed stylings are all yours, get yourself dirty.
+ */
+
+.slick--skin--3d-back .slick-initialized {
+  overflow: hidden;
+  padding-bottom: 30px;
+  padding-top: 30px;
+}
+
+.slick--skin--3d-back .slick-initialized .slick-list {
+  margin: 0 -120px;
+}
+
+@media (min-width: 65em) {
+  .slick--skin--3d-back .slick-initialized .slick-list {
+    margin: 0 -210px;
+  }
+}
+
+.slick--skin--3d-back .slick-initialized .slide {
+  overflow: hidden;
+}
+
+.slick--skin--3d-back .slick-initialized .slide .slide__content {
+  -webkit-perspective: 1500px;
+  -ms-perspective: 1500px;
+  perspective: 1500px;
+  -webkit-transform-style: preserve-3d;
+  -ms-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+
+.slick--skin--3d-back .slick-initialized .slide .slide__media {
+  margin: 30px 0;
+  outline: 1px solid transparent;
+  -ms-transform: rotateY(25deg);
+  -webkit-transform: rotateY(25deg);
+  transform: rotateY(25deg);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transition: opacity 1s ease 0s, -webkit-transform 1s;
+  transition: opacity 1s ease 0s, transform 1s;
+  -webkit-transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+  transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.slick--skin--3d-back .slick-initialized .slide .slide__caption {
+  bottom: 0;
+  padding: 0;
+  position: relative;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: all 0.4s ease-in-out 0s;
+  transition: all 0.4s ease-in-out 0s;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+}
+
+.slick--skin--3d-back .slick-initialized .slick-current ~ .slide .slide__media {
+  -ms-transform: rotateY(-25deg);
+  -webkit-transform: rotateY(-25deg);
+  transform: rotateY(-25deg);
+}
+
+.slick--skin--3d-back .slick-initialized .slick-current.slide .slide__media {
+  -ms-transform: rotateY(0deg);
+  -webkit-transform: rotateY(0deg);
+  transform: rotateY(0deg);
+}
+
+.slick--skin--3d-back .slick-initialized .slick-current.slide .slide__caption {
+  bottom: auto;
+  position: relative;
+  filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+  opacity: 1;
+  visibility: visible;
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+}
+
+.slick--skin--3d-back .slick-initialized .slick__arrow {
+  left: 50%;
+  margin-left: -25%;
+  width: 50%;
+}
+
+.slick--skin--3d-back .slick-initialized .slick-dots {
+  bottom: 0;
+}

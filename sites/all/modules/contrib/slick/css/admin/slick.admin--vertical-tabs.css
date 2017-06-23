@@ -1,0 +1,218 @@
+/**
+ * @file
+ * Vertical tabs. Lets face it, VT over-specified selector is for a reason:
+ * not easily get broken. And that is not a breeze to override.
+ * And we don't want to CSS alter for a partial use case.
+ */
+.form--slick div.vertical-tabs {
+  border: 1px solid #dbe1e9 !important;
+}
+
+.form--slick div.vertical-tabs,
+.form--slick .fieldset--responsive .fieldset--settings {
+  border-radius: 0;
+  box-shadow: 0 0 0 4px #f9f9f9;
+  clear: both;
+  float: left;
+  margin: 1em auto;
+  width: 99%;
+}
+
+.form--slick div.vertical-tabs {
+  background: #f9f9f9;
+  clear: both;
+  position: relative;
+  padding: 1em;
+  margin: 0 0 1em;
+}
+
+.form--slick div.vertical-tabs fieldset {
+  border: 0;
+}
+
+.form--slick div.vertical-tabs .vertical-tabs-panes fieldset.vertical-tabs-pane {
+  padding: 0;
+}
+
+.form--slick div.vertical-tabs .fieldset--responsive--ajax {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.form--slick div.vertical-tabs .vertical-tabs-list {
+  border: 0;
+  float: left; /* LTR */
+  line-height: 1;
+  margin: 0 -100% -1px 0; /* LTR */
+  padding: 20px 0 0;
+  position: relative;
+  width: 16%;
+  z-index: 2;
+}
+
+.form--slick div.vertical-tabs ul li.vertical-tab-button {
+  border: 0;
+  list-style: none;
+  list-style-image: none;
+  margin: 0;
+  text-align: right;
+}
+
+.form--slick div.vertical-tabs ul li.vertical-tab-button a {
+  border: 0;
+  color: #808080;
+  display: block;
+  font-size: 14px;
+  font-size: 0.875rem;
+  line-height: 22px;
+  padding: 10px 20px;
+  text-decoration: none;
+}
+
+.form--slick div.vertical-tabs ul li.vertical-tab-button a:hover,
+.form--slick div.vertical-tabs ul li.vertical-tab-button a:focus {
+  background: none;
+  outline: 0;
+  color: #000;
+}
+
+.form--slick div.vertical-tabs ul li.vertical-tab-button strong {
+  font-size: 14px;
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.form--slick div.vertical-tabs ul li.vertical-tab-button .summary {
+  color: #000;
+  display: block;
+  font-size: 11px;
+  font-size: 0.6875rem;
+  padding-top: 0.4em;
+}
+
+.form--slick div.vertical-tabs ul li.vertical-tab-button a,
+.form--slick div.vertical-tabs ul li.first a {
+  border-right: 0;
+  border-top: 0;
+}
+
+.form--slick div.vertical-tabs ul li.selected a,
+.form--slick div.vertical-tabs ul li.selected a:hover,
+.form--slick div.vertical-tabs ul li.selected a:focus,
+.form--slick div.vertical-tabs ul li.selected a:active {
+  background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuMCIgeTE9IjAuNSIgeDI9IjEuMCIgeTI9IjAuNSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwLjAiLz48c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwLjUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIiAvPjwvc3ZnPiA=');
+  background-size: 100%;
+  background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(50%, rgba(255, 255, 255, 0.5)), color-stop(100%, #ffffff));
+  background-image: -webkit-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, #ffffff 100%);
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, #ffffff 100%);
+  border-bottom: 1px solid #dadada;
+  border-top: 1px solid #dadada;
+  border-left: 1px solid #dadada;
+  border-radius: 5px 0 0 5px;
+  color: #000;
+  text-decoration: none;
+  margin-right: -2px;
+}
+
+.form--slick div.vertical-tabs ul li.selected a:focus strong {
+  text-decoration: none;
+}
+
+.form--slick div.vertical-tabs-panes {
+  background: #f3f3f3;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #dadada;
+  border-radius: 1px;
+  padding: 0;
+  min-height: 240px;
+  margin: 0 0 0 16%; /* LTR */
+}
+
+.form--slick div.vertical-tabs-panes > fieldset,
+.form--slick div.vertical-tabs-panes > fieldset:first-child {
+  border: 0;
+  margin: 0;
+  padding-top: 0 !important;
+}
+
+/* Overrides vertical-tabs.css */
+.form--slick div.vertical-tabs-panes .fieldset-wrapper > div:first-child {
+  padding-top: 20px;
+}
+
+.form--slick div.vertical-tabs-panes .fieldset-description {
+  padding: 5px 15px;
+}
+
+.form--slick div.vertical-tabs-panes > fieldset > legend,
+.form--slick div.vertical-tabs-panes > fieldset:first-child > legend {
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+  overflow: hidden;
+  height: 1px;
+  width: 1px;
+  word-wrap: normal;
+}
+
+.form--slick .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane fieldset.collapsible {
+  border: 0;
+}
+
+@media all and (max-width: 900px) {
+  .form--slick div.vertical-tabs .vertical-tabs-list {
+    width: 30%;
+  }
+
+  .form--slick div.vertical-tabs-panes {
+    margin-left: 30%;
+  }
+}
+
+@media all and (max-width: 768px) {
+  .form--slick div.vertical-tabs .vertical-tabs-panes {
+    margin: 0;
+  }
+
+  .form--slick div.vertical-tabs .vertical-tabs-list {
+    border-bottom: 2px solid #dadada;
+    margin: 0 0 1em;
+    padding: 1em;
+    width: 100%;
+  }
+
+  .form--slick div.vertical-tabs .vertical-tabs-list li {
+    float: none;
+    display: inline-block;
+  }
+
+  .form--slick div.vertical-tabs ul li.selected a,
+  .form--slick div.vertical-tabs ul li.selected a:hover,
+  .form--slick div.vertical-tabs ul li.selected a:focus,
+  .form--slick div.vertical-tabs ul li.selected a:active {
+    border: 1px solid #dadada;
+    border-radius: 0;
+    background: #fff;
+  }
+
+  .form--slick .vertical-tab-button .summary {
+    position: absolute !important;
+    clip: rect(1px, 1px, 1px, 1px);
+    overflow: hidden;
+    height: 1px;
+    width: 1px;
+    word-wrap: normal;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .form--slick div.vertical-tabs .vertical-tabs-list {
+    padding: 0;
+  }
+
+  .form--slick div.vertical-tabs ul li.vertical-tab-button {
+    display: block;
+    text-align: left;
+  }
+}

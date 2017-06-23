@@ -62,7 +62,7 @@
 
   <div class="c-meeting-detail--overview">
     <p class="c-meeting-detail--date">
-      <?php if (!empty($field_date)): ?>
+      <?php if (!empty($field_date[0]['value'])): ?>
       <span class="c-meeting-date--num">
         <?php echo date("d", $field_date[0]['value']); ?>
       </span>
@@ -88,13 +88,18 @@
         <?php if (!empty($field_location[0]['postal_code'])): echo $field_location[0]['postal_code']; endif; ?>
         <?php if (!empty($field_location[0]['state'])): echo $field_location[0]['state']; endif; ?>
       </p>
-      <p class="c-meeting-detail--time">
-        <?php if (!empty($field_date)): echo date("g:i A ", $field_date[0]['value']);?> to <?php echo date("g:i A ", $field_date[0]['value2']); endif; ?>
-        <?php if (!empty($field_video_status) && $field_video_status[0]['value'] != 'streaming_redirect'): ?>
-          <span class="c-meeting-video--status icon-before__youtube"><?php print render($content['field_video_status']); ?></span>
-        <?php endif; ?>
-      </p>
-      <div title="Add to Calendar" class="addthisevent">
+        <p class="c-meeting-detail--time">
+          <?php if (!empty($field_date[0]['value'])) {
+            echo date("g:i A ", $field_date[0]['value']);
+            if (!empty($field_date[0]['value2'])) {
+              echo ' to ' . date("g:i A ", $field_date[0]['value2']);
+            }
+          }
+          if (isset($field_video_status[0]['value']) && $field_video_status[0]['value'] != 'streaming_redirect'): ?>
+              <span class="c-meeting-video--status icon-before__youtube"><?php print render($content['field_video_status']); ?></span>
+          <?php endif; ?>
+        </p>
+        <div title="Add to Calendar" class="addthisevent">
         Add to Calendar
         <span class="start"><?php print format_date($node->field_date[LANGUAGE_NONE][0]['value'], "custom", "m/d/Y"); ?> <?php print format_date($node->field_date[LANGUAGE_NONE][0]['value'], "custom", "g:i A"); ?></span>
         <span class="end"><?php print format_date($node->field_date[LANGUAGE_NONE][0]['value2'], "custom", "m/d/Y"); ?> <?php print format_date($node->field_date[LANGUAGE_NONE][0]['value2'], "custom", "g:i A"); ?></span>

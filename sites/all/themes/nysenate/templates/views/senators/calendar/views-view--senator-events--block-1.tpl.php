@@ -62,7 +62,9 @@
   <?php if ($rows): ?>
   	<div class="c-container--header">
     <h2 class="c-container--title">Upcoming Events</h2>
-		<a href="/<?php print $alias; ?>/calendar" class="c-container--link">Go to Events</a>
+        <?php if (isset($alias)): ?>
+		  <a href="/<?php print $alias; ?>/calendar" class="c-container--link">Go to Events</a>
+		<?php endif; ?>
 	</div>
     <div class="view-content">
       <?php print $rows; ?>

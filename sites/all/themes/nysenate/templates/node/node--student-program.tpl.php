@@ -106,7 +106,7 @@
 
 
   <div class="c-news--body">
-    <?php if($node->field_image_main): ?>
+    <?php if (isset($node->field_image_main[LANGUAGE_NONE][0])): ?>
     <div class="c-block c-block--img">
       <?php print theme('image_style', array( 'path' =>  $field_image_main[0]['uri'], 'style_name' => '760x377')); ?>
         <?php if(!empty($node->field_image_main[LANGUAGE_NONE][0]['title'])): ?>

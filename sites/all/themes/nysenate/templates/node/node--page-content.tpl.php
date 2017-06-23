@@ -78,7 +78,7 @@
 <section id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
   <?php print render($title_prefix); ?>
   <?php if ($page): ?>
-    <div class="c-news--head">
+    <header class="c-news--head">
       <h1 class="nys-article-title"><?php print $title; ?></h1>
       <div class="c-news--head-meta">
         <?php if(isset($content['field_issues'])): ?>
@@ -89,7 +89,7 @@
         </ul>
         <?php endif; ?>
       </div>
-    </div>
+    </header>
   <?php endif; ?>
   <?php print render($title_suffix); ?>
 
@@ -104,6 +104,12 @@
     <?php if(isset($content['body'])): ?>
     <div class="c-block">
       <?php print render($content['body']);?>
+    </div>
+    <?php endif; ?>
+    
+    <?php if(isset($content['field_paragraphs'])): ?>
+    <div class="c-block-paragraph">
+      <?php print render($content['field_paragraphs']);?>
     </div>
     <?php endif; ?>
 

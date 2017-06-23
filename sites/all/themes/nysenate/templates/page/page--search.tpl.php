@@ -79,7 +79,7 @@
 				</ul>
 			<?php endif; ?>
 			<?php print render($page['content']); ?>
-      <?php print $advanced_search_message; ?>
+      <?php if (isset($advanced_search_message)) print $advanced_search_message; ?>
 		</div>
 		<!--/.l-main region -->
 

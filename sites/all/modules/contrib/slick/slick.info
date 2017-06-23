@@ -1,0 +1,17 @@
+name = Slick
+description = "Slick carousel, the last carousel you'll ever need."
+core = 7.x
+package = Slick
+
+dependencies[] = libraries (>=2.x)
+dependencies[] = ctools
+dependencies[] = jquery_update
+
+files[] = tests/slick.test
+
+; Information added by Drupal.org packaging script on 2015-12-12
+version = "7.x-2.0"
+core = "7.x"
+project = "slick"
+datestamp = "1449932983"
+

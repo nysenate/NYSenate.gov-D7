@@ -34,6 +34,7 @@
       <div class="c-tab--arrow u-mobile-only"></div>
       <dd class="c-tab active"><a class="c-tab-link first" href="#panel1">All News</a></dd>
       <dd class="c-tab"><a class="c-tab-link" href="#panel2">Press Releases</a></dd>
+      <dd class="c-tab"><a class="c-tab-link" href="#panel3">Videos</a></dd>
     </dl>
     <div class="tabs-content"><?php print $content['tabs']; ?></div>
 

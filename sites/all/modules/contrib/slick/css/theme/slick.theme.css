@@ -1,0 +1,439 @@
+/**
+ * @file.
+ * Provided basic layout and styling for the Slick based on custom settings.
+ */
+
+.slick-wrapper,
+.slick,
+.slick * {
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+img {
+  border: 0;
+  height: auto;
+  max-width: 100%;
+  -ms-interpolation-mode: bicubic;
+}
+
+/* Prevents confusing white space with centerPadding */
+.slick__slide img {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.slick-hidden {
+  display: none;
+}
+
+/**
+ * Arrows contained/wrapped within slick__arrow for easy moves.
+ */
+.slick__arrow {
+  bottom: auto;
+  display: none;
+  height: 2px;
+  left: 0;
+  margin-top: -1px;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  z-index: 2;
+}
+
+.slick__arrow li,
+.slick__arrow button {
+  pointer-events: auto;
+}
+
+.slick-initialized ~ .slick__arrow {
+  display: block;
+}
+
+.slick-initialized ~ .slick__arrow.element-hidden {
+  display: none;
+}
+
+.slick--has-arrow-down > .slick__arrow {
+  bottom: 20px;
+  height: 62px;
+  left: 50%;
+  margin: 0 0 0 -90px;
+  top: auto;
+  width: 180px;
+}
+
+.slick-arrow,
+.slick-down {
+  border: 0;
+  border-radius: 50%;
+  display: block;
+  font-size: 0;
+  height: 42px;
+  pointer-events: auto;
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  width: 42px;
+}
+
+.slick-arrow:active,
+.slick-arrow:focus,
+.slick-down:active,
+.slick-down:focus {
+  box-shadow: none;
+  outline: 0;
+}
+
+.slick-arrow::before,
+.slick-arrow::after,
+.slick-down::before,
+.slick-down::after {
+  pointer-events: none;
+}
+
+/* Overrides problematic hidden arrows at core slick.css */
+.slick-prev {
+  left: 0;
+}
+
+.slick-next {
+  right: 0;
+}
+
+.slick-arrow::before {
+  color: #ff6d2c;
+  font-size: 36px;
+  font-size: 2.25rem;
+}
+
+.slick-arrow:hover::before {
+  color: #37465b;
+}
+
+/* Pure CSS arrow down, override by icon font accordingly */
+.slick-down {
+  background: #ff6d2c;
+  cursor: pointer;
+  height: 48px;
+  left: 50%;
+  margin-left: -24px;
+  top: 50%;
+  width: 48px;
+}
+
+.slick-down:hover {
+  background: #37465b;
+}
+
+.slick-down::before,
+.slick-down::after {
+  border-right: 3px solid;
+  color: #fff;
+  content: '';
+  display: block;
+  height: 16px;
+  margin-top: -6px;
+  position: absolute;
+  -ms-transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+  transform: rotate(135deg);
+  right: 28px;
+  top: 50%;
+  width: 0;
+}
+
+.slick-down::after {
+  right: 18px;
+  -ms-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.slick-down:hover::before,
+.slick-down:hover::after {
+  color: #fff;
+}
+
+/**
+ * Slick center, depends on JS centerMode with partial view if visible ones > 2.
+ */
+.slick--center .slick-track {
+  padding-bottom: 32px;
+  padding-top: 32px;
+}
+
+.slick--center.slick--skin--classic .slick-track,
+.slick--center.slick--display--thumbnail .slick-track {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+.slick--center .slide__content {
+  overflow: hidden;
+  position: relative;
+}
+
+.slick--center .slick__slide {
+  -webkit-transition: all 300ms ease;
+  transition: all 300ms ease;
+}
+
+/**
+ * Misc overrides core slick.
+ */
+/* Hide non-js lazy-loaded image to show <noscript> one instead, if the theme
+supports no-js, otherwise IMG tag with dummy placeholder. */
+.no-js .slick img.lazy {
+  display: none;
+}
+
+/* Prevents overflowing noscript, and nested slides. */
+.no-js .slick__slide,
+.slick__slide .slick__slide {
+  max-width: 100%;
+}
+
+.slick-initialized {
+  overflow: visible;
+}
+
+.slick,
+.slick__slide {
+  max-width: 100%;
+  position: relative;
+}
+
+.slick__slide.slick-center {
+  z-index: 1;
+}
+
+.slick__slide.slick-current {
+  z-index: 4;
+}
+
+.draggable {
+  cursor: grab;
+  cursor: -webkit-grab;
+}
+
+.draggable:active {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+
+.draggable:active a,
+.draggable:active .slide__caption {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.slide__media {
+  overflow: hidden;
+  position: relative;
+}
+
+/* Center the image to reduce gap at RHS with smaller image, larger container */
+.slick__image {
+  margin: 0 auto;
+}
+
+/**
+ * Skins.
+ */
+.slide__content::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.slide__title {
+  margin: 10px 0 5px;
+  line-height: 1.2;
+}
+
+.slide__link {
+  margin: 30px auto;
+}
+
+.slide__pattern {
+  display: block;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 0;
+  pointer-events: none;
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADAQMAAABs5if8AAAAA3NCSVQICAjb4U/gAAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlP/AOW3MEoAAAAJcEhZcwAACusAAArrAYKLDVoAAAAWdEVYdENyZWF0aW9uIFRpbWUAMjUvMDQvMTHvvlk6AAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M1cbXjNgAAAA5JREFUCJljSGB4wPAAAAVmAiGdUf+vAAAAAElFTkSuQmCC") repeat 0 0;
+}
+
+/**
+ * Bullets.
+ */
+/* Makes the pointer work when bullets placed over the slide. */
+.slick-dots li button {
+  pointer-events: auto;
+}
+
+/* Overrides too tiny bullets from core slick.css */
+.slick-dots li button::before {
+  font-size: 12px;
+  font-size: 0.75rem;
+}
+
+/* Overrides .slick-slider to make caption text selectable. */
+.slide__caption {
+  cursor: text;
+  position: relative;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  -o-user-select: text;
+  -webkit-user-select: text;
+  user-select: text;
+  width: 100%;
+}
+
+/* Fix excessive height with ondemand lazyLoad prior to being visible */
+.slick--ondemand .slick__slide:not(.slick-active) img[data-lazy] {
+  width: 40px;
+  height: 40px;
+}
+
+/**
+ * Complex layout needs custom refinement for mobile, hence it is reasonable
+ * to apply for Desktop up. Adjust mobile version accordingly.
+ */
+/**
+ * Slide layouts, adjust accordingly per actual container slide.
+ */
+.slick--display--main .slide__caption {
+  min-height: 32%;
+  padding: 20px 0;
+  z-index: 3;
+}
+
+.slick--display--thumbnail .slide__caption {
+  padding: 5px 6px;
+}
+
+/* Overrides core > 1.3.11, otherwise thumbnails are non-clickable */
+.slick--display--thumbnail .slick__slide img {
+  pointer-events: auto;
+}
+
+/* Prevents collapsing slick when unslick like one item. */
+.unslick .slide {
+  width: 100%;
+}
+
+@media (min-width: 64em) {
+  .unslick.slick--float::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .slick--float .slick__slide {
+    float: left;
+    /* Prevents overflowing width within smaller container */
+    max-width: 100%;
+  }
+
+  /* Fixed FireFox draggable issue, avoid asNavFor thumbnails. */
+  .slick--display--main .slick__slide img {
+    pointer-events: none;
+  }
+
+  .slide__caption {
+    left: 0;
+    padding: 20px;
+    top: 10%;
+  }
+
+  .slide--caption--center .slide__caption,
+  .slide--caption--center-top .slide__caption,
+  .slide--caption--right  .slide__caption {
+    width: 42%;
+  }
+
+  .slide--caption--center .slide__caption {
+    margin-top: -16%;
+    position: absolute;
+    top: 50%;
+  }
+
+  .slide--caption--center .slide__caption,
+  .slide--caption--center-top .slide__caption {
+    left: 50%;
+    margin-left: -21%;
+    padding: 0;
+    position: absolute;
+    text-align: center;
+  }
+
+  .slide--caption--right .slide__caption {
+    left: auto;
+    position: absolute;
+    right: 0;
+  }
+
+  .slide--caption--top .slide__caption,
+  .slide--caption--bottom .slide__caption {
+    position: absolute;
+    width: 100%;
+  }
+
+  .slide--caption--top .slide__caption {
+    top: 0;
+  }
+
+  .slide--caption--bottom .slide__caption {
+    bottom: 0;
+    top: auto;
+  }
+
+  .slick--has-arrow-down .slide--caption--bottom .slide__caption {
+    padding-bottom: 80px;
+  }
+
+  .slide--caption--stage-left .slide__caption,
+  .slide--caption--stage-right .slide__caption,
+  .slide--caption--stage-zebra .slide__caption {
+    left: 50%;
+    margin-left: -41%;
+    padding: 0;
+    position: absolute;
+    width: 82%;
+  }
+
+  .slick--display--thumbnail .slide__caption,
+  .slide--caption--below .slide__caption {
+    padding: 20px 0;
+    position: relative;
+    top: auto;
+    width: 100%;
+  }
+
+  .slick--display--thumbnail .slide__caption {
+    padding: 5px 6px;
+  }
+
+  #overlay .slick-wrapper,
+  #overlay .slick  {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1040px;
+  }
+}

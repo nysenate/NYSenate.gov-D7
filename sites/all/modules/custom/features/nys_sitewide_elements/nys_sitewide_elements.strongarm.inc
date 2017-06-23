@@ -406,6 +406,12 @@ function nys_sitewide_elements_strongarm() {
       'sponsor_list_bill_detail' => array(
         'custom_settings' => FALSE,
       ),
+      'agenda_senator_sponsors' => array(
+        'custom_settings' => FALSE,
+      ),
+      'senators_involved' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -419,7 +425,13 @@ function nys_sitewide_elements_strongarm() {
           'weight' => '1',
         ),
         'metatags' => array(
-          'weight' => '8',
+          'weight' => '9',
+        ),
+        'redirect' => array(
+          'weight' => '12',
+        ),
+        'xmlsitemap' => array(
+          'weight' => '13',
         ),
       ),
       'display' => array(

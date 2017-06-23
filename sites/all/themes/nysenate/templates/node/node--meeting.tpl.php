@@ -36,7 +36,7 @@
     <?php if (isset($field_event_status[0]['value']) && $field_event_status[0]['value'] === "live_now"): ?>
     <p class="c-meeting-detail--live-flag"><?php print render($content['field_event_status']); ?></p>
     <?php endif; ?>
-    <?php if ($field_off_the_floor[0]['value'] === "1"): ?>
+    <?php if (isset($field_off_the_floor[0]['value']) && $field_off_the_floor[0]['value'] === "1"): ?>
     <p class="c-meeting-detail--floor-flag">off the floor</p>
     <?php endif; ?>
   </div>
@@ -45,13 +45,13 @@
     <div class="c-block">
       <p class="c-meeting-detail--date">
         <span class="c-meeting-date--num">
-          <?php echo date("d", $field_date[0]['value']);?>
+          <?php if (isset($field_date[0]['value'])) echo date("d", $field_date[0]['value']);?>
         </span>
         <span class="c-meeting-date--month">
-          <?php echo date("M", $field_date[0]['value']);?>
+          <?php if (isset($field_date[0]['value'])) echo date("M", $field_date[0]['value']);?>
         </span>
         <span class="c-meeting-date--year">
-          <?php echo date("Y", $field_date[0]['value']);?>
+          <?php if (isset($field_date[0]['value'])) echo date("Y", $field_date[0]['value']);?>
         </span>
 
       </p>
@@ -65,8 +65,14 @@
           <?php if (!empty($field_meeting_location[0]['value'])): print $field_meeting_location[0]['value']; endif; ?>
         </p>
         <p class="c-meeting-detail--time">
-          <?php echo date("g:i A ", $field_date[0]['value']);?> to <?php echo date("g:i A ", $field_date[0]['value2']); ?>
-          <?php if (!empty($field_video_status) && $field_video_status[0]['value'] != 'streaming_redirect'): ?>
+          <?php
+          if (isset($field_date[0]['value'])) {
+            echo date("g:i A ", $field_date[0]['value']);
+          }
+          if (isset($field_date[0]['value2'])) {
+              echo ' to ' . date("g:i A ", $field_date[0]['value2']);
+          }
+          if (isset($field_video_status[0]['value']) && $field_video_status[0]['value'] != 'streaming_redirect'): ?>
             <span class="c-meeting-video--status icon-before__youtube"><?php print render($content['field_video_status']); ?></span>
           <?php endif; ?>
         </p>
@@ -76,7 +82,7 @@
           <span class="end"><?php print format_date($node->field_date[LANGUAGE_NONE][0]['value2'], "custom", "m/d/Y"); ?> <?php print format_date($node->field_date[LANGUAGE_NONE][0]['value2'], "custom", "g:i A"); ?></span>
           <span class="timezone">America/New_York</span>
           <span class="title"><?php print $title; ?></span>
-          <span class="location"><?php echo $node->field_meeting_location[LANGUAGE_NONE][0]['safe_value'];?></span>
+          <span class="location"><?php if (isset( $node->field_meeting_location[LANGUAGE_NONE][0]['safe_value'])) { echo $node->field_meeting_location[LANGUAGE_NONE][0]['safe_value']; }?></span>
           <span class="date_format">MM/DD/YYYY</span>
           <span class="organizer">NY STATE SENATE</span>
           <span class="organizer_email">content@senate.state.ny.us</span>
@@ -101,12 +107,11 @@
       <?php endif; ?>
       </div>
     </div>
-  
-      <?php if (!empty($field_video_status) && $field_video_status[0]['value'] === "streaming_live_now" && !empty($field_ustream_url)): ?>
+      <?php if (isset($field_video_status[0]['value']) && $field_video_status[0]['value'] === "streaming_live_now"): ?>
       <div class="c-meeting-detail--descript flex-video">
         <?php print render($content['field_ustream_url']); ?>
       </div>
-      <?php elseif (!empty($field_video_status) && $field_video_status[0]['value'] === "streaming_redirect" && !empty($field_video_redirect)): ?>
+      <?php elseif (isset($field_video_status[0]['value']) && $field_video_status[0]['value'] === "streaming_redirect"): ?>
         <?php print render($content['field_ustream_url']); ?>
       <?php endif; ?>
 

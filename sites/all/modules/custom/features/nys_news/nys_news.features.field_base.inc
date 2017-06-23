@@ -212,6 +212,34 @@ function nys_news_field_default_field_bases() {
     'type' => 'image',
   );
 
+  // Exported field_base: 'field_hide_feed'.
+  $field_bases['field_hide_feed'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_hide_feed',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => 'Show in News Feed',
+        1 => 'Hide from News Feed',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_boolean',
+  );
+
   // Exported field_base: 'field_images'.
   $field_bases['field_images'] = array(
     'active' => 1,

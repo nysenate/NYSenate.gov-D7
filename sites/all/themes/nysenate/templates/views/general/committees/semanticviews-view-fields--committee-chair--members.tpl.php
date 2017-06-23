@@ -46,23 +46,27 @@ if(isset($fields['field_committee_member_role']->content)) {
 				<h3 class="nys-senator--position"><?php echo $position; ?></h3>
 			<?php endif; ?>
 			<h4 class="nys-senator--name"><?php echo $fields['title']->content;?></h4>
-			
+
 			<?php
 				$party = $fields['field_party']->content;
 				if(!empty($party)) $associations = explode(', ', $party);
 
-				$conference_parts = explode (" ",$fields['field_conference']->content);			
-				$conference ="";
-				foreach($conference_parts as $index=>$part)
-					if(($index != 0) && ($index%2 == 1)) $associations[] = substr($conference_parts[$index-1],0,1).substr($part,0,1);
-
+        if (isset($fields['field_conference']->content)) {
+				  $conference_parts = explode (" ",$fields['field_conference']->content);
+				  $conference ="";
+				  foreach($conference_parts as $index=>$part) {
+					  if(($index != 0) && ($index%2 == 1)) {
+					    $associations[] = substr($conference_parts[$index-1],0,1).substr($part,0,1);
+            }
+          }
+        }
 				// if(!empty($associations)) echo '('.implode(', ', $associations).')';
 			?>
 				<?php if(!empty($associations)):?>
 					<span class="nys-senator--party">
-						<?php echo '('.implode(', ', $associations).')'; ?>	
-					</span>	
-				<?php endif; ?>	
+						<?php echo '('.implode(', ', $associations).')'; ?>
+					</span>
+				<?php endif; ?>
 
 				<?php if(isset($fields['field_district_number']->content)):?>
 					<span class="nys-senator--district">
@@ -71,6 +75,6 @@ if(isset($fields['field_committee_member_role']->content)) {
 				<?php endif; ?>
 			</span>
 		</div>
-		
+
 	</div>
 </a>

@@ -117,7 +117,7 @@ else {
     <!-- INITIATIVE BLOCK - TWO UP -->
   <div class="c-block c-block--initiative c-block--initiative__has-img lgt-bg">
 
-    <img src="<?php print $theme_path; ?>/images/initiative-block-img.jpg" alt="" />
+    <img src="<?php if (isset($theme_path)) print $theme_path; ?>/images/initiative-block-img.jpg" alt="" />
 
     <div class="c-initiative--content">
       <div class="c-initiative--inner">

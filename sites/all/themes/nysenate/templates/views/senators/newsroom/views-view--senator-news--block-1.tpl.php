@@ -65,7 +65,9 @@ if ( arg(0) == 'node' && is_numeric(arg(1)) && ! arg(2) ) {
   <?php if ($rows): ?>
   <div class="c-container--header">
     <h2 class="c-container--title">Newsroom</h2>
-		<a href="/<?php print $alias; ?>/newsroom" class="c-container--link">Go to Newsroom</a>
+        <?php if (isset($alias) && $alias): ?>
+		  <a href="/<?php print $alias; ?>/newsroom" class="c-container--link">Go to Newsroom</a>
+		<?php endif; ?>
 	</div>
     <div class="view-content">
       <?php print $rows; ?>

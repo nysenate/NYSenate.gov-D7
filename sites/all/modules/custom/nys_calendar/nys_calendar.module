@@ -131,3 +131,29 @@ function nys_calendar_ajax_callback($page_callback_result) {
 
     print ajax_render($commands);
 }
+
+
+function nys_calendar_ajax_events_callback($page_callback_result) {
+  if (!isset($_GET['id'])) {
+    return FALSE;
+  }
+  $nid = $_GET['id'];
+  $page = (isset($_GET['page'])) ? $_GET['page'] : 0;
+  $current_month = isset($_GET['date']) ? $_GET['date'] : '';
+
+  $class = (isset($_GET['class'])) ? $_GET['class'] : 'upcoming_events';
+  if(strpos($class, 'upcoming_events')) $block = 'upcoming_events';
+  if(strpos($class, 'senator_upcoming_district')) $block = 'senator_upcoming_district';
+  if(strpos($class, 'senator_upcoming_albany')) $block = 'senator_upcoming_albany';
+
+  $view = 'senator_events';
+
+  $view = views_get_view('senator_events');
+  $view->set_display($block);
+  $pager = $view->display_handler->display->display_options['pager']['options']['items_per_page'];
+  $view->pager = $page;
+  $view->set_arguments(array($nid, $current_month));
+  $result= $view->render();
+  print_r($result);
+
+}
