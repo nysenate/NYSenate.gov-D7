@@ -24,7 +24,7 @@ function nys_captcha_form_alter(&$form, &$form_state, $form_id) {
 
     // Detect previous CAPTCHA submission, and disable CAPTCHA.
     if ($form_id == 'nys_messaging_senator_contact_form') {
-      if (array_key_exists('captcha', $form['actions']) && !$_SESSION['nys_captcha']['present_captcha']) {
+      if (array_key_exists('captcha', $form['actions']) && empty($_SESSION['nys_captcha']['present_captcha'])) {
         unset($form['actions']['captcha']);
       }
     }

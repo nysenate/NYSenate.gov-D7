@@ -23,9 +23,10 @@ function sendgrid_integration_disable() {
  */
 function sendgrid_integration_install() {
   $t = get_t();
-  drupal_set_message($t("You can configure SendGrid settings under Administer > Configuration > !link",
+  drupal_set_message($t('You can configure SendGrid settings under Administer > Configuration > !link',
     array(
-      '!link' => l($t('SendGrid settings'), 'admin/config/system/sendgrid'))
+      '!link' => l($t('SendGrid settings'), 'admin/config/system/sendgrid')
+    )
   ));
 }
 
@@ -33,7 +34,31 @@ function sendgrid_integration_install() {
  * Implements hook_uninstall().
  */
 function sendgrid_integration_uninstall() {
-  variable_del('sendgrid_integration_username');
+  variable_del('sendgrid_integration_apikey_id');
   variable_del('sendgrid_integration_apikey');
+  variable_del('sendgrid_integration_test_defaults');
+  variable_del('sendgrid_integration_maillog_log');
+  variable_del('sendgrid_integration_maillog_devel');
+}
+
+/**
+ * Remove variables no longer used.
+ */
+function sendgrid_integration_update_7001() {
+  $t = get_t();
+  if (!module_exists('composer_manager')) {
+    drupal_set_message($t('Install Composer Manager before upgrading (https://www.drupal.org/project/composer_manager)'), 'error');
+    exit;
+  }
+  // Deleting unused variables.
   variable_del('sendgrid_integration_ssl');
+  variable_del('sendgrid_integration_username');
+}
+
+/**
+ * Remove variables no longer used.
+ */
+function sendgrid_integration_update_7002() {
+  // Emptying old variables.
+  variable_del('sendgrid_integration_apikey_id', '');
 }

@@ -1,0 +1,130 @@
+<?php
+
+/**
+ * @file
+ * Check for known security issues in Composer libraries.
+ */
+
+use SensioLabs\Security\SecurityChecker;
+
+/**
+ * Implements hook_composer_dependencies_install().
+ */
+function composer_manager_sa_composer_dependencies_install() {
+  // This hook is only called with Drush, so we know this function is safe to
+  // call.
+  composer_manager_sa_print();
+}
+
+/**
+ * Implements hook_cron().
+ */
+function composer_manager_sa_cron() {
+  // If the data is still in the cache, this will not do anything beyond a
+  // cache_get() call.
+  composer_manager_sa_vulnerabilities(composer_manager_lock_file());
+}
+
+/**
+ * Check for security advisories against Composer libraries.
+ *
+ * @param string $lock_file
+ *   The URI to the composer.lock file.
+ *
+ * @return \Symfony\Component\Console\Output\BufferedOutput
+ *   The security advisory report. This will also contain a result if no issues
+ *   are found.
+ */
+function composer_manager_sa_check($lock_file) {
+  $vulnerabilities = composer_manager_sa_vulnerabilities($lock_file);
+  return composer_manager_sa_plain_text($lock_file, $vulnerabilities);
+}
+
+/**
+ * Generate a plain text report for an array of vulnerabilities.
+ *
+ * @param string $lock_file
+ *   The URI to the composer.lock file.
+ * @param array $vulnerabilities
+ *   An array of security vulnerabilities.
+ *
+ * @return \Symfony\Component\Console\Output\BufferedOutput
+ *   Buffered output of the plain text report.
+ */
+function composer_manager_sa_plain_text($lock_file, array $vulnerabilities) {
+  $formatter = new \SensioLabs\Security\Formatters\TextFormatter(new \Symfony\Component\Console\Helper\FormatterHelper());
+  $output = new \Symfony\Component\Console\Output\BufferedOutput();
+  $formatter->displayResults($output, drupal_realpath($lock_file), $vulnerabilities);
+
+  return $output;
+}
+
+/**
+ * Find any known vulnerabilities in a composer.lock file.
+ *
+ * Vulnerability reports are cached for one hour, based on the contents of
+ * composer.lock.
+ *
+ * @param string $lock_file
+ *   The URI to the composer.lock file.
+ * @param bool $force_refresh
+ *   (optional) Set to TRUE to force a refresh of cached data.
+ *
+ * @return array
+ *   An array of known security issues, or an empty array if all libraries
+ *   passed.
+ */
+function composer_manager_sa_vulnerabilities($lock_file, $force_refresh = FALSE) {
+  // 'drush composer-manager' doesn't run a full bootstrap, so on install and
+  // update the Composer autoloader may not be registered.
+  composer_manager_register_autoloader();
+
+  if ($force_refresh || !$vulnerabilities = composer_manager_sa_cache($lock_file)) {
+    $checker = new SecurityChecker();
+    $vulnerabilities = &drupal_static('composer_manager_sa_cache');
+    $vulnerabilities = $checker->check(drupal_realpath($lock_file));
+    cache_set(composer_manager_sa_cache_cid($lock_file), $vulnerabilities, 'cache', 3600);
+  }
+
+  return $vulnerabilities;
+}
+
+/**
+ * Return the cached security advisory report.
+ *
+ * @param string $lock_file
+ *   The URI to the composer.lock file.
+ *
+ * @return array|NULL
+ *   The array of cached vulnerabilities, or FALSE if no data is in the cache.
+ */
+function composer_manager_sa_cache($lock_file) {
+  $vulnerabilities = &drupal_static(__FUNCTION__);
+
+  // If there are no vulnerabilities this is an empty array, so we have to use
+  // is_array() to check to see if we are cached or not.
+  if (is_array($vulnerabilities)) {
+    return $vulnerabilities;
+  }
+
+  $cid = composer_manager_sa_cache_cid($lock_file);
+  if ($cached = cache_get($cid)) {
+    $vulnerabilities = $cached->data;
+  }
+
+  return $vulnerabilities;
+}
+
+/**
+ * Return the cache ID for a lock file URI.
+ *
+ * @param string $lock_file
+ *   The URI to the composer.lock file.
+ *
+ * @return string
+ *   The cache ID.
+ */
+function composer_manager_sa_cache_cid($lock_file) {
+  $cid = md5(file_get_contents($lock_file));
+  return $cid;
+}

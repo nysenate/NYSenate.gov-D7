@@ -81,13 +81,21 @@ function nys_committees_image_default_styles() {
   $styles['1346x330'] = array(
     'label' => '1346x330',
     'effects' => array(
-      11 => array(
+      33 => array(
         'name' => 'image_scale_and_crop',
         'data' => array(
           'width' => 1346,
           'height' => 330,
+          'retinafy' => 1,
         ),
         'weight' => 1,
+      ),
+      34 => array(
+        'name' => 'image_style_quality',
+        'data' => array(
+          'quality' => 85,
+        ),
+        'weight' => 2,
       ),
     ),
   );

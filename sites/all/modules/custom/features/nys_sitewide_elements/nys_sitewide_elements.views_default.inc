@@ -2817,7 +2817,6 @@ function nys_sitewide_elements_views_default_views() {
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'petition' => 'petition',
-    'questionnaire' => 'questionnaire',
   );
 
   /* Display: Bills */
@@ -3288,13 +3287,14 @@ function nys_sitewide_elements_views_default_views() {
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['label'] = '';
   $handler->display->display_options['fields']['field_date']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_date']['type'] = 'date_plain';
   $handler->display->display_options['fields']['field_date']['settings'] = array(
     'format_type' => 'month_only',
+    'custom_date_format' => '',
     'fromto' => 'value',
     'multiple_number' => '',
     'multiple_from' => '',
     'multiple_to' => '',
+    'show_remaining_days' => 0,
   );
   /* Field: Content: Published on */
   $handler->display->display_options['fields']['field_date_1']['id'] = 'field_date_1';
@@ -3302,13 +3302,14 @@ function nys_sitewide_elements_views_default_views() {
   $handler->display->display_options['fields']['field_date_1']['field'] = 'field_date';
   $handler->display->display_options['fields']['field_date_1']['label'] = '';
   $handler->display->display_options['fields']['field_date_1']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_date_1']['type'] = 'date_plain';
   $handler->display->display_options['fields']['field_date_1']['settings'] = array(
     'format_type' => 'day_only',
+    'custom_date_format' => '',
     'fromto' => 'both',
     'multiple_number' => '',
     'multiple_from' => '',
     'multiple_to' => '',
+    'show_remaining_days' => 0,
   );
   /* Field: Content: Youtube Video */
   $handler->display->display_options['fields']['field_yt']['id'] = 'field_yt';
@@ -3317,9 +3318,10 @@ function nys_sitewide_elements_views_default_views() {
   $handler->display->display_options['fields']['field_yt']['label'] = '';
   $handler->display->display_options['fields']['field_yt']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_yt']['click_sort_column'] = 'video_url';
-  $handler->display->display_options['fields']['field_yt']['type'] = 'video_embed_field_url';
+  $handler->display->display_options['fields']['field_yt']['type'] = 'video_embed_field_thumbnail';
   $handler->display->display_options['fields']['field_yt']['settings'] = array(
-    'video_style' => 'normal',
+    'image_style' => '200x125',
+    'image_link' => 'source',
   );
   /* Field: Content: Published on */
   $handler->display->display_options['fields']['field_date_2']['id'] = 'field_date_2';
@@ -3327,14 +3329,31 @@ function nys_sitewide_elements_views_default_views() {
   $handler->display->display_options['fields']['field_date_2']['field'] = 'field_date';
   $handler->display->display_options['fields']['field_date_2']['label'] = '';
   $handler->display->display_options['fields']['field_date_2']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_date_2']['type'] = 'date_plain';
   $handler->display->display_options['fields']['field_date_2']['settings'] = array(
-    'format_type' => 'long',
+    'format_type' => 'privatemsg_current_day',
+    'custom_date_format' => '',
     'fromto' => 'both',
     'multiple_number' => '',
     'multiple_from' => '',
     'multiple_to' => '',
+    'show_remaining_days' => 0,
   );
+  /* Field: Location: City */
+  $handler->display->display_options['fields']['city']['id'] = 'city';
+  $handler->display->display_options['fields']['city']['table'] = 'location';
+  $handler->display->display_options['fields']['city']['field'] = 'city';
+  $handler->display->display_options['fields']['city']['label'] = '';
+  $handler->display->display_options['fields']['city']['element_type'] = '0';
+  $handler->display->display_options['fields']['city']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['city']['element_default_classes'] = FALSE;
+  /* Field: Location: Province */
+  $handler->display->display_options['fields']['province']['id'] = 'province';
+  $handler->display->display_options['fields']['province']['table'] = 'location';
+  $handler->display->display_options['fields']['province']['field'] = 'province';
+  $handler->display->display_options['fields']['province']['label'] = '';
+  $handler->display->display_options['fields']['province']['element_type'] = '0';
+  $handler->display->display_options['fields']['province']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['province']['element_default_classes'] = FALSE;
   /* Sort criterion: Content: Published on -  start date (field_date) */
   $handler->display->display_options['sorts']['field_date_value']['id'] = 'field_date_value';
   $handler->display->display_options['sorts']['field_date_value']['table'] = 'field_data_field_date';

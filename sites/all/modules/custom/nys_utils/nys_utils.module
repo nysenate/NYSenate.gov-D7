@@ -145,6 +145,14 @@ function nys_utils_location_element_alter(&$element) {
  * senator's identifiers, used by other utility functions in this module,
  * as not to repeat code.
  *
+ * TODO: This function is inappropriately named.
+ * It does not actually load the district info from the user, but rather loads
+ * the user's senator, then loads the district from the senator object.  This
+ * causes a failure if the district does not have an assigned senator (e.g., an
+ * empty seat).  We are leaving this in place for now because it is already
+ * in wide usage.  See user_get_district_data() to load the district info
+ * properly from the user information.
+ *
  * @param object|int $user
  *   Object or $uid, if $uid will convert to $user object.
  *
@@ -189,6 +197,48 @@ function user_get_district_senator_data_array($user) {
     }
   }
   return $user_district_senator_info[$uid];
+}
+
+/**
+ * Get user's district data.
+ *
+ * Given a $user object or $uid, return that user's district information.
+ *
+ * TODO: This function breaks out the district information loading routines
+ * from user_get_district_senator_data_array().  The other function improperly
+ * assumes and depends on a relationship between a senator user and a district.
+ * This function relies solely on the user's district assignment.
+ *
+ * @param object|int $user
+ *   Object or $uid, if $uid will convert to $user object.
+ *
+ * @return array
+ *   An array containing district's tid (taxonomy id), name, and number.
+ */
+function user_get_district_data($user) {
+  $user_district_info = &drupal_static(__FUNCTION__);
+  if (is_object($user)) {
+    $uid = $user->uid;
+  }
+  elseif (is_numeric($user)) {
+    $uid = $user;
+  }
+  elseif (empty($user->uid)) {
+    global $user;
+    $uid = $user->uid;
+  }
+
+  if (!isset($user_district_info[$uid])) {
+    $query = "SELECT td.tid, td.name, dn.field_district_number_value AS number " .
+      "FROM field_data_field_district fd " .
+      "INNER JOIN taxonomy_term_data td " .
+      "ON fd.field_district_target_id=td.tid AND fd.bundle='user' " .
+      "INNER JOIN field_data_field_district_number dn " .
+      "ON td.tid=dn.entity_id AND dn.entity_type='taxonomy_term' AND dn.bundle='districts' " .
+      "WHERE fd.entity_id = :uid";
+    $user_district_info[$uid] = db_query($query, [':uid' => $uid])->fetchAssoc();
+  }
+  return $user_district_info[$uid];
 }
 
 /**
@@ -1134,7 +1184,7 @@ function nys_utils_views_pre_view(&$view, &$display_id, &$args) {
     }
     elseif (arg(0) == 'node') {
       $node = node_load(arg(1));
-      if ($node->type != 'senator' && !empty($node->field_senator[LANGUAGE_NONE][0]['target_id'])) {
+      if ($node !== FALSE && $node->type != 'senator' && !empty($node->field_senator[LANGUAGE_NONE][0]['target_id'])) {
         $senator_nid = $node->field_senator[LANGUAGE_NONE][0]['target_id'];
         $args[0] = $senator_nid;
       }
@@ -1347,7 +1397,7 @@ function nys_utils_tokens($type, $tokens, array $data = array(), array $options 
             $replacements[$original] = 'taxonomy/term/' . $district_tid;
           }
           elseif (arg(0) == 'node') {
-            if ($data['node']->type == 'senator') {
+            if (isset($data['node']->type) && $data['node']->type == 'senator') {
               $district_tid = senator_get_district_tid($data['node']->nid);
               if (!empty($district_tid)) {
                 $replacements[$original] = 'taxonomy/term/' . $district_tid;
@@ -1368,7 +1418,7 @@ function nys_utils_tokens($type, $tokens, array $data = array(), array $options 
             $replacements[$original] = 'node/' . district_get_senator_nid(arg(2));
           }
           elseif (arg(0) == 'node') {
-            if ($data['node']->type == 'senator') {
+            if (isset($data['node']->type) && $data['node']->type == 'senator') {
               $senator_nid = $data['node']->nid;
               $replacements[$original] = 'node/' . $senator_nid;
             }
@@ -1913,7 +1963,6 @@ function nys_utils_send_slack_notification($message, $fields = array(), $channel
     $payload = array(
       'text' => $title,
       'channel' => $channel,
-      'username' => 'someuser',
       'attachments' => array([
         'color' => $attachment_color,
         'text' => $message,
@@ -1936,10 +1985,95 @@ function nys_utils_send_slack_notification($message, $fields = array(), $channel
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-    curl_exec($ch);
+    $response = curl_exec($ch);
     curl_close($ch);
+    if ($response != 'ok') {
+      watchdog('nys_utils_slack', 'Slack call failed with response: %response', ['%response'=>$response], WATCHDOG_ERROR);
+    }
   }
   else {
     watchdog('nys_utils_slack', 'Slack URL is not set!', array(), WATCHDOG_WARNING);
+  }
+}
+
+/**
+ * Alters the description text on the Web tab for Media Browser upload.
+ */
+function nys_utils_form_file_entity_add_upload_alter(&$form, &$form_state, $form_id) {
+  $step = isset($form['#step']) ? $form['#step'] : 0;
+  // Swap the upload field for an embed field when on the first step of the web
+  // tab.
+  if ($form_id == 'media_internet_add_upload' && $step == 1) {
+
+
+    $form['embed_code'] = array(
+      '#type' => 'textfield',
+      '#title' => t('URL for internet media resource'),
+      '#description' => t('To embed a Twitter or Facebook post, enter the URL to the post.<br><br> <strong>Examples:</strong><br><strong>Twitter:</strong> https://twitter.com/NYSenate/status/877737578484699137<br> <strong>Facebook:</strong> https://www.facebook.com/NYsenate/posts/10155333531260883'),
+      '#attributes' => array('class' => array('media-add-from-url')),
+      // There is no standard specifying a maximum length for a URL. Internet
+      // Explorer supports up to 2083 (http://support.microsoft.com/kb/208427)
+      // so we assume publicly available media URLs are within this limit.
+      '#maxlength' => 2083,
+      '#required' => TRUE,
+      '#default_value' => isset($form_state['storage']['embed_code']) ? $form_state['storage']['embed_code'] : NULL,
+    );
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function nys_utils_module_implements_alter(&$implementations, $hook) {
+  switch($hook) {
+    case 'form_file_entity_add_upload_alter':
+      // Move user_login hook to the top to circumvent default flag module behavior.
+      $group = array('nys_utils' => $implementations['nys_utils']);
+      unset($implementations['nys_utils']);
+      $implementations = $group + $implementations;
+      break;
+  }
+}
+
+
+/**
+ * Checks for safe use of array and key.
+ *
+ * The nys_av() function tests arrays before use returns a default value if not.
+ *
+ * param scaler $key
+ *   The array key to test.
+ * param array $list
+ *   The array to test.
+ * param scaler $default
+ *   The value to return if $key is not set.
+ *
+ *   Returns the array data if set or the default if not.
+ */
+function nys_av($key, $list, $default = NULL) {
+  if (is_array($list)) {
+    return isset($list[$key]) ? $list[$key] : $default;
+  }
+  return $default;
+}
+
+/**
+ * Checks for safe use of variables - Variables need to be set.
+ *
+ * The s() function tests and filters variables before use.
+ *
+ * param scaler $value
+ *   The value under test.
+ * paramX scaler $default
+ *   The value to return if $value is not set or undefined.
+ *
+ *   Returns the $value if set or the default if not.
+ */
+function s($value, $default = '') {
+  if (isset($value)) {
+    return $value;
+  }
+  else {
+    return $default;
   }
 }

@@ -1,0 +1,40 @@
+<?php
+/**
+ * @file
+ * Contains install and update functions for SendGrid Integration Reports
+ */
+
+/**
+ * Implements hook_disable().
+ */
+function sendgrid_integration_reports_disable() {
+
+}
+
+/**
+ * Implements hook_install().
+ */
+function sendgrid_integration_reports_install() {
+  $t = get_t();
+  drupal_set_message($t('You can configure SendGrid settings under Administer > Configuration > !link',
+    array(
+      '!link' => l($t('SendGrid settings'), 'admin/config/system/sendgrid'))
+  ));
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function sendgrid_integration_reports_uninstall() {
+  db_drop_table('cache_sendgrid_integration_reports');
+}
+
+/**
+ * Implements hook_schema().
+ */
+
+function sendgrid_integration_reports_schema() {
+  $schema = array();
+  $schema['cache_sendgrid_integration_reports'] = drupal_get_schema_unprocessed('system', 'cache');
+  return $schema;
+}

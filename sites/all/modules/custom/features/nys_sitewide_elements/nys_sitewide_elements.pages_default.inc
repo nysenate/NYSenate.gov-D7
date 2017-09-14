@@ -268,11 +268,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   $display->content['new-1f1c72db-3861-4d1a-8a4a-dfe0902402ac'] = $pane;
   $display->panels['middle'][1] = 'new-1f1c72db-3861-4d1a-8a4a-dfe0902402ac';
   $pane = new stdClass();
-  $pane->pid = 'new-5f5c2274-2e2c-45cc-8845-75aa7e6d78bd';
+  $pane->pid = 'new-1f600603-527f-4e63-91d7-9ad955cc3e91';
   $pane->panel = 'middle';
   $pane->type = 'views';
   $pane->subtype = 'senator_news';
-  $pane->shown = FALSE;
+  $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
     'override_pager_settings' => 0,
@@ -286,11 +286,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
     'link_to_view' => 0,
     'args' => '',
     'url' => '',
-    'display' => 'senator_questionnaire_article_footer',
+    'display' => 'senator_news_article_footer',
     'context' => array(
       0 => '',
     ),
-    'override_title' => 1,
+    'override_title' => 0,
     'override_title_text' => '',
     'override_title_heading' => 'h2',
   );
@@ -302,11 +302,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   $pane->extras = array();
   $pane->position = 2;
   $pane->locks = array();
-  $pane->uuid = '5f5c2274-2e2c-45cc-8845-75aa7e6d78bd';
-  $display->content['new-5f5c2274-2e2c-45cc-8845-75aa7e6d78bd'] = $pane;
-  $display->panels['middle'][2] = 'new-5f5c2274-2e2c-45cc-8845-75aa7e6d78bd';
+  $pane->uuid = '1f600603-527f-4e63-91d7-9ad955cc3e91';
+  $display->content['new-1f600603-527f-4e63-91d7-9ad955cc3e91'] = $pane;
+  $display->panels['middle'][2] = 'new-1f600603-527f-4e63-91d7-9ad955cc3e91';
   $pane = new stdClass();
-  $pane->pid = 'new-0aade494-7dd4-4436-b1af-9247946453a2';
+  $pane->pid = 'new-853a3fca-58b1-43ef-b145-fbc5ae96e7a5';
   $pane->panel = 'middle';
   $pane->type = 'views';
   $pane->subtype = 'promo_banner_senators_committees';
@@ -315,7 +315,7 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   $pane->configuration = array(
     'override_pager_settings' => 0,
     'use_pager' => 0,
-    'nodes_per_page' => '3',
+    'nodes_per_page' => '4',
     'pager_id' => '0',
     'offset' => '0',
     'more_link' => 0,
@@ -324,8 +324,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
     'link_to_view' => 0,
     'args' => '',
     'url' => '',
-    'display' => 'news_issues_promos',
-    'override_title' => 1,
+    'display' => 'senator_microsite_interior_footer',
+    'context' => array(
+      0 => '',
+    ),
+    'override_title' => 0,
     'override_title_text' => '',
     'override_title_heading' => 'h2',
   );
@@ -337,9 +340,9 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   $pane->extras = array();
   $pane->position = 3;
   $pane->locks = array();
-  $pane->uuid = '0aade494-7dd4-4436-b1af-9247946453a2';
-  $display->content['new-0aade494-7dd4-4436-b1af-9247946453a2'] = $pane;
-  $display->panels['middle'][3] = 'new-0aade494-7dd4-4436-b1af-9247946453a2';
+  $pane->uuid = '853a3fca-58b1-43ef-b145-fbc5ae96e7a5';
+  $display->content['new-853a3fca-58b1-43ef-b145-fbc5ae96e7a5'] = $pane;
+  $display->panels['middle'][3] = 'new-853a3fca-58b1-43ef-b145-fbc5ae96e7a5';
   $display->hide_title = PANELS_TITLE_FIXED;
   $display->title_pane = '0';
   $handler->conf['display'] = $display;

@@ -1,0 +1,140 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the NYS Bills module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function nys_flag_debug_schema() {
+  $schema['nys_flag_debug'] = array(
+    'description' => 'Holds activity record for flagging table.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key.',
+      ),
+      'action_type' => array(
+        'type' => 'varchar',
+        'length' => 6,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Trigger action for this row.',
+      ),
+      'action_time' => array(
+        'type' => 'int', 
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The time the action was taken.',
+      ),
+      'flagging_id' => array(
+        'description' => 'The unique ID for this particular tag.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'fid' => array(
+        'description' => 'The unique flag ID this object has been flagged with, from {flag}.',
+        'type' => 'int',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'entity_type' => array(
+        'description' => 'The flag type, for example "node", "comment", or "user".',
+        'type' => 'varchar',
+        'length' => '128',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'entity_id' => array(
+        'description' => 'The unique ID of the flagged entity, for example the uid, cid, or nid.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'uid' => array(
+        'description' => 'The user ID by whom this object was flagged.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'sid' => array(
+        'description' => "The user's numeric sid from the session_api table.",
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'timestamp' => array(
+        'description' => 'The UNIX time stamp representing when the flag was set.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'disp-size' => 11,
+      ),
+    ),
+    'primary key' => array('id'),
+    'indexes' => array(
+      'flagging_id' => array('flagging_id'),
+      'entity_id' => array('entity_id'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function nys_flag_debug_uninstall() {
+  $query = [
+    "DROP TRIGGER IF EXISTS nys_flag_debug_ai;",
+    "DROP TRIGGER IF EXISTS nys_flag_debug_au;",
+    "DROP TRIGGER IF EXISTS nys_flag_debug_ad;",
+  ];
+  foreach ($query as $val) {
+    $result = db_query($val);
+  }
+}
+
+/**
+ * Implements hook_install().
+ */
+function nys_flag_debug_install() {
+  nys_flag_debug_uninstall();
+  $query = [
+    "CREATE TRIGGER nys_flag_debug_ai AFTER INSERT ON flagging
+      FOR EACH ROW BEGIN
+        INSERT INTO nys_flag_debug (action_type, action_time, flagging_id, fid,
+          entity_type, entity_id, uid, sid, timestamp) VALUES
+          ('INSERT', UNIX_TIMESTAMP(), NEW.flagging_id, NEW.fid, NEW.entity_type, 
+          NEW.entity_id, NEW.uid, NEW.sid, NEW.timestamp);
+      END;",
+    "CREATE TRIGGER nys_flag_debug_au AFTER UPDATE ON flagging
+      FOR EACH ROW BEGIN
+        INSERT INTO nys_flag_debug (action_type, action_time, flagging_id, fid,
+          entity_type, entity_id, uid, sid, timestamp) VALUES
+          ('UPDATE', UNIX_TIMESTAMP(), NEW.flagging_id, NEW.fid, NEW.entity_type, 
+          NEW.entity_id, NEW.uid, NEW.sid, NEW.timestamp);
+      END;",
+    "CREATE TRIGGER nys_flag_debug_ad AFTER DELETE ON flagging
+      FOR EACH ROW BEGIN
+        INSERT INTO nys_flag_debug (action_type, action_time, flagging_id, fid,
+          entity_type, entity_id, uid, sid, timestamp) VALUES
+          ('DELETE', UNIX_TIMESTAMP(), OLD.flagging_id, OLD.fid, OLD.entity_type, 
+          OLD.entity_id, OLD.uid, OLD.sid, OLD.timestamp);
+      END;",
+    ];
+  foreach ($query as $val) {
+    $result = db_query($val);
+  }
+}

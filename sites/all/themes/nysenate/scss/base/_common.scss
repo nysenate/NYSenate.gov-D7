@@ -180,8 +180,11 @@
 / add 'passed' class to illustrate we're 
 /	passed that step	
 /----------------------------------------*/
-ul.nys-bill-status {
-  margin: 90px 0 60px;
+
+.c-bill-section {
+  ul.nys-bill-status {
+    margin: 90px 0;
+  }
 }
 
 .nys-bill-status {

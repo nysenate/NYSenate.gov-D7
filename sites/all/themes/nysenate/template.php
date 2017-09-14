@@ -470,7 +470,12 @@ function nysenate_preprocess_node(&$variables) {
     $i = array_search($bill_wrapper->field_ol_last_status->value(), array_keys($info_status['settings']['allowed_values']));
     $variables['status_value'] = $i;
     $variables['status_allowed_values'] = $status_list;
-    $variables['last_status'] = $status_list[$variables['field_ol_last_status'][0]['value']];
+    if (!empty($status_list) && !empty($variables['field_ol_last_status'][0]['value'])) {
+      $variables['last_status'] = $status_list[$variables['field_ol_last_status'][0]['value']];
+    }
+    else {
+      $variables['last_status'] = '';
+    }
 
     $amended_versions_result = nysenate_amended_versions($bill_wrapper);
     $variables['amended_version_ids'] = $amended_versions_result;
@@ -641,17 +646,11 @@ function nysenate_preprocess_node(&$variables) {
     }
     $variables['grouped_actions'] = $grouped_actions;
 
-    // Create an array containing node ids / print nos for same as bills
+    // Create an array containing node ids / print nos for same as bills.
     $same_as_billids = json_decode($bill_wrapper->field_ol_same_as->value());
     $same_as = array();
     foreach ($same_as_billids as $billid) {
-      $same_as_bill_query = new EntityFieldQuery();
-      $same_as_bill_result = $same_as_bill_query->entityCondition('entity_type', 'node')
-        ->entityCondition('bundle', 'bill')
-        ->fieldCondition('field_ol_session', 'value', $billid->session)
-        ->fieldCondition('field_ol_print_no', 'value', $billid->printNo)
-        ->range(0,1)
-        ->execute();
+      $same_as_bill_result = nysenate_bill_get_prev_versions($billid->session, $billid->printNo);
       if (isset($same_as_bill_result['node'])) {
         $same_as[] = array(
           'nid' => array_keys($same_as_bill_result['node'])[0],
@@ -685,13 +684,8 @@ function nysenate_preprocess_node(&$variables) {
         }
         // Set up links for bills in each legislative session.
         $prev_vers_printno = $prev_vers['printNo'];
-        $prev_vers_query = new EntityFieldQuery();
-        $prev_vers_result = $prev_vers_query->entityCondition('entity_type', 'node')
-          ->entityCondition('bundle', 'bill')
-          ->fieldCondition('field_ol_session', 'value', $prev_vers_session)
-          ->fieldCondition('field_ol_print_no', 'value', $prev_vers_printno)
-          ->range(0,1)
-          ->execute();
+        $prev_vers_result = nysenate_bill_get_prev_versions($prev_vers_session, $prev_vers_printno);
+
         if (isset($prev_vers_result['node'])) {
           $prev_vers_array[$prev_leg_session][$prev_vers_printno] = l(t($prev_vers_printno), '/' . drupal_get_path_alias('node/' . array_keys($prev_vers_result['node'])[0]));
         }
@@ -737,13 +731,8 @@ function nysenate_preprocess_node(&$variables) {
                 $same_leg_session = ($same_prev_session - 1) . '-' . $same_prev_session;
               }
 
-              $same_prev_query = new EntityFieldQuery();
-              $same_prev_result = $same_prev_query->entityCondition('entity_type', 'node')
-                ->entityCondition('bundle', 'bill')
-                ->fieldCondition('field_ol_session', 'value', $same_prev_session)
-                ->fieldCondition('field_ol_print_no', 'value', $same_prev_printno)
-                ->range(0,1)
-                ->execute();
+              $same_prev_result = nysenate_bill_get_prev_versions($same_prev_session, $same_prev_printno);
+
               if (isset($same_prev_result['node'])) {
                 $prev_vers_array[$same_leg_session][$same_prev_printno] = l(t($same_prev_printno), '/' . drupal_get_path_alias('node/' . array_keys($same_prev_result['node'])[0]));
               }
@@ -901,8 +890,6 @@ function nysenate_preprocess_node(&$variables) {
     $variables['view_related_content']->execute();
 
     $variables['amendments_block'] = _nysenate_render_bill_amendments($variables['amendments'], $base_print_no, $bill_wrapper, $same_as, $previous_versions_info, $active_amendment_version);
-
-    //print_r($variables['amendments']); exit();
   }
 
   if ($variables['type'] == 'resolution') {
@@ -964,7 +951,6 @@ function nysenate_preprocess_node(&$variables) {
   return $variables;
 }
 
-
 function nysenate_preprocess_taxonomy_term(&$variables) {
   if ($variables['vocabulary_machine_name'] === 'districts'){
     //var_dump($variables['field_senator'][LANGUAGE_NONE][0]['value']);exit;
@@ -995,7 +981,6 @@ function nysenate_links__topbar_secondary_menu($variables) {
   return '<ul' . drupal_attributes($variables['attributes']) . ' data-dropdown-content>' . $output . '</ul>';
 }
 
-
 function nysenate_preprocess_block(&$variables) {
   if($variables["block_html_id"] == "block-menu-menu-senator-s-microsite-menu"){
     $index = strpos($variables["content"],">");
@@ -1007,7 +992,6 @@ function nysenate_preprocess_block(&$variables) {
 /**
  * Implements hook_ds_pre_render_alter
  **/
-
 function nysenate_ds_pre_render_alter(&$layout_render_array, $context, &$vars) {
   /*
    * Templates to have a pre-render bill graph applied are listed here
@@ -1033,7 +1017,7 @@ function nysenate_ds_pre_render_alter(&$layout_render_array, $context, &$vars) {
 
   foreach($layout_render_array['ds_content'] as $key => $layout) {
     foreach ($templates as $template) {
-  
+
       if (
           (isset($layout['#entity_type']) && $template[0] == $layout['#entity_type']) &&
           (isset($layout['#bundle']) && $template[1] == $layout['#bundle']) &&
@@ -1048,7 +1032,6 @@ function nysenate_ds_pre_render_alter(&$layout_render_array, $context, &$vars) {
     }
   }
 }
-
 
 /**
  * Implements hook_html_head_alter().
@@ -1066,14 +1049,8 @@ function nysenate_html_head_alter(&$head_elements) {
 }
 
 /**
- * Implementation of hook_views_post_render
- */
-
-
-/**
  * Implements hook_views_pre_render
  */
-
 function nysenate_views_pre_render(&$view) {
 
   /*
@@ -1149,7 +1126,6 @@ function nysenate_views_pre_render(&$view) {
   return $view;
 }
 
-
 function _nysenate_render_sponsor_boilerplate($sponsor, $chamber) {
   $ret = '';
   switch ($chamber) {
@@ -1175,7 +1151,6 @@ function _nysenate_render_sponsor_boilerplate($sponsor, $chamber) {
   }
   return $ret;
 }
-
 
 /**
  * @param array $sponsors An array of sponsor objects
@@ -1560,7 +1535,6 @@ function str_split_at_nth($haystack, $needle, $nth) {
   return $output;
 }
 
-
 function nysenate_preprocess_semanticviews_view_fields(&$vars) {
 
   // limit display of issues fields to three terms on given views
@@ -1606,8 +1580,7 @@ function nysenate_preprocess_semanticviews_view_fields(&$vars) {
   return $vars;
 }
 
-
-/*
+/**
  * Implementation of hook_form_alter()
  */
 function nysenate_form_alter(&$form, &$form_state, $form_id){
@@ -1647,9 +1620,11 @@ function nysenate_form_alter(&$form, &$form_state, $form_id){
   }
 }
 
-/*
-* Implements hook_pager_link
-* Used to overwrite the pager links for Users on senator dashboard tabs like Issues, Peititons and Questionnaires
+/**
+ * Implements hook_pager_link().
+ *
+ * Used to overwrite the pager links for Users on senator dashboard tabs like
+ * Issues, Petitions and Questionnaires.
  */
 function nysenate_pager_link($variables) {
   $text = $variables['text'];
@@ -1708,17 +1683,16 @@ function nysenate_pager_link($variables) {
   return '<a' . drupal_attributes($attributes) . '>' . check_plain($text) . '</a>';
 }
 
-/*
- * Overriding the main menu output
+/**
+ * Overriding the main menu output.
  */
-
 function nysenate_menu_tree__main_menu($variables) {
   return '<ul class="c-nav--list">' . $variables['tree'] . '</ul>';
 }
-/*
- * Overriding the microsite menu output
- */
 
+/**
+ * Overriding the microsite menu output.
+ */
 function nysenate_menu_tree__menu_senator_s_microsite_menu($variables) {
   return '<ul class="c-nav--list">' . $variables['tree'] . '</ul>';
 }
@@ -1767,8 +1741,8 @@ function nysenate_preprocess_entity(&$variables, $hook) {
 
 /**
  * Override drupal core messages with zurb foundation alert-box messages.
- * Customize the colors within the _settings.scss file.
  *
+ * Customize the colors within the _settings.scss file.
  * http://foundation.zurb.com/docs/elements.php#panelEx
  */
 function nysenate_status_messages($variables) {
@@ -1867,6 +1841,15 @@ function nysenate_amended_versions($node_wrapper) {
 }
 
 function nysenate_get_bill_versions($node_type, $bill_base_print_no, $bill_session_year) {
+  // We're using drupal_html_class() ensure that parameters have no spaces in
+  // them.
+  $cid = 'nysenate_bill_versions_' . drupal_html_class($node_type) . '-' . drupal_html_class($bill_session_year) . '-' . drupal_html_class($bill_base_print_no);
+
+  // If data is cached, return cached data.
+  if ($cache = cache_get($cid)) {
+    return $cache->data;
+  }
+
   $results = [];
   if ($bill_base_print_no && $bill_session_year && $node_type) {
     $query = "SELECT n.title, n.nid, os.field_ol_session_value
@@ -1885,6 +1868,9 @@ function nysenate_get_bill_versions($node_type, $bill_base_print_no, $bill_sessi
       $results[] = ['nid' => $r->nid, 'title' => $r->title];
     }
   }
+
+  // Cache data based on cache ID that was set above.
+  cache_set($cid, $results, 'cache', CACHE_PERMANENT);
   return $results;
 }
 
@@ -1951,4 +1937,49 @@ function _nysenate_render_bill_sponsor_list($wrapper) {
   }
 
   return $ret;
+}
+
+/**
+ * Helper function to return previous versions of a bill.
+ *
+ * @param string $prev_vers_session
+ *   OL Session.
+ * @param string $prev_vers_printno
+ *   Print Number.
+ *
+ * @return array
+ *   Array of query results.
+ */
+function nysenate_bill_get_prev_versions($prev_vers_session, $prev_vers_printno) {
+  // We're using drupal_html_class() ensure that parameters have no spaces in
+  // them.
+  $cid = 'nysenate_bill_prev_versions_' . drupal_html_class($prev_vers_session) . '-' . drupal_html_class($prev_vers_printno);
+  if ($cache = cache_get($cid)) {
+    return $cache->data;
+  }
+
+  $prev_vers_query = new EntityFieldQuery();
+  $prev_vers_result = $prev_vers_query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'bill')
+    ->fieldCondition('field_ol_session', 'value', $prev_vers_session)
+    ->fieldCondition('field_ol_print_no', 'value', $prev_vers_printno)
+    ->range(0, 1)
+    ->execute();
+
+  // Cache data for later use.
+  $cache_ttl = variable_get('nys_access_permissions_prev_query_ttl', '+24 hours');
+  $expire_timestamp = strtotime($cache_ttl, time());
+  cache_set($cid, $prev_vers_result, 'cache', $expire_timestamp);
+
+  // Log every time this cache has been rebuilt. If we get to this part of the
+  // code, it's because the cache doesn't exist for this cache_id.
+  $message = t('Cache cleared for session: @session and printno: @printno',
+    array(
+      '@session' => $prev_vers_session,
+      '@printno' => $prev_vers_printno,
+    )
+  );
+  watchdog('nys_prev_cache', $message, array(), WATCHDOG_INFO);
+
+  return $prev_vers_result;
 }

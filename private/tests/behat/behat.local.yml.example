@@ -1,0 +1,5 @@
+#local configuration
+default:
+  extensions:
+    Behat\MinkExtension:
+      base_url: http://example.mcdev

@@ -24,10 +24,19 @@ function nysenate_preprocess_views_view_fields(&$variables) {
 
     $office_contacts = array();
     for ($x = 0; $x < count($office_contact_ids); $x++) {
-      $office_contacts[$x]['office_contact_name'] = field_collection_item_load($office_contact_ids[$x])->field_office_contact_name[LANGUAGE_NONE][0]['value'];
-      $office_contacts[$x]['office_contact_title'] = field_collection_item_load($office_contact_ids[$x])->field_office_contact_title[LANGUAGE_NONE][0]['value'];
-      $office_contacts[$x]['office_contact_phone'] = field_collection_item_load($office_contact_ids[$x])->field_office_contact_phone[LANGUAGE_NONE][0]['value'];
-      $office_contacts[$x]['office_contact_email'] = field_collection_item_load($office_contact_ids[$x])->field_office_contact_email[LANGUAGE_NONE][0]['value'];
+      if (!empty(field_collection_item_load($office_contact_ids[$x])->field_office_contact_name[LANGUAGE_NONE][0]['value'])) {
+        $office_contacts[$x]['office_contact_name'] = field_collection_item_load($office_contact_ids[$x])->field_office_contact_name[LANGUAGE_NONE][0]['value'];
+      }
+      if (!empty(field_collection_item_load($office_contact_ids[$x])->field_office_contact_title[LANGUAGE_NONE][0]['value'])) {
+        $office_contacts[$x]['office_contact_title'] = field_collection_item_load($office_contact_ids[$x])->field_office_contact_title[LANGUAGE_NONE][0]['value'];
+      }
+      if (!empty(field_collection_item_load($office_contact_ids[$x])->field_office_contact_phone[LANGUAGE_NONE][0]['value'])) {
+        $office_contacts[$x]['office_contact_phone'] = field_collection_item_load($office_contact_ids[$x])->field_office_contact_phone[LANGUAGE_NONE][0]['value'];
+      }
+      if (!empty(field_collection_item_load($office_contact_ids[$x])->field_office_contact_email[LANGUAGE_NONE][0]['value'])) {
+        $office_contacts[$x]['office_contact_email'] = field_collection_item_load($office_contact_ids[$x])->field_office_contact_email[LANGUAGE_NONE][0]['value'];
+      }
+      
     }
 
     $variables['fields']['office_contacts'] = $office_contacts;

@@ -319,3 +319,23 @@ a.tweetabletext {
   vertical-align: middle;
   }
 }
+
+/*----------------------------------------
+/ OEMBED STYLES
+/----------------------------------------*/
+twitterwidget {
+  margin: 10px auto 40px!important;
+}
+.fb_iframe_widget iframe {
+  margin-left: 20px;
+  margin-bottom: 40px!important;
+}
+.fb_iframe_widget {
+  margin-bottom: 40px;
+}
+.media {
+  .instagram-media-rendered{
+    max-width: 60%!important;
+    margin: 0 auto 40px!important;
+  }
+}

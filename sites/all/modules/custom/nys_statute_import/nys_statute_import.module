@@ -9,30 +9,31 @@ define("NYS_STATUTE_IMPORT_BASE_PATH", "/legislation/laws/");
 define("NYS_STATUTE_IMPORT_SET_SUGGESTED_PATH", FALSE);
 define("NYS_STATUTE_IMPORT_SET_PATH", TRUE);
 define("NYS_STATUTE_IMPORT_SLEEP_MICROSECONDS", 100000);
+define("NYS_STATUTE_IMPORT_ALL_STOP", "nys_staute_import_all_stop");
+define("NYS_STATUTE_IMPORT_BATCH_JOB_IN_PROGRESS", "nys_statute_batch_job_in_progress");
+define("NYS_STATUTE_IMPORT_DEBUG", FALSE);
 
 /*
  * Import All Statutes.
  */
 
 /**
- * Implements the drush import-all-statutes command.
+ * Implements the drush update-all-statutes command.
  *
  * $arg1 - a lawId like ABB || a statuteId like ABB-215
  */
-function nys_statute_import_import_all_statutes($arg1) {
+function nys_statute_import_update_all_statutes($arg1) {
   module_load_include('inc', 'nys_statute_import', 'nys_statute_import');
   drupal_set_time_limit(20000);
 
   if (empty($arg1) == TRUE) {
 
-    // Iterate thru all law_id's.
-    $law_listings = nys_statute_import_get_law_listings();
-
-    foreach ($law_listings as $law_id => $law_listing) {
-
-      nys_statute_import_process_statutes($law_id, 'IMPORT-ALL');
-
-    }
+    return nys_statute_import_thread_manager(nys_statute_import_get_law_id_count(),
+                                            1,
+                                            1,
+                                            'nys_statute_import_update_setup',
+                                            'nys_statute_import_update_teardown',
+                                            0);
 
   }
   else {
@@ -55,126 +56,47 @@ function nys_statute_import_import_all_statutes($arg1) {
 }
 
 /**
+ * A multi threaded setup function.
+ *
+ * BUILD THE DRUSH COMMAND TO CALL HERE.
+ * STATIC DATA HERE ???.
+ *
+ * @param int $thread_id
+ *   An identifier for the thread which will execute this command.
+ * @param int $batch_size
+ *   How many tasks this command should work on.
+ * @param int $offset
+ *   The position in a queue of jobs for the first job this command
+ *   should work on.
+ *
+ * @return string
+ *   A command which can be executed on the command line.
+ */
+function nys_statute_import_update_setup($thread_id, $batch_size, $offset) {
+  $law_id = nys_statute_import_get_law_id($offset);
+  if ($law_id !== FALSE) {
+    print "Begin Import/Update processing for Law ID " . $law_id . "\r\n";
+    return "drush process-statutes $law_id IMPORT-ALL";
+  }
+  else {
+    return '';
+  }
+}
+
+/**
+ * A test multi threaded teardown function.
+ *
+ * @param int $thread_id
+ *   The thread which just completed.
+ */
+function nys_statute_import_update_teardown($thread_id) {
+  print "Finished Import/Update Processing For Law.\r\n";
+}
+
+/**
  * Implements the drush restart-import-all-statutes command.
  *
  * $arg1 - a lawId like ABB .
- */
-function nys_statute_import_restart_import_all_statutes($arg1) {
-  module_load_include('inc', 'nys_statute_import', 'nys_statute_import');
-  drupal_set_time_limit(20000);
-
-  if (empty($arg1) == TRUE) {
-    $law_id_arg = variable_get('nys_statute_import_process_statutes', '');
-
-    if (empty($law_id_arg) == TRUE) {
-      print "Since a previous run was not detected. A lawID argument is required. Example:ABP";
-      return;
-    }
-  }
-  else {
-    $law_id_arg = $arg1;
-  }
-
-  if (strlen($law_id_arg) == 3) {
-    $found_law_id = FALSE;
-
-    // Iterate thru all law_id's.
-    $law_listings = nys_statute_import_get_law_listings();
-
-    foreach ($law_listings as $law_id => $law_listing) {
-      if (strcasecmp($law_id, $law_id_arg) == 0) {
-        $found_law_id = TRUE;
-        print "IMPORT-ALL RESUMED PROCESSING AT LAW-ID $law_id  \r\n";
-      }
-      if ($found_law_id == TRUE) {
-        nys_statute_import_process_statutes($law_id, 'IMPORT-ALL');
-      }
-
-    }
-
-  }
-
-}
-
-/**
- * Implements the drush describe-import-all-statutes command.
- *
- * $arg1 - a lawId like ABB.
- */
-function nys_statute_import_describe_import_all_statutes($arg1) {
-  module_load_include('inc', 'nys_statute_import', 'nys_statute_import');
-  drupal_set_time_limit(20000);
-
-  $drush_alias = variable_get('nys_statute_import_drush_alias', '');
-  if (empty($drush_alias) == TRUE) {
-    print "\r\n\r\nTHE DRUSH ALIAS FOR describe- COMMANDS IS EMPTY ! To set it.\r\n";
-    print "drush vset nys_statute_import_drush_alias [sites drush alias heres] \r\n\r\n\r\n";
-  }
-  else {
-    $drush_alias = '@' . $drush_alias;
-  }
-
-  if (empty($arg1) == FALSE && strlen($arg1) == 3) {
-    $found_law_id = FALSE;
-  }
-  else {
-    $found_law_id = TRUE;
-  }
-
-  // Iterate thru all law_id's.
-  $law_listings = nys_statute_import_get_law_listings();
-
-  foreach ($law_listings as $law_id => $law_listing) {
-    if (strcasecmp($law_id, $arg1) == 0) {
-      $found_law_id = TRUE;
-    }
-    if ($found_law_id == TRUE) {
-      print "drush $drush_alias import-all-statutes $law_id -y\r\n";
-    }
-
-  }
-
-}
-
-/*
- * Update All Statutes.
- */
-
-/**
- * Implements the drush update-all-statutes command.
- */
-function nys_statute_import_update_all_statutes($arg1) {
-  module_load_include('inc', 'nys_statute_import', 'nys_statute_import');
-  drupal_set_time_limit(20000);
-
-  if (empty($arg1) == TRUE) {
-    // Iterate thru all law_id's.
-    $law_listings = nys_statute_import_get_law_listings();
-    foreach ($law_listings as $law_id => $law_listing) {
-      nys_statute_import_process_statutes($law_id, 'UPDATE-ALL');
-    }
-  }
-  else {
-
-    if (strlen($arg1) == 3) {
-      nys_statute_import_process_statutes($arg1, 'UPDATE-SOME');
-    }
-    elseif (strpos($arg1, NYS_STATUTE_STATUTE_ID_DELIMITER) != FALSE) {
-      $arg_array = explode(NYS_STATUTE_STATUTE_ID_DELIMITER, $arg1);
-      if (count($arg_array) == 2 && is_numeric($arg_array[1]) == TRUE) {
-        nys_statute_import_process_a_statute($arg_array[0], $arg_array[1], 'UPDATE-ONE');
-      }
-
-    }
-
-  }
-
-}
-
-/**
- * Implements the drush restart-update-all-statutes command.
- *
- * $arg1 - a lawId like ABB.
  */
 function nys_statute_import_restart_update_all_statutes($arg1) {
   module_load_include('inc', 'nys_statute_import', 'nys_statute_import');
@@ -195,61 +117,15 @@ function nys_statute_import_restart_update_all_statutes($arg1) {
   if (strlen($law_id_arg) == 3) {
     $found_law_id = FALSE;
 
-    // Iterate thru all law_id's.
-    $law_listings = nys_statute_import_get_law_listings();
-
-    foreach ($law_listings as $law_id => $law_listing) {
-
-      if (strcasecmp($law_id, $law_id_arg) == 0) {
-        $found_law_id = TRUE;
-        print "UPDATE-ALL RESUMED PROCESSING AT LAW-ID $law_id  \r\n";
-      }
-
-      if ($found_law_id == TRUE) {
-        nys_statute_import_process_statutes($law_id, 'UPDATE-ALL');
-      }
-
-    }
-
-  }
-
-}
-
-/**
- * Implements the drush describe-update-all-statutes command.
- *
- * $arg1 - a lawId like ABB.
- */
-function nys_statute_import_describe_update_all_statutes($arg1) {
-  module_load_include('inc', 'nys_statute_import', 'nys_statute_import');
-  drupal_set_time_limit(20000);
-
-  $drush_alias = variable_get('nys_statute_import_drush_alias', '');
-  if (empty($drush_alias) == TRUE) {
-    print "\r\n\r\nTHE DRUSH ALIAS FOR describe- COMMANDS IS EMPTY ! To set it.\r\n";
-    print "drush vset nys_statute_import_drush_alias [sites drush alias heres]  \r\n\r\n\r\n";
-  }
-  else {
-    $drush_alias = '@' . $drush_alias;
-  }
-
-  if (empty($arg1) == FALSE && strlen($arg1) == 3) {
-    $found_law_id = FALSE;
-  }
-  else {
-    $found_law_id = TRUE;
-  }
-
-  // Iterate thru all law_id's.
-  $law_listings = nys_statute_import_get_law_listings();
-
-  foreach ($law_listings as $law_id => $law_listing) {
-    if (strcasecmp($law_id, $arg1) == 0) {
-      $found_law_id = TRUE;
-    }
-
-    if ($found_law_id == TRUE) {
-      print "drush $drush_alias update-all-statutes $law_id -y\r\n";
+    $starting_offset = nys_statute_import_get_law_id_index($law_id_arg);
+    if ($starting_offset !== FALSE) {
+      print "IMPORT-ALL RESUMED PROCESSING AT LAW-ID $law_id  \r\n";
+      return nys_statute_import_thread_manager(nys_statute_import_get_law_id_count(),
+                                              1,
+                                              1,
+                                              'nys_statute_import_update_setup',
+                                              'nys_statute_import_update_teardown',
+                                              $starting_offset);
     }
 
   }
@@ -264,21 +140,17 @@ function nys_statute_import_describe_update_all_statutes($arg1) {
  * Implements the drush audit-all-statutes command.
  */
 function nys_statute_import_audit_all_statutes($arg1) {
-
   module_load_include('inc', 'nys_statute_import', 'nys_statute_import');
   drupal_set_time_limit(20000);
 
   if (empty($arg1) == TRUE) {
 
-    // Iterate thru all law_id's.
-    $law_listings = nys_statute_import_get_law_listings();
-    foreach ($law_listings as $law_id => $law_listing) {
-
-      // Print print "AUDIT ALL - PROCESSING law_id $law_id \r\n";.
-      print "lawId,Article,docType,location_id,statuteId,nid,STATUS\r\n";
-      nys_statute_import_process_statutes($law_id, 'AUDIT-ALL');
-
-    }
+    return nys_statute_import_thread_manager(nys_statute_import_get_law_id_count(),
+                                            1,
+                                            1,
+                                            'nys_statute_import_audit_setup',
+                                            'nys_statute_import_audit_teardown',
+                                            0);
 
   }
   else {
@@ -303,12 +175,50 @@ function nys_statute_import_audit_all_statutes($arg1) {
 }
 
 /**
+ * A multi threaded setup function.
+ *
+ * BUILD THE DRUSH COMMAND TO CALL HERE.
+ * STATIC DATA HERE ???.
+ *
+ * @param int $thread_id
+ *   An identifier for the thread which will execute this command.
+ * @param int $batch_size
+ *   How many tasks this command should work on.
+ * @param int $offset
+ *   The position in a queue of jobs for the first job this command
+ *   should work on.
+ *
+ * @return string
+ *   A command which can be executed on the command line.
+ */
+function nys_statute_import_audit_setup($thread_id, $batch_size, $offset) {
+  $law_id = nys_statute_import_get_law_id($offset);
+  if ($law_id !== FALSE) {
+    print "Begin import processing for Law ID " . $law_id . "\r\n";
+    return "drush process-statutes $law_id AUDIT-ALL";
+  }
+  else {
+    return '';
+  }
+
+}
+
+/**
+ * A test multi threaded teardown function.
+ *
+ * @param int $thread_id
+ *   The thread which just completed.
+ */
+function nys_statute_import_audit_teardown($thread_id) {
+  print "Finished Audit Processing For Law.\r\n";
+}
+
+/**
  * Implements the drush restart-audit-all-statutes command.
  *
  * $arg1 - a lawId like ABB.
  */
 function nys_statute_import_restart_audit_all_statutes($arg1) {
-
   module_load_include('inc', 'nys_statute_import', 'nys_statute_import');
   drupal_set_time_limit(20000);
 
@@ -330,62 +240,16 @@ function nys_statute_import_restart_audit_all_statutes($arg1) {
 
     $found_law_id = FALSE;
 
-    // Iterate thru all law_id's.
-    $law_listings = nys_statute_import_get_law_listings();
+    $starting_offset = nys_statute_import_get_law_id_index($law_id_arg);
+    if ($starting_offset !== FALSE) {
 
-    foreach ($law_listings as $law_id => $law_listing) {
-      if (strcasecmp($law_id, $law_id_arg) == 0) {
-        $found_law_id = TRUE;
-        // Skip for clean csv.
-        // Print print "AUDIT-ALL RESUMED PROCESSING AT LAW-ID $law_id \r\n";.
-      }
+      return nys_statute_import_thread_manager(nys_statute_import_get_law_id_count(),
+                                              1,
+                                              1,
+                                              'nys_statute_import_audit_setup',
+                                              'nys_statute_import_audit_teardown',
+                                              $starting_offset);
 
-      if ($found_law_id == TRUE) {
-
-        nys_statute_import_process_statutes($law_id, 'AUDIT-ALL');
-      }
-
-    }
-
-  }
-
-}
-
-/**
- * Implements the drush describe-audit-all-statutes command.
- *
- * $arg1 - a lawId like ABB.
- */
-function nys_statute_import_audit_describe_all_statutes($arg1) {
-  module_load_include('inc', 'nys_statute_import', 'nys_statute_import');
-  drupal_set_time_limit(20000);
-
-  $drush_alias = variable_get('nys_statute_import_drush_alias', '');
-  if (empty($drush_alias) == TRUE) {
-    print "\r\n\r\nTHE DRUSH ALIAS FOR describe- COMMANDS IS EMPTY ! To set it.\r\n";
-    print "drush vset nys_statute_import_drush_alias [sites drush alias heres]  \r\n\r\n\r\n";
-  }
-  else {
-    $drush_alias = '@' . $drush_alias;
-  }
-
-  if (empty($arg1) == FALSE && strlen($arg1) == 3) {
-    $found_law_id = FALSE;
-  }
-  else {
-    $found_law_id = TRUE;
-  }
-
-  // Iterate thru all law_id's.
-  $law_listings = nys_statute_import_get_law_listings();
-
-  foreach ($law_listings as $law_id => $law_listing) {
-    if (strcasecmp($law_id, $arg1) == 0) {
-      $found_law_id = TRUE;
-    }
-
-    if ($found_law_id == TRUE) {
-      print "drush $drush_alias audit-all-statutes $law_id -y\r\n";
     }
 
   }
@@ -435,7 +299,8 @@ function nys_statute_import_update_range_statutes($arg1) {
 
       print "UPDATE RANGE - PROCESSING $arg1 \r\n";
 
-      nys_statute_import_process_update_range_statutes($law_id, $fromDateTime, $toDateTime, 'IMPORT-ONE'); //'UPDATE-RANGE');
+      // UPDATE-RANGE.
+      nys_statute_import_process_update_range_statutes($law_id, $fromDateTime, $toDateTime, 'IMPORT-ONE');
 
     }
     else {
@@ -505,4 +370,248 @@ function nys_statute_import_currently_processing_law_id($arg1) {
 
   }
 
+}
+
+/**
+ * Returns the index for given a law_id.
+ */
+function nys_statute_import_get_law_id($index) {
+  $law_listings = nys_statute_import_get_law_listings();
+  $i = 0;
+
+  foreach ($law_listings as $key => $law_listing) {
+    $i++;
+    if ($index == $i) {
+      return $key;
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Returns a law_id for a given index.
+ */
+function nys_statute_import_get_law_id_index($law_id) {
+  $law_listings = nys_statute_import_get_law_listings();
+  $index = 0;
+
+  foreach ($law_listings as $key => $law_listing) {
+    $index++;
+    if (strcmp($key, $law_id) == 0) {
+      return $index;
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Returns the quantity of Law Ids.
+ */
+function nys_statute_import_get_law_id_count() {
+  return count(nys_statute_import_get_law_listings());
+}
+
+/**
+ * A multithreading manager for drush.
+ *
+ * @param int $job_count
+ *   The total number of jobs to process.
+ * @param int $job_batch_size
+ *   The number of jobs handed to each thread.
+ * @param int $thread_count
+ *   The maximum number of active threads.
+ * @param string $setup_function
+ *   The function to generate the thread command. This is written for your
+ *   application its signature is:
+ *   my_setup_function($thread_id, $limit, $offset) : string;
+ *   Where $thread_id is the unique thread identifier, $limit is the total
+ *   number of records to process and offset is the starting point. The
+ *   function should return a string which is a shell command that the thread
+ *   will execute in a separate process.
+ * @param string $teardown_function
+ *   A function which runs when a thread completes. It's signature is:
+ *   my_teardown_function($thread_id);
+ *   Your business logic can then run any cleanup which occurs when the
+ *   thread completes.
+ * @param int $starting_offset
+ *   (optional) Start x records into the process.
+ */
+function nys_statute_import_thread_manager($job_count, $job_batch_size, $thread_count, $setup_function, $teardown_function = '', $starting_offset = 0) {
+
+  if (!function_exists('proc_open')) {
+    throw new Exception('proc_open command is needed to use multi threading.');
+  }
+
+  $jobs_remaining = $job_count;
+  $processes = array();
+  $running = TRUE;
+  $offset = $starting_offset;
+  $start = time();
+
+  $descriptor_spec = array(
+    0 => array("pipe", "r"),
+    1 => array("pipe", "w"),
+    2 => array("pipe", "w"),
+  );
+
+  while ($running) {
+
+    // Fill all empty threads.
+    for ($thread_id = 0; $thread_id < $thread_count; $thread_id++) {
+      if ($jobs_remaining > 0 && !isset($processes[$thread_id])) {
+        $pipes = array();
+        $cmd = $setup_function($thread_id, $job_batch_size, $offset);
+        $process = proc_open($cmd, $descriptor_spec, $pipes);
+
+        drush_print("Thread {$thread_id} starts at LawID index $offset. LawID's remaining: $jobs_remaining");
+
+        foreach ($pipes as $pipe) {
+          stream_set_blocking($pipe, FALSE);
+        }
+
+        $offset += $job_batch_size;
+        $jobs_remaining -= $job_batch_size;
+
+        $processes[$thread_id] = array(
+          'process' => $process,
+          'pipes' => $pipes,
+        );
+
+        sleep(1);
+      }
+    }
+
+    // Monitor running threads.
+    for ($thread_id = 0; $thread_id < $thread_count; $thread_id++) {
+      if (!isset($processes[$thread_id])) {
+        continue;
+      }
+
+      $process_running = nys_statute_import_mt_monitor_process($thread_id, $processes[$thread_id]['process'], $processes[$thread_id]['pipes']);
+
+      if (!$process_running) {
+        unset($processes[$thread_id]);
+
+        if (!empty($teardown_function)) {
+          $teardown_function($thread_id);
+        }
+
+        $speed = ($job_count - $jobs_remaining) / (time() - $start);
+        $end_date = date('G:i:s d/m/y', ($job_count / $speed) + $start);
+        $speed = floor($speed * 60);
+
+        $now = date("Y-m-d h:i:sa");
+        drush_print("Completed at {$now}");
+        drush_print("---------------------------------------------------------------------");
+      }
+    }
+
+    // Check for endgame.
+    $all_stop = nys_statute_import_variable_exists(NYS_STATUTE_IMPORT_ALL_STOP);
+    if (($jobs_remaining < 1 && empty($processes)) || ($all_stop == TRUE)) {
+      $running = FALSE;
+      return 1;
+    }
+    else {
+      // Pause the master process.
+      sleep(1);
+    }
+  }
+  return 0;
+}
+/**
+ * Monitor a process.
+ *
+ * This function checks a running process.
+ * If it has finished it is closed down safely.
+ *
+ * @return bool
+ *   TRUE if the process is still running
+ *   FALSE if it is not running.
+ */
+function nys_statute_import_mt_monitor_process($thread_id, $process, $pipes) {
+  $status = proc_get_status($process);
+
+  foreach ($pipes as $id => $pipe) {
+    if ($id == 0) {
+      // Don't read from stdin!
+      continue;
+    }
+
+    $messages = stream_get_contents($pipe);
+
+    if (!empty($messages)) {
+      foreach (explode("\n", $messages) as $message) {
+        $message = str_replace('[error]', '', $message);
+        $message = str_replace('[completed]', '', $message);
+        $message = trim($message);
+        if (!empty($message)) {
+          if ($id == 1) {
+            // Message from stdout.
+            // A drush_print(" -> T$thread_id: $message");.
+            drush_print("  $message");
+          }
+          else {
+            if (NYS_STATUTE_IMPORT_DEBUG == TRUE) {
+              // Message from stderr.
+              // drush_set_error(" -> T$thread_id: $message");
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (!$status['running']) {
+    foreach ($pipes as $pipe) {
+      fclose($pipe);
+    }
+
+    proc_close($process);
+  }
+
+  return $status['running'];
+}
+
+/**
+ * Function workout_variable_get().
+ *
+ * Loads the variable directly from the database.
+ */
+function nys_statute_import_variable_exists($variable_name) {
+  $num_variables = db_query("SELECT COUNT(*) FROM `variable` WHERE `name` = :name", array(':name' => $variable_name))->fetchField();
+  if ($num_variables > 0) {
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Produces a report of open leg vs drupal for a particular lawid.
+ */
+function nys_statute_import_drush_commandimport_audit_statute($law_id) {
+  nys_statute_import_audit_statute($law_id);
+}
+
+/**
+ * Produces a report of open leg vs drupal for each lawid.
+ */
+function nys_statute_run_import_audit_statutes() {
+  module_load_include('inc', 'nys_statute_import', 'nys_statute_import');
+  nys_statute_import_audit_statutes();
+}
+
+/**
+ * Iterates thru all statutes for a given lawId.
+ *
+ * This is the main iterator for
+ *   $law_id - The three letter law id.
+ *   $run_type - IMPORT-ALL | UPDATE-ALL | UPDATE-RANGE | AUDIT-ALL |.
+ */
+function nys_statute_import_run_process_statutes($law_id, $run_type) {
+  module_load_include('inc', 'nys_statute_import', 'nys_statute_import');
+  nys_statute_import_process_statutes($law_id, $run_type);
 }

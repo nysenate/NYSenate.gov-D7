@@ -14,6 +14,10 @@ $options = array(
   'group' => CSS_THEME,
 );
 drupal_add_css(drupal_get_path('module', 'nys_legislation_explorer') . '/css/search_general.css', $options);
+
+if (!isset($total)) {
+  $total = 0;
+}
 ?>
 
 <h1 class="c-adv-search--title">Advanced Legislation Search</h1>
@@ -22,11 +26,11 @@ drupal_add_css(drupal_get_path('module', 'nys_legislation_explorer') . '/css/sea
   <form id="adv-search-form" action="" method="get">
   <?php if ($search['searched'] == TRUE): ?>
     <div class="page-search">
-      <?php if ($error): ?>
+      <?php if (!empty($error) && $error): ?>
       <div class="c-adv-search--results">
         <p class="c-adv-search--no-results"><?php print $error ?></p>
       </div>
-      <?php elseif ($total == 0): ?>
+      <?php elseif (!empty($total) && $total == 0): ?>
       <div class="c-adv-search--results">
         <p class="c-adv-search--no-results">Sorry, your search returned no results.</p>
       </div>
@@ -37,23 +41,25 @@ drupal_add_css(drupal_get_path('module', 'nys_legislation_explorer') . '/css/sea
           Your search gave back <?php echo $total ?> result(s).
         </div>
       </div>
-      <div class="columns medium-5">
-        <label for="sort-by">Sort Results</label>
-        <select id="sort-by" name="sort" onchange="this.form.submit()">
-          <option <?php echo ($search['sort'] == 'asc') ? 'selected' : ''?> value="asc"><?php print $sort_desc[0] ?></option>
-          <option <?php echo ($search['sort'] != 'asc') ? 'selected' : ''?> value="desc"><?php print $sort_desc[1] ?></option>
-        </select>
-      </div>
+	  <?php if (!empty($sort_desc[0]) && !empty($sort_desc[1])): ?>
+	  <div class="columns medium-5">
+		<label for="sort-by">Sort Results</label>
+		<select id="sort-by" name="sort" onchange="this.form.submit()">
+		  <option <?php echo ($search['sort'] == 'asc') ? 'selected' : ''?> value="asc"><?php print $sort_desc[0] ?></option>
+		  <option <?php echo ($search['sort'] != 'asc') ? 'selected' : ''?> value="desc"><?php print $sort_desc[1] ?></option>
+		</select>
+	  </div>
+	  <?php endif;?>
       <?php endif;?>
       <!-- Bill/Resolution Result -->
-      <?php if ($total > 0): ?>
+      <?php if (!empty($total) && $total > 0): ?>
         <?php if ($search['type'] == 'f_bill' || $search['type'] == 'f_resolution'): ?>
           <?php foreach($resp->response->docs as &$doc): ?>
             <?php $bill_session = $doc->itm_field_ol_session[0];
                   $bill_session_closing_year = $bill_session - 1999;
                   $bill_print_no = $doc->sm_field_ol_print_no[0];
                   $bill_chamber = $doc->sm_field_ol_chamber[0];
-                  $bill_active = isset($doc->sm_field_ol_active_version) ? $doc->sm_field_ol_active_version : NULL;
+                  $bill_active = !empty($doc->sm_field_ol_active_version) ? $doc->sm_field_ol_active_version : NULL;
                   $url_path = ($search['type'] == 'f_bill') ? 'bills' : 'resolutions';
             ?>
             <div class="c-block c-list-item c-block-legislation">
@@ -145,9 +151,11 @@ drupal_add_css(drupal_get_path('module', 'nys_legislation_explorer') . '/css/sea
                   <?php echo $doc->label ?>
                 </a>
               </h3>
-              <h4 class="c-bill-topic" style="margin-bottom:5px;">
-                <?php echo $doc->sm_vid_Committees[0] ?>
-              </h4>
+              <?php if ($search['searched'] == TRUE): ?>
+                <h4 class="c-bill-topic" style="margin-bottom:5px;">
+                  <?php echo $doc->sm_vid_Committees[0] ?>
+                </h4>
+            <?php endif; ?>
               <h4 class="c-bill-topic" style="margin-top:0;">
                 <?php echo date("F j, Y", strtotime($doc->dm_field_ol_publish_date[0])); ?>
               </h4>

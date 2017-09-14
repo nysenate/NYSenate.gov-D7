@@ -4476,6 +4476,8 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
   // Exported field_instance: 'node-senator-field_user_account'.
   $field_instances['node-senator-field_user_account'] = array(
     'bundle' => 'senator',
+    'custom_add_another' => '',
+    'custom_remove' => '',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => 'The senator user account associated with this senator content node (admin only).',
@@ -4540,6 +4542,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'weight' => 6,
       ),
     ),
+    'ds_extras_field_template' => '',
     'entity_type' => 'node',
     'field_name' => 'field_user_account',
     'label' => 'User Account',
@@ -4551,13 +4554,14 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'entityreference',
+      'module' => 'options',
       'settings' => array(
+        'apply_chosen' => '',
         'match_operator' => 'CONTAINS',
         'path' => '',
         'size' => 60,
       ),
-      'type' => 'entityreference_autocomplete',
+      'type' => 'options_select',
       'weight' => 10,
     ),
   );

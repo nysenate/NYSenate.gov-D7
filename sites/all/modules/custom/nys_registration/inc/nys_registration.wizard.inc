@@ -112,6 +112,7 @@ function nys_registration_form($js = NULL, $step = NULL) {
 function nys_registration_form_start($form, &$form_state) {
   ctools_include('object-cache');
   $fbuser = ctools_object_cache_get('nys_registration', 'fbuser');
+  $help_text = '';
 
   if (isset($fbuser)) {
     $form_state['object']->fbuid = $fbuser['fb_uid'];
@@ -141,7 +142,7 @@ function nys_registration_form_start($form, &$form_state) {
   if (arg(4) == 'follow-issue') {
     $title_text = t('Follow Issues');
     $help_text = t('To follow the issues facing NY State, please create a profile using the form below.');
-    if ($query_paramters['issue'] !== null) {
+    if (isset($query_paramters['issue'])) {
       $issue = taxonomy_term_load($query_paramters['issue']);
       if ($issue->vid == '4') {
         $title_text =  t('Follow Issue: ') . $issue->name;
@@ -155,9 +156,9 @@ function nys_registration_form_start($form, &$form_state) {
   if (arg(4) == 'message-senator') {
     $title_text = 'Message a Senator';
     $help_text = 'To send a message to any NY State Senator, please creating a profile or <a href="/user/login">login</a>.';
-    if ($query_paramters['senator'] !== null) {
+    if (isset($query_paramters['senator'])) {
       $senator = node_load($query_paramters['senator']);
-      if ($senator->type == 'senator' && $senator->field_active['und'][0]['value'] == '1') {
+      if ($senator !== FALSE && $senator->type == 'senator' && s(@$senator->field_active['und'][0]['value'], '0') == '1') {
         $title_text = 'Message Sen. ' . $senator->title;
         $help_text = t('To send a message to NY State Sen. ') . $senator->field_last_name['und'][0]['value'];
         $help_text .= t(', please create a profile using the form below or <a href="/user/login">login</a>.');
@@ -168,8 +169,8 @@ function nys_registration_form_start($form, &$form_state) {
   $form['#attributes']['class'] = array('registration-form');
   $form['registration_teaser'] = array(
     '#markup' => '<div class="c-block c-login">
-                  <h2 class="nys-title">' . $title_text . '</h2>
-                  <p>'. $help_text .'</p>
+                  <h2 class="nys-title">' . s(@$title_text) . '</h2>
+                  <p>'. s(@$help_text) .'</p>
                   <p class="c-login-create">
                   ' . $fb_link . '
                   </p>
@@ -277,7 +278,7 @@ function nys_registration_form_start_submit($form, &$form_state) {
  */
 function nys_registration_form_second($form, &$form_state) {
   // If district is not set.
-  if ($form_state['object']->has_district === FALSE) {
+  if (isset($form_state['object']->has_district) && $form_state['object']->has_district === FALSE) {
 
     $form['account']['intro'] = array(
       '#markup' => '<div class="c-block c-login"><h2 class="nys-title">There was a problem finding your district.</h2><p>If you are from outside NY State, please continue by selecting "FINISH". If not, go back and ensure you entered your NY address correctly.</p></div>',
@@ -285,7 +286,7 @@ function nys_registration_form_second($form, &$form_state) {
     );
 
   // If district is set, but no senator can be found for the district.
-  } elseif ($form_state['object']->has_district === TRUE && $form_state['object']->has_senator === FALSE) {
+} elseif (!empty($form_state['object']->has_district) && $form_state['object']->has_district === TRUE && isset($form_state['object']->has_senator) && $form_state['object']->has_senator === FALSE) {
     // TODO add a logging action so that the address fields are captured and
     // sent to the SAGE team.
     $form['account']['intro'] = array(
@@ -301,24 +302,24 @@ function nys_registration_form_second($form, &$form_state) {
     $form['senator'] = array(
       '#markup' => '
         <div class="c-block c-login">
-        <h3 class="nys-title">' . t('This address is in Senate District ') . $form_state['object']->district_number . '</h3>
+        <h3 class="nys-title">' . t('This address is in Senate District ') . s(@$form_state['object']->district_number) . '</h3>
         <p>' . t('If your address information below is correct, select "FINISH" to complete the sign-up process and connect with your Senator. If not, please select "BACK"') . '</p>
         <div class="c-login-left" >
         <div class="nys-senator--thumb" ><img src = "/' . drupal_get_path('theme', 'nysenate') . '/images/default-avatar.png" width = "160" height = "160" ></div >
           <ul class="c-user--info" >
-            <li >' . $form_state['object']->first_name . ' ' . $form_state['object']->last_name . '</li >
-            <li >' . $form_state['object']->email . '</li >
-            <li >' . $form_state['object']->street . ' ' . $form_state['object']->additional . '</li >
-            <li >' . $form_state['object']->city . ', ' . $form_state['object']->state . ' ' . $form_state['object']->postal_code . '</li >
+            <li >' . s(@$form_state['object']->first_name) . ' ' . s(@$form_state['object']->last_name) . '</li >
+            <li >' . s(@$form_state['object']->email) . '</li >
+            <li >' . s(@$form_state['object']->street) . ' ' . s(@$form_state['object']->additional) . '</li >
+            <li >' . s(@$form_state['object']->city) . ', ' . s(@$form_state['object']->state) . ' ' . s(@$form_state['object']->postal_code) . '</li >
           </ul >
         </div >
         <div class="c-login-right" >
-          <div class="nys-senator--thumb" > ' . _nyss_img($form_state['object']->senator->field_image_headshot[LANGUAGE_NONE][0]['uri'], '160x160', '') . '</div >
+          <div class="nys-senator--thumb" > ' . _nyss_img(@$form_state['object']->senator->field_image_headshot[LANGUAGE_NONE][0]['uri'], '160x160', '') . '</div >
           <ul class="c-senator--info" >
             <li > Your Senator </li >' .
-        '<li >' . $form_state['object']->senator->title . '</li >' .
-        '<li >' . $current_duties . '</li > ' .
-        '<li >NY Senate District ' . $form_state['object']->district_number . ' (<a href = "/district/' . $form_state['object']->district_number . '" > Map</a >)</li >
+        '<li >' . s(@$form_state['object']->senator->title) . '</li >' .
+        '<li >' . s(@$current_duties) . '</li > ' .
+        '<li >NY Senate District ' . s(@$form_state['object']->district_number) . ' (<a href = "/district/' . s(@$form_state['object']->district_number) . '" > Map</a >)</li >
         </ul >
         </div > '
       );
@@ -450,6 +451,11 @@ function nys_registration_wizard_cancel(&$form_state) {
  * Creates a new nysenate.gov user.
  */
 function _nys_registration_create_user($object) {
+  // If $object is empty and theres no email address, no point in continuing.
+  if (empty($object->email)) {
+    return FALSE;
+  }
+
   $password = user_password(8);
   $name = nys_registration_unique_username($object->first_name . '_' . $object->last_name);
   $address = array(
@@ -485,7 +491,7 @@ function _nys_registration_create_user($object) {
   $uid = $new_user->getIdentifier();
 
   // Save fb uid.
-  if ($object->fbuid) {
+  if (isset($object->fbuid) && $object->fbuid) {
     // Save the Facebook user ID into a custom module table.
     fboauth_save($uid, $object->fbuid);
   }

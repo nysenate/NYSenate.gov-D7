@@ -1,0 +1,25 @@
+{
+    "name": "drupal/composer_manager",
+    "type": "drupal-module",
+    "description": "Composer Manager is a bridge to best-in-breed, standards compliant PHP libraries that are managed by Composer and Packagist.",
+    "homepage": "http://drupal.org/project/composer_manager",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Chris Pliakas",
+            "email": "opensource@chrispliakas.com",
+            "role": "Project Lead"
+        },
+        {
+            "name": "See contributors",
+            "homepage": "http://drupal.org/node/1929436/committers",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "http://drupal.org/project/issues/composer_manager"
+    },
+    "require": {
+        "php": ">=5.3.0"
+    }
+}

@@ -25,17 +25,24 @@
  * @todo Justify this template. Excluding the PHP, this template outputs angle
  * brackets, the label element, slashes and whitespace.
  */
+//dpm $fields;
 ?>
 <div class="c-event-block c-event-block--list">
-	<div class="c-event-date"><span><?php echo $field_date_day;?></span> <?php echo $field_date_month;?></div>
+	<div class="c-event-date"><span><?php if (!empty($field_date_day)) echo $field_date_day;?></span> <?php if (!empty($field_date_month)) echo $field_date_month;?></div>
 	<?php if (!empty($path->content) && !empty($title->content)): ?><a href="<?php echo $path->content;?>"><h3 class="c-event-name"><?php echo $title->content; ?></h3></a><?php endif; ?>
 	<?php if (!empty($name->content)): ?><a class="c-event-location" target="_blank"><span class="icon-before__circle-pin"></span><?php echo $name->content; ?></a><?php endif; ?>
 	<div class="c-event-time">
-		<?php if (!empty($time)): ?>
-			<span><?php echo $time;?></span>
+    <div class="c-location">
+      <?php echo $fields['city']->content;?>, <?php echo $fields['province']->content;?>
+    </div>
+		<?php if (!empty($fields['field_date_2']->content)): ?>
+			<span><?php echo $fields['field_date_2']->content;?></span>
 		<?php endif; ?>
-		<?php if (!empty($field_yt->content)): ?>
-			| <a href="<?php echo $fields['path']->content;?>" class="c-event-video">Archived Video</a>
-		<?php endif; ?>
-	</div>
+    </div>
+    <?php if (!empty($fields['field_yt']->content)): ?>
+      <div class="c-event-video">
+        <span class="c-meeting-video--status icon-before__youtube">Archived Video</span><br>
+        <?php echo $fields['field_yt']->content;?>
+      </div>
+    <?php endif; ?>
 </div>

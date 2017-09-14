@@ -11,6 +11,9 @@ $options = array(
   'group' => CSS_THEME,
 );
 drupal_add_css(drupal_get_path('module', 'nys_find_my_senator') . '/css/find_my_senator.css', $options);
+if (!isset($searched)) {
+  $searched = '';
+}
 ?>
 <div class="c-find-my-senator">
   <h2 class="nys-title">Find My Senator</h2>
@@ -22,14 +25,14 @@ drupal_add_css(drupal_get_path('module', 'nys_find_my_senator') . '/css/find_my_
           <div class="columns medium-6 l-padded-column">
             <h2 class="c-container--title">Your Senator</h2>
             <hr class="c-find-my-senator--divider"/>
-            <?php if ($senator_info != FALSE): ?>
+            <?php if (!empty($senator_info) && $senator_info != FALSE): ?>
               <img class="c-find-my-senator--senator-img"
                    src="<?php print $senator_info['image_path'] ?>"/>
             <?php endif; ?>
             <div class="c-find-my-senator--district-info">
               <p>
                 <a class="c-find-my-senator--senator-link"
-                   href="<?php print ($senator_info != FALSE) ? $senator_info['path_alias'] : '' ?>">
+                   href="<?php print (!empty($senator_info) && $senator_info != FALSE) ? $senator_info['path_alias'] : '' ?>">
                   <?php print $senate_district->senator->name ?>
                 </a>
               </p>

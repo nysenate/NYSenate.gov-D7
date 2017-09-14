@@ -1,0 +1,81 @@
+<?php
+
+/**
+ * @file
+ * Contains tests for the Sendgrid Integration module.
+ */
+
+/**
+ * Test case.
+ */
+class SendgridIntegrationTestCase extends DrupalWebTestCase {
+  /**
+   * Administrative user.
+   *
+   * @var object
+   */
+  protected $admin_user;
+
+  /**
+   * Normal web user.
+   *
+   * @var object
+   */
+  protected $web_user;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return [
+      'name' => 'Sendgrid Integration Tests',
+      'description' => 'Tests core setup functions.',
+      'group' => 'Sendgrid Integration',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function setUp() {
+    // Call the parent with an array of modules to enable for the test.
+    $modules[] = 'sendgrid_integration';
+    parent::setUp($modules);
+
+    // Create a generic authenticated user.
+    $this->web_user = $this->drupalCreateUser();
+
+    // Create an admin user and log them in.
+    $this->admin_user = $this->drupalCreateUser([
+      'access content',
+      'create page content',
+      'edit own page content',
+      'administer users',
+      'administer permissions',
+    ]);
+    $this->drupalLogin($this->admin_user);
+    // Set the role as admin for the admin user just created.
+    $this->drupalPost('user/' . $this->admin_user->uid . '/edit', ['roles[3]' => TRUE], t('Save'));
+
+  }
+
+  /**
+   * Set API key settings.
+   */
+  function testSendGridIntegrationAPISetup() {
+    // Add API information.
+    $edit = [];
+    $secret = '12314512312asdfqewr1234qerqafd';
+    $edit['sendgrid_integration_apikey'] = $secret;
+    $this->drupalPost('admin/config/services/sendgrid', $edit, t('Save Settings'));
+    $this->assertText(t('SendGrid Settings Saved'), t('SendGrid API Settings Saved.'));
+    variable_del('sendgrid_integration_apikey');
+
+    // Attempt to add API information but no secret key.
+    $edit = [];
+    $this->drupalPost('admin/config/services/sendgrid', $edit, t('Save Settings'));
+    $this->assertText(t('API Secret Key field is required.'), t('SendGrid API Settings Rejected save without secret key.'));
+  }
+
+
+}

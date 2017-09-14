@@ -44,12 +44,9 @@ if ($title):
                 <p class="c-bill-update--date">
                   <?php echo render($content['field_ol_last_status_date']); ?>
                   <?php
-                  if (
-                    (isset($field_ol_session[LANGUAGE_NONE][0]['value'])
-                      && $field_ol_session[LANGUAGE_NONE][0]['value'] == date('Y'))
-                    || ($current_status == 'SIGNED_BY_GOV' || $current_status == 'VETOED')
-                  ):
-                    echo '&nbsp;&nbsp;|&nbsp;&nbsp;' . $display_status;
+                  if (isset($content['field_ol_session']) && ($node->field_ol_session[LANGUAGE_NONE][0]['value'] == date('Y'))
+                    || ($node->field_ol_last_status[LANGUAGE_NONE][0]['value'] == 'SIGNED_BY_GOV' || $node->field_ol_last_status[LANGUAGE_NONE][0]['value'] == 'VETOED')):
+                    echo '&nbsp;&nbsp;|&nbsp;&nbsp;' . $bill_display_status;
                   endif; ?>
                 </p>
               <?php if (!empty($node->field_ol_sponsor[LANGUAGE_NONE][0]['target_id'])): ?>
@@ -61,9 +58,6 @@ if ($title):
                 !empty($node->field_ol_sponsor_name[LANGUAGE_NONE][0]['value'])
                 && !empty($node->field_ol_sponsor[LANGUAGE_NONE][0]['target_id'])
               ): ?>
-                  <p class="c-bill-update--sponsor">
-                      Sponsor: <?php echo render($content['field_ol_sponsor_name']); ?>
-                  </p>
               <?php endif; ?>
             </div>
         </div>

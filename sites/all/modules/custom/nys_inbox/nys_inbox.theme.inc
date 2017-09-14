@@ -12,11 +12,20 @@ function theme_privatemsg_list_field__nys_inbox_subject($variables) {
   $is_new = '';
 
   if (empty($variables['message'])) {
-    $thread = $variables['thread'];
-    $message = privatemsg_message_load($thread['thread_id']);
+    if (isset($variables['thread'])) {
+      $thread = $variables['thread'];
+      if (isset($thread['thread_id'])) {
+        $thread_id = $thread['thread_id'];
+      }
+      else {
+        $thread_id = '';
+      }
+      $message = privatemsg_message_load($thread['thread_id']);
+    }
   }
   else {
     $message = $variables['message'];
+    $thread_id = '';
   }
 
   $items = array();
@@ -41,7 +50,7 @@ function theme_privatemsg_list_field__nys_inbox_subject($variables) {
 
   $subject = implode(', ', $items);
   $options = array('html' => TRUE);
-  $subject_themed = '<div class="subject">' . l($subject, 'user/' . $account->uid . '/dashboard/inbox/reply/' . $thread['thread_id'], $options) . $is_new . '</div>';
+  $subject_themed = '<div class="subject">' . l($subject, 'user/' . $account->uid . '/dashboard/inbox/reply/' . $thread_id, $options) . $is_new . '</div>';
 
   $field = array(
     'data' => $subject_themed,
@@ -197,6 +206,10 @@ function theme_nys_inbox_username($variables) {
  *   Themed output.
  */
 function theme_nys_inbox_district($variables) {
+  if (!isset($variables['thread']['district'])) {
+    return array();
+  }
+
   $district = $variables['thread']['district'];
 
   $field['class'][] = 'privatemsg-list-district';

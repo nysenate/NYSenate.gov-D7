@@ -13,6 +13,11 @@
  *   $run_type - IMPORT-ALL | UPDATE-ALL | UPDATE-RANGE | AUDIT-ALL |.
  */
 function nys_statute_import_process_statutes($law_id, $run_type) {
+  if (NYS_STATUTE_IMPORT_DEBUG == TRUE) {
+    print "NYS_STATUTE_IMPORT_UPDATE_DEBUG - process_statutes($law_id, $run_type)\r\n";
+    return 0;
+  }
+
   $law_tree = nys_statute_import_get_law_tree_from_node($law_id, '', '');
 
   if ($run_type != 'AUDIT-ALL' || $run_type != 'AUDIT-SOME' || $run_type != 'AUDIT-ONE') {
@@ -115,7 +120,6 @@ function nys_statute_import_process_document($documents_obj, $run_type, $parent_
       // If it has a child parse it.
       if ($statute_document_obj->documents->size > 0) {
         // Recursive call to itself.
-
         nys_statute_import_process_document($statute_document_obj->documents, $run_type, $statute_document_obj->locationId, $prev_sibling_location_id, $prev_sibling_link_title, $next_sibling_location_id, $next_sibling_link_title);
       }
 
@@ -1380,8 +1384,8 @@ function create_ancestor_node($run_type, $law_id, $name, $law_type, $chapter, $p
   $statute_ancestor_document_obj_wrapper->documents->toSection = NULL;
   $statute_ancestor_document_obj_wrapper->documents->text = $text;
   $statute_ancestor_document_obj_wrapper->documents->documents = new StdClass();
-    $statute_ancestor_document_obj_wrapper->documents->documents->items = array();
-    $statute_ancestor_document_obj_wrapper->documents->documents->size = 0;
+  $statute_ancestor_document_obj_wrapper->documents->documents->items = array();
+  $statute_ancestor_document_obj_wrapper->documents->documents->size = 0;
   $statute_ancestor_document_obj_wrapper->documents->repealed = NULL;
 
   // A $run_type set by argument.
@@ -1452,5 +1456,135 @@ function nys_statute_import_get_sibling_law_info($law_type, $direction) {
   }
 
   return FALSE;
+
+}
+
+/**
+ * Produces a report of open leg vs drupal for each lawid.
+ */
+function nys_statute_import_audit_statutes() {
+  drupal_set_time_limit(3600);
+  $num_law_ids = 0;
+  $sum_from_ol = 0;
+  $sum_from_differences = 0;
+  $sum_from_drupal = 0;
+  $law_listings = nys_statute_import_get_law_listings();
+
+  print "+------------+-----------------+-------------+--------------+\r\n";
+  print "| LAW ID     | FROM OPEN LEG   | FROM NYS    | DIFFERENCE   |\r\n";
+  print "+------------+-----------------+-------------+--------------+\r\n";
+
+  foreach ($law_listings as $law_id => $law_listing) {
+
+    $quantity_from_ol = nys_statute_import_ol_get_num_bills($law_id);
+    $quantity_from_drupal = nys_statute_import_get_num_bills($law_id);
+
+    print '| ' . str_pad($law_id, 10) . ' | ' . str_pad($quantity_from_ol, 15) . ' | ' . str_pad($quantity_from_drupal, 11) . ' | ' . str_pad($quantity_from_ol - $quantity_from_drupal, 13) . "|\r\n";
+    $num_law_ids++;
+    $sum_from_differences = $sum_from_differences + ($quantity_from_ol - $quantity_from_drupal);
+    $sum_from_ol = $sum_from_ol + $quantity_from_ol;
+    $sum_from_drupal = $sum_from_drupal + $quantity_from_drupal;
+    $number_of_statute_nodes = nys_statute_import_get_num_statute_nodes();
+
+  }
+
+  print "+------------+-----------------+-------------+--------------+\r\n";
+  print '| ' . str_pad($num_law_ids, 10) . ' | ' . str_pad($sum_from_ol, 15) . ' | ' . str_pad($sum_from_drupal, 11) . ' | ' . str_pad($sum_from_differences, 13) . "|\r\n";
+  print "+------------+-----------------+-------------+--------------+\r\n";
+  print "| LAW ID     | FROM OPEN LEG   | FROM NYS    | DIFFERENCE   |\r\n";
+  print "+------------+-----------------+-------------+--------------+\r\n";
+  print '|          NUMBER OF GRAND PARENT BILL NODES' . ' | ' . str_pad(5, 13) . "|\r\n";
+  print "+--------------------------------------------+--------------+\r\n";
+  print '|                 TOTAL NUMBER OF BILL NODES' . ' | ' . str_pad($number_of_statute_nodes, 13) . "|\r\n";
+  print "+--------------------------------------------+--------------+\r\n";
+
+}
+
+/**
+ * Produces a report of open leg vs drupal for a particular lawid.
+ */
+function nys_statute_import_audit_statute($law_id) {
+
+  print "+------------+-----------------+-------------+--------------+\r\n";
+  print "| LAW ID     | FROM OPEN LEG   | FROM NYS    | DIFFERENCE   |\r\n";
+  print "+------------+-----------------+-------------+--------------+\r\n";
+
+  $quantity_from_ol = nys_statute_import_ol_get_num_bills($law_id);
+  $quantity_from_drupal = nys_statute_import_get_num_bills($law_id);
+
+  print '| ' . str_pad($law_id, 10) . ' | ' . str_pad($quantity_from_ol, 15) . ' | ' . str_pad($quantity_from_drupal, 11) . ' | ' . str_pad($quantity_from_ol - $quantity_from_drupal, 13) . "|\r\n";
+  print "+------------+-----------------+-------------+--------------+\r\n";
+
+}
+
+/**
+ * Get the number of statutes with for the specified $law_id.
+ */
+function nys_statute_import_get_num_bills($law_id) {
+  $quantity_of_bills = db_query("SELECT COUNT(*) FROM field_data_field_lawid WHERE `field_lawid_value` = :law_id", array(":law_id" => $law_id))->fetchField();
+  return $quantity_of_bills;
+}
+
+/**
+ * Get the total number of statute nodes.
+ *
+ * Includes the 4 Grand Parent nodes and 1 Great Grand Parent node.
+ */
+function nys_statute_import_get_num_statute_nodes() {
+  $num_bill_nodes = db_query("SELECT COUNT(*) FROM `node` WHERE `type` = 'statute'")->fetchField();
+  return $num_bill_nodes;
+}
+
+/**
+ * Get the numberof Bills for a $law_id.
+ */
+function nys_statute_import_ol_get_num_bills($law_id) {
+  $count = 1;
+
+  // Load the law tree.
+  $law_tree = nys_statute_import_get_law_tree_from_node($law_id, '', '');
+
+  // Process the law tree.
+  if ($law_tree != NULL &&
+        is_object($law_tree) == TRUE &&
+        property_exists($law_tree, 'documents') == TRUE &&
+        property_exists($law_tree->documents, 'documents') == TRUE &&
+        property_exists($law_tree->documents->documents, 'items') == TRUE &&
+        is_array($law_tree->documents->documents->items) == TRUE
+  ) {
+
+    // Call the recursive process_document function to process document tree.
+    nys_statute_import_get_document_count($law_tree->documents->documents, $count);
+
+    return $count;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Recursive function that processes the document tree.
+ *
+ * Params:
+ *   $documents_obj - The three letter law id.
+ */
+function nys_statute_import_get_document_count($documents_obj, &$counter) {
+
+  if (is_array($documents_obj->items) == TRUE && $documents_obj->size > 0) {
+    foreach ($documents_obj->items as $index => $statute_document_obj) {
+      $last_row_index = count($documents_obj->items) - 1;
+
+      // For the child.
+      $counter++;
+
+      // If it has a child parse it.
+      if ($statute_document_obj->documents->size > 0) {
+        // Recursive call to itself.
+        nys_statute_import_get_document_count($statute_document_obj->documents, $counter);
+      }
+
+    }
+
+  }
 
 }

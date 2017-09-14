@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Install hooks for Composer Manager Security Advisories.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function composer_manager_sa_requirements($phase) {
+  if ($phase == 'runtime') {
+    $t = get_t();
+
+    $requirements = array();
+
+    $lock_file = composer_manager_lock_file();
+    $vulnerabilities = composer_manager_sa_cache($lock_file);
+    if (is_array($vulnerabilities) && empty($vulnerabilities)) {
+      $severity = REQUIREMENT_OK;
+      $description = $t('There are no known security issues with Composer libraries.');
+    }
+    elseif ($vulnerabilities === NULL) {
+      $severity = REQUIREMENT_WARNING;
+      $description = $t('Composer security check is waiting to run on cron.');
+    }
+    else {
+      $severity = REQUIREMENT_ERROR;
+      $formatted = composer_manager_sa_plain_text($lock_file, $vulnerabilities);
+      $description = '<pre>' . check_plain($formatted->fetch()) . '</pre>';
+    }
+
+    $requirements['composer_manager_security_advisories'] = array(
+      'title' => $t('Composer library security updates'),
+      'value' => format_plural(count($vulnerabilities), '@count security advisory.', '@count security advisories.'),
+      'description' => $description,
+      'severity' => $severity,
+    );
+
+    return $requirements;
+  }
+
+  return array();
+}

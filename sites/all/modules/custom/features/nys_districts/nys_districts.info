@@ -9,7 +9,6 @@ dependencies[] = entity
 dependencies[] = entityreference
 dependencies[] = features
 dependencies[] = feeds
-dependencies[] = feeds_import
 dependencies[] = feeds_jsonpath_parser
 dependencies[] = feeds_tamper
 dependencies[] = feeds_tamper_ui

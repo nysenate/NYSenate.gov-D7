@@ -2174,7 +2174,7 @@ function nys_legislation_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'list',
         'settings' => array(),
-        'type' => 'list_key',
+        'type' => 'list_default',
         'weight' => 7,
       ),
       'teaser' => array(

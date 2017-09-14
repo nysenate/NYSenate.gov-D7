@@ -1,0 +1,73 @@
+<?php
+
+module_load_include('inc', 'nys_legislation_spotcheck');
+
+
+function nys_legislation_spotcheck_handle_spotcheck_dump($content_type, $year) {
+  $querier = nys_legislation_spotcheck_get_dump_querier($content_type);
+
+  $limit = 100;
+  $total = $querier->getDumpTotalCount($year);
+  $timestamp = time();
+  $ref_date_time = date('Y-m-d', $timestamp) . "T" . date('H:i:s', $timestamp);
+
+  echo "Found $total $content_type nodes for $year.\n";
+
+  for ($offset = 0; $offset < $total; $offset += $limit) {
+
+    echo "Retrieving $year $content_type nodes " .
+      ($offset + 1) . " - " . (($offset + $limit < $total) ? $offset + $limit : $total) . "\n";
+
+    $nids = $querier->getNids($year, $limit, $offset);
+
+    $nodes = node_load_multiple($nids, [], TRUE);
+
+    $querier->prepareNodes($nodes);
+
+    $dump_object = nys_legislation_spotcheck_package_dump(
+      $content_type, $ref_date_time, $year, $total, $limit, $offset, $nodes);
+
+    nys_legislation_spotcheck_send_dump($dump_object);
+  }
+}
+
+function nys_legislation_spotcheck_package_dump($content_type, $ref_date_time, $year,
+                                                $total, $limit, $offset, $nodes) {
+  return [
+    'contentType' => $content_type,
+    'refDateTime' => $ref_date_time,
+    'year' => $year,
+    'part' => 1 + $offset / $limit,
+    'totalParts' => ceil($total / $limit),
+    'nodes' => $nodes,
+  ];
+}
+
+function nys_legislation_spotcheck_send_dump($dump_data) {
+  $ol_base_url = variable_get("openleg_base_url");
+  $openleg_key = variable_get("openleg_key");
+  $qa_url = $ol_base_url . '/api/3/senatesite/dump?key=' . $openleg_key;
+  $data = json_encode($dump_data, JSON_UNESCAPED_UNICODE);
+
+  echo "\n[POST] ${qa_url}\n";
+
+  $options = [
+    'headers' => [
+      'Content-Type' => 'application/json',
+      'charset' => 'UTF-8',
+    ],
+    'method' => 'POST',
+    'data' => $data,
+  ];
+
+  $result = drupal_http_request($qa_url, $options);
+
+  $result_message = "Result: [$result->code] $result->status_message\n";
+
+  if ($result->code >= 200 && $result->code < 300) {
+    echo $result_message;
+  }
+  else {
+    throw new Exception("Sending of spotcheck dump failed\n$result_message", $result->code);
+  }
+}

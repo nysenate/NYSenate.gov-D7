@@ -30,13 +30,14 @@ function nys_senators_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'About Page',
       'instance_settings' => array(
-        'description' => '',
-        'classes' => 'group-about-page field-group-fieldset',
         'required_fields' => 1,
         'id' => '',
+        'classes' => 'group-about-page field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $field_groups['group_about_page|node|senator|form'] = $field_group;
@@ -59,13 +60,14 @@ function nys_senators_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Auto-Reply Settings',
       'instance_settings' => array(
-        'description' => '',
-        'classes' => 'group-autoreply field-group-fieldset',
         'required_fields' => 1,
         'id' => '',
+        'classes' => 'group-autoreply field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $field_groups['group_autoreply|node|senator|form'] = $field_group;
@@ -90,13 +92,14 @@ function nys_senators_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Contact Page',
       'instance_settings' => array(
-        'description' => '',
-        'classes' => 'group-contact field-group-fieldset',
         'required_fields' => 1,
         'id' => '',
+        'classes' => 'group-contact field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $field_groups['group_contact|node|senator|form'] = $field_group;
@@ -119,13 +122,14 @@ function nys_senators_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Direct Messaging',
       'instance_settings' => array(
-        'description' => '',
-        'classes' => 'group-direct-messages field-group-fieldset',
         'required_fields' => 1,
         'id' => '',
+        'classes' => 'group-direct-messages field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $field_groups['group_direct_messages|node|senator|form'] = $field_group;
@@ -147,13 +151,14 @@ function nys_senators_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Key Staff',
       'instance_settings' => array(
-        'description' => '',
-        'classes' => 'group-key-staff field-group-fieldset',
         'required_fields' => 1,
         'id' => '',
+        'classes' => 'group-key-staff field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $field_groups['group_key_staff|node|senator|form'] = $field_group;
@@ -175,13 +180,14 @@ function nys_senators_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Legislation Page',
       'instance_settings' => array(
-        'description' => '',
-        'classes' => 'group-legislation field-group-fieldset',
         'required_fields' => 1,
         'id' => '',
+        'classes' => 'group-legislation field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $field_groups['group_legislation|node|senator|form'] = $field_group;
@@ -202,18 +208,19 @@ function nys_senators_field_group_info() {
       0 => 'field_pallette_selector',
       1 => 'field_image_hero',
       2 => 'field_top_issue',
-      3 => 'group_social_media_links',
-      4 => 'group_promo_banners',
+      3 => 'group_promo_banners',
+      4 => 'group_social_media_links',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Microsite Settings',
       'instance_settings' => array(
-        'description' => '',
-        'classes' => 'group-microsite-settings field-group-fieldset',
         'required_fields' => 1,
         'id' => '',
+        'classes' => 'group-microsite-settings field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $field_groups['group_microsite_settings|node|senator|form'] = $field_group;
@@ -236,13 +243,14 @@ function nys_senators_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Newsroom Page',
       'instance_settings' => array(
-        'description' => '',
-        'classes' => 'group-newsroom field-group-fieldset',
         'required_fields' => 1,
         'id' => '',
+        'classes' => 'group-newsroom field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $field_groups['group_newsroom|node|senator|form'] = $field_group;
@@ -264,13 +272,14 @@ function nys_senators_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Office Addresses',
       'instance_settings' => array(
-        'description' => '',
-        'classes' => 'group-office-addresses field-group-fieldset',
         'required_fields' => 1,
         'id' => '',
+        'classes' => 'group-office-addresses field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $field_groups['group_office_addresses|node|senator|form'] = $field_group;
@@ -292,13 +301,14 @@ function nys_senators_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Promotional Banners',
       'instance_settings' => array(
-        'description' => '',
-        'classes' => 'group-promo-banners field-group-fieldset',
         'required_fields' => 1,
         'id' => '',
+        'classes' => 'group-promo-banners field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $field_groups['group_promo_banners|node|senator|form'] = $field_group;
@@ -325,13 +335,14 @@ function nys_senators_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Senator Information',
       'instance_settings' => array(
-        'description' => '',
-        'classes' => 'group-senator-info field-group-fieldset',
         'required_fields' => 1,
         'id' => '',
+        'classes' => 'group-senator-info field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $field_groups['group_senator_info|node|senator|form'] = $field_group;
@@ -356,13 +367,14 @@ function nys_senators_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Social Media Links',
       'instance_settings' => array(
-        'description' => '',
-        'classes' => 'group-social-media-links field-group-fieldset',
         'required_fields' => 1,
         'id' => '',
+        'classes' => 'group-social-media-links field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $field_groups['group_social_media_links|node|senator|form'] = $field_group;
@@ -385,13 +397,14 @@ function nys_senators_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Student Letters',
       'instance_settings' => array(
-        'description' => '',
-        'classes' => 'group-student-letters field-group-fieldset',
         'required_fields' => 1,
         'id' => '',
+        'classes' => 'group-student-letters field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $field_groups['group_student_letters|node|senator|form'] = $field_group;

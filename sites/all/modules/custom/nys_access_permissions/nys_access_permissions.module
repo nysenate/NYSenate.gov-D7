@@ -1,12 +1,16 @@
 <?php
 
 /**
- * @file nys_access_permissions.module
- * Custom Permissions for users and roles on the nysenate.gov site. (Beyond Standard Drupal Perms)
+ * @file
+ * Custom Permissions for users and roles on the nysenate.gov site.
+ *
+ * (Beyond Standard Drupal Perms).
  */
 
+/**
+ * Implements hook_menu().
+ */
 function nys_access_permissions_menu() {
-
   $items = array();
 
   $items['admin/settings/nysenate'] = array(
@@ -15,9 +19,9 @@ function nys_access_permissions_menu() {
     'page arguments' => array('nys_access_permissions_admin'),
     'access arguments' => array('administer nys access permissions settings'),
     'type' => MENU_NORMAL_ITEM,
-   );
+  );
 
-    $items['ajax/only-my-nodes'] = array(
+  $items['ajax/only-my-nodes'] = array(
     'title' => 'Show microsite content producer his/her own nodes',
     'page callback' => 'nys_access_permissions_only_my_nodes_autocomplete',
     'page arguments' => array(2, 3),
@@ -29,7 +33,7 @@ function nys_access_permissions_menu() {
 }
 
 /**
- * return results as json with only the content logged-in user has created
+ * Return results as json with only the content logged-in user has created.
  */
 function nys_access_permissions_only_my_nodes_autocomplete($type, $search_term) {
   $matches = array();
@@ -44,23 +48,22 @@ function nys_access_permissions_only_my_nodes_autocomplete($type, $search_term) 
     AND (n.uid = :uid OR fs.field_senator_target_id IN (:nids))
     ORDER BY n.title LIMIT 20";
 
-   $queryArgs = array(
-     ':search_term' => '%' . db_like($search_term) . '%',
-     ':type' => $type,
-     ':uid' => $user->uid,
-     ':nids' => $nids,
-   );
+  $queryArgs = array(
+    ':search_term' => '%' . db_like($search_term) . '%',
+    ':type' => $type,
+    ':uid' => $user->uid,
+    ':nids' => $nids,
+  );
 
-   $result = db_query($query, $queryArgs);
-
+  $result = db_query($query, $queryArgs);
 
   $suggestions = array();
   foreach ($result as $r) {
     $suggestions[$r->title . '(' . $r->nid . ')'] = $r->title . '(' . $r->nid . ')';
   }
 
-  // convert to object to prevent drupal bug, see http://drupal.org/node/175361
-  return drupal_json_output((object)$suggestions);
+  // Convert to object to prevent drupal bug, see http://drupal.org/node/175361
+  return drupal_json_output((object) $suggestions);
 
 }
 
@@ -156,10 +159,10 @@ function nys_access_permissions_field_attach_view_alter(&$output, $context) {
   }
 }
 
-/*
- * Implementation of hook_permission()
+/**
+ * Implements hook_permission().
  */
-function nys_access_permissions_permission(){
+function nys_access_permissions_permission() {
   return array(
     'administer nys access permissions settings' => array(
       'title' => t('Administer Global NY State Senate Settings'),
@@ -189,30 +192,34 @@ function nys_access_permissions_menu_alter(&$items) {
  */
 function nys_access_permissions_term_edit($term) {
 
-  // do a default term access check, role based.
+  // Do a default term access check, role based.
   if (taxonomy_term_edit_access($term) || user_access('administer ' . $term->vocabulary_machine_name . ' vocabulary terms')) {
     return TRUE;
-  } else{
-    // get the current user
+  }
+  else {
+    // Get the current user.
     global $user;
     $type = $term->vocabulary_machine_name;
 
-    switch(true){
+    switch (TRUE) {
       case ($type === 'districts'):
         $senator_id = $term->field_senator[LANGUAGE_NONE][0]['target_id'];
-      break;
+        break;
+
       case ($type === 'committees'):
         $senator_id = $term->field_chair[LANGUAGE_NONE][0]['target_id'];
-      break;
+        break;
     }
-     // If user is microsite producer, check if they have rights to edit on behalf of the member
+    // If user is microsite producer, check if they have rights to edit on
+    // behalf of the member.
     if ($type === 'districts' && in_array('Microsite Content Producer', $user->roles) &&
-      user_is_senators_microsite_producer($senator_id, $user->uid)){
+      user_is_senators_microsite_producer($senator_id, $user->uid)) {
       return TRUE;
     }
-    // If user is microsite producer, check if they have rights to edit on behalf of the chair
+    // If user is microsite producer, check if they have rights to edit on
+    // behalf of the chair.
     if ($type === 'committees' && in_array('Microsite Content Producer', $user->roles) &&
-      user_is_senators_microsite_producer($senator_id, $user->uid)){
+      user_is_senators_microsite_producer($senator_id, $user->uid)) {
       return TRUE;
     }
   }
@@ -220,10 +227,10 @@ function nys_access_permissions_term_edit($term) {
   return FALSE;
 }
 
-
 /**
- * global settings form for the NY Senate site,
- * see https://www.drupal.org/node/206761
+ * Global settings form for the NY Senate site.
+ *
+ * See https://www.drupal.org/node/206761
  */
 function nys_access_permissions_admin() {
   $form = array();
@@ -356,7 +363,8 @@ function nys_access_permissions_admin() {
     $hero_default_path = file_uri_target($hero_default_path);
   }
 
-  // Helpful text showing the file name, disabled to avoid the user thinking it can be used for any purpose.
+  // Helpful text showing the file name, disabled to avoid the user thinking it
+  // can be used for any purpose.
   $form['senate_settings']['hero']['hero_default_path'] = array(
     '#type' => 'textfield',
     '#title' => 'Path to hero default image',
@@ -364,7 +372,7 @@ function nys_access_permissions_admin() {
     '#disabled' => TRUE,
   );
 
-  // Upload field
+  // Upload field.
   $form['senate_settings']['hero']['hero_default_upload'] = array(
     '#type' => 'file',
     '#title' => 'Upload hero image',
@@ -377,7 +385,7 @@ function nys_access_permissions_admin() {
     '#title' => t('PDFs'),
   );
 
-  $form['senate_settings']['pdfs']['member_listing_pdf'] =array(
+  $form['senate_settings']['pdfs']['member_listing_pdf'] = array(
     '#type' => 'managed_file',
     '#name' => 'member_listing_pdf',
     '#title' => t('Member Listing PDF'),
@@ -385,7 +393,7 @@ function nys_access_permissions_admin() {
     '#upload_location' => 'public://pdfs/'
   );
 
-  $form['senate_settings']['pdfs']['session_calendar_pdf'] =array(
+  $form['senate_settings']['pdfs']['session_calendar_pdf'] = array(
     '#type' => 'managed_file',
     '#name' => 'session_calendar_pdf',
     '#title' => t('Session Calendar PDF'),
@@ -422,19 +430,59 @@ function nys_access_permissions_admin() {
     '#default_value' => variable_get('nys_access_permissions_slack_title'),
   );
 
-  // Attach custom submit handler to the form
+  $form['senate_settings']['previous_session'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Previous Session Query Cache config'),
+  );
+  $form['senate_settings']['previous_session']['nys_access_permissions_prev_query_ttl'] = array(
+    '#type' => 'select',
+    '#title' => t('Cache Lifetime'),
+    '#options' => array(
+      '+1 hour' => t('1 hour'),
+      '+2 hours' => t('2 hours'),
+      '+4 hours' => t('4 hours'),
+      '+6 hours' => t('6 hours'),
+      '+12 hours' => t('12 hours'),
+      '+24 hours' => t('24 hours'),
+      '+3 days' => t('3 days'),
+      '+1 week' => t('1 week'),
+    ),
+    '#empty_option' => t('-- Select Lifetime --'),
+    '#description' => t('Select the Previous Session Query Cache lifetime. This determines how long the cache for queries for Previous Session is valid for.'),
+    '#default_value' => variable_get('nys_access_permissions_prev_query_ttl'),
+  );
+
+  $form['senate_settings']['previous_session']['clear'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Manually Clear Cache'),
+  );
+
+  $form['senate_settings']['previous_session']['clear']['clear_query_cache'] = array(
+    '#type' => 'submit',
+    '#value' => t('Clear Previous Session Query cache.'),
+    '#submit' => array('_nys_access_permissions_clear_query_cache'),
+  );
+
+  // Attach custom submit handler to the form.
   $form['#submit'][] = 'nys_access_permissions_settings_submit';
 
   return system_settings_form($form);
 }
 
+/**
+ * Helper function to clear Previous Session Query Cache.
+ */
+function _nys_access_permissions_clear_query_cache($form, &$form_state) {
+  // Clear all cache from the 'cache' bin that matches this pattern.
+  cache_clear_all('nysenate_bill_prev_versions_', 'cache', TRUE);
+  drupal_set_message(t('Previous Session Query Cache cleared.'), 'status');
+}
 
 /**
  * Capture theme settings, update uploaded image and clear Pantheon edge cache.
  */
 function nys_access_permissions_settings_submit($form, &$form_state) {
-  $settings = array();
-  // Get the previous value
+  // Get the previous value.
   $previous = 'public://' . $form['senate_settings']['hero']['hero_default_path']['#default_value'];
 
   $file = file_save_upload('hero_default_upload');
@@ -443,32 +491,31 @@ function nys_access_permissions_settings_submit($form, &$form_state) {
     $destination = 'public://' . $parts['basename'];
     $file->status = FILE_STATUS_PERMANENT;
 
-    if(file_copy($file, $destination, FILE_EXISTS_REPLACE)) {
+    if (file_copy($file, $destination, FILE_EXISTS_REPLACE)) {
       $_POST['hero_default_path'] = $form_state['values']['hero_default_path'] = $destination;
-      // If new file has a different name than the old one, delete the old
+      // If new file has a different name than the old one, delete the old.
       if ($destination != $previous) {
         drupal_unlink($previous);
       }
     }
-  } else {
-    // Avoid error when the form is submitted without specifying a new image
+  }
+  else {
+    // Avoid error when the form is submitted without specifying a new image.
     $_POST['hero_default_path'] = $form_state['values']['hero_default_path'] = $previous;
   }
 
-  if(!empty($form['senate_settings']['pdfs']['member_listing_pdf']['#file'])) {
+  if (!empty($form['senate_settings']['pdfs']['member_listing_pdf']['#file'])) {
     $file_members = $form['senate_settings']['pdfs']['member_listing_pdf']['#file'];
     $file_members->status = FILE_STATUS_PERMANENT;
     file_save($file_members);
     file_usage_add($file_members, 'nys_access_permissions', 'member_listing_pdf', $file_members->fid);
-
   }
 
-  if(!empty($form['senate_settings']['pdfs']['session_calendar_pdf']['#file'])) {
+  if (!empty($form['senate_settings']['pdfs']['session_calendar_pdf']['#file'])) {
     $file_calendar = $form['senate_settings']['pdfs']['session_calendar_pdf']['#file'];
     $file_calendar->status = FILE_STATUS_PERMANENT;
     file_save($file_calendar);
     file_usage_add($file_calendar, 'nys_access_permissions', 'session_calendar_pdf', $file_calendar->fid);
-
   }
 
   if (!empty($form['senate_settings']['pdfs']['public_hearing_schedule']['#file'])) {
@@ -502,11 +549,11 @@ function nys_access_permissions_settings_submit($form, &$form_state) {
   }
 }
 
-
 /**
-* Implements hook_node_access().
-* Grant access to content on unique content basis
-*/
+ * Implements hook_node_access().
+ *
+ * Grant access to content on unique content basis.
+ */
 function nys_access_permissions_node_access($node, $op, $account) {
   global $user;
 
@@ -530,7 +577,8 @@ function nys_access_permissions_node_access($node, $op, $account) {
       return NODE_ACCESS_IGNORE;
     }
 
-    // Check if users have same role and permissions to update each other's content.
+    // Check if users have same role and permissions to update each other's
+    // content.
     if (!empty($node->uid) && $op == 'update' && user_access('edit same role')) {
       $author = user_load($node->uid);
       if (array_intersect($editor->roles, $author->roles)) {
@@ -582,7 +630,6 @@ function nys_access_permissions_node_access($node, $op, $account) {
         return NODE_ACCESS_ALLOW;
       }
       else {
-        //drupal_set_message('FOIL Administrators can only edit the FOIL form ', 'warning', FALSE);
         return NODE_ACCESS_DENY;
       }
     }
@@ -594,6 +641,9 @@ function nys_access_permissions_node_access($node, $op, $account) {
   }
 }
 
+/**
+ * Function _microsite_content_producer_node_types().
+ */
 function _microsite_content_producer_node_types() {
   return array(
     'article',
@@ -614,7 +664,7 @@ function _microsite_content_producer_node_types() {
 }
 
 /**
- * Implements hook_form_alter.
+ * Implements hook_form_alter().
  */
 function nys_access_permissions_form_alter(&$form, &$form_state, $form_id) {
   global $user;
@@ -627,7 +677,8 @@ function nys_access_permissions_form_alter(&$form, &$form_state, $form_id) {
     $form['field_webform'][LANGUAGE_NONE][0]['target_id']['#autocomplete_path'] = 'ajax/only-my-nodes/webform';
   }
 
-  // If Senator MCP only allow them to set Senators listed in $user->field_senator_management.
+  // If Senator MCP only allow them to set Senators listed in
+  // $user->field_senator_management.
   if (user_has_role(_nys_utils_get_rid_by_name('Microsite Content Producer'), $user) && (
     $form_id === 'article_node_form'
     || $form_id === 'event_node_form'
@@ -669,26 +720,34 @@ function nys_access_permissions_form_alter(&$form, &$form_state, $form_id) {
 
   if (
     (
-    user_has_role(_nys_utils_get_rid_by_name('Microsite Content Producer'),$user) ||
-    user_has_role(_nys_utils_get_rid_by_name('Legislative Correspondent'),$user)
+    user_has_role(_nys_utils_get_rid_by_name('Microsite Content Producer'), $user) ||
+    user_has_role(_nys_utils_get_rid_by_name('Legislative Correspondent'), $user)
     ) && (
     $form_id === 'resolution_node_form'
   )
   ) {
-      $form['title']['#disabled'] = 1;
-      $form['metatags']['#access'] = FALSE;
-      $form['revision_information']['#access'] = FALSE;
-      $form['comment_settings']['#access'] = FALSE;
-      $form['author']['#access'] = FALSE;
-      $form['options']['#access'] = FALSE;
-      foreach($form as $key => $value) {
-        if(strpos($key, 'field_') !== FALSE && !in_array($key, array('field_issues', 'field_image_main', 'field_featured_quote'))) {
-          $form[$key]['#access'] = FALSE;
-        }
+    $form['title']['#disabled'] = 1;
+    $form['metatags']['#access'] = FALSE;
+    $form['revision_information']['#access'] = FALSE;
+    $form['comment_settings']['#access'] = FALSE;
+    $form['author']['#access'] = FALSE;
+    $form['options']['#access'] = FALSE;
+    foreach ($form as $key => $value) {
+      if (
+        strpos($key, 'field_') !== FALSE &&
+        !in_array($key, array(
+          'field_issues',
+          'field_image_main',
+          'field_featured_quote',
+        ))
+      ) {
+        $form[$key]['#access'] = FALSE;
       }
+    }
   }
 
-  // Restrict committees to those that the MCP has Senators for as chair or co-chair.
+  // Restrict committees to those that the MCP has Senators for as chair or
+  // co-chair.
   if (user_has_role(_nys_utils_get_rid_by_name('Microsite Content Producer'), $user) && ($form_id == 'meeting_node_form' || $form_id == 'public_hearing_node_form')) {
     if (!empty($form['field_committee'][LANGUAGE_NONE]['#options'])) {
       $options = $form['field_committee'][LANGUAGE_NONE]['#options'];
@@ -700,12 +759,14 @@ function nys_access_permissions_form_alter(&$form, &$form_state, $form_id) {
     }
   }
 
-  // only those with access to administer users can change user's assigned senator
-  if($form_id == 'user_profile_form') {
+  // Only those with access to administer users can change user's assigned
+  // senator.
+  if ($form_id == 'user_profile_form') {
     if (!user_access('administer users')) {
       $form['field_senator']['#access'] = FALSE;
     }
-    // Only Constituents that are not also Senators should be able to receive emails.
+    // Only Constituents that are not also Senators should be able to receive
+    // emails.
     if (!user_has_role(_nys_utils_get_rid_by_name('Constituent'), $user) || user_has_role(_nys_utils_get_rid_by_name('Senator'), $user)) {
       $form['field_user_receive_emails']['#access'] = FALSE;
     }
@@ -718,11 +779,14 @@ function nys_access_permissions_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * @param null $target_user
+ * Get allowed senators dropdown options.
+ *
+ * @param null|object $target_user
  *   A user account object, or a user account UID value.  If not provided, the
  *   global user object is used.
  * @param bool $rebuild
  *   Indicates if the static cache should be rebuilt for this user.
+ *
  * @return array
  *   An array of all available associated senator options indexed by the
  *   senator's node ID.
@@ -733,7 +797,8 @@ function nys_access_permissions_get_allowed_senators_dropdown($target_user = NUL
   // Keep a static return per user.
   $select_options = &drupal_static(__FUNCTION__);
 
-  // If a user ID or user object was passed, use it.  Otherwise, use global $user.
+  // If a user ID or user object was passed, use it.  Otherwise, use global
+  // $user.
   if ((int) $target_user) {
     $check_user = user_load($target_user);
   }
@@ -897,5 +962,4 @@ function nys_access_permissions_views_query_alter(&$view, &$query) {
     $query->where[1]['conditions'][0]['value'] = $sponsor_keys;
     $query->where[1]['conditions'][0]['operator'] = 'IN';
   }
-
 }

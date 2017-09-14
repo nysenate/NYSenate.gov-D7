@@ -50,8 +50,8 @@
 					<h4>Director</h4>
 					<p>Phone: 518-455-2611</p>
 					
-					<h3 class="padded">Kimberly A. Burke</h3>
-					<h4>Confidential Assistant</h4>
+					<h3 class="padded">Mitch Lucas</h3>
+					<h4>Executive Assistant</h4>
 					<p>Phone: 518-455-2611</p>
 
 				</div>

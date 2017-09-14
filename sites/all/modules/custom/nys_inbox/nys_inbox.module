@@ -998,7 +998,7 @@ function _nys_inbox_format_participants($part_array, $limit = NULL, $no_text = F
 
       // Directly address the current user, IF current dashboard is the logged in user's
       if (arg(0) == 'user' && arg(2) == 'dashboard' && arg(1) == $viewed_user->uid) {
-        if (isset($account->type) && in_array($account->type, array('hidden', 'user')) && $account->recipient == $viewed_user->uid && $view_user->uid == $user->uid) {
+        if (isset($account->type) && in_array($account->type, array('hidden', 'user')) && $account->recipient == $viewed_user->uid && $viewed_user->uid == $user->uid) {
           array_unshift($to, $no_text ? t('You') : t('you'));
           continue;
         }
