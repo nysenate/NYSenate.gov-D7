@@ -365,7 +365,6 @@ function nys_messaging_senator_contact_form($form, &$form_state) {
     '#default_value' => $senator->title ? $senator->title : '',
   );  
   
-
   $form['inquiry_type'] = array(
     '#type' => 'radios',
     '#default_value' => 'General Inquiry',
@@ -380,7 +379,7 @@ function nys_messaging_senator_contact_form($form, &$form_state) {
     '#title' => t('First name'),
     '#maxlength' => 255,
     '#required' => TRUE,
-    '#default_value' => $vitals->field_first_name[LANGUAGE_NONE][0]['value'] ? $vitals->field_first_name[LANGUAGE_NONE][0]['value'] : '',
+    '#default_value' =>  !empty($vitals->field_first_name[LANGUAGE_NONE][0]['value']) ? $vitals->field_first_name[LANGUAGE_NONE][0]['value'] : '',
   );
 
   $form['last_name'] = array(
@@ -388,7 +387,7 @@ function nys_messaging_senator_contact_form($form, &$form_state) {
     '#title' => t('Last name'),
     '#maxlength' => 255,
     '#required' => TRUE,
-    '#default_value' => $vitals->field_last_name[LANGUAGE_NONE][0]['value'] ? $vitals->field_last_name[LANGUAGE_NONE][0]['value'] : '',
+    '#default_value' => !empty($vitals->field_last_name[LANGUAGE_NONE][0]['value']) ? $vitals->field_last_name[LANGUAGE_NONE][0]['value'] : '',
   );  
 
   $form['from_email'] = array(
@@ -423,7 +422,7 @@ function nys_messaging_senator_contact_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Street Address'),
     '#maxlength' => 255,
-    '#default_value' => $vitals->field_address[LANGUAGE_NONE][0]['street'] ? $vitals->field_address[LANGUAGE_NONE][0]['street'] : '',
+    '#default_value' => !empty($vitals->field_address[LANGUAGE_NONE][0]['street']) ? $vitals->field_address[LANGUAGE_NONE][0]['street'] : '',
     '#required' => TRUE,
   );
   
@@ -431,7 +430,7 @@ function nys_messaging_senator_contact_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('City'),
     '#maxlength' => 255,
-    '#default_value' => $vitals->field_address[LANGUAGE_NONE][0]['city'] ? $vitals->field_address[LANGUAGE_NONE][0]['city'] : '',
+    '#default_value' => !empty($vitals->field_address[LANGUAGE_NONE][0]['city']) ? $vitals->field_address[LANGUAGE_NONE][0]['city'] : '',
     '#required' => TRUE,
   );
   
@@ -439,7 +438,7 @@ function nys_messaging_senator_contact_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Zip'),
     '#maxlength' => 5,
-    '#default_value' => $vitals->field_address[LANGUAGE_NONE][0]['postal_code'] ? $vitals->field_address[LANGUAGE_NONE][0]['postal_code'] : '',
+    '#default_value' => !empty($vitals->field_address[LANGUAGE_NONE][0]['postal_code']) ? $vitals->field_address[LANGUAGE_NONE][0]['postal_code'] : '',
     '#required' => TRUE,
   );
 

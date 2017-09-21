@@ -1,7 +1,7 @@
 name = nys_variables
 core = 7.x
 package = NY STATE SENATE
-version = 7.x-1.44
+version = 7.x-1.47
 project = nys_variables
 dependencies[] = calendar
 dependencies[] = captcha
@@ -157,7 +157,6 @@ features[variable][] = recaptcha_theme
 features[variable][] = recaptcha_type
 features[variable][] = seckit_clickjacking
 features[variable][] = seckit_ssl
-features[variable][] = sendgrid_integration_ssl
 features[variable][] = site_403
 features[variable][] = site_default_country
 features[variable][] = site_name

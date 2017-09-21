@@ -138,8 +138,19 @@ function _nys_accumulator_extract_user_info($user) {
   $district_info = user_get_district_senator_data_array($user);
   $user_district = taxonomy_term_load($district_info['district_tid']);
   $user_senator = node_load($district_info['senator_nid']);
-  $user_info['district_number'] = $user_district ? $user_district->field_district_number[LANGUAGE_NONE][0]['value'] : 0;
-  $user_info['senator_shortname'] = $user_senator ? $user_senator->field_shortname[LANGUAGE_NONE][0]['value'] : '';
+  if (isset($user_district->field_district_number[LANGUAGE_NONE][0]['value'])) {
+    $user_info['district_number'] = $user_district->field_district_number[LANGUAGE_NONE][0]['value'];
+  }
+  else {
+    $user_info['district_number'] = 0;
+  }
+
+  if (isset($user_senator->field_shortname[LANGUAGE_NONE][0]['value'])) {
+    $user_info['senator_shortname'] = $user_senator->field_shortname[LANGUAGE_NONE][0]['value'];
+  }
+  else {
+    $user_info['senator_shortname'] = '';
+  }
 
   // Set a reference to the user's dashboard.
   $user_info['dashboard_url'] = $user_id ? "/user/{$user_id}" : '';
@@ -777,8 +788,16 @@ function nys_accumulator_user_update(&$edit, $account, $category) {
                          );
     foreach ($fields_to_compare as $key => $val) {
       // if field is an array, get the reference field.  Otherwise, check the whole value
-      $old_value = $val !== FALSE ? $account->original->{$key}[LANGUAGE_NONE][0][$val] : $account->original->{$key};
-      $new_value = $val !== FALSE ? $account->{$key}[LANGUAGE_NONE][0][$val] : $account->{$key};
+      if ($val) {
+        $old_value = isset($account->original->{$key}[LANGUAGE_NONE][0][$val]) ?
+          $account->original->{$key}[LANGUAGE_NONE][0][$val] : '';
+        $new_value = isset($account->{$key}[LANGUAGE_NONE][0][$val]) ?
+          $account->{$key}[LANGUAGE_NONE][0][$val] : '';
+      }
+      else {
+        $old_value = $account->original->{$key};
+        $new_value = $account->{$key};
+      }
 
       // Any difference triggers a message.
       if ($new_value != $old_value) {
@@ -899,7 +918,13 @@ function nys_accumulator_webform_submission_presave($node, &$submission) {
   $a_user = user_load($user->uid);
 
   // Load the Senator's shortname and user's district.
-  nys_accumulator_retrieve_senator_and_district($a_user->field_district[LANGUAGE_NONE][0]['target_id'], $response);
+  if (isset($a_user->field_district[LANGUAGE_NONE][0]['target_id'])) {
+    $a_district = $a_user->field_district[LANGUAGE_NONE][0]['target_id'];
+  }
+  else {
+    $a_district = 0;
+  }
+  nys_accumulator_retrieve_senator_and_district($a_district, $response);
 
   // Set the user data.
   nys_accumulator_populate_user_info($a_user, $response);

@@ -43,12 +43,12 @@
 ?>
 <?php
 $inactive_class = '';
-if(!$active_senator) $senator_copy = 'Your district is empty.';
+if(!$active_senator) $senator_copy = 'Your district’s state senate seat is currently vacant. For constituent services, please visit:';
 else if(isset($no_district) && ($no_district === TRUE)) $senator_copy = 'Your address does not match a NY State Senate District';
 ?>
   <div class="c-block c-container c-container--dash-senator-card">
     <div class="c-user--header">
-      <?php if($image) {; ?>
+      <?php if(!empty($image) && $image) {; ?>
         <?php print $image; ?>
       <?php } else {; ?>
         <img class="dash-senator-img" src="<?php print base_path() . drupal_get_path('theme', 'nysenate'); ?>/images/default-avatar.png">
@@ -59,10 +59,10 @@ else if(isset($no_district) && ($no_district === TRUE)) $senator_copy = 'Your ad
           <h2 class="c-container--title"><?php print $title; ?></h2>
 
           <p><?php print $duties; ?> <?php print $abbreviations; ?></p>
-          <h3 class="c-container--district"><?php print $district; ?></h3>
+          <h3 class="c-container--district"><?php print $district['name']; ?></h3>
         <?php else: ?>
           <?php $inactive_class = 'inactive';?>
-          <div class="c-container--your-s"><?php echo $senator_copy;?></div>
+          <div class="c-container--your-s"><?php echo $senator_copy;?><a href="/district/<?php echo $district['number'];?>"><br>NY State District <?php echo $district['number'];?> Page</a></div>
         <?php endif; ?>
       </div>
     </div>

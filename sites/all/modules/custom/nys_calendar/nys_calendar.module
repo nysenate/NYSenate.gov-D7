@@ -21,6 +21,10 @@ function nys_calendar_menu() {
 
 function nys_calendar_ajax_get_ajax() {
   $path = func_get_args();
+  
+  if (empty($path[0]) || empty($path[1]) || empty($path[2])) {
+    return array();
+  }
 
   $command = $path[1];
   $senator = $path[2];
@@ -45,7 +49,9 @@ function nys_calendar_ajax_get_events_ajax() {
 }
 
 function nys_calendar_ajax_callback($page_callback_result) {
-
+        if (empty($page_callback_result)) {
+          return '';
+        }
         $previous_month = $page_callback_result[3]->format("F");
         $next_month = $page_callback_result[2]->format("F");
         $current_month = $page_callback_result[0]->format("Y-m");
@@ -106,14 +112,17 @@ function nys_calendar_ajax_callback($page_callback_result) {
         );    
 
         $view = views_get_view('senator_events');
+        $view->dom_id = 'upcoming_events';
         $view->set_arguments(array($page_callback_result[1],$current_month));
         $table1= $view->render('upcoming_events');
 
         $view1 = views_get_view('senator_events');
+        $view1->dom_id = 'senator_upcoming_albany';
         $view1->set_arguments(array($page_callback_result[1],$current_month));
         $table2= $view1->render('senator_upcoming_albany');
 
         $view2 = views_get_view('senator_events');
+        $view2->dom_id = 'senator_upcoming_district';
         $view2->set_arguments(array($page_callback_result[1],$current_month));
         $table3= $view2->render('senator_upcoming_district');
 
@@ -137,6 +146,7 @@ function nys_calendar_ajax_events_callback($page_callback_result) {
   if (!isset($_GET['id'])) {
     return FALSE;
   }
+  $block = '';
   $nid = $_GET['id'];
   $page = (isset($_GET['page'])) ? $_GET['page'] : 0;
   $current_month = isset($_GET['date']) ? $_GET['date'] : '';

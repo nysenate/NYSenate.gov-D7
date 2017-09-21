@@ -1,0 +1,67 @@
+Existing tags
+*************
+
+Entire features or individual scenarios can be tagged as follows to assist in running tests:
+
+Tags to assist in selectively running tests
+===========================================
+
+@smoke
+@smoke-test
+    A broad selection of key tests that can be run quickly to make sure you haven't broken anything.
+
+@ci
+    Used to include a feature or scenario in the continuous integration system.
+
+@dependent
+    Used to indicate a scenario that is dependent on data created previously in the same feature file. In a perfect world, scenarios like this would not exist, and the tag will help us isolate the scenarios if/when we come up with a better solution. Scenarios should *never* depend on data from a different feature file.
+
+@javascript
+    Used when the feature being tested relies on CSS or javascript and must use a fully-featured browser for accurate testing. Note: Selenium must be running on the system executing tests or these scenarios will fail.
+
+@slow
+    Used for scenarios that are, well, slow. There is not, as yet, a definitive metric like, requires more than 10 seconds to complete.
+
+@wip
+    Used to tag a work-in-progress. These are typically excluded from a test run as they may fail or do not yet fully test the feature described.
+
+@anon
+    Used for scenarios/features that don't require user authentication to run the test.
+
+@specific_text
+    Denotes tests that are looking at text that is more likely to change and require update.
+
+@timeout
+    Tests that are likely to timeout, currently at 30 seconds.
+
+@bug
+    Known bug.  Don’t execute under normal runs.  Similar to Skip.
+
+Section Tags:
+=============
+
+The tags below are used to identify where a feature (not an individual scenario) is located within the site map. These should be the first tag on the left above the feature description.
+
+@front
+
+Featureset Tags
+===============
+Featureset tags describe features that don't correspond to a traditional site map structure or are complex features at a lower level on the site.
+
+@admin
+@user
+
+Tags to hook into the test process
+==================================
+
+Certain tags are used to hook into the testing process to trigger activity. For example, a scenario that creates a node might be tagged with @cleanData will attempt to delete content created by one of its steps. See http://docs.behat.org/guides/3.hooks.html for a detailed discussion of how this works in behat.
+
+
+
+See http://docs.behat.org/guides/3.hooks.html for a detailed discussion.
+
+Introducing new tags
+********************
+Any new tags that are committed to the repository should be documented here.
+
+

@@ -38,16 +38,28 @@ function nys_statute_legislation_not_found() {
   drupal_add_http_header('Status', '404 Not Found');
 
   // Get the markup for the not found page.
-  $fast_404_html = file_get_contents(DRUPAL_ROOT . '/sites/default/404.html');
+  if (file_exists (DRUPAL_ROOT . '/sites/default/404.html')) {
+    $fast_404_html = file_get_contents(DRUPAL_ROOT . '/sites/default/404.html');
+  }
+  else {
+   $fast_404_html = '';
+  }
 
   // If the nice markup can not be found use the standard.
   if (empty($fast_404_html) == TRUE) {
     $fast_404_html = variable_get('404_fast_html', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>');
   }
 
+  
+  if (isset($_GET['page'])) {
+    $page = $_GET['page'];
+  }
+  else {
+     $page = '';
+  }
+  
   // Replace @path in the variable with the page path.
-  print strtr($fast_404_html, array('@path' => check_plain($_GET['page'])));
-
+  print strtr($fast_404_html, array('@path' => check_plain($page)));
 }
 
 /**
@@ -446,7 +458,7 @@ function nys_statute_render_child_statutes($node) {
         // Must be a Chapter.
         $statute_id = $node->field_lawid[LANGUAGE_NONE][0]['value'];
         // Alt $sql = "SELECT entity_id FROM field_data_field_parentstatuteid WHERE `bundle` = 'statute' AND `field_parentstatuteid_value` = :statuteID";.
-        $sql = "SELECT field_data_field_parentstatuteid.entity_id FROM field_data_field_parentstatuteid, field_data_field_doclevelid WHERE field_data_field_parentstatuteid.entity_id = field_data_field_doclevelid.entity_id AND `field_parentstatuteid_value` = :statuteID ORDER BY field_doclevelid_value  * 1 ASC";
+        $sql = "SELECT field_data_field_parentstatuteid.entity_id FROM field_data_field_parentstatuteid, field_data_field_doclevelid WHERE field_data_field_parentstatuteid.entity_id = field_data_field_doclevelid.entity_id AND `field_parentstatuteid_value` = :statuteID ORDER BY field_doclevelid_value ASC";
 
     }
 
@@ -465,7 +477,7 @@ function nys_statute_render_child_statutes($node) {
         break;
 
       default:
-        $sql = "SELECT field_data_field_parentstatuteid.entity_id FROM field_data_field_parentstatuteid, field_data_field_doclevelid WHERE field_data_field_parentstatuteid.entity_id = field_data_field_doclevelid.entity_id AND `field_parentstatuteid_value` = :statuteID ORDER BY field_doclevelid_value  * 1 ASC";
+        $sql = "SELECT field_data_field_parentstatuteid.entity_id FROM field_data_field_parentstatuteid, field_data_field_doclevelid WHERE field_data_field_parentstatuteid.entity_id = field_data_field_doclevelid.entity_id AND `field_parentstatuteid_value` = :statuteID ORDER BY field_doclevelid_value ASC";
     }
 
   }

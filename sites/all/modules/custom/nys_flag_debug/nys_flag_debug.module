@@ -1,0 +1,4 @@
+<?php
+function nys_flag_debug_multiquery($query) {
+
+}

@@ -9,6 +9,7 @@
   position: relative;
   border-top: 1px solid $grey05;
   padding: 20px 0 35px;
+  margin-bottom: 0;
 
   .c-block--btn-toggle {
     @extend .icon-replace__share;
@@ -24,7 +25,11 @@
       color: $grey05 !important;
     }
   }
-
+.c-block {
+  &.c-legislation-block{
+    margin-bottom: 0;
+  }
+}
   // social starts hidden;
   .c-social {
     display: block;
@@ -337,6 +342,11 @@ h3.c-bill-num {
 }
 
 @media #{$tablet} {
+  .c-block {
+  &.c-legislation-block{
+    margin-bottom: 20px;
+  }
+}
   .c-block-legislation {
 
     // social starts hidden;
@@ -404,7 +414,7 @@ h3.c-bill-num {
   }
 
   h3.c-bill-num {
-    font-size: 36px;
+    font-size: 22px;
   }
 
   .c-bill-topic {

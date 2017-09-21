@@ -59,6 +59,7 @@ function nys_sitewide_elements_fe_nodequeue_export_fields() {
     'reference' => 0,
     'reverse' => 0,
     'i18n' => 0,
+    'insert_at_front' => 0,
     'subqueues' => 1,
     'types' => array(
       0 => 'session',
@@ -82,6 +83,7 @@ function nys_sitewide_elements_fe_nodequeue_export_fields() {
     'reference' => 0,
     'reverse' => 0,
     'i18n' => 0,
+    'insert_at_front' => 0,
     'subqueues' => 1,
     'types' => array(
       0 => 'promotional_banner',
@@ -181,13 +183,21 @@ function nys_sitewide_elements_image_default_styles() {
   $styles['embed_landscape_400x225'] = array(
     'label' => 'Embed Landscape 400x225',
     'effects' => array(
-      13 => array(
+      21 => array(
         'name' => 'image_scale_and_crop',
         'data' => array(
           'width' => 400,
           'height' => 225,
+          'retinafy' => 1,
         ),
         'weight' => 1,
+      ),
+      22 => array(
+        'name' => 'image_style_quality',
+        'data' => array(
+          'quality' => 100,
+        ),
+        'weight' => 2,
       ),
     ),
   );
@@ -196,13 +206,21 @@ function nys_sitewide_elements_image_default_styles() {
   $styles['embed_portrait_225x345'] = array(
     'label' => 'Embed Portrait 225x345',
     'effects' => array(
-      14 => array(
+      23 => array(
         'name' => 'image_scale_and_crop',
         'data' => array(
           'width' => 225,
           'height' => 345,
+          'retinafy' => 1,
         ),
         'weight' => 1,
+      ),
+      24 => array(
+        'name' => 'image_style_quality',
+        'data' => array(
+          'quality' => 100,
+        ),
+        'weight' => 2,
       ),
     ),
   );

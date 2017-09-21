@@ -118,7 +118,7 @@
 
 	<?php if(isset($content['field_honorees'])): ?>
 		<div class="c-block c-block--initiative-honorees">
-			<h2 class="c-initiative--section-title"><?php echo $content['field_honoree_section_title'][0]['#markup']; ?></h2>
+			<h2 class="c-initiative--section-title"><?php if (isset( $content['field_honoree_section_title'][0]['#markup'])) echo $content['field_honoree_section_title'][0]['#markup']; ?></h2>
 			<?php print render($content['field_honorees']); ?>
 		</div>
 	<?php endif; ?>

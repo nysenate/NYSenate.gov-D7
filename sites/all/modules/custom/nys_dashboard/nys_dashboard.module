@@ -306,7 +306,7 @@ function nys_dashboard_menu() {
     'access callback' => 'user_is_logged_in',
     'type' => MENU_CALLBACK,
   );
-  
+
   $items['dashboard'] = array(
     'title' => 'dashboard redirect',
     'page arguments' => array(1),
@@ -741,7 +741,7 @@ function _nys_dashboard_year_updates_block_content() {
   $petition_count = 0;
   foreach ($petitions as $petition) {
     $petition_result = flag_get_counts('node', $petition->entity_id);
-    $petition_count += $petition_result['sign_petition'];
+    $petition_count += @$petition_result['sign_petition'];
   }
 
   $signature_count = $questionnaire_count + $petition_count;
@@ -896,7 +896,7 @@ function _nys_dashboard_sen_bills_msg_block_content() {
  */
 function _nys_dashboard_sen_issues_block_content() {
   global $user;
-  
+
   // Find senator ID.
   $senator_nid = user_get_senator_nid($user);
 
@@ -1051,13 +1051,15 @@ function _nys_dashboard_senator_card_block_content() {
 
   $data = user_get_district_senator_data_array((int) $account->uid);
   $senator_nid = $data['senator_nid'];
-  $district_tid = $data['district_tid'];
+  $district = user_get_district_data($account);
 
   $managed_links = array();
 
   if (user_has_role(_nys_utils_get_rid_by_name('Legislative Correspondent'), $account) && !empty($account->field_senator_inbox_access[LANGUAGE_NONE])) {
     $managed_links = nys_dashboard_legislative_correspondent_get_links($account->field_senator_inbox_access[LANGUAGE_NONE]);
   }
+
+  $vars = [ 'district' => $district ];
 
   if ($senator_nid) {
     $node = node_load($senator_nid);
@@ -1072,13 +1074,6 @@ function _nys_dashboard_senator_card_block_content() {
         $abbreviations = '<span class="duties">(' . $abbreviations . ')</span>';
       }
 
-      $district = '';
-
-      if (!empty($district_tid)) {
-        $district_term = taxonomy_term_load($district_tid);
-        $district = $district_term->name;
-      }
-
       $duties = '';
       if (!empty($node->field_current_duties[LANGUAGE_NONE][0]['safe_value'])) {
         $duties = $node->field_current_duties[LANGUAGE_NONE][0]['safe_value'];
@@ -1086,10 +1081,9 @@ function _nys_dashboard_senator_card_block_content() {
 
       $dashboard_link = nys_blocks_get_message_senator_link();
 
-      $vars = array(
+      $vars += [
         'title' => $node->title,
         'image' => $image,
-        'district' => $district,
         'duties' => $duties,
         'abbreviations' => $abbreviations,
         'contact_text' => 'Message',
@@ -1098,29 +1092,29 @@ function _nys_dashboard_senator_card_block_content() {
         'active_senator' => TRUE,
         'microsite_link' => $senator_nid,
         'is_senator' => $is_senator,
-      );
+      ];
     }
     else {
-      $vars = array(
+      $vars += [
         'active_senator' => FALSE,
         'contact_text' => 'Contact the Senate',
         'contact_link' => '/contact',
         'is_senator' => $is_senator,
         'managed_links' => $managed_links,
-      );
+      ];
     }
 
   }
 
-  if (!$district_tid) {
-    $vars = array(
+  if (!isset($district['tid'])) {
+    $vars += [
       'active_senator' => FALSE,
       'contact_text' => 'Contact the Senate',
       'contact_link' => '/contact',
       'is_senator' => $is_senator,
       'no_district' => TRUE,
       'managed_links' => $managed_links,
-    );
+    ];
   }
 
   $vars['display_message_senator_link'] = $display_message_senator_link;
@@ -1133,7 +1127,7 @@ function _nys_dashboard_senator_card_block_content() {
  * Implements hook_views_query_alter().
  */
 function nys_dashboard_views_query_alter(&$view, &$query) {
-
+  $calendar_filter = FALSE;
   // Fix most recent issues tab on explore issues(SQLSTATE[HY093]: Invalid
   // parameter number: number of bound variables does not match number of
   // tokens).
@@ -1509,7 +1503,7 @@ function nys_dashboard_search_textfield_post_render($content, $element) {
   else {
     $title = '';
   }
-  
+
   $content = str_replace('type="text"', 'type="search"', $content);
   $content = '<label for="' . $element['#name'] . '">' . $title . '</label>' .
     '<div class="container-inline form-wrapper">' . $content;
@@ -1618,8 +1612,8 @@ function nys_dashboard_views_pre_render(&$view) {
         $sa_bill_nid_query = db_select('field_data_field_ol_print_no', 'pn');
         $sa_bill_nid_query->join('field_data_field_ol_session', 's', 'pn.entity_id = s.entity_id');
         $sa_bill_nid_query->addField('pn', 'entity_id');
-        $sa_bill_nid_query->condition('pn.field_ol_print_no_value', $same_as_info->printNo, '=');
-        $sa_bill_nid_query->condition('s.field_ol_session_value', $same_as_info->session, '=');
+        $sa_bill_nid_query->condition('pn.field_ol_print_no_value', s(@$same_as_info->printNo), '=');
+        $sa_bill_nid_query->condition('s.field_ol_session_value', s(@$same_as_info->session), '=');
 
         $sa_bill_nid = $sa_bill_nid_query->execute()->fetchField();
 
@@ -1682,7 +1676,7 @@ function nys_dashboard_views_pre_render(&$view) {
         else {
           $check_for_sub = null;
         }
-                
+
         if (!is_null($check_for_sub)) {
           // Replace bill loaded for purposes of vote information
           // From here, the vote should populate correctly if the bill was substituted
@@ -1748,7 +1742,7 @@ function nys_dashboard_views_pre_render(&$view) {
   // For a meeting agenda, get the committee a bill was referred to.
   if (($view->name == 'meeting_agenda_block') && ($view->current_display == 'meeting_agenda')) {
     foreach ($view->result as $index => $row) {
-      $referred_to_committee = $row->_field_data['field_collection_item_field_data_field_ol_agenda_bills_item_']['entity']->field_ol_bill_message;
+      $referred_to_committee = s(@$row->_field_data['field_collection_item_field_data_field_ol_agenda_bills_item_']['entity']->field_ol_bill_message);
       if (!empty($referred_to_committee)) {
         // Fix for some legacy content which already contains the "referred to"
         // text.
@@ -2362,6 +2356,9 @@ function _nys_dashboard_build_constituent_table_row($data) {
 
 function nys_dashboard_render_bill_status($bill_to_load, $draw_classes = '', $add_spacer = false) {
   $bill = node_load($bill_to_load);
+  if ($bill === FALSE) {
+    new stdClass();
+  }
 
   $frontend_statuses = array(
     array(
@@ -2423,8 +2420,8 @@ function nys_dashboard_render_bill_status($bill_to_load, $draw_classes = '', $ad
     }
   }
 
-  $current_status = $bill->field_ol_last_status[LANGUAGE_NONE][0]['value'];
-  $current_status_value = $backend_statuses_to_values[$current_status];
+  $current_status = s(@$bill->field_ol_last_status[LANGUAGE_NONE][0]['value'], 0);
+  $current_status_value = nys_av($current_status, $backend_statuses_to_values, array(0, 0));
 
   // Show if the bill has been signed or vetoed if it's reached the governor.
   $signed_or_vetoed = "Signed/Vetoed by Governor";
@@ -2481,13 +2478,16 @@ function nys_dashboard_render_bill_status($bill_to_load, $draw_classes = '', $ad
   {
     $display_status = 'Passed Senate &amp; Assembly';
   }
+  else {
+    $display_status = '';
+  }
 
   $status_info = array(
     'current_status' => $current_status,
     'current_status_value' => $current_status_value,
     'frontend_statuses' => $frontend_statuses,
-    'chamber' => $bill->field_ol_chamber[LANGUAGE_NONE][0]['value'],
-    'last_status_committee' => $bill->field_ol_latest_status_committee[LANGUAGE_NONE][0]['value'],
+    'chamber' => s(@$bill->field_ol_chamber[LANGUAGE_NONE][0]['value']),
+    'last_status_committee' => s(@$bill->field_ol_latest_status_committee[LANGUAGE_NONE][0]['value']),
     'draw_classes' => $draw_classes,
     'add_spacer' => $add_spacer
   );
@@ -2498,5 +2498,3 @@ function nys_dashboard_render_bill_status($bill_to_load, $draw_classes = '', $ad
 
   return $result;
 }
-
-

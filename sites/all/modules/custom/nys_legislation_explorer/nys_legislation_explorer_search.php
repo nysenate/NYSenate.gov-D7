@@ -100,7 +100,7 @@ function nys_legislation_explorer_general_search() {
     $search['params']['fl'] = '*';
     $vars['total'] = 0;
     try {
-      $resp = $solr_service->search($search['query'], $search['params'], 'GET');
+      $resp = $solr_service->search(@$search['query'], $search['params'], 'GET');
 
       // If the bill has an active version, attach it to the object.
       foreach ($resp->response->docs as &$doc) {

@@ -112,9 +112,9 @@
   <div class="c-questionnaire--body">
   <?php if(!empty($node->field_image_main)): ?>
     <div class="c-block c-block--img">
-      <?php print theme('image_style', array( 'path' =>  $field_image_main[0]['uri'], 'style_name' => '760x377')); ?>
+      <?php if(!empty($field_image_main[0]['uri'])) print theme('image_style', array( 'path' =>  $field_image_main[0]['uri'], 'style_name' => '760x377')); ?>
         <?php if (!empty($node->field_image_main[LANGUAGE_NONE][0]['title'])): ?>
-          <p class="c-img--caption"><?php print $node->field_image_main[LANGUAGE_NONE][0]['title']; ?></p>
+          <p class="c-img--caption"><?php if(!empty($node->field_image_main[LANGUAGE_NONE][0]['title'])) print $node->field_image_main[LANGUAGE_NONE][0]['title']; ?></p>
         <?php endif; ?>
     </div>
     <?php endif; ?>

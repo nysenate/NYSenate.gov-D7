@@ -693,3 +693,4 @@ function nys_bill_import_bill_qa($from_date_time, $to_date_time, $session) {
   }
   while ($offsetEnd < $total);
 }
+

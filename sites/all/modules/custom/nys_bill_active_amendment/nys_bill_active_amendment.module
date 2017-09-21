@@ -99,7 +99,12 @@ function nys_bill_active_amendment_validate_aliases($node) {
     $search_pattern = $base_url . '%';
 
     // Active version will receive the shortcut alias 'legislation/bills/{year}/{base_print}'
-    $active_version = strtolower($node->field_ol_active_version[LANGUAGE_NONE][0]['value']);
+    if (isset($node->field_ol_active_version[LANGUAGE_NONE][0]['value'])) {
+      $active_version = strtolower($node->field_ol_active_version[LANGUAGE_NONE][0]['value']);
+    }
+    else {
+      $active_version = '';
+    }
 
     // If a bill has no amendments, active version will be an empty string.
     if (!$active_version) {

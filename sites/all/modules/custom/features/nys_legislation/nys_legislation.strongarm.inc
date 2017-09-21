@@ -188,7 +188,14 @@ function nys_legislation_strongarm() {
           'weight' => '33',
         ),
       ),
-      'display' => array(),
+      'display' => array(
+        'disqus' => array(
+          'search_index' => array(
+            'weight' => '1002',
+            'visible' => FALSE,
+          ),
+        ),
+      ),
     ),
   );
   $export['field_bundle_settings_node__bill'] = $strongarm;

@@ -46,9 +46,11 @@ function nys_senators_json() {
   // Iterate over the loaded senators and create the JSON response.
   $senators_response = array();
   foreach ($senator_nodes as &$senator_node) {
-    $senate_district = intval($districts_by_senator[$senator_node->nid]);
-    $senator = create_senator_response($senator_node, $senate_district);
-    array_push($senators_response, $senator);
+    if (array_key_exists($senator_node->nid, $districts_by_senator)) {
+      $senate_district = intval($districts_by_senator[$senator_node->nid]);
+      $senator = create_senator_response($senator_node, $senate_district);
+      array_push($senators_response, $senator);
+    }
   }
 
   // If there's only one senator, remove the parent array structure.
@@ -111,7 +113,9 @@ function create_senator_response(&$senator_node, $senate_district) {
   $field_parties = $senator_wrapper->field_party->value();
   if (!empty($field_parties)) {
     foreach ($field_parties as &$party) {
-      array_push($senator['party'], $party['value']);
+      if (is_array($party) && array_key_exists('value', $party)) {
+        array_push($senator['party'], $party['value']);
+      }
     }
   }
 

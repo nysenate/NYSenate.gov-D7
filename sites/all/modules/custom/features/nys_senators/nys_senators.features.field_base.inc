@@ -1432,17 +1432,18 @@ function nys_senators_field_default_field_bases() {
     'locked' => 0,
     'module' => 'entityreference',
     'settings' => array(
-      'handler' => 'base',
+      'handler' => 'views',
       'handler_settings' => array(
         'behaviors' => array(
           'views-select-list' => array(
-            'status' => 0,
+            'status' => 1,
           ),
         ),
-        'sort' => array(
-          'type' => 'none',
+        'view' => array(
+          'args' => array(),
+          'display_name' => 'title',
+          'view_name' => 'senator_users',
         ),
-        'target_bundles' => array(),
       ),
       'profile2_private' => FALSE,
       'target_type' => 'user',

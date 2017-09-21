@@ -1,5 +1,5 @@
-@import url('nysenate_ie9-blessed2.css?z=1498163210973');
-@import url('nysenate_ie9-blessed1.css?z=1498163210973');
+@import url('nysenate_ie9-blessed2.css?z=1501184522649');
+@import url('nysenate_ie9-blessed1.css?z=1501184522649');
 
 
 @media screen and (min-width: 760px) {
@@ -1227,7 +1227,7 @@
     background: #2B6A90;
   }
 
-  .c-login--list {
+  ul.c-login--list {
     position: relative;
     display: inline-block;
     vertical-align: middle;
@@ -1238,11 +1238,11 @@
     padding-left: 0;
   }
 
-  .c-login--list .c-header--btn {
+  ul.c-login--list .c-header--btn {
     margin-left: 0;
   }
 
-  .c-login--list .c-header--btn.c-header--btn__primary {
+  ul.c-login--list .c-header--btn.c-header--btn__primary {
     -webkit-transition: background 0.2s ease 0.1s;
     -moz-transition: background 0.2s ease 0.1s;
     -ms-transition: background 0.2s ease 0.1s;
@@ -1250,14 +1250,14 @@
     transition: background 0.2s ease 0.1s;
   }
 
-  .c-login--list li {
+  ul.c-login--list li {
     position: relative;
     top: 0;
     height: 100%;
     z-index: 4;
   }
 
-  .c-login--list li a {
+  ul.c-login--list li a {
     display: block;
     height: 100%;
     width: 100%;
@@ -1272,7 +1272,7 @@
     user-select: none;
   }
 
-  .c-login--list li + li {
+  ul.c-login--list li + li {
     position: absolute;
     width: 100%;
     margin-top: 0;
@@ -1284,7 +1284,7 @@
     transition: top 0.2s ease-in 0s;
   }
 
-  .c-login--list li + li a {
+  ul.c-login--list li + li a {
     -webkit-transition: background 0.2s ease 0.1s;
     -moz-transition: background 0.2s ease 0.1s;
     -ms-transition: background 0.2s ease 0.1s;
@@ -1292,11 +1292,11 @@
     transition: background 0.2s ease 0.1s;
   }
 
-  .c-login--list li + li.c-login--admin {
+  ul.c-login--list li + li.c-login--admin {
     z-index: 3;
   }
 
-  .c-login--list:hover .c-header--btn__primary {
+  ul.c-login--list:hover .c-header--btn__primary {
     color: #fff;
     -webkit-transition: background 0.2s ease 0s;
     -moz-transition: background 0.2s ease 0s;
@@ -1305,19 +1305,19 @@
     transition: background 0.2s ease 0s;
   }
 
-  .c-login--list:hover .c-login--edit {
+  ul.c-login--list:hover .c-login--edit {
     top: 100%;
   }
 
-  .c-login--list:hover .c-login--logout {
+  ul.c-login--list:hover .c-login--logout {
     top: 200%;
   }
 
-  .c-login--list:hover .c-login--admin {
+  ul.c-login--list:hover .c-login--admin {
     top: 300%;
   }
 
-  .c-login--list:hover li + li {
+  ul.c-login--list:hover li + li {
     -webkit-transition: top 0.2s ease-in 0.15s;
     -moz-transition: top 0.2s ease-in 0.15s;
     -ms-transition: top 0.2s ease-in 0.15s;
@@ -1325,7 +1325,7 @@
     transition: top 0.2s ease-in 0.15s;
   }
 
-  .c-login--list:hover li + li a {
+  ul.c-login--list:hover li + li a {
     background: #AAAAAA;
     -webkit-transition: background 0.1s ease 0.05s;
     -moz-transition: background 0.1s ease 0.05s;
@@ -1334,7 +1334,7 @@
     transition: background 0.1s ease 0.05s;
   }
 
-  .c-login--list:hover li + li a:hover {
+  ul.c-login--list:hover li + li a:hover {
     -webkit-transition: background 0.15s ease 0s;
     -moz-transition: background 0.15s ease 0s;
     -ms-transition: background 0.15s ease 0s;
@@ -2080,6 +2080,10 @@
     margin-bottom: 20px;
   }
 
+  .c-block.c-legislation-block {
+    margin-bottom: 20px;
+  }
+
   .c-block-legislation .c-social {
     position: absolute;
     display: block;
@@ -2141,7 +2145,7 @@
   }
 
   h3.c-bill-num {
-    font-size: 36px;
+    font-size: 22px;
   }
 
   .c-bill-topic {
@@ -3261,6 +3265,33 @@
     float: right;
     clear: right;
     margin-right: 430px;
+    margin-left: 0px;
+  }
+
+  .c-event-block--list .c-meeting-video--status:before {
+    padding: 0;
+    margin-left: 0;
+    border-left: none;
+  }
+
+  .c-event-block--list .c-event-video {
+    position: absolute;
+    top: 20px;
+    right: 0;
+    clear: none;
+    margin-top: 0;
+  }
+
+  .view-previous-sessions .c-event-block--list .c-event-name {
+    margin-bottom: 18px;
+  }
+
+  .view-previous-sessions .c-event-block--list .c-event-location {
+    clear: right;
+    float: right;
+  }
+
+  .view-previous-sessions .c-event-block--list .c-event-video {
     margin-left: 0px;
   }
 

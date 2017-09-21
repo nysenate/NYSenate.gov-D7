@@ -104,11 +104,23 @@ function media_wysiwyg_format_form($form, &$form_state, $file) {
       '#default_value' => $align_default,
     );
   }
-
   // Add fields from the file, so that we can override them if necessary.
   $form['options']['fields'] = array();
   foreach ($fields as $field_name => $field_value) {
     $file->{$field_name} = $field_value;
+  }
+  // Get the external url from the fid array.
+  $external_url = empty($query_fields['external_url']) ? NULL : $query_fields['external_url'];
+  // Field to attach external url's to files for linking.
+  if(variable_get('media_wysiwyg_external_link', FALSE)) {
+    if($file->type == 'image') {
+      $form['options']['external_url'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Link Image'),
+        '#description' => t('Enter a URL to turn the image into a link.'),
+        '#default_value' => $external_url,
+      );
+    }
   }
   field_attach_form('file', $file, $form['options']['fields'], $form_state);
   $instance = field_info_instances('file', $file->type);

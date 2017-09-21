@@ -51,5 +51,19 @@ function hook_sendgrid_integration_unique_args_alter($unique_args) {
 }
 
 /**
+ * This hook is invoked before mail is sent, allowing modification of categories.
+ * @param array $categories
+ *   An array of categories for Sendgrid statistics.
+ * @return array
+ *   Returned array will be used as categories.
+ */
+function hook_sendgrid_integration_categories_alter($message, $categories) {
+  $categories[] = 'from_' . $message['from'];
+  $categories[] = $message['language'];
+
+  return $categories;
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

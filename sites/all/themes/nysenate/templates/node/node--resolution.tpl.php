@@ -229,7 +229,12 @@
   <div class="c-block c-bill--details">
     <h3 class="c-detail--subhead c-detail--section-title">Resolution Details</h3>
       <dl>
-      <?php $same_as = json_decode($node->field_ol_same_as[LANGUAGE_NONE][0]['value']); ?>
+      <?php if (!empty($node->field_ol_same_as[LANGUAGE_NONE][0]['value'])) { 
+              $same_as = json_decode($node->field_ol_same_as[LANGUAGE_NONE][0]['value']);
+            } else { 
+              $same_as = '';
+            } ?>
+ 
       <?php if($same_as):?>
         <dt>See Assembly Version of this Bill:</dt>
         <?php $first = TRUE;  foreach($same_as as $key => $item):?>

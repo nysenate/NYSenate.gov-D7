@@ -49,8 +49,8 @@ class SchemaRegressionTest extends DrupalWebTestCase {
     $this->assertTrue(isset($fields['destid']), 'Column destid exists.');
 
     // Inspect the table by using schema_compare().
-    $schema = drupal_get_schema('schema_test_1');
-    $comparison = schema_compare_table($schema);
+    $schema = schema_get_schema();
+    $comparison = schema_compare_table($schema['schema_test_1']);
     $this->assertEqual($comparison['status'], 'different', 'Table does not match its schema.');
   }
 }

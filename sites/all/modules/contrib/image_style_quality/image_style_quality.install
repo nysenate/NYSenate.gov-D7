@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Image style quality install file.
+ */
+
+/**
+ * Delete obsolete variable.
+ */
+function image_style_quality_update_7100() {
+  variable_del('image_style_quality_global_quality');
+}

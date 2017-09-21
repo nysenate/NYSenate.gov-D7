@@ -704,6 +704,7 @@ function nys_variables_strongarm() {
   $strongarm->name = 'mail_system';
   $strongarm->value = array(
     'default-system' => 'SendGridMailSystem',
+    'sendgrid_integration' => 'SendGridMailSystem',
   );
   $export['mail_system'] = $strongarm;
 
@@ -733,8 +734,8 @@ function nys_variables_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'media_wysiwyg_wysiwyg_allowed_types';
   $strongarm->value = array(
-    0 => 'image',
-    1 => 'video',
+    0 => 'document',
+    1 => 'image',
   );
   $export['media_wysiwyg_wysiwyg_allowed_types'] = $strongarm;
 
@@ -813,13 +814,6 @@ function nys_variables_strongarm() {
     'hsts_subdomains' => 0,
   );
   $export['seckit_ssl'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'sendgrid_integration_ssl';
-  $strongarm->value = 0;
-  $export['sendgrid_integration_ssl'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

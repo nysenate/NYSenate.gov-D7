@@ -36,8 +36,8 @@ ctools_add_css('login_modal', 'nys_registration');
 ctools_add_js('login_modal', 'nys_registration');
 
 $issue = taxonomy_term_load($tid);
-$issue_url = drupal_lookup_path('alias', current_path());
-$absolute_url = $GLOBALS['base_url'] . '/' . drupal_get_path_alias(current_path(), ['absolute' => TRUE]);
+$issue_url = drupal_lookup_path('alias', current_path(), 'en');
+$absolute_url = $GLOBALS['base_url'] . '/' . check_plain(drupal_get_path_alias(current_path(), 'en'));
 
 // Get count of followers for the issue
 $flag_result = flag_get_counts('taxonomy_term', $tid);

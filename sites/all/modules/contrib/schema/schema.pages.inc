@@ -28,7 +28,7 @@ function schema_compare() {
     'missing' => t('Tables in the schema that are not present in the database.'),
   );
 
-  $schema = drupal_get_schema(NULL, TRUE);
+  $schema = schema_get_schema();
   $info = schema_compare_schemas($schema);
 
   // The info array is keyed by state (same/different/missing/extra/warn). For missing,
@@ -36,7 +36,7 @@ function schema_compare() {
   // Get those out of the way first
   if (isset($info['warn'])) {
     foreach ($info['warn'] as $message) {
-      drupal_set_message($message, 'warning');
+      drupal_set_message(filter_xss($message), 'warning');
     }
     unset($info['warn']);
   }
@@ -124,9 +124,9 @@ function schema_compare() {
 function schema_describe() {
   $build = array();
 
-  $schema = drupal_get_schema(NULL, TRUE);
+  $schema = schema_get_schema();
   ksort($schema);
-  $row_hdrs = array(t('Name'), t('Type[:Size]'), t('Null?'), t('Default'));
+  $row_hdrs = array(t('Name'), t('Type[:Size]'), t('Null?'), t('Default'), t('Description'));
 
   $default_table_description = t('TODO: please describe this table!');
   $default_field_description = t('TODO: please describe this field!');
@@ -134,7 +134,7 @@ function schema_describe() {
     $rows = array();
     foreach ($t_spec['fields'] as $c_name => $c_spec) {
       $row = array();
-      $row[] = $c_name;
+      $row[] = filter_xss($c_name);
       $type = $c_spec['type'];
       if (!empty($c_spec['length'])) {
         $type .= '(' . $c_spec['length'] . ')';
@@ -148,21 +148,22 @@ function schema_describe() {
       if ($c_spec['type'] == 'int' && !empty($c_spec['unsigned'])) {
         $type .= ', unsigned';
       }
-      $row[] = $type;
+      $row[] = filter_xss($type);
       $row[] = !empty($c_spec['not null']) ? 'NO' : 'YES';
-      $row[] = isset($c_spec['default']) ? (is_string($c_spec['default']) ? '\'' . $c_spec['default'] . '\'' : $c_spec['default']) : '';
-      $rows[] = $row;
+      $row[] = filter_xss(isset($c_spec['default']) ? (is_string($c_spec['default']) ? '\'' . $c_spec['default'] . '\'' : $c_spec['default']) : '');
       if (!empty($c_spec['description']) && $c_spec['description'] != $default_field_description) {
         $desc = _schema_process_description($c_spec['description']);
-        $rows[] = array(array('colspan' => count($row_hdrs), 'data' => $desc));
+        $row[] = filter_xss($desc);
       }
       else {
-        drupal_set_message(_schema_process_description(t('Field {!table}.@field has no description.', array('!table' => $t_name, '@field' => $c_name))), 'warning');
+        drupal_set_message(_schema_process_description(t('Field {@table}.@field has no description.', array('@table' => $t_name, '@field' => $c_name))), 'warning');
+        $row[] = t('Description not found.');
       }
+      $rows[] = $row;
     }
 
     if (empty($t_spec['description']) || $t_spec['description'] == $default_table_description) {
-      drupal_set_message(_schema_process_description(t('Table {!table} has no description.', array('!table' => $t_name))), 'warning');
+      drupal_set_message(_schema_process_description(t('Table {@table} has no description.', array('@table' => $t_name))), 'warning');
     }
 
     $build[$t_name] = array(
@@ -196,7 +197,7 @@ function schema_inspect() {
   $mods = module_list();
   sort($mods);
   $mods = array_flip($mods);
-  $schema = drupal_get_schema(NULL, TRUE);
+  $schema = schema_get_schema();
   $inspect = schema_dbobject()->inspect();
   foreach ($inspect as $name => $table) {
     $module = isset($schema[$name]['module']) ? $schema[$name]['module'] : 'Unknown';
@@ -224,7 +225,7 @@ function schema_inspect() {
  * "SQL" menu callback.
  */
 function schema_sql($engine = NULL) {
-  $schema = drupal_get_schema(NULL, TRUE);
+  $schema = schema_get_schema();
   $connection = Database::getConnection();
   $sql = '';
   foreach ($schema as $name => $table) {
@@ -251,7 +252,7 @@ function schema_sql($engine = NULL) {
  * as you need.
  */
 function schema_show() {
-  $schema = drupal_get_schema(NULL, TRUE);
+  $schema = schema_get_schema();
   $show = var_export($schema, 1);
 
   return "<textarea style=\"width:100%\" rows=\"30\">$show</textarea>";

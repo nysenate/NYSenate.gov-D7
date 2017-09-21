@@ -455,8 +455,8 @@ function nys_bills_bill_form_submit($form, &$form_state) {
 
   // If there is no existing vote, or the vote value differs from
   // the existing vote, record the new vote.
-  nyslog("vote value={$the_vote->value}, vote_index={$vote_index}");
-  if (is_null($the_vote) || $the_vote->value != $vote_index) {
+  nyslog("vote value={$the_vote['value']}, vote_index={$vote_index}");
+  if (is_null($the_vote) || $the_vote['value'] != $vote_index) {
     $new_vote = nys_bill_vote_process_vote('node', $node->nid, $vote_index);
     nyslog("registered new vote=\n" . var_export($new_vote, 1));
   }

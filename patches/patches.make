@@ -48,7 +48,7 @@ projects[entity][patch][] = https://www.drupal.org/files/issues/entity-stop-assu
 ; Entity Reference
 projects[entityreference][type] = module
 projects[entityreference][subdir] = contrib
-projects[entityreference][version] = 1.1
+projects[entityreference][version] = 1.5
 projects[entityreference][patch][] = ../patches/contrib/entity_reference__restrict_access_label_fix.patch
 
 ; Feeds XPath Parser

@@ -1,0 +1,11 @@
+{
+    "require": {
+        "php": ">=5.3.0",
+        "fastglass/sendgrid": ">=1.0.6"
+    },
+    "config": {
+        "autoloader-suffix": "ComposerManager",
+        "vendor-dir": "../../../all/vendor"
+    },
+    "prefer-stable": true
+}

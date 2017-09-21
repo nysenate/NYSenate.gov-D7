@@ -137,7 +137,7 @@
       <?php if (!empty($node->field_image_main)): ?>
           <div class="c-block c-block--img">
             <?php print theme('image_style', [
-              'path' => $field_image_main[0]['uri'],
+              'path' => (isset($field_image_main[0]['uri']) ? $field_image_main[0]['uri'] : ''),
               'style_name' => '760x377',
             ]); ?>
             <?php if (!empty($node->field_image_main[LANGUAGE_NONE][0]['title'])): ?>

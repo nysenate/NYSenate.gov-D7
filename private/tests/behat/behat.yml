@@ -1,0 +1,59 @@
+default:
+  suites:
+    default:
+      contexts:
+        - FeatureContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
+      filters:
+        tags: '~@bug&&~@wip'
+  extensions:
+    Behat\MinkExtension:
+      goutte: ~
+      selenium2: ~
+      sessions:
+        selenium_firefox_session:
+          selenium2:
+            browser: firefox
+            wd_host: 'http://127.0.0.1:8643/wd/hub'
+    Drupal\DrupalExtension:
+      blackbox: ~
+
+
+# run all 'ready' tests
+ci:
+  suites:
+    default:
+      filters:
+        tags: '~@bug&&~@wip'
+
+# run tests that are still in dev
+wip:
+  suites:
+    default:
+      filters:
+        tags: '@wip&&~@bug'
+
+# run key tests (fast test)
+smoke:
+  suites:
+    default:
+      filters:
+        tags: '@smoke-test,@smoke'
+
+# dont run slow tests
+no-slow:
+  suites:
+    default:
+      filters:
+        tags: '@~bug&&~@slow'
+
+firefox:
+  extensions:
+    Behat\MinkExtension:
+      default_session: selenium_firefox_session
+
+imports:
+  - behat.local.yml

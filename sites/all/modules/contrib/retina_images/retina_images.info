@@ -1,0 +1,11 @@
+name = "Retina Images"
+description = "Provide an image effect to output images in high resolution format for high resolution displays."
+core = 7.x
+dependencies[] = image
+
+; Information added by Drupal.org packaging script on 2016-02-18
+version = "7.x-1.0-beta5"
+core = "7.x"
+project = "retina_images"
+datestamp = "1455779943"
+

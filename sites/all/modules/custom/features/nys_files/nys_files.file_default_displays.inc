@@ -12,6 +12,702 @@ function nys_files_file_default_displays() {
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
+  $file_display->name = 'document__default__file_field_file_download_link';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'text' => 'Download [file:name]',
+  );
+  $export['document__default__file_field_file_download_link'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__default__file_field_file_table';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['document__default__file_field_file_table'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__default__file_field_file_url_plain';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['document__default__file_field_file_url_plain'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__default__file_field_media_large_icon';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'image_style' => '',
+  );
+  $export['document__default__file_field_media_large_icon'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__default__file_field_slick';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'optionset' => 'default',
+    'skin' => '',
+    'optionset_thumbnail' => '',
+    'skin_thumbnail' => '',
+    'skin_arrows' => '',
+    'skin_dots' => '',
+    'asnavfor_main' => '',
+    'asnavfor_thumbnail' => '',
+    'asnavfor_auto' => 0,
+    'image_style' => '',
+    'thumbnail_style' => '',
+    'thumbnail_hover' => 0,
+    'slide_layout' => '',
+    'thumbnail_caption' => '',
+    'slide_overlay' => '',
+    'slide_title' => '',
+    'slide_link' => '',
+    'slide_classes' => '',
+    'slide_caption' => array(
+      'field_file_image_alt_text' => 0,
+      'field_file_image_title_text' => 0,
+    ),
+    'view_mode' => '',
+    'media_switch' => '',
+    'iframe_lazy' => 0,
+    'aspect_ratio' => '',
+    'mousewheel' => 0,
+    'markup' => 0,
+    'cache' => '',
+    'override' => 0,
+    'overridables' => array(
+      'arrows' => 0,
+      'autoplay' => 0,
+      'dots' => 0,
+      'draggable' => 0,
+    ),
+    'current_view_mode' => 'default',
+  );
+  $export['document__default__file_field_slick'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__default__media_oembed_thumbnail';
+  $file_display->weight = 0;
+  $file_display->status = TRUE;
+  $file_display->settings = array(
+    'image_style' => '',
+  );
+  $export['document__default__media_oembed_thumbnail'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__default__media_ustream_video';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'width' => '640',
+    'height' => '393',
+    'autoplay_live' => 0,
+    'autoplay_recorded' => 0,
+    'new_player' => 1,
+    'player_color' => '',
+    'custom_color' => '',
+  );
+  $export['document__default__media_ustream_video'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__media_link__file_field_file_default';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['document__media_link__file_field_file_default'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__media_link__file_field_file_download_link';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'text' => 'Download [file:name]',
+  );
+  $export['document__media_link__file_field_file_download_link'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__media_link__file_field_file_table';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['document__media_link__file_field_file_table'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__media_link__file_field_file_url_plain';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['document__media_link__file_field_file_url_plain'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__media_link__file_field_media_large_icon';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'image_style' => '',
+  );
+  $export['document__media_link__file_field_media_large_icon'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__media_link__file_field_slick';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'optionset' => 'default',
+    'skin' => '',
+    'optionset_thumbnail' => '',
+    'skin_thumbnail' => '',
+    'skin_arrows' => '',
+    'skin_dots' => '',
+    'asnavfor_main' => '',
+    'asnavfor_thumbnail' => '',
+    'asnavfor_auto' => 0,
+    'image_style' => '',
+    'thumbnail_style' => '',
+    'thumbnail_hover' => 0,
+    'slide_layout' => '',
+    'thumbnail_caption' => '',
+    'slide_overlay' => '',
+    'slide_title' => '',
+    'slide_link' => '',
+    'slide_classes' => '',
+    'slide_caption' => array(
+      'field_file_image_alt_text' => 0,
+      'field_file_image_title_text' => 0,
+    ),
+    'view_mode' => '',
+    'media_switch' => '',
+    'iframe_lazy' => 0,
+    'aspect_ratio' => '',
+    'mousewheel' => 0,
+    'markup' => 0,
+    'cache' => '',
+    'override' => 0,
+    'overridables' => array(
+      'arrows' => 0,
+      'autoplay' => 0,
+      'dots' => 0,
+      'draggable' => 0,
+    ),
+    'current_view_mode' => 'media_link',
+  );
+  $export['document__media_link__file_field_slick'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__media_link__media_oembed';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'width' => '640',
+    'height' => '360',
+  );
+  $export['document__media_link__media_oembed'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__media_link__media_oembed_thumbnail';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'image_style' => '',
+  );
+  $export['document__media_link__media_oembed_thumbnail'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__media_link__media_ustream_video';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'width' => '640',
+    'height' => '393',
+    'autoplay_live' => 0,
+    'autoplay_recorded' => 0,
+    'new_player' => 1,
+    'player_color' => '',
+    'custom_color' => '',
+  );
+  $export['document__media_link__media_ustream_video'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__media_original__file_field_file_default';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['document__media_original__file_field_file_default'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__media_original__file_field_file_download_link';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'text' => 'Download [file:name]',
+  );
+  $export['document__media_original__file_field_file_download_link'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__media_original__file_field_file_table';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['document__media_original__file_field_file_table'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__media_original__file_field_file_url_plain';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['document__media_original__file_field_file_url_plain'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__media_original__file_field_media_large_icon';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'image_style' => '',
+  );
+  $export['document__media_original__file_field_media_large_icon'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__media_original__file_field_slick';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'optionset' => 'default',
+    'skin' => '',
+    'optionset_thumbnail' => '',
+    'skin_thumbnail' => '',
+    'skin_arrows' => '',
+    'skin_dots' => '',
+    'asnavfor_main' => '',
+    'asnavfor_thumbnail' => '',
+    'asnavfor_auto' => 0,
+    'image_style' => '',
+    'thumbnail_style' => '',
+    'thumbnail_hover' => 0,
+    'slide_layout' => '',
+    'thumbnail_caption' => '',
+    'slide_overlay' => '',
+    'slide_title' => '',
+    'slide_link' => '',
+    'slide_classes' => '',
+    'slide_caption' => array(
+      'field_file_image_alt_text' => 0,
+      'field_file_image_title_text' => 0,
+    ),
+    'view_mode' => '',
+    'media_switch' => '',
+    'iframe_lazy' => 0,
+    'aspect_ratio' => '',
+    'mousewheel' => 0,
+    'markup' => 0,
+    'cache' => '',
+    'override' => 0,
+    'overridables' => array(
+      'arrows' => 0,
+      'autoplay' => 0,
+      'dots' => 0,
+      'draggable' => 0,
+    ),
+    'current_view_mode' => 'media_original',
+  );
+  $export['document__media_original__file_field_slick'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__media_original__media_oembed';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'width' => '640',
+    'height' => '360',
+  );
+  $export['document__media_original__media_oembed'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__media_original__media_oembed_thumbnail';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'image_style' => '',
+  );
+  $export['document__media_original__media_oembed_thumbnail'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__media_original__media_ustream_video';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'width' => '640',
+    'height' => '393',
+    'autoplay_live' => 0,
+    'autoplay_recorded' => 0,
+    'new_player' => 1,
+    'player_color' => '',
+    'custom_color' => '',
+  );
+  $export['document__media_original__media_ustream_video'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__preview__file_field_file_download_link';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'text' => 'Download [file:name]',
+  );
+  $export['document__preview__file_field_file_download_link'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__preview__file_field_file_table';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['document__preview__file_field_file_table'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__preview__file_field_file_url_plain';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['document__preview__file_field_file_url_plain'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__preview__file_field_slick';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'optionset' => 'default',
+    'skin' => '',
+    'optionset_thumbnail' => '',
+    'skin_thumbnail' => '',
+    'skin_arrows' => '',
+    'skin_dots' => '',
+    'asnavfor_main' => '',
+    'asnavfor_thumbnail' => '',
+    'asnavfor_auto' => 0,
+    'image_style' => '',
+    'thumbnail_style' => '',
+    'thumbnail_hover' => 0,
+    'slide_layout' => '',
+    'thumbnail_caption' => '',
+    'slide_overlay' => '',
+    'slide_title' => '',
+    'slide_link' => '',
+    'slide_classes' => '',
+    'slide_caption' => array(
+      'field_file_image_alt_text' => 0,
+      'field_file_image_title_text' => 0,
+    ),
+    'view_mode' => '',
+    'media_switch' => '',
+    'iframe_lazy' => 0,
+    'aspect_ratio' => '',
+    'mousewheel' => 0,
+    'markup' => 0,
+    'cache' => '',
+    'override' => 0,
+    'overridables' => array(
+      'arrows' => 0,
+      'autoplay' => 0,
+      'dots' => 0,
+      'draggable' => 0,
+    ),
+    'current_view_mode' => 'preview',
+  );
+  $export['document__preview__file_field_slick'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__preview__media_oembed';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'width' => '640',
+    'height' => '360',
+  );
+  $export['document__preview__media_oembed'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__preview__media_ustream_video';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'width' => '640',
+    'height' => '393',
+    'autoplay_live' => 0,
+    'autoplay_recorded' => 0,
+    'new_player' => 1,
+    'player_color' => '',
+    'custom_color' => '',
+  );
+  $export['document__preview__media_ustream_video'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__teaser__file_field_file_download_link';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'text' => 'Download [file:name]',
+  );
+  $export['document__teaser__file_field_file_download_link'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__teaser__file_field_file_table';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['document__teaser__file_field_file_table'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__teaser__file_field_file_url_plain';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['document__teaser__file_field_file_url_plain'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__teaser__file_field_media_large_icon';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'image_style' => '',
+  );
+  $export['document__teaser__file_field_media_large_icon'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__teaser__file_field_slick';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'optionset' => 'default',
+    'skin' => '',
+    'optionset_thumbnail' => '',
+    'skin_thumbnail' => '',
+    'skin_arrows' => '',
+    'skin_dots' => '',
+    'asnavfor_main' => '',
+    'asnavfor_thumbnail' => '',
+    'asnavfor_auto' => 0,
+    'image_style' => '',
+    'thumbnail_style' => '',
+    'thumbnail_hover' => 0,
+    'slide_layout' => '',
+    'thumbnail_caption' => '',
+    'slide_overlay' => '',
+    'slide_title' => '',
+    'slide_link' => '',
+    'slide_classes' => '',
+    'slide_caption' => array(
+      'field_file_image_alt_text' => 0,
+      'field_file_image_title_text' => 0,
+    ),
+    'view_mode' => '',
+    'media_switch' => '',
+    'iframe_lazy' => 0,
+    'aspect_ratio' => '',
+    'mousewheel' => 0,
+    'markup' => 0,
+    'cache' => '',
+    'override' => 0,
+    'overridables' => array(
+      'arrows' => 0,
+      'autoplay' => 0,
+      'dots' => 0,
+      'draggable' => 0,
+    ),
+    'current_view_mode' => 'teaser',
+  );
+  $export['document__teaser__file_field_slick'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__teaser__media_oembed_thumbnail';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'image_style' => '',
+  );
+  $export['document__teaser__media_oembed_thumbnail'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__teaser__media_ustream_video';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'width' => '640',
+    'height' => '393',
+    'autoplay_live' => 0,
+    'autoplay_recorded' => 0,
+    'new_player' => 1,
+    'player_color' => '',
+    'custom_color' => '',
+  );
+  $export['document__teaser__media_ustream_video'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__wysiwyg__file_field_file_default';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['document__wysiwyg__file_field_file_default'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__wysiwyg__file_field_file_download_link';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'text' => 'Download [file:name]',
+  );
+  $export['document__wysiwyg__file_field_file_download_link'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__wysiwyg__file_field_file_table';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['document__wysiwyg__file_field_file_table'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__wysiwyg__file_field_file_url_plain';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = '';
+  $export['document__wysiwyg__file_field_file_url_plain'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__wysiwyg__file_field_media_large_icon';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'image_style' => '',
+  );
+  $export['document__wysiwyg__file_field_media_large_icon'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__wysiwyg__file_field_slick';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'optionset' => 'default',
+    'skin' => '',
+    'optionset_thumbnail' => '',
+    'skin_thumbnail' => '',
+    'skin_arrows' => '',
+    'skin_dots' => '',
+    'asnavfor_main' => '',
+    'asnavfor_thumbnail' => '',
+    'asnavfor_auto' => 0,
+    'image_style' => '',
+    'thumbnail_style' => '',
+    'thumbnail_hover' => 0,
+    'slide_layout' => '',
+    'thumbnail_caption' => '',
+    'slide_overlay' => '',
+    'slide_title' => '',
+    'slide_link' => '',
+    'slide_classes' => '',
+    'slide_caption' => array(
+      'field_file_image_alt_text' => 0,
+      'field_file_image_title_text' => 0,
+    ),
+    'view_mode' => '',
+    'media_switch' => '',
+    'iframe_lazy' => 0,
+    'aspect_ratio' => '',
+    'mousewheel' => 0,
+    'markup' => 0,
+    'cache' => '',
+    'override' => 0,
+    'overridables' => array(
+      'arrows' => 0,
+      'autoplay' => 0,
+      'dots' => 0,
+      'draggable' => 0,
+    ),
+    'current_view_mode' => 'wysiwyg',
+  );
+  $export['document__wysiwyg__file_field_slick'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__wysiwyg__media_oembed';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'width' => '640',
+    'height' => '360',
+  );
+  $export['document__wysiwyg__media_oembed'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__wysiwyg__media_oembed_thumbnail';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'image_style' => '',
+  );
+  $export['document__wysiwyg__media_oembed_thumbnail'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
+  $file_display->name = 'document__wysiwyg__media_ustream_video';
+  $file_display->weight = 0;
+  $file_display->status = FALSE;
+  $file_display->settings = array(
+    'width' => '640',
+    'height' => '393',
+    'autoplay_live' => 0,
+    'autoplay_recorded' => 0,
+    'new_player' => 1,
+    'player_color' => '',
+    'custom_color' => '',
+  );
+  $export['document__wysiwyg__media_ustream_video'] = $file_display;
+
+  $file_display = new stdClass();
+  $file_display->api_version = 1;
   $file_display->name = 'image__default__file_field_file_download_link';
   $file_display->weight = 0;
   $file_display->status = FALSE;

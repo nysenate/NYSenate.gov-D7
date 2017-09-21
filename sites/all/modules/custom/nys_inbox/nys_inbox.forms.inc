@@ -450,7 +450,7 @@ function nys_inbox_form_submit($form, &$form_state) {
 
   else if (isset($form_state['input']['op']) && $form_state['input']['op'] == 'Message') {
 
-    if ($form_state['input']['check_all'] == 1 && $form_state['input']['in_district'] != 1) {
+    if ((isset($form_state['input']['check_all']) && $form_state['input']['check_all'] == 1) && (isset($form_state['input']['in_district']) && $form_state['input']['in_district'] != 1)) {
 
 
       $queryArgs = array(
@@ -639,25 +639,25 @@ function nys_inbox_message_form($form, &$form_state, $recipients = '', $subject 
   );
 
   if (
-      ($_GET['context'] == 'senators_constituents_tab')
+      (!empty( $_GET['context']) && $_GET['context'] == 'senators_constituents_tab')
       ||
-      ($_GET['context'] == 'senators_issues_tab')
+      (!empty( $_GET['context']) && $_GET['context'] == 'senators_issues_tab')
       ||
-      ($_GET['context'] == 'senators_petitions_tab')
+      (!empty( $_GET['context']) && $_GET['context'] == 'senators_petitions_tab')
       ||
-      ($_GET['context'] == 'senators_questionnaires_tab')
+      (!empty( $_GET['context']) && $_GET['context'] == 'senators_questionnaires_tab')
       ||
-      ($_GET['context'] == 'senators_bills_tab')
+      (!empty( $_GET['context']) && $_GET['context'] == 'senators_bills_tab')
     ) {
     $to = nys_inbox_get_to_value_constituents_tab_context();
   }
-  else if ($_GET['context'] == 'message_senator') {
+  else if (!empty( $_GET['context']) && $_GET['context'] == 'message_senator') {
     $senator_uid = user_get_senator_uid($user);
     $form['to']['#default_value'] = strip_tags(theme('nys_dashboard_user_link', array('uid' => $senator_uid)));
     $form['to']['#disabled'] = TRUE;
     $form['recipient_uid']['#value'] = array($senator_uid);
   }
-  else if (in_array($_GET['context'], array('bill_vote', 'following_bill'))) {
+  else if (!empty( $_GET['context']) && in_array($_GET['context'], array('bill_vote', 'following_bill'))) {
     $senator_uid = user_get_senator_uid($user);
     $form['to']['#default_value'] = strip_tags(theme('nys_dashboard_user_link', array('uid' => $senator_uid)));
     $form['to']['#disabled'] = TRUE;
@@ -702,7 +702,7 @@ function nys_inbox_message_form($form, &$form_state, $recipients = '', $subject 
     $form['subject']['#disabled'] = TRUE;
     $form['recipient_uid']['#value'] = array($senator_uid);
   }
-  else if ($_GET['context'] == 'issue') {
+  else if (!empty( $_GET['context']) && $_GET['context'] == 'issue') {
     $senator_uid = user_get_senator_uid($user);
     $form['to']['#default_value'] = strip_tags(theme('nys_dashboard_user_link', array('uid' => $senator_uid)));
     $form['to']['#disabled'] = TRUE;
@@ -712,7 +712,7 @@ function nys_inbox_message_form($form, &$form_state, $recipients = '', $subject 
     $form['subject']['#disabled'] = TRUE;
     $form['recipient_uid']['#value'] = array($senator_uid);
   }
-  else if ($_GET['context'] == 'following_committee') {
+  else if (!empty( $_GET['context']) && $_GET['context'] == 'following_committee') {
     $senator_uid = user_get_senator_uid($user);
     $form['to']['#default_value'] = strip_tags(theme('nys_dashboard_user_link', array('uid' => $senator_uid)));
     $form['to']['#disabled'] = TRUE;
@@ -722,7 +722,7 @@ function nys_inbox_message_form($form, &$form_state, $recipients = '', $subject 
     $form['subject']['#disabled'] = TRUE;
     $form['recipient_uid']['#value'] = array($senator_uid);
   }
-  else if ($_GET['context'] == 'inbox') {
+  else if (!empty( $_GET['context']) && $_GET['context'] == 'inbox') {
     $to = nys_inbox_get_to_value_inbox_tab_context();
   }
 

@@ -36,13 +36,21 @@ function nys_variables_image_default_styles() {
   $styles['1280x510'] = array(
     'label' => '1280x510',
     'effects' => array(
-      7 => array(
+      11 => array(
         'name' => 'image_scale_and_crop',
         'data' => array(
           'width' => 1280,
           'height' => 510,
+          'retinafy' => 1,
         ),
         'weight' => 1,
+      ),
+      18 => array(
+        'name' => 'image_style_quality',
+        'data' => array(
+          'quality' => 85,
+        ),
+        'weight' => 2,
       ),
     ),
   );
@@ -51,13 +59,21 @@ function nys_variables_image_default_styles() {
   $styles['160x160'] = array(
     'label' => '160x160',
     'effects' => array(
-      3 => array(
+      25 => array(
         'name' => 'image_scale_and_crop',
         'data' => array(
           'width' => 160,
           'height' => 160,
+          'retinafy' => 1,
         ),
         'weight' => 1,
+      ),
+      26 => array(
+        'name' => 'image_style_quality',
+        'data' => array(
+          'quality' => 100,
+        ),
+        'weight' => 2,
       ),
     ),
   );
@@ -66,13 +82,21 @@ function nys_variables_image_default_styles() {
   $styles['200x125'] = array(
     'label' => '200x125',
     'effects' => array(
-      4 => array(
+      19 => array(
         'name' => 'image_scale_and_crop',
         'data' => array(
           'width' => 200,
           'height' => 125,
+          'retinafy' => 1,
         ),
         'weight' => 1,
+      ),
+      20 => array(
+        'name' => 'image_style_quality',
+        'data' => array(
+          'quality' => 100,
+        ),
+        'weight' => 2,
       ),
     ),
   );
@@ -81,13 +105,21 @@ function nys_variables_image_default_styles() {
   $styles['280x280'] = array(
     'label' => '280x280',
     'effects' => array(
-      1 => array(
+      27 => array(
         'name' => 'image_scale_and_crop',
         'data' => array(
           'width' => 280,
           'height' => 280,
+          'retinafy' => 1,
         ),
         'weight' => 1,
+      ),
+      28 => array(
+        'name' => 'image_style_quality',
+        'data' => array(
+          'quality' => 100,
+        ),
+        'weight' => 2,
       ),
     ),
   );
@@ -96,13 +128,21 @@ function nys_variables_image_default_styles() {
   $styles['360x200'] = array(
     'label' => '360x200',
     'effects' => array(
-      2 => array(
+      29 => array(
         'name' => 'image_scale_and_crop',
         'data' => array(
           'width' => 360,
           'height' => 200,
+          'retinafy' => 1,
         ),
         'weight' => 1,
+      ),
+      30 => array(
+        'name' => 'image_style_quality',
+        'data' => array(
+          'quality' => 100,
+        ),
+        'weight' => 2,
       ),
     ),
   );
@@ -111,13 +151,21 @@ function nys_variables_image_default_styles() {
   $styles['380x215'] = array(
     'label' => '380x215',
     'effects' => array(
-      3 => array(
+      31 => array(
         'name' => 'image_scale_and_crop',
         'data' => array(
           'width' => 380,
           'height' => 215,
+          'retinafy' => 1,
         ),
         'weight' => 1,
+      ),
+      32 => array(
+        'name' => 'image_style_quality',
+        'data' => array(
+          'quality' => 100,
+        ),
+        'weight' => 2,
       ),
     ),
   );
@@ -143,13 +191,21 @@ function nys_variables_image_default_styles() {
   $styles['680x510'] = array(
     'label' => '680x510',
     'effects' => array(
-      2 => array(
+      16 => array(
         'name' => 'image_scale_and_crop',
         'data' => array(
           'width' => 680,
           'height' => 510,
+          'retinafy' => 1,
         ),
         'weight' => 1,
+      ),
+      17 => array(
+        'name' => 'image_style_quality',
+        'data' => array(
+          'quality' => 92,
+        ),
+        'weight' => 2,
       ),
     ),
   );
@@ -158,13 +214,21 @@ function nys_variables_image_default_styles() {
   $styles['760x377'] = array(
     'label' => '760x377',
     'effects' => array(
-      1 => array(
+      13 => array(
         'name' => 'image_scale_and_crop',
         'data' => array(
           'width' => 760,
           'height' => 377,
+          'retinafy' => 1,
         ),
         'weight' => 1,
+      ),
+      15 => array(
+        'name' => 'image_style_quality',
+        'data' => array(
+          'quality' => 92,
+        ),
+        'weight' => 2,
       ),
     ),
   );

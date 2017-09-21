@@ -1137,7 +1137,12 @@ function media_get_thumbnail_preview($file, $link = FALSE, $view_mode = 'preview
  */
 function media_file_validate_types($file, $types) {
   $errors = array();
-  if (!in_array(file_get_type($file), $types)) {
+
+  if (!function_exists('file_entity_get_filetype_candidates')) {
+    module_load_include('inc', 'file_entity', 'file_entity.pages');
+  }
+  $file_candidates = array_keys(file_entity_get_filetype_candidates($file));
+  if (!array_intersect($file_candidates, $types)) {
     $errors[] = t('Only the following types of files are allowed to be uploaded: %types-allowed', array('%types-allowed' => implode(', ', $types)));
   }
 
@@ -1215,10 +1220,11 @@ function media_set_browser_params() {
 
     // Filter out everything except a whitelist of known safe options.
     $safe_options = array(
-      'activePlugins',
+      'enabledPlugins',
       'fid',
       'id',
       'multiselect',
+      'field',
       'options',
       'plugins',
       'render',
@@ -1227,9 +1233,9 @@ function media_set_browser_params() {
     );
     $params = array_intersect_key($params, array_flip($safe_options));
 
-    // Retrieve the security sensitive options from the cache.
+    // If the cache is present, use its values instead of the GET parameters.
     if (!empty($params['options']) && is_string($params['options']) && $options = cache_get('media_options:' . $params['options'], 'cache_form')) {
-      $params = array_merge($options->data, $params);
+      $params = $options->data;
     }
 
     // Transform text 'true' and 'false' to actual booleans.
