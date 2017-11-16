@@ -1,0 +1,35 @@
+diff --git a/advpoll.module b/advpoll.module
+index b43fee1..0895f81 100644
+--- a/advpoll.module
++++ b/advpoll.module
+@@ -792,7 +792,7 @@ function advpoll_form_submit($form, &$form_state) {
+  * cast more votes.
+  */
+ function advpoll_form_submit_check($data, $nid) {
+-  if ($data->mode === 'cookie' && isset($_COOKIE['advpoll' . $nid])) {
++  if ($data->mode === 'cookie' && isset($_COOKIE['SESSadvpoll' . $nid])) {
+     return t('You have already voted on this poll.');
+   }
+
+diff --git a/includes/advpoll_voteapi.inc b/includes/advpoll_voteapi.inc
+index 75d031a..61bd4c4 100644
+--- a/includes/advpoll_voteapi.inc
++++ b/includes/advpoll_voteapi.inc
+@@ -248,7 +248,7 @@ function advpoll_user_eligibility($node) {
+     }
+   }
+
+-  if ($data->mode === 'cookie' && isset($_COOKIE[$node->type . $node->nid])) {
++  if ($data->mode === 'cookie' && isset($_COOKIE['SESS' . $node->type . $node->nid])) {
+     return FALSE;
+   }
+
+@@ -333,7 +333,7 @@ function advpoll_add_votes($vote) {
+        */
+       global $cookie_domain;
+
+-      setrawcookie($vote['nodetype'] . $vote['nid'], 'vote', time() + (60 * $vote['duration']), '/', $cookie_domain);
++      setrawcookie('SESS' . $vote['nodetype'] . $vote['nid'], 'vote', time() + (86400 * $vote['duration']), '/', $cookie_domain);
+     }
+
+     $votes = array(

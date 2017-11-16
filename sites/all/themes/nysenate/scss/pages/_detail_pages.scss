@@ -20,6 +20,13 @@
   font-size: 14px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  span {
+    text-transform: capitalize;
+    clear: both;
+    line-height: 1.4em;
+    letter-spacing: .01em;
+    display: block;
+  }
 }
 
 .c-detail--descript {

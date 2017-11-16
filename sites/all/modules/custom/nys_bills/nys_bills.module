@@ -330,7 +330,7 @@ function nys_bills_clear_bill_versions_cache($node) {
   // Clear the cache for the 'previous version' query results as well
   // as the 'bill versions' query results.
   $cache_id_identifier = $session . '-' . drupal_html_class($print_no);
-  $bill_versions_cache = 'nysenate_bill_versions_bill-' . $cache_id_identifier;
+  $bill_versions_cache = 'nys_bills-versions_bill-' . $cache_id_identifier;
   cache_clear_all($bill_versions_cache, 'cache');
 }
 
@@ -506,3 +506,43 @@ function nys_bills_send_private_message($message) {
 
   return $bills_flag_message;
 }
+
+function nys_bills_get_bill_versions($node_type, $bill_base_print_no, $bill_session_year) {
+  // We're using drupal_html_class() ensure that parameters
+  // have no spaces in them.
+  $cid = 'nys_bills-versions-' .
+    drupal_html_class($node_type) . '-' .
+    drupal_html_class($bill_session_year) . '-' .
+    drupal_html_class($bill_base_print_no);
+
+  // If data is cached, return cached data.
+  if ($cache = cache_get($cid)) {
+    return $cache->data;
+  }
+
+  $results = [];
+  if ($bill_base_print_no && $bill_session_year && $node_type) {
+    $query = "SELECT n.title, n.nid, os.field_ol_session_value " .
+      "FROM field_data_field_ol_base_print_no pn JOIN node n " .
+      "ON n.nid = pn.entity_id " .
+      "JOIN field_data_field_ol_session os " .
+      "ON os.entity_id = pn.entity_id AND os.bundle = pn.bundle " .
+      "WHERE pn.field_ol_base_print_no_value = :base_print_no " .
+      "AND pn.bundle = :bundle AND os.field_ol_session_value = :session_year;";
+    $queryargs = [
+      ':base_print_no' => $bill_base_print_no,
+      ':bundle' => $node_type,
+      ':session_year' => $bill_session_year,
+    ];
+
+    $db_results = db_query($query, $queryargs);
+    foreach ($db_results as $key => $r) {
+      $results[] = ['nid' => $r->nid, 'title' => $r->title];
+    }
+  }
+
+  // Cache data based on cache ID that was set above.
+  cache_set($cid, $results, 'cache', CACHE_PERMANENT);
+  return $results;
+}
+

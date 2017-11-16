@@ -6,6 +6,10 @@ module_load_include('inc', 'nys_legislation_spotcheck');
 function nys_legislation_spotcheck_handle_spotcheck_dump($content_type, $year) {
   $querier = nys_legislation_spotcheck_get_dump_querier($content_type);
 
+  if ($querier->isSessionBased()) {
+    $year = nys_legislation_spotcheck_get_session_year($year);
+  }
+
   $limit = 100;
   $total = $querier->getDumpTotalCount($year);
   $timestamp = time();
@@ -51,23 +55,23 @@ function nys_legislation_spotcheck_send_dump($dump_data) {
 
   echo "\n[POST] ${qa_url}\n";
 
-  $options = [
-    'headers' => [
-      'Content-Type' => 'application/json',
-      'charset' => 'UTF-8',
-    ],
-    'method' => 'POST',
-    'data' => $data,
-  ];
+  $curl = curl_init($qa_url);
+  curl_setopt($curl, CURLOPT_HEADER, 1);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+  curl_setopt($curl, CURLOPT_HTTPHEADER, ["Content-type: application/json; charset=UTF-8"]);
+  curl_setopt($curl, CURLOPT_POST, TRUE);
+  curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
 
-  $result = drupal_http_request($qa_url, $options);
+  $json_response = curl_exec($curl);
+  $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-  $result_message = "Result: [$result->code] $result->status_message\n";
-
-  if ($result->code >= 200 && $result->code < 300) {
-    echo $result_message;
+  if ($status != 200 && $status != 201) {
+    die("\nError: call to URL $qa_url failed with status $status, response $json_response, " .
+      "curl_error " . curl_error($curl) . ", curl_errno " . curl_errno($curl));
   }
   else {
-    throw new Exception("Sending of spotcheck dump failed\n$result_message", $result->code);
+    echo "\nStatus Code: ${status}\n";
+    echo "\nResponse: ${json_response}";
   }
+  curl_close($curl);
 }

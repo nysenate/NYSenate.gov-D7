@@ -2,5 +2,6 @@ composer.phar
 composer.lock
 bin
 vendor
+node_modules
 behat.local.yml
 *.rej

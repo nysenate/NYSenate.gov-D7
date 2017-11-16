@@ -14,7 +14,6 @@ function nys_sage_schema() {
    * the module install routines to run without running up against the
    * existing table owned by nys_registrations.
    */
-  /*
   $schema['nys_sage_log'] = array(
     'description' => 'Store for raw returns from calls to SAGE API.',
     'fields' => array(
@@ -89,8 +88,6 @@ function nys_sage_schema() {
     'primary key' => array('sage_id'),
   );
   return $schema;
-*/
-  return array();
 }
 
 function nys_sage_install() {

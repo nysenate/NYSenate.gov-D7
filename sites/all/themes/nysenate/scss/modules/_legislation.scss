@@ -199,11 +199,22 @@ h3.c-bill-num {
   margin: 0;
   font-family: "Proxima Nova Regular";
   font-size: 12px;
-
   &:before {
     content: "|";
     display: inline-block;
     margin-right: 0.5em;
+  }
+}
+
+.c-block-legislation-featured {
+  .c-bill-update--location {
+    a {
+      color: #fff;
+      border-bottom: solid 0.05em #fff;
+      &:hover {
+        border-bottom: none;
+      }
+  }
   }
 }
 
@@ -1200,3 +1211,24 @@ TABLE.c-bill--actions-table, TABLE.c-bill--actions-table TBODY TR TD {
 .trad_green .c-quote--content a { color: $trad_green_lgt; }
 .cont_green .c-quote--content a { color: $cont_green_lgt; }
 
+// Color change for a links in associated bill teaser blocks
+
+.trad_blue, .cont_blue, .purple, .trad_red, .cont_red, .orange, .trad_green, .cont_green {
+  .c-block-legislation-featured {
+    .c-bill-update--location {
+      display: inline;
+      line-height: 1.3;
+      a {
+      color: #fff;
+      border-bottom: solid 0.05em #fff;
+        &:hover {
+          border-bottom: none;
+        }
+      }
+    }
+    .c-bill-update--date {
+      display: inline;
+      line-height: 1.3;
+    }
+  }
+}

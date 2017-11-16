@@ -2,14 +2,13 @@
 
 use Drupal\DrupalExtension\Context\RawDrupalContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Behat\Gherkin\Node\PyStringNode;
-use Behat\Gherkin\Node\TableNode;
 
 /**
  * Defines application features from the specific context.
  */
 class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext {
 
+  use MinkFieldRandomizer\Context\FilterContext;
   /**
    * Initializes context.
    *
@@ -18,6 +17,32 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
    * context constructor through behat.yml.
    */
   public function __construct() {
+  }
+
+  /**
+   * Copied from MinkContext.
+   *
+   * MinkFieldRandomizer assumes we're extending MinkContext and this method
+   * will be available, but we're not, we're extending RawMinkContext.
+   *
+   * @see Behat\MinkExtension\Context\MinkContext::fillField()
+   */
+  protected function fillField($field, $value) {
+    $field = $this->fixStepArgument($field);
+    $value = $this->fixStepArgument($value);
+    $this->getSession()->getPage()->fillField($field, $value);
+  }
+
+  /**
+   * Copied from MinkContext.
+   *
+   * MinkFieldRandomizer assumes we're extending MinkContext and this method
+   * will be available, but we're not, we're extending RawMinkContext.
+   *
+   * @see Behat\MinkExtension\Context\MinkContext::fixStepArgument()
+   */
+  protected function fixStepArgument($argument) {
+    return str_replace('\\"', '"', $argument);
   }
 
   /**

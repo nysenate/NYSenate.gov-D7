@@ -9,12 +9,16 @@
   }
 }
 
-form.entitytype-earth_day-form, form.entitytype-earth_day_preview-form {
+form.entitytype-earth_day-form, form.entitytype-earth_day_preview-form, form.entitytype-school_submissions-form, form.entitytype-hannon_photo_contest-form {
   margin-bottom: 10%;
   button#edit-submit {
     margin: 0 auto;
     margin-top: 5%;
     @extend .icon-before__check;
+     &:focus {
+        color: #fff;
+        background: $blue01;
+      }
   }
   input[type="file"] {
     width: 50%;
@@ -24,11 +28,14 @@ form.entitytype-earth_day-form, form.entitytype-earth_day_preview-form {
   }
   .form-item .description, .fieldset-description {
     text-transform: none;
-    font-size: 1.2em;
+    font-size: 12px;
     color: #2B6A90;
-    font-family: 'Proxima Nova Semibold'
+    font-family: 'Proxima Nova Semibold';
+    strong {
+      font-family: 'Proxima Nova Semibold';
+    }
   }
-    .form-item .form-type-managed-file .description {
+  .form-item .form-type-managed-file .description {
       font-size: .9em!important;
       padding-top: 3%;
     }
@@ -38,7 +45,21 @@ form.entitytype-earth_day-form, form.entitytype-earth_day_preview-form {
   button[id*="add-more"] {
     @extend .icon-before__plus;
   }
-  
+  button {
+    &:focus {
+        color: #fff;
+        background: $blue01;
+      }
+  }
+}
+
+.field-name-field-school-student-full-name {
+  .form-item .description {
+    margin-bottom: 18px;
+  }
+  input.text-full {
+    margin-bottom: 3px;
+  }
 }
 
 form.has-nys-captcha.entityform.entitytype-earth_day-form, form.has-nys-captcha.entityform.entitytype-earth_day_preview-form{
@@ -48,7 +69,7 @@ form.has-nys-captcha.entityform.entitytype-earth_day-form, form.has-nys-captcha.
   }
 }
 
-.page-eform-submit-earth-day {
+.page-eform-submit-earth-day, .page-eform-submit-school-submissions {
   div.error {
    background-image: none!important;
   }
@@ -70,7 +91,7 @@ form.has-nys-captcha.entityform.entitytype-earth_day-form, form.has-nys-captcha.
   font-size: .7em;
 }
 
-button[id*="edit-field-school-stud-earthday-subm"] {
+button[id*="edit-field-school-stud-earthday-subm"], button[id*="edit-field-school-student-submissions"]  {
     padding-top: .5rem;
     padding-right: 1rem;
     padding-bottom: .55rem;
@@ -84,7 +105,7 @@ button[id*="edit-field-school-stud-earthday-subm"] {
 
 //display settings for submissions
 
-.entityform-earth-day, .entityform-earth-day-preview {
+.entityform-earth-day, .entityform-earth-day-preview, .entityform-hannon-photo-contest.view-mode-review, .entityform-hannon-photo-contest.view-mode-confirmation, .entityform-hannon-photo-contest.view-mode-full, .entityform-school-submissions, {
   margin-bottom: 10%;
   p.form-label {
     font-family: 'Proxima Nova SemiBold';
@@ -92,10 +113,15 @@ button[id*="edit-field-school-stud-earthday-subm"] {
   p.form-results {
     font-family: 'Proxima Nova Regular';
     padding-left: 250px;
+    margin-top: 0;
   }
   p.label-inline {
     float: left;
     padding-right: 3em;
+    font-family: 'Proxima Nova SemiBold';
+    margin-top: 0;
+  }
+  p.label-above {
     font-family: 'Proxima Nova SemiBold';
   }
   h3.label-above {
@@ -119,6 +145,31 @@ button[id*="edit-field-school-stud-earthday-subm"] {
   }
   .entity-field-collection-item {
     margin-top: 5%;
+    padding-bottom: 3%;
+    border-bottom: 1px dotted $grey01;
+    width: 75%;
+  }
+}
+
+.entityform-school-submissions {
+  span.file {
+    line-height: 1;
+    a {
+      font-size: 18px;
+    }
+  }
+  img {
+      padding-left: 0;
+    }
+  p.label-above {
+    margin: 0 0 12px;
+  }
+}
+.field-name-field-school-submission-upload {
+  .file-widget {
+    .file-icon {
+      margin-top: .75em;
+    }
   }
 }
 
@@ -129,7 +180,7 @@ fieldset[id*="edit-field-school-address-und"] {
 }
 //SENATOR RESULTS PAGES
 
-.pane-node-field-student-earthday-letter h2 {
+.pane-node-field-student-earthday-letter h2, h1.pane-title {
     margin: 0 0 30px;
     font-size: 48px;
     color: #444444;
@@ -196,4 +247,182 @@ ul.chosen-results {
       color: $grey03;
       font-family: 'Proxima Nova Regular';
   }
+}
+
+//HANNON PHOTO CONTEST FORM
+form.entitytype-hannon_photo_contest-form {
+  margin-bottom: 36px;
+  .form-item-field-hannon-home-address-und-0-country {
+    display: none;
+  }
+  .form-type-managed-file {
+    min-height: 100px;
+  }
+  button#edit-field-hannon-photo-upload-und-0-upload-button{
+    display: none;
+  }
+  input[type="file"] {
+    width: 100%;
+    font-size: 150%;
+  }
+  .form-item.form-type-managed-file {
+    &.description {
+      margin-top: 18px;
+      color: $blue01;
+      font-size: 1em;
+    }
+  }
+  .form-item #edit-field-agreement {
+    &.description {
+      margin-top: -6px;
+    }
+  }
+}
+
+#edit-field-hannon-photo-upload {
+  &.description {
+    margin-top: 18px!important;
+  }
+}
+
+.entityform-hannon-photo-contest.view-mode-review, .entityform-hannon-photo-contest.view-mode-full, .entityform-hannon-photo-contest.view-mode-confirmation {
+  img {
+    padding-left: 0;
+    clear: both;
+    padding-top: 16px;
+  }
+  .vcard {
+    padding: 0 47px;
+  }
+
+}
+
+.page-hannon-photo-contest-submissions {
+  @media #{$tablet} {
+  .l-row--main {
+    max-width: inherit;
+    width: 90%;
+  }
+  }
+  @media #{$desktop} {
+  .l-row--main {
+    max-width: inherit;
+    width: 90%;
+  }
+  }
+  @media #{$large} {
+  .l-row--main {
+    max-width: 1280px;
+    width: 90%;
+  }
+  }
+  table {
+    width: 100%;
+    margin-top: 24px;
+  }
+  .views-submit-button, .views-reset-button {
+    margin: 26px 0 0 24px;
+    
+  }
+  button {
+    padding: .55rem .75rem;
+    &:focus {
+        color: #fff;
+        //border: 2px solid $blue01;
+        background: $blue01;
+      }
+  }
+  #edit-field-hannon-school-name-target-id-wrapper, #edit-field-hannon-category-value-wrapper {
+    margin-right: 18px;
+  }
+  #edit-field-hannon-winner-types-value-wrapper, #edit-field-hannon-star-rating-value-wrapper {
+    clear: both;
+    margin-right: 18px;
+    .form-type-bef-checkbox, .form-type-radio {
+      float: left;
+    }
+    &.description {
+      clear: both;
+    }
+  }
+  input#edit-field-hannon-last-name-value{
+    //height: 44px;
+  }
+  .view-filters select {
+    min-height: 35px;
+  }
+  .vcard {
+    display: inline-block;
+    margin: 0;
+    border: none;
+    font-size: 0.875rem;
+    color: $grey03;
+    font-family: 'Proxima Nova Regular';
+    padding: 0;
+  }
+  fieldset {
+    width: 25%;
+    border: none;
+    padding: 0;
+    .fieldset-legend {
+      display: none;
+    }
+  }
+ 
+}
+
+
+.view-student-hannon-photo-contest {
+  .feed-icon {
+    width: 5%;
+    margin-bottom: 5%;
+  }
+}
+
+
+.form-item.form-type-managed-file.form-item-field-hannon-photo-upload-und-0 div.description {
+  margin-top: 18px;
+}
+.form-item.form-type-checkbox.form-item-field-agreement-und div.description {
+  margin-top: -6px;
+  margin-left: 1.8em;
+}
+
+#edit-field-hannon-photo-upload-und-0-remove-button {
+  margin-left: 40px;
+}
+
+#edit-field-school-teachers-email input, #edit-field-hannon-school-name-und {
+  margin-bottom: 3px;
+}
+
+
+.field-type-list-boolean.field-name-field-agreement {
+  border: none;
+  padding-top: 2%;
+  input{
+    font-size: 54px;
+    margin-top: .4rem;
+  }
+  label.option {
+    font-size: 24px;
+    line-height: 1.1em;
+    margin-top: -34px;
+    margin-left: 24px;
+    text-transform: none;
+    font-weight: 600;
+  }
+  label .form-required {
+    font-size: 36px;
+  }
+}
+
+.paragraphs-item-pg-entity-form h2 {
+  display: none;
+}
+
+.pane-student-submissions .view-content {
+    border-bottom: 1px solid #666666;
+    padding: 0 0 5%;
+    margin-bottom: 10%
 }

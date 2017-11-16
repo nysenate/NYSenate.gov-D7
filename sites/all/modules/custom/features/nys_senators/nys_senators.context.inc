@@ -19,7 +19,7 @@ function nys_senators_context_default_contexts() {
   $context->conditions = array(
     'assigned_senator' => array(
       'values' => array(
-        'node_type' => 'a:29:{s:5:"event";s:5:"event";s:7:"article";s:7:"article";s:11:"in_the_news";s:11:"in_the_news";s:13:"press_release";s:13:"press_release";s:5:"video";s:5:"video";s:10:"initiative";s:10:"initiative";s:8:"petition";s:8:"petition";s:13:"questionnaire";s:13:"questionnaire";s:6:"agenda";i:0;s:7:"meeting";i:0;s:14:"public_hearing";i:0;s:4:"bill";i:0;s:8:"calendar";i:0;s:10:"resolution";i:0;s:7:"session";i:0;s:10:"transcript";i:0;s:5:"photo";i:0;s:9:"open_data";i:0;s:14:"paragraph_page";i:0;s:6:"school";i:0;s:7:"chapter";i:0;s:18:"promotional_banner";i:0;s:7:"senator";i:0;s:12:"page_content";i:0;s:15:"student_program";i:0;s:13:"timeline_item";i:0;s:7:"webform";i:0;s:7:"statute";i:0;s:4:"test";i:0;}',
+        'node_type' => 'a:28:{s:5:"event";s:5:"event";s:7:"article";s:7:"article";s:11:"in_the_news";s:11:"in_the_news";s:13:"press_release";s:13:"press_release";s:5:"video";s:5:"video";s:7:"advpoll";s:7:"advpoll";s:10:"initiative";s:10:"initiative";s:8:"petition";s:8:"petition";s:13:"questionnaire";s:13:"questionnaire";s:6:"agenda";i:0;s:7:"meeting";i:0;s:14:"public_hearing";i:0;s:4:"bill";i:0;s:8:"calendar";i:0;s:10:"resolution";i:0;s:7:"session";i:0;s:10:"transcript";i:0;s:5:"photo";i:0;s:9:"open_data";i:0;s:6:"school";i:0;s:7:"chapter";i:0;s:18:"promotional_banner";i:0;s:7:"senator";i:0;s:12:"page_content";i:0;s:15:"student_program";i:0;s:13:"timeline_item";i:0;s:7:"webform";i:0;s:7:"statute";i:0;}',
       ),
     ),
     'path_raw' => array(
@@ -30,7 +30,7 @@ function nys_senators_context_default_contexts() {
         'senators/*/message' => 'senators/*/message',
         'senators/*/contact' => 'senators/*/contact',
         'senators/*/legislation' => 'senators/*/legislation',
-        'senators/*/thankful-2016' => 'senators/*/thankful-2016',
+        'senators/*/thankful-2017' => 'senators/*/thankful-2017',
         'senators/*/earthday-2017' => 'senators/*/earthday-2017',
       ),
     ),

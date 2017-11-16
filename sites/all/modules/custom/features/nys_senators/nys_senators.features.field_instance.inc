@@ -1229,11 +1229,8 @@ function nys_senators_field_default_field_instances() {
       ),
       'teaser' => array(
         'label' => 'hidden',
-        'module' => 'text',
-        'settings' => array(
-          'trim_length' => 600,
-        ),
-        'type' => 'text_summary_or_trimmed',
+        'settings' => array(),
+        'type' => 'hidden',
         'weight' => 0,
       ),
       'token' => array(
@@ -1323,7 +1320,7 @@ function nys_senators_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 6,
       ),
       'token' => array(
         'label' => 'above',
@@ -1412,7 +1409,7 @@ function nys_senators_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 5,
       ),
       'token' => array(
         'label' => 'above',
@@ -1498,7 +1495,7 @@ function nys_senators_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 34,
       ),
       'token' => array(
         'label' => 'hidden',
@@ -1579,7 +1576,7 @@ function nys_senators_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 1,
       ),
       'token' => array(
         'label' => 'above',
@@ -1661,7 +1658,7 @@ function nys_senators_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 30,
       ),
       'token' => array(
         'label' => 'hidden',
@@ -1804,7 +1801,7 @@ function nys_senators_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 43,
       ),
       'token' => array(
         'label' => 'hidden',
@@ -1888,7 +1885,7 @@ function nys_senators_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 31,
       ),
       'token' => array(
         'label' => 'hidden',
@@ -1971,7 +1968,7 @@ function nys_senators_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 41,
       ),
       'token' => array(
         'label' => 'above',
@@ -2055,7 +2052,7 @@ function nys_senators_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 2,
       ),
       'token' => array(
         'label' => 'above',
@@ -2138,7 +2135,7 @@ function nys_senators_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 32,
       ),
       'token' => array(
         'label' => 'above',
@@ -2223,7 +2220,7 @@ Quotes are also printed on bill pages where the member is a sponsor.',
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 45,
       ),
       'token' => array(
         'label' => 'above',
@@ -2303,7 +2300,7 @@ Quotes are also printed on bill pages where the member is a sponsor.',
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 23,
       ),
       'token' => array(
         'label' => 'above',
@@ -2413,7 +2410,7 @@ Quotes are also printed on bill pages where the member is a sponsor.',
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 40,
       ),
       'token' => array(
         'label' => 'hidden',
@@ -2561,7 +2558,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 26,
       ),
       'token' => array(
         'label' => 'hidden',
@@ -2704,7 +2701,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 33,
       ),
       'token' => array(
         'label' => 'hidden',
@@ -2848,7 +2845,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 8,
       ),
       'token' => array(
         'label' => 'above',
@@ -2932,7 +2929,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 4,
       ),
       'token' => array(
         'label' => 'above',
@@ -3015,7 +3012,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 22,
       ),
       'token' => array(
         'label' => 'above',
@@ -3098,7 +3095,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 35,
       ),
       'token' => array(
         'label' => 'above',
@@ -3179,7 +3176,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 11,
       ),
       'token' => array(
         'label' => 'above',
@@ -3269,7 +3266,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 3,
       ),
       'token' => array(
         'label' => 'above',
@@ -3350,7 +3347,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 38,
       ),
       'token' => array(
         'label' => 'above',
@@ -3430,7 +3427,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 9,
       ),
       'token' => array(
         'label' => 'above',
@@ -3514,7 +3511,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 29,
       ),
       'token' => array(
         'label' => 'hidden',
@@ -3637,7 +3634,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 39,
       ),
       'token' => array(
         'label' => 'above',
@@ -3720,7 +3717,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 10,
       ),
       'token' => array(
         'label' => 'above',
@@ -3802,7 +3799,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 27,
       ),
       'token' => array(
         'label' => 'above',
@@ -3897,7 +3894,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 36,
       ),
       'token' => array(
         'label' => 'above',
@@ -3988,7 +3985,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 28,
       ),
       'token' => array(
         'label' => 'hidden',
@@ -4071,7 +4068,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 42,
       ),
       'token' => array(
         'label' => 'above',
@@ -4168,7 +4165,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 12,
       ),
       'token' => array(
         'label' => 'above',
@@ -4266,7 +4263,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 13,
       ),
       'token' => array(
         'label' => 'above',
@@ -4354,7 +4351,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 44,
       ),
       'token' => array(
         'label' => 'above',
@@ -4443,7 +4440,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 24,
       ),
       'token' => array(
         'label' => 'above',
@@ -4533,7 +4530,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 37,
       ),
       'token' => array(
         'label' => 'hidden',
@@ -4619,7 +4616,7 @@ Dimensions: Image should be 680x510px or a 4:3 ratio no larger than 1360x1020 (f
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 25,
       ),
       'token' => array(
         'label' => 'above',

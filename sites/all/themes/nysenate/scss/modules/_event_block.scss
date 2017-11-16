@@ -833,8 +833,8 @@
 	.c-upcoming-container {
 			
 		.c-event-block--upcoming {
-			width: 50%;
-			float: left;
+			//width: 50%;
+			clear: left;
 			margin: 0;
 			padding-top: 0;
 			padding-left: 20px;
@@ -852,9 +852,9 @@
 				text-transform: uppercase;
 				font-size: 14px;
 				margin-top: 0;
-				position: static;
+				//position: static;
 				line-height: 1;
-				border-top: 1px solid $grey09;
+				//border-top: 1px solid $grey09;
 				padding-top: 16px;
 
 				span {
@@ -865,27 +865,29 @@
 			.c-event-name {
 				float: left;
 				clear: left;
-				margin-left: 0;
-				margin-top: 30px;
+				margin-left: 200px;
+				margin-top: 24px;
 				padding-top: 0;
 			}
 
 		.c-event-location {
 				float: left;
 				clear: left;
-				margin-left: 0;
+				margin-left: 200px;
 		}
 
 		.c-event-address {
 				float: left;
 				clear: left;
 				display: block;
+        margin-left: 200px;
 		}
 
 		.c-event-time {
 				float: left;
 				clear: left;
 				display: block;
+        margin-left: 200px;
 		}
 		}
 	}

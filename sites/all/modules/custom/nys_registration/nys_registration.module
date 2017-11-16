@@ -362,7 +362,7 @@ function nys_registration_get_overlay_parent_path() {
 function nys_registration_user_login(&$edit, $account) {
   // Check if user has logged in with one time link.
   if (!isset($_POST['form_id']) || $_POST['form_id'] == 'user_pass_reset') {
-    $_GET['destination'] = 'user/' . $account->uid . '/edit?one-time-link=1';
+    $_GET['destination'] = 'password-reset?one-time-link=1';
   }
   elseif (in_array('Constituent', $account->roles)) {
       $_GET['destination'] = 'user/' . $account->uid . '/dashboard/issues';
@@ -376,6 +376,20 @@ function nys_registration_form_user_profile_form_alter(&$form, &$form_state, $fo
   if (!($form_id == 'user_profile_form')) {
     return;
   }
+
+  // Determine if there is a password history.  If not, then consider this a
+  // first-time login.
+  $pw_history = s($form['#user']->password_history, []);
+  $current_pw = s($form['#user']->pass, '');
+  $has_history = FALSE;
+  if (is_array($pw_history)) {
+    foreach ($pw_history as $val) {
+      if ($val->pass != $current_pw) {
+        $has_history = TRUE;
+      }
+    }
+  }
+
   $name = str_replace('_', '', $form['#user']->name);
   $uid = $form['#user']->uid;
   $slug = strtolower($name);
@@ -449,13 +463,16 @@ function nys_registration_form_user_profile_form_alter(&$form, &$form_state, $fo
     $form['reset_password']['#access'] = FALSE;
 
     // Update section header title.
-    $form['#user']->name = 'Change Your Password';
+    $form['#user']->name = $has_history ? 'Change Your Password' : 'Create A Password';
 
     // Make sure form does not go back to password change.
     $form['#action'] = '/user/' . $uid . '/edit';
 
     // Enable the password fields.
     $form['account']['pass']['#access'] = TRUE;
+
+    // Disable the "current password" field, since it is being reset.
+    unset($form['account']['current_pass']);
   }
 
   if (!empty($fbid)) {
@@ -470,7 +487,6 @@ function nys_registration_form_user_profile_form_alter(&$form, &$form_state, $fo
  * Implements hook_user_presave().
  */
 function nys_registration_user_presave(&$edit, $account, $category) {
-  nyslog();
   // If an address is available, and the account is not new, execute the call.
   // New users have already called SAGE in nys_registrations.
   $is_new = isset($edit['is_new']) ? $edit['is_new'] : FALSE;
@@ -516,4 +532,130 @@ function nys_registration_password_reset() {
     }
   }
   return drupal_get_form('user_login');
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function nys_registration_preprocess_page(&$vars) {
+  $pathing = arg();
+
+  // Only act on the password-reset page.
+  if ($pathing[0] == 'password-reset') {
+    nys_registration_preprocess_password_reset($vars);
+  }
+}
+
+/**
+ * Preprocess function for password reset page.
+ *
+ * @param $vars
+ */
+function nys_registration_preprocess_password_reset(&$vars) {
+  global $user;
+
+  // We should only be acting on logged-in users.
+  // If there is not a valid user, send them to the login page.
+  if (!(int) $user->uid) {
+    drupal_goto('/user/login');
+  }
+
+  // Determine if there is a password history.  If not, then consider this a
+  // first-time login.
+  $pw_history = s($user->password_history, []);
+  $current_pw = s($user->pass, '');
+  $has_history = FALSE;
+  if (is_array($pw_history)) {
+    foreach ($pw_history as $val) {
+      if ($val->pass != $current_pw) {
+        $has_history = TRUE;
+      }
+    }
+  }
+
+  // Set up some properties for display.
+  $vars['user_id'] = $user->uid;
+  $vars['logo_path'] = '/sites/all/themes/nysenate/images/senate_seal_icon.png';
+
+  // Set up language variances based on first-time logins.
+  if ($has_history) {
+    $vars['form_title'] = 'Change Your Password';
+    $vars['greeting'] = 'Please enter a new password for your account.';
+  }
+  else {
+    $vars['form_title'] = 'Create a Password';
+    $vars['greeting'] = 'Please create a password for your account.';
+  }
+
+  // Render the form and make it available to the template.
+  $the_form = drupal_get_form('nys_registration_password_reset_form');
+  $vars['render_form'] = drupal_render($the_form);
+}
+
+/**
+ * Create the password reset form.
+ */
+function nys_registration_password_reset_form($form, &$form_state) {
+  global $user;
+
+  // Required to leverage Drupal's built-in handler for password changes.
+  require_once 'modules/user/user.pages.inc';
+
+  // Setting some properties for drupal's standard account form handler.
+  $form_state['user'] = $user;
+  $form['#user'] = $user;
+  $form['#user_category'] = 'account';
+
+  // Set up the actual form.
+  $form['pass'] = [
+    '#type' => 'password_confirm',
+    '#size' => 25,
+    '#description' => t('Provide the same password in both fields.'),
+    '#required' => TRUE,
+  ];
+
+  // Add a submit button.
+  $form['actions'] = ['#type' => 'actions'];
+  $form['actions']['submit'] = [
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  ];
+
+  // Set the submit handlers to use our custom, followed by Drupal's built-in.
+  $form['#submit'] = [
+    'nys_registration_password_reset_form_submit',
+    'user_profile_form_submit',
+  ];
+
+  // Add our custom CSS.
+  $form['#attached']['css'] = ['sites/all/modules/custom/nys_registration/css/nys_registration.css'];
+
+  // Add the post-submit redirection.  See the submit handler for more info.
+  $form_state['custom_redirect'] = '/user/' . $user->uid . '/edit';
+
+  return $form;
+}
+
+/**
+ * Custom form submit handler for password reset.  This handler is only here
+ * to make sure the redirect value is propagated.  Once the form is submitted,
+ * during drupal_build_form(), Drupal tries to read the pre-existing form_state
+ * from cache.  If successful, certain keys (see form_state_keys_no_cache()) are
+ * removed from form_state.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function nys_registration_password_reset_form_submit($form, &$form_state) {
+  if (isset($form_state['custom_redirect'])) {
+    $form_state['redirect'] = $form_state['custom_redirect'];
+  }
+}
+
+function nys_registration_mail_alter(&$message) {
+  $html_emails = ['register_no_approval_required'];
+  $key = nys_av('key', $message, '');
+  if (in_array($key, $html_emails)) {
+    $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed';
+  }
 }

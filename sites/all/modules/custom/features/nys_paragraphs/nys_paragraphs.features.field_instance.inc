@@ -607,6 +607,55 @@ function nys_paragraphs_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance:
+  // 'paragraphs_item-pg_entity_form-field_pg_entity_form'.
+  $field_instances['paragraphs_item-pg_entity_form-field_pg_entity_form'] = array(
+    'bundle' => 'pg_entity_form',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'links' => TRUE,
+          'use_content_language' => TRUE,
+          'view_mode' => 'default',
+        ),
+        'type' => 'entityreference_entity_view',
+        'weight' => 0,
+      ),
+      'paragraphs_editor_preview' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'paragraphs_item',
+    'field_name' => 'field_pg_entity_form',
+    'label' => 'Entity Form',
+    'required' => 0,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
+      'type' => 'options_select',
+      'weight' => 1,
+    ),
+  );
+
   // Exported field_instance: 'paragraphs_item-pg_featured_bills-field_bills'.
   $field_instances['paragraphs_item-pg_featured_bills-field_bills'] = array(
     'bundle' => 'pg_featured_bills',
@@ -1254,6 +1303,54 @@ function nys_paragraphs_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'paragraphs_item-pg_poll-field_pg_poll'.
+  $field_instances['paragraphs_item-pg_poll-field_pg_poll'] = array(
+    'bundle' => 'pg_poll',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'links' => 0,
+          'use_content_language' => 1,
+          'view_mode' => 'teaser',
+        ),
+        'type' => 'entityreference_entity_view',
+        'weight' => 0,
+      ),
+      'paragraphs_editor_preview' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'paragraphs_item',
+    'field_name' => 'field_pg_poll',
+    'label' => 'Poll',
+    'required' => 0,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
+      'type' => 'options_select',
+      'weight' => 1,
+    ),
+  );
+
   // Exported field_instance:
   // 'paragraphs_item-pg_quick_facts-field_pg_fc_quick_facts'.
   $field_instances['paragraphs_item-pg_quick_facts-field_pg_fc_quick_facts'] = array(
@@ -1773,6 +1870,7 @@ function nys_paragraphs_field_default_field_instances() {
   t('Choose "Full Width Bleed" if you want a gray background out to edges of screen for your two columns.');
   t('Column One');
   t('Column Two');
+  t('Entity Form');
   t('Feature Image');
   t('Featured Bills');
   t('File Title');
@@ -1783,6 +1881,7 @@ function nys_paragraphs_field_default_field_instances() {
   t('Number of Columns');
   t('PDF');
   t('Paragraphs');
+  t('Poll');
   t('Quick Facts');
   t('Text');
   t('This is the text that will wrap to the left of the featured bill.');

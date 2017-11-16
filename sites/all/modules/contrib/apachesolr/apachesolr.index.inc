@@ -505,7 +505,7 @@ function apachesolr_index_get_entities_to_index($env_id, $entity_type, $limit) {
 
   // Get next batch of entities to index
   $query = _apachesolr_index_get_next_set_query($env_id, $entity_type);
-  
+
   $query->range(0, $limit);
   $records = $query->execute();
 
@@ -568,7 +568,10 @@ function apachesolr_index_delete_index($env_id, $entity_type = NULL, $bundle = N
     $solr->commit();
 
     // Log the query used for deletion.
-    watchdog('Apache Solr', 'Deleted documents from index with query @query', array('@query' => $query), WATCHDOG_INFO);
+    $log_success = variable_get('apachesolr_watchdog_successes', TRUE);
+    if ($log_success) {
+      watchdog('Apache Solr', 'Deleted documents from index with query @query', array('@query' => $query), WATCHDOG_INFO);
+    }
 
     if (!empty($entity_type)) {
       $reindex_callback = apachesolr_entity_get_callback($entity_type, 'reindex callback');
@@ -667,7 +670,10 @@ function apachesolr_index_delete_bundles($env_id, $entity_type, array $excluded_
       $solr->deleteByQuery($query);
 
       // Log the query used for deletion.
-      watchdog('Apache Solr', 'Deleted documents from index with query @query', array('@query' => $query), WATCHDOG_INFO);      
+      $log_success = variable_get('apachesolr_watchdog_successes', TRUE);
+      if ($log_success) {
+        watchdog('Apache Solr', 'Deleted documents from index with query @query', array('@query' => $query), WATCHDOG_INFO);
+      }
     }
     if ($excluded_bundles) {
       $solr->commit();
@@ -707,7 +713,10 @@ function apachesolr_index_delete_entity_from_index($env_id, $entity_type, $entit
     $query = "id:\"$document_id\" OR sm_parent_document_id:\"$document_id\"";
     $solr->deleteByQuery($query);
     // Log the query used for deletion.
-    watchdog('Apache Solr', 'Deleted documents from index with query @query', array('@query' => $query), WATCHDOG_INFO);    
+    $log_success = variable_get('apachesolr_watchdog_successes', TRUE);
+    if ($log_success) {
+      watchdog('Apache Solr', 'Deleted documents from index with query @query', array('@query' => $query), WATCHDOG_INFO);
+    }
     apachesolr_set_last_index_updated($env_id, REQUEST_TIME);
     return TRUE;
   }

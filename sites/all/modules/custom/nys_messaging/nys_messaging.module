@@ -503,7 +503,7 @@ function nys_messaging_senator_contact_form_submit($form, &$form_state) {
     // Send the email.
     $mail = drupal_mail('nys_messaging', $key, $to, language_default(), $params, $from);
     drupal_set_message("Your message has been submitted to the Senator.");
-    $_SESSION['nys_captcha']['present_captcha'] = 1;
+    $_SESSION['nys_captcha_senator_contact_submitted'] = 1;
 
     // Check for an autoreply text.  If present, send the autoreply as a separate email.
     if ($senator->field_email_autoreply_text) {

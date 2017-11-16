@@ -572,12 +572,43 @@ function nys_student_submissions_default_page_manager_pages() {
   $page->api_version = 1;
   $page->name = 'thankful_2106';
   $page->task = 'page';
-  $page->admin_title = 'Thankful 2106';
+  $page->admin_title = 'Thankful 2017';
   $page->admin_description = '';
-  $page->path = 'node/%node/thankful-2016';
+  $page->path = 'node/%node/thankful-2017';
   $page->access = array(
     'logic' => 'and',
-    'plugins' => array(),
+    'plugins' => array(
+      1 => array(
+        'name' => 'node_type',
+        'settings' => array(
+          'type' => array(
+            'senator' => 'senator',
+          ),
+        ),
+        'context' => 'argument_entity_id:node_1',
+        'not' => FALSE,
+      ),
+      2 => array(
+        'name' => 'role',
+        'settings' => array(
+          'rids' => array(
+            0 => 1,
+            1 => 6,
+            2 => 17,
+          ),
+        ),
+        'context' => 'logged-in-user',
+        'not' => FALSE,
+      ),
+      3 => array(
+        'name' => 'context_exists',
+        'settings' => array(
+          'exists' => '1',
+        ),
+        'context' => 'argument_entity_id:node_1',
+        'not' => FALSE,
+      ),
+    ),
     'type' => 'none',
     'settings' => NULL,
   );
@@ -585,7 +616,7 @@ function nys_student_submissions_default_page_manager_pages() {
   $page->arguments = array(
     'node' => array(
       'id' => 1,
-      'identifier' => 'Content: ID',
+      'identifier' => 'Node: ID',
       'name' => 'entity_id:node',
       'settings' => array(),
     ),
@@ -625,6 +656,23 @@ function nys_student_submissions_default_page_manager_pages() {
           'context' => 'argument_entity_id:node_1',
           'not' => FALSE,
         ),
+        1 => array(
+          'name' => 'entity_field_value:node:senator:field_active',
+          'settings' => array(
+            'field_active' => array(
+              'und' => array(
+                0 => array(
+                  'value' => '1',
+                ),
+              ),
+            ),
+            'field_active_value' => array(
+              0 => '1',
+            ),
+          ),
+          'context' => 'argument_entity_id:node_1',
+          'not' => FALSE,
+        ),
       ),
       'logic' => 'and',
     ),
@@ -646,6 +694,36 @@ function nys_student_submissions_default_page_manager_pages() {
   $display->content = array();
   $display->panels = array();
   $pane = new stdClass();
+  $pane->pid = 'new-c4166b03-8a9e-469a-abf3-aac5b940c332';
+  $pane->panel = 'middle';
+  $pane->type = 'entity_field';
+  $pane->subtype = 'node:field_student_thankful_letter';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'label' => 'hidden',
+    'formatter' => 'text_default',
+    'delta_limit' => 0,
+    'delta_offset' => '0',
+    'delta_reversed' => FALSE,
+    'formatter_settings' => array(),
+    'context' => 'argument_entity_id:node_1',
+    'override_title' => 1,
+    'override_title_text' => '2017 Thanksgiving Day Creative Celebration',
+    'override_title_heading' => 'h1',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 0;
+  $pane->locks = array();
+  $pane->uuid = 'c4166b03-8a9e-469a-abf3-aac5b940c332';
+  $display->content['new-c4166b03-8a9e-469a-abf3-aac5b940c332'] = $pane;
+  $display->panels['middle'][0] = 'new-c4166b03-8a9e-469a-abf3-aac5b940c332';
+  $pane = new stdClass();
   $pane->pid = 'new-f01a5793-d8db-4136-88ce-689b72239ce1';
   $pane->panel = 'middle';
   $pane->type = 'views';
@@ -660,11 +738,49 @@ function nys_student_submissions_default_page_manager_pages() {
     'offset' => '0',
     'more_link' => 0,
     'feed_icons' => 0,
-    'panel_args' => 0,
+    'panel_args' => 1,
     'link_to_view' => 0,
     'args' => '',
     'url' => '',
     'display' => 'block_1',
+    'context' => array(
+      0 => '',
+    ),
+    'override_title' => 1,
+    'override_title_text' => '',
+    'override_title_heading' => 'h2',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 1;
+  $pane->locks = array();
+  $pane->uuid = 'f01a5793-d8db-4136-88ce-689b72239ce1';
+  $display->content['new-f01a5793-d8db-4136-88ce-689b72239ce1'] = $pane;
+  $display->panels['middle'][1] = 'new-f01a5793-d8db-4136-88ce-689b72239ce1';
+  $pane = new stdClass();
+  $pane->pid = 'new-d840e82a-ff88-4f86-bc34-79e5a7a3c002';
+  $pane->panel = 'middle';
+  $pane->type = 'views';
+  $pane->subtype = 'promo_banner_senators_committees';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'override_pager_settings' => 0,
+    'use_pager' => 0,
+    'nodes_per_page' => '4',
+    'pager_id' => '0',
+    'offset' => '0',
+    'more_link' => 0,
+    'feed_icons' => 0,
+    'panel_args' => 0,
+    'link_to_view' => 0,
+    'args' => '',
+    'url' => '',
+    'display' => 'senator_microsite_interior_footer',
     'context' => array(
       0 => '',
     ),
@@ -678,11 +794,11 @@ function nys_student_submissions_default_page_manager_pages() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 0;
+  $pane->position = 2;
   $pane->locks = array();
-  $pane->uuid = 'f01a5793-d8db-4136-88ce-689b72239ce1';
-  $display->content['new-f01a5793-d8db-4136-88ce-689b72239ce1'] = $pane;
-  $display->panels['middle'][0] = 'new-f01a5793-d8db-4136-88ce-689b72239ce1';
+  $pane->uuid = 'd840e82a-ff88-4f86-bc34-79e5a7a3c002';
+  $display->content['new-d840e82a-ff88-4f86-bc34-79e5a7a3c002'] = $pane;
+  $display->panels['middle'][2] = 'new-d840e82a-ff88-4f86-bc34-79e5a7a3c002';
   $display->hide_title = PANELS_TITLE_FIXED;
   $display->title_pane = '0';
   $handler->conf['display'] = $display;

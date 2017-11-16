@@ -2060,6 +2060,344 @@ function nys_cms_views_default_views() {
   $handler->display->display_options['menu']['name'] = 'management';
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
+
+  /* Display: Manage Agendas */
+  $handler = $view->new_display('page', 'Manage Agendas', 'page_5');
+  $handler->display->display_options['defaults']['exposed_form'] = FALSE;
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['exposed_form']['options']['reset_button'] = TRUE;
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Bulk operations: Content */
+  $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
+  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_node';
+  $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
+  $handler->display->display_options['fields']['views_bulk_operations']['label'] = '';
+  $handler->display->display_options['fields']['views_bulk_operations']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['views_bulk_operations']['hide_alter_empty'] = FALSE;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '0';
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['row_clickable'] = 1;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
+    'action::views_bulk_operations_modify_action' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 1,
+      'override_label' => 1,
+      'label' => 'Update values',
+      'settings' => array(
+        'show_all_tokens' => 1,
+        'display_values' => array(
+          'session::field_live_message_override' => 'session::field_live_message_override',
+          'session::field_live_message_status' => 'session::field_live_message_status',
+          'session::field_yt' => 'session::field_yt',
+          'session::field_ustream' => 'session::field_ustream',
+          'session::field_video_status' => 'session::field_video_status',
+        ),
+      ),
+    ),
+    'action::node_publish_action' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 1,
+      'override_label' => 1,
+      'label' => 'Publish',
+    ),
+    'action::node_unpublish_action' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 1,
+      'override_label' => 1,
+      'label' => 'Unpublish',
+    ),
+  );
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  /* Field: Content: Year */
+  $handler->display->display_options['fields']['field_ol_year']['id'] = 'field_ol_year';
+  $handler->display->display_options['fields']['field_ol_year']['table'] = 'field_data_field_ol_year';
+  $handler->display->display_options['fields']['field_ol_year']['field'] = 'field_ol_year';
+  $handler->display->display_options['fields']['field_ol_year']['settings'] = array(
+    'thousand_separator' => '',
+    'prefix_suffix' => 1,
+  );
+  /* Field: Content: Week */
+  $handler->display->display_options['fields']['field_ol_week']['id'] = 'field_ol_week';
+  $handler->display->display_options['fields']['field_ol_week']['table'] = 'field_data_field_ol_week';
+  $handler->display->display_options['fields']['field_ol_week']['field'] = 'field_ol_week';
+  $handler->display->display_options['fields']['field_ol_week']['settings'] = array(
+    'thousand_separator' => '',
+    'prefix_suffix' => 1,
+  );
+  /* Field: Content: Agenda Addendum */
+  $handler->display->display_options['fields']['field_ol_agenda_addendum']['id'] = 'field_ol_agenda_addendum';
+  $handler->display->display_options['fields']['field_ol_agenda_addendum']['table'] = 'field_data_field_ol_agenda_addendum';
+  $handler->display->display_options['fields']['field_ol_agenda_addendum']['field'] = 'field_ol_agenda_addendum';
+  $handler->display->display_options['fields']['field_ol_agenda_addendum']['label'] = 'Addendum';
+  /* Field: Content: Meeting Date */
+  $handler->display->display_options['fields']['field_ol_meeting_date']['id'] = 'field_ol_meeting_date';
+  $handler->display->display_options['fields']['field_ol_meeting_date']['table'] = 'field_data_field_ol_meeting_date';
+  $handler->display->display_options['fields']['field_ol_meeting_date']['field'] = 'field_ol_meeting_date';
+  $handler->display->display_options['fields']['field_ol_meeting_date']['settings'] = array(
+    'format_type' => 'privatemsg_years',
+    'custom_date_format' => '',
+    'fromto' => 'both',
+    'multiple_number' => '',
+    'multiple_from' => '',
+    'multiple_to' => '',
+    'show_remaining_days' => 0,
+  );
+  /* Field: Content: Committee Name */
+  $handler->display->display_options['fields']['field_ol_committee_name']['id'] = 'field_ol_committee_name';
+  $handler->display->display_options['fields']['field_ol_committee_name']['table'] = 'field_data_field_ol_committee_name';
+  $handler->display->display_options['fields']['field_ol_committee_name']['field'] = 'field_ol_committee_name';
+  $handler->display->display_options['fields']['field_ol_committee_name']['label'] = 'Committee';
+  /* Field: Content: Has new content */
+  $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
+  $handler->display->display_options['fields']['timestamp']['table'] = 'history';
+  $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
+  $handler->display->display_options['fields']['timestamp']['label'] = '';
+  $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
+  /* Field: Content: Type */
+  $handler->display->display_options['fields']['type']['id'] = 'type';
+  $handler->display->display_options['fields']['type']['table'] = 'node';
+  $handler->display->display_options['fields']['type']['field'] = 'type';
+  $handler->display->display_options['fields']['type']['exclude'] = TRUE;
+  /* Field: Content: Published */
+  $handler->display->display_options['fields']['status']['id'] = 'status';
+  $handler->display->display_options['fields']['status']['table'] = 'node';
+  $handler->display->display_options['fields']['status']['field'] = 'status';
+  $handler->display->display_options['fields']['status']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['status']['not'] = 0;
+  /* Field: Content: Updated date */
+  $handler->display->display_options['fields']['changed']['id'] = 'changed';
+  $handler->display->display_options['fields']['changed']['table'] = 'node';
+  $handler->display->display_options['fields']['changed']['field'] = 'changed';
+  $handler->display->display_options['fields']['changed']['label'] = 'Updated';
+  $handler->display->display_options['fields']['changed']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['changed']['date_format'] = 'short';
+  $handler->display->display_options['fields']['changed']['second_date_format'] = 'month_only';
+  /* Field: Content: Edit link */
+  $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
+  $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
+  $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
+  $handler->display->display_options['fields']['edit_node']['label'] = 'Operations';
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Content: Year (field_ol_year) */
+  $handler->display->display_options['sorts']['field_ol_year_value']['id'] = 'field_ol_year_value';
+  $handler->display->display_options['sorts']['field_ol_year_value']['table'] = 'field_data_field_ol_year';
+  $handler->display->display_options['sorts']['field_ol_year_value']['field'] = 'field_ol_year_value';
+  $handler->display->display_options['sorts']['field_ol_year_value']['order'] = 'DESC';
+  /* Sort criterion: Content: Week (field_ol_week) */
+  $handler->display->display_options['sorts']['field_ol_week_value']['id'] = 'field_ol_week_value';
+  $handler->display->display_options['sorts']['field_ol_week_value']['table'] = 'field_data_field_ol_week';
+  $handler->display->display_options['sorts']['field_ol_week_value']['field'] = 'field_ol_week_value';
+  $handler->display->display_options['sorts']['field_ol_week_value']['order'] = 'DESC';
+  /* Sort criterion: Content: Agenda Addendum (field_ol_agenda_addendum) */
+  $handler->display->display_options['sorts']['field_ol_agenda_addendum_value']['id'] = 'field_ol_agenda_addendum_value';
+  $handler->display->display_options['sorts']['field_ol_agenda_addendum_value']['table'] = 'field_data_field_ol_agenda_addendum';
+  $handler->display->display_options['sorts']['field_ol_agenda_addendum_value']['field'] = 'field_ol_agenda_addendum_value';
+  /* Sort criterion: Content: Committee Name (field_ol_committee_name) */
+  $handler->display->display_options['sorts']['field_ol_committee_name_value']['id'] = 'field_ol_committee_name_value';
+  $handler->display->display_options['sorts']['field_ol_committee_name_value']['table'] = 'field_data_field_ol_committee_name';
+  $handler->display->display_options['sorts']['field_ol_committee_name_value']['field'] = 'field_ol_committee_name_value';
+  $handler->display->display_options['sorts']['field_ol_committee_name_value']['expose']['label'] = 'Committee Name';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Title */
+  $handler->display->display_options['filters']['title']['id'] = 'title';
+  $handler->display->display_options['filters']['title']['table'] = 'node';
+  $handler->display->display_options['filters']['title']['field'] = 'title';
+  $handler->display->display_options['filters']['title']['operator'] = 'contains';
+  $handler->display->display_options['filters']['title']['group'] = 1;
+  $handler->display->display_options['filters']['title']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['title']['expose']['operator_id'] = 'title_op';
+  $handler->display->display_options['filters']['title']['expose']['label'] = 'Title';
+  $handler->display->display_options['filters']['title']['expose']['operator'] = 'title_op';
+  $handler->display->display_options['filters']['title']['expose']['identifier'] = 'title';
+  $handler->display->display_options['filters']['title']['expose']['remember'] = TRUE;
+  $handler->display->display_options['filters']['title']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    16 => 0,
+    17 => 0,
+    18 => 0,
+    19 => 0,
+  );
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_min_chars'] = '0';
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_field'] = 'title';
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_raw_dropdown'] = 1;
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_dependent'] = 0;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type_1']['id'] = 'type_1';
+  $handler->display->display_options['filters']['type_1']['table'] = 'node';
+  $handler->display->display_options['filters']['type_1']['field'] = 'type';
+  $handler->display->display_options['filters']['type_1']['value'] = array(
+    'agenda' => 'agenda',
+  );
+  $handler->display->display_options['filters']['type_1']['group'] = 1;
+  $handler->display->display_options['filters']['type_1']['expose']['operator_id'] = 'type_1_op';
+  $handler->display->display_options['filters']['type_1']['expose']['label'] = 'Type';
+  $handler->display->display_options['filters']['type_1']['expose']['operator'] = 'type_1_op';
+  $handler->display->display_options['filters']['type_1']['expose']['identifier'] = 'type_1';
+  $handler->display->display_options['filters']['type_1']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    16 => 0,
+    17 => 0,
+    18 => 0,
+    19 => 0,
+  );
+  $handler->display->display_options['filters']['type_1']['expose']['reduce'] = TRUE;
+  /* Filter criterion: Content: Year (field_ol_year) */
+  $handler->display->display_options['filters']['field_ol_year_value']['id'] = 'field_ol_year_value';
+  $handler->display->display_options['filters']['field_ol_year_value']['table'] = 'field_data_field_ol_year';
+  $handler->display->display_options['filters']['field_ol_year_value']['field'] = 'field_ol_year_value';
+  $handler->display->display_options['filters']['field_ol_year_value']['group'] = 1;
+  $handler->display->display_options['filters']['field_ol_year_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_ol_year_value']['expose']['operator_id'] = 'field_ol_year_value_op';
+  $handler->display->display_options['filters']['field_ol_year_value']['expose']['label'] = 'Year';
+  $handler->display->display_options['filters']['field_ol_year_value']['expose']['operator'] = 'field_ol_year_value_op';
+  $handler->display->display_options['filters']['field_ol_year_value']['expose']['identifier'] = 'field_ol_year_value';
+  $handler->display->display_options['filters']['field_ol_year_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    17 => 0,
+    18 => 0,
+    19 => 0,
+  );
+  /* Filter criterion: Content: Week (field_ol_week) */
+  $handler->display->display_options['filters']['field_ol_week_value']['id'] = 'field_ol_week_value';
+  $handler->display->display_options['filters']['field_ol_week_value']['table'] = 'field_data_field_ol_week';
+  $handler->display->display_options['filters']['field_ol_week_value']['field'] = 'field_ol_week_value';
+  $handler->display->display_options['filters']['field_ol_week_value']['group'] = 1;
+  $handler->display->display_options['filters']['field_ol_week_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_ol_week_value']['expose']['operator_id'] = 'field_ol_week_value_op';
+  $handler->display->display_options['filters']['field_ol_week_value']['expose']['label'] = 'Week';
+  $handler->display->display_options['filters']['field_ol_week_value']['expose']['operator'] = 'field_ol_week_value_op';
+  $handler->display->display_options['filters']['field_ol_week_value']['expose']['identifier'] = 'field_ol_week_value';
+  $handler->display->display_options['filters']['field_ol_week_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    17 => 0,
+    18 => 0,
+    19 => 0,
+  );
+  /* Filter criterion: Content: Agenda Addendum (field_ol_agenda_addendum) */
+  $handler->display->display_options['filters']['field_ol_agenda_addendum_value']['id'] = 'field_ol_agenda_addendum_value';
+  $handler->display->display_options['filters']['field_ol_agenda_addendum_value']['table'] = 'field_data_field_ol_agenda_addendum';
+  $handler->display->display_options['filters']['field_ol_agenda_addendum_value']['field'] = 'field_ol_agenda_addendum_value';
+  $handler->display->display_options['filters']['field_ol_agenda_addendum_value']['group'] = 1;
+  $handler->display->display_options['filters']['field_ol_agenda_addendum_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_ol_agenda_addendum_value']['expose']['operator_id'] = 'field_ol_agenda_addendum_value_op';
+  $handler->display->display_options['filters']['field_ol_agenda_addendum_value']['expose']['label'] = 'Addendum';
+  $handler->display->display_options['filters']['field_ol_agenda_addendum_value']['expose']['operator'] = 'field_ol_agenda_addendum_value_op';
+  $handler->display->display_options['filters']['field_ol_agenda_addendum_value']['expose']['identifier'] = 'field_ol_agenda_addendum_value';
+  $handler->display->display_options['filters']['field_ol_agenda_addendum_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    17 => 0,
+    18 => 0,
+    19 => 0,
+  );
+  $handler->display->display_options['filters']['field_ol_agenda_addendum_value']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['field_ol_agenda_addendum_value']['expose']['autocomplete_min_chars'] = '0';
+  $handler->display->display_options['filters']['field_ol_agenda_addendum_value']['expose']['autocomplete_field'] = 'field_ol_agenda_addendum';
+  $handler->display->display_options['filters']['field_ol_agenda_addendum_value']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['field_ol_agenda_addendum_value']['expose']['autocomplete_raw_dropdown'] = 1;
+  $handler->display->display_options['filters']['field_ol_agenda_addendum_value']['expose']['autocomplete_dependent'] = 0;
+  /* Filter criterion: Content: Committee Name (field_ol_committee_name) */
+  $handler->display->display_options['filters']['field_ol_committee_name_value']['id'] = 'field_ol_committee_name_value';
+  $handler->display->display_options['filters']['field_ol_committee_name_value']['table'] = 'field_data_field_ol_committee_name';
+  $handler->display->display_options['filters']['field_ol_committee_name_value']['field'] = 'field_ol_committee_name_value';
+  $handler->display->display_options['filters']['field_ol_committee_name_value']['operator'] = 'contains';
+  $handler->display->display_options['filters']['field_ol_committee_name_value']['group'] = 1;
+  $handler->display->display_options['filters']['field_ol_committee_name_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_ol_committee_name_value']['expose']['operator_id'] = 'field_ol_committee_name_value_op';
+  $handler->display->display_options['filters']['field_ol_committee_name_value']['expose']['label'] = 'Committee';
+  $handler->display->display_options['filters']['field_ol_committee_name_value']['expose']['operator'] = 'field_ol_committee_name_value_op';
+  $handler->display->display_options['filters']['field_ol_committee_name_value']['expose']['identifier'] = 'field_ol_committee_name_value';
+  $handler->display->display_options['filters']['field_ol_committee_name_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    17 => 0,
+    18 => 0,
+    19 => 0,
+  );
+  $handler->display->display_options['filters']['field_ol_committee_name_value']['expose']['autocomplete_filter'] = 1;
+  $handler->display->display_options['filters']['field_ol_committee_name_value']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['field_ol_committee_name_value']['expose']['autocomplete_min_chars'] = '0';
+  $handler->display->display_options['filters']['field_ol_committee_name_value']['expose']['autocomplete_field'] = 'field_ol_committee_name';
+  $handler->display->display_options['filters']['field_ol_committee_name_value']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['field_ol_committee_name_value']['expose']['autocomplete_raw_dropdown'] = 1;
+  $handler->display->display_options['filters']['field_ol_committee_name_value']['expose']['autocomplete_dependent'] = 0;
+  $handler->display->display_options['path'] = 'admin/content/agendas';
+  $handler->display->display_options['menu']['type'] = 'tab';
+  $handler->display->display_options['menu']['title'] = 'Agendas';
+  $handler->display->display_options['menu']['weight'] = '10';
+  $handler->display->display_options['menu']['name'] = 'management';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
   $export['admin_views_node_custom'] = $view;
 
   $view = new view();

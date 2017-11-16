@@ -10,13 +10,24 @@
 function nys_student_submissions_user_default_permissions() {
   $permissions = array();
 
-  // Exported permission: 'administer entityform types'.
-  $permissions['administer entityform types'] = array(
-    'name' => 'administer entityform types',
+  // Exported permission: 'create field_hannon_star_rating'.
+  $permissions['create field_hannon_star_rating'] = array(
+    'name' => 'create field_hannon_star_rating',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Student Contest Judge' => 'Student Contest Judge',
     ),
-    'module' => 'entityform',
+    'module' => 'field_permissions',
+  );
+
+  // Exported permission: 'create field_hannon_winner_types'.
+  $permissions['create field_hannon_winner_types'] = array(
+    'name' => 'create field_hannon_winner_types',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Student Contest Judge' => 'Student Contest Judge',
+    ),
+    'module' => 'field_permissions',
   );
 
   // Exported permission: 'create field_school_featured_entry'.
@@ -29,32 +40,34 @@ function nys_student_submissions_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
-  // Exported permission: 'delete any entityform'.
-  $permissions['delete any entityform'] = array(
-    'name' => 'delete any entityform',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'entityform',
-  );
-
-  // Exported permission: 'delete own entityform'.
-  $permissions['delete own entityform'] = array(
-    'name' => 'delete own entityform',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'entityform',
-  );
-
-  // Exported permission: 'edit any entityform'.
-  $permissions['edit any entityform'] = array(
-    'name' => 'edit any entityform',
+  // Exported permission: 'create field_school_show_student'.
+  $permissions['create field_school_show_student'] = array(
+    'name' => 'create field_school_show_student',
     'roles' => array(
       'Administrator' => 'Administrator',
       'Student Contest Judge' => 'Student Contest Judge',
     ),
-    'module' => 'entityform',
+    'module' => 'field_permissions',
+  );
+
+  // Exported permission: 'edit field_hannon_star_rating'.
+  $permissions['edit field_hannon_star_rating'] = array(
+    'name' => 'edit field_hannon_star_rating',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Student Contest Judge' => 'Student Contest Judge',
+    ),
+    'module' => 'field_permissions',
+  );
+
+  // Exported permission: 'edit field_hannon_winner_types'.
+  $permissions['edit field_hannon_winner_types'] = array(
+    'name' => 'edit field_hannon_winner_types',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Student Contest Judge' => 'Student Contest Judge',
+    ),
+    'module' => 'field_permissions',
   );
 
   // Exported permission: 'edit field_school_featured_entry'.
@@ -67,13 +80,34 @@ function nys_student_submissions_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
-  // Exported permission: 'edit own entityform'.
-  $permissions['edit own entityform'] = array(
-    'name' => 'edit own entityform',
+  // Exported permission: 'edit field_school_show_student'.
+  $permissions['edit field_school_show_student'] = array(
+    'name' => 'edit field_school_show_student',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Student Contest Judge' => 'Student Contest Judge',
     ),
-    'module' => 'entityform',
+    'module' => 'field_permissions',
+  );
+
+  // Exported permission: 'edit own field_hannon_star_rating'.
+  $permissions['edit own field_hannon_star_rating'] = array(
+    'name' => 'edit own field_hannon_star_rating',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Student Contest Judge' => 'Student Contest Judge',
+    ),
+    'module' => 'field_permissions',
+  );
+
+  // Exported permission: 'edit own field_hannon_winner_types'.
+  $permissions['edit own field_hannon_winner_types'] = array(
+    'name' => 'edit own field_hannon_winner_types',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Student Contest Judge' => 'Student Contest Judge',
+    ),
+    'module' => 'field_permissions',
   );
 
   // Exported permission: 'edit own field_school_featured_entry'.
@@ -86,14 +120,34 @@ function nys_student_submissions_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
-  // Exported permission: 'view any entityform'.
-  $permissions['view any entityform'] = array(
-    'name' => 'view any entityform',
+  // Exported permission: 'edit own field_school_show_student'.
+  $permissions['edit own field_school_show_student'] = array(
+    'name' => 'edit own field_school_show_student',
     'roles' => array(
       'Administrator' => 'Administrator',
       'Student Contest Judge' => 'Student Contest Judge',
     ),
-    'module' => 'entityform',
+    'module' => 'field_permissions',
+  );
+
+  // Exported permission: 'view field_hannon_star_rating'.
+  $permissions['view field_hannon_star_rating'] = array(
+    'name' => 'view field_hannon_star_rating',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Student Contest Judge' => 'Student Contest Judge',
+    ),
+    'module' => 'field_permissions',
+  );
+
+  // Exported permission: 'view field_hannon_winner_types'.
+  $permissions['view field_hannon_winner_types'] = array(
+    'name' => 'view field_hannon_winner_types',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Student Contest Judge' => 'Student Contest Judge',
+    ),
+    'module' => 'field_permissions',
   );
 
   // Exported permission: 'view field_school_featured_entry'.
@@ -106,18 +160,49 @@ function nys_student_submissions_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
-  // Exported permission: 'view own entityform'.
-  $permissions['view own entityform'] = array(
-    'name' => 'view own entityform',
+  // Exported permission: 'view field_school_show_student'.
+  $permissions['view field_school_show_student'] = array(
+    'name' => 'view field_school_show_student',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Student Contest Judge' => 'Student Contest Judge',
     ),
-    'module' => 'entityform',
+    'module' => 'field_permissions',
+  );
+
+  // Exported permission: 'view own field_hannon_star_rating'.
+  $permissions['view own field_hannon_star_rating'] = array(
+    'name' => 'view own field_hannon_star_rating',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Student Contest Judge' => 'Student Contest Judge',
+    ),
+    'module' => 'field_permissions',
+  );
+
+  // Exported permission: 'view own field_hannon_winner_types'.
+  $permissions['view own field_hannon_winner_types'] = array(
+    'name' => 'view own field_hannon_winner_types',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Student Contest Judge' => 'Student Contest Judge',
+    ),
+    'module' => 'field_permissions',
   );
 
   // Exported permission: 'view own field_school_featured_entry'.
   $permissions['view own field_school_featured_entry'] = array(
     'name' => 'view own field_school_featured_entry',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Student Contest Judge' => 'Student Contest Judge',
+    ),
+    'module' => 'field_permissions',
+  );
+
+  // Exported permission: 'view own field_school_show_student'.
+  $permissions['view own field_school_show_student'] = array(
+    'name' => 'view own field_school_show_student',
     'roles' => array(
       'Administrator' => 'Administrator',
       'Student Contest Judge' => 'Student Contest Judge',

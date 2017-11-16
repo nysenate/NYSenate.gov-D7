@@ -52,12 +52,6 @@ function nys_users_user_default_roles() {
     'weight' => 5,
   );
 
-  // Exported role: Student Contest Judge.
-  $roles['Student Contest Judge'] = array(
-    'name' => 'Student Contest Judge',
-    'weight' => 18,
-  );
-
   // Exported role: Student Programs.
   $roles['Student Programs'] = array(
     'name' => 'Student Programs',

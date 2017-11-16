@@ -1,6 +1,7 @@
 {
   "name": "nys-behat",
   "version": "1.0.0",
+  "private": true,
   "description": "Requirements for running NYS Behat tests.",
   "dependencies": {
     "forever": "^0.15.3",
@@ -10,5 +11,5 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "NYSENATE",
-  "license": "GPLv2"
+  "license": "GPL-2.0"
 }

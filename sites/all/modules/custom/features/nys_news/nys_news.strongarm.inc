@@ -903,6 +903,13 @@ function nys_news_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_taxonomy_term_content_experiments_pattern';
+  $strongarm->value = '';
+  $export['pathauto_taxonomy_term_content_experiments_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'twitter_api';
   $strongarm->value = 'https://api.twitter.com';
   $export['twitter_api'] = $strongarm;

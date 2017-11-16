@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the NYS Polls feature.
+ */
+
+include_once 'nys_polls.features.inc';
