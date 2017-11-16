@@ -1,0 +1,420 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function default_image_ft_menu() {
+  $items['admin/content/default-image'] = array(
+    'title' => 'Default images',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('default_image_ft_form'),
+    'access callback' => 'default_image_ft_form_access',
+    'type' => MENU_LOCAL_TASK | MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_menu_alter().
+ *
+ * I'm abusing this function as a cache-flush-hook, because there's no such thing.
+ */
+function default_image_ft_menu_alter(&$items) {
+  _default_image_ft_redo_state();
+}
+
+/**
+ * Access callback for admin/content/default-image.
+ */
+function default_image_ft_form_access() {
+  if (user_access('administer all default images')) {
+    return TRUE;
+  }
+
+  $access = FALSE;
+  default_image_ft_state_cycle(function($entity_type, $bundle, $field_name, $source_var, $location) use (&$access) {
+    $permission = 'administer default image ' . implode(':', $location);
+    $access |= user_access($permission);
+  });
+  return $access;
+}
+
+/**
+ * Form & page callback for admin/content/default-image.
+ */
+function default_image_ft_form($form, &$form_state) {
+  $empty = TRUE;
+  $corrupted = FALSE;
+
+  $form['default_images'] = array('#tree' => TRUE);
+  default_image_ft_state_cycle(function($entity_type, $bundle, $field_name, $source_var, $location) use (&$form, &$empty, &$corrupted) {
+    $permission = 'administer default image ' . implode(':', $location);
+
+    $access = user_access($permission);
+    $label = _default_image_ft_entity_bundle_field_label($entity_type, $bundle, $field_name);
+    if ($access && !$label) {
+      $label = t('*Missing entity type or field: %entity_type &gt; %bundle &gt; %field_name*', array(
+        '%entity_type' => $entity_type,
+        '%bundle' => $bundle,
+        '%field_name' => $field_name,
+      ));
+      $corrupted = TRUE;
+    }
+
+    // Another field is using this variable. No problem: combine visual meta data.
+    if (isset($form['default_images'][$source_var])) {
+      $element = &$form['default_images'][$source_var];
+
+      // Save new label in element.
+      $element['#field_location_labels'][] = $label;
+
+      // Show new title, including new label.
+      $labels = implode(' ' . t('AND') . ' ', $element['#field_location_labels']);
+      $element['#title'] = t('Default image for !label', array('!label' => $labels));
+
+      // Update access, if any, because access is per field, not per variable.
+      $access and $element['#access'] = TRUE;
+    }
+    else {
+      $form['default_images'][$source_var] = array(
+        '#type' => 'managed_file',
+        '#title' => t('Default image for !label', array('!label' => $label)),
+        '#default_value' => variable_get($source_var),
+        '#description' => t('Variable name: %var_name.', array('%var_name' => $source_var)),
+        '#access' => $access,
+        '#upload_location' => 'public://default_images',
+        '#field_location_labels' => array($label),
+      );
+    }
+
+    $access and $empty = FALSE;
+  });
+
+  if ($empty) {
+    $form['empty'] = array(
+      '#markup' => t("You don't have any featurizable image defaults. Configure a field by entering a new variable name in %element in an Image field instance. That field will use the given variable for its default image. <strong>Featurize the field, don't featurize the variable!<strong>", array(
+        '%element' => t('Source variable for default image'),
+      )),
+    );
+  }
+
+  $form['actions']['#type'] = 'actions';
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'));
+
+  // Disable actions if empty.
+  if ($empty) {
+    $form['actions']['submit']['#disabled'] = TRUE;
+  }
+
+  // Add an uncorrupt button with some explanation. Maybe this should just happen automatically..?
+  if ($corrupted) {
+    $form['actions']['uncorrupt'] = array(
+      '#type' => 'submit',
+      '#value' => t('Fix missing instances'),
+      '#submit' => array('default_image_ft_form_uncorrupt'),
+      '#attributes' => array('title' => "This will fix the Default Image FT state and remove unused images. If that sounds dangerous, no action is necessary."),
+    );
+  }
+
+  $form['#submit'][] = 'default_image_ft_form_submit';
+
+  return $form;
+}
+
+/**
+ * Submit handler for default_image_ft_form().
+ */
+function default_image_ft_form_submit($form, &$form_state) {
+  $values = &$form_state['values'];
+  $default_images = $values['default_images'];
+
+  foreach ($default_images as $source_var => $new_fid) {
+    $old_fid = variable_get($source_var);
+    $new_fid ? variable_set($source_var, (int) $new_fid) : variable_del($source_var);
+
+    _default_image_ft_update_file_status($old_fid, $new_fid, $source_var);
+  }
+
+  drupal_set_message(t('Images saved.'));
+}
+
+/**
+ * Submit handler for the 'uncorrupt' button in default_image_ft_form().
+ */
+function default_image_ft_form_uncorrupt($form, &$form_state) {
+  $used_vars = $unused_vars = array();
+  default_image_ft_state_cycle(function($entity_type, $bundle, $field_name, $source_var, $location) use (&$state, &$used_vars, &$unused_vars) {
+    $permission = 'administer default image ' . implode(':', $location);
+
+    $access = user_access($permission);
+    $label = _default_image_ft_entity_bundle_field_label($entity_type, $bundle, $field_name);
+
+    // Only clean up instances/fields/images that this user can see/has access to.
+    if ($access && !$label) {
+      $unused_vars[] = $source_var;
+
+      // Fix state, but don't delete image or variable yet.
+      $fake_instance = compact('entity_type', 'field_name', 'bundle');
+      default_image_ft_field_delete_instance($fake_instance);
+    }
+    else {
+      $used_vars[] = $source_var;
+    }
+  });
+
+  // Remove only vars that are not in use in another instance.
+  $remove_vars = array_diff($unused_vars, $used_vars);
+  foreach ($remove_vars as $var_name) {
+    $old_fid = variable_get($var_name);
+    variable_del($var_name);
+
+    // Clean up old images.
+    _default_image_ft_update_file_status($old_fid, 0, $var_name);
+  }
+
+  drupal_set_message(t('State fixed, variables and images removed. This page might now be useless.'));
+}
+
+/**
+ * Implements hook_permission().
+ */
+function default_image_ft_permission() {
+  $permissions = array();
+  $permissions['administer all default images'] = array(
+    'title' => t('Adminster all default images'),
+  );
+
+  default_image_ft_state_cycle(function($entity_type, $bundle, $field_name, $source_var, $location) use (&$permissions) {
+    $key = implode(':', $location);
+    $label = _default_image_ft_entity_bundle_field_label($entity_type, $bundle, $field_name);
+    if ($label) {
+      $permissions['administer default image ' . $key] = array(
+        'title' => t('Adminster default image: !label', array('!label' => $label)),
+      );
+    }
+  });
+
+  return $permissions;
+}
+
+/**
+ * Helper to return the full label for Entity type > Bundle name > Field name.
+ */
+function _default_image_ft_entity_bundle_field_label($entity_type, $bundle, $field_name) {
+  $entity_info = entity_get_info();
+  $instance = field_info_instance($entity_type, $field_name, $bundle);
+
+  // If this instance, bundle or even entity type doesn't exist anymore, forget it.
+  if (!$instance || !isset($entity_info[$entity_type])) {
+    return FALSE;
+  }
+
+  return t('%entity_type &gt; %bundle &gt; %field_name', array(
+    '%entity_type' => $entity_info[$entity_type]['label'],
+    '%bundle' => $entity_info[$entity_type]['bundles'][$bundle]['label'],
+    '%field_name' => $instance['label'],
+  ));
+}
+
+/**
+ * Helper to publish or unpublish or ignore an uploaded or old custom file.
+ */
+function _default_image_ft_update_file_status($old_fid, $new_fid, $name, $module = NULL) {
+  $module or $module = 'default_image_ft';
+
+  if ((int) $new_fid != (int) $old_fid) {
+    if ($old_fid) {
+      $old_file = file_load($old_fid);
+      if ($old_file) {
+        // Unuse.
+        file_usage_delete($old_file, $module, $name, 1);
+
+        // If unused: unpublish.
+        $usage = file_usage_list($old_file);
+        if (!$usage) {
+          $old_file->status = 0; // There's no constant for this?
+          file_save($old_file);
+        }
+      }
+    }
+
+    if ($new_fid) {
+      $new_file = file_load($new_fid);
+
+      // Publish.
+      $new_file->status = FILE_STATUS_PERMANENT;
+      file_save($new_file);
+
+      // Use.
+      file_usage_add($new_file, $module, $name, 1);
+    }
+  }
+}
+
+/**
+ * Helper to cycle through the current state.
+ */
+function default_image_ft_state_cycle($callback) {
+  $state = variable_get('default_image_ft_state', array());
+
+  foreach ($state as $entity_type => $bundles) {
+    foreach ($bundles as $bundle => $fields) {
+      foreach ($fields as $field_name => $source_var) {
+        $location = compact('entity_type', 'bundle', 'field_name');
+        call_user_func($callback, $entity_type, $bundle, $field_name, $source_var, $location);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for field_ui_field_edit_form().
+ *
+ * Alter field instance form to add textfield for variable name.
+ */
+function default_image_ft_form_field_ui_field_edit_form_alter(&$form, &$form_state) {
+  $field = $form['#field'];
+  $instance = $form['#instance'];
+
+  // Don't alter if not 'image'.
+  if ($field['type'] != 'image') {
+    return;
+  }
+
+  $source_var = (string) @$instance['settings']['default_image_ft_source_var'];
+  $fid = $source_var ? variable_get($source_var, 0) : 0;
+  $form['instance']['settings']['default_image_ft_source_var'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Source variable for default image'),
+    '#description' => t('If above default image is empty, this variable will be used as source for the default image <code>fid</code>.'),
+    '#default_value' => $source_var,
+  );
+  if ($fid) {
+    $file = file_load($fid);
+    $filename = $file ? l($file->filename, file_create_url($file->uri), array('attributes' => array('target' => '_blank'))) : '--ERROR--';
+    $form['instance']['settings']['default_image_ft_source_var']['#field_suffix'] = ' ' . t('(currently # @fid: !filename)', array('@fid' => $fid, '!filename' => $filename));
+  }
+
+  // Clean up empty field config before Field UI saves it into the db.
+  array_unshift($form['#submit'], 'default_image_ft_field_ui_field_edit_form_submit');
+}
+
+/**
+ * Submit handler for field_ui_field_edit_form().
+ */
+function default_image_ft_field_ui_field_edit_form_submit($form, &$form_state) {
+  if (empty($form_state['values']['instance']['settings']['default_image_ft_source_var'])) {
+    unset($form_state['values']['instance']['settings']['default_image_ft_source_var']);
+  }
+}
+
+/**
+ * Implements hook_field_update_instance().
+ *
+ * Update default image source state in local variable. This variable should NOT be featurized. It's updated automatically.
+ */
+function default_image_ft_field_update_instance($instance, $prior_instance) {
+  _default_image_ft_redo_state();
+}
+
+/**
+ * Implements hook_field_create_instance().
+ */
+function default_image_ft_field_create_instance($instance) {
+  _default_image_ft_redo_state();
+}
+
+/**
+ * Implements hook_field_delete_instance().
+ */
+function default_image_ft_field_delete_instance($instance) {
+  _default_image_ft_redo_state();
+}
+
+/**
+ *
+ */
+function _default_image_ft_redo_state() {
+  $state = _default_image_ft_live_state();
+  variable_set('default_image_ft_state', $state);
+}
+
+/**
+ *
+ */
+function _default_image_ft_live_state() {
+  $state = array();
+  foreach (field_info_instances() as $entity_type => $instances) {
+    foreach ($instances as $bundle => $instances2) {
+      foreach ($instances2 as $field_name => $instance) {
+        if ($var = trim(@$instance['settings']['default_image_ft_source_var'])) {
+          $state[$entity_type][$bundle][$field_name] = $var;
+        }
+      }
+    }
+  }
+
+  return $state;
+}
+
+/**
+ * Implements hook_field_attach_view_alter().
+ *
+ * This is called by field_view_field(), which is called by views_handler_field_field::set_items() for
+ * every rendering views field. It's only requesting 1 field, so if $result is empty, the field is empty.
+ */
+function default_image_ft_field_attach_view_alter(&$result, $context) {
+  if (!$result && is_array($context['display']) && !empty($context['display']['views_field'])) {
+    $views_field = $context['display']['views_field'];
+    $field_name = $views_field->definition['field_name'];
+
+    $entity_type = $context['entity_type'];
+    $entity = $context['entity'];
+    list($id) = entity_extract_ids($entity_type, $entity);
+    $entities = array($id => $entity);
+
+    // Run through our entity_prepare, since field_view_field() doesn't do that.
+    $langcode = $views_field->field_language($entity_type, $entity);
+    $change = default_image_ft_entity_prepare_view($entities, $entity_type, $langcode, $field_name);
+    if ($change) {
+      // We added something, so let's render this field again WITH value.
+      $result[$field_name] = field_view_field($entity_type, $entity, $field_name, $context['display'], $langcode);
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_prepare_view().
+ *
+ * This is called when full entities are about to be viewed, e.g. node_view_multiple().
+ */
+function default_image_ft_entity_prepare_view($entities, $entity_type, $langcode, $source_field = '') {
+  $state = variable_get('default_image_ft_state', array());
+
+  $change = FALSE;
+  foreach ($entities as $entity) {
+    list(,, $bundle) = entity_extract_ids($entity_type, $entity);
+    if (isset($state[$entity_type][$bundle])) {
+      foreach ($state[$entity_type][$bundle] as $field_name => $source_var) {
+
+        // Skip other fields than the one we want when using views.
+        if ($source_field && $field_name != $source_field) {
+          continue;
+        }
+
+        if (isset($entity->{$field_name}) && empty($entity->{$field_name}[$langcode]) && empty($entity->{$field_name}[LANGUAGE_NONE])) {
+          $fid = variable_get($source_var, 0);
+          if ($fid && ($file = file_load($fid))) {
+            $entity->{$field_name}[$langcode][0] =
+              $entity->{$field_name}[LANGUAGE_NONE][0] =
+              array('fid' => $fid, 'default_image' => $source_var) + (array) $file;
+            $change = TRUE;
+          }
+        }
+      }
+    }
+  }
+
+  return $change;
+}

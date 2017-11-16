@@ -297,6 +297,13 @@ function nys_variables_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'dblog_row_limit';
+  $strongarm->value = '100000';
+  $export['dblog_row_limit'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'ds_extras_fields_extra';
   $strongarm->value = 0;
   $export['ds_extras_fields_extra'] = $strongarm;

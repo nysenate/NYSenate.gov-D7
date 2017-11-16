@@ -1,7 +1,7 @@
 name = NYS Pathauto Settings
 core = 7.x
 package = NY STATE SENATE
-version = 7.x-1.5
+version = 7.x-1.6
 project = nys_pathauto_settings
 dependencies[] = ctools
 dependencies[] = pathauto
@@ -20,6 +20,7 @@ features[variable][] = pathauto_file_pattern
 features[variable][] = pathauto_file_video_pattern
 features[variable][] = pathauto_forum_pattern
 features[variable][] = pathauto_node_admin_livestream_pattern
+features[variable][] = pathauto_node_advpoll_pattern
 features[variable][] = pathauto_node_agenda_pattern
 features[variable][] = pathauto_node_article_pattern
 features[variable][] = pathauto_node_bill_pattern

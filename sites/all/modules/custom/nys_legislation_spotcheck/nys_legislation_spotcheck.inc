@@ -1,7 +1,13 @@
 <?php
 
 /**
- * Class SpotcheckContentType
+ * @file
+ * File nys_legislation_spotcheck.inc
+ */
+
+/**
+ * Class SpotcheckContentType.
+ *
  * Enumeration of spotcheck content types
  */
 abstract class SpotcheckContentType {
@@ -15,6 +21,8 @@ abstract class SpotcheckContentType {
   private static $TYPES = [self::AGENDA, self::BILL, self::CALENDAR];
 
   /**
+   * Get a string containing all available types.
+   *
    * @return string - a formatted string displaying the available types
    */
   public static function getTypesStr() {
@@ -24,7 +32,7 @@ abstract class SpotcheckContentType {
   }
 
   /**
-   * Verifies the content type of the passed in string
+   * Verifies the content type of the passed in string.
    *
    * @param $contentTypeStr
    *
@@ -41,7 +49,8 @@ abstract class SpotcheckContentType {
 }
 
 /**
- * Class SpotcheckDumpQuery
+ * Class SpotcheckDumpQuery.
+ *
  * Used to retrieve node data for use in OpenLegislation spotchecks
  * Provides base methods for data retrieval and node cleaning
  * Implemented by each content type for content-specific queries
@@ -53,24 +62,35 @@ abstract class SpotcheckDumpQuery {
   /* Abstract methods */
 
   /**
-   * @return SpotcheckContentType of the query implementation
+   * Gets the content type supported by this query.
+   *
+   * @return string SpotcheckContentType of the query implementation
    */
   public abstract function getContentType();
 
   /**
-   * @return string - the node type corresponding to the content type
+   * Returns true if the content type queried is session based.
+   *
+   * @return boolean returns true if the content is queried by session
    */
-  protected abstract function getNodeType();
+  public abstract function isSessionBased();
 
   /**
-   * Adds the appropriate table joins to the given query
+   * Gets the node types queried.
+   *
+   * @return array - the node types corresponding to the content type
+   */
+  protected abstract function getNodeTypes();
+
+  /**
+   * Adds the appropriate table joins to the given query.
    *
    * @param $query SelectQuery
    */
   protected abstract function addJoins($query);
 
   /**
-   * Adds WHERE conditions to the given query based on the given year
+   * Adds WHERE conditions to the given query based on the given year.
    *
    * @param $query SelectQuery
    * @param $year int
@@ -80,7 +100,9 @@ abstract class SpotcheckDumpQuery {
   /* Public methods */
 
   /**
-   * @param $year year
+   * Get a count of the total number of query results.
+   *
+   * @param $year int
    *
    * @return int the number of content nodes for the given year
    */
@@ -92,8 +114,9 @@ abstract class SpotcheckDumpQuery {
   }
 
   /**
-   * Return content node ids for the given session year
-   * Supports pagination via limit and offset params
+   * Return content node ids for the given session year.
+   *
+   * Supports pagination via limit and offset params.
    *
    * @param $year int - year
    * @param $limit int - maximum number of node ids returned
@@ -104,8 +127,6 @@ abstract class SpotcheckDumpQuery {
   public function getNids($year, $limit, $offset) {
     $query = $this->getBaseQuery($year)
       ->range($offset, $limit);
-
-    //        print $query;
 
     $result = $query->execute();
 
@@ -119,8 +140,7 @@ abstract class SpotcheckDumpQuery {
   }
 
   /**
-   * Performs cleaning and any necessary manipulations to the nodes
-   * in preparation for sending to Open Legislation
+   * Performs cleaning and any necessary manipulations to the nodes.
    *
    * @param $nodes
    */
@@ -131,7 +151,7 @@ abstract class SpotcheckDumpQuery {
   /* Internal Methods */
 
   /**
-   * Gets a base query that retrieves all node ids for the given session year
+   * Gets a base query that retrieves all node ids for the given session year.
    *
    * @param $year int - year
    *
@@ -141,14 +161,15 @@ abstract class SpotcheckDumpQuery {
     $query = db_select('node', $this::$node_alias);
     $this->addJoins($query);
     $query->fields($this::$node_alias, ['nid'])
-      ->condition($this::$node_alias . '.type', $this->getNodeType(), '=');
+      ->condition($this::$node_alias . '.type', $this->getNodeTypes(), 'IN');
     $this->addConditions($query, $year);
     return $query;
   }
 }
 
 /**
- * Class SessionSpotcheckDumpQuery
+ * Class SessionSpotcheckDumpQuery.
+ *
  * Abstract extension of SpotcheckDumpQuery
  * Meant for content types that are categorized by session year (as opposed to
  * standard year)
@@ -160,7 +181,14 @@ abstract class SessionSpotcheckDumpQuery extends SpotcheckDumpQuery {
   protected static $session_field = 'field_ol_session_value';
 
   /**
-   * Join to openleg session table
+   * {@inheritdoc}
+   */
+  public function isSessionBased() {
+    return TRUE;
+  }
+
+  /**
+   * Join to openleg session table.
    *
    * @param SelectQuery $query
    */
@@ -170,20 +198,23 @@ abstract class SessionSpotcheckDumpQuery extends SpotcheckDumpQuery {
   }
 
   /**
-   * Add where clause to select session year
+   * Add where clause to select session year.
    *
    * @param SelectQuery $query
-   * @param int $session
+   * @param int $year
    */
-  protected function addConditions($query, $session) {
+  protected function addConditions($query, $year) {
+    $session = nys_legislation_spotcheck_get_session_year($year);
     $query->condition($this::$session_alias . '.' . $this::$session_field, $session, '=');
   }
 }
 
 /**
- * Class YearlySpotcheckDumpQuery
- * Abstract extension of SpotcheckDumpQuery
- * Meant for content types that are categorized by year
+ * Class YearlySpotcheckDumpQuery.
+ *
+ * Abstract extension of SpotcheckDumpQuery.
+ *
+ * Meant for content types that are categorized by year.
  */
 abstract class YearlySpotcheckDumpQuery extends SpotcheckDumpQuery {
 
@@ -192,7 +223,14 @@ abstract class YearlySpotcheckDumpQuery extends SpotcheckDumpQuery {
   protected static $year_field = 'field_ol_year_value';
 
   /**
-   * Joins openleg year table
+   * {@inheritdoc}
+   */
+  public function isSessionBased() {
+    return FALSE;
+  }
+
+  /**
+   * Joins openleg year table.
    *
    * @param SelectQuery $query
    */
@@ -202,7 +240,7 @@ abstract class YearlySpotcheckDumpQuery extends SpotcheckDumpQuery {
   }
 
   /**
-   * Adds where clause to select any of the two years under the given session
+   * Adds where clause to select any of the two years under the given session.
    *
    * @param SelectQuery $query
    * @param int $year
@@ -215,33 +253,63 @@ abstract class YearlySpotcheckDumpQuery extends SpotcheckDumpQuery {
   }
 }
 
+/**
+ * Class BillSpotcheckDumpQuerier.
+ *
+ * Queries bill and resolution nodes.
+ */
 class BillSpotcheckDumpQuerier extends SessionSpotcheckDumpQuery {
 
-  protected function getNodeType() {
-    return 'bill';
+  /**
+   * {@inheritdoc}
+   */
+  protected function getNodeTypes() {
+    return ['bill', 'resolution'];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getContentType() {
     return SpotcheckContentType::BILL;
   }
 }
 
+/**
+ * Class CalendarSpotcheckDumpQuerier.
+ *
+ * Queries calendar nodes.
+ */
 class CalendarSpotcheckDumpQuerier extends YearlySpotcheckDumpQuery {
 
-  protected function getNodeType() {
-    return 'calendar';
+  /**
+   * {@inheritdoc}
+   */
+  protected function getNodeTypes() {
+    return ['calendar'];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getContentType() {
     return SpotcheckContentType::CALENDAR;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function prepareNodes(&$nodes) {
     parent::prepareNodes($nodes);
 
-    self::getCalendars($nodes); //wha
+    self::getCalendars($nodes);
   }
 
+  /**
+   * Extracts individual calendars from calendar nodes.
+   *
+   * @param $nodes
+   */
   private function getCalendars(&$nodes) {
     $cal_eids = [];
     foreach ($nodes as $node) {
@@ -269,6 +337,13 @@ class CalendarSpotcheckDumpQuerier extends YearlySpotcheckDumpQuery {
     }
   }
 
+  /**
+   * Gets bill print nos from calendar bill references.
+   *
+   * @param $cal_eids
+   *
+   * @return array
+   */
   private function getBillTitles($cal_eids) {
     $bill_nid_map = [];
     $bill_query_result = db_query(
@@ -278,7 +353,7 @@ class CalendarSpotcheckDumpQuerier extends YearlySpotcheckDumpQuery {
       "WHERE bill.entity_id IN (:calids)",
       [":calids" => $cal_eids]);
 
-    // Map bill titles to their node ids
+    // Map bill titles to their node ids.
     foreach ($bill_query_result->fetchAll() as $row) {
       $bill_nid_map[$row->nid] = $row->title;
     }
@@ -286,6 +361,12 @@ class CalendarSpotcheckDumpQuerier extends YearlySpotcheckDumpQuery {
     return $bill_nid_map;
   }
 
+  /**
+   * Replaces bill nids with corresponding print_nos.
+   *
+   * @param $calendar
+   * @param $bill_nid_map
+   */
   private function setBillIds($calendar, $bill_nid_map) {
     foreach ($calendar->field_ol_bill[LANGUAGE_NONE] as &$bill_ref) {
       $nid = $bill_ref['target_id'];
@@ -299,23 +380,39 @@ class CalendarSpotcheckDumpQuerier extends YearlySpotcheckDumpQuery {
 
 }
 
+/**
+ * Class AgendaSpotcheckDumpQuerier.
+ *
+ * Queries agenda nodes.
+ */
 class AgendaSpotcheckDumpQuerier extends YearlySpotcheckDumpQuery {
 
+  /**
+   * {@inheritdoc}
+   */
   public function prepareNodes(&$nodes) {
     parent::prepareNodes($nodes);
 
     self::getAgendaBills($nodes);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getContentType() {
     return SpotcheckContentType::AGENDA;
   }
 
-  protected function getNodeType() {
-    return 'agenda';
+  /**
+   * {@inheritdoc}
+   */
+  protected function getNodeTypes() {
+    return ['agenda'];
   }
 
   /**
+   * Retrieves agenda bill info and sets on agenda.
+   *
    * Replaces the list of eids for bill agenda info in an agenda nodes,
    * with actual bill agenda infos
    *
@@ -325,7 +422,7 @@ class AgendaSpotcheckDumpQuerier extends YearlySpotcheckDumpQuery {
     /** Mapping of EID -> bill agenda info */
     $bill_infos = [];
 
-    // Get the EIDs for all bills referenced in the agendas
+    // Get the EIDs for all bills referenced in the agendas.
     foreach ($agenda_nodes as $agenda_node) {
       $agenda_bill_refs = $agenda_node->field_ol_agenda_bills[LANGUAGE_NONE];
       if (empty($agenda_bill_refs)) {
@@ -333,21 +430,21 @@ class AgendaSpotcheckDumpQuerier extends YearlySpotcheckDumpQuery {
       }
       foreach ($agenda_bill_refs as $bill_info_ref) {
         $eid = $bill_info_ref["value"];
-        // Store false as bill data for now, we will load data soon
+        // Store false as bill data for now, we will load data soon.
         $bill_infos[$eid] = FALSE;
       }
     }
 
-    // Bulk load all referenced bills
+    // Bulk load all referenced bills.
     $bill_infos = entity_load("field_collection_item", array_keys($bill_infos), [], TRUE);
     nys_legislation_spotcheck_clean_nodes($bill_infos);
 
-    // Map loaded bills to their eid
+    // Map loaded bills to their eid.
     foreach ($bill_infos as $bill_info) {
       $bill_infos[$bill_info->item_id] = $bill_info;
     }
 
-    // for each agenda, replace eid array with array of bills
+    // for each agenda, replace eid array with array of bills.
     foreach ($agenda_nodes as $agenda_node) {
       $agenda_bill_refs = &$agenda_node->field_ol_agenda_bills[LANGUAGE_NONE];
       if (empty($agenda_bill_refs)) {
@@ -362,6 +459,8 @@ class AgendaSpotcheckDumpQuerier extends YearlySpotcheckDumpQuery {
 }
 
 /**
+ * Gets a dump querier for the given content type.
+ *
  * @param $content_type SpotcheckContentType
  *
  * @return SpotcheckDumpQuery A query object appropriate to the passed in
@@ -380,6 +479,8 @@ function nys_legislation_spotcheck_get_dump_querier($content_type) {
 }
 
 /**
+ * Gets the session year of the given year.
+ *
  * @param $year int year
  *
  * @return int - the session year corresponding to the passed in year
@@ -392,7 +493,7 @@ function nys_legislation_spotcheck_get_session_year($year) {
 }
 
 /**
- * Remove format and safe values from node objects to compress data
+ * Remove format and safe values from node objects to compress data.
  *
  * @param $nodes
  */

@@ -1734,12 +1734,20 @@
           font-size: 14px;
           line-height: 18px;
           line-height: 20px;
-          display: inline-block;
+          display: inline;
         }
         .bill-committee {
-          display: inline-block;
+          display: inline;
           font-size: 14px;
           line-height: 18px;
+          word-wrap: break-word;
+          a {
+              color: #fff;
+              border-bottom: solid 0.05em #fff;
+              &:hover {
+                border-bottom: none;
+              }
+          }
           &:before {
             content: "";
             display: inline-block;

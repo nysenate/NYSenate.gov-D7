@@ -1,0 +1,97 @@
+diff --git a/advpoll.info b/advpoll.info
+index 5f87339..7651be1 100644
+--- a/advpoll.info
++++ b/advpoll.info
+@@ -6,6 +6,7 @@ dependencies[] = advpoll_field
+ dependencies[] = votingapi
+ dependencies[] = date
+ dependencies[] = date_popup
++dependencies[] = entity
+ configure = admin/config/search/advpoll
+
+ files[] = tests/AdvPollTestBase.test
+diff --git a/includes/advpoll_helper.inc b/includes/advpoll_helper.inc
+index 1002b9f..7204ae5 100644
+--- a/includes/advpoll_helper.inc
++++ b/includes/advpoll_helper.inc
+@@ -58,13 +58,7 @@ function advpoll_get_data($node) {
+       (isset($node->advpoll_choice[$lang])) ? $data['choices'] = $node->advpoll_choice[$lang] : $data['choices'] = $node->advpoll_choice[LANGUAGE_NONE];
+     }
+
+-    if ($node->advpoll_dates) {
+-      $data['start_date'] = (isset($node->advpoll_dates[$lang])) ? strtotime($node->advpoll_dates[$lang][0]['value'] . ' UTC') : strtotime($node->advpoll_dates[LANGUAGE_NONE][0]['value'] . ' UTC');
+-      $data['end_date'] = (isset($node->advpoll_dates[$lang])) ? strtotime($node->advpoll_dates[$lang][0]['value2'] . ' UTC') : strtotime($node->advpoll_dates[LANGUAGE_NONE][0]['value2'] . 'UTC');
+-    } else {
+-      $data['start_date'] = 0;
+-      $data['end_date'] = 0;
+-    }
++    $data += _advpoll_get_date($node);
+
+     (isset($node->advpoll_mode[$lang])) ? $data['mode'] = $node->advpoll_mode[$lang][0]['value'] : $data['mode'] = $node->advpoll_mode[LANGUAGE_NONE][0]['value'];
+     if (isset($node->advpoll_cookie_duration[$lang])) {
+@@ -145,13 +139,7 @@ function advpoll_get_form_data($form_state, $index = 0) {
+       (isset($node->advpoll_options[$lang])) ? $options = $node->advpoll_options[$lang] : $options = $node->advpoll_options[LANGUAGE_NONE];
+     }
+     (isset($node->advpoll_choice[$lang])) ? $data['choices'] = $node->advpoll_choice[$lang] : $data['choices'] = $node->advpoll_choice[LANGUAGE_NONE];
+-    if ($node->advpoll_dates) {
+-      (isset($node->advpoll_dates[$lang])) ? $data['start_date'] = strtotime($node->advpoll_dates[$lang][0]['value']) : $data['start_date'] = strtotime($node->advpoll_dates[LANGUAGE_NONE][0]['value']);
+-      (isset($node->advpoll_dates[$lang])) ? $data['end_date'] = strtotime($node->advpoll_dates[$lang][0]['value2']) : $data['end_date'] = strtotime($node->advpoll_dates[LANGUAGE_NONE][0]['value2']);
+-    } else {
+-      $data['start_date'] = 0;
+-      $data['end_date'] = 0;
+-    }
++    $data += _advpoll_get_date($node);
+     (isset($node->advpoll_mode[$lang])) ? $data['mode'] = $node->advpoll_mode[$lang][0]['value'] : $data['mode'] = $node->advpoll_mode[LANGUAGE_NONE][0]['value'];
+     (isset($node->advpoll_cookie_duration[$lang])) ? $data['cookie_duration'] = $node->advpoll_cookie_duration[$lang][0]['value'] : $data['cookie_duration'] = $node->advpoll_cookie_duration[LANGUAGE_NONE][0]['value'];
+     (isset($node->advpoll_closed[$lang])) ? $data['state'] = $node->advpoll_closed[$lang][0]['value'] : $data['state'] = $node->advpoll_closed[LANGUAGE_NONE][0]['value'];
+@@ -165,3 +153,31 @@ function advpoll_get_form_data($form_state, $index = 0) {
+
+   return (object) $data;
+ }
++
++/**
++ * Helper to pull dates from the advpoll_dates field.
++ *
++ * @param object $node
++ *   An advpoll node.
++ *
++ * @return array
++ *   An array of start_date and end_date: both default to 0.
++ */
++function _advpoll_get_date($node) {
++  $return = array(
++    'start_date' => 0,
++    'end_date' => 0,
++  );
++
++  if ($node->advpoll_dates) {
++    $wrapper = entity_metadata_wrapper('node', $node);
++
++    if ($dates = $wrapper->advpoll_dates->value()) {
++      $timezone = ($dates['timezone']) ?: 'UTC';
++      $return['start_date'] = ($dates['value']) ? strtotime($dates['value'] . ' ' . $timezone) : 0;
++      $return['end_date'] = ($dates['value2']) ? strtotime($dates['value2'] . ' ' . $timezone) : 0;
++    }
++  }
++
++  return $return;
++}
+diff --git a/tests/AdvPollTestBase.test b/tests/AdvPollTestBase.test
+index 7310ef0..c7d5926 100644
+--- a/tests/AdvPollTestBase.test
++++ b/tests/AdvPollTestBase.test
+@@ -31,11 +31,9 @@ var $poll_admin;
+    */
+   public function setUp() {
+     // Enable required modules.
+-    parent::setUp('field', 'field_sql_storage', 'number',
+-                  'options', 'list',
+-                  'votingapi',
+-                  'date_api', 'date', 'date_popup',
+-                  'advpoll_field', 'advpoll');
++    parent::setUp(array(
++        'advpoll',
++    ));
+
+     // Create some users.
+     $this->createUsers();

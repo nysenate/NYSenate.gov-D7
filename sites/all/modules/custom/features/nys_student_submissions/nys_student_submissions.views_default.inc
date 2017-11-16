@@ -11,6 +11,663 @@ function nys_student_submissions_views_default_views() {
   $export = array();
 
   $view = new view();
+  $view->name = 'student_hannon_photo_contest';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'entityform';
+  $view->human_name = 'Student Hannon Photo Contest';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Hannon Photo Contest';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'none';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'better_exposed_filters';
+  $handler->display->display_options['exposed_form']['options']['reset_button'] = TRUE;
+  $handler->display->display_options['exposed_form']['options']['autosubmit'] = TRUE;
+  $handler->display->display_options['exposed_form']['options']['bef'] = array(
+    'general' => array(
+      'input_required' => 0,
+      'text_input_required' => array(
+        'text_input_required' => array(
+          'value' => 'Select any filter and click on Apply to see results',
+          'format' => 'full_html',
+        ),
+      ),
+      'allow_secondary' => 0,
+      'secondary_label' => 'Advanced options',
+      'secondary_collapse_override' => '0',
+    ),
+    'field_hannon_school_name_target_id' => array(
+      'bef_format' => 'default',
+      'more_options' => array(
+        'bef_select_all_none' => FALSE,
+        'bef_collapsible' => 0,
+        'autosubmit' => 0,
+        'is_secondary' => 0,
+        'any_label' => '',
+        'bef_filter_description' => '',
+        'tokens' => array(
+          'available' => array(
+            0 => 'global_types',
+          ),
+        ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
+      ),
+    ),
+    'field_hannon_category_value' => array(
+      'bef_format' => 'default',
+      'more_options' => array(
+        'bef_select_all_none' => FALSE,
+        'bef_collapsible' => 0,
+        'autosubmit' => 0,
+        'is_secondary' => 0,
+        'any_label' => '',
+        'bef_filter_description' => '',
+        'tokens' => array(
+          'available' => array(
+            0 => 'global_types',
+          ),
+        ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
+      ),
+    ),
+    'field_hannon_last_name_value' => array(
+      'bef_format' => 'default',
+      'more_options' => array(
+        'autosubmit' => 0,
+        'is_secondary' => 0,
+        'any_label' => '',
+        'bef_filter_description' => '',
+        'tokens' => array(
+          'available' => array(
+            0 => 'global_types',
+          ),
+        ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
+      ),
+    ),
+    'field_hannon_winner_types_value' => array(
+      'bef_format' => 'bef',
+      'more_options' => array(
+        'bef_select_all_none' => 0,
+        'bef_collapsible' => 0,
+        'autosubmit' => 0,
+        'is_secondary' => 0,
+        'any_label' => '',
+        'bef_filter_description' => '',
+        'tokens' => array(
+          'available' => array(
+            0 => 'global_types',
+          ),
+        ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
+      ),
+    ),
+    'field_hannon_star_rating_value' => array(
+      'bef_format' => 'bef',
+      'more_options' => array(
+        'bef_select_all_none' => FALSE,
+        'bef_collapsible' => 0,
+        'autosubmit' => 0,
+        'is_secondary' => 0,
+        'any_label' => '',
+        'bef_filter_description' => '',
+        'tokens' => array(
+          'available' => array(
+            0 => 'global_types',
+          ),
+        ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
+      ),
+    ),
+  );
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['style_plugin'] = 'table';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'field_hannon_first_name' => 'field_hannon_first_name',
+    'field_hannon_last_name' => 'field_hannon_last_name',
+    'field_hannon_school_name' => 'field_hannon_school_name',
+    'field_hannon_category' => 'field_hannon_category',
+    'field_hannon_photo_upload' => 'field_hannon_photo_upload',
+    'field_hannon_winner_types' => 'field_hannon_winner_types',
+    'views_bulk_operations' => 'views_bulk_operations',
+    'field_hannon_city' => 'field_hannon_city',
+    'field_hannon_street_address' => 'field_hannon_street_address',
+    'field_hannon_zip_code' => 'field_hannon_last_name',
+    'field_school_teachers_email' => 'field_hannon_last_name',
+    'field_hannon_phone_num' => 'field_hannon_last_name',
+    'field_hannon_star_rating' => 'field_hannon_winner_types',
+  );
+  $handler->display->display_options['style_options']['default'] = '-1';
+  $handler->display->display_options['style_options']['info'] = array(
+    'field_hannon_first_name' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_hannon_last_name' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '<br>',
+      'empty_column' => 0,
+    ),
+    'field_hannon_school_name' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_hannon_category' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_hannon_photo_upload' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_hannon_winner_types' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '<br>',
+      'empty_column' => 0,
+    ),
+    'views_bulk_operations' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_hannon_city' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_hannon_street_address' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_hannon_zip_code' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_school_teachers_email' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_hannon_phone_num' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_hannon_star_rating' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
+  /* Header: Global: Unfiltered text */
+  $handler->display->display_options['header']['area_text_custom']['id'] = 'area_text_custom';
+  $handler->display->display_options['header']['area_text_custom']['table'] = 'views';
+  $handler->display->display_options['header']['area_text_custom']['field'] = 'area_text_custom';
+  /* Field: Entityform Submission: First Name */
+  $handler->display->display_options['fields']['field_hannon_first_name']['id'] = 'field_hannon_first_name';
+  $handler->display->display_options['fields']['field_hannon_first_name']['table'] = 'field_data_field_hannon_first_name';
+  $handler->display->display_options['fields']['field_hannon_first_name']['field'] = 'field_hannon_first_name';
+  $handler->display->display_options['fields']['field_hannon_first_name']['exclude'] = TRUE;
+  /* Field: Entityform Submission: Last Name */
+  $handler->display->display_options['fields']['field_hannon_last_name']['id'] = 'field_hannon_last_name';
+  $handler->display->display_options['fields']['field_hannon_last_name']['table'] = 'field_data_field_hannon_last_name';
+  $handler->display->display_options['fields']['field_hannon_last_name']['field'] = 'field_hannon_last_name';
+  $handler->display->display_options['fields']['field_hannon_last_name']['label'] = 'Name';
+  $handler->display->display_options['fields']['field_hannon_last_name']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_hannon_last_name']['alter']['text'] = '[field_hannon_first_name] [field_hannon_last_name]';
+  /* Field: Entityform Submission: School */
+  $handler->display->display_options['fields']['field_hannon_school_name']['id'] = 'field_hannon_school_name';
+  $handler->display->display_options['fields']['field_hannon_school_name']['table'] = 'field_data_field_hannon_school_name';
+  $handler->display->display_options['fields']['field_hannon_school_name']['field'] = 'field_hannon_school_name';
+  $handler->display->display_options['fields']['field_hannon_school_name']['settings'] = array(
+    'bypass_access' => 0,
+    'link' => 0,
+  );
+  /* Field: Entityform Submission: Category */
+  $handler->display->display_options['fields']['field_hannon_category']['id'] = 'field_hannon_category';
+  $handler->display->display_options['fields']['field_hannon_category']['table'] = 'field_data_field_hannon_category';
+  $handler->display->display_options['fields']['field_hannon_category']['field'] = 'field_hannon_category';
+  /* Field: Entityform Submission: Attach your photo */
+  $handler->display->display_options['fields']['field_hannon_photo_upload']['id'] = 'field_hannon_photo_upload';
+  $handler->display->display_options['fields']['field_hannon_photo_upload']['table'] = 'field_data_field_hannon_photo_upload';
+  $handler->display->display_options['fields']['field_hannon_photo_upload']['field'] = 'field_hannon_photo_upload';
+  $handler->display->display_options['fields']['field_hannon_photo_upload']['label'] = 'Photo Submission';
+  $handler->display->display_options['fields']['field_hannon_photo_upload']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_hannon_photo_upload']['settings'] = array(
+    'image_style' => 'medium',
+    'image_link' => 'file',
+  );
+  /* Field: Entityform Submission: Winner Types */
+  $handler->display->display_options['fields']['field_hannon_winner_types']['id'] = 'field_hannon_winner_types';
+  $handler->display->display_options['fields']['field_hannon_winner_types']['table'] = 'field_data_field_hannon_winner_types';
+  $handler->display->display_options['fields']['field_hannon_winner_types']['field'] = 'field_hannon_winner_types';
+  $handler->display->display_options['fields']['field_hannon_winner_types']['label'] = 'Winner/Ratings Status';
+  $handler->display->display_options['fields']['field_hannon_winner_types']['alter']['text'] = '[field_hannon_winner]<br>
+[field_hannon_winner_types]
+';
+  /* Field: Bulk operations: Entityform Submission */
+  $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
+  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_entityform';
+  $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
+  $handler->display->display_options['fields']['views_bulk_operations']['label'] = 'Select Winners or Change Star Ratings';
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '1';
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['row_clickable'] = 1;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
+    'action::views_bulk_operations_modify_action' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 1,
+      'skip_permission_check' => 0,
+      'override_label' => 1,
+      'label' => 'Select Winners or Change Star Ratings',
+      'settings' => array(
+        'show_all_tokens' => 0,
+        'display_values' => array(
+          'hannon_photo_contest::field_hannon_winner_types' => 'hannon_photo_contest::field_hannon_winner_types',
+          'hannon_photo_contest::field_hannon_star_rating' => 'hannon_photo_contest::field_hannon_star_rating',
+        ),
+      ),
+    ),
+  );
+  /* Field: Entityform Submission: City */
+  $handler->display->display_options['fields']['field_hannon_city']['id'] = 'field_hannon_city';
+  $handler->display->display_options['fields']['field_hannon_city']['table'] = 'field_data_field_hannon_city';
+  $handler->display->display_options['fields']['field_hannon_city']['field'] = 'field_hannon_city';
+  $handler->display->display_options['fields']['field_hannon_city']['label'] = '';
+  $handler->display->display_options['fields']['field_hannon_city']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_hannon_city']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: Street Address */
+  $handler->display->display_options['fields']['field_hannon_street_address']['id'] = 'field_hannon_street_address';
+  $handler->display->display_options['fields']['field_hannon_street_address']['table'] = 'field_data_field_hannon_street_address';
+  $handler->display->display_options['fields']['field_hannon_street_address']['field'] = 'field_hannon_street_address';
+  $handler->display->display_options['fields']['field_hannon_street_address']['label'] = '';
+  $handler->display->display_options['fields']['field_hannon_street_address']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_hannon_street_address']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: Zip Code */
+  $handler->display->display_options['fields']['field_hannon_zip_code']['id'] = 'field_hannon_zip_code';
+  $handler->display->display_options['fields']['field_hannon_zip_code']['table'] = 'field_data_field_hannon_zip_code';
+  $handler->display->display_options['fields']['field_hannon_zip_code']['field'] = 'field_hannon_zip_code';
+  $handler->display->display_options['fields']['field_hannon_zip_code']['label'] = '';
+  $handler->display->display_options['fields']['field_hannon_zip_code']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_hannon_zip_code']['alter']['text'] = '[field_hannon_street_address]<br>
+[field_hannon_city], NY [field_hannon_zip_code]';
+  $handler->display->display_options['fields']['field_hannon_zip_code']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_hannon_zip_code']['settings'] = array(
+    'thousand_separator' => '',
+    'prefix_suffix' => 0,
+  );
+  /* Field: Entityform Submission: Teacher's Email */
+  $handler->display->display_options['fields']['field_school_teachers_email']['id'] = 'field_school_teachers_email';
+  $handler->display->display_options['fields']['field_school_teachers_email']['table'] = 'field_data_field_school_teachers_email';
+  $handler->display->display_options['fields']['field_school_teachers_email']['field'] = 'field_school_teachers_email';
+  $handler->display->display_options['fields']['field_school_teachers_email']['label'] = '';
+  $handler->display->display_options['fields']['field_school_teachers_email']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: Phone Number */
+  $handler->display->display_options['fields']['field_hannon_phone_num']['id'] = 'field_hannon_phone_num';
+  $handler->display->display_options['fields']['field_hannon_phone_num']['table'] = 'field_data_field_hannon_phone_num';
+  $handler->display->display_options['fields']['field_hannon_phone_num']['field'] = 'field_hannon_phone_num';
+  $handler->display->display_options['fields']['field_hannon_phone_num']['label'] = '';
+  $handler->display->display_options['fields']['field_hannon_phone_num']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: Star Rating */
+  $handler->display->display_options['fields']['field_hannon_star_rating']['id'] = 'field_hannon_star_rating';
+  $handler->display->display_options['fields']['field_hannon_star_rating']['table'] = 'field_data_field_hannon_star_rating';
+  $handler->display->display_options['fields']['field_hannon_star_rating']['field'] = 'field_hannon_star_rating';
+  $handler->display->display_options['fields']['field_hannon_star_rating']['label'] = '';
+  $handler->display->display_options['fields']['field_hannon_star_rating']['element_label_colon'] = FALSE;
+  /* Sort criterion: Entityform Submission: Star Rating (field_hannon_star_rating) */
+  $handler->display->display_options['sorts']['field_hannon_star_rating_value']['id'] = 'field_hannon_star_rating_value';
+  $handler->display->display_options['sorts']['field_hannon_star_rating_value']['table'] = 'field_data_field_hannon_star_rating';
+  $handler->display->display_options['sorts']['field_hannon_star_rating_value']['field'] = 'field_hannon_star_rating_value';
+  $handler->display->display_options['sorts']['field_hannon_star_rating_value']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['field_hannon_star_rating_value']['allowed_values'] = '1';
+  /* Sort criterion: Entityform Submission: Winner Types (field_hannon_winner_types) */
+  $handler->display->display_options['sorts']['field_hannon_winner_types_value']['id'] = 'field_hannon_winner_types_value';
+  $handler->display->display_options['sorts']['field_hannon_winner_types_value']['table'] = 'field_data_field_hannon_winner_types';
+  $handler->display->display_options['sorts']['field_hannon_winner_types_value']['field'] = 'field_hannon_winner_types_value';
+  $handler->display->display_options['sorts']['field_hannon_winner_types_value']['allowed_values'] = '1';
+  /* Filter criterion: Entityform Submission: Entityform Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'entityform';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'hannon_photo_contest' => 'hannon_photo_contest',
+  );
+  $handler->display->display_options['filters']['type']['group'] = 1;
+  /* Filter criterion: Entityform Submission: School (field_hannon_school_name) */
+  $handler->display->display_options['filters']['field_hannon_school_name_target_id']['id'] = 'field_hannon_school_name_target_id';
+  $handler->display->display_options['filters']['field_hannon_school_name_target_id']['table'] = 'field_data_field_hannon_school_name';
+  $handler->display->display_options['filters']['field_hannon_school_name_target_id']['field'] = 'field_hannon_school_name_target_id';
+  $handler->display->display_options['filters']['field_hannon_school_name_target_id']['group'] = 1;
+  $handler->display->display_options['filters']['field_hannon_school_name_target_id']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_hannon_school_name_target_id']['expose']['operator_id'] = 'field_hannon_school_name_target_id_op';
+  $handler->display->display_options['filters']['field_hannon_school_name_target_id']['expose']['label'] = 'School';
+  $handler->display->display_options['filters']['field_hannon_school_name_target_id']['expose']['operator'] = 'field_hannon_school_name_target_id_op';
+  $handler->display->display_options['filters']['field_hannon_school_name_target_id']['expose']['identifier'] = 'field_hannon_school_name_target_id';
+  $handler->display->display_options['filters']['field_hannon_school_name_target_id']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    17 => 0,
+    18 => 0,
+    19 => 0,
+  );
+  /* Filter criterion: Entityform Submission: Category (field_hannon_category) */
+  $handler->display->display_options['filters']['field_hannon_category_value']['id'] = 'field_hannon_category_value';
+  $handler->display->display_options['filters']['field_hannon_category_value']['table'] = 'field_data_field_hannon_category';
+  $handler->display->display_options['filters']['field_hannon_category_value']['field'] = 'field_hannon_category_value';
+  $handler->display->display_options['filters']['field_hannon_category_value']['group'] = 1;
+  $handler->display->display_options['filters']['field_hannon_category_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_hannon_category_value']['expose']['operator_id'] = 'field_hannon_category_value_op';
+  $handler->display->display_options['filters']['field_hannon_category_value']['expose']['label'] = 'Category';
+  $handler->display->display_options['filters']['field_hannon_category_value']['expose']['operator'] = 'field_hannon_category_value_op';
+  $handler->display->display_options['filters']['field_hannon_category_value']['expose']['identifier'] = 'field_hannon_category_value';
+  $handler->display->display_options['filters']['field_hannon_category_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    17 => 0,
+    18 => 0,
+    19 => 0,
+  );
+  /* Filter criterion: Entityform Submission: Last Name (field_hannon_last_name) */
+  $handler->display->display_options['filters']['field_hannon_last_name_value']['id'] = 'field_hannon_last_name_value';
+  $handler->display->display_options['filters']['field_hannon_last_name_value']['table'] = 'field_data_field_hannon_last_name';
+  $handler->display->display_options['filters']['field_hannon_last_name_value']['field'] = 'field_hannon_last_name_value';
+  $handler->display->display_options['filters']['field_hannon_last_name_value']['operator'] = 'contains';
+  $handler->display->display_options['filters']['field_hannon_last_name_value']['group'] = 1;
+  $handler->display->display_options['filters']['field_hannon_last_name_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_hannon_last_name_value']['expose']['operator_id'] = 'field_hannon_last_name_value_op';
+  $handler->display->display_options['filters']['field_hannon_last_name_value']['expose']['label'] = 'Student\'s Last Name';
+  $handler->display->display_options['filters']['field_hannon_last_name_value']['expose']['operator'] = 'field_hannon_last_name_value_op';
+  $handler->display->display_options['filters']['field_hannon_last_name_value']['expose']['identifier'] = 'field_hannon_last_name_value';
+  $handler->display->display_options['filters']['field_hannon_last_name_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    17 => 0,
+    18 => 0,
+    19 => 0,
+  );
+  $handler->display->display_options['filters']['field_hannon_last_name_value']['expose']['autocomplete_filter'] = 1;
+  $handler->display->display_options['filters']['field_hannon_last_name_value']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['field_hannon_last_name_value']['expose']['autocomplete_min_chars'] = '1';
+  $handler->display->display_options['filters']['field_hannon_last_name_value']['expose']['autocomplete_field'] = 'field_hannon_last_name';
+  $handler->display->display_options['filters']['field_hannon_last_name_value']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['field_hannon_last_name_value']['expose']['autocomplete_raw_dropdown'] = 1;
+  $handler->display->display_options['filters']['field_hannon_last_name_value']['expose']['autocomplete_dependent'] = 0;
+  /* Filter criterion: Entityform Submission: Star Rating (field_hannon_star_rating) */
+  $handler->display->display_options['filters']['field_hannon_star_rating_value']['id'] = 'field_hannon_star_rating_value';
+  $handler->display->display_options['filters']['field_hannon_star_rating_value']['table'] = 'field_data_field_hannon_star_rating';
+  $handler->display->display_options['filters']['field_hannon_star_rating_value']['field'] = 'field_hannon_star_rating_value';
+  $handler->display->display_options['filters']['field_hannon_star_rating_value']['group'] = 1;
+  $handler->display->display_options['filters']['field_hannon_star_rating_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_hannon_star_rating_value']['expose']['operator_id'] = 'field_hannon_star_rating_value_op';
+  $handler->display->display_options['filters']['field_hannon_star_rating_value']['expose']['label'] = 'Star Rating';
+  $handler->display->display_options['filters']['field_hannon_star_rating_value']['expose']['operator'] = 'field_hannon_star_rating_value_op';
+  $handler->display->display_options['filters']['field_hannon_star_rating_value']['expose']['identifier'] = 'field_hannon_star_rating_value';
+  $handler->display->display_options['filters']['field_hannon_star_rating_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    17 => 0,
+    18 => 0,
+    19 => 0,
+  );
+  /* Filter criterion: Entityform Submission: Winner Types (field_hannon_winner_types) */
+  $handler->display->display_options['filters']['field_hannon_winner_types_value']['id'] = 'field_hannon_winner_types_value';
+  $handler->display->display_options['filters']['field_hannon_winner_types_value']['table'] = 'field_data_field_hannon_winner_types';
+  $handler->display->display_options['filters']['field_hannon_winner_types_value']['field'] = 'field_hannon_winner_types_value';
+  $handler->display->display_options['filters']['field_hannon_winner_types_value']['group'] = 1;
+  $handler->display->display_options['filters']['field_hannon_winner_types_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_hannon_winner_types_value']['expose']['operator_id'] = 'field_hannon_winner_types_value_op';
+  $handler->display->display_options['filters']['field_hannon_winner_types_value']['expose']['label'] = 'Winner Types';
+  $handler->display->display_options['filters']['field_hannon_winner_types_value']['expose']['description'] = 'To choose winners, click box in column next to photo submission, and then click "Select Winners" button below to change value.';
+  $handler->display->display_options['filters']['field_hannon_winner_types_value']['expose']['operator'] = 'field_hannon_winner_types_value_op';
+  $handler->display->display_options['filters']['field_hannon_winner_types_value']['expose']['identifier'] = 'field_hannon_winner_types_value';
+  $handler->display->display_options['filters']['field_hannon_winner_types_value']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_hannon_winner_types_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    17 => 0,
+    18 => 0,
+    19 => 0,
+  );
+
+  /* Display: Admin */
+  $handler = $view->new_display('page', 'Admin', 'results');
+  $handler->display->display_options['path'] = 'admin/entityforms/hannon-photo';
+  $handler->display->display_options['menu']['title'] = 'Hannon Photo Contest';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'management';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
+
+  /* Display: Front */
+  $handler = $view->new_display('page', 'Front', 'page_1');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Hannon Photo Contest Results';
+  $handler->display->display_options['defaults']['access'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'role';
+  $handler->display->display_options['access']['role'] = array(
+    6 => '6',
+    17 => '17',
+  );
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '20';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page'] = TRUE;
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_options_all'] = TRUE;
+  $handler->display->display_options['pager']['options']['expose']['offset_label'] = 'Enter # of Items to Skip';
+  $handler->display->display_options['defaults']['header'] = FALSE;
+  /* Header: Global: Unfiltered text */
+  $handler->display->display_options['header']['area_text_custom']['id'] = 'area_text_custom';
+  $handler->display->display_options['header']['area_text_custom']['table'] = 'views';
+  $handler->display->display_options['header']['area_text_custom']['field'] = 'area_text_custom';
+  $handler->display->display_options['header']['area_text_custom']['content'] = '<h1 class="nys-article-title">Photo Contest Submissions</h1>';
+  $handler->display->display_options['path'] = 'hannon/photo-contest-submissions';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'Hannon Photo Contest';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'management';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
+
+  /* Display: Data export */
+  $handler = $view->new_display('views_data_export', 'Data export', 'views_data_export_1');
+  $handler->display->display_options['defaults']['access'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'role';
+  $handler->display->display_options['access']['role'] = array(
+    6 => '6',
+    17 => '17',
+  );
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['style_plugin'] = 'views_data_export_csv';
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  /* Relationship: Entityform Submission: Attach your photo (field_hannon_photo_upload:fid) */
+  $handler->display->display_options['relationships']['field_hannon_photo_upload_fid']['id'] = 'field_hannon_photo_upload_fid';
+  $handler->display->display_options['relationships']['field_hannon_photo_upload_fid']['table'] = 'field_data_field_hannon_photo_upload';
+  $handler->display->display_options['relationships']['field_hannon_photo_upload_fid']['field'] = 'field_hannon_photo_upload_fid';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Entityform Submission: Last Name */
+  $handler->display->display_options['fields']['field_hannon_last_name']['id'] = 'field_hannon_last_name';
+  $handler->display->display_options['fields']['field_hannon_last_name']['table'] = 'field_data_field_hannon_last_name';
+  $handler->display->display_options['fields']['field_hannon_last_name']['field'] = 'field_hannon_last_name';
+  $handler->display->display_options['fields']['field_hannon_last_name']['alter']['text'] = '[field_hannon_first_name] [field_hannon_last_name]';
+  /* Field: Entityform Submission: First Name */
+  $handler->display->display_options['fields']['field_hannon_first_name']['id'] = 'field_hannon_first_name';
+  $handler->display->display_options['fields']['field_hannon_first_name']['table'] = 'field_data_field_hannon_first_name';
+  $handler->display->display_options['fields']['field_hannon_first_name']['field'] = 'field_hannon_first_name';
+  /* Field: Entityform Submission: School */
+  $handler->display->display_options['fields']['field_hannon_school_name']['id'] = 'field_hannon_school_name';
+  $handler->display->display_options['fields']['field_hannon_school_name']['table'] = 'field_data_field_hannon_school_name';
+  $handler->display->display_options['fields']['field_hannon_school_name']['field'] = 'field_hannon_school_name';
+  $handler->display->display_options['fields']['field_hannon_school_name']['settings'] = array(
+    'bypass_access' => 0,
+    'link' => 0,
+  );
+  /* Field: Entityform Submission: Street Address */
+  $handler->display->display_options['fields']['field_hannon_street_address']['id'] = 'field_hannon_street_address';
+  $handler->display->display_options['fields']['field_hannon_street_address']['table'] = 'field_data_field_hannon_street_address';
+  $handler->display->display_options['fields']['field_hannon_street_address']['field'] = 'field_hannon_street_address';
+  $handler->display->display_options['fields']['field_hannon_street_address']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: City */
+  $handler->display->display_options['fields']['field_hannon_city']['id'] = 'field_hannon_city';
+  $handler->display->display_options['fields']['field_hannon_city']['table'] = 'field_data_field_hannon_city';
+  $handler->display->display_options['fields']['field_hannon_city']['field'] = 'field_hannon_city';
+  $handler->display->display_options['fields']['field_hannon_city']['element_label_colon'] = FALSE;
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['label'] = 'State';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = 'NY';
+  /* Field: Entityform Submission: Zip Code */
+  $handler->display->display_options['fields']['field_hannon_zip_code']['id'] = 'field_hannon_zip_code';
+  $handler->display->display_options['fields']['field_hannon_zip_code']['table'] = 'field_data_field_hannon_zip_code';
+  $handler->display->display_options['fields']['field_hannon_zip_code']['field'] = 'field_hannon_zip_code';
+  $handler->display->display_options['fields']['field_hannon_zip_code']['alter']['text'] = '[field_hannon_street_address]<br>
+[field_hannon_city], NY [field_hannon_zip_code]';
+  $handler->display->display_options['fields']['field_hannon_zip_code']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_hannon_zip_code']['settings'] = array(
+    'thousand_separator' => '',
+    'prefix_suffix' => 0,
+  );
+  /* Field: Entityform Submission: Teacher's Email */
+  $handler->display->display_options['fields']['field_school_teachers_email']['id'] = 'field_school_teachers_email';
+  $handler->display->display_options['fields']['field_school_teachers_email']['table'] = 'field_data_field_school_teachers_email';
+  $handler->display->display_options['fields']['field_school_teachers_email']['field'] = 'field_school_teachers_email';
+  $handler->display->display_options['fields']['field_school_teachers_email']['label'] = 'Email';
+  $handler->display->display_options['fields']['field_school_teachers_email']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: Phone Number */
+  $handler->display->display_options['fields']['field_hannon_phone_num']['id'] = 'field_hannon_phone_num';
+  $handler->display->display_options['fields']['field_hannon_phone_num']['table'] = 'field_data_field_hannon_phone_num';
+  $handler->display->display_options['fields']['field_hannon_phone_num']['field'] = 'field_hannon_phone_num';
+  $handler->display->display_options['fields']['field_hannon_phone_num']['label'] = 'Phone';
+  $handler->display->display_options['fields']['field_hannon_phone_num']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: Category */
+  $handler->display->display_options['fields']['field_hannon_category']['id'] = 'field_hannon_category';
+  $handler->display->display_options['fields']['field_hannon_category']['table'] = 'field_data_field_hannon_category';
+  $handler->display->display_options['fields']['field_hannon_category']['field'] = 'field_hannon_category';
+  /* Field: File: Path */
+  $handler->display->display_options['fields']['uri']['id'] = 'uri';
+  $handler->display->display_options['fields']['uri']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['uri']['field'] = 'uri';
+  $handler->display->display_options['fields']['uri']['relationship'] = 'field_hannon_photo_upload_fid';
+  $handler->display->display_options['fields']['uri']['label'] = 'Link to File';
+  $handler->display->display_options['fields']['uri']['file_download_path'] = TRUE;
+  /* Field: Entityform Submission: Winner Types */
+  $handler->display->display_options['fields']['field_hannon_winner_types']['id'] = 'field_hannon_winner_types';
+  $handler->display->display_options['fields']['field_hannon_winner_types']['table'] = 'field_data_field_hannon_winner_types';
+  $handler->display->display_options['fields']['field_hannon_winner_types']['field'] = 'field_hannon_winner_types';
+  $handler->display->display_options['fields']['field_hannon_winner_types']['label'] = 'Winner Status';
+  $handler->display->display_options['fields']['field_hannon_winner_types']['alter']['text'] = '[field_hannon_winner]<br>
+[field_hannon_winner_types]
+';
+  $handler->display->display_options['path'] = 'hannon-photo-export.csv';
+  $handler->display->display_options['displays'] = array(
+    'results' => 'results',
+    'page_1' => 'page_1',
+    'default' => 0,
+  );
+  $export['student_hannon_photo_contest'] = $view;
+
+  $view = new view();
   $view->name = 'student_submission_entity_reference';
   $view->description = '';
   $view->tag = 'default';
@@ -78,6 +735,41 @@ function nys_student_submissions_views_default_views() {
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'entityreference_fields';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
+
+  /* Display: Hannon D6 HS */
+  $handler = $view->new_display('entityreference', 'Hannon D6 HS', 'entityreference_2');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'entityreference_style';
+  $handler->display->display_options['style_options']['search_fields'] = array(
+    'title' => 'title',
+  );
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'entityreference_fields';
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'school' => 'school',
+  );
+  /* Filter criterion: Content: Grade Organization (field_school_grade_organization) */
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['id'] = 'field_school_grade_organization_value';
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['table'] = 'field_data_field_school_grade_organization';
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['field'] = 'field_school_grade_organization_value';
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['value'] = 'Senior High';
   $export['student_submission_entity_reference'] = $view;
 
   $view = new view();
@@ -200,30 +892,15 @@ function nys_student_submissions_views_default_views() {
   $handler->display->display_options['row_options']['inline'] = array(
     'field_school_student_full_name' => 'field_school_student_full_name',
   );
-  /* Relationship: Field Collection Items */
-  $handler->display->display_options['relationships']['field_school_student_submissions_value']['id'] = 'field_school_student_submissions_value';
-  $handler->display->display_options['relationships']['field_school_student_submissions_value']['table'] = 'field_data_field_school_student_submissions';
-  $handler->display->display_options['relationships']['field_school_student_submissions_value']['field'] = 'field_school_student_submissions_value';
-  $handler->display->display_options['relationships']['field_school_student_submissions_value']['ui_name'] = 'Field Collection Items';
-  $handler->display->display_options['relationships']['field_school_student_submissions_value']['delta'] = '-1';
   /* Relationship: Entity Reference: Referenced Entity */
   $handler->display->display_options['relationships']['field_school_name_target_id']['id'] = 'field_school_name_target_id';
   $handler->display->display_options['relationships']['field_school_name_target_id']['table'] = 'field_data_field_school_name';
   $handler->display->display_options['relationships']['field_school_name_target_id']['field'] = 'field_school_name_target_id';
-  /* Relationship: Entityform Type: Entityform Submission */
-  $handler->display->display_options['relationships']['entityform']['id'] = 'entityform';
-  $handler->display->display_options['relationships']['entityform']['table'] = 'entityform_type';
-  $handler->display->display_options['relationships']['entityform']['field'] = 'entityform';
   /* Relationship: Entity Reference: Referenced Entity */
   $handler->display->display_options['relationships']['field_district_target_id']['id'] = 'field_district_target_id';
   $handler->display->display_options['relationships']['field_district_target_id']['table'] = 'field_data_field_district';
   $handler->display->display_options['relationships']['field_district_target_id']['field'] = 'field_district_target_id';
   $handler->display->display_options['relationships']['field_district_target_id']['relationship'] = 'field_school_name_target_id';
-  /* Relationship: Field collection item: Attach your submission (field_school_submission_upload:fid) */
-  $handler->display->display_options['relationships']['field_school_submission_upload_fid']['id'] = 'field_school_submission_upload_fid';
-  $handler->display->display_options['relationships']['field_school_submission_upload_fid']['table'] = 'field_data_field_school_submission_upload';
-  $handler->display->display_options['relationships']['field_school_submission_upload_fid']['field'] = 'field_school_submission_upload_fid';
-  $handler->display->display_options['relationships']['field_school_submission_upload_fid']['relationship'] = 'field_school_student_submissions_value';
   /* Field: Field collection item: My submission could best be described as */
   $handler->display->display_options['fields']['field_school_submission_type']['id'] = 'field_school_submission_type';
   $handler->display->display_options['fields']['field_school_submission_type']['table'] = 'field_data_field_school_submission_type';
@@ -242,24 +919,6 @@ function nys_student_submissions_views_default_views() {
   $handler->display->display_options['fields']['field_school_submission_upload']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_school_submission_upload']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_school_submission_upload']['type'] = 'file_url_plain';
-  /* Field: Field collection item: First Name */
-  $handler->display->display_options['fields']['field_school_first_name']['id'] = 'field_school_first_name';
-  $handler->display->display_options['fields']['field_school_first_name']['table'] = 'field_data_field_school_first_name';
-  $handler->display->display_options['fields']['field_school_first_name']['field'] = 'field_school_first_name';
-  $handler->display->display_options['fields']['field_school_first_name']['relationship'] = 'field_school_student_submissions_value';
-  $handler->display->display_options['fields']['field_school_first_name']['label'] = '';
-  $handler->display->display_options['fields']['field_school_first_name']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_school_first_name']['element_label_colon'] = FALSE;
-  /* Field: Field collection item: Last Name */
-  $handler->display->display_options['fields']['field_school_last_name']['id'] = 'field_school_last_name';
-  $handler->display->display_options['fields']['field_school_last_name']['table'] = 'field_data_field_school_last_name';
-  $handler->display->display_options['fields']['field_school_last_name']['field'] = 'field_school_last_name';
-  $handler->display->display_options['fields']['field_school_last_name']['relationship'] = 'field_school_student_submissions_value';
-  $handler->display->display_options['fields']['field_school_last_name']['label'] = '';
-  $handler->display->display_options['fields']['field_school_last_name']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_school_last_name']['alter']['text'] = '<a href="[field_school_submission_upload]">[field_school_first_name] [field_school_last_name]</a> | [field_school_submission_type] ';
-  $handler->display->display_options['fields']['field_school_last_name']['element_type'] = 'p';
-  $handler->display->display_options['fields']['field_school_last_name']['element_label_colon'] = FALSE;
   /* Field: Entityform Submission: School Name */
   $handler->display->display_options['fields']['field_school_name']['id'] = 'field_school_name';
   $handler->display->display_options['fields']['field_school_name']['table'] = 'field_data_field_school_name';
@@ -296,65 +955,67 @@ function nys_student_submissions_views_default_views() {
 
   /* Display: Thankful */
   $handler = $view->new_display('page', 'Thankful', 'page');
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['style_options']['grouping'] = array(
+    0 => array(
+      'field' => 'field_school_legal_name',
+      'rendered' => 1,
+      'rendered_strip' => 0,
+    ),
+    1 => array(
+      'field' => 'field_school_grade',
+      'rendered' => 1,
+      'rendered_strip' => 0,
+    ),
+  );
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['row_options']['inline'] = array(
+    'field_school_student_full_name' => 'field_school_student_full_name',
+  );
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['footer'] = FALSE;
-  $handler->display->display_options['defaults']['arguments'] = FALSE;
-  $handler->display->display_options['path'] = 'senators/%/thankful-2016';
-
-  /* Display: Thankful Block */
-  $handler = $view->new_display('block', 'Thankful Block', 'block_1');
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_school_name_target_id']['id'] = 'field_school_name_target_id';
+  $handler->display->display_options['relationships']['field_school_name_target_id']['table'] = 'field_data_field_school_name';
+  $handler->display->display_options['relationships']['field_school_name_target_id']['field'] = 'field_school_name_target_id';
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_district_target_id']['id'] = 'field_district_target_id';
+  $handler->display->display_options['relationships']['field_district_target_id']['table'] = 'field_data_field_district';
+  $handler->display->display_options['relationships']['field_district_target_id']['field'] = 'field_district_target_id';
+  $handler->display->display_options['relationships']['field_district_target_id']['relationship'] = 'field_school_name_target_id';
+  /* Relationship: Entityform Submission: Student Submissions (field_school_student_submissions) */
+  $handler->display->display_options['relationships']['field_school_student_submissions_value']['id'] = 'field_school_student_submissions_value';
+  $handler->display->display_options['relationships']['field_school_student_submissions_value']['table'] = 'field_data_field_school_student_submissions';
+  $handler->display->display_options['relationships']['field_school_student_submissions_value']['field'] = 'field_school_student_submissions_value';
+  $handler->display->display_options['relationships']['field_school_student_submissions_value']['delta'] = '-1';
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Field: Field collection item: Attach your submission */
-  $handler->display->display_options['fields']['field_school_submission_upload']['id'] = 'field_school_submission_upload';
-  $handler->display->display_options['fields']['field_school_submission_upload']['table'] = 'field_data_field_school_submission_upload';
-  $handler->display->display_options['fields']['field_school_submission_upload']['field'] = 'field_school_submission_upload';
-  $handler->display->display_options['fields']['field_school_submission_upload']['relationship'] = 'field_school_student_submissions_value';
-  $handler->display->display_options['fields']['field_school_submission_upload']['label'] = '';
-  $handler->display->display_options['fields']['field_school_submission_upload']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_school_submission_upload']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_school_submission_upload']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_school_submission_upload']['type'] = 'file_url_plain';
-  /* Field: Field collection item: My submission could best be described as */
-  $handler->display->display_options['fields']['field_school_submission_type']['id'] = 'field_school_submission_type';
-  $handler->display->display_options['fields']['field_school_submission_type']['table'] = 'field_data_field_school_submission_type';
-  $handler->display->display_options['fields']['field_school_submission_type']['field'] = 'field_school_submission_type';
-  $handler->display->display_options['fields']['field_school_submission_type']['relationship'] = 'field_school_student_submissions_value';
-  $handler->display->display_options['fields']['field_school_submission_type']['label'] = '';
-  $handler->display->display_options['fields']['field_school_submission_type']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_school_submission_type']['element_label_colon'] = FALSE;
-  /* Field: File: Mime type */
-  $handler->display->display_options['fields']['filemime']['id'] = 'filemime';
-  $handler->display->display_options['fields']['filemime']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['filemime']['field'] = 'filemime';
-  $handler->display->display_options['fields']['filemime']['relationship'] = 'field_school_submission_upload_fid';
-  $handler->display->display_options['fields']['filemime']['label'] = '';
-  $handler->display->display_options['fields']['filemime']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['filemime']['element_label_colon'] = FALSE;
-  /* Field: File: Extension */
-  $handler->display->display_options['fields']['extension']['id'] = 'extension';
-  $handler->display->display_options['fields']['extension']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['extension']['field'] = 'extension';
-  $handler->display->display_options['fields']['extension']['relationship'] = 'field_school_submission_upload_fid';
-  $handler->display->display_options['fields']['extension']['label'] = '';
-  $handler->display->display_options['fields']['extension']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['extension']['element_label_colon'] = FALSE;
-  /* Field: Field collection item: First Name */
-  $handler->display->display_options['fields']['field_school_first_name']['id'] = 'field_school_first_name';
-  $handler->display->display_options['fields']['field_school_first_name']['table'] = 'field_data_field_school_first_name';
-  $handler->display->display_options['fields']['field_school_first_name']['field'] = 'field_school_first_name';
-  $handler->display->display_options['fields']['field_school_first_name']['relationship'] = 'field_school_student_submissions_value';
-  $handler->display->display_options['fields']['field_school_first_name']['label'] = '';
-  $handler->display->display_options['fields']['field_school_first_name']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_school_first_name']['element_label_colon'] = FALSE;
-  /* Field: Field collection item: Last Name */
-  $handler->display->display_options['fields']['field_school_last_name']['id'] = 'field_school_last_name';
-  $handler->display->display_options['fields']['field_school_last_name']['table'] = 'field_data_field_school_last_name';
-  $handler->display->display_options['fields']['field_school_last_name']['field'] = 'field_school_last_name';
-  $handler->display->display_options['fields']['field_school_last_name']['relationship'] = 'field_school_student_submissions_value';
-  $handler->display->display_options['fields']['field_school_last_name']['label'] = '';
-  $handler->display->display_options['fields']['field_school_last_name']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_school_last_name']['alter']['text'] = '<a href="[field_school_submission_upload]">[field_school_first_name] [field_school_last_name] <span>([extension])</span></a> | [field_school_submission_type]';
-  $handler->display->display_options['fields']['field_school_last_name']['element_type'] = 'p';
-  $handler->display->display_options['fields']['field_school_last_name']['element_label_colon'] = FALSE;
+  /* Field: Content: School Legal Name */
+  $handler->display->display_options['fields']['field_school_legal_name']['id'] = 'field_school_legal_name';
+  $handler->display->display_options['fields']['field_school_legal_name']['table'] = 'field_data_field_school_legal_name';
+  $handler->display->display_options['fields']['field_school_legal_name']['field'] = 'field_school_legal_name';
+  $handler->display->display_options['fields']['field_school_legal_name']['relationship'] = 'field_school_name_target_id';
+  $handler->display->display_options['fields']['field_school_legal_name']['label'] = '';
+  $handler->display->display_options['fields']['field_school_legal_name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_school_legal_name']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: Grade */
+  $handler->display->display_options['fields']['field_school_grade']['id'] = 'field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['table'] = 'field_data_field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['field'] = 'field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['label'] = '';
+  $handler->display->display_options['fields']['field_school_grade']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_school_grade']['element_label_colon'] = FALSE;
+  /* Field: Content: School Address */
+  $handler->display->display_options['fields']['field_school_address']['id'] = 'field_school_address';
+  $handler->display->display_options['fields']['field_school_address']['table'] = 'field_data_field_school_address';
+  $handler->display->display_options['fields']['field_school_address']['field'] = 'field_school_address';
+  $handler->display->display_options['fields']['field_school_address']['relationship'] = 'field_school_name_target_id';
+  $handler->display->display_options['fields']['field_school_address']['label'] = '';
+  $handler->display->display_options['fields']['field_school_address']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_school_address']['element_label_colon'] = FALSE;
   /* Field: Entityform Submission: School Name */
   $handler->display->display_options['fields']['field_school_name']['id'] = 'field_school_name';
   $handler->display->display_options['fields']['field_school_name']['table'] = 'field_data_field_school_name';
@@ -374,6 +1035,158 @@ function nys_student_submissions_views_default_views() {
   $handler->display->display_options['fields']['field_senator']['settings'] = array(
     'link' => 0,
   );
+  /* Field: Field collection item: Student's Full Name */
+  $handler->display->display_options['fields']['field_school_student_full_name']['id'] = 'field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['table'] = 'field_data_field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['field'] = 'field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['relationship'] = 'field_school_student_submissions_value';
+  $handler->display->display_options['fields']['field_school_student_full_name']['label'] = '';
+  $handler->display->display_options['fields']['field_school_student_full_name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  $handler->display->display_options['path'] = 'senators/%/thankful';
+
+  /* Display: Thankful Block */
+  $handler = $view->new_display('block', 'Thankful Block', 'block_1');
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['style_options']['grouping'] = array(
+    0 => array(
+      'field' => 'field_school_legal_name',
+      'rendered' => 1,
+      'rendered_strip' => 0,
+    ),
+    1 => array(
+      'field' => 'field_school_grade',
+      'rendered' => 1,
+      'rendered_strip' => 0,
+    ),
+  );
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['row_options']['inline'] = array(
+    'field_school_student_full_name' => 'field_school_student_full_name',
+  );
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['header'] = FALSE;
+  /* Header: Global: Unfiltered text */
+  $handler->display->display_options['header']['area_text_custom']['id'] = 'area_text_custom';
+  $handler->display->display_options['header']['area_text_custom']['table'] = 'views';
+  $handler->display->display_options['header']['area_text_custom']['field'] = 'area_text_custom';
+  $handler->display->display_options['header']['area_text_custom']['content'] = '<br><p>Sincerely,<br><br>
+
+[field_senator]</p><br>
+<h2>2017 Submissions</h2>';
+  $handler->display->display_options['header']['area_text_custom']['tokenize'] = TRUE;
+  $handler->display->display_options['defaults']['footer'] = FALSE;
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_school_name_target_id']['id'] = 'field_school_name_target_id';
+  $handler->display->display_options['relationships']['field_school_name_target_id']['table'] = 'field_data_field_school_name';
+  $handler->display->display_options['relationships']['field_school_name_target_id']['field'] = 'field_school_name_target_id';
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_district_target_id']['id'] = 'field_district_target_id';
+  $handler->display->display_options['relationships']['field_district_target_id']['table'] = 'field_data_field_district';
+  $handler->display->display_options['relationships']['field_district_target_id']['field'] = 'field_district_target_id';
+  $handler->display->display_options['relationships']['field_district_target_id']['relationship'] = 'field_school_name_target_id';
+  /* Relationship: Entityform Submission: Student Submissions (field_school_student_submissions) */
+  $handler->display->display_options['relationships']['field_school_student_submissions_value']['id'] = 'field_school_student_submissions_value';
+  $handler->display->display_options['relationships']['field_school_student_submissions_value']['table'] = 'field_data_field_school_student_submissions';
+  $handler->display->display_options['relationships']['field_school_student_submissions_value']['field'] = 'field_school_student_submissions_value';
+  $handler->display->display_options['relationships']['field_school_student_submissions_value']['label'] = 'field collection items';
+  $handler->display->display_options['relationships']['field_school_student_submissions_value']['delta'] = '-1';
+  /* Relationship: Field collection item: Attach your submission (field_school_submission_upload:fid) */
+  $handler->display->display_options['relationships']['field_school_submission_upload_fid']['id'] = 'field_school_submission_upload_fid';
+  $handler->display->display_options['relationships']['field_school_submission_upload_fid']['table'] = 'field_data_field_school_submission_upload';
+  $handler->display->display_options['relationships']['field_school_submission_upload_fid']['field'] = 'field_school_submission_upload_fid';
+  $handler->display->display_options['relationships']['field_school_submission_upload_fid']['relationship'] = 'field_school_student_submissions_value';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Entityform Submission: School Name */
+  $handler->display->display_options['fields']['field_school_name']['id'] = 'field_school_name';
+  $handler->display->display_options['fields']['field_school_name']['table'] = 'field_data_field_school_name';
+  $handler->display->display_options['fields']['field_school_name']['field'] = 'field_school_name';
+  $handler->display->display_options['fields']['field_school_name']['label'] = '';
+  $handler->display->display_options['fields']['field_school_name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_school_name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_school_name']['settings'] = array(
+    'link' => 0,
+  );
+  /* Field: Field collection item: Attach your submission */
+  $handler->display->display_options['fields']['field_school_submission_upload']['id'] = 'field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload']['table'] = 'field_data_field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload']['field'] = 'field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload']['relationship'] = 'field_school_student_submissions_value';
+  $handler->display->display_options['fields']['field_school_submission_upload']['label'] = '';
+  $handler->display->display_options['fields']['field_school_submission_upload']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_school_submission_upload']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_school_submission_upload']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_school_submission_upload']['type'] = 'file_url_plain';
+  /* Field: Field collection item: My submission could best be described as */
+  $handler->display->display_options['fields']['field_school_submission_type']['id'] = 'field_school_submission_type';
+  $handler->display->display_options['fields']['field_school_submission_type']['table'] = 'field_data_field_school_submission_type';
+  $handler->display->display_options['fields']['field_school_submission_type']['field'] = 'field_school_submission_type';
+  $handler->display->display_options['fields']['field_school_submission_type']['relationship'] = 'field_school_student_submissions_value';
+  $handler->display->display_options['fields']['field_school_submission_type']['label'] = '';
+  $handler->display->display_options['fields']['field_school_submission_type']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_school_submission_type']['element_label_colon'] = FALSE;
+  /* Field: Field: Senator */
+  $handler->display->display_options['fields']['field_senator']['id'] = 'field_senator';
+  $handler->display->display_options['fields']['field_senator']['table'] = 'field_data_field_senator';
+  $handler->display->display_options['fields']['field_senator']['field'] = 'field_senator';
+  $handler->display->display_options['fields']['field_senator']['relationship'] = 'field_district_target_id';
+  $handler->display->display_options['fields']['field_senator']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_senator']['settings'] = array(
+    'link' => 0,
+  );
+  /* Field: Content: School Legal Name */
+  $handler->display->display_options['fields']['field_school_legal_name']['id'] = 'field_school_legal_name';
+  $handler->display->display_options['fields']['field_school_legal_name']['table'] = 'field_data_field_school_legal_name';
+  $handler->display->display_options['fields']['field_school_legal_name']['field'] = 'field_school_legal_name';
+  $handler->display->display_options['fields']['field_school_legal_name']['relationship'] = 'field_school_name_target_id';
+  $handler->display->display_options['fields']['field_school_legal_name']['label'] = '';
+  $handler->display->display_options['fields']['field_school_legal_name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_school_legal_name']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: Grade */
+  $handler->display->display_options['fields']['field_school_grade']['id'] = 'field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['table'] = 'field_data_field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['field'] = 'field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['label'] = '';
+  $handler->display->display_options['fields']['field_school_grade']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_school_grade']['element_label_colon'] = FALSE;
+  /* Field: File: Extension */
+  $handler->display->display_options['fields']['extension']['id'] = 'extension';
+  $handler->display->display_options['fields']['extension']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['extension']['field'] = 'extension';
+  $handler->display->display_options['fields']['extension']['relationship'] = 'field_school_submission_upload_fid';
+  $handler->display->display_options['fields']['extension']['label'] = '';
+  $handler->display->display_options['fields']['extension']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['extension']['element_label_colon'] = FALSE;
+  /* Field: Field collection item: Student's Full Name */
+  $handler->display->display_options['fields']['field_school_student_full_name']['id'] = 'field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['table'] = 'field_data_field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['field'] = 'field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['relationship'] = 'field_school_student_submissions_value';
+  $handler->display->display_options['fields']['field_school_student_full_name']['label'] = '';
+  $handler->display->display_options['fields']['field_school_student_full_name']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_school_student_full_name']['alter']['text'] = '<a href="[field_school_submission_upload]">[field_school_student_full_name]</a><em> [field_school_submission_type]</em><span> ([extension])</span>';
+  $handler->display->display_options['fields']['field_school_student_full_name']['element_type'] = 'p';
+  $handler->display->display_options['fields']['field_school_student_full_name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Content: School Legal Name (field_school_legal_name) */
+  $handler->display->display_options['sorts']['field_school_legal_name_value']['id'] = 'field_school_legal_name_value';
+  $handler->display->display_options['sorts']['field_school_legal_name_value']['table'] = 'field_data_field_school_legal_name';
+  $handler->display->display_options['sorts']['field_school_legal_name_value']['field'] = 'field_school_legal_name_value';
+  $handler->display->display_options['sorts']['field_school_legal_name_value']['relationship'] = 'field_school_name_target_id';
+  /* Sort criterion: Entityform Submission: Grade (field_school_grade) */
+  $handler->display->display_options['sorts']['field_school_grade_value']['id'] = 'field_school_grade_value';
+  $handler->display->display_options['sorts']['field_school_grade_value']['table'] = 'field_data_field_school_grade';
+  $handler->display->display_options['sorts']['field_school_grade_value']['field'] = 'field_school_grade_value';
+  $handler->display->display_options['sorts']['field_school_grade_value']['allowed_values'] = '1';
+  /* Sort criterion: Field collection item: Student&#039;s Full Name (field_school_student_full_name) */
+  $handler->display->display_options['sorts']['field_school_student_full_name_value']['id'] = 'field_school_student_full_name_value';
+  $handler->display->display_options['sorts']['field_school_student_full_name_value']['table'] = 'field_data_field_school_student_full_name';
+  $handler->display->display_options['sorts']['field_school_student_full_name_value']['field'] = 'field_school_student_full_name_value';
+  $handler->display->display_options['sorts']['field_school_student_full_name_value']['relationship'] = 'field_school_student_submissions_value';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Field: Senator (field_senator) */
   $handler->display->display_options['arguments']['field_senator_target_id']['id'] = 'field_senator_target_id';
@@ -385,6 +1198,21 @@ function nys_student_submissions_views_default_views() {
   $handler->display->display_options['arguments']['field_senator_target_id']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_senator_target_id']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_senator_target_id']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Entityform Submission: Entityform Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'entityform';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'school_submissions' => 'school_submissions',
+  );
+  /* Filter criterion: Entityform Submission: Date submitted */
+  $handler->display->display_options['filters']['created']['id'] = 'created';
+  $handler->display->display_options['filters']['created']['table'] = 'entityform';
+  $handler->display->display_options['filters']['created']['field'] = 'created';
+  $handler->display->display_options['filters']['created']['operator'] = '>=';
+  $handler->display->display_options['filters']['created']['value']['value'] = '2017-08-01';
 
   /* Display: Earth Day Block */
   $handler = $view->new_display('block', 'Earth Day Block', 'block_2');
@@ -752,19 +1580,14 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['style_options']['columns'] = array(
     'field_school_address' => 'field_school_address',
     'field_senator' => 'field_senator',
-    'field_school_student_full_name' => 'field_school_student_full_name',
-    'field_school_grade' => 'field_school_student_full_name',
-    'field_school_contact_name' => 'field_school_student_full_name',
-    'field_school_teachers_email' => 'field_school_student_full_name',
+    'field_school_grade' => 'field_school_grade',
+    'field_school_contact_name' => 'field_school_contact_email',
+    'field_school_contact_email' => 'field_school_contact_email',
     'field_school_submission_upload' => 'field_school_submission_upload',
-    'field_school_submission_upload_1' => 'field_school_submission_upload',
-    'field_school_featured_entry' => 'field_school_featured_entry',
     'edit_entityform' => 'edit_entityform',
     'created' => 'created',
     'link_entityform' => 'edit_entityform',
     'title' => 'title',
-    'views_bulk_operations' => 'views_bulk_operations',
-    'field_school_show_student' => 'field_school_student_full_name',
   );
   $handler->display->display_options['style_options']['default'] = '-1';
   $handler->display->display_options['style_options']['info'] = array(
@@ -782,13 +1605,6 @@ NYS Senator, District [field_district_number]</p>
       'separator' => '',
       'empty_column' => 0,
     ),
-    'field_school_student_full_name' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '<br>',
-      'empty_column' => 0,
-    ),
     'field_school_grade' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
@@ -803,28 +1619,14 @@ NYS Senator, District [field_district_number]</p>
       'separator' => '',
       'empty_column' => 0,
     ),
-    'field_school_teachers_email' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'field_school_submission_upload' => array(
+    'field_school_contact_email' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '<br>',
       'empty_column' => 0,
     ),
-    'field_school_submission_upload_1' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'field_school_featured_entry' => array(
+    'field_school_submission_upload' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
@@ -849,18 +1651,6 @@ NYS Senator, District [field_district_number]</p>
       'empty_column' => 0,
     ),
     'title' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'views_bulk_operations' => array(
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'field_school_show_student' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
@@ -910,7 +1700,6 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['fields']['field_school_student_full_name']['table'] = 'field_data_field_school_student_full_name';
   $handler->display->display_options['fields']['field_school_student_full_name']['field'] = 'field_school_student_full_name';
   $handler->display->display_options['fields']['field_school_student_full_name']['relationship'] = 'field_school_stud_earthday_subm_value';
-  $handler->display->display_options['fields']['field_school_student_full_name']['label'] = 'Student\'s Name';
   $handler->display->display_options['fields']['field_school_student_full_name']['element_type'] = 'strong';
   /* Field: Entityform Submission: Grade */
   $handler->display->display_options['fields']['field_school_grade']['id'] = 'field_school_grade';
@@ -930,17 +1719,6 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['fields']['field_school_teachers_email']['field'] = 'field_school_teachers_email';
   $handler->display->display_options['fields']['field_school_teachers_email']['label'] = '';
   $handler->display->display_options['fields']['field_school_teachers_email']['element_label_colon'] = FALSE;
-  /* Field: Field collection item: Attach your submission */
-  $handler->display->display_options['fields']['field_school_submission_upload']['id'] = 'field_school_submission_upload';
-  $handler->display->display_options['fields']['field_school_submission_upload']['table'] = 'field_data_field_school_submission_upload';
-  $handler->display->display_options['fields']['field_school_submission_upload']['field'] = 'field_school_submission_upload';
-  $handler->display->display_options['fields']['field_school_submission_upload']['relationship'] = 'field_school_stud_earthday_subm_value';
-  $handler->display->display_options['fields']['field_school_submission_upload']['label'] = 'Submission';
-  $handler->display->display_options['fields']['field_school_submission_upload']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_school_submission_upload']['type'] = 'file_rendered';
-  $handler->display->display_options['fields']['field_school_submission_upload']['settings'] = array(
-    'file_view_mode' => 'teaser',
-  );
   /* Field: URL to File */
   $handler->display->display_options['fields']['field_school_submission_upload_1']['id'] = 'field_school_submission_upload_1';
   $handler->display->display_options['fields']['field_school_submission_upload_1']['table'] = 'field_data_field_school_submission_upload';
@@ -1027,13 +1805,6 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['sorts']['created']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['created']['expose']['label'] = 'Sort by date submitted';
   $handler->display->display_options['sorts']['created']['granularity'] = 'day';
-  /* Sort criterion: Field collection item: Student&#039;s Full Name (field_school_student_full_name) */
-  $handler->display->display_options['sorts']['field_school_student_full_name_value']['id'] = 'field_school_student_full_name_value';
-  $handler->display->display_options['sorts']['field_school_student_full_name_value']['table'] = 'field_data_field_school_student_full_name';
-  $handler->display->display_options['sorts']['field_school_student_full_name_value']['field'] = 'field_school_student_full_name_value';
-  $handler->display->display_options['sorts']['field_school_student_full_name_value']['relationship'] = 'field_school_stud_earthday_subm_value';
-  $handler->display->display_options['sorts']['field_school_student_full_name_value']['exposed'] = TRUE;
-  $handler->display->display_options['sorts']['field_school_student_full_name_value']['expose']['label'] = 'Student Name';
   /* Filter criterion: Entityform Submission: Entityform Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'entityform';
@@ -1144,9 +1915,261 @@ NYS Senator, District [field_district_number]</p>
     6 => '6',
     17 => '17',
   );
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'table';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'field_school_address' => 'field_school_address',
+    'field_senator' => 'field_senator',
+    'field_school_student_full_name' => 'field_school_student_full_name',
+    'field_school_grade' => 'field_school_student_full_name',
+    'field_school_contact_name' => 'field_school_student_full_name',
+    'field_school_teachers_email' => 'field_school_student_full_name',
+    'field_school_submission_upload' => 'field_school_submission_upload_1',
+    'field_school_submission_upload_1' => 'field_school_submission_upload_1',
+    'field_school_featured_entry' => 'field_school_featured_entry',
+    'edit_entityform' => 'edit_entityform',
+    'created' => 'created',
+    'link_entityform' => 'edit_entityform',
+    'title' => 'title',
+    'views_bulk_operations' => 'views_bulk_operations',
+    'field_school_show_student' => 'field_school_student_full_name',
+  );
+  $handler->display->display_options['style_options']['default'] = '-1';
+  $handler->display->display_options['style_options']['info'] = array(
+    'field_school_address' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_senator' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_school_student_full_name' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '<br>',
+      'empty_column' => 0,
+    ),
+    'field_school_grade' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_school_contact_name' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_school_teachers_email' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_school_submission_upload' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_school_submission_upload_1' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '<br>',
+      'empty_column' => 0,
+    ),
+    'field_school_featured_entry' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'edit_entityform' => array(
+      'align' => '',
+      'separator' => '<br>',
+      'empty_column' => 0,
+    ),
+    'created' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'link_entityform' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'title' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'views_bulk_operations' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_school_show_student' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: School Address */
+  $handler->display->display_options['fields']['field_school_address']['id'] = 'field_school_address';
+  $handler->display->display_options['fields']['field_school_address']['table'] = 'field_data_field_school_address';
+  $handler->display->display_options['fields']['field_school_address']['field'] = 'field_school_address';
+  $handler->display->display_options['fields']['field_school_address']['relationship'] = 'field_school_name_target_id';
+  $handler->display->display_options['fields']['field_school_address']['label'] = 'School';
+  /* Field: Field: Senator */
+  $handler->display->display_options['fields']['field_senator']['id'] = 'field_senator';
+  $handler->display->display_options['fields']['field_senator']['table'] = 'field_data_field_senator';
+  $handler->display->display_options['fields']['field_senator']['field'] = 'field_senator';
+  $handler->display->display_options['fields']['field_senator']['relationship'] = 'field_district_target_id';
+  $handler->display->display_options['fields']['field_senator']['settings'] = array(
+    'link' => 0,
+  );
+  /* Field: Field collection item: Student's Full Name */
+  $handler->display->display_options['fields']['field_school_student_full_name']['id'] = 'field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['table'] = 'field_data_field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['field'] = 'field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['relationship'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['fields']['field_school_student_full_name']['element_type'] = 'strong';
+  /* Field: Entityform Submission: Grade */
+  $handler->display->display_options['fields']['field_school_grade']['id'] = 'field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['table'] = 'field_data_field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['field'] = 'field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['label'] = '';
+  $handler->display->display_options['fields']['field_school_grade']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: Teacher's Name */
+  $handler->display->display_options['fields']['field_school_contact_name']['id'] = 'field_school_contact_name';
+  $handler->display->display_options['fields']['field_school_contact_name']['table'] = 'field_data_field_school_contact_name';
+  $handler->display->display_options['fields']['field_school_contact_name']['field'] = 'field_school_contact_name';
+  $handler->display->display_options['fields']['field_school_contact_name']['label'] = '';
+  $handler->display->display_options['fields']['field_school_contact_name']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: Teacher's Email */
+  $handler->display->display_options['fields']['field_school_teachers_email']['id'] = 'field_school_teachers_email';
+  $handler->display->display_options['fields']['field_school_teachers_email']['table'] = 'field_data_field_school_teachers_email';
+  $handler->display->display_options['fields']['field_school_teachers_email']['field'] = 'field_school_teachers_email';
+  $handler->display->display_options['fields']['field_school_teachers_email']['label'] = '';
+  $handler->display->display_options['fields']['field_school_teachers_email']['element_label_colon'] = FALSE;
+  /* Field: Field collection item: Attach your submission */
+  $handler->display->display_options['fields']['field_school_submission_upload']['id'] = 'field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload']['table'] = 'field_data_field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload']['field'] = 'field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload']['relationship'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['fields']['field_school_submission_upload']['label'] = 'Submission';
+  $handler->display->display_options['fields']['field_school_submission_upload']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_school_submission_upload']['type'] = 'file_rendered';
+  $handler->display->display_options['fields']['field_school_submission_upload']['settings'] = array(
+    'file_view_mode' => 'teaser',
+  );
+  /* Field: URL to File */
+  $handler->display->display_options['fields']['field_school_submission_upload_1']['id'] = 'field_school_submission_upload_1';
+  $handler->display->display_options['fields']['field_school_submission_upload_1']['table'] = 'field_data_field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload_1']['field'] = 'field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload_1']['relationship'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['fields']['field_school_submission_upload_1']['ui_name'] = 'URL to File';
+  $handler->display->display_options['fields']['field_school_submission_upload_1']['label'] = '';
+  $handler->display->display_options['fields']['field_school_submission_upload_1']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_school_submission_upload_1']['alter']['text'] = '<a href="[field_school_submission_upload_1]">Link to file</a>';
+  $handler->display->display_options['fields']['field_school_submission_upload_1']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_school_submission_upload_1']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_school_submission_upload_1']['type'] = 'file_url_plain';
+  /* Field: Field collection item: Poster Winner? */
+  $handler->display->display_options['fields']['field_school_featured_entry']['id'] = 'field_school_featured_entry';
+  $handler->display->display_options['fields']['field_school_featured_entry']['table'] = 'field_data_field_school_featured_entry';
+  $handler->display->display_options['fields']['field_school_featured_entry']['field'] = 'field_school_featured_entry';
+  $handler->display->display_options['fields']['field_school_featured_entry']['relationship'] = 'field_school_stud_earthday_subm_value';
+  /* Field: Entityform Submission: Edit Link */
+  $handler->display->display_options['fields']['edit_entityform']['id'] = 'edit_entityform';
+  $handler->display->display_options['fields']['edit_entityform']['table'] = 'entityform';
+  $handler->display->display_options['fields']['edit_entityform']['field'] = 'edit_entityform';
+  $handler->display->display_options['fields']['edit_entityform']['label'] = 'Actions';
+  $handler->display->display_options['fields']['edit_entityform']['text'] = 'Edit';
+  /* Field: Entityform Submission: Date submitted */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'entityform';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['date_format'] = 'medium';
+  $handler->display->display_options['fields']['created']['second_date_format'] = 'month_only';
+  /* Field: Entityform Submission: Link */
+  $handler->display->display_options['fields']['link_entityform']['id'] = 'link_entityform';
+  $handler->display->display_options['fields']['link_entityform']['table'] = 'entityform';
+  $handler->display->display_options['fields']['link_entityform']['field'] = 'link_entityform';
+  $handler->display->display_options['fields']['link_entityform']['label'] = '';
+  $handler->display->display_options['fields']['link_entityform']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['link_entityform']['text'] = 'View';
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['relationship'] = 'field_school_name_target_id';
+  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
+  /* Field: Bulk operations: Field collection item */
+  $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
+  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_field_collection_item';
+  $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
+  $handler->display->display_options['fields']['views_bulk_operations']['relationship'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '0';
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['row_clickable'] = 1;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
+    'action::views_bulk_operations_modify_action' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+      'settings' => array(
+        'show_all_tokens' => 0,
+        'display_values' => array(
+          'field_school_stud_earthday_subm::field_school_featured_entry' => 'field_school_stud_earthday_subm::field_school_featured_entry',
+          'field_school_stud_earthday_subm::field_school_student_full_name' => 'field_school_stud_earthday_subm::field_school_student_full_name',
+          'field_school_stud_earthday_subm::field_school_submission_upload' => 'field_school_stud_earthday_subm::field_school_submission_upload',
+          'field_school_stud_earthday_subm::field_school_show_student' => 'field_school_stud_earthday_subm::field_school_show_student',
+        ),
+      ),
+    ),
+  );
+  /* Field: Field collection item: Show? */
+  $handler->display->display_options['fields']['field_school_show_student']['id'] = 'field_school_show_student';
+  $handler->display->display_options['fields']['field_school_show_student']['table'] = 'field_data_field_school_show_student';
+  $handler->display->display_options['fields']['field_school_show_student']['field'] = 'field_school_show_student';
+  $handler->display->display_options['fields']['field_school_show_student']['relationship'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['fields']['field_school_show_student']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_school_show_student']['alter']['text'] = 'Show status: [field_school_show_student]';
   $handler->display->display_options['path'] = 'admin/entityforms/earthday';
   $handler->display->display_options['menu']['type'] = 'normal';
-  $handler->display->display_options['menu']['title'] = 'Student Submissions';
+  $handler->display->display_options['menu']['title'] = 'Earth Day Submissions';
   $handler->display->display_options['menu']['weight'] = '0';
   $handler->display->display_options['menu']['name'] = 'management';
   $handler->display->display_options['menu']['context'] = 0;
@@ -1213,7 +2236,6 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['fields']['field_school_student_full_name']['table'] = 'field_data_field_school_student_full_name';
   $handler->display->display_options['fields']['field_school_student_full_name']['field'] = 'field_school_student_full_name';
   $handler->display->display_options['fields']['field_school_student_full_name']['relationship'] = 'field_school_stud_earthday_subm_value';
-  $handler->display->display_options['fields']['field_school_student_full_name']['label'] = 'Student\'s Name';
   $handler->display->display_options['fields']['field_school_student_full_name']['element_type'] = 'strong';
   /* Field: Entityform Submission: Grade */
   $handler->display->display_options['fields']['field_school_grade']['id'] = 'field_school_grade';
@@ -1269,7 +2291,6 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['fields']['field_school_teachers_email']['id'] = 'field_school_teachers_email';
   $handler->display->display_options['fields']['field_school_teachers_email']['table'] = 'field_data_field_school_teachers_email';
   $handler->display->display_options['fields']['field_school_teachers_email']['field'] = 'field_school_teachers_email';
-  $handler->display->display_options['fields']['field_school_teachers_email']['label'] = 'Email';
   $handler->display->display_options['fields']['field_school_teachers_email']['element_label_colon'] = FALSE;
   /* Field: Content: Principal Phone Number */
   $handler->display->display_options['fields']['field_school_ceo_phone']['id'] = 'field_school_ceo_phone';
@@ -1343,6 +2364,467 @@ NYS Senator, District [field_district_number]</p>
   );
   $handler->display->display_options['sitename_title'] = 0;
   $handler->display->display_options['segment_size'] = '500';
+
+  /* Display: Thankful Submissions */
+  $handler = $view->new_display('page', 'Thankful Submissions', 'page_1');
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'table';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'field_school_address' => 'field_school_address',
+    'field_senator' => 'field_senator',
+    'field_school_contact_name' => 'field_school_contact_email',
+    'field_school_contact_email' => 'field_school_contact_email',
+    'field_school_grade' => 'field_school_contact_email',
+    'field_school_student_full_name' => 'field_school_submission_upload',
+    'field_school_submission_upload' => 'field_school_submission_upload',
+    'edit_entityform' => 'edit_entityform',
+    'created' => 'created',
+    'link_entityform' => 'edit_entityform',
+    'title' => 'title',
+    'field_school_submission_type' => 'field_school_submission_upload',
+  );
+  $handler->display->display_options['style_options']['default'] = '-1';
+  $handler->display->display_options['style_options']['info'] = array(
+    'field_school_address' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_senator' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_school_contact_name' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_school_contact_email' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '<br>',
+      'empty_column' => 0,
+    ),
+    'field_school_grade' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_school_student_full_name' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_school_submission_upload' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '<br>',
+      'empty_column' => 0,
+    ),
+    'edit_entityform' => array(
+      'align' => '',
+      'separator' => '<br>',
+      'empty_column' => 0,
+    ),
+    'created' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'link_entityform' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'title' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_school_submission_type' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_school_name_target_id']['id'] = 'field_school_name_target_id';
+  $handler->display->display_options['relationships']['field_school_name_target_id']['table'] = 'field_data_field_school_name';
+  $handler->display->display_options['relationships']['field_school_name_target_id']['field'] = 'field_school_name_target_id';
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_district_target_id']['id'] = 'field_district_target_id';
+  $handler->display->display_options['relationships']['field_district_target_id']['table'] = 'field_data_field_district';
+  $handler->display->display_options['relationships']['field_district_target_id']['field'] = 'field_district_target_id';
+  $handler->display->display_options['relationships']['field_district_target_id']['relationship'] = 'field_school_name_target_id';
+  /* Relationship: Entityform Submission: Student Submissions (field_school_student_submissions) */
+  $handler->display->display_options['relationships']['field_school_student_submissions_value']['id'] = 'field_school_student_submissions_value';
+  $handler->display->display_options['relationships']['field_school_student_submissions_value']['table'] = 'field_data_field_school_student_submissions';
+  $handler->display->display_options['relationships']['field_school_student_submissions_value']['field'] = 'field_school_student_submissions_value';
+  $handler->display->display_options['relationships']['field_school_student_submissions_value']['delta'] = '-1';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: School Address */
+  $handler->display->display_options['fields']['field_school_address']['id'] = 'field_school_address';
+  $handler->display->display_options['fields']['field_school_address']['table'] = 'field_data_field_school_address';
+  $handler->display->display_options['fields']['field_school_address']['field'] = 'field_school_address';
+  $handler->display->display_options['fields']['field_school_address']['relationship'] = 'field_school_name_target_id';
+  $handler->display->display_options['fields']['field_school_address']['label'] = 'School';
+  /* Field: Field: Senator */
+  $handler->display->display_options['fields']['field_senator']['id'] = 'field_senator';
+  $handler->display->display_options['fields']['field_senator']['table'] = 'field_data_field_senator';
+  $handler->display->display_options['fields']['field_senator']['field'] = 'field_senator';
+  $handler->display->display_options['fields']['field_senator']['relationship'] = 'field_district_target_id';
+  $handler->display->display_options['fields']['field_senator']['settings'] = array(
+    'link' => 0,
+  );
+  /* Field: Entityform Submission: Teacher's Name */
+  $handler->display->display_options['fields']['field_school_contact_name']['id'] = 'field_school_contact_name';
+  $handler->display->display_options['fields']['field_school_contact_name']['table'] = 'field_data_field_school_contact_name';
+  $handler->display->display_options['fields']['field_school_contact_name']['field'] = 'field_school_contact_name';
+  $handler->display->display_options['fields']['field_school_contact_name']['label'] = '';
+  $handler->display->display_options['fields']['field_school_contact_name']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: Contact Email */
+  $handler->display->display_options['fields']['field_school_contact_email']['id'] = 'field_school_contact_email';
+  $handler->display->display_options['fields']['field_school_contact_email']['table'] = 'field_data_field_school_contact_email';
+  $handler->display->display_options['fields']['field_school_contact_email']['field'] = 'field_school_contact_email';
+  $handler->display->display_options['fields']['field_school_contact_email']['label'] = 'Contact Information';
+  /* Field: Entityform Submission: Grade */
+  $handler->display->display_options['fields']['field_school_grade']['id'] = 'field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['table'] = 'field_data_field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['field'] = 'field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['label'] = '';
+  $handler->display->display_options['fields']['field_school_grade']['element_label_colon'] = FALSE;
+  /* Field: Field collection item: Student's Full Name */
+  $handler->display->display_options['fields']['field_school_student_full_name']['id'] = 'field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['table'] = 'field_data_field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['field'] = 'field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['relationship'] = 'field_school_student_submissions_value';
+  $handler->display->display_options['fields']['field_school_student_full_name']['element_type'] = 'strong';
+  /* Field: Field collection item: My submission could best be described as */
+  $handler->display->display_options['fields']['field_school_submission_type']['id'] = 'field_school_submission_type';
+  $handler->display->display_options['fields']['field_school_submission_type']['table'] = 'field_data_field_school_submission_type';
+  $handler->display->display_options['fields']['field_school_submission_type']['field'] = 'field_school_submission_type';
+  $handler->display->display_options['fields']['field_school_submission_type']['relationship'] = 'field_school_student_submissions_value';
+  /* Field: Field collection item: Attach your submission */
+  $handler->display->display_options['fields']['field_school_submission_upload']['id'] = 'field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload']['table'] = 'field_data_field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload']['field'] = 'field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload']['relationship'] = 'field_school_student_submissions_value';
+  $handler->display->display_options['fields']['field_school_submission_upload']['label'] = 'Submission';
+  $handler->display->display_options['fields']['field_school_submission_upload']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_school_submission_upload']['type'] = 'file_rendered';
+  $handler->display->display_options['fields']['field_school_submission_upload']['settings'] = array(
+    'file_view_mode' => 'teaser',
+  );
+  /* Field: Entityform Submission: Edit Link */
+  $handler->display->display_options['fields']['edit_entityform']['id'] = 'edit_entityform';
+  $handler->display->display_options['fields']['edit_entityform']['table'] = 'entityform';
+  $handler->display->display_options['fields']['edit_entityform']['field'] = 'edit_entityform';
+  $handler->display->display_options['fields']['edit_entityform']['label'] = 'Actions';
+  $handler->display->display_options['fields']['edit_entityform']['text'] = 'Edit';
+  /* Field: Entityform Submission: Date submitted */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'entityform';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['date_format'] = 'medium';
+  $handler->display->display_options['fields']['created']['second_date_format'] = 'month_only';
+  /* Field: Entityform Submission: Link */
+  $handler->display->display_options['fields']['link_entityform']['id'] = 'link_entityform';
+  $handler->display->display_options['fields']['link_entityform']['table'] = 'entityform';
+  $handler->display->display_options['fields']['link_entityform']['field'] = 'link_entityform';
+  $handler->display->display_options['fields']['link_entityform']['label'] = '';
+  $handler->display->display_options['fields']['link_entityform']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['link_entityform']['text'] = 'View';
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['relationship'] = 'field_school_name_target_id';
+  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Entityform Submission: Entityform Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'entityform';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'school_submissions' => 'school_submissions',
+  );
+  /* Filter criterion: Field: Senator (field_senator) */
+  $handler->display->display_options['filters']['field_senator_target_id']['id'] = 'field_senator_target_id';
+  $handler->display->display_options['filters']['field_senator_target_id']['table'] = 'field_data_field_senator';
+  $handler->display->display_options['filters']['field_senator_target_id']['field'] = 'field_senator_target_id';
+  $handler->display->display_options['filters']['field_senator_target_id']['relationship'] = 'field_district_target_id';
+  $handler->display->display_options['filters']['field_senator_target_id']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_senator_target_id']['expose']['operator_id'] = 'field_senator_target_id_op';
+  $handler->display->display_options['filters']['field_senator_target_id']['expose']['label'] = 'Senator';
+  $handler->display->display_options['filters']['field_senator_target_id']['expose']['operator'] = 'field_senator_target_id_op';
+  $handler->display->display_options['filters']['field_senator_target_id']['expose']['identifier'] = 'field_senator_target_id';
+  $handler->display->display_options['filters']['field_senator_target_id']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    16 => 0,
+  );
+  /* Filter criterion: Content: Title */
+  $handler->display->display_options['filters']['title']['id'] = 'title';
+  $handler->display->display_options['filters']['title']['table'] = 'node';
+  $handler->display->display_options['filters']['title']['field'] = 'title';
+  $handler->display->display_options['filters']['title']['relationship'] = 'field_school_name_target_id';
+  $handler->display->display_options['filters']['title']['operator'] = 'contains';
+  $handler->display->display_options['filters']['title']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['title']['expose']['operator_id'] = 'title_op';
+  $handler->display->display_options['filters']['title']['expose']['label'] = 'School';
+  $handler->display->display_options['filters']['title']['expose']['operator'] = 'title_op';
+  $handler->display->display_options['filters']['title']['expose']['identifier'] = 'title';
+  $handler->display->display_options['filters']['title']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    16 => 0,
+  );
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_filter'] = 1;
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_min_chars'] = '0';
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_field'] = 'title';
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_raw_dropdown'] = 1;
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_dependent'] = 0;
+  /* Filter criterion: Entityform Submission: Date submitted */
+  $handler->display->display_options['filters']['created']['id'] = 'created';
+  $handler->display->display_options['filters']['created']['table'] = 'entityform';
+  $handler->display->display_options['filters']['created']['field'] = 'created';
+  $handler->display->display_options['filters']['created']['operator'] = '>=';
+  $handler->display->display_options['filters']['created']['value']['value'] = '2017-02-07';
+  /* Filter criterion: Entityform Submission: Teacher&#039;s Name (field_school_contact_name) */
+  $handler->display->display_options['filters']['field_school_contact_name_value']['id'] = 'field_school_contact_name_value';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['table'] = 'field_data_field_school_contact_name';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['field'] = 'field_school_contact_name_value';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['operator'] = 'contains';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['operator_id'] = 'field_school_contact_name_value_op';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['label'] = 'Teacher Name';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['operator'] = 'field_school_contact_name_value_op';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['identifier'] = 'field_school_contact_name_value';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    16 => 0,
+    17 => 0,
+  );
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['autocomplete_filter'] = 1;
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['autocomplete_min_chars'] = '0';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['autocomplete_field'] = 'field_school_contact_name';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['autocomplete_raw_dropdown'] = 1;
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['autocomplete_dependent'] = 0;
+  $handler->display->display_options['path'] = 'admin/entityforms/thanksgiving';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'Thanksgiving Submissions';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'management';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
+
+  /* Display: Data export Tksgiving */
+  $handler = $view->new_display('views_data_export', 'Data export Tksgiving', 'views_data_export_2');
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['style_plugin'] = 'views_data_export_csv';
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_school_name_target_id']['id'] = 'field_school_name_target_id';
+  $handler->display->display_options['relationships']['field_school_name_target_id']['table'] = 'field_data_field_school_name';
+  $handler->display->display_options['relationships']['field_school_name_target_id']['field'] = 'field_school_name_target_id';
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_district_target_id']['id'] = 'field_district_target_id';
+  $handler->display->display_options['relationships']['field_district_target_id']['table'] = 'field_data_field_district';
+  $handler->display->display_options['relationships']['field_district_target_id']['field'] = 'field_district_target_id';
+  $handler->display->display_options['relationships']['field_district_target_id']['relationship'] = 'field_school_name_target_id';
+  /* Relationship: Entityform Submission: Student Submissions (field_school_student_submissions) */
+  $handler->display->display_options['relationships']['field_school_student_submissions_value']['id'] = 'field_school_student_submissions_value';
+  $handler->display->display_options['relationships']['field_school_student_submissions_value']['table'] = 'field_data_field_school_student_submissions';
+  $handler->display->display_options['relationships']['field_school_student_submissions_value']['field'] = 'field_school_student_submissions_value';
+  $handler->display->display_options['relationships']['field_school_student_submissions_value']['delta'] = '-1';
+  /* Relationship: Field collection item: Attach your submission (field_school_submission_upload:fid) */
+  $handler->display->display_options['relationships']['field_school_submission_upload_fid']['id'] = 'field_school_submission_upload_fid';
+  $handler->display->display_options['relationships']['field_school_submission_upload_fid']['table'] = 'field_data_field_school_submission_upload';
+  $handler->display->display_options['relationships']['field_school_submission_upload_fid']['field'] = 'field_school_submission_upload_fid';
+  $handler->display->display_options['relationships']['field_school_submission_upload_fid']['relationship'] = 'field_school_student_submissions_value';
+  /* Relationship: Content: Taxonomy terms on node */
+  $handler->display->display_options['relationships']['term_node_tid']['id'] = 'term_node_tid';
+  $handler->display->display_options['relationships']['term_node_tid']['table'] = 'node';
+  $handler->display->display_options['relationships']['term_node_tid']['field'] = 'term_node_tid';
+  $handler->display->display_options['relationships']['term_node_tid']['relationship'] = 'field_school_name_target_id';
+  $handler->display->display_options['relationships']['term_node_tid']['vocabularies'] = array(
+    'districts' => 'districts',
+    'committees' => 0,
+    'content_experiments' => 0,
+    'issues' => 0,
+    'nys_counties' => 0,
+  );
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Entityform Submission: Date submitted */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'entityform';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['date_format'] = 'medium';
+  $handler->display->display_options['fields']['created']['second_date_format'] = 'month_only';
+  /* Field: Field collection item: Student's Full Name */
+  $handler->display->display_options['fields']['field_school_student_full_name']['id'] = 'field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['table'] = 'field_data_field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['field'] = 'field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['relationship'] = 'field_school_student_submissions_value';
+  $handler->display->display_options['fields']['field_school_student_full_name']['label'] = 'Student\'s Name';
+  /* Field: Entityform Submission: Grade */
+  $handler->display->display_options['fields']['field_school_grade']['id'] = 'field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['table'] = 'field_data_field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['field'] = 'field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: Teacher's Name */
+  $handler->display->display_options['fields']['field_school_contact_name']['id'] = 'field_school_contact_name';
+  $handler->display->display_options['fields']['field_school_contact_name']['table'] = 'field_data_field_school_contact_name';
+  $handler->display->display_options['fields']['field_school_contact_name']['field'] = 'field_school_contact_name';
+  $handler->display->display_options['fields']['field_school_contact_name']['label'] = 'Teacher';
+  $handler->display->display_options['fields']['field_school_contact_name']['element_label_colon'] = FALSE;
+  /* Field: Content: School Legal Name */
+  $handler->display->display_options['fields']['field_school_legal_name']['id'] = 'field_school_legal_name';
+  $handler->display->display_options['fields']['field_school_legal_name']['table'] = 'field_data_field_school_legal_name';
+  $handler->display->display_options['fields']['field_school_legal_name']['field'] = 'field_school_legal_name';
+  $handler->display->display_options['fields']['field_school_legal_name']['relationship'] = 'field_school_name_target_id';
+  $handler->display->display_options['fields']['field_school_legal_name']['label'] = 'School Name';
+  $handler->display->display_options['fields']['field_school_legal_name']['element_label_colon'] = FALSE;
+  /* Field: Location: Street */
+  $handler->display->display_options['fields']['street']['id'] = 'street';
+  $handler->display->display_options['fields']['street']['table'] = 'location';
+  $handler->display->display_options['fields']['street']['field'] = 'street';
+  $handler->display->display_options['fields']['street']['relationship'] = 'field_school_name_target_id';
+  /* Field: Location: City */
+  $handler->display->display_options['fields']['city']['id'] = 'city';
+  $handler->display->display_options['fields']['city']['table'] = 'location';
+  $handler->display->display_options['fields']['city']['field'] = 'city';
+  $handler->display->display_options['fields']['city']['relationship'] = 'field_school_name_target_id';
+  $handler->display->display_options['fields']['city']['exclude'] = TRUE;
+  /* Field: Location: Province */
+  $handler->display->display_options['fields']['province']['id'] = 'province';
+  $handler->display->display_options['fields']['province']['table'] = 'location';
+  $handler->display->display_options['fields']['province']['field'] = 'province';
+  $handler->display->display_options['fields']['province']['relationship'] = 'field_school_name_target_id';
+  $handler->display->display_options['fields']['province']['label'] = 'City, State';
+  $handler->display->display_options['fields']['province']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['province']['alter']['text'] = '[city], NY';
+  /* Field: Location: Postal Code */
+  $handler->display->display_options['fields']['postal_code']['id'] = 'postal_code';
+  $handler->display->display_options['fields']['postal_code']['table'] = 'location';
+  $handler->display->display_options['fields']['postal_code']['field'] = 'postal_code';
+  $handler->display->display_options['fields']['postal_code']['relationship'] = 'field_school_name_target_id';
+  $handler->display->display_options['fields']['postal_code']['label'] = 'Zip Code';
+  $handler->display->display_options['fields']['postal_code']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: Contact Email */
+  $handler->display->display_options['fields']['field_school_contact_email']['id'] = 'field_school_contact_email';
+  $handler->display->display_options['fields']['field_school_contact_email']['table'] = 'field_data_field_school_contact_email';
+  $handler->display->display_options['fields']['field_school_contact_email']['field'] = 'field_school_contact_email';
+  $handler->display->display_options['fields']['field_school_contact_email']['label'] = 'Email';
+  /* Field: Content: Principal Phone Number */
+  $handler->display->display_options['fields']['field_school_ceo_phone']['id'] = 'field_school_ceo_phone';
+  $handler->display->display_options['fields']['field_school_ceo_phone']['table'] = 'field_data_field_school_ceo_phone';
+  $handler->display->display_options['fields']['field_school_ceo_phone']['field'] = 'field_school_ceo_phone';
+  $handler->display->display_options['fields']['field_school_ceo_phone']['relationship'] = 'field_school_name_target_id';
+  $handler->display->display_options['fields']['field_school_ceo_phone']['label'] = 'School Phone';
+  /* Field: Field: Senator */
+  $handler->display->display_options['fields']['field_senator']['id'] = 'field_senator';
+  $handler->display->display_options['fields']['field_senator']['table'] = 'field_data_field_senator';
+  $handler->display->display_options['fields']['field_senator']['field'] = 'field_senator';
+  $handler->display->display_options['fields']['field_senator']['relationship'] = 'field_district_target_id';
+  $handler->display->display_options['fields']['field_senator']['settings'] = array(
+    'link' => 0,
+  );
+  /* Field: Taxonomy term: District Number */
+  $handler->display->display_options['fields']['field_district_number']['id'] = 'field_district_number';
+  $handler->display->display_options['fields']['field_district_number']['table'] = 'field_data_field_district_number';
+  $handler->display->display_options['fields']['field_district_number']['field'] = 'field_district_number';
+  $handler->display->display_options['fields']['field_district_number']['relationship'] = 'field_district_target_id';
+  $handler->display->display_options['fields']['field_district_number']['settings'] = array(
+    'thousand_separator' => '',
+    'prefix_suffix' => 1,
+  );
+  /* Field: Field collection item: Attach your submission */
+  $handler->display->display_options['fields']['field_school_submission_upload']['id'] = 'field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload']['table'] = 'field_data_field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload']['field'] = 'field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload']['relationship'] = 'field_school_student_submissions_value';
+  $handler->display->display_options['fields']['field_school_submission_upload']['label'] = 'URL';
+  $handler->display->display_options['fields']['field_school_submission_upload']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_school_submission_upload']['type'] = 'file_url_plain';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Entityform Submission: Entityform Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'entityform';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'school_submissions' => 'school_submissions',
+  );
+  /* Filter criterion: Entityform Submission: Date submitted */
+  $handler->display->display_options['filters']['created']['id'] = 'created';
+  $handler->display->display_options['filters']['created']['table'] = 'entityform';
+  $handler->display->display_options['filters']['created']['field'] = 'created';
+  $handler->display->display_options['filters']['created']['operator'] = '>=';
+  $handler->display->display_options['filters']['created']['value']['value'] = '2017-08-01';
+  $handler->display->display_options['path'] = 'tksgiving-student-export.csv';
+  $handler->display->display_options['displays'] = array(
+    'page_1' => 'page_1',
+    'default' => 0,
+    'page' => 0,
+  );
   $export['student_submissions_admin_lists'] = $view;
 
   return $export;

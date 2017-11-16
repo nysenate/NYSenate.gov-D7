@@ -13,6 +13,39 @@ function nys_news_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
+  $field_group->identifier = 'group_article_content|node|article|form';
+  $field_group->group_name = 'group_article_content';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'article';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Article Content',
+    'weight' => '1',
+    'children' => array(
+      0 => 'body',
+      1 => 'field_chapters',
+      2 => 'field_image_main',
+      3 => 'field_subtitle',
+      4 => 'field_bills',
+      5 => 'field_paragraphs',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'formatter' => 'collapsible',
+      'instance_settings' => array(
+        'description' => '',
+        'classes' => 'group-article-content field-group-fieldset',
+        'required_fields' => 1,
+        'id' => '',
+      ),
+    ),
+  );
+  $field_groups['group_article_content|node|article|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
   $field_group->identifier = 'group_committee_settings|node|article|form';
   $field_group->group_name = 'group_committee_settings';
   $field_group->entity_type = 'node';
@@ -125,39 +158,6 @@ function nys_news_field_group_info() {
     ),
   );
   $field_groups['group_content|node|in_the_news|form'] = $field_group;
-  
-    $field_group = new stdClass();
-  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
-  $field_group->api_version = 1;
-  $field_group->identifier = 'group_article_content|node|article|form';
-  $field_group->group_name = 'group_article_content';
-  $field_group->entity_type = 'node';
-  $field_group->bundle = 'article';
-  $field_group->mode = 'form';
-  $field_group->parent_name = '';
-  $field_group->data = array(
-    'label' => 'Article Content',
-    'weight' => '1',
-    'children' => array(
-      0 => 'body',
-      1 => 'field_chapters',
-      2 => 'field_image_main',
-      3 => 'field_subtitle',
-      4 => 'field_bills',
-      5 => 'field_paragraphs',
-    ),
-    'format_type' => 'fieldset',
-    'format_settings' => array(
-      'formatter' => 'collapsible',
-      'instance_settings' => array(
-        'description' => '',
-        'classes' => 'group-article-content field-group-fieldset',
-        'required_fields' => 1,
-        'id' => '',
-      ),
-    ),
-  );
-  $field_groups['group_article_content|node|article|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -276,8 +276,8 @@ function nys_news_field_group_info() {
     ),
   );
   $field_groups['group_heading_information|node|press_release|form'] = $field_group;
-  
-    $field_group = new stdClass();
+
+  $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
   $field_group->identifier = 'group_heading_info|node|article|form';
@@ -491,8 +491,8 @@ function nys_news_field_group_info() {
     'label' => 'Promotion and Visibility',
     'weight' => '4',
     'children' => array(
-      0 => 'group_microsite_settings',
-      1 => 'group_committee_settings',
+      0 => 'group_committee_settings',
+      1 => 'group_microsite_settings',
       2 => 'group_sitewide_settings',
     ),
     'format_type' => 'htabs',
@@ -630,14 +630,12 @@ function nys_news_field_group_info() {
   t('Committee Settings');
   t('Discoverability');
   t('Heading Information');
-  t('Article Heading Information');
   t('Headline & Authorship');
   t('Promotion & Visibility');
   t('Promotion and Visibility');
   t('Senator Microsite Settings');
   t('Sitewide Settings');
   t('Source Information');
-
 
   return $field_groups;
 }

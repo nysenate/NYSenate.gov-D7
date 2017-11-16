@@ -176,3 +176,115 @@
 		}
 	}
 }
+
+//POLLS
+
+.pane-senator-polls, .c-block--pg-poll, .node-advpoll {
+  .c-block--initiative {
+    margin: 0 0 40px 0!important;
+  }
+  .c-block-btn {
+    height: 50px;
+    line-height: 50px;
+  }
+  h3.c-initiative--title {
+    font-family: "Adelle Light";
+    font-size: 36px;
+    color: #fff;
+    margin-top: 0;
+  }
+  .c-block--initiative__has-img {
+    img {
+      margin-top: -15px;
+    }
+    .c-block ul {
+      display: none;
+    }
+    .c-initiative--content {
+    padding-bottom: 10px;
+    padding-right: 10px;
+    width: 65%;
+      .poll {
+        width: 90%;
+        margin-top: 2%;
+        .vote-form .choices {
+        margin: 0;
+        }
+        .text {
+          color: #fff;
+          font-size: 18px;
+          }
+        .voted .bar {
+          border: none;
+        }
+        .bar {
+          height: 2em;
+          .foreground {
+            height: 2em;
+          }
+        }
+        .percent, .total, .poll-message, #message, .poll-closed p {
+          color: #fff;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
+
+
+form#poll-view-voting, form[id*="advpoll-form"] {
+  .form-item {
+    padding-left: 20px;
+    margin-bottom: 0;
+  }
+  input {
+    font-size: 120%;
+    margin: 0.5rem 0 1.2rem 0;
+  }
+  label {
+    color: #fff;
+    font-size: 24px;
+    font-family: "Proxima Nova Regular";
+    line-height: 1.25em;
+  }
+  button {
+    color: #fff;
+    display: block;
+    margin: 0 auto;
+  }
+  #message {
+    color: #fff;
+    font-size: 12px;
+  }
+}
+.node-advpoll.view-mode-full {
+    .c-block--initiative__has-img .c-initiative--content {
+      padding-bottom: 10px;
+      padding-right: 10px;
+    }
+}
+.c-advpoll--date {
+  display: block;
+  margin: 30px 0 36px;
+}
+button[id*="edit-submit-advpoll"] {
+  .trad_blue & { background-color: $trad_blue_med; }
+  .cont_blue & { background-color: $cont_blue_med; }
+  .purple & { background-color: $purple_med; }
+  .trad_red & { background-color: $trad_red_med; }
+  .cont_red & { background-color: $cont_red_med; }
+  .orange & { background-color: $orange_med; }
+  .trad_green & { background-color: $trad_green_med; }
+  .cont_green & { background-color: $cont_green_med; }
+}
+.poll .bar .foreground {
+  .trad_blue & { background-color: $trad_blue_drk; }
+  .cont_blue & { background-color: $cont_blue_drk; }
+  .purple & { background-color: $purple_drk; }
+  .trad_red & { background-color: $trad_red_drk; }
+  .cont_red & { background-color: $cont_red_drk; }
+  .orange & { background-color: $orange_drk; }
+  .trad_green & { background-color: $trad_green_drk; }
+  .cont_green & { background-color: $cont_green_drk; }
+}

@@ -38,10 +38,6 @@ function nys_statute_import_process_statutes($law_id, $run_type) {
         is_array($law_tree->documents->documents->items) == TRUE &&
         count($law_tree->documents->documents->items) > 0
   ) {
-
-    // Record the lawId in a variable.
-    variable_set('nys_statute_import_process_statutes', $law_id);
-
     // Process the CHAPTER.
     $statute_chapter_document_obj_wrapper = new StdClass();
     $statute_chapter_document_obj_wrapper->documents = $law_tree->documents;
@@ -52,23 +48,14 @@ function nys_statute_import_process_statutes($law_id, $run_type) {
     $parent_location_id = $law_tree->documents->lawId;
     nys_statute_import_process_document($law_tree->documents->documents, $run_type, $parent_location_id);
 
-    variable_set('nys_statute_import_process_statutes', '');
-
   }
-  elseif ($law_tree != NULL &&
-        is_object($law_tree) == TRUE
+  elseif ($law_tree != NULL && is_object($law_tree) == TRUE
   ) {
-
-    // Record the lawId in a variable.
-    variable_set('nys_statute_import_process_statutes', $law_id);
-
     // Process the CHAPTER.
     $statute_chapter_document_obj_wrapper = new StdClass();
     $statute_chapter_document_obj_wrapper->documents = $law_tree->documents;
     $chapter_parent_location_id = nys_statute_get_law_type($law_tree->documents->lawId);
     nys_statute_import_process_a_statute_object($statute_chapter_document_obj_wrapper, $run_type, $chapter_parent_location_id);
-
-    variable_set('nys_statute_import_process_statutes', '');
 
   }
 
@@ -157,6 +144,90 @@ function nys_statute_import_process_update_range_statutes($law_id, $fromDateTime
 }
 
 /**
+ * Builds queue.
+ */
+function nys_statute_import_process_structure_range_statutes($from_date_time, $to_date_time, $dry_run = FALSE) {
+  // Clear out any previous data.
+  nys_statute_import_law_queue_truncate();
+  // Get the list of changed statutes and iterate thru it
+  $changed_statutes_array = nys_statute_import_get_structure_range_statutes($from_date_time, $to_date_time);
+  if ($changed_statutes_array !== FALSE) {
+    foreach ($changed_statutes_array as $changed_statute_object) {
+      // Get the $law_id.
+      $law_id = (isset($changed_statute_object->id->lawId) ? $changed_statute_object->id->lawId : '');
+      nys_statute_import_law_queue_insert($law_id, '');
+
+    }
+
+  }
+
+}
+
+/**
+ * Repeal (delete) a range of statutes.
+ *
+ * Params:
+ *   $fromDateTime -  its the from date time.
+ *   $toDateTime - its the from date time.
+ *   $dry_run - type of run FALSE TO ACTUALLY DELETE. TRUE TO LIST ONLY.
+ */
+function nys_statute_import_process_repeal_range_statutes($from_date_time, $to_date_time, $dry_run = FALSE) {
+  $repealed_statutes_array = nys_statute_import_get_repealed_statutes($from_date_time, $to_date_time);
+  if ($repealed_statutes_array !== FALSE) {
+    foreach ($repealed_statutes_array as $repeales_statute_object) {
+      // Available data in id: $repeales_statute_object->lawId.
+      // And ($repeales_statute_object->locationId.
+      // And $repeales_statute_object->publishedDate.
+      // Try and get the nid of the statute.
+      // Process a deletion of a statute.
+      nys_statute_delete_statute($repeales_statute_object->lawId, $repeales_statute_object->locationId, $dry_run);
+
+      usleep(NYS_STATUTE_IMPORT_SLEEP_MICROSECONDS);
+
+    }
+
+    if ($dry_run == FALSE) {
+      // Set the time of the run so the next one will be good.
+      variable_set(NYS_STATUTE_IMPORT_LAST_REPEAL_TIMETAMP, date('Y-m-d\TH:i:s', time()));
+    }
+
+  }
+
+}
+
+/**
+ * Delete statute.
+ *
+ * Params:
+ *   $law_id - The three letter law id
+ *   $locationId -  iloction id.
+ */
+function nys_statute_delete_statute($lawId, $locationId, $dry_run = FALSE) {
+  $result = db_query("SELECT field_data_field_lawid.entity_id FROM field_data_field_lawid, field_data_field_locationid WHERE
+                       field_data_field_lawid.entity_id = field_data_field_locationid.entity_id AND
+                       field_data_field_lawid.bundle = field_data_field_locationid.bundle AND
+                       field_lawid_value = :lawid AND
+                       field_locationid_value = :locationId",
+                      array(':lawid' => $lawId, ':locationId' => $locationId));
+
+  $row_count = $result->rowCount();
+
+  if ($row_count == 1) {
+    // Delete the statute.
+    $statute_nid = $result->fetchField();
+    if ($dry_run == FALSE) {
+      node_delete($statute_nid);
+      print "Deleting Repealed node ID: $statute_nid \r\n";
+    }
+    else {
+      print "Proposed Repealed node ID: $statute_nid \r\n";
+    }
+
+  }
+
+}
+
+/**
  * Function nys_statute_import_process_a_statute() Processes a single statute.
  *
  * Params:
@@ -213,23 +284,32 @@ function nys_statute_import_process_a_statute_object($law_tree, $run_type, $pare
         if ($run_type == 'AUDIT-ALL' || $run_type == 'AUDIT-SOME' || $run_type == 'AUDIT-ONE') {
           $doc_type = nys_statute_get_law_type($law_id);
           if ($law_tree->documents->docType != 'CHAPTER') {
-            print "$law_id,$parent_location_id,$doc_type,$location_id,$law_id" . NYS_STATUTE_STATUTE_ID_DELIMITER . "$location_id,$node->nid,MATCHED\r\n";
+            $law_tree_documents_doc_type = (isset($law_tree->documents->docType) ? $law_tree->documents->docType : '');
+            print "$law_id,$parent_location_id,$law_tree_documents_doc_type,$location_id,$law_id" . NYS_STATUTE_STATUTE_ID_DELIMITER . "$location_id,$node->nid,MATCHED\r\n";
+            nys_statute_import_log_insert($law_id, $parent_location_id, $law_tree_documents_doc_type, $location_id, $law_id . NYS_STATUTE_STATUTE_ID_DELIMITER . $location_id, $node->nid, 'MATCHED');
           }
           else {
-            print "$law_id,$parent_location_id,$doc_type,$location_id,$law_id,$node->nid,MATCHED\r\n";
+            $law_tree_documents_doc_type = (isset($law_tree->documents->docType) ? $law_tree->documents->docType : '');
+            print "$law_id,$parent_location_id,$law_tree_documents_doc_type,$location_id,$law_id,$node->nid,MATCHED\r\n";
+            nys_statute_import_log_insert($law_id, $parent_location_id, $law_tree_documents_doc_type, $location_id, $law_id, $node->nid, 'MATCHED');
           }
 
           return;
         }
         else {
-          if ($law_tree->documents->docType != 'CHAPTER') {
+          if ($law_tree->documents->docType != 'CHAPTER' && !nys_statute_import_is_grandparent($law_id, $law_id . NYS_STATUTE_STATUTE_ID_DELIMITER . $location_id)) {
             print ' MATCHED NODE = ' . $node->nid . ' | STATUTE_ID = ' . $law_id . NYS_STATUTE_STATUTE_ID_DELIMITER . $location_id . "\r\n";
+            nys_statute_import_log_insert($law_id, $parent_location_id, $law_tree->documents->docType, $location_id, $law_id . NYS_STATUTE_STATUTE_ID_DELIMITER . $location_id, $node->nid, 'MATCHED');
           }
-          else {
+          elseif (!nys_statute_import_is_grandparent($law_id, $law_id . NYS_STATUTE_STATUTE_ID_DELIMITER . $location_id)) {
             // Its a Chapter.
             print ' MATCHED NODE = ' . $node->nid . ' | STATUTE_ID = ' . $law_id . "\r\n";
+            nys_statute_import_log_insert($law_id, $parent_location_id, $law_tree->documents->docType, $location_id, $law_id, $node->nid, 'MATCHED');
           }
-
+          else {
+            print ' MATCHED NODE = ' . $node->nid . ' | STATUTE_ID = ' . $law_id . NYS_STATUTE_STATUTE_ID_DELIMITER . $location_id . "\r\n";
+            nys_statute_import_log_insert($law_id, $parent_location_id, $law_tree->documents->docType, $location_id, $law_id . NYS_STATUTE_STATUTE_ID_DELIMITER . $location_id, $node->nid, 'MATCHED');
+          }
         }
 
         // No further processing necessary for this statute.
@@ -239,11 +319,13 @@ function nys_statute_import_process_a_statute_object($law_tree, $run_type, $pare
     }
     else {
       print $result . ' -  statuteId =  ' . $law_id . NYS_STATUTE_STATUTE_ID_DELIMITER . $location_id . "\r\n";
+      nys_statute_import_log_insert($law_id, $parent_location_id, $law_tree->documents->docType, $location_id, $law_id . NYS_STATUTE_STATUTE_ID_DELIMITER . $location_id, $node->nid, 'NO-MATCH');
 
       if ($run_type == 'AUDIT-ALL' || $run_type == 'AUDIT-SOME' || $run_type == 'AUDIT-ONE') {
         $doc_type = nys_statute_get_law_type($law_id);
-        print "$law_id,$parent_location_id,$doc_type,$location_id,$law_id" . NYS_STATUTE_STATUTE_ID_DELIMITER . "$location_id,$node->nid,NO-MATCH\r\n";
-
+        $law_tree_documents_doc_type = (isset($law_tree->documents->docType) ? $law_tree->documents->docType : '');
+        print "$law_id,$parent_location_id,$law_tree_documents_doc_type,$location_id,$law_id" . NYS_STATUTE_STATUTE_ID_DELIMITER . "$location_id,$node->nid,NO-MATCH\r\n";
+        nys_statute_import_log_insert($law_id, $parent_location_id, $law_tree_documents_doc_type, $location_id, $law_id . NYS_STATUTE_STATUTE_ID_DELIMITER . $location_id, $node->nid, 'NO-MATCH');
         return;
       }
 
@@ -254,6 +336,7 @@ function nys_statute_import_process_a_statute_object($law_tree, $run_type, $pare
     // No node was found.
     if ($run_type == 'AUDIT-ALL') {
       print "$law_id,$parent_location_id,$law_doc->docType,$location_id,$law_id" . NYS_STATUTE_STATUTE_ID_DELIMITER . "$location_id,,NO-NODE\r\n";
+      nys_statute_import_log_insert($law_id, $parent_location_id, $law_tree->documents->docType, $location_id, $law_id . NYS_STATUTE_STATUTE_ID_DELIMITER . $location_id, 0, 'NO-NODE');
       return;
     }
 
@@ -301,21 +384,23 @@ function nys_statute_import_process_a_statute_object($law_tree, $run_type, $pare
   if ($newly_created == TRUE) {
     if ($law_tree->documents->docType != 'CHAPTER') {
       print 'CREATED NODE = ' . $node->nid . ' | STATUTE_ID = ' . $law_id . NYS_STATUTE_STATUTE_ID_DELIMITER . $location_id . "\r\n";
+      nys_statute_import_log_insert($law_id, $parent_location_id, $law_tree->documents->docType, $location_id, $law_id . NYS_STATUTE_STATUTE_ID_DELIMITER . $location_id, $node->nid, 'CREATED');
     }
     else {
       // Its a chapter.
-      print 'CREATED NODE = ' . $node->nid . ' | STATUTE_ID = ' . $law_id  . "\r\n";
+      print 'CREATED NODE = ' . $node->nid . ' | STATUTE_ID = ' . $law_id . "\r\n";
+      nys_statute_import_log_insert($law_id, $parent_location_id, $law_tree->documents->docType, $location_id, $law_id, $node->nid, 'CREATED');
     }
   }
   else {
     if ($law_tree->documents->docType != 'CHAPTER') {
-      if ($law_tree->documents->docType != 'CHAPTER') {
-        print 'UPDATED NODE = ' . $node->nid . ' | STATUTE_ID = ' . $law_id . NYS_STATUTE_STATUTE_ID_DELIMITER . $location_id . "\r\n";
-      }
-      else {
-        // Its a chapter.
-        print 'UPDATED NODE = ' . $node->nid . ' | STATUTE_ID = ' . $law_id . "\r\n";
-      }
+      print 'UPDATED NODE = ' . $node->nid . ' | STATUTE_ID = ' . $law_id . NYS_STATUTE_STATUTE_ID_DELIMITER . $location_id . "\r\n";
+      nys_statute_import_log_insert($law_id, $parent_location_id, $law_tree->documents->docType, $location_id, $law_id . NYS_STATUTE_STATUTE_ID_DELIMITER . $location_id, $node->nid, 'UPDATED');
+    }
+    else {
+      // Its a chapter.
+      print 'UPDATED NODE = ' . $node->nid . ' | STATUTE_ID = ' . $law_id . "\r\n";
+      nys_statute_import_log_insert($law_id, $parent_location_id, $law_tree->documents->docType, $location_id, $law_id, $node->nid, 'UPDATED');
     }
   }
 
@@ -460,8 +545,6 @@ function nys_statute_import_set_values(&$node, $law_doc, $law_tree, $run_type, $
     }
 
   }
-
-
 
   if ($run_type == 'PARENT' && empty($law_tree->documents->lawId) == FALSE) {
     $node->field_statuteid[LANGUAGE_NONE][0]['value'] = $law_tree->documents->lawId;
@@ -851,22 +934,30 @@ function nys_statute_import_node_load_by_statute_id($statuteId) {
   $result = db_query("SELECT `entity_id` FROM `field_data_field_statuteid` WHERE field_statuteid_value = :statuteId",
                              array(':statuteId' => $statuteId));
 
-  if ($result->num_rows > 1) {
-    print "MORE THAN ONE $statuteId FOUND\r\n";
-  }
+  $row_count = $result->rowCount();
 
-  foreach ($result as $item) {
-    $entity_id = $item->entity_id;
+  if ($row_count == 1) {
+    $entity_id = $result->fetchField();
+  }
+  elseif ($row_count > 1) {
+    print "MORE THAN ONE $statuteId FOUND |";
+
+    foreach ($result as $item) {
+      print ' nid ' . $item->entity_id . ' |';
+      $entity_id = $item->entity_id;
+    }
+
+    print "\r\n";
   }
 
   if (empty($entity_id) == FALSE && is_numeric($entity_id) == TRUE) {
-    $node = node_load($entity_id);
     return node_load($entity_id);
   }
 
   return FALSE;
 
 }
+
 
 /**
  * Function nys_statute_import_node_load().
@@ -885,16 +976,23 @@ function nys_statute_import_node_load($lawId, $locationId) {
                        field_locationid_value = :locationId",
                       array(':lawid' => $lawId, ':locationId' => $locationId));
 
-  if ($result->num_rows > 1) {
-    print "MORE THAN ONE $statuteId FOUND\r\n";
-  }
+  $row_count = $result->rowCount();
 
-  foreach ($result as $item) {
-    $entity_id = $item->entity_id;
+  if ($row_count == 1) {
+    $entity_id = $result->fetchField();
+  }
+  elseif ($row_count > 1) {
+    print "MORE THAN ONE $statuteId FOUND |";
+
+    foreach ($result as $item) {
+      print ' nid ' . $item->entity_id . ' |';
+      $entity_id = $item->entity_id;
+    }
+
+    print "\r\n";
   }
 
   if (empty($entity_id) == FALSE && is_numeric($entity_id) == TRUE) {
-    $node = node_load($entity_id);
     return node_load($entity_id);
   }
 
@@ -916,7 +1014,7 @@ function nys_statute_import_node_load_by_statute_document($statute_document_obj)
     $locationId = $statute_document_obj->documents->locationId;
 
     if (empty($lawId) == FALSE && empty($locationId) == FALSE) {
-      if ( $statute_document_obj->documents->docType != 'CHAPTER') {
+      if ($statute_document_obj->documents->docType != 'CHAPTER') {
         $statuteId = $lawId . NYS_STATUTE_STATUTE_ID_DELIMITER . $locationId;
       }
       else {
@@ -930,14 +1028,22 @@ function nys_statute_import_node_load_by_statute_document($statute_document_obj)
     }
 
     $result = db_query("SELECT `entity_id` FROM `field_data_field_statuteid` WHERE field_statuteid_value = :statuteId",
-                             array(':statuteId' => $statuteId));
+                              array(':statuteId' => $statuteId));
 
-    if ($result->num_rows > 1) {
-      print "MORE THAN ONE $statuteId FOUND\r\n";
+    $row_count = $result->rowCount();
+
+    if ($row_count == 1) {
+      $entity_id = $result->fetchField();
     }
+    elseif ($row_count > 1) {
+      print "MORE THAN ONE $statuteId FOUND |";
 
-    foreach ($result as $item) {
-      $entity_id = $item->entity_id;
+      foreach ($result as $item) {
+        print ' nid ' . $item->entity_id . ' |';
+        $entity_id = $item->entity_id;
+      }
+
+      print "\r\n";
     }
 
     if (empty($entity_id) == FALSE && is_numeric($entity_id) == TRUE) {
@@ -1007,7 +1113,7 @@ function nys_statute_import_node_count($lawId, $locationId) {
 function nys_statute_import_get_changed_statutes($law_id, $fromDateTime = '', $toDateTime = '') {
 
   if (empty($fromDateTime) == TRUE) {
-    $fromDateTime_value = variable_get("statute_import_last_update", $run_start_time);
+    $fromDateTime_value = variable_get(NYS_STATUTE_IMPORT_LAST_UPDATE_TIMETAMP, $run_start_time);
   }
   else {
     $fromDateTime_value = $fromDateTime;
@@ -1053,43 +1159,109 @@ function nys_statute_import_get_changed_statutes($law_id, $fromDateTime = '', $t
 }
 
 /**
- * Retrieves the law listings from open leg and caches them.
+ * Returns an array containing the statutes that have structural tree changes.
+ *
+ * Params:
+ *   $fromDateTime - If empty the last run date is used.
+ *                   If supplied its the from date time.
+ *   $toDateTime   - If empty the current date time is used.
+ *                   If supplied its the from date time.
+ *   Note . The fromDateTime and toDateTime should
+ *          be formatted as the ISO Date Time format.
+ *          December 10, 2014, 1:30:02 PM should be
+ *          inputted as 2014-12-10T13:30:02.
+ * Returns:
+ *   An array of objects
+ *   with lawId, locationId, publishedDate
+ *   object->id->lawId,  object->id->locationId,
+ *   object->id->publishedDate.
  */
-function nys_statute_import_get_law_listings() {
-  $CACHE_KEY = 'nys_statute_import_law_listings';
-  $law_listings = cache_get($CACHE_KEY);
-  if (!$law_listings) {
-
-    $ctx1 = stream_context_create(array(
-      'http' => array(
-        'timeout' => 240,
-      ),
-    )
-    );
-
-    $base_result = file_get_contents(nys_statute_import_get_base_openleg_law_url() . nys_statute_get_openleg_key(TRUE), 0, $ctx1);
-    if ($base_result === FALSE) {
-      $base_result = file_get_contents(nys_statute_import_get_base_openleg_law_url() . nys_statute_get_openleg_key(TRUE), 0, $ctx1);
-    }
-    if ($base_result === FALSE) {
-      $base_result = file_get_contents(nys_statute_import_get_base_openleg_law_url() . nys_statute_get_openleg_key(TRUE), 0, $ctx1);
-    }
-    if ($base_result === FALSE) {
-      return FALSE;
-    }
-
-    $json_response = json_decode($base_result);
-    $law_listings = array();
-    foreach ($json_response->result->items as $k => &$v) {
-      $law_listings[$v->lawId] = $v;
-    }
-
-    cache_set($CACHE_KEY, $law_listings);
+function nys_statute_import_get_structure_range_statutes($fromDateTime = '', $toDateTime = '') {
+  // If no From date is set use the earliest known date.
+  if (empty($fromDateTime) == TRUE) {
+    $fromDateTime = variable_get(NYS_STATUTE_IMPORT_LAST_STRUCTURAL_TIMETAMP, '2015-10-17T09:44:55');
   }
-  else {
-    $law_listings = $law_listings->data;
+
+  // If no End is set use now.
+  if (empty($toDateTime) == TRUE) {
+    $toDateTime = date('Y-m-d\TH:i:s', time());
   }
-  return $law_listings;
+
+  $base_url = variable_get("openleg_base_url");
+
+  $url = nys_statute_import_get_base_openleg_law_url() . "/tree/updates/{$fromDateTime}/{$toDateTime}?limit=200&" . nys_statute_get_openleg_key(FALSE);
+
+  $ctx1 = stream_context_create(array(
+    'http' => array(
+      'timeout' => 240,
+    ),
+  )
+  );
+
+  $updated_laws_json = file_get_contents($url, 0, $ctx1);
+  $updated_laws = json_decode($updated_laws_json);
+  if ($updated_laws != NULL && $updated_laws !== FALSE) {
+    if ($updated_laws->responseType == "update-token list") {
+      if ($updated_laws->total > 0) {
+        return $updated_laws->result->items;
+      }
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Returns an array containing the statutes that have been repealed.
+ *
+ * Params:
+ *   $fromDateTime - If empty the last run date is used.
+ *                   If supplied its the from date time.
+ *   $toDateTime   - If empty the current date time is used.
+ *                   If supplied its the from date time.
+ *   Note . The fromDateTime and toDateTime should
+ *          be formatted as the ISO Date Time format.
+ *          December 10, 2014, 1:30:02 PM should be
+ *          inputted as 2014-12-10T13:30:02.
+ * Returns:
+ *   An array of objects
+ *   with lawId, locationId, publishedDate
+ *   object->id->lawId,  object->id->locationId,
+ *   object->id->publishedDate.
+ */
+function nys_statute_import_get_repealed_statutes($fromDateTime = '', $toDateTime = '') {
+  // If no From date is set use the earliest known date.
+  if (empty($fromDateTime) == TRUE) {
+    $fromDateTime = variable_get(NYS_STATUTE_IMPORT_LAST_REPEAL_TIMETAMP, '2015-10-17T09:44:55');
+  }
+
+  // If no End is set use now.
+  if (empty($toDateTime) == TRUE) {
+    $toDateTime = date('Y-m-d\TH:i:s', time());
+  }
+
+  $base_url = variable_get("openleg_base_url");
+
+  $url = nys_statute_import_get_base_openleg_law_url() . "/repealed?fromDateTime={$fromDateTime}&toDateTime={$toDateTime}" . nys_statute_get_openleg_key(FALSE);
+
+  $ctx1 = stream_context_create(array(
+    'http' => array(
+      'timeout' => 240,
+    ),
+  )
+  );
+
+  $repealed_laws_json = file_get_contents($url, 0, $ctx1);
+  $repealed_laws = json_decode($repealed_laws_json);
+  if ($repealed_laws != NULL && $repealed_laws !== FALSE) {
+    if ($repealed_laws->responseType == "law-doc-id list") {
+      if ($repealed_laws->total > 0) {
+        return $repealed_laws->result->items;
+      }
+    }
+  }
+
+  return FALSE;
 }
 
 /**
@@ -1161,16 +1333,6 @@ function nys_statute_import_get_law_tree_from_node($law_id, $law_location_id, $d
   $law_tree = json_decode($base_result);
   return $law_tree->result;
 }
-
-/**
- * Returns a string containing the base openleg laws api url.
- */
-function nys_statute_import_get_base_openleg_law_url() {
-  $ol_base_url   = variable_get("openleg_base_url");
-  $base_url = $ol_base_url . '/api/3/laws';
-  return $base_url;
-}
-
 
 /**
  * Updates the nodes alias if needed.
@@ -1493,9 +1655,9 @@ function nys_statute_import_audit_statutes() {
   print "+------------+-----------------+-------------+--------------+\r\n";
   print "| LAW ID     | FROM OPEN LEG   | FROM NYS    | DIFFERENCE   |\r\n";
   print "+------------+-----------------+-------------+--------------+\r\n";
-  print '|          NUMBER OF GRAND PARENT BILL NODES' . ' | ' . str_pad(5, 13) . "|\r\n";
+  print '|       NUMBER OF GRAND PARENT STATUTE NODES' . ' | ' . str_pad(5, 13) . "|\r\n";
   print "+--------------------------------------------+--------------+\r\n";
-  print '|                 TOTAL NUMBER OF BILL NODES' . ' | ' . str_pad($number_of_statute_nodes, 13) . "|\r\n";
+  print '|              TOTAL NUMBER OF STATUTE NODES' . ' | ' . str_pad($number_of_statute_nodes, 13) . "|\r\n";
   print "+--------------------------------------------+--------------+\r\n";
 
 }
@@ -1587,4 +1749,103 @@ function nys_statute_import_get_document_count($documents_obj, &$counter) {
 
   }
 
+}
+
+/**
+ * Determine if grandparent.
+ */
+function nys_statute_import_is_grandparent($law_id, $statute_id) {
+  if (strcasecmp($law_id, 'all') && strcasecmp($statute_id, 'all/')) {
+    return TRUE;
+  }
+  elseif (strcasecmp($law_id, 'CONSOLIDATED') && strcasecmp($statute_id, 'CONSOLIDATED/')) {
+    return TRUE;
+  }
+  elseif (strcasecmp($law_id, 'UNCONSOLIDATED') && strcasecmp($statute_id, 'UNCONSOLIDATED/')) {
+    return TRUE;
+  }
+  elseif (strcasecmp($law_id, 'COURTACTS') && strcasecmp($statute_id, 'COURTACTS/')) {
+    return TRUE;
+  }
+  elseif (strcasecmp($law_id, 'RULES') && strcasecmp($statute_id, 'RULES/')) {
+    return TRUE;
+  }
+
+  return FALSE;
+
+}
+
+
+/**
+ * Inserts a row un the nys_statute_import_log table.
+ */
+function nys_statute_import_log_insert($law_id,
+                                       $parent_location_id,
+                                       $doc_type,
+                                       $location_id,
+                                       $statute_id,
+                                       $statute_nid,
+                                       $status) {
+
+  $result = db_insert('nys_statute_import_log')
+    ->fields(array(
+      'law_id' => $law_id,
+      'parent_location_id' => $parent_location_id,
+      'doc_type' => $doc_type,
+      'location_id' => $location_id,
+      'statute_id' => $statute_id,
+      'statute_nid' => $statute_nid,
+      'status' => $status,
+      'timestamp' => time(),
+    ))->execute();
+
+}
+
+/**
+ * Deletes laws with $law_id from the nys_statute_import_log table.
+ */
+function nys_statute_import_log_clear_law_id($law_id) {
+  db_query("DELETE FROM `nys_statute_import_log` WHERE `law_id` = :law_id", array(':law_id' => $law_id));
+}
+
+/**
+ * Truncates the nys_statute_import_law_queue table.
+ */
+function nys_statute_import_log_truncate() {
+  $result = db_truncate('nys_statute_import_log')->execute();
+}
+
+/**
+ * Inserts a row un the nys_statute_import_law_queue table.
+ */
+function nys_statute_import_law_queue_insert($law_id, $status = '') {
+
+  $result = db_insert('nys_statute_import_law_queue')
+    ->fields(array(
+      'law_id' => $law_id,
+      'status' => $status,
+      'timestamp' => time(),
+    ))->execute();
+
+}
+
+/**
+ * Returns the quantity of rows in the nys_statute_import_law_queue table.
+ */
+function nys_statute_import_law_queue_count() {
+  return db_query("SELECT COUNT(*) FROM `nys_statute_import_law_queue`")->fetchField();
+}
+
+/**
+ * Returns a row in the nys_statute_import_law_queue table.
+ */
+function nys_statute_import_law_queue_get_law_id($index) {
+  return db_query("SELECT `law_id` FROM `nys_statute_import_law_queue` WHERE `id` = :id", array(':id' => $index))->fetchField();
+}
+
+/**
+ * Truncates the nys_statute_import_log table.
+ */
+function nys_statute_import_law_queue_truncate() {
+  $result = db_truncate('nys_statute_import_law_queue')->execute();
 }

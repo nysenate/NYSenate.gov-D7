@@ -24,7 +24,12 @@ function nys_news_views_pre_view(&$view, &$display_id, &$args) {
   if ($view->name == 'senator_news' && $display_id == 'senator_news_article_footer') {
     if (arg(0) == 'node' && is_numeric(arg(1))) {
       $node_emw = entity_metadata_wrapper('node', arg(1));
-      $senator = $node_emw->field_senator->nid->value();
+      try {
+        $senator = $node_emw->field_senator->nid->value();
+      }
+      catch (EntityMetadataWrapperException $e) {
+        $senator = 0;
+      }
 
       $view->set_arguments(array($senator));
     }

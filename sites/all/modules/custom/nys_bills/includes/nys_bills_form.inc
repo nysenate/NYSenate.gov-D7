@@ -241,7 +241,7 @@ function nys_bills_bill_form($form, &$form_state, $node) {
     );
   }
 
-  honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
+  honeypot_add_form_protection($form, $form_state, array('honeypot'));
 
   return $form;
 }

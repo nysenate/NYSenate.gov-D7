@@ -1311,6 +1311,44 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   $display->content['new-081b3939-db34-46d6-ac9e-0fa6a52bbe76'] = $pane;
   $display->panels['content'][0] = 'new-081b3939-db34-46d6-ac9e-0fa6a52bbe76';
   $pane = new stdClass();
+  $pane->pid = 'new-f7fa4291-8f36-4e4e-be46-e554c831b6e2';
+  $pane->panel = 'content';
+  $pane->type = 'views';
+  $pane->subtype = 'senator_polls';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'override_pager_settings' => 0,
+    'use_pager' => 0,
+    'nodes_per_page' => '0',
+    'pager_id' => '0',
+    'offset' => '0',
+    'more_link' => 0,
+    'feed_icons' => 0,
+    'panel_args' => 0,
+    'link_to_view' => 0,
+    'args' => '',
+    'url' => '',
+    'display' => 'block',
+    'context' => array(
+      0 => '',
+    ),
+    'override_title' => 1,
+    'override_title_text' => '',
+    'override_title_heading' => 'h2',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 1;
+  $pane->locks = array();
+  $pane->uuid = 'f7fa4291-8f36-4e4e-be46-e554c831b6e2';
+  $display->content['new-f7fa4291-8f36-4e4e-be46-e554c831b6e2'] = $pane;
+  $display->panels['content'][1] = 'new-f7fa4291-8f36-4e4e-be46-e554c831b6e2';
+  $pane = new stdClass();
   $pane->pid = 'new-f66f4b67-da8d-4cdd-86fd-ea03d0e2b682';
   $pane->panel = 'content';
   $pane->type = 'views';
@@ -1342,11 +1380,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 1;
+  $pane->position = 2;
   $pane->locks = array();
   $pane->uuid = 'f66f4b67-da8d-4cdd-86fd-ea03d0e2b682';
   $display->content['new-f66f4b67-da8d-4cdd-86fd-ea03d0e2b682'] = $pane;
-  $display->panels['content'][1] = 'new-f66f4b67-da8d-4cdd-86fd-ea03d0e2b682';
+  $display->panels['content'][2] = 'new-f66f4b67-da8d-4cdd-86fd-ea03d0e2b682';
   $pane = new stdClass();
   $pane->pid = 'new-c1c8b25e-6b12-41b9-9acb-40a6ab99922c';
   $pane->panel = 'content';
@@ -1380,11 +1418,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 2;
+  $pane->position = 3;
   $pane->locks = array();
   $pane->uuid = 'c1c8b25e-6b12-41b9-9acb-40a6ab99922c';
   $display->content['new-c1c8b25e-6b12-41b9-9acb-40a6ab99922c'] = $pane;
-  $display->panels['content'][2] = 'new-c1c8b25e-6b12-41b9-9acb-40a6ab99922c';
+  $display->panels['content'][3] = 'new-c1c8b25e-6b12-41b9-9acb-40a6ab99922c';
   $pane = new stdClass();
   $pane->pid = 'new-08cf0cb5-274e-467e-91b3-6008cc393256';
   $pane->panel = 'content';
@@ -1418,11 +1456,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 3;
+  $pane->position = 4;
   $pane->locks = array();
   $pane->uuid = '08cf0cb5-274e-467e-91b3-6008cc393256';
   $display->content['new-08cf0cb5-274e-467e-91b3-6008cc393256'] = $pane;
-  $display->panels['content'][3] = 'new-08cf0cb5-274e-467e-91b3-6008cc393256';
+  $display->panels['content'][4] = 'new-08cf0cb5-274e-467e-91b3-6008cc393256';
   $pane = new stdClass();
   $pane->pid = 'new-9c3654bd-ae6f-45ce-85a3-5444a8090ed9';
   $pane->panel = 'content';
@@ -1455,11 +1493,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 4;
+  $pane->position = 5;
   $pane->locks = array();
   $pane->uuid = '9c3654bd-ae6f-45ce-85a3-5444a8090ed9';
   $display->content['new-9c3654bd-ae6f-45ce-85a3-5444a8090ed9'] = $pane;
-  $display->panels['content'][4] = 'new-9c3654bd-ae6f-45ce-85a3-5444a8090ed9';
+  $display->panels['content'][5] = 'new-9c3654bd-ae6f-45ce-85a3-5444a8090ed9';
   $pane = new stdClass();
   $pane->pid = 'new-a7b0f50e-e85b-48c5-8412-595a2bd1fb08';
   $pane->panel = 'content';
@@ -1492,11 +1530,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 5;
+  $pane->position = 6;
   $pane->locks = array();
   $pane->uuid = 'a7b0f50e-e85b-48c5-8412-595a2bd1fb08';
   $display->content['new-a7b0f50e-e85b-48c5-8412-595a2bd1fb08'] = $pane;
-  $display->panels['content'][5] = 'new-a7b0f50e-e85b-48c5-8412-595a2bd1fb08';
+  $display->panels['content'][6] = 'new-a7b0f50e-e85b-48c5-8412-595a2bd1fb08';
   $pane = new stdClass();
   $pane->pid = 'new-c101573f-6d77-4024-b811-592695cded78';
   $pane->panel = 'content';
@@ -1530,11 +1568,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 6;
+  $pane->position = 7;
   $pane->locks = array();
   $pane->uuid = 'c101573f-6d77-4024-b811-592695cded78';
   $display->content['new-c101573f-6d77-4024-b811-592695cded78'] = $pane;
-  $display->panels['content'][6] = 'new-c101573f-6d77-4024-b811-592695cded78';
+  $display->panels['content'][7] = 'new-c101573f-6d77-4024-b811-592695cded78';
   $pane = new stdClass();
   $pane->pid = 'new-3cf1e583-fc3b-4d7d-9b21-45067b363ba1';
   $pane->panel = 'content';
@@ -1569,11 +1607,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 7;
+  $pane->position = 8;
   $pane->locks = array();
   $pane->uuid = '3cf1e583-fc3b-4d7d-9b21-45067b363ba1';
   $display->content['new-3cf1e583-fc3b-4d7d-9b21-45067b363ba1'] = $pane;
-  $display->panels['content'][7] = 'new-3cf1e583-fc3b-4d7d-9b21-45067b363ba1';
+  $display->panels['content'][8] = 'new-3cf1e583-fc3b-4d7d-9b21-45067b363ba1';
   $pane = new stdClass();
   $pane->pid = 'new-b8b48d3a-8ff6-4fee-851a-4d93c6cc055d';
   $pane->panel = 'content';
@@ -1591,11 +1629,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 8;
+  $pane->position = 9;
   $pane->locks = array();
   $pane->uuid = 'b8b48d3a-8ff6-4fee-851a-4d93c6cc055d';
   $display->content['new-b8b48d3a-8ff6-4fee-851a-4d93c6cc055d'] = $pane;
-  $display->panels['content'][8] = 'new-b8b48d3a-8ff6-4fee-851a-4d93c6cc055d';
+  $display->panels['content'][9] = 'new-b8b48d3a-8ff6-4fee-851a-4d93c6cc055d';
   $pane = new stdClass();
   $pane->pid = 'new-c8797a74-60ea-4652-a490-29fdef1dd195';
   $pane->panel = 'content';
@@ -1628,11 +1666,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 9;
+  $pane->position = 10;
   $pane->locks = array();
   $pane->uuid = 'c8797a74-60ea-4652-a490-29fdef1dd195';
   $display->content['new-c8797a74-60ea-4652-a490-29fdef1dd195'] = $pane;
-  $display->panels['content'][9] = 'new-c8797a74-60ea-4652-a490-29fdef1dd195';
+  $display->panels['content'][10] = 'new-c8797a74-60ea-4652-a490-29fdef1dd195';
   $pane = new stdClass();
   $pane->pid = 'new-48834b8a-2242-46fb-8a02-831eb05f452b';
   $pane->panel = 'content';
@@ -1666,11 +1704,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 10;
+  $pane->position = 11;
   $pane->locks = array();
   $pane->uuid = '48834b8a-2242-46fb-8a02-831eb05f452b';
   $display->content['new-48834b8a-2242-46fb-8a02-831eb05f452b'] = $pane;
-  $display->panels['content'][10] = 'new-48834b8a-2242-46fb-8a02-831eb05f452b';
+  $display->panels['content'][11] = 'new-48834b8a-2242-46fb-8a02-831eb05f452b';
   $pane = new stdClass();
   $pane->pid = 'new-de6d36f1-823e-4729-a0a5-2670eb0dcf62';
   $pane->panel = 'content';
@@ -1704,11 +1742,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 11;
+  $pane->position = 12;
   $pane->locks = array();
   $pane->uuid = 'de6d36f1-823e-4729-a0a5-2670eb0dcf62';
   $display->content['new-de6d36f1-823e-4729-a0a5-2670eb0dcf62'] = $pane;
-  $display->panels['content'][11] = 'new-de6d36f1-823e-4729-a0a5-2670eb0dcf62';
+  $display->panels['content'][12] = 'new-de6d36f1-823e-4729-a0a5-2670eb0dcf62';
   $pane = new stdClass();
   $pane->pid = 'new-6d48b677-c38b-444b-a41e-423e93990d10';
   $pane->panel = 'footer_first';

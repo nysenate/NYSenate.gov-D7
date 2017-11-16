@@ -114,6 +114,15 @@ function nys_users_user_default_permissions() {
     'module' => 'dashboard',
   );
 
+  // Exported permission: 'access electoral list'.
+  $permissions['access electoral list'] = array(
+    'name' => 'access electoral list',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'advpoll',
+  );
+
   // Exported permission: 'access media browser'.
   $permissions['access media browser'] = array(
     'name' => 'access media browser',
@@ -278,6 +287,15 @@ function nys_users_user_default_permissions() {
       'Web Administrator' => 'Web Administrator',
     ),
     'module' => 'twitter',
+  );
+
+  // Exported permission: 'add write-ins'.
+  $permissions['add write-ins'] = array(
+    'name' => 'add write-ins',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'advpoll',
   );
 
   // Exported permission: 'admin_display_suite'.
@@ -647,6 +665,15 @@ function nys_users_user_default_permissions() {
     'module' => 'user',
   );
 
+  // Exported permission: 'administer polls'.
+  $permissions['administer polls'] = array(
+    'name' => 'administer polls',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'advpoll',
+  );
+
   // Exported permission: 'administer privatemsg settings'.
   $permissions['administer privatemsg settings'] = array(
     'name' => 'administer privatemsg settings',
@@ -874,6 +901,15 @@ function nys_users_user_default_permissions() {
     'module' => 'user',
   );
 
+  // Exported permission: 'cancel own vote'.
+  $permissions['cancel own vote'] = array(
+    'name' => 'cancel own vote',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'advpoll',
+  );
+
   // Exported permission: 'change layouts in place editing'.
   $permissions['change layouts in place editing'] = array(
     'name' => 'change layouts in place editing',
@@ -972,16 +1008,6 @@ function nys_users_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
-  // Exported permission: 'create field_active'.
-  $permissions['create field_active'] = array(
-    'name' => 'create field_active',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
   // Exported permission: 'create field_assemblymen_chair'.
   $permissions['create field_assemblymen_chair'] = array(
     'name' => 'create field_assemblymen_chair',
@@ -995,48 +1021,6 @@ function nys_users_user_default_permissions() {
   // Exported permission: 'create field_chair'.
   $permissions['create field_chair'] = array(
     'name' => 'create field_chair',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'create field_conference'.
-  $permissions['create field_conference'] = array(
-    'name' => 'create field_conference',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'create field_district'.
-  $permissions['create field_district'] = array(
-    'name' => 'create field_district',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Web Administrator' => 'Web Administrator',
-      'anonymous user' => 'anonymous user',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'create field_form_description'.
-  $permissions['create field_form_description'] = array(
-    'name' => 'create field_form_description',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Microsite Content Producer' => 'Microsite Content Producer',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'create field_group_members'.
-  $permissions['create field_group_members'] = array(
-    'name' => 'create field_group_members',
     'roles' => array(
       'Administrator' => 'Administrator',
       'Web Administrator' => 'Web Administrator',
@@ -1059,16 +1043,6 @@ function nys_users_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'create field_school_featured_entry'.
-  $permissions['create field_school_featured_entry'] = array(
-    'name' => 'create field_school_featured_entry',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Student Contest Judge' => 'Student Contest Judge',
     ),
     'module' => 'field_permissions',
   );
@@ -2484,16 +2458,6 @@ function nys_users_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
-  // Exported permission: 'edit field_active'.
-  $permissions['edit field_active'] = array(
-    'name' => 'edit field_active',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
   // Exported permission: 'edit field_assemblymen_chair'.
   $permissions['edit field_assemblymen_chair'] = array(
     'name' => 'edit field_assemblymen_chair',
@@ -2507,46 +2471,6 @@ function nys_users_user_default_permissions() {
   // Exported permission: 'edit field_chair'.
   $permissions['edit field_chair'] = array(
     'name' => 'edit field_chair',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'edit field_conference'.
-  $permissions['edit field_conference'] = array(
-    'name' => 'edit field_conference',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'edit field_district'.
-  $permissions['edit field_district'] = array(
-    'name' => 'edit field_district',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'edit field_form_description'.
-  $permissions['edit field_form_description'] = array(
-    'name' => 'edit field_form_description',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'edit field_group_members'.
-  $permissions['edit field_group_members'] = array(
-    'name' => 'edit field_group_members',
     'roles' => array(
       'Administrator' => 'Administrator',
       'Web Administrator' => 'Web Administrator',
@@ -2570,16 +2494,6 @@ function nys_users_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'edit field_school_featured_entry'.
-  $permissions['edit field_school_featured_entry'] = array(
-    'name' => 'edit field_school_featured_entry',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Student Contest Judge' => 'Student Contest Judge',
     ),
     'module' => 'field_permissions',
   );
@@ -2713,16 +2627,6 @@ function nys_users_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
-  // Exported permission: 'edit own field_active'.
-  $permissions['edit own field_active'] = array(
-    'name' => 'edit own field_active',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
   // Exported permission: 'edit own field_assemblymen_chair'.
   $permissions['edit own field_assemblymen_chair'] = array(
     'name' => 'edit own field_assemblymen_chair',
@@ -2736,49 +2640,6 @@ function nys_users_user_default_permissions() {
   // Exported permission: 'edit own field_chair'.
   $permissions['edit own field_chair'] = array(
     'name' => 'edit own field_chair',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'edit own field_conference'.
-  $permissions['edit own field_conference'] = array(
-    'name' => 'edit own field_conference',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'edit own field_district'.
-  $permissions['edit own field_district'] = array(
-    'name' => 'edit own field_district',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Constituent' => 'Constituent',
-      'Senator' => 'Senator',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'edit own field_form_description'.
-  $permissions['edit own field_form_description'] = array(
-    'name' => 'edit own field_form_description',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Microsite Content Producer' => 'Microsite Content Producer',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'edit own field_group_members'.
-  $permissions['edit own field_group_members'] = array(
-    'name' => 'edit own field_group_members',
     'roles' => array(
       'Administrator' => 'Administrator',
       'Web Administrator' => 'Web Administrator',
@@ -2802,16 +2663,6 @@ function nys_users_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'edit own field_school_featured_entry'.
-  $permissions['edit own field_school_featured_entry'] = array(
-    'name' => 'edit own field_school_featured_entry',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Student Contest Judge' => 'Student Contest Judge',
     ),
     'module' => 'field_permissions',
   );
@@ -3372,6 +3223,7 @@ function nys_users_user_default_permissions() {
     'name' => 'execute views_bulk_operations_modify_action',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Student Contest Judge' => 'Student Contest Judge',
       'Student Programs' => 'Student Programs',
       'Web Administrator' => 'Web Administrator',
     ),
@@ -3528,6 +3380,15 @@ function nys_users_user_default_permissions() {
       'Web Administrator' => 'Web Administrator',
     ),
     'module' => 'permissions_per_webform',
+  );
+
+  // Exported permission: 'inspect all votes'.
+  $permissions['inspect all votes'] = array(
+    'name' => 'inspect all votes',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'advpoll',
   );
 
   // Exported permission: 'manage features'.
@@ -3692,6 +3553,24 @@ function nys_users_user_default_permissions() {
       'Administrator' => 'Administrator',
     ),
     'module' => 'location_user',
+  );
+
+  // Exported permission: 'show vote results'.
+  $permissions['show vote results'] = array(
+    'name' => 'show vote results',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'advpoll',
+  );
+
+  // Exported permission: 'show write-ins'.
+  $permissions['show write-ins'] = array(
+    'name' => 'show write-ins',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'advpoll',
   );
 
   // Exported permission: 'skip CAPTCHA'.
@@ -3975,18 +3854,6 @@ function nys_users_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
-  // Exported permission: 'view field_active'.
-  $permissions['view field_active'] = array(
-    'name' => 'view field_active',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Web Administrator' => 'Web Administrator',
-      'anonymous user' => 'anonymous user',
-      'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'field_permissions',
-  );
-
   // Exported permission: 'view field_assemblymen_chair'.
   $permissions['view field_assemblymen_chair'] = array(
     'name' => 'view field_assemblymen_chair',
@@ -4003,50 +3870,6 @@ function nys_users_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Microsite Content Producer' => 'Microsite Content Producer',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'view field_conference'.
-  $permissions['view field_conference'] = array(
-    'name' => 'view field_conference',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'view field_district'.
-  $permissions['view field_district'] = array(
-    'name' => 'view field_district',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Senator' => 'Senator',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'view field_form_description'.
-  $permissions['view field_form_description'] = array(
-    'name' => 'view field_form_description',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Microsite Content Producer' => 'Microsite Content Producer',
-      'Web Administrator' => 'Web Administrator',
-      'anonymous user' => 'anonymous user',
-      'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'view field_group_members'.
-  $permissions['view field_group_members'] = array(
-    'name' => 'view field_group_members',
-    'roles' => array(
-      'Administrator' => 'Administrator',
       'Web Administrator' => 'Web Administrator',
     ),
     'module' => 'field_permissions',
@@ -4074,16 +3897,6 @@ function nys_users_user_default_permissions() {
       'Web Administrator' => 'Web Administrator',
       'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'view field_school_featured_entry'.
-  $permissions['view field_school_featured_entry'] = array(
-    'name' => 'view field_school_featured_entry',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Student Contest Judge' => 'Student Contest Judge',
     ),
     'module' => 'field_permissions',
   );
@@ -4161,17 +3974,6 @@ function nys_users_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
-  // Exported permission: 'view own field_active'.
-  $permissions['view own field_active'] = array(
-    'name' => 'view own field_active',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Constituent' => 'Constituent',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
   // Exported permission: 'view own field_assemblymen_chair'.
   $permissions['view own field_assemblymen_chair'] = array(
     'name' => 'view own field_assemblymen_chair',
@@ -4188,49 +3990,6 @@ function nys_users_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Microsite Content Producer' => 'Microsite Content Producer',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'view own field_conference'.
-  $permissions['view own field_conference'] = array(
-    'name' => 'view own field_conference',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'view own field_district'.
-  $permissions['view own field_district'] = array(
-    'name' => 'view own field_district',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Constituent' => 'Constituent',
-      'Senator' => 'Senator',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'view own field_form_description'.
-  $permissions['view own field_form_description'] = array(
-    'name' => 'view own field_form_description',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Microsite Content Producer' => 'Microsite Content Producer',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'view own field_group_members'.
-  $permissions['view own field_group_members'] = array(
-    'name' => 'view own field_group_members',
-    'roles' => array(
-      'Administrator' => 'Administrator',
       'Web Administrator' => 'Web Administrator',
     ),
     'module' => 'field_permissions',
@@ -4258,16 +4017,6 @@ function nys_users_user_default_permissions() {
       'Web Administrator' => 'Web Administrator',
       'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'view own field_school_featured_entry'.
-  $permissions['view own field_school_featured_entry'] = array(
-    'name' => 'view own field_school_featured_entry',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Student Contest Judge' => 'Student Contest Judge',
     ),
     'module' => 'field_permissions',
   );
@@ -4390,6 +4139,17 @@ function nys_users_user_default_permissions() {
       'Administrator' => 'Administrator',
     ),
     'module' => 'location',
+  );
+
+  // Exported permission: 'vote on polls'.
+  $permissions['vote on polls'] = array(
+    'name' => 'vote on polls',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'advpoll',
   );
 
   // Exported permission: 'write privatemsg'.

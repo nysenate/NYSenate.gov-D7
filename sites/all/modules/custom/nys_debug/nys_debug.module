@@ -25,10 +25,12 @@ function nys_debug_watchdog($log_entry) {
 
   // Only act if the handler is not currently being fired, and the log_entry
   // is for a PHP error/warning/notice.
+  // 2017-08-30 Added admin flag to turn off reporting.
   if (!$in_handler
     && is_array($log_entry)
     && nys_av('type', $log_entry) == 'php'
     && (int)nys_av('severity', $log_entry, 5) < 4
+    && variable_get('nys_debug_slack_reporting', 0)
   ) {
     $in_handler = TRUE;
     $message = nys_av('message', $log_entry, '');

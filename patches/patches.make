@@ -14,6 +14,19 @@ api = 2
 
 ; Contrib
 
+; Advanced Poll
+projects[apachesolr][type] = module
+projects[apachesolr][subdir] = contrib
+projects[apachesolr][version] = 3.0
+projects[apachesolr][patch][] = https://www.drupal.org/files/issues/poll_availability_date-2709169-19.patch
+
+; Advanced Poll
+projects[apachesolr][type] = module
+projects[apachesolr][subdir] = contrib
+projects[apachesolr][version] = 3.0
+projects[apachesolr][patch][] = ../patches/contrib/advpoll-pantheon-cookie.patch
+
+
 ; Apache Solr Search
 projects[apachesolr][type] = module
 projects[apachesolr][subdir] = contrib
@@ -56,6 +69,12 @@ projects[feeds_xpathparser][type] = module
 projects[feeds_xpathparser][subdir] = contrib
 projects[feeds_xpathparser][version] = 1.0-beta4
 projects[feeds_xpathparser][patch][] = https://www.drupal.org/files/feeds_xpath_parser_undefined_index_unique-1998194-2.patch
+
+; Feeds Tamper
+projects[feeds_tamper][type] = module
+projects[feeds_tamper][subdir] = contrib
+projects[feeds_tamper][version] = 1.1
+projects[feeds_tamper][patch][] = https://www.drupal.org/files/issues/feeds_tamper-fix-params-default-value-callback-2567431-2-7.x.patch
 
 ; Features
 projects[features][type] = module

@@ -112,7 +112,7 @@ function nys_bill_active_amendment_validate_aliases($node) {
     }
 
     // Fetch all known versions of the current bill.
-    $all_versions = nysenate_get_bill_versions($node->type, $base_print_no, $bill_session_year);
+    $all_versions = nys_bills_get_bill_versions($node->type, $base_print_no, $bill_session_year);
 
     // Fetch existing aliases for this bill, based on a search pattern.
     $existing_result = nys_bill_active_amendment_fetch_existing_alias($search_pattern);

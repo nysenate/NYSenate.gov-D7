@@ -356,6 +356,12 @@ function file_entity_field_formatter_view($entity_type, $entity, $field, $instan
       $items = array_filter($items);
       foreach ($items as $delta => $item) {
         if (!empty($item['fid']) && ($file = file_load($item['fid'])) && file_entity_access('download', $file)) {
+          if (isset($item['display'])) {
+            $file->display = $item['display'];
+          }
+          if (isset($item['description'])) {
+            $file->description = $item['description'];
+          }
           $element[$delta] = array(
             '#theme' => 'file_entity_download_link',
             '#file' => $file,

@@ -194,6 +194,65 @@ function nys_legislation_ds_layout_settings_info() {
   );
   $export['node|bill|node_embed'] = $ds_layout;
 
+  $ds_layout = new stdClass();
+  $ds_layout->api_version = 1;
+  $ds_layout->id = 'node|bill|teaser';
+  $ds_layout->entity_type = 'node';
+  $ds_layout->bundle = 'bill';
+  $ds_layout->view_mode = 'teaser';
+  $ds_layout->layout = 'ds_1col';
+  $ds_layout->settings = array(
+    'regions' => array(
+      'ds_content' => array(
+        0 => 'field_ol_chamber',
+        1 => 'field_ol_name',
+        2 => 'field_ol_print_no',
+        3 => 'field_ol_sponsor',
+        4 => 'field_ol_sponsor_name',
+        5 => 'field_ol_all_statuses',
+        6 => 'field_ol_latest_status_committee',
+        7 => 'field_ol_amendments',
+        8 => 'field_ol_session',
+        9 => 'field_issues',
+        10 => 'field_ol_votes',
+        11 => 'field_ol_last_status',
+        12 => 'field_ol_last_status_date',
+        13 => 'field__constituent_vote',
+        14 => 'field_ol_co_sponsors',
+        15 => 'field_ol_multi_sponsors',
+      ),
+    ),
+    'fields' => array(
+      'field_ol_chamber' => 'ds_content',
+      'field_ol_name' => 'ds_content',
+      'field_ol_print_no' => 'ds_content',
+      'field_ol_sponsor' => 'ds_content',
+      'field_ol_sponsor_name' => 'ds_content',
+      'field_ol_all_statuses' => 'ds_content',
+      'field_ol_latest_status_committee' => 'ds_content',
+      'field_ol_amendments' => 'ds_content',
+      'field_ol_session' => 'ds_content',
+      'field_issues' => 'ds_content',
+      'field_ol_votes' => 'ds_content',
+      'field_ol_last_status' => 'ds_content',
+      'field_ol_last_status_date' => 'ds_content',
+      'field__constituent_vote' => 'ds_content',
+      'field_ol_co_sponsors' => 'ds_content',
+      'field_ol_multi_sponsors' => 'ds_content',
+    ),
+    'classes' => array(),
+    'wrappers' => array(
+      'ds_content' => 'div',
+    ),
+    'layout_wrapper' => 'div',
+    'layout_attributes' => '',
+    'layout_attributes_merge' => 1,
+    'layout_link_attribute' => '',
+    'layout_link_custom' => '',
+    'layout_disable_css' => FALSE,
+  );
+  $export['node|bill|teaser'] = $ds_layout;
+
   return $export;
 }
 

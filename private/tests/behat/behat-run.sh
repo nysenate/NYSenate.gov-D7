@@ -11,7 +11,7 @@ EOF
 PHANTOMJS=node_modules/phantomjs/bin/phantomjs
 FOREVER=node_modules/forever/bin/forever
 
-if [ ! -f ${PHAMTOMJS} ] || [ ! -f ${FOREVER} ]; then
+if [ ! -f ${PHANTOMJS} ] || [ ! -f ${FOREVER} ]; then
   usage
   exit 1;
 fi

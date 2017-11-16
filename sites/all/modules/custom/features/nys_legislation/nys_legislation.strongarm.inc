@@ -194,6 +194,10 @@ function nys_legislation_strongarm() {
             'weight' => '1002',
             'visible' => FALSE,
           ),
+          'teaser' => array(
+            'weight' => '45',
+            'visible' => FALSE,
+          ),
         ),
       ),
     ),

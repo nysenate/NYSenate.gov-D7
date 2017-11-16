@@ -1,7 +1,7 @@
 name = nys_variables
 core = 7.x
 package = NY STATE SENATE
-version = 7.x-1.47
+version = 7.x-1.48
 project = nys_variables
 dependencies[] = calendar
 dependencies[] = captcha
@@ -86,6 +86,7 @@ features[variable][] = date_views_month_format_with_year
 features[variable][] = date_views_month_format_without_year
 features[variable][] = date_views_week_format_with_year
 features[variable][] = date_views_week_format_without_year
+features[variable][] = dblog_row_limit
 features[variable][] = ds_extras_field_permissions
 features[variable][] = ds_extras_field_template
 features[variable][] = ds_extras_fields_extra

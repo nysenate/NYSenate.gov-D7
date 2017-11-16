@@ -1419,7 +1419,7 @@ function _nys_blocks_bill_detail_votes_block_content() {
   $search_for = array();
 
   // Get the node IDs of all revisions of the current bill.
-  $current_revisions = nysenate_get_bill_versions('bill', $current_base_print, $current_session_year);
+  $current_revisions = nys_bills_get_bill_versions('bill', $current_base_print, $current_session_year);
   foreach ($current_revisions as $key => $val) {
     $search_for[] = $val['nid'];
   }

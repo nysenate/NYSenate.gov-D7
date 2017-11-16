@@ -36,6 +36,11 @@ function nys_paragraphs_paragraphs_info() {
       'bundle' => 'pg_block_reference',
       'locked' => '1',
     ),
+    'pg_entity_form' => array(
+      'name' => 'Entity Form',
+      'bundle' => 'pg_entity_form',
+      'locked' => '1',
+    ),
     'pg_featured_bills' => array(
       'name' => 'Featured Bill',
       'bundle' => 'pg_featured_bills',
@@ -54,6 +59,11 @@ function nys_paragraphs_paragraphs_info() {
     'pg_image_slider' => array(
       'name' => 'Image Slider',
       'bundle' => 'pg_image_slider',
+      'locked' => '1',
+    ),
+    'pg_poll' => array(
+      'name' => 'Poll',
+      'bundle' => 'pg_poll',
       'locked' => '1',
     ),
     'pg_quick_facts' => array(

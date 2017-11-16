@@ -1680,7 +1680,7 @@ function nys_dashboard_views_pre_render(&$view) {
         if (!is_null($check_for_sub)) {
           // Replace bill loaded for purposes of vote information
           // From here, the vote should populate correctly if the bill was substituted
-          $sub_bill_versions = nysenate_get_bill_versions($bill->type, $check_for_sub, $bill->field_ol_session[LANGUAGE_NONE][0]['value']);
+          $sub_bill_versions = nys_bills_get_bill_versions($bill->type, $check_for_sub, $bill->field_ol_session[LANGUAGE_NONE][0]['value']);
           $sub_bill = node_load(end($sub_bill_versions)['nid']);
           if (isset($sub_bill->field_ol_votes[LANGUAGE_NONE]) && (is_array($sub_bill->field_ol_votes[LANGUAGE_NONE]) || is_object($sub_bill->field_ol_votes[LANGUAGE_NONE]))) {
             $bill = $sub_bill;
@@ -2414,7 +2414,7 @@ function nys_dashboard_render_bill_status($bill_to_load, $draw_classes = '', $ad
 
   if (!empty($bill->field_ol_substituted_by[LANGUAGE_NONE][0]['value'])) {
     $sub_bill_base_print_no = $bill->field_ol_substituted_by[LANGUAGE_NONE][0]['value'];
-    $sub_bill_versions = nysenate_get_bill_versions($bill->type, $sub_bill_base_print_no, $bill->field_ol_session[LANGUAGE_NONE][0]['value']);
+    $sub_bill_versions = nys_bills_get_bill_versions($bill->type, $sub_bill_base_print_no, $bill->field_ol_session[LANGUAGE_NONE][0]['value']);
     if (!empty($sub_bill_versions)) {
       $bill = node_load(end($sub_bill_versions)['nid']);
     }
@@ -2448,12 +2448,16 @@ function nys_dashboard_render_bill_status($bill_to_load, $draw_classes = '', $ad
   ) {
     $current_status       = "PASSED_ASSEMBLY";
   }
+  //Convert committee name to url link to committee page
+  $committee = $bill->field_ol_latest_status_committee[LANGUAGE_NONE][0]['value'];
+  $committee = strtolower(str_replace([',', ' '],['', '-'],$committee));
+  $committee_url = '<a class="committee-link" href="/committees/' . $committee . '">' . $bill->field_ol_latest_status_committee[LANGUAGE_NONE][0]['value'] . '&nbsp;Committee</a>';
 
   // Determines Display Status String
   switch ($current_status) {
     case 'INTRODUCED': $display_status = 'Introduced'; $current_status_value = 0; break;
     case 'IN_ASSEMBLY_COMM': $display_status = 'In Assembly Committee'; $current_status_value = 1; break;
-    case 'IN_SENATE_COMM': $display_status = 'In Senate Committee'; $current_status_value = 1; break;
+    case 'IN_SENATE_COMM': $display_status = '<span>In Senate&nbsp;' . $committee_url; $current_status_value = 1; break;
     case 'SENATE_FLOOR': $display_status = 'On Floor Calendar'; $current_status_value = 2; break;
     case 'ASSEMBLY_FLOOR': $display_status = 'On Floor Calendar'; $current_status_value = 2; break;
     case 'PASSED_ASSEMBLY': $display_status = 'Passed Assembly'; $current_status_value = 3; break;
@@ -2477,9 +2481,6 @@ function nys_dashboard_render_bill_status($bill_to_load, $draw_classes = '', $ad
     ($bill->field_ol_chamber[LANGUAGE_NONE][0]['value'] == 'assembly' && $current_status == 'PASSED_SENATE'))
   {
     $display_status = 'Passed Senate &amp; Assembly';
-  }
-  else {
-    $display_status = '';
   }
 
   $status_info = array(

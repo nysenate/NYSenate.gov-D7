@@ -46,7 +46,7 @@ function nyslog($msg = '', $with_trace = FALSE) {
       watchdog('nyslog', $msg, array(), WATCHDOG_DEBUG);
     }
     if (variable_get('nys_debug_write_to_message', FALSE)) {
-      drupal_set_message($msg);
+      drupal_set_message($msg, 'status', FALSE);
     }
   }
 }
@@ -1027,6 +1027,18 @@ function nys_accumulator_action_insert($response) {
   $response['user_shortname'] = $response['msg_info']['user_info']['senator_shortname'];
   $response['user_district'] = $response['msg_info']['user_info']['district_number'];
 
+  // RE:#11364, tracking current request url and query string.
+  // Temporary addition to help locate URL being used to follow a bill
+  // without voting.  2017-10-12
+  if (variable_get('nys_debug_mode_track_request_info')) {
+    $response['msg_info']['request_info'] = [
+      'url' => request_uri(),
+      'get' => drupal_get_query_parameters($_GET, []),
+      'post' => drupal_get_query_parameters($_POST, []),
+      'referer' => $_SERVER['HTTP_REFERER'],
+    ];
+  }
+
   // If not preset by the generator, set verification flag and timestamp.
   if (!array_key_exists('user_is_verified', $response)) {
     $response['user_is_verified'] = nys_accumulator_calculate_user_verified_bitflag();
@@ -1108,4 +1120,41 @@ function nys_accumulator_nys_accumulator_preinsert($row) {
   // TODO: The above section will be unnecessary after summer changes.
 
   return $row;
+}
+
+/**
+ * Implements hook_mail().
+ *
+ * This hook defines a list of possible e-mail templates that this module can
+ * send. Each e-mail is given a unique identifier, or 'key'.
+ *
+ * $message comes in with some standard properties already set: 'to' address,
+ * 'from' address, and a set of default 'headers' from drupal_mail(). The goal
+ * of hook_mail() is to set the message's 'subject' and 'body' properties, as
+ * well as make any adjustments to the headers that are necessary.
+ *
+ * The $params argument is an array which can hold any additional data required
+ * to build the mail subject and body; for example, user-entered form data, or
+ * some context information as to where the mail request came from.
+ *
+ * Note that hook_mail() is not actually a hook. It is only called for a single
+ * module, the module named in the first argument of drupal_mail(). So it's
+ * a callback of a type, but not a hook.
+ */
+function nys_accumulator_mail($key, &$message, $params) {
+  // For subject and content-type header, replace message data only if the params entry is populated.
+  if (isset($params['subject'])) {
+    $message['subject'] = $params['subject'];
+  }
+  if (isset($params['content-type'])) {
+    $message['headers']['Content-Type'] = $params['content-type'];
+  }
+
+  // Actions per mail type
+  switch ($key) {
+    // Send a simple message from the contact form.
+    case 'drush_automated_checks':
+      $message['body'] = [ str_replace("\n", "<br />", $params['body']) ];
+      break;
+  }
 }

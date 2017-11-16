@@ -30,7 +30,7 @@
 / WIDTHS
 /---------------------------*/
 /*---------------------------
-/ MEDIA QUERIES	
+/ MEDIA QUERIES 
 /---------------------------*/
 .flex-video {
   position: relative;
@@ -51,11 +51,11 @@
     height: 100%; }
 
 /*-----------------------------
-/	CUSTOM PALETTE STYLES
+/ CUSTOM PALETTE STYLES
 /------------------------------*/
 /*
-/	Colors are set within Pallette Selector (field_pallette)
-/	class is set on body
+/ Colors are set within Pallette Selector (field_pallette)
+/ class is set on body
 /*
 
 
@@ -396,11 +396,11 @@
 
 /*---------------------------------/
 /
-/	CUSTOM FONT DEFINITIONS
+/ CUSTOM FONT DEFINITIONS
 /
 /----------------------------------*/
 /*---------------------------------/
-/	ADELLE
+/ ADELLE
 /----------------------------------*/
 @font-face {
   font-family: 'Adelle Light';
@@ -439,7 +439,7 @@
   font-weight: normal; }
 
 /*---------------------------------/
-/	PROXIMA NOVA
+/ PROXIMA NOVA
 /----------------------------------*/
 @font-face {
   font-family: 'Proxima Nova Regular';
@@ -460,7 +460,7 @@
   font-weight: normal; }
 
 /*---------------------------------/
-/	FREIGHT TEXT BOOK
+/ FREIGHT TEXT BOOK
 /----------------------------------*/
 @font-face {
   font-family: 'FreightText Book';
@@ -473,10 +473,10 @@
 
 /*----------------------------------------------/
 /
-/	CUSTOM ICON FONT
+/ CUSTOM ICON FONT
 /
-/	to apply an icon :
-/	add class "icon-[placement]__[type]"
+/ to apply an icon :
+/ add class "icon-[placement]__[type]"
 / placements = before, after, replace
 /
 /----------------------------------------------*/
@@ -488,9 +488,9 @@
   font-style: normal; }
 
 /*---------------------------------/
-/	ICON BEFORE
+/ ICON BEFORE
 /----------------------------------*/
-[class^="icon-before"]:before, [class*=" icon-before"]:before, .icon-before__quotes:before, .c-pullquote p:before, blockquote p:before, .c-sponsor-quote--title:before, .icon-before__find-senator:before, .c-actionbar .c-block--btn a:before, .c-senate-status .c-block--btn a:before, .c-nav .c-header--btn-find-senator:before, .c-hero--cta .c-block--btn:before, .c-want-to--item.c-want-to--item__senator .c-block--btn:before, .c-issue--contact-btn.no-senator:before, .icon-before__recruit-friends:before, .c-nav .c-header--btn-login:before, .c-news-container .c-news-block .nys-senator--involved:before, .c-login .c-block--btn.c-login-create:before, .c-login .form-submit:before, .icon-before__left:before, .c-upcoming--nav-item:before, .c-block--about-timeline .c-timeline-mv-left:before, .icon-before__right:before, .icon-before__arrow:before, .c-actionbar--loggedin .c-block--btn:before, .c-senate-works-container .c-container--link:before, .icon-before__search:before, .c-want-to--item.c-want-to--item__explore .c-block--btn:before, .icon-before__presskit:before, .c-view--link:before, .c-block-download .c-block--btn:before, .c-want-to--item.c-want-to--item__news .c-block--btn:before, .c-news--download .file > a:before, .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn:before, .icon-before__bill:before, .c-download--link:before, .c-detail--download:before, .icon-before__facebook:before, .c-login .c-block--btn.c-block--btn-facebook:before, .c-login .facebook-button:before, .facebook-action-connect:before, .icon-before__x:before, .c-nav .c-header--btn-logout:before, .c-block--issue .c-block--btn .unflag-action:before, .nys-bill-vote .c-block--btn.c-half-btn--right:before, .c-bill--vote-widget .c-block--btn + .c-block--btn:before, .c-bill--vote-attach .c-block--btn + .c-block--btn:before, form.entitytype-earth_day-form button[id*="remove-button"]:before, form.entitytype-earth_day_preview-form button[id*="remove-button"]:before, .icon-before__check:before, .c-senate-works--illustration.illustration--passed:before, .nys-bill-vote .c-block--btn.c-half-btn--left:before, .c-bill--vote-widget .c-block--btn:before, .c-bill--vote-attach .c-block--btn:before, form.entitytype-earth_day-form button#edit-submit:before, form.entitytype-earth_day_preview-form button#edit-submit:before, .icon-before__circle-check:before, .alert-box.success:before, .l-messages-thanks .alert-box.success:before, .c-btn--cta__sign .flag-success-message:before, .c-actionbar [class*="c-btn--follow-"] .message-text:before, .c-senate-status [class*="c-btn--follow-"] .message-text:before, .icon-before__see-more:before, .c-about--nav li:before, .icon-before__petition:before, .c-btn--cta__sign .flag-wrapper .unflag-disabled:before, .c-btn--cta__sign .flag-wrapper .flag-link-toggle:before, .c-senate-works--illustration.illustration--write:before, .icon-before__error:before, .alert-box.alert:before, .l-messages-thanks .alert-box.alert:before, .icon-before__circle-pin:before, .cal-event-loc-1:before, .c-meeting-detail--location-link:before, .c-block--senator-office .c-office-location-link:before, .c-block--senator-media .c-office-location-link:before, .icon-before__questionaire:before, .c-nav .c-header--btn-edit:before, .icon-before__plus:before, .c-block--issue .c-block--btn .flag-action:before, form.entitytype-earth_day-form button[id*="add-more"]:before, form.entitytype-earth_day_preview-form button[id*="add-more"]:before, .icon-before__mail:before, .c-senator-footer-col__newsletter .c-btn__newsletter span:before, .c-senator-footer-col__newsletter .c-btn__contact span:before, .c-actionbar [class*="c-btn--follow-"] .flag-success-btn:before, .c-senate-status [class*="c-btn--follow-"] .flag-success-btn:before, .c-actionbar [class*="c-btn--follow-"].c-btn--follow-issue .flag-success-btn:before, .c-actionbar [class*="c-btn--follow-"].c-btn--follow-committee .flag-success-btn:before, .c-actionbar [class*="c-btn--follow-"].c-btn--follow-bill .flag-success-btn:before, .c-senate-status [class*="c-btn--follow-"].c-btn--follow-issue .flag-success-btn:before, .c-senate-status [class*="c-btn--follow-"].c-btn--follow-committee .flag-success-btn:before, .c-senate-status [class*="c-btn--follow-"].c-btn--follow-bill .flag-success-btn:before, .c-block--issue .c-block--btn .flag-success-btn:before, .nys-bill-vote .bill-vote-message-prompt .nys-bill-vote--contact:before, .flag-action:before, .unflag-action:before {
+[class^="icon-before"]:before, [class*=" icon-before"]:before, .icon-before__quotes:before, .c-pullquote p:before, blockquote p:before, .c-sponsor-quote--title:before, .icon-before__find-senator:before, .c-actionbar .c-block--btn a:before, .c-senate-status .c-block--btn a:before, .c-nav .c-header--btn-find-senator:before, .c-hero--cta .c-block--btn:before, .c-want-to--item.c-want-to--item__senator .c-block--btn:before, .c-issue--contact-btn.no-senator:before, .icon-before__recruit-friends:before, .c-nav .c-header--btn-login:before, .c-news-container .c-news-block .nys-senator--involved:before, .c-login .c-block--btn.c-login-create:before, .c-login .form-submit:before, .icon-before__left:before, .c-upcoming--nav-item:before, .c-block--about-timeline .c-timeline-mv-left:before, .icon-before__right:before, .icon-before__arrow:before, .c-actionbar--loggedin .c-block--btn:before, .c-senate-works-container .c-container--link:before, .icon-before__search:before, .c-want-to--item.c-want-to--item__explore .c-block--btn:before, .icon-before__presskit:before, .c-view--link:before, .c-block-download .c-block--btn:before, .c-want-to--item.c-want-to--item__news .c-block--btn:before, .c-news--download .file > a:before, .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn:before, .icon-before__bill:before, .c-download--link:before, .c-detail--download:before, .icon-before__facebook:before, .c-login .c-block--btn.c-block--btn-facebook:before, .c-login .facebook-button:before, .facebook-action-connect:before, .icon-before__x:before, .c-nav .c-header--btn-logout:before, .c-block--issue .c-block--btn .unflag-action:before, .nys-bill-vote .c-block--btn.c-half-btn--right:before, .c-bill--vote-widget .c-block--btn + .c-block--btn:before, .c-bill--vote-attach .c-block--btn + .c-block--btn:before, form.entitytype-earth_day-form button[id*="remove-button"]:before, form.entitytype-earth_day_preview-form button[id*="remove-button"]:before, form.entitytype-school_submissions-form button[id*="remove-button"]:before, form.entitytype-hannon_photo_contest-form button[id*="remove-button"]:before, .icon-before__check:before, .c-senate-works--illustration.illustration--passed:before, .nys-bill-vote .c-block--btn.c-half-btn--left:before, .c-bill--vote-widget .c-block--btn:before, .c-bill--vote-attach .c-block--btn:before, form.entitytype-earth_day-form button#edit-submit:before, form.entitytype-earth_day_preview-form button#edit-submit:before, form.entitytype-school_submissions-form button#edit-submit:before, form.entitytype-hannon_photo_contest-form button#edit-submit:before, .icon-before__circle-check:before, .alert-box.success:before, .l-messages-thanks .alert-box.success:before, .c-btn--cta__sign .flag-success-message:before, .c-actionbar [class*="c-btn--follow-"] .message-text:before, .c-senate-status [class*="c-btn--follow-"] .message-text:before, .icon-before__see-more:before, .c-about--nav li:before, .icon-before__petition:before, .c-btn--cta__sign .flag-wrapper .unflag-disabled:before, .c-btn--cta__sign .flag-wrapper .flag-link-toggle:before, .c-senate-works--illustration.illustration--write:before, .icon-before__error:before, .alert-box.alert:before, .l-messages-thanks .alert-box.alert:before, .icon-before__circle-pin:before, .cal-event-loc-1:before, .c-meeting-detail--location-link:before, .c-block--senator-office .c-office-location-link:before, .c-block--senator-media .c-office-location-link:before, .icon-before__questionaire:before, .c-nav .c-header--btn-edit:before, .icon-before__plus:before, .c-block--issue .c-block--btn .flag-action:before, form.entitytype-earth_day-form button[id*="add-more"]:before, form.entitytype-earth_day_preview-form button[id*="add-more"]:before, form.entitytype-school_submissions-form button[id*="add-more"]:before, form.entitytype-hannon_photo_contest-form button[id*="add-more"]:before, .icon-before__mail:before, .c-senator-footer-col__newsletter .c-btn__newsletter span:before, .c-senator-footer-col__newsletter .c-btn__contact span:before, .c-actionbar [class*="c-btn--follow-"] .flag-success-btn:before, .c-senate-status [class*="c-btn--follow-"] .flag-success-btn:before, .c-actionbar [class*="c-btn--follow-"].c-btn--follow-issue .flag-success-btn:before, .c-actionbar [class*="c-btn--follow-"].c-btn--follow-committee .flag-success-btn:before, .c-actionbar [class*="c-btn--follow-"].c-btn--follow-bill .flag-success-btn:before, .c-senate-status [class*="c-btn--follow-"].c-btn--follow-issue .flag-success-btn:before, .c-senate-status [class*="c-btn--follow-"].c-btn--follow-committee .flag-success-btn:before, .c-senate-status [class*="c-btn--follow-"].c-btn--follow-bill .flag-success-btn:before, .c-block--issue .c-block--btn .flag-success-btn:before, .nys-bill-vote .bill-vote-message-prompt .nys-bill-vote--contact:before, .flag-action:before, .unflag-action:before {
   font-family: 'senate_icons';
   display: inline-block;
   vertical-align: middle;
@@ -540,7 +540,7 @@
 .icon-before__calendar2:before {
   content: "\64"; }
 
-.icon-before__check:before, .c-senate-works--illustration.illustration--passed:before, .nys-bill-vote .c-block--btn.c-half-btn--left:before, .c-bill--vote-widget .c-block--btn:before, .c-bill--vote-attach .c-block--btn:before, form.entitytype-earth_day-form button#edit-submit:before, form.entitytype-earth_day_preview-form button#edit-submit:before {
+.icon-before__check:before, .c-senate-works--illustration.illustration--passed:before, .nys-bill-vote .c-block--btn.c-half-btn--left:before, .c-bill--vote-widget .c-block--btn:before, .c-bill--vote-attach .c-block--btn:before, form.entitytype-earth_day-form button#edit-submit:before, form.entitytype-earth_day_preview-form button#edit-submit:before, form.entitytype-school_submissions-form button#edit-submit:before, form.entitytype-hannon_photo_contest-form button#edit-submit:before {
   content: "\2f"; }
 
 .icon-before__circle-check:before, .alert-box.success:before, .l-messages-thanks .alert-box.success:before, .c-btn--cta__sign .flag-success-message:before, .c-actionbar [class*="c-btn--follow-"] .message-text:before, .c-senate-status [class*="c-btn--follow-"] .message-text:before {
@@ -621,7 +621,7 @@
 .icon-before__play-outline:before {
   content: "\50"; }
 
-.icon-before__plus:before, .c-block--issue .c-block--btn .flag-action:before, form.entitytype-earth_day-form button[id*="add-more"]:before, form.entitytype-earth_day_preview-form button[id*="add-more"]:before {
+.icon-before__plus:before, .c-block--issue .c-block--btn .flag-action:before, form.entitytype-earth_day-form button[id*="add-more"]:before, form.entitytype-earth_day_preview-form button[id*="add-more"]:before, form.entitytype-school_submissions-form button[id*="add-more"]:before, form.entitytype-hannon_photo_contest-form button[id*="add-more"]:before {
   content: "\2b"; }
 
 .icon-before__presskit:before, .c-view--link:before, .c-block-download .c-block--btn:before, .c-want-to--item.c-want-to--item__news .c-block--btn:before, .c-news--download .file > a:before, .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn:before {
@@ -663,7 +663,7 @@
 .icon-before__twitter:before {
   content: "\23"; }
 
-.icon-before__x:before, .c-nav .c-header--btn-logout:before, .c-block--issue .c-block--btn .unflag-action:before, .nys-bill-vote .c-block--btn.c-half-btn--right:before, .c-bill--vote-widget .c-block--btn + .c-block--btn:before, .c-bill--vote-attach .c-block--btn + .c-block--btn:before, form.entitytype-earth_day-form button[id*="remove-button"]:before, form.entitytype-earth_day_preview-form button[id*="remove-button"]:before {
+.icon-before__x:before, .c-nav .c-header--btn-logout:before, .c-block--issue .c-block--btn .unflag-action:before, .nys-bill-vote .c-block--btn.c-half-btn--right:before, .c-bill--vote-widget .c-block--btn + .c-block--btn:before, .c-bill--vote-attach .c-block--btn + .c-block--btn:before, form.entitytype-earth_day-form button[id*="remove-button"]:before, form.entitytype-earth_day_preview-form button[id*="remove-button"]:before, form.entitytype-school_submissions-form button[id*="remove-button"]:before, form.entitytype-hannon_photo_contest-form button[id*="remove-button"]:before {
   content: "\78"; }
 
 .icon-before__youtube:before {
@@ -679,7 +679,7 @@
   content: "\61"; }
 
 /*---------------------------------/
-/	ICON AFTER
+/ ICON AFTER
 /----------------------------------*/
 [class^="icon-after"]:after, [class*=" icon-after"]:after, .icon-after__facebook:after, .page-user-dashboard .c-container--dash-user-card .dash-user-info .c-container--title.fb:after, .page-user-dashboard .c-container--dash-senator-card .dash-user-info .c-container--title.fb:after, #user-profile-form .fb-connect-container .fb-container--title.fb:after, .icon-after__twitter:after, .c-btn--twitter:after, .share-icon-twitter:after, .icon-after__mail:after, .c-btn--email:after, .share-icon-email:after, .icon-after__left:after, .icon-after__right:after, .nys-arrow-link:after, .c-block--explore-issues a:after, .c-committee-header .c-committee--see-more:after, .c-upcoming--nav-item + .c-upcoming--nav-item:after, .page-user-dashboard .c-header-bar .c-dashboard-header--btn:after, .c-block--about-timeline .c-timeline-mv-right:after, .icon-after__arrow:after, .c-tab--link-more:after, .c-container--link:after, .c-paragraph--more-link:after, .page-user-dashboard.senator-dashboard .c-container--dash-senator-card .c-dash-senator-action-links .c-dash-senator-site-link:after, .icon-after__recruit-friends:after, .c-header--btn.c-header--btn__primary:after, .icon-after__user-guide:after, .c-header--btn.c-header--btn__taking_action:after, .icon-after__see-less:after, .nys-btn-more.open:after, .c-chapter-cta:after, .icon-after__see-more:after, .item-list .pager.pager-load-more .pager-next > a:after, .item-list .page-user-dashboard .c-container--issues .pager.issue-follower-header .pager-next > a:after, .page-user-dashboard .c-container--issues .item-list .pager.issue-follower-header .pager-next > a:after, .nys-btn-more:after, .c-chapter__collapsed .c-chapter-cta:after, .c-senators-container .views-exposed-widget .views-widget:after, .accordion .accordion-navigation > a:after, .accordion dd > a:after, .c-committee-header .c-committee--see-all:after, .page-events .view-calendar-page .view-filters .views-exposed-form .views-exposed-widget:after, .page-user-dashboard .c-container--const-issues-follow .views-exposed-form .form-type-select:after, .page-user-dashboard .c-container--const-bills-follow .views-exposed-form .form-type-select:after, .page-user-dashboard .c-container--const-comm-follow .views-exposed-form .form-type-select:after, .page-user-dashboard .c-container--const-pet-quest .views-exposed-form .form-type-select:after, .page-user-dashboard .c-container--issues .filter-wrapper:after, .page-user-dashboard .c-container--quest-pet .tabs-content .your-petitions .poll-signature .poll-signature-list form .filter-wrapper:after, .page-user-dashboard .c-container--quest-pet .tabs-content .all-petitions .poll-signature .poll-signature-list form .filter-wrapper:after, .page-user-dashboard #nys_senators_constituents_bills form .filter-wrapper.filter-wrapper--bill:after, .page-user-dashboard .c-container--senator-constituents #nys-inbox-senator-constituents-form .filter-wrapper:after, .page-search .block-facetapi:after, .open-data-page .view-display-id-page_1 .view-filters .views-widget .date-year:after, .flag-action:after, .icon-after__down-arrow:after, .c-senators-committees-header .c-container--link:after, .unflag-action:after {
   font-family: 'senate_icons';
@@ -864,7 +864,7 @@
   content: "\79"; }
 
 /*---------------------------------/
-/	ICON REPLACE
+/ ICON REPLACE
 /----------------------------------*/
 [class^="icon-replace"], [class*=" icon-replace"], .icon-replace__minus, .c-block--btn-toggle, .icon-replace__plus, .c-block__collapsed .c-block--btn-toggle, .c-block__collapsed.c-block-legislation .c-block--btn-toggle, .icon-replace__facebook, .c-btn--facebook, .share-icon-facebook, .c-btn--facebook-login, .c-detail--social-item.facebook, .icon-replace__twitter, .c-btn--twitter, .share-icon-twitter, .c-detail--social-item.twitter, .icon-replace__mail, .c-btn--email, .share-icon-email, .c-detail--social-item.email, .icon-replace__x, .l-messages .close, .c-actionbar [class*="c-btn--follow-"] .flag-success-message .close-message, .c-senate-status [class*="c-btn--follow-"] .flag-success-message .close-message, .nav-open .c-nav--toggle, .c-nav--wrap.search-open .c-site-search--btn, .c-block--issue .c-block--btn .close-message, .nys-bill-vote .bill-vote-message-prompt .closer, .c-bill--sentiment-update .c-bill--sentiment-text .closer, .icon-replace__hamburger, .c-nav--toggle, .icon-replace__left, .c-carousel--btn.prev, .c-upcoming--nav-item, .icon-replace__right, .c-carousel--btn.next, .c-upcoming--nav-item + .c-upcoming--nav-item, .icon-replace__arrow, .c-actionbar--loggedin .c-block--btn, .icon-replace__search, .c-site-search--btn:focus, .c-site-search--btn, .c-nav--wrap.search-open .c-site-search .c-site-search--btn, #views-exposed-form-explore-issues-explore-issues .views-submit-button button, #views-exposed-form-explore-issues-solr-explore-issues .views-submit-button button, #views-exposed-form-explore-issues-tabs-explore-issues-alpha .views-submit-button button, .icon-replace__twitter-fav, .c-twitter-block-container .c-twitter-block .c-web_intents a[href*="intent/favorite"], .icon-replace__twitter-reply, .c-twitter-block-container .c-twitter-block .c-web_intents a[href*="intent/tweet"], .icon-replace__twitter-retweet, .c-twitter-block-container .c-twitter-block .c-web_intents a[href*="intent/retweet"], .icon-replace__see-more, .c-tab--arrow, .icon-replace__see-less, .l-tab-bar.open .c-tab--arrow {
   position: relative;
@@ -2101,8 +2101,8 @@ main.l-row--main, main.calendar-dls {
   clear: both; }
 
 /*
-	overriding column padding rather than constinuously
-	removing the element
+  overriding column padding rather than constinuously
+  removing the element
 */
 .l-row .column, .l-row .columns {
   padding-left: 0;
@@ -2110,9 +2110,9 @@ main.l-row--main, main.calendar-dls {
 
 /*------------------------------------
 / UTILITIES (could be own file)
-/	hooks and classes that don't style 
+/ hooks and classes that don't style 
 / or handle layouts 
-/	- ie for mobile v desktop view
+/ - ie for mobile v desktop view
 /-------------------------------------*/
 .u-mobile-only {
   display: block; }
@@ -2170,11 +2170,11 @@ main.l-row--main, main.calendar-dls {
   border-top: 1px solid #AAAAAA; }
 
 /*------------------------------------
-/	SENATOR LISTING  
-/ 	
-/	circular thumbnail of senator
-/	description to the right
-/	name, district, party affiliation
+/ SENATOR LISTING  
+/   
+/ circular thumbnail of senator
+/ description to the right
+/ name, district, party affiliation
 /-------------------------------------*/
 .nys-senator {
   position: relative;
@@ -2245,7 +2245,7 @@ main.l-row--main, main.calendar-dls {
 / styling for a list denoting a bill's status
 / list items are circle 
 / add 'passed' class to illustrate we're 
-/	passed that step	
+/ passed that step  
 /----------------------------------------*/
 .c-bill-section ul.nys-bill-status {
   margin: 90px 0; }
@@ -2284,9 +2284,9 @@ main.l-row--main, main.calendar-dls {
     border-radius: 50%;
     background-clip: padding-box;
     /* 
-			spacer is necessary to pull off
-			justified lists
-		*/ }
+      spacer is necessary to pull off
+      justified lists
+    */ }
     .nys-bill-status li.passed {
       border: none;
       background: #2B6990; }
@@ -2418,7 +2418,7 @@ main.l-row--main, main.calendar-dls {
 
 /*---------------------------------
 / ACCORDION LIST & LIST ITEMS
-/	
+/ 
 /---------------------------------*/
 /*----------------------------
 / CLUSTER GLOBALS
@@ -2466,7 +2466,7 @@ main.l-row--main, main.calendar-dls {
 / containers are reuseable blocks 
 / things with uniform titles and links to those sections
 / ie - newsroom container which includes a title,
-/	synopsis of a few articles and a link to the newsroom
+/ synopsis of a few articles and a link to the newsroom
 /
 /-------------------------------------------------------*/
 .c-container {
@@ -2553,8 +2553,8 @@ h2.c-container--title, h3.c-container--title {
 
 /*----------------------------------------------
 /
-/	CAROUSEL - some containers contain carousels
-/	- these are those styles
+/ CAROUSEL - some containers contain carousels
+/ - these are those styles
 /
 /----------------------------------------------*/
 .c-carousel--nav {
@@ -2623,8 +2623,8 @@ h2.c-container--title, h3.c-container--title {
   line-height: 1.5em; }
 
 /*-------------------------------------
-/	Page Header styles - 
-/ 	TODO: refactor this with subpage - below
+/ Page Header styles - 
+/   TODO: refactor this with subpage - below
 /-------------------------------------*/
 .c-page-header--title {
   margin: 0;
@@ -2632,7 +2632,7 @@ h2.c-container--title, h3.c-container--title {
   font-size: 32px; }
 
 /*-------------------------------------
-/	Subpage Header styles
+/ Subpage Header styles
 /-------------------------------------*/
 h2.c-subpage-header--title {
   margin: 0;
@@ -2708,13 +2708,13 @@ h2.c-subpage-header--title {
 
 /*-------------------------------------
 /
-/	EMBEDDED ITEMS 
+/ EMBEDDED ITEMS 
 / shows up within articles
 / and about page
 /
 /-------------------------------------*/
 /*-------------------------------------
-/	BLOCKQUOTE
+/ BLOCKQUOTE
 /-------------------------------------*/
 .c-blockquote {
   color: #444444;
@@ -2729,7 +2729,7 @@ h2.c-subpage-header--title {
     margin-bottom: 30px; } }
 
 /*-------------------------------------
-/	PULL QUOTE -- actually blockquote.
+/ PULL QUOTE -- actually blockquote.
 /-------------------------------------*/
 .c-pullquote {
   margin: 0;
@@ -2789,7 +2789,7 @@ blockquote {
     font-size: 28px; } }
 
 /*-------------------------------------
-/	EMBED IMG - 
+/ EMBED IMG - 
 /-------------------------------------*/
 .media-media_landscape_image, .c-embed-img, .c-news--body .media-element-container, .page-node-about .media-element-container {
   display: block;
@@ -2852,12 +2852,12 @@ blockquote {
     padding: 5px 20px; } }
 
 /*-------------------------------------
-/	CUSTOM BUTTON
+/ CUSTOM BUTTON
 / Solid bg - color set on element 
-/		varies based on Senator theme
-/ 	span as child with text
+/   varies based on Senator theme
+/   span as child with text
 / ** assumes absolutely positoned at 
-/		at the bottom of its parent
+/   at the bottom of its parent
 /-------------------------------------*/
 .webform-submit {
   text-align: left;
@@ -2926,7 +2926,7 @@ blockquote {
     color: #fff; }
 
 /*-------------------------------------
-/	CTA BUTTON
+/ CTA BUTTON
 /-------------------------------------*/
 .c-btn--cta {
   display: inline-block;
@@ -3043,7 +3043,7 @@ blockquote {
         width: 420px; } }
 
 /*-------------------------------------
-/	HALF BUTTON
+/ HALF BUTTON
 /-------------------------------------*/
 .c-half-btn {
   width: 49.5%; }
@@ -3056,10 +3056,10 @@ blockquote {
   right: 0; }
 
 /*--------------------------------------
-/	REVEAL BUTTON
-/	used to hide and show content
-/	full-width, variable text and 
-/	open / close arrow
+/ REVEAL BUTTON
+/ used to hide and show content
+/ full-width, variable text and 
+/ open / close arrow
 /--------------------------------------*/
 .nys-btn-more {
   clear: both;
@@ -3871,7 +3871,7 @@ blockquote {
     max-width: 1200px; } }
 
 /*----------------------------
-/	Transition Speeds
+/ Transition Speeds
 /-----------------------------*/
 /*------------------------------
 / SITE WIDE TOP BAR
@@ -4224,7 +4224,7 @@ blockquote {
 / BILLS - following or not
 / ISSUES - following or not
 /
-/	DEFAULT IS SENATOR
+/ DEFAULT IS SENATOR
 /
 /----------------------------*/
 .c-actionbar, .c-senate-status {
@@ -4513,7 +4513,7 @@ blockquote {
       position: absolute; }
 
 /*------------------------------
-/	NAV -
+/ NAV -
 /-------------------------------*/
 .c-nav--wrap {
   position: fixed;
@@ -5012,8 +5012,8 @@ body.adminimal-menu div#admin-menu a, body.adminimal-menu div#admin-menu span {
 
 /*-----------------------------
 /
-/	HERO AREAS
-/	
+/ HERO AREAS
+/ 
 /-----------------------------*/
 /*------------------------------
 / SITEWIDE HERO
@@ -5130,8 +5130,8 @@ body.adminimal-menu div#admin-menu a, body.adminimal-menu div#admin-menu span {
   background: #444444; }
 
 /*
-	TODO: make sure aspect ratio is correct
-	currently using 560 x 315 or .5625
+  TODO: make sure aspect ratio is correct
+  currently using 560 x 315 or .5625
 */
 .c-hero--video-wrapper {
   position: relative;
@@ -5611,8 +5611,8 @@ body.adminimal-menu div#admin-menu a, body.adminimal-menu div#admin-menu span {
 
 /*-------------------------------------------------
 /
-/	Chapter style
-/	TODO: Collapsible. 
+/ Chapter style
+/ TODO: Collapsible. 
 / Also - not sure if 'chapters' is abstacted enough
 /
 /-------------------------------------------------*/
@@ -5628,7 +5628,8 @@ body.adminimal-menu div#admin-menu a, body.adminimal-menu div#admin-menu span {
     font-family: "Adelle Light";
     font-size: 18px;
     line-height: 1.3em;
-    cursor: pointer; }
+    cursor: pointer;
+    margin: 0; }
   .node-chapter .content {
     position: relative;
     z-index: 1; }
@@ -5817,6 +5818,12 @@ h3.c-bill-num {
     content: "|";
     display: inline-block;
     margin-right: 0.5em; }
+
+.c-block-legislation-featured .c-bill-update--location a {
+  color: #fff;
+  border-bottom: solid 0.05em #fff; }
+  .c-block-legislation-featured .c-bill-update--location a:hover {
+    border-bottom: none; }
 
 .c-bill-update--sponsor {
   display: block;
@@ -6454,6 +6461,18 @@ TABLE.c-bill--actions-table, TABLE.c-bill--actions-table TBODY TR TD {
 .cont_green .c-quote--content a {
   color: #65C5B6; }
 
+.trad_blue .c-block-legislation-featured .c-bill-update--location, .cont_blue .c-block-legislation-featured .c-bill-update--location, .purple .c-block-legislation-featured .c-bill-update--location, .trad_red .c-block-legislation-featured .c-bill-update--location, .cont_red .c-block-legislation-featured .c-bill-update--location, .orange .c-block-legislation-featured .c-bill-update--location, .trad_green .c-block-legislation-featured .c-bill-update--location, .cont_green .c-block-legislation-featured .c-bill-update--location {
+  display: inline;
+  line-height: 1.3; }
+  .trad_blue .c-block-legislation-featured .c-bill-update--location a, .cont_blue .c-block-legislation-featured .c-bill-update--location a, .purple .c-block-legislation-featured .c-bill-update--location a, .trad_red .c-block-legislation-featured .c-bill-update--location a, .cont_red .c-block-legislation-featured .c-bill-update--location a, .orange .c-block-legislation-featured .c-bill-update--location a, .trad_green .c-block-legislation-featured .c-bill-update--location a, .cont_green .c-block-legislation-featured .c-bill-update--location a {
+    color: #fff;
+    border-bottom: solid 0.05em #fff; }
+    .trad_blue .c-block-legislation-featured .c-bill-update--location a:hover, .cont_blue .c-block-legislation-featured .c-bill-update--location a:hover, .purple .c-block-legislation-featured .c-bill-update--location a:hover, .trad_red .c-block-legislation-featured .c-bill-update--location a:hover, .cont_red .c-block-legislation-featured .c-bill-update--location a:hover, .orange .c-block-legislation-featured .c-bill-update--location a:hover, .trad_green .c-block-legislation-featured .c-bill-update--location a:hover, .cont_green .c-block-legislation-featured .c-bill-update--location a:hover {
+      border-bottom: none; }
+.trad_blue .c-block-legislation-featured .c-bill-update--date, .cont_blue .c-block-legislation-featured .c-bill-update--date, .purple .c-block-legislation-featured .c-bill-update--date, .trad_red .c-block-legislation-featured .c-bill-update--date, .cont_red .c-block-legislation-featured .c-bill-update--date, .orange .c-block-legislation-featured .c-bill-update--date, .trad_green .c-block-legislation-featured .c-bill-update--date, .cont_green .c-block-legislation-featured .c-bill-update--date {
+  display: inline;
+  line-height: 1.3; }
+
 /*----------------------------------------------
 / NYS Legislation Explorer
 / covers: NYS Laws, Advanced Legislation 
@@ -6675,8 +6694,8 @@ a.c-law--inactive-breadcrumb {
 
 /*-------------------------------------------------
 /
-/	INITIATIVE BLOCK 
-/	half lives on almost every page
+/ INITIATIVE BLOCK 
+/ half lives on almost every page
 / full size is on most pages
 / class will have to updated
 /
@@ -6805,6 +6824,103 @@ a.c-law--inactive-breadcrumb {
       margin-right: 6%; }
     .c-block--initiative__half .c-initiative--title {
       font-size: 32px; } }
+
+.pane-senator-polls .c-block--initiative, .c-block--pg-poll .c-block--initiative, .node-advpoll .c-block--initiative {
+  margin: 0 0 40px 0 !important; }
+.pane-senator-polls .c-block-btn, .c-block--pg-poll .c-block-btn, .node-advpoll .c-block-btn {
+  height: 50px;
+  line-height: 50px; }
+.pane-senator-polls h3.c-initiative--title, .c-block--pg-poll h3.c-initiative--title, .node-advpoll h3.c-initiative--title {
+  font-family: "Adelle Light";
+  font-size: 36px;
+  color: #fff;
+  margin-top: 0; }
+.pane-senator-polls .c-block--initiative__has-img img, .c-block--pg-poll .c-block--initiative__has-img img, .node-advpoll .c-block--initiative__has-img img {
+  margin-top: -15px; }
+.pane-senator-polls .c-block--initiative__has-img .c-block ul, .c-block--pg-poll .c-block--initiative__has-img .c-block ul, .node-advpoll .c-block--initiative__has-img .c-block ul {
+  display: none; }
+.pane-senator-polls .c-block--initiative__has-img .c-initiative--content, .c-block--pg-poll .c-block--initiative__has-img .c-initiative--content, .node-advpoll .c-block--initiative__has-img .c-initiative--content {
+  padding-bottom: 10px;
+  padding-right: 10px;
+  width: 65%; }
+  .pane-senator-polls .c-block--initiative__has-img .c-initiative--content .poll, .c-block--pg-poll .c-block--initiative__has-img .c-initiative--content .poll, .node-advpoll .c-block--initiative__has-img .c-initiative--content .poll {
+    width: 90%;
+    margin-top: 2%; }
+    .pane-senator-polls .c-block--initiative__has-img .c-initiative--content .poll .vote-form .choices, .c-block--pg-poll .c-block--initiative__has-img .c-initiative--content .poll .vote-form .choices, .node-advpoll .c-block--initiative__has-img .c-initiative--content .poll .vote-form .choices {
+      margin: 0; }
+    .pane-senator-polls .c-block--initiative__has-img .c-initiative--content .poll .text, .c-block--pg-poll .c-block--initiative__has-img .c-initiative--content .poll .text, .node-advpoll .c-block--initiative__has-img .c-initiative--content .poll .text {
+      color: #fff;
+      font-size: 18px; }
+    .pane-senator-polls .c-block--initiative__has-img .c-initiative--content .poll .voted .bar, .c-block--pg-poll .c-block--initiative__has-img .c-initiative--content .poll .voted .bar, .node-advpoll .c-block--initiative__has-img .c-initiative--content .poll .voted .bar {
+      border: none; }
+    .pane-senator-polls .c-block--initiative__has-img .c-initiative--content .poll .bar, .c-block--pg-poll .c-block--initiative__has-img .c-initiative--content .poll .bar, .node-advpoll .c-block--initiative__has-img .c-initiative--content .poll .bar {
+      height: 2em; }
+      .pane-senator-polls .c-block--initiative__has-img .c-initiative--content .poll .bar .foreground, .c-block--pg-poll .c-block--initiative__has-img .c-initiative--content .poll .bar .foreground, .node-advpoll .c-block--initiative__has-img .c-initiative--content .poll .bar .foreground {
+        height: 2em; }
+    .pane-senator-polls .c-block--initiative__has-img .c-initiative--content .poll .percent, .pane-senator-polls .c-block--initiative__has-img .c-initiative--content .poll .total, .pane-senator-polls .c-block--initiative__has-img .c-initiative--content .poll .poll-message, .pane-senator-polls .c-block--initiative__has-img .c-initiative--content .poll #message, .pane-senator-polls .c-block--initiative__has-img .c-initiative--content .poll .poll-closed p, .c-block--pg-poll .c-block--initiative__has-img .c-initiative--content .poll .percent, .c-block--pg-poll .c-block--initiative__has-img .c-initiative--content .poll .total, .c-block--pg-poll .c-block--initiative__has-img .c-initiative--content .poll .poll-message, .c-block--pg-poll .c-block--initiative__has-img .c-initiative--content .poll #message, .c-block--pg-poll .c-block--initiative__has-img .c-initiative--content .poll .poll-closed p, .node-advpoll .c-block--initiative__has-img .c-initiative--content .poll .percent, .node-advpoll .c-block--initiative__has-img .c-initiative--content .poll .total, .node-advpoll .c-block--initiative__has-img .c-initiative--content .poll .poll-message, .node-advpoll .c-block--initiative__has-img .c-initiative--content .poll #message, .node-advpoll .c-block--initiative__has-img .c-initiative--content .poll .poll-closed p {
+      color: #fff;
+      font-size: 12px; }
+
+form#poll-view-voting .form-item, form[id*="advpoll-form"] .form-item {
+  padding-left: 20px;
+  margin-bottom: 0; }
+form#poll-view-voting input, form[id*="advpoll-form"] input {
+  font-size: 120%;
+  margin: 0.5rem 0 1.2rem 0; }
+form#poll-view-voting label, form[id*="advpoll-form"] label {
+  color: #fff;
+  font-size: 24px;
+  font-family: "Proxima Nova Regular";
+  line-height: 1.25em; }
+form#poll-view-voting button, form[id*="advpoll-form"] button {
+  color: #fff;
+  display: block;
+  margin: 0 auto; }
+form#poll-view-voting #message, form[id*="advpoll-form"] #message {
+  color: #fff;
+  font-size: 12px; }
+
+.node-advpoll.view-mode-full .c-block--initiative__has-img .c-initiative--content {
+  padding-bottom: 10px;
+  padding-right: 10px; }
+
+.c-advpoll--date {
+  display: block;
+  margin: 30px 0 36px; }
+
+.trad_blue button[id*="edit-submit-advpoll"] {
+  background-color: #1D446B; }
+.cont_blue button[id*="edit-submit-advpoll"] {
+  background-color: #008CA6; }
+.purple button[id*="edit-submit-advpoll"] {
+  background-color: #754775; }
+.trad_red button[id*="edit-submit-advpoll"] {
+  background-color: #6E0026; }
+.cont_red button[id*="edit-submit-advpoll"] {
+  background-color: #BB0623; }
+.orange button[id*="edit-submit-advpoll"] {
+  background-color: #ED4B1C; }
+.trad_green button[id*="edit-submit-advpoll"] {
+  background-color: #4D894F; }
+.cont_green button[id*="edit-submit-advpoll"] {
+  background-color: #479E93; }
+
+.trad_blue .poll .bar .foreground {
+  background-color: #1C364E; }
+.cont_blue .poll .bar .foreground {
+  background-color: #1F798F; }
+.purple .poll .bar .foreground {
+  background-color: #543457; }
+.trad_red .poll .bar .foreground {
+  background-color: #500019; }
+.cont_red .poll .bar .foreground {
+  background-color: #A00101; }
+.orange .poll .bar .foreground {
+  background-color: #C84123; }
+.trad_green .poll .bar .foreground {
+  background-color: #416837; }
+.cont_green .poll .bar .foreground {
+  background-color: #378479; }
 
 /*----------------------------
 / DOWNLOAD MODULES
@@ -7023,8 +7139,8 @@ a.c-law--inactive-breadcrumb {
 
 /*-------------------------------------------------------
 /
-/ 	Committee Updates
-/ 	Exists on : Committee Detail Page
+/   Committee Updates
+/   Exists on : Committee Detail Page
 /
 /-------------------------------------------------------*/
 .c-updates-container .dropdown {
@@ -7090,9 +7206,9 @@ a.c-law--inactive-breadcrumb {
 @media screen and (min-width: 760px) {
   .c-updates-container {
     /* 
-		 *	container header usually has a bottom border
-		 *	but this conflicts with the top borders of the update items
-		*/ }
+     *  container header usually has a bottom border
+     *  but this conflicts with the top borders of the update items
+    */ }
     .c-updates-container .dropdown {
       display: none; }
     .c-updates-container .l-tab-bar {
@@ -7134,8 +7250,8 @@ a.c-law--inactive-breadcrumb {
 
 /*-------------------------------------------------------
 /
-/ 	How the Senate Works
-/	- variant : How We Create a Budget
+/   How the Senate Works
+/ - variant : How We Create a Budget
 /
 /-------------------------------------------------------*/
 .c-senate-works-container {
@@ -7355,8 +7471,8 @@ a.c-law--inactive-breadcrumb {
 
 /*-------------------------------------------------------
 /
-/ 	SENATORS LIST
-/ 	Exists on : Senators Listing Page
+/   SENATORS LIST
+/   Exists on : Senators Listing Page
 /
 /-------------------------------------------------------*/
 .c-senators-container {
@@ -7486,8 +7602,8 @@ a.c-law--inactive-breadcrumb {
 
 /*-------------------------------------------------------
 /
-/ 	SENATE DIRECTORIES
-/	right below the senator list
+/   SENATE DIRECTORIES
+/ right below the senator list
 /
 /-------------------------------------------------------*/
 .c-senate-directory--container {
@@ -7549,8 +7665,8 @@ a.c-law--inactive-breadcrumb {
 
 /*-------------------------------------------------
 /
-/	INITIATIVE BLOCK 
-/	half lives on almost every page
+/ INITIATIVE BLOCK 
+/ half lives on almost every page
 / full size is on most pages
 / class will have to updated
 /
@@ -7672,8 +7788,8 @@ a.c-law--inactive-breadcrumb {
 
 /*-------------------------------------------------------
 /
-/ 	COMMITTEES LIST
-/ 	Exists on : Senators Listing Page
+/   COMMITTEES LIST
+/   Exists on : Senators Listing Page
 /
 /-------------------------------------------------------*/
 .c-committees-container {
@@ -7751,9 +7867,9 @@ a.c-law--inactive-breadcrumb {
 
 /*-------------------------------------------------------
 /
-/ 	NEWS CLUSTER
-/ 	Covers: News Videos, Press Releases and Tweets
-/ 	Exists on : Homepage
+/   NEWS CLUSTER
+/   Covers: News Videos, Press Releases and Tweets
+/   Exists on : Homepage
 /
 /-------------------------------------------------------*/
 .c-news-container {
@@ -7905,9 +8021,9 @@ a.c-law--inactive-breadcrumb {
 
 /*-------------------------------------------------------
 /
-/ 	FEATURED STORY / VIDEO BLOCK
-/ 	Covers: Featured Story and Video
-/ 	Exists on : Homepage
+/   FEATURED STORY / VIDEO BLOCK
+/   Covers: Featured Story and Video
+/   Exists on : Homepage
 /
 /-------------------------------------------------------*/
 .c-event-featured-story {
@@ -7973,9 +8089,9 @@ a.c-law--inactive-breadcrumb {
 
 /*-------------------------------------------------------
 /
-/ 	FEATURED STORY / VIDEO BLOCK
-/ 	Covers: Featured Story and Video
-/ 	Exists on : Homepage
+/   FEATURED STORY / VIDEO BLOCK
+/   Covers: Featured Story and Video
+/   Exists on : Homepage
 /
 /-------------------------------------------------------*/
 .c-featured_video {
@@ -8044,9 +8160,9 @@ a.c-law--inactive-breadcrumb {
 
 /*-------------------------------------------------------
 /
-/ 	FEATURED STORY / VIDEO BLOCK
-/ 	Covers: Featured Story and Video
-/ 	Exists on : Homepage
+/   FEATURED STORY / VIDEO BLOCK
+/   Covers: Featured Story and Video
+/   Exists on : Homepage
 /
 /-------------------------------------------------------*/
 .c-featured-video-teaser {
@@ -8114,9 +8230,9 @@ a.c-law--inactive-breadcrumb {
 
 /*-------------------------------------------------------
 /
-/ 	EVENTS CLUSTER BLOCK
-/ 	Covers: Featured Issues
-/ 	Exists on : Homepage
+/   EVENTS CLUSTER BLOCK
+/   Covers: Featured Issues
+/   Exists on : Homepage
 /
 /-------------------------------------------------------*/
 .c-event-cluster-featured-issue {
@@ -8205,7 +8321,7 @@ a.c-law--inactive-breadcrumb {
 
 /*-------------------------------------------------------
 /
-/ 	MAP BLOCK
+/   MAP BLOCK
 / Covers: Map Display
 / Exists on : Districts About Page
 /
@@ -8325,7 +8441,7 @@ a.c-law--inactive-breadcrumb {
 
 /*-------------------------------------------------------
 /
-/	LISTING BLOCK
+/ LISTING BLOCK
 / Covers: People Listing and Senator Committees Modules
 / Exists on : Senator About
 /
@@ -8394,10 +8510,10 @@ a.c-law--inactive-breadcrumb {
 
 /*-------------------------------------------------------
 /
-/ 	EVENTS BLOCK
-/ 	Covers: Featured Event with Image, Featured Event no 
-/		Image, Todays Event, Event Listing
-/ 	Exists on :
+/   EVENTS BLOCK
+/   Covers: Featured Event with Image, Featured Event no 
+/   Image, Todays Event, Event Listing
+/   Exists on :
 /
 /-------------------------------------------------------*/
 .c-event-address {
@@ -8956,8 +9072,7 @@ a.c-law--inactive-breadcrumb {
     margin-top: 20px;
     margin-right: 120px; }
   .c-upcoming-container .c-event-block--upcoming {
-    width: 50%;
-    float: left;
+    clear: left;
     margin: 0;
     padding-top: 0;
     padding-left: 20px;
@@ -8972,30 +9087,30 @@ a.c-law--inactive-breadcrumb {
       text-transform: uppercase;
       font-size: 14px;
       margin-top: 0;
-      position: static;
       line-height: 1;
-      border-top: 1px solid #D8D8D8;
       padding-top: 16px; }
       .c-upcoming-container .c-event-block--upcoming .c-event-date span {
         font-size: 40px; }
     .c-upcoming-container .c-event-block--upcoming .c-event-name {
       float: left;
       clear: left;
-      margin-left: 0;
-      margin-top: 30px;
+      margin-left: 200px;
+      margin-top: 24px;
       padding-top: 0; }
     .c-upcoming-container .c-event-block--upcoming .c-event-location {
       float: left;
       clear: left;
-      margin-left: 0; }
+      margin-left: 200px; }
     .c-upcoming-container .c-event-block--upcoming .c-event-address {
       float: left;
       clear: left;
-      display: block; }
+      display: block;
+      margin-left: 200px; }
     .c-upcoming-container .c-event-block--upcoming .c-event-time {
       float: left;
       clear: left;
-      display: block; }
+      display: block;
+      margin-left: 200px; }
   .c-upcoming-container.today .c-event-name {
     margin-top: 0;
     padding-top: 30px;
@@ -9476,11 +9591,11 @@ a.c-law--inactive-breadcrumb {
     width: 16px !important; }
 
 /*---------------------------------
-/	
-/ 	QUICK FACTS
-/	and
-/	WHAT WE'VE BEEN UP TO
-/	illustrated module
+/ 
+/   QUICK FACTS
+/ and
+/ WHAT WE'VE BEEN UP TO
+/ illustrated module
 /
 /---------------------------------*/
 .c-stats--container {
@@ -9642,10 +9757,10 @@ a.c-law--inactive-breadcrumb {
 
 /*-------------------------------------
 /
-/	I WANT TO...
-/	a container with three links in it
-/	senator - either find or your (depends on logged in state)
-/	explore issues and see all news
+/ I WANT TO...
+/ a container with three links in it
+/ senator - either find or your (depends on logged in state)
+/ explore issues and see all news
 /
 /-------------------------------------*/
 .c-container--want-to .c-container--header {
@@ -10181,10 +10296,10 @@ div.ctools-modal-content .modal-content {
     overflow: hidden; } }
 
 /*---------------------------------------
-/	ACCORDION LISTS:
-/	collapsible lists with abstracts on 
-/	various topics. 
-/ 	overwrites some foundation
+/ ACCORDION LISTS:
+/ collapsible lists with abstracts on 
+/ various topics. 
+/   overwrites some foundation
 /---------------------------------------*/
 .nys-accordion--header {
   display: block;
@@ -10449,10 +10564,10 @@ div.ctools-modal-content .modal-content {
 
 /*---------------------------
 /
-/	WIDGET STYLES
-/	only applies to the buttons
-/	on featured legislation
-/	and the voting on bill detail
+/ WIDGET STYLES
+/ only applies to the buttons
+/ on featured legislation
+/ and the voting on bill detail
 /
 /---------------------------*/
 .nys-bill-vote .c-block--btn {
@@ -11345,7 +11460,7 @@ twitterwidget {
   display: none; }
 
 /*------------------------------------
-/	HOMEPAGE
+/ HOMEPAGE
 /-------------------------------------*/
 .front .pane-nys-blocks-want-to {
   display: none; }
@@ -11541,7 +11656,7 @@ twitterwidget {
                 padding-top: 0; } }
 
 /*------------------------------------
-/	NEWS:
+/ NEWS:
 /-------------------------------------*/
 .c-news--head, .c-questionnaire--head {
   margin-bottom: 20px; }
@@ -11643,7 +11758,7 @@ twitterwidget {
     line-height: 1.2em; }
   .c-news--pub-date {
     /*border-right: 1px solid $grey04;
-		padding-right: 14px;*/ }
+    padding-right: 14px;*/ }
   .c-news--subtitle {
     font-size: 26px; }
   .c-news--body-title {
@@ -11663,7 +11778,7 @@ twitterwidget {
   margin: 15px 0 40px 0; }
 
 /*------------------------------------
-/	INITIATIVES PAGE
+/ INITIATIVES PAGE
 /-------------------------------------*/
 .c-initiative--header {
   margin-bottom: 20px; }
@@ -11776,7 +11891,7 @@ twitterwidget {
     margin-bottom: 18px; }
 
 /*------------------------------------
-/	PETITION PAGE
+/ PETITION PAGE
 /-------------------------------------*/
 .c-petition--head {
   margin-bottom: 15px; }
@@ -11855,8 +11970,8 @@ twitterwidget {
 
 /*-------------------------------------------------------
 /
-/ 	Committee Detail Header
-/ 	Exists on : Committee Detail Page
+/   Committee Detail Header
+/   Exists on : Committee Detail Page
 /
 /-------------------------------------------------------*/
 .c-senator-block img {
@@ -12003,8 +12118,8 @@ twitterwidget {
 
 /*-------------------------------------------------------
 /
-/ 	Senate Members
-/ 	Exists on : Senators Detail Page
+/   Senate Members
+/   Exists on : Senators Detail Page
 /
 /-------------------------------------------------------*/
 .c-members-title {
@@ -12120,7 +12235,7 @@ twitterwidget {
     margin-left: 110px; } }
 
 /*------------------------------------
-/	CALENDAR - SENATOR
+/ CALENDAR - SENATOR
 /-------------------------------------*/
 .c-upcoming--header {
   position: relative;
@@ -12208,7 +12323,7 @@ twitterwidget {
         line-height: 47px; } }
 
 /*------------------------------------
-/	GLOBAL CALENDAR
+/ GLOBAL CALENDAR
 /-------------------------------------*/
 .page-events #footer-last {
   clear: both; }
@@ -12738,23 +12853,23 @@ twitterwidget {
   background: #666; }
 
 /*------------------------------------
-/	DASHBOARD:
+/ DASHBOARD:
 /-------------------------------------*/
 .page-user-dashboard {
   /*------------------------------------
-  /	LEFT SIDEBAR
+  / LEFT SIDEBAR
   /-------------------------------------*/
   /*------------------------------------
-  /	RIGHT CONTENT AREA
+  / RIGHT CONTENT AREA
   /-------------------------------------*/
   /*------------------------------------
-  /	Constituent Dashboard
+  / Constituent Dashboard
   /-------------------------------------*/
   /*------------------------------------
-  /	Senator Dashboard
+  / Senator Dashboard
   /-------------------------------------*/
   /*------------------------------------------------
-  /	Constituent Dashboard General Element Overrides
+  / Constituent Dashboard General Element Overrides
   /-----------------------------------------------*/ }
   .page-user-dashboard .c-page-title {
     font-family: "Adelle Regular"; }
@@ -13932,11 +14047,17 @@ twitterwidget {
         font-size: 14px;
         line-height: 18px;
         line-height: 20px;
-        display: inline-block; }
+        display: inline; }
       .page-user-dashboard .c-container--const-bills-wdgt-follow .bill-widget-wrapper .bill-follow-widget .bill-committee {
-        display: inline-block;
+        display: inline;
         font-size: 14px;
-        line-height: 18px; }
+        line-height: 18px;
+        word-wrap: break-word; }
+        .page-user-dashboard .c-container--const-bills-wdgt-follow .bill-widget-wrapper .bill-follow-widget .bill-committee a {
+          color: #fff;
+          border-bottom: solid 0.05em #fff; }
+          .page-user-dashboard .c-container--const-bills-wdgt-follow .bill-widget-wrapper .bill-follow-widget .bill-committee a:hover {
+            border-bottom: none; }
         .page-user-dashboard .c-container--const-bills-wdgt-follow .bill-widget-wrapper .bill-follow-widget .bill-committee:before {
           content: "";
           display: inline-block;
@@ -14874,13 +14995,13 @@ twitterwidget {
 @media screen and (min-width: 760px) {
   .page-user-dashboard {
     /*------------------------------------
-    /	Senator Dashboard
+    / Senator Dashboard
     /-------------------------------------*/
     /*------------------------------------
-    /	Constituent Dashboard
+    / Constituent Dashboard
     /-------------------------------------*/
     /*------------------------------------
-    /	Main columns overrides
+    / Main columns overrides
     /-------------------------------------*/ }
     .page-user-dashboard.constituent-dashboard #nys_inbox form .inbox-action-links .action-button-wrapper button {
       background-color: #2B6A90; }
@@ -15206,10 +15327,10 @@ twitterwidget {
 @media screen and (min-width: 960px) {
   .page-user-dashboard {
     /*------------------------------------
-    /	Constituent Dashboard
+    / Constituent Dashboard
     /-------------------------------------*/
     /*------------------------------------
-    /	Senator Dashboard
+    / Senator Dashboard
     /-------------------------------------*/ }
     .page-user-dashboard .u-mobile-only {
       display: none !important; }
@@ -15474,10 +15595,10 @@ twitterwidget {
   padding: 0px 5px; }
 
 /*--------------------------------
-/	DETAIL PAGES
-/ 	Bills
-/	Resolutions
-/	Issues
+/ DETAIL PAGES
+/   Bills
+/ Resolutions
+/ Issues
 /----------------------------------------------*/
 .c-detail--header {
   margin-bottom: 20px; }
@@ -15491,6 +15612,12 @@ twitterwidget {
   font-size: 14px;
   letter-spacing: 0.1em;
   text-transform: uppercase; }
+  .c-detail--subhead span {
+    text-transform: capitalize;
+    clear: both;
+    line-height: 1.4em;
+    letter-spacing: .01em;
+    display: block; }
 
 .c-detail--descript {
   margin-bottom: 10px; }
@@ -15665,7 +15792,7 @@ twitterwidget {
   line-height: 1.4em; }
 
 /*---------------------------
-/	BILL & RESOLUTION
+/ BILL & RESOLUTION
 /---------------------------*/
 .c-action--items {
   list-style: none;
@@ -15734,7 +15861,7 @@ twitterwidget {
     font-size: 16px; } }
 
 /*---------------------------
-/	BILL SPECIFIC
+/ BILL SPECIFIC
 /---------------------------*/
 .c-bill--flags {
   overflow: hidden;
@@ -16176,7 +16303,7 @@ twitterwidget {
       font-size: 16px; } }
 
 /*---------------------------
-/	RESOLUTION SPECIFIC
+/ RESOLUTION SPECIFIC
 /---------------------------*/
 .bill-resolution .c-detail--sponsors {
   margin-bottom: 60px; }
@@ -16191,7 +16318,7 @@ twitterwidget {
       margin-bottom: 80px; } }
 
 /*---------------------------
-/	ISSUES SPECIFIC
+/ ISSUES SPECIFIC
 /---------------------------*/
 .c-issue--followers {
   color: #888888;
@@ -16243,8 +16370,8 @@ twitterwidget {
     color: #888888; }
 
 /*---------------------------
-/	ISSUES SPECIFIC -
-/	tablet and above
+/ ISSUES SPECIFIC -
+/ tablet and above
 /---------------------------*/
 @media screen and (min-width: 760px) {
   .c-issue--contact-btn {
@@ -16479,7 +16606,7 @@ twitterwidget {
         margin-right: 0; } }
 
 /*---------------------------
-/	SENATOR DETAIL
+/ SENATOR DETAIL
 /---------------------------*/
 .nys-title--events {
   border-bottom: 1px solid #AAAAAA;
@@ -17155,7 +17282,7 @@ twitterwidget {
     margin-top: 20px; } }
 
 /*------------------------------------
-/	ISSUE DETAIL
+/ ISSUE DETAIL
 /-------------------------------------*/
 .flag-success-message {
   width: 487px;
@@ -17542,7 +17669,7 @@ twitterwidget {
         border-radius: 45px; } }
 
 /*------------------------------------
-/	ISSUE DETAIL
+/ ISSUE DETAIL
 /-------------------------------------*/
 .page-explore-issues #views-exposed-form-explore-issues-explore-issues .views-submit-button, .page-explore-issues #views-exposed-form-explore-issues-solr-explore-issues .views-submit-button, .page-explore-issues #views-exposed-form-explore-issues-tabs-explore-issues-alpha .views-submit-button {
   position: relative;
@@ -17573,7 +17700,7 @@ twitterwidget {
     margin-bottom: 60px; } }
 
 /*------------------------------------
-/	Student Program and Alumni Testimonial
+/ Student Program and Alumni Testimonial
 /-------------------------------------*/
 .page-student-programs .large-12.columns, .page-alumni-testimonial .large-12.columns {
   padding: 0; }
@@ -17870,29 +17997,42 @@ twitterwidget {
 .field-name-field-school-submission-upload .form-type-managed-file {
   min-height: inherit; }
 
-form.entitytype-earth_day-form, form.entitytype-earth_day_preview-form {
+form.entitytype-earth_day-form, form.entitytype-earth_day_preview-form, form.entitytype-school_submissions-form, form.entitytype-hannon_photo_contest-form {
   margin-bottom: 10%; }
-  form.entitytype-earth_day-form button#edit-submit, form.entitytype-earth_day_preview-form button#edit-submit {
+  form.entitytype-earth_day-form button#edit-submit, form.entitytype-earth_day_preview-form button#edit-submit, form.entitytype-school_submissions-form button#edit-submit, form.entitytype-hannon_photo_contest-form button#edit-submit {
     margin: 0 auto;
     margin-top: 5%; }
-  form.entitytype-earth_day-form input[type="file"], form.entitytype-earth_day_preview-form input[type="file"] {
+    form.entitytype-earth_day-form button#edit-submit:focus, form.entitytype-earth_day_preview-form button#edit-submit:focus, form.entitytype-school_submissions-form button#edit-submit:focus, form.entitytype-hannon_photo_contest-form button#edit-submit:focus {
+      color: #fff;
+      background: #2B6990; }
+  form.entitytype-earth_day-form input[type="file"], form.entitytype-earth_day_preview-form input[type="file"], form.entitytype-school_submissions-form input[type="file"], form.entitytype-hannon_photo_contest-form input[type="file"] {
     width: 50%; }
-  form.entitytype-earth_day-form button[id*="upload-button"], form.entitytype-earth_day_preview-form button[id*="upload-button"] {
+  form.entitytype-earth_day-form button[id*="upload-button"], form.entitytype-earth_day_preview-form button[id*="upload-button"], form.entitytype-school_submissions-form button[id*="upload-button"], form.entitytype-hannon_photo_contest-form button[id*="upload-button"] {
     display: none; }
-  form.entitytype-earth_day-form .form-item .description, form.entitytype-earth_day-form .fieldset-description, form.entitytype-earth_day_preview-form .form-item .description, form.entitytype-earth_day_preview-form .fieldset-description {
+  form.entitytype-earth_day-form .form-item .description, form.entitytype-earth_day-form .fieldset-description, form.entitytype-earth_day_preview-form .form-item .description, form.entitytype-earth_day_preview-form .fieldset-description, form.entitytype-school_submissions-form .form-item .description, form.entitytype-school_submissions-form .fieldset-description, form.entitytype-hannon_photo_contest-form .form-item .description, form.entitytype-hannon_photo_contest-form .fieldset-description {
     text-transform: none;
-    font-size: 1.2em;
+    font-size: 12px;
     color: #2B6A90;
     font-family: 'Proxima Nova Semibold'; }
-  form.entitytype-earth_day-form .form-item .form-type-managed-file .description, form.entitytype-earth_day_preview-form .form-item .form-type-managed-file .description {
+    form.entitytype-earth_day-form .form-item .description strong, form.entitytype-earth_day-form .fieldset-description strong, form.entitytype-earth_day_preview-form .form-item .description strong, form.entitytype-earth_day_preview-form .fieldset-description strong, form.entitytype-school_submissions-form .form-item .description strong, form.entitytype-school_submissions-form .fieldset-description strong, form.entitytype-hannon_photo_contest-form .form-item .description strong, form.entitytype-hannon_photo_contest-form .fieldset-description strong {
+      font-family: 'Proxima Nova Semibold'; }
+  form.entitytype-earth_day-form .form-item .form-type-managed-file .description, form.entitytype-earth_day_preview-form .form-item .form-type-managed-file .description, form.entitytype-school_submissions-form .form-item .form-type-managed-file .description, form.entitytype-hannon_photo_contest-form .form-item .form-type-managed-file .description {
     font-size: .9em !important;
     padding-top: 3%; }
+  form.entitytype-earth_day-form button:focus, form.entitytype-earth_day_preview-form button:focus, form.entitytype-school_submissions-form button:focus, form.entitytype-hannon_photo_contest-form button:focus {
+    color: #fff;
+    background: #2B6990; }
+
+.field-name-field-school-student-full-name .form-item .description {
+  margin-bottom: 18px; }
+.field-name-field-school-student-full-name input.text-full {
+  margin-bottom: 3px; }
 
 form.has-nys-captcha.entityform.entitytype-earth_day-form .form-managed-file button[value="Remove"].ajax-processed, form.has-nys-captcha.entityform.entitytype-earth_day_preview-form .form-managed-file button[value="Remove"].ajax-processed {
   display: inline !important;
   visibility: visible !important; }
 
-.page-eform-submit-earth-day div.error {
+.page-eform-submit-earth-day div.error, .page-eform-submit-school-submissions div.error {
   background-image: none !important; }
 
 #field-school-student-submissions-values, #field-school-stud-earthday-subm-values {
@@ -17906,7 +18046,7 @@ form.has-nys-captcha.entityform.entitytype-earth_day-form .form-managed-file but
 .views-field-field-school-last-name a span {
   font-size: .7em; }
 
-button[id*="edit-field-school-stud-earthday-subm"] {
+button[id*="edit-field-school-stud-earthday-subm"], button[id*="edit-field-school-student-submissions"] {
   padding-top: .5rem;
   padding-right: 1rem;
   padding-bottom: .55rem;
@@ -17915,23 +18055,27 @@ button[id*="edit-field-school-stud-earthday-subm"] {
   background-color: #F1AF58;
   border-color: #CB8D37; }
 
-.entityform-earth-day, .entityform-earth-day-preview {
+.entityform-earth-day, .entityform-earth-day-preview, .entityform-hannon-photo-contest.view-mode-review, .entityform-hannon-photo-contest.view-mode-confirmation, .entityform-hannon-photo-contest.view-mode-full, .entityform-school-submissions {
   margin-bottom: 10%; }
-  .entityform-earth-day p.form-label, .entityform-earth-day-preview p.form-label {
+  .entityform-earth-day p.form-label, .entityform-earth-day-preview p.form-label, .entityform-hannon-photo-contest.view-mode-review p.form-label, .entityform-hannon-photo-contest.view-mode-confirmation p.form-label, .entityform-hannon-photo-contest.view-mode-full p.form-label, .entityform-school-submissions p.form-label {
     font-family: 'Proxima Nova SemiBold'; }
-  .entityform-earth-day p.form-results, .entityform-earth-day-preview p.form-results {
+  .entityform-earth-day p.form-results, .entityform-earth-day-preview p.form-results, .entityform-hannon-photo-contest.view-mode-review p.form-results, .entityform-hannon-photo-contest.view-mode-confirmation p.form-results, .entityform-hannon-photo-contest.view-mode-full p.form-results, .entityform-school-submissions p.form-results {
     font-family: 'Proxima Nova Regular';
-    padding-left: 250px; }
-  .entityform-earth-day p.label-inline, .entityform-earth-day-preview p.label-inline {
+    padding-left: 250px;
+    margin-top: 0; }
+  .entityform-earth-day p.label-inline, .entityform-earth-day-preview p.label-inline, .entityform-hannon-photo-contest.view-mode-review p.label-inline, .entityform-hannon-photo-contest.view-mode-confirmation p.label-inline, .entityform-hannon-photo-contest.view-mode-full p.label-inline, .entityform-school-submissions p.label-inline {
     float: left;
     padding-right: 3em;
+    font-family: 'Proxima Nova SemiBold';
+    margin-top: 0; }
+  .entityform-earth-day p.label-above, .entityform-earth-day-preview p.label-above, .entityform-hannon-photo-contest.view-mode-review p.label-above, .entityform-hannon-photo-contest.view-mode-confirmation p.label-above, .entityform-hannon-photo-contest.view-mode-full p.label-above, .entityform-school-submissions p.label-above {
     font-family: 'Proxima Nova SemiBold'; }
-  .entityform-earth-day h3.label-above, .entityform-earth-day-preview h3.label-above {
+  .entityform-earth-day h3.label-above, .entityform-earth-day-preview h3.label-above, .entityform-hannon-photo-contest.view-mode-review h3.label-above, .entityform-hannon-photo-contest.view-mode-confirmation h3.label-above, .entityform-hannon-photo-contest.view-mode-full h3.label-above, .entityform-school-submissions h3.label-above {
     margin: 24px 0 12px;
     padding-top: 3%;
     border-top: 1px solid #222222;
     color: #666666; }
-  .entityform-earth-day .vcard, .entityform-earth-day-preview .vcard {
+  .entityform-earth-day .vcard, .entityform-earth-day-preview .vcard, .entityform-hannon-photo-contest.view-mode-review .vcard, .entityform-hannon-photo-contest.view-mode-confirmation .vcard, .entityform-hannon-photo-contest.view-mode-full .vcard, .entityform-school-submissions .vcard {
     display: inline-block;
     margin: 0;
     border: none;
@@ -17939,16 +18083,31 @@ button[id*="edit-field-school-stud-earthday-subm"] {
     color: #666666;
     font-family: 'Proxima Nova Regular';
     padding: 0 41px; }
-  .entityform-earth-day img, .entityform-earth-day-preview img {
+  .entityform-earth-day img, .entityform-earth-day-preview img, .entityform-hannon-photo-contest.view-mode-review img, .entityform-hannon-photo-contest.view-mode-confirmation img, .entityform-hannon-photo-contest.view-mode-full img, .entityform-school-submissions img {
     width: auto;
     padding-left: 250px; }
-  .entityform-earth-day .entity-field-collection-item, .entityform-earth-day-preview .entity-field-collection-item {
-    margin-top: 5%; }
+  .entityform-earth-day .entity-field-collection-item, .entityform-earth-day-preview .entity-field-collection-item, .entityform-hannon-photo-contest.view-mode-review .entity-field-collection-item, .entityform-hannon-photo-contest.view-mode-confirmation .entity-field-collection-item, .entityform-hannon-photo-contest.view-mode-full .entity-field-collection-item, .entityform-school-submissions .entity-field-collection-item {
+    margin-top: 5%;
+    padding-bottom: 3%;
+    border-bottom: 1px dotted #323232;
+    width: 75%; }
+
+.entityform-school-submissions span.file {
+  line-height: 1; }
+  .entityform-school-submissions span.file a {
+    font-size: 18px; }
+.entityform-school-submissions img {
+  padding-left: 0; }
+.entityform-school-submissions p.label-above {
+  margin: 0 0 12px; }
+
+.field-name-field-school-submission-upload .file-widget .file-icon {
+  margin-top: .75em; }
 
 fieldset[id*="edit-field-school-address-und"] .form-item-field-school-address-und-0-locpick-user-latitude, fieldset[id*="edit-field-school-address-und"] .form-item-field-school-address-und-0-locpick-user-longitude, fieldset[id*="edit-field-school-address-und"] .description {
   display: none; }
 
-.pane-node-field-student-earthday-letter h2 {
+.pane-node-field-student-earthday-letter h2, h1.pane-title {
   margin: 0 0 30px;
   font-size: 48px;
   color: #444444;
@@ -18002,6 +18161,123 @@ ul.chosen-results li {
   font-size: 16px;
   color: #666666;
   font-family: 'Proxima Nova Regular'; }
+
+form.entitytype-hannon_photo_contest-form {
+  margin-bottom: 36px; }
+  form.entitytype-hannon_photo_contest-form .form-item-field-hannon-home-address-und-0-country {
+    display: none; }
+  form.entitytype-hannon_photo_contest-form .form-type-managed-file {
+    min-height: 100px; }
+  form.entitytype-hannon_photo_contest-form button#edit-field-hannon-photo-upload-und-0-upload-button {
+    display: none; }
+  form.entitytype-hannon_photo_contest-form input[type="file"] {
+    width: 100%;
+    font-size: 150%; }
+  form.entitytype-hannon_photo_contest-form .form-item.form-type-managed-file.description {
+    margin-top: 18px;
+    color: #2B6990;
+    font-size: 1em; }
+  form.entitytype-hannon_photo_contest-form .form-item #edit-field-agreement.description {
+    margin-top: -6px; }
+
+#edit-field-hannon-photo-upload.description {
+  margin-top: 18px !important; }
+
+.entityform-hannon-photo-contest.view-mode-review img, .entityform-hannon-photo-contest.view-mode-full img, .entityform-hannon-photo-contest.view-mode-confirmation img {
+  padding-left: 0;
+  clear: both;
+  padding-top: 16px; }
+.entityform-hannon-photo-contest.view-mode-review .vcard, .entityform-hannon-photo-contest.view-mode-full .vcard, .entityform-hannon-photo-contest.view-mode-confirmation .vcard {
+  padding: 0 47px; }
+
+@media screen and (min-width: 760px) {
+  .page-hannon-photo-contest-submissions .l-row--main, .page-hannon-photo-contest-submissions .calendar-dls {
+    max-width: inherit;
+    width: 90%; } }
+@media screen and (min-width: 960px) {
+  .page-hannon-photo-contest-submissions .l-row--main, .page-hannon-photo-contest-submissions .calendar-dls {
+    max-width: inherit;
+    width: 90%; } }
+@media screen and (min-width: 1280px) {
+  .page-hannon-photo-contest-submissions .l-row--main, .page-hannon-photo-contest-submissions .calendar-dls {
+    max-width: 1280px;
+    width: 90%; } }
+.page-hannon-photo-contest-submissions table {
+  width: 100%;
+  margin-top: 24px; }
+.page-hannon-photo-contest-submissions .views-submit-button, .page-hannon-photo-contest-submissions .views-reset-button {
+  margin: 26px 0 0 24px; }
+.page-hannon-photo-contest-submissions button {
+  padding: .55rem .75rem; }
+  .page-hannon-photo-contest-submissions button:focus {
+    color: #fff;
+    background: #2B6990; }
+.page-hannon-photo-contest-submissions #edit-field-hannon-school-name-target-id-wrapper, .page-hannon-photo-contest-submissions #edit-field-hannon-category-value-wrapper {
+  margin-right: 18px; }
+.page-hannon-photo-contest-submissions #edit-field-hannon-winner-types-value-wrapper, .page-hannon-photo-contest-submissions #edit-field-hannon-star-rating-value-wrapper {
+  clear: both;
+  margin-right: 18px; }
+  .page-hannon-photo-contest-submissions #edit-field-hannon-winner-types-value-wrapper .form-type-bef-checkbox, .page-hannon-photo-contest-submissions #edit-field-hannon-winner-types-value-wrapper .form-type-radio, .page-hannon-photo-contest-submissions #edit-field-hannon-star-rating-value-wrapper .form-type-bef-checkbox, .page-hannon-photo-contest-submissions #edit-field-hannon-star-rating-value-wrapper .form-type-radio {
+    float: left; }
+  .page-hannon-photo-contest-submissions #edit-field-hannon-winner-types-value-wrapper.description, .page-hannon-photo-contest-submissions #edit-field-hannon-star-rating-value-wrapper.description {
+    clear: both; }
+.page-hannon-photo-contest-submissions .view-filters select {
+  min-height: 35px; }
+.page-hannon-photo-contest-submissions .vcard {
+  display: inline-block;
+  margin: 0;
+  border: none;
+  font-size: 0.875rem;
+  color: #666666;
+  font-family: 'Proxima Nova Regular';
+  padding: 0; }
+.page-hannon-photo-contest-submissions fieldset {
+  width: 25%;
+  border: none;
+  padding: 0; }
+  .page-hannon-photo-contest-submissions fieldset .fieldset-legend {
+    display: none; }
+
+.view-student-hannon-photo-contest .feed-icon {
+  width: 5%;
+  margin-bottom: 5%; }
+
+.form-item.form-type-managed-file.form-item-field-hannon-photo-upload-und-0 div.description {
+  margin-top: 18px; }
+
+.form-item.form-type-checkbox.form-item-field-agreement-und div.description {
+  margin-top: -6px;
+  margin-left: 1.8em; }
+
+#edit-field-hannon-photo-upload-und-0-remove-button {
+  margin-left: 40px; }
+
+#edit-field-school-teachers-email input, #edit-field-hannon-school-name-und {
+  margin-bottom: 3px; }
+
+.field-type-list-boolean.field-name-field-agreement {
+  border: none;
+  padding-top: 2%; }
+  .field-type-list-boolean.field-name-field-agreement input {
+    font-size: 54px;
+    margin-top: .4rem; }
+  .field-type-list-boolean.field-name-field-agreement label.option {
+    font-size: 24px;
+    line-height: 1.1em;
+    margin-top: -34px;
+    margin-left: 24px;
+    text-transform: none;
+    font-weight: 600; }
+  .field-type-list-boolean.field-name-field-agreement label .form-required {
+    font-size: 36px; }
+
+.paragraphs-item-pg-entity-form h2 {
+  display: none; }
+
+.pane-student-submissions .view-content {
+  border-bottom: 1px solid #666666;
+  padding: 0 0 5%;
+  margin-bottom: 10%; }
 
 /*----------------------------------------
 / Search Results
@@ -18549,7 +18825,7 @@ ul.chosen-results li {
 
 /*-------------------------------
 /
-/	MEETING DETAIL PAGE
+/ MEETING DETAIL PAGE
 /
 /-------------------------------*/
 .c-meeting-detail--header {
@@ -19953,7 +20229,7 @@ body.node-type-transcript .field-name-field-ol-text {
 
 /*----------------------------------------
 /
-/	CONTACT PAGE STYLES
+/ CONTACT PAGE STYLES
 /
 /-----------------------------------------*/
 .contact-form .columns.medium-6 {
@@ -19980,7 +20256,7 @@ body.node-type-transcript .field-name-field-ol-text {
 
 /*----------------------------
 /
-/	News & Issues Page
+/ News & Issues Page
 /
 /----------------------------*/
 @media screen and (min-width: 760px) {

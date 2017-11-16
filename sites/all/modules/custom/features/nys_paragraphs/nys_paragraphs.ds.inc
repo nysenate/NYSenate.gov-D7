@@ -561,6 +561,33 @@ function nys_paragraphs_ds_layout_settings_info() {
 
   $ds_layout = new stdClass();
   $ds_layout->api_version = 1;
+  $ds_layout->id = 'paragraphs_item|pg_poll|default';
+  $ds_layout->entity_type = 'paragraphs_item';
+  $ds_layout->bundle = 'pg_poll';
+  $ds_layout->view_mode = 'default';
+  $ds_layout->layout = 'ds_1col';
+  $ds_layout->settings = array(
+    'regions' => array(
+      'ds_content' => array(
+        0 => 'field_pg_poll',
+      ),
+    ),
+    'fields' => array(
+      'field_pg_poll' => 'ds_content',
+    ),
+    'classes' => array(),
+    'wrappers' => array(),
+    'layout_wrapper' => 'div',
+    'layout_attributes' => '',
+    'layout_attributes_merge' => TRUE,
+    'layout_link_attribute' => FALSE,
+    'layout_link_custom' => '',
+    'layout_disable_css' => FALSE,
+  );
+  $export['paragraphs_item|pg_poll|default'] = $ds_layout;
+
+  $ds_layout = new stdClass();
+  $ds_layout->api_version = 1;
   $ds_layout->id = 'paragraphs_item|pg_quick_facts|default';
   $ds_layout->entity_type = 'paragraphs_item';
   $ds_layout->bundle = 'pg_quick_facts';

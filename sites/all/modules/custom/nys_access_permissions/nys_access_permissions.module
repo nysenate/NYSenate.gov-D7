@@ -240,12 +240,12 @@ function nys_access_permissions_admin() {
     '#title' => t('Debugging'),
   );
 
-  $form['senate_settings']['debug']['nys_debug_mode'] = array(
+  $form['senate_settings']['debug']['nys_debug_mode_track_request_info'] = array(
     '#type' => 'radios',
-    '#title' => t('Debug mode'),
+    '#title' => t('Accumulator tracking of request info'),
     '#options' => array(0 => t('Off'), 1 => t('On')),
-    '#description' => t('Enable debug mode on the site.'),
-    '#default_value' => variable_get('nys_debug_mode'),
+    '#description' => t('Accumulator records will include a &quot;request_info&quot; section with _GET/_POST information'),
+    '#default_value' => variable_get('nys_debug_mode_track_request_info'),
   );
 
   $form['senate_settings']['debug']['nys_debug_mode_accumulator_insert'] = array(
@@ -283,6 +283,34 @@ function nys_access_permissions_admin() {
     '#options' => array(0 => t('Off'), 1 => t('On')),
     '#description' => t('Write debug log entries into the system message area on public requests.  Note that this will make logged messages visible to the public.'),
     '#default_value' => variable_get('nys_debug_write_to_message'),
+  );
+
+  $form['senate_settings']['accumulator'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Accumulator Integrity Checks'),
+  );
+
+  $form['senate_settings']['accumulator']['integrity_check_send_report'] = array(
+    '#type' => 'radios',
+    '#title' => t('Send Email Report?'),
+    '#default_value' => variable_get('integrity_check_send_report', 0),
+    '#options' => array(0 => t('No'), 1 => t('Yes')),
+    '#description' => t('If an email report should be sent.  The report will only include output tagged as "Report".'),
+  );
+
+  $form['senate_settings']['accumulator']['integrity_check_report_email'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Email to Receive Report'),
+    '#default_value' => variable_get('integrity_check_report_email', ''),
+    '#description' => t('The email address to which a report should be sent.'),
+  );
+
+  $form['senate_settings']['accumulator']['integrity_check_log_level'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Logging Level'),
+    '#default_value' => variable_get('integrity_check_log_level', 2),
+    '#options' => [1 => 'Error', 2 => 'Warning', 3 => 'Report', 4 => 'Info', 5 => 'Debug'],
+    '#description' => t('Messages levels to include in the drush command output.  Note that only "Report" level items are included in the email version.'),
   );
 
   $form['senate_settings']['APIs'] = array(
@@ -428,6 +456,13 @@ function nys_access_permissions_admin() {
     '#type' => 'textfield',
     '#title' => 'Slack Message Title',
     '#default_value' => variable_get('nys_access_permissions_slack_title'),
+  );
+  $form['senate_settings']['slack_integration']['nys_debug_slack_reporting'] = array(
+    '#type' => 'radios',
+    '#title' => t('Slack Reporting'),
+    '#options' => array(0 => t('Off'), 1 => t('On')),
+    '#description' => t('Enable echo of PHP errors to Slack'),
+    '#default_value' => variable_get('nys_debug_slack_reporting', 0),
   );
 
   $form['senate_settings']['previous_session'] = array(

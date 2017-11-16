@@ -14,6 +14,8 @@
  *   Which path of the site we're using to display help
  * @param arg
  *   Array that holds the current path as returned from arg() function
+ *
+ * @return string
  */
 function nys_bill_import_help($path, $arg) {
   if ($path == "admin/help#nys_bill_import") {
@@ -343,9 +345,9 @@ function nys_bill_import_run($timestamp) {
   }
 
   while ($more_results) {
-    echo "Fetching: " . $base_url . $timestamp . "?offset=" . $offset . "&limit=" . $limit . "&order=asc&key=" . $openleg_key . "\r\n";
-    $base_result   = file_get_contents($base_url . $timestamp . "?offset=" . $offset . "&limit=" . $limit . "&order=asc&key=" . $openleg_key);
-    $base_result   = json_decode($base_result);
+    $full_url = $base_url . $timestamp . "?offset=" . $offset . "&limit=" . $limit . "&order=asc&key=" . $openleg_key;
+    drupal_set_message(t("Fetching: @url", ['@url' => $full_url]));
+    $base_result   = json_decode(file_get_contents($full_url));
 
     if (isset($base_result->success) && $base_result->success) {
       foreach ($base_result->result->items as $item) {
@@ -399,7 +401,7 @@ function nys_bill_import_run($timestamp) {
     }
   }
 
-  echo "\nUpdated ${count} bills";
+  drupal_set_message(t("Updated @count bills", ["@count" => $count]));
   // Also, refresh some stats if there were updates.
   if ($count > 0) {
     nys_bill_import_what_weve_been_up_to();
@@ -421,7 +423,7 @@ function nys_bill_import_re_import($session, $initial_offset) {
   $offset = $initial_offset;
   while ($more_results) {
     $url = "${base_url}${session}?key=${openleg_key}&full=true&limit=${limit}&offset=${offset}";
-    echo "Fetching ${url}";
+    drupal_set_message(t("Fetching @url", ['@url' => $url]));
     $response = json_decode(file_get_contents($url));
     if (isset($response->success) && $response->success) {
       foreach ($response->result->items as $bill_result) {
@@ -437,11 +439,14 @@ function nys_bill_import_re_import($session, $initial_offset) {
       }
     }
     else {
-      echo "Error!";
+      drupal_set_message(t("Error!"));
       break;
     }
   }
-  echo "\n${count} bills from session ${session} were imported.\n";
+  drupal_set_message(t("@count bills from session @session were imported.", [
+    '@count' => $count,
+    '@session' => $session,
+  ]));
 }
 
 /**
@@ -460,37 +465,37 @@ function nys_bill_import_what_weve_been_up_to() {
   $signed   = "/api/3/bills/search?term=session:" . $legislative_session . "%20AND%20status.statusType:%22SIGNED_BY_GOV%22&key=" . $openleg_key;
   $vetoed   = "/api/3/bills/search?term=session:" . $legislative_session . "%20AND%20status.statusType:%22VETOED%22&key=" . $openleg_key;
 
-  echo "Fetching: " . $ol_base_url . $awaiting . "\r\n";
+  drupal_set_message(t("Fetching: @url", ['@url' => $ol_base_url . $awaiting]));
   $response = file_get_contents($ol_base_url . $awaiting);
   $response = json_decode($response);
 
   if (isset($response->success) && $response->success && isset($response->total)) {
-    echo "-- Found " . $response->total . " result(s).\r\n";
+    drupal_set_message(t("-- Found @total result(s).", ['@total' => $response->total]));
     variable_set("bills_awaiting_gov_signature", $response->total);
   } else {
-    echo "-- Bad response received.\r\n";
+    drupal_set_message(t("-- Bad response received."));
   }
 
-  echo "Fetching: " . $ol_base_url . $signed . "\r\n";
+  drupal_set_message(t("Fetching: @url", ['@url' => $ol_base_url . $signed]));
   $response = file_get_contents($ol_base_url . $signed);
   $response = json_decode($response);
 
   if (isset($response->success) && $response->success && isset($response->total)) {
-    echo "-- Found " . $response->total . " result(s).\r\n";
+    drupal_set_message(t("-- Found @total result(s).", ['@total' => $response->total]));
     variable_set("bills_signed_gov", $response->total);
   } else {
-    echo "-- Bad response received.\r\n";
+    drupal_set_message(t("-- Bad response received."));
   }
 
-  echo "Fetching: " . $ol_base_url . $vetoed . "\r\n";
+  drupal_set_message(t("Fetching: @url", ['@url' => $ol_base_url . $vetoed]));
   $response = file_get_contents($ol_base_url . $vetoed);
   $response = json_decode($response);
 
   if (isset($response->success) && $response->success && isset($response->total)) {
-    echo "-- Found " . $response->total . " result(s).\r\n";
+    drupal_set_message(t("-- Found @total result(s).", ['@total' => $response->total]));
     variable_set("bills_vetoed_gov", $response->total);
   } else {
-    echo "-- Bad response received.\r\n";
+    drupal_set_message(t("-- Bad response received."));
   }
 }
 
@@ -504,7 +509,7 @@ function nys_bill_import_fetch($bill_session, $bill_print_no) {
   $openleg_key   = variable_get("openleg_key");
   $bill_url      = $base_bill_url . $bill_session . "/" . $bill_print_no . "?key=" . $openleg_key;
 
-  echo "Fetching: " . $bill_url . "\r\n";
+  drupal_set_message(t("Fetching: @url", ['@url' => $bill_url]));
   $bill_result = json_decode(file_get_contents($bill_url));
   if (isset($bill_result->success) && $bill_result->success) {
     $bill_result = $bill_result->result;
@@ -577,13 +582,17 @@ function nys_bill_import_save(&$bill_result) {
       node_object_prepare($node);
       $node->uid = "1";
     }
-    echo "\nSaving ${bill_print_no}... ";
+    drupal_set_message(t("Saving @printno ...", ['@printno' => $bill_print_no]));
     node_save($node);
+
     // Map the bill's field collections.
     if (!$is_resolution) {
       nys_bill_import_set_field_collection($node, $bill_result, $bill_print_no);
     }
-    echo $bill_nid === false ? "Saved new node." : "Updated node ${bill_nid}" . "\n";
+    $msg = $bill_nid === false
+      ? t("Saved new node.")
+      : t("Updated node @nid", ['@nid' => $bill_nid]);
+    drupal_set_message($msg);
   }
   return true;
 }
@@ -594,11 +603,14 @@ function nys_bill_import_bill_qa($from_date_time, $to_date_time, $session) {
   $openleg_key   = variable_get("openleg_key");
   $qa_url   = $ol_base_url . '/api/3/senatesite/billdump' . '?key=' . $openleg_key;
   if (isset($session)) {
-    echo "Running Bill QA against Openleg for bills during session " . $session . "\n";
+    drupal_set_message(t("Running Bill QA against Openleg for bills during session @session", ['@session' => $session]));
     $updates_url   = $ol_base_url . '/api/3/bills/' . $session . '/' . '?key=' . $openleg_key;
   }
   else {
-    echo "Running Bill QA against Openleg for bills updated between " . $from_date_time . " and " . $to_date_time . "\n";
+    drupal_set_message(t("Running Bill QA against Openleg for bills updated between @from and @to", [
+      '@from' => $from_date_time,
+      '@to' => $to_date_time,
+    ]));
     $updates_url   = $ol_base_url . '/api/3/bills/updates/' . $from_date_time . '/' . $to_date_time . '?key=' . $openleg_key;
   }
 
@@ -610,16 +622,16 @@ function nys_bill_import_bill_qa($from_date_time, $to_date_time, $session) {
   $part = 1;
   do {
     $url = $updates_url . "&limit=${limit}&offset=${offset}";
-    echo "[GET] ${url}\n";
+    drupal_set_message(t("[GET] @url", ['@url' => $url]));
     $updates_resp = file_get_contents($url);
     if ($updates_resp === FALSE) {
-      echo "Failed to retrieve updates from Openleg";
+      drupal_set_message(t("Failed to retrieve updates from Openleg"));
       return;
     }
     $updates_json = json_decode($updates_resp);
     $total = $updates_json->total;
     $offsetEnd = $updates_json->offsetEnd;
-    echo "$total bills will be checked...";
+    drupal_set_message(t("@total bills will be checked...", ['@total' => $total]));
     if ($total > 0) {
       $nids = array();
       foreach($updates_json->result->items as $item) {
@@ -667,7 +679,7 @@ function nys_bill_import_bill_qa($from_date_time, $to_date_time, $session) {
       );
       $output_json = json_encode($output_arr, JSON_UNESCAPED_UNICODE);
 
-      echo "\n[POST] ${qa_url}\n";
+      drupal_set_message(t("[POST] @url", ['@url' => $qa_url]));
       $curl = curl_init($qa_url);
       curl_setopt($curl, CURLOPT_HEADER, 1);
       curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -682,8 +694,8 @@ function nys_bill_import_bill_qa($from_date_time, $to_date_time, $session) {
           die("\nError: call to URL $url failed with status $status, response $json_response, curl_error " . curl_error($curl) . ", curl_errno " . curl_errno($curl));
       }
       else {
-        echo "\nStatus Code: ${status}\n";
-        echo "\nResponse: ${json_response}";
+        drupal_set_message(t("Status Code: @status", ['@status' => $status]));
+        drupal_set_message(t("Response: @json", ['@json' => $json_response]));
       }
       curl_close($curl);
 

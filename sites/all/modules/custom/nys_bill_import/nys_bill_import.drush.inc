@@ -44,7 +44,7 @@ function drush_nys_bill_import_bill_qa() {
   $last_lock_time = variable_get("bill_qa_last_lock_time", strtotime("now"));
 
   if (!$is_locked) {
-    echo "Start time: " . date(DATE_ISO8601, strtotime("now")) . "\r\n";
+    drupal_set_message(t("Start time: @start", ['@start' => date(DATE_ISO8601, strtotime("now"))]));
     $from = drush_get_option("from", date(DATETIME_FORMAT, strtotime('-1 day', strtotime("now"))));
     $to   = drush_get_option("to", date(DATETIME_FORMAT, strtotime("now")));
     $session = drush_get_option("session");
@@ -62,17 +62,17 @@ function drush_nys_bill_import_bill_qa() {
     }
 
     nys_bill_import_bill_qa($from, $to, $session);
-    echo "End time: " . date(DATE_ISO8601, strtotime("now")) . "\r\n";
+    drupal_set_message(t("End time: @end", ['@end' => date(DATE_ISO8601, strtotime("now"))]));
 
     variable_set("bill_qa_is_locked", false);
   }
   else {
-    echo "The bill qa process is already running.";
+    drupal_set_message(t("The bill qa process is already running."));
   }
 }
 
 function drush_nys_bill_import_bill_import() {
-  echo "Start time: " . date("m/d/Y H:i:s", strtotime("now")) . "\r\n";
+  drupal_set_message(t("Start time: @start", ['@start' => date("m/d/Y H:i:s", strtotime("now"))]));
   $interval     = variable_get("bill_import_interval", 60 * 5);
   $bill_ids_str = drush_get_option("billids", "");
   $session      = drush_get_option("session", "");
@@ -102,7 +102,7 @@ function drush_nys_bill_import_bill_import() {
     variable_set("bill_import_is_locked", true);
     variable_set("bill_import_last_lock_time", strtotime("now"));
 
-    echo "Executing...\r\n";
+    drupal_set_message(t("Executing..."));
     if (!empty($bill_id_arr)) {
       foreach ($bill_id_arr as $key=>$val) {
         nys_bill_import_fetch($val[1], $val[0]);
@@ -118,10 +118,10 @@ function drush_nys_bill_import_bill_import() {
     variable_set("bill_import_is_locked", false);
     variable_set('bill_import_next_execution', time() + $interval);
    } else {
-     echo "Skipping execution...\r\n";
-     echo "Is locked: '" . $is_locked . "'\r\n";
-     echo "Last lock time: '" . date("m/d/y h:i:s", $last_lock_time) . "'\r\n";
+     drupal_set_message(t("Skipping execution..."));
+     drupal_set_message(t("Is locked: '@lock'", ['@lock' => $is_locked]));
+     drupal_set_message(t("Last lock time: '@lock'", ['@lock' => date("m/d/y h:i:s", $last_lock_time)]));
    }
 
-  echo "End time: " . date("m/d/Y H:i:s", strtotime("now")) . "\r\n";
+  drupal_set_message(t("End time: @end", ['@end' => date("m/d/Y H:i:s", strtotime("now"))]));
 }

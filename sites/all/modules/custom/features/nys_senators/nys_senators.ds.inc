@@ -90,6 +90,27 @@ function nys_senators_ds_field_settings_info() {
   );
   $export['node|senator|sponsor_list_bill_detail'] = $ds_fieldsetting;
 
+  $ds_fieldsetting = new stdClass();
+  $ds_fieldsetting->api_version = 1;
+  $ds_fieldsetting->id = 'node|senator|teaser';
+  $ds_fieldsetting->entity_type = 'node';
+  $ds_fieldsetting->bundle = 'senator';
+  $ds_fieldsetting->view_mode = 'teaser';
+  $ds_fieldsetting->settings = array(
+    'title' => array(
+      'weight' => '7',
+      'label' => 'hidden',
+      'format' => 'default',
+      'formatter_settings' => array(
+        'link' => '0',
+        'wrapper' => 'span',
+        'class' => '',
+        'ft' => array(),
+      ),
+    ),
+  );
+  $export['node|senator|teaser'] = $ds_fieldsetting;
+
   return $export;
 }
 
@@ -262,6 +283,35 @@ function nys_senators_ds_layout_settings_info() {
     'layout_link_custom' => '',
   );
   $export['node|senator|sponsor_list_bill_detail'] = $ds_layout;
+
+  $ds_layout = new stdClass();
+  $ds_layout->api_version = 1;
+  $ds_layout->id = 'node|senator|teaser';
+  $ds_layout->entity_type = 'node';
+  $ds_layout->bundle = 'senator';
+  $ds_layout->view_mode = 'teaser';
+  $ds_layout->layout = 'ds_1col';
+  $ds_layout->settings = array(
+    'regions' => array(
+      'ds_content' => array(
+        0 => 'title',
+      ),
+    ),
+    'fields' => array(
+      'title' => 'ds_content',
+    ),
+    'classes' => array(),
+    'wrappers' => array(
+      'ds_content' => 'div',
+    ),
+    'layout_wrapper' => 'div',
+    'layout_attributes' => '',
+    'layout_attributes_merge' => 1,
+    'layout_link_attribute' => '',
+    'layout_link_custom' => '',
+    'layout_disable_css' => FALSE,
+  );
+  $export['node|senator|teaser'] = $ds_layout;
 
   return $export;
 }

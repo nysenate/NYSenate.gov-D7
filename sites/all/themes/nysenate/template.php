@@ -180,7 +180,7 @@ function nysenate_preprocess_page(&$variables) {
           $variables['pallette_class'] = 'inactive-pallette';
         }
       }
-      else if(in_array($node->type, array('article', 'press_release', 'petition', 'questionnaire', 'initiative', 'in_the_news', 'event', 'video'))){
+      else if(in_array($node->type, array('article', 'press_release', 'petition', 'questionnaire', 'initiative', 'in_the_news', 'event', 'video', 'advpoll'))){
         $senator = entity_metadata_wrapper('node', $node)->field_senator->value();
         //Exposing variables for Senator full name, user name and hero image
         if(isset($senator)){
@@ -449,7 +449,7 @@ function nysenate_preprocess_node(&$variables) {
     // Check if the bill has a substituted bill and load it if it does.
     if (!empty($bill_wrapper->field_ol_substituted_by->value())) {
       $sub_bill_base_print_no = $bill_wrapper->field_ol_substituted_by->value();
-      $sub_bill_versions = nysenate_get_bill_versions($variables['type'], $sub_bill_base_print_no, $bill_session_year);
+      $sub_bill_versions = nys_bills_get_bill_versions($variables['type'], $sub_bill_base_print_no, $bill_session_year);
       if (!empty($sub_bill_versions)) {
         $variables['sub_bill_node'] = node_load(end($sub_bill_versions)['nid']);
         if (!empty($variables['sub_bill_node'])) {
@@ -458,9 +458,6 @@ function nysenate_preprocess_node(&$variables) {
         }
       }
     }
-
-    ctools_include('object-cache');
-    ctools_object_cache_set('is_bill_substituted', 'is_substituted_' . arg(1), $variables['is_substituted']);
 
     $info_status = field_info_field('field_ol_last_status');
     $status_list = $info_status['settings']['allowed_values'];
@@ -924,21 +921,24 @@ function nysenate_preprocess_node(&$variables) {
     );
 
     if(in_array($variables['type'], array('webform', 'page_content'))) {
-      $social_share_vars['social_share_title'] = 'share this page';
-      $social_share_vars['CTA'] = 'Check out this page';
+      $social_share_vars['social_share_title'] = t('share this page');
+      $social_share_vars['CTA'] = t('Check out this page');
     }
 
     if(in_array($variables['type'], array('student_program', 'in_the_news'))) {
-      $social_share_vars['social_share_title'] = 'share this article';
-      $social_share_vars['CTA'] = 'Check out this article';
+      $social_share_vars['social_share_title'] = t('share this article');
+      $social_share_vars['CTA'] = t('Check out this article');
     }
 
     if(in_array($variables['type'], array('open_data'))) {
-      $social_share_vars['social_share_title'] = 'share this open data report';
-      $social_share_vars['CTA'] = 'Check out this open data report';
+      $social_share_vars['social_share_title'] = t('share this open data report');
+      $social_share_vars['CTA'] = t('Check out this open data report');
     }
 
-
+    if(in_array($variables['type'], array('advpoll'))) {
+      $social_share_vars['social_share_title'] = t('share this poll');
+      $social_share_vars['CTA'] = t('Check out this poll');
+    }
 
     if(arg(0) == 'node' && $variables['nid'] == arg(1)) { // don't show on embedded nodes, such as webform embedded within questionnaire
       $variables['social_buttons'] = theme('social_buttons', $social_share_vars);
@@ -1009,7 +1009,7 @@ function nysenate_ds_pre_render_alter(&$layout_render_array, $context, &$vars) {
   $templates = array(
       array('node', 'bill', 'search_index', 'nys-bill-status__sml'),
       array('node', 'bill', 'bill_list_item', 'nys-bill-status__sml'),
-      array('node', 'bill', 'node_embed', 'nys-bill-status__drk'),
+      array('node', 'bill', 'teaser', 'nys-bill-status__drk'),
       array('node', 'bill', 'node_embed_no_quote', 'nys-bill-status__drk')
   );
 
@@ -1457,14 +1457,17 @@ function _nysenate_render_bill_amendments($amendments, $base_print_no, &$bill_wr
 
       <!-- Full Text -->
       <?php
-      $bill_text_show_expander = preg_match_all('/\n/', $amendment->field_ol_full_text[LANGUAGE_NONE][0]['value']) > 50 ? true : false;
-      if ($bill_text_show_expander) {
-        $amendment_text = str_split_at_nth($amendment->field_ol_full_text[LANGUAGE_NONE][0]['value'], chr(10), 50);
-      }
-      else {
-        $amendment_text['part_1'] = $amendment->field_ol_full_text[LANGUAGE_NONE][0]['value'];
-        $amendment_text['part_2'] = '';
-        $amendment_text['extra_line_count'] = 0;
+      $bill_text_show_expander = FALSE;
+      if (!empty($amendment->field_ol_full_text)) {
+        $bill_text_show_expander = preg_match_all('/\n/', $amendment->field_ol_full_text[LANGUAGE_NONE][0]['value']) > 50;
+        if ($bill_text_show_expander) {
+          $amendment_text = str_split_at_nth($amendment->field_ol_full_text[LANGUAGE_NONE][0]['value'], chr(10), 50);
+        }
+        else {
+          $amendment_text['part_1'] = $amendment->field_ol_full_text[LANGUAGE_NONE][0]['value'];
+          $amendment_text['part_2'] = '';
+          $amendment_text['extra_line_count'] = 0;
+        }
       }
       ?>
       <div class="c-bill-text__bill" style="clear:both;">
@@ -1478,7 +1481,7 @@ function _nysenate_render_bill_amendments($amendments, $base_print_no, &$bill_wr
           </span>
         </h3>
       <?php
-      if ($amendment->field_ol_full_text[LANGUAGE_NONE][0]['value']):
+      if (!empty($amendment->field_ol_full_text)):
       ?>
         <div id="full-text-<?php print $bill_wrapper->label(); ?>" class="c-text--preformatted">
           <div class="c-detail--memo">
@@ -1617,6 +1620,13 @@ function nysenate_form_alter(&$form, &$form_state, $form_id){
   }
   if ($form_id == 'earth_day_entityform_edit_form') {
     $form['field_school_name'][LANGUAGE_NONE]['#options']['_none'] = t('- Start typing school name to narrow list -');
+  }
+  if ($form_id == 'school_submissions_entityform_edit_form') {
+    $form['field_school_name'][LANGUAGE_NONE]['#options']['_none'] = t('- Start typing school name to narrow list -');
+  }
+  if ($form_id == 'hannon_photo_contest_entityform_edit_form') {
+    $form['field_hannon_school_name'][LANGUAGE_NONE]['#options']['_none'] = t('- Select your high school -');
+    $form['field_hannon_category'][LANGUAGE_NONE]['#options']['_none'] = t('- Select a category -');
   }
 }
 
@@ -1833,45 +1843,11 @@ function nysenate_fboauth_action($variables) {
  * given a bill or resolution, return bills (including current bill) with same base_version, bundle (bill vs resolution) and session_year
  */
 function nysenate_amended_versions($node_wrapper) {
-  return nysenate_get_bill_versions(
+  return nys_bills_get_bill_versions(
     $node_wrapper->type->value(),
     $node_wrapper->field_ol_base_print_no->value(),
     $node_wrapper->field_ol_session->value()
   );
-}
-
-function nysenate_get_bill_versions($node_type, $bill_base_print_no, $bill_session_year) {
-  // We're using drupal_html_class() ensure that parameters have no spaces in
-  // them.
-  $cid = 'nysenate_bill_versions_' . drupal_html_class($node_type) . '-' . drupal_html_class($bill_session_year) . '-' . drupal_html_class($bill_base_print_no);
-
-  // If data is cached, return cached data.
-  if ($cache = cache_get($cid)) {
-    return $cache->data;
-  }
-
-  $results = [];
-  if ($bill_base_print_no && $bill_session_year && $node_type) {
-    $query = "SELECT n.title, n.nid, os.field_ol_session_value
-      FROM field_data_field_ol_base_print_no pn JOIN node n ON n.nid = pn.entity_id
-      JOIN field_data_field_ol_session os ON os.entity_id = pn.entity_id AND os.bundle = pn.bundle
-      WHERE pn.field_ol_base_print_no_value = :base_print_no
-      AND pn.bundle = :bundle AND os.field_ol_session_value = :session_year;";
-    $queryargs = [
-      ':base_print_no' => $bill_base_print_no,
-      ':bundle' => $node_type,
-      ':session_year' => $bill_session_year,
-    ];
-
-    $db_results = db_query($query, $queryargs);
-    foreach ($db_results as $key => $r) {
-      $results[] = ['nid' => $r->nid, 'title' => $r->title];
-    }
-  }
-
-  // Cache data based on cache ID that was set above.
-  cache_set($cid, $results, 'cache', CACHE_PERMANENT);
-  return $results;
 }
 
 /**
@@ -1970,16 +1946,6 @@ function nysenate_bill_get_prev_versions($prev_vers_session, $prev_vers_printno)
   $cache_ttl = variable_get('nys_access_permissions_prev_query_ttl', '+24 hours');
   $expire_timestamp = strtotime($cache_ttl, time());
   cache_set($cid, $prev_vers_result, 'cache', $expire_timestamp);
-
-  // Log every time this cache has been rebuilt. If we get to this part of the
-  // code, it's because the cache doesn't exist for this cache_id.
-  $message = t('Cache cleared for session: @session and printno: @printno',
-    array(
-      '@session' => $prev_vers_session,
-      '@printno' => $prev_vers_printno,
-    )
-  );
-  watchdog('nys_prev_cache', $message, array(), WATCHDOG_INFO);
 
   return $prev_vers_result;
 }

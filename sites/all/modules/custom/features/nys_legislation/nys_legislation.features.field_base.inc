@@ -30,6 +30,32 @@ function nys_legislation_field_default_field_bases() {
     'type' => 'nys_bill_vote',
   );
 
+  // Exported field_base: 'field_bill_multi_session_root'.
+  $field_bases['field_bill_multi_session_root'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_bill_multi_session_root',
+    'indexes' => array(
+      'tid' => array(
+        0 => 'tid',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'taxonomy',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => array(
+          'vocabulary' => 'prev_ver',
+          'parent' => 0,
+        ),
+      ),
+    ),
+    'translatable' => 0,
+    'type' => 'taxonomy_term_reference',
+  );
+
   // Exported field_base: 'field_bill_user_vote'.
   $field_bases['field_bill_user_vote'] = array(
     'active' => 1,

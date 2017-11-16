@@ -340,7 +340,7 @@ function _captcha_get_captcha_placement($form_id, $form) {
       if (count($buttons)) {
         // Pick first button.
         // TODO: make this more sofisticated? Use cases needed.
-        $placement = $buttons[0];
+        $placement = (isset($buttons[count($buttons) - 1])) ? $buttons[count($buttons) - 1] : $buttons[0];
       }
       else {
         // Use NULL when no buttons were found.
