@@ -458,7 +458,7 @@ function nys_statute_render_child_statutes($node) {
         // Must be a Chapter.
         $statute_id = $node->field_lawid[LANGUAGE_NONE][0]['value'];
         // Alt $sql = "SELECT entity_id FROM field_data_field_parentstatuteid WHERE `bundle` = 'statute' AND `field_parentstatuteid_value` = :statuteID";.
-        $sql = "SELECT field_data_field_parentstatuteid.entity_id FROM field_data_field_parentstatuteid, field_data_field_doclevelid WHERE field_data_field_parentstatuteid.entity_id = field_data_field_doclevelid.entity_id AND `field_parentstatuteid_value` = :statuteID ORDER BY field_doclevelid_value ASC";
+        $sql = "SELECT field_data_field_parentstatuteid.entity_id FROM field_data_field_parentstatuteid, field_data_field_sequenceno WHERE field_data_field_parentstatuteid.entity_id = field_data_field_sequenceno.entity_id AND `field_parentstatuteid_value` = :statuteID ORDER BY field_sequenceno_value * 1 ASC";
 
     }
 
