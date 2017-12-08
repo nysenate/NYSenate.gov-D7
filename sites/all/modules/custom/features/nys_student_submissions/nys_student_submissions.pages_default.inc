@@ -592,9 +592,8 @@ function nys_student_submissions_default_page_manager_pages() {
         'name' => 'role',
         'settings' => array(
           'rids' => array(
-            0 => 1,
-            1 => 6,
-            2 => 17,
+            0 => 6,
+            1 => 17,
           ),
         ),
         'context' => 'logged-in-user',

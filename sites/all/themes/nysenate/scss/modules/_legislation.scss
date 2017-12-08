@@ -122,13 +122,26 @@ h3.c-bill-num {
 }
 
 
-.c-bill-topic {
+.c-bill-topic{
   margin-bottom: 1.5em;
   text-transform: uppercase;
   font-family: "Proxima Nova SemiBold";
   letter-spacing: 0.1em;
   font-size: 10px;
   @extend .lgt-text;
+}
+
+h4.c-bill-topic {
+  text-transform: uppercase;
+  font-family: "Proxima Nova SemiBold";
+  letter-spacing: 0.1em;
+  font-size: 10px;
+  @extend .lgt-text;
+  font-style: inherit;
+  margin-top: 0;
+  a {
+    font-family: "Proxima Nova SemiBold";
+  }
 }
 
 .c-bill-descript {

@@ -16,8 +16,24 @@ function session_api_settings_form() {
   $form['session_api_cookie_expire_time'] = array(
     '#type' => 'textfield',
     '#title' => t('Cookie expire time'),
-    '#description' => t("The <strong>Session API</strong> module sets an additional cookie in the end users' browsers in order to better track sessions across logins and logouts. This is the amount of time, in seconds, that the cookie will stay valid in a user's browser. If set to -1, then the cookie will expire when the session ends (i.e, when the browser closes)"),
+    '#description' => t(
+      "The <strong>Session API</strong> module sets an additional cookie in the end users' browsers in order to " .
+      "better track sessions across logins and logouts. This is the amount of time, in seconds, that the cookie will " .
+      "stay valid in a user's browser. If set to 0, then the cookie will expire when the session ends (i.e, when the " .
+      "browser closes)"
+    ),
     '#default_value' => variable_get('session_api_cookie_expire_time', 2592000),
+  );
+
+  // Cookie purging.
+  $form['session_api_cookie_purge_time'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Cookie purge time'),
+    '#description' => t(
+      "Cookies will be purged on cron run when they have become unused for the amount of time set here. This is" .
+      "separate from the cookie expire time, so sessions won't be purged before the corresponding cookie expires."
+    ),
+    '#default_value' => variable_get('session_api_cookie_purge_time', 2592000),
   );
 
   // Cookie name.

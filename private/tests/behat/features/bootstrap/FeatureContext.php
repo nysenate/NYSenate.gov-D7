@@ -9,6 +9,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext {
 
   use MinkFieldRandomizer\Context\FilterContext;
+
   /**
    * Initializes context.
    *

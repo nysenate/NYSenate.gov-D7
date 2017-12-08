@@ -1287,6 +1287,47 @@ function nys_student_submissions_field_default_field_instances() {
   );
 
   // Exported field_instance:
+  // 'field_collection_item-field_school_student_submissions-field_school_show_student'.
+  $field_instances['field_collection_item-field_school_student_submissions-field_school_show_student'] = array(
+    'bundle' => 'field_school_student_submissions',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => array(
+      0 => array(
+        'value' => 1,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 3,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_school_show_student',
+    'label' => 'Show?',
+    'required' => 0,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance:
   // 'field_collection_item-field_school_student_submissions-field_school_student_full_name'.
   $field_instances['field_collection_item-field_school_student_submissions-field_school_student_full_name'] = array(
     'bundle' => 'field_school_student_submissions',
@@ -1322,7 +1363,7 @@ function nys_student_submissions_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 2,
+      'weight' => 0,
     ),
   );
 
@@ -1357,7 +1398,7 @@ function nys_student_submissions_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 3,
+      'weight' => 1,
     ),
   );
 
@@ -1460,7 +1501,7 @@ function nys_student_submissions_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'file_generic',
-      'weight' => 4,
+      'weight' => 2,
     ),
   );
 

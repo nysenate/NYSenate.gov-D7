@@ -116,15 +116,6 @@ projects[privatemsg][download][branch] = 7.x-2.x
 projects[privatemsg][download][revision] = adee03
 projects[privatemsg][patch][] = https://www.drupal.org/files/issues/privatemsg-1573000-120.patch
 
-; Session API
-projects[session_api][type] = module
-projects[session_api][subdir] = contrib
-projects[session_api][download][type] = git
-projects[session_api][download][url] = git://git.drupal.org/project/session_api.git
-projects[session_api][download][branch] = 7.x-1.x
-projects[session_api][download][revision] = 434aad
-projects[session_api][patch][] = https://www.drupal.org/files/issues/session_api-reset_sid-2705055-2.patch
-
 ; Sub-pathauto (Sub-path URL Aliases)
 projects[subpathauto][type] = module
 projects[subpathauto][subdir] = contrib

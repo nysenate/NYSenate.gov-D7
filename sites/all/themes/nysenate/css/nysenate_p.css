@@ -72,7 +72,7 @@
 .contrast_text, .c-senator-hero--title, .c-senator-hero--district, .c-senator-hero--district a, .c-block.c-block-legislation-featured .c-bill-topic {
   color: #000; }
 
-.lgt-text, .item-list .pager.pager-load-more .pager-next > a, .item-list .page-user-dashboard .c-container--issues .pager.issue-follower-header .pager-next > a, .page-user-dashboard .c-container--issues .item-list .pager.issue-follower-header .pager-next > a, .item-list .pager.pager-load-more .pager-next > a:after, .item-list .page-user-dashboard .c-container--issues .pager.issue-follower-header .pager-next > a:after, .page-user-dashboard .c-container--issues .item-list .pager.issue-follower-header .pager-next > a:after, .nys-associated-topics a, .l-tab-bar .arrow, .l-tab-bar .c-tab .c-tab-link, .c-tab--arrow, .block-menu-menu-issue-explorer ul .arrow, .block-menu-menu-issue-explorer ul li.leaf a, .c-download--link, .c-view--link, .c-pullquote p:before, .c-pullquote:before, blockquote p:before, .c-header--btn.c-header--btn__primary, .c-header--btn.c-header--btn__taking_action, .c-header--btn.c-senator-header--btn .nys-senator--title, .c-header--btn.c-senator-header--btn .nys-senator--name, .c-chapter-cta, .c-bill-topic, .c-block-legislation-featured .c-block--btn-toggle:hover:after, .c-committees-container .c-committee-link .c-committee-title, .c-news-container .c-title .c-newsroom, .c-news-container .c-title h3 .c-newsroom, .c-news-container .c-news-block .c-newsroom-link, .c-news-container .c-news-block .l-twitter-container .c-twitter_info a, .c-news-container .c-news-block .c-tweet a, .c-event-featured-story .c-story-link, .c-event-cluster-featured-issue .c-title a, .c-video-container .c-tag-list .c-tag .c-link, .c-event-block--today .c-event-location span, .c-event-block--today .c-event-rsvp, .c-event-block--list .c-event-location span, .c-event-block--list .c-event-rsvp, .c-event-block--featured .c-event-location span, .c-event-block--featured .c-event-rsvp, .c-event-block--featured-image .c-event-location span, .c-event-block--featured-image .c-event-rsvp, .c-upcoming-container .c-title .c-calendar, .c-upcoming-container .c-event-block--upcoming .c-event-location span, .c-reference-block .l-senator-container .c-senator-district, .c-news--head ul.links a, .c-questionnaire--head ul.links a, .c-news--download .file > a, .c-news--body-title a, .c-upcoming--nav-item, .c-upcoming--nav-item:after, .c-meeting-detail--location-link, .c-meeting-detail--location-link a, .c-meeting-detail--past .c-meeting-detail--location-link:before, .c-block--senator-office .c-block--senator-email, .c-block--senator-media .c-block--senator-email, .c-block--senator-office .c-office-info--office-contact, .c-block--senator-media .c-office-info--office-contact, .c-block--senator-office .c-office-location-link, .c-block--senator-media .c-office-location-link {
+.lgt-text, .item-list .pager.pager-load-more .pager-next > a, .item-list .page-user-dashboard .c-container--issues .pager.issue-follower-header .pager-next > a, .page-user-dashboard .c-container--issues .item-list .pager.issue-follower-header .pager-next > a, .item-list .pager.pager-load-more .pager-next > a:after, .item-list .page-user-dashboard .c-container--issues .pager.issue-follower-header .pager-next > a:after, .page-user-dashboard .c-container--issues .item-list .pager.issue-follower-header .pager-next > a:after, .nys-associated-topics a, .l-tab-bar .arrow, .l-tab-bar .c-tab .c-tab-link, .c-tab--arrow, .block-menu-menu-issue-explorer ul .arrow, .block-menu-menu-issue-explorer ul li.leaf a, .c-download--link, .c-view--link, .c-pullquote p:before, .c-pullquote:before, blockquote p:before, .c-header--btn.c-header--btn__primary, .c-header--btn.c-header--btn__taking_action, .c-header--btn.c-senator-header--btn .nys-senator--title, .c-header--btn.c-senator-header--btn .nys-senator--name, .c-chapter-cta, .c-bill-topic, h4.c-bill-topic, .c-block-legislation-featured .c-block--btn-toggle:hover:after, .c-committees-container .c-committee-link .c-committee-title, .c-news-container .c-title .c-newsroom, .c-news-container .c-title h3 .c-newsroom, .c-news-container .c-news-block .c-newsroom-link, .c-news-container .c-news-block .l-twitter-container .c-twitter_info a, .c-news-container .c-news-block .c-tweet a, .c-event-featured-story .c-story-link, .c-event-cluster-featured-issue .c-title a, .c-video-container .c-tag-list .c-tag .c-link, .c-event-block--today .c-event-location span, .c-event-block--today .c-event-rsvp, .c-event-block--list .c-event-location span, .c-event-block--list .c-event-rsvp, .c-event-block--featured .c-event-location span, .c-event-block--featured .c-event-rsvp, .c-event-block--featured-image .c-event-location span, .c-event-block--featured-image .c-event-rsvp, .c-upcoming-container .c-title .c-calendar, .c-upcoming-container .c-event-block--upcoming .c-event-location span, .c-reference-block .l-senator-container .c-senator-district, .c-news--head ul.links a, .c-questionnaire--head ul.links a, .c-news--download .file > a, .c-news--body-title a, .c-upcoming--nav-item, .c-upcoming--nav-item:after, .c-meeting-detail--location-link, .c-meeting-detail--location-link a, .c-meeting-detail--past .c-meeting-detail--location-link:before, .c-block--senator-office .c-block--senator-email, .c-block--senator-media .c-block--senator-email, .c-block--senator-office .c-office-info--office-contact, .c-block--senator-media .c-office-info--office-contact, .c-block--senator-office .c-office-location-link, .c-block--senator-media .c-office-location-link {
   color: #2B6A90; }
 
 .lgt-bg, button.secondary, .button.secondary.form-submit, .nys-bill-status.nys-bill-status__drk li.nys-bill-status--assem-sen, .webform-submit, .c-btn--cta, .c-btn--small, .share-icon, .c-senator-footer-col__newsletter .c-btn__newsletter, .c-senator-footer-col__newsletter .c-btn__contact, .c-header--btn.c-header--btn__primary:after, .c-header--btn.c-header--btn__primary:hover, .c-header--btn.c-header--btn__taking_action:after, .c-header--btn.c-header--btn__taking_action:hover, ul.c-login--list:hover .c-header--btn__primary, ul.c-login--list:hover .c-header--btn__primary:hover, .c-header--btn.c-senator-header--btn:hover, .c-actionbar, .c-senate-status, .c-nav > nav, .c-senator-hero, .c-bill-path--step.c-bill-path--step__passed, .c-block.c-block-legislation-featured, .c-block--initiative, .c-block-download .c-block--btn, .c-senator-block.co-chair, .c-block--chair, .c-login .facebook-button, #nys-registration-form-start .form-actions button, #nys-registration-form-second .form-actions button, #user-pass .form-actions button, .c-login .form-actions button, #user-pass button, .nys-bill-vote .c-block--btn:hover, .nys-bill-vote .bill-vote-message-prompt .nys-bill-vote--contact:hover, .slick-arrow, .slick-arrow:hover, .slick-arrow:focus, .nys-btn--gold-inline, .c-btn--small-blue, .view-display-id-senator_press_kit_block .views-field-field-press-kit .c-block--btn, #nys-messaging-senator-message-form #edit-submit, #user-profile-form .field-add-more-submit, #user-profile-form #edit-submit, .facebook-action-connect {
@@ -5759,6 +5759,16 @@ h3.c-bill-num {
   letter-spacing: 0.1em;
   font-size: 10px; }
 
+h4.c-bill-topic {
+  text-transform: uppercase;
+  font-family: "Proxima Nova SemiBold";
+  letter-spacing: 0.1em;
+  font-size: 10px;
+  font-style: inherit;
+  margin-top: 0; }
+  h4.c-bill-topic a {
+    font-family: "Proxima Nova SemiBold"; }
+
 .c-bill-descript {
   margin: 0 0 10px 0;
   color: #444444;
@@ -6832,20 +6842,19 @@ a.c-law--inactive-breadcrumb {
   line-height: 50px; }
 .pane-senator-polls h3.c-initiative--title, .c-block--pg-poll h3.c-initiative--title, .node-advpoll h3.c-initiative--title {
   font-family: "Adelle Light";
-  font-size: 36px;
+  font-size: 30px;
   color: #fff;
   margin-top: 0; }
-.pane-senator-polls .c-block--initiative__has-img img, .c-block--pg-poll .c-block--initiative__has-img img, .node-advpoll .c-block--initiative__has-img img {
-  margin-top: -15px; }
 .pane-senator-polls .c-block--initiative__has-img .c-block ul, .c-block--pg-poll .c-block--initiative__has-img .c-block ul, .node-advpoll .c-block--initiative__has-img .c-block ul {
   display: none; }
 .pane-senator-polls .c-block--initiative__has-img .c-initiative--content, .c-block--pg-poll .c-block--initiative__has-img .c-initiative--content, .node-advpoll .c-block--initiative__has-img .c-initiative--content {
-  padding-bottom: 10px;
-  padding-right: 10px;
-  width: 65%; }
+  padding: 0 10px 80px 25px;
+  width: 100%;
+  position: static; }
   .pane-senator-polls .c-block--initiative__has-img .c-initiative--content .poll, .c-block--pg-poll .c-block--initiative__has-img .c-initiative--content .poll, .node-advpoll .c-block--initiative__has-img .c-initiative--content .poll {
     width: 90%;
-    margin-top: 2%; }
+    margin-top: 1.5em;
+    margin-bottom: -80px; }
     .pane-senator-polls .c-block--initiative__has-img .c-initiative--content .poll .vote-form .choices, .c-block--pg-poll .c-block--initiative__has-img .c-initiative--content .poll .vote-form .choices, .node-advpoll .c-block--initiative__has-img .c-initiative--content .poll .vote-form .choices {
       margin: 0; }
     .pane-senator-polls .c-block--initiative__has-img .c-initiative--content .poll .text, .c-block--pg-poll .c-block--initiative__has-img .c-initiative--content .poll .text, .node-advpoll .c-block--initiative__has-img .c-initiative--content .poll .text {
@@ -6864,14 +6873,16 @@ a.c-law--inactive-breadcrumb {
 form#poll-view-voting .form-item, form[id*="advpoll-form"] .form-item {
   padding-left: 20px;
   margin-bottom: 0; }
-form#poll-view-voting input, form[id*="advpoll-form"] input {
-  font-size: 120%;
-  margin: 0.5rem 0 1.2rem 0; }
+form#poll-view-voting input[type="radio"], form[id*="advpoll-form"] input[type="radio"] {
+  font-size: 110%;
+  margin: 0.5rem 0 1rem 0; }
 form#poll-view-voting label, form[id*="advpoll-form"] label {
   color: #fff;
-  font-size: 24px;
-  font-family: "Proxima Nova Regular";
-  line-height: 1.25em; }
+  font-size: 20px;
+  line-height: 1.25em;
+  text-transform: none;
+  font-family: "Adelle SemiBold";
+  letter-spacing: 0.02em; }
 form#poll-view-voting button, form[id*="advpoll-form"] button {
   color: #fff;
   display: block;
@@ -6881,7 +6892,6 @@ form#poll-view-voting #message, form[id*="advpoll-form"] #message {
   font-size: 12px; }
 
 .node-advpoll.view-mode-full .c-block--initiative__has-img .c-initiative--content {
-  padding-bottom: 10px;
   padding-right: 10px; }
 
 .c-advpoll--date {

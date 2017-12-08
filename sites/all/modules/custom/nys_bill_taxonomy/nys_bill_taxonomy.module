@@ -103,7 +103,8 @@ function nys_bill_taxonomy_verify_vocabulary() {
  */
 function nys_bill_taxonomy_node_presave($node) {
   // Only do work on bills and resolutions.
-  if (in_array($node->type, ['bill', 'resolution'])) {
+  // 2017-11-06, exempting resolutions from taxonomy.
+  if (in_array($node->type, ['bill'])) {
     $tax = nys_bill_taxonomy_verify_vocabulary();
     foreach ($tax as $key => $val) {
       $function = "nys_bill_taxonomy_assign_terms_$key";
@@ -190,7 +191,12 @@ function nys_bill_taxonomy_assign_terms_prev_ver($node) {
     // to hold one ID, so send it alone.  If it is altered to hold multiple,
     // change $tid to an array: [$tid].
     if ($tid) {
-      $wrapped->field_bill_multi_session_root->set($tid);
+      try {
+        $wrapped->field_bill_multi_session_root->set($tid);
+      }
+      catch (EntityMetadataWrapperException $e) {
+        drupal_set_message(t("Failed to set root taxonomy id: @msg", ['@msg' => $e->getMessage()]));
+      }
     }
   }
 }

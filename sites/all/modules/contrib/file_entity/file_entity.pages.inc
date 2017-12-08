@@ -90,7 +90,7 @@ function file_entity_add_upload($form, &$form_state, $options = array()) {
     'enabledPlugins' => array(),
     'schemes' => array(),
     'max_filesize' => '',
-    'uri_scheme' => 'public',
+    'uri_scheme' => file_default_scheme(),
     'plugins' => ''
   );
 

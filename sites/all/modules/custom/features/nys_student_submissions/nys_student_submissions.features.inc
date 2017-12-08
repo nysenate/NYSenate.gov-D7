@@ -111,7 +111,8 @@ function nys_student_submissions_default_entityform_type() {
       "roles" : {
         "1" : "1",
         "2" : "2",
-        "6" : 0,
+        "6" : "6",
+        "17" : "17",
         "8" : 0,
         "9" : 0,
         "3" : 0,
@@ -120,7 +121,6 @@ function nys_student_submissions_default_entityform_type() {
         "13" : 0,
         "14" : 0,
         "7" : 0,
-        "17" : 0,
         "18" : 0,
         "19" : 0
       },
@@ -160,7 +160,8 @@ function nys_student_submissions_default_entityform_type() {
       "roles" : {
         "1" : "1",
         "2" : "2",
-        "6" : 0,
+        "6" : "6",
+        "17" : "17",
         "8" : 0,
         "9" : 0,
         "3" : 0,
@@ -169,14 +170,13 @@ function nys_student_submissions_default_entityform_type() {
         "13" : 0,
         "14" : 0,
         "7" : 0,
-        "17" : 0,
         "18" : 0,
         "19" : 0
       },
       "resubmit_action" : "new",
       "redirect_path" : "",
       "instruction_pre" : {
-        "value" : "\\u003Cdiv class=\\u0022c-questionnaire--head\\u0022\\u003E\\r\\n\\u003Ch1 class=\\u0022nys-article-title\\u0022\\u003E2017 What are you thankful for this year?\\u003C\\/h1\\u003E\\r\\n\\r\\n\\u003Cdiv class=\\u0022c-news--head-meta\\u0022\\u003E\\r\\n\\u003Cp class=\\u0022c-news--pub-date\\u0022\\u003E\\u003Cspan class=\\u0022date-display-single\\u0022\\u003EOctober 4, 2017\\u003C\\/span\\u003E\\u003C\\/p\\u003E\\r\\n\\r\\n\\u003Cul class=\\u0022nys-associated-topics\\u0022\\u003E\\r\\n\\t\\u003Cli\\u003E\\u003Ca href=\\u0022\\/issues\\/thanksgiving\\u0022\\u003EThanksgiving\\u003C\\/a\\u003E\\u003C\\/li\\u003E\\r\\n\\u003C\\/ul\\u003E\\r\\n\\u003C\\/div\\u003E\\r\\n\\u003C\\/div\\u003E\\r\\n\\r\\n\\u003Cdiv class=\\u0022c-news--body\\u0022\\u003E\\r\\n\\u003Cdiv class=\\u0022c-block c-block--img\\u0022\\u003E\\u003Cimg alt=\\u0022\\u0022 height=\\u0022377\\u0022 src=\\u0022https:\\/\\/www.nysenate.gov\\/sites\\/default\\/files\\/t_day_rotator_page.jpg\\u0022 width=\\u0022760\\u0022\\u003E\\u003C\\/div\\u003E\\r\\n\\r\\n\\u003Cp\\u003EPlease submit your essay, poetry or art work for inclusion in our Thanksgiving Day Showcase by November 20, 2017.\\u003C\\/p\\u003E\\r\\n\\r\\n\\u003Cp\\u003E\\u003Cstrong\\u003ENote:\\u003C\\/strong\\u003E Teachers may submit multiple students from a single grade on this form.\\u003C\\/p\\u003E\\r\\n\\r\\n\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\r\\n\\u003C\\/div\\u003E\\r\\n",
+        "value" : "\\u003Cdiv class=\\u0022c-questionnaire--head\\u0022\\u003E\\r\\n\\u003Ch1 class=\\u0022nys-article-title\\u0022\\u003E2017 What are you thankful for this year?\\u003C\\/h1\\u003E\\r\\n\\r\\n\\u003Cdiv class=\\u0022c-news--head-meta\\u0022\\u003E\\r\\n\\u003Cp class=\\u0022c-news--pub-date\\u0022\\u003E\\u003Cspan class=\\u0022date-display-single\\u0022\\u003EOctober 4, 2017\\u003C\\/span\\u003E\\u003C\\/p\\u003E\\r\\n\\r\\n\\u003Cul class=\\u0022nys-associated-topics\\u0022\\u003E\\r\\n\\t\\u003Cli\\u003E\\u003Ca href=\\u0022\\/issues\\/thanksgiving\\u0022\\u003EThanksgiving\\u003C\\/a\\u003E\\u003C\\/li\\u003E\\r\\n\\u003C\\/ul\\u003E\\r\\n\\u003C\\/div\\u003E\\r\\n\\u003C\\/div\\u003E\\r\\n\\r\\n\\u003Cdiv class=\\u0022c-news--body\\u0022\\u003E\\r\\n\\u003Cdiv class=\\u0022c-block c-block--img\\u0022\\u003E\\u003Cimg alt=\\u0022\\u0022 height=\\u0022377\\u0022 src=\\u0022https:\\/\\/www.nysenate.gov\\/sites\\/default\\/files\\/t_day_rotator_page.jpg\\u0022 width=\\u0022760\\u0022\\u003E\\u003C\\/div\\u003E\\r\\n\\r\\n\\u003Cp\\u003EPlease submit your essay, poetry or art work for inclusion in our Thanksgiving Day Showcase by November 20, 2017. Submissions are limited to grades K-6.\\u003C\\/p\\u003E\\r\\n\\r\\n\\u003Cp\\u003E\\u003Cstrong\\u003ENote:\\u003C\\/strong\\u003E Teachers may submit multiple students from a single grade on this form.\\u003C\\/p\\u003E\\r\\n\\r\\n\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\r\\n\\u003C\\/div\\u003E\\r\\n",
         "format" : "source_html"
       }
     },

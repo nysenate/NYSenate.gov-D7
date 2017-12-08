@@ -189,24 +189,25 @@
   }
   h3.c-initiative--title {
     font-family: "Adelle Light";
-    font-size: 36px;
+    font-size: 30px;
     color: #fff;
     margin-top: 0;
   }
   .c-block--initiative__has-img {
     img {
-      margin-top: -15px;
+      //margin-top: -15px;
     }
     .c-block ul {
       display: none;
     }
     .c-initiative--content {
-    padding-bottom: 10px;
-    padding-right: 10px;
-    width: 65%;
+    padding: 0 10px 80px 25px;
+    width: 100%;
+    position: static;
       .poll {
         width: 90%;
-        margin-top: 2%;
+        margin-top: 1.5em;
+        margin-bottom: -80px;
         .vote-form .choices {
         margin: 0;
         }
@@ -238,15 +239,17 @@ form#poll-view-voting, form[id*="advpoll-form"] {
     padding-left: 20px;
     margin-bottom: 0;
   }
-  input {
-    font-size: 120%;
-    margin: 0.5rem 0 1.2rem 0;
+  input[type="radio"] {
+    font-size: 110%;
+    margin: 0.5rem 0 1rem 0;
   }
   label {
     color: #fff;
-    font-size: 24px;
-    font-family: "Proxima Nova Regular";
+    font-size: 20px;
     line-height: 1.25em;
+    text-transform: none;
+    font-family: "Adelle SemiBold";
+    letter-spacing: 0.02em;
   }
   button {
     color: #fff;
@@ -260,13 +263,16 @@ form#poll-view-voting, form[id*="advpoll-form"] {
 }
 .node-advpoll.view-mode-full {
     .c-block--initiative__has-img .c-initiative--content {
-      padding-bottom: 10px;
       padding-right: 10px;
     }
 }
 .c-advpoll--date {
   display: block;
   margin: 30px 0 36px;
+}
+
+.poll {
+  
 }
 button[id*="edit-submit-advpoll"] {
   .trad_blue & { background-color: $trad_blue_med; }

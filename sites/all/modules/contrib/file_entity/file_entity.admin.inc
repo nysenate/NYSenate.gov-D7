@@ -385,6 +385,7 @@ function file_entity_admin_files() {
   foreach ($files as $file) {
     $file_type = file_type_load($file->type);
     $account = isset($accounts[$file->uid]) ? $accounts[$file->uid] : NULL;
+    $total_count = (int) isset($result[$file->fid]->total_count) ? $result[$file->fid]->total_count : 0;
     $options[$file->fid] = array(
       'title' => array(
         'data' => array(
@@ -397,7 +398,7 @@ function file_entity_admin_files() {
       'size' => format_size($file->filesize),
       'author' => theme('username', array('account' => $account)),
       'timestamp' => format_date($file->timestamp, 'short'),
-      'usage' => format_plural((int) $result[$file->fid]->total_count, '1 place', '@count places'),
+      'usage' => format_plural($total_count, '1 place', '@count places'),
     );
 
     // Show a warning for files that do not exist.
@@ -1104,7 +1105,7 @@ function file_entity_settings_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Default allowed file extensions'),
     '#default_value' => variable_get('file_entity_default_allowed_extensions', 'jpg jpeg gif png txt doc docx xls xlsx pdf ppt pptx pps ppsx odt ods odp mp3 mov mp4 m4a m4v mpeg avi ogg oga ogv weba webp webm'),
-    '#description' => t('Separate extensions with a space or comma and do not include the leading dot.'),
+    '#description' => t('Separate extensions with a space and do not include the leading dot.'),
     '#maxlength' => NULL,
   );
 

@@ -8,7 +8,7 @@
  * Implements template_preprocess_views_view_fields.
  */
 function nysenate_preprocess_views_view_fields(&$variables) {
-  if (($variables['view']->name == 'senator_contact_blocks') && (!isset($variables['fields']['office_contacts']))) {
+  if ($variables['view']->name == 'senator_contact_blocks' && $variables['view']->current_display == 'senator_office_info_block' && !isset($variables['fields']['office_contacts'])) {
     // This sets up office contacts field collection for template output.
     $senator_nid = $variables['view']->args[0];
     $senator_node = node_load($senator_nid);
