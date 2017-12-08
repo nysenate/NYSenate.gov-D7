@@ -11,7 +11,7 @@
 function nys_captcha_form_nys_messaging_senator_contact_form_alter(&$form, &$form_state) {
   // Remove captcha from Senator contact form (node/%nid/contact) if user has
   // NOT submitted it this session already.
-  if (array_key_exists('captcha', $form['actions']) && (empty($_SESSION) || !$_SESSION['nys_captcha_senator_contact_submitted'])) {
+  if (array_key_exists('captcha', $form['actions']) && (empty($_SESSION) || empty($_SESSION['nys_captcha_senator_contact_submitted']))) {
     unset($form['actions']['captcha']);
   }
 }

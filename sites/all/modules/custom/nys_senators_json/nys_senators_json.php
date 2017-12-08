@@ -109,15 +109,7 @@ function create_senator_response(&$senator_node, $senate_district) {
     }
   }
 
-  $senator['party'] = array();
-  $field_parties = $senator_wrapper->field_party->value();
-  if (!empty($field_parties)) {
-    foreach ($field_parties as &$party) {
-      if (is_array($party) && array_key_exists('value', $party)) {
-        array_push($senator['party'], $party['value']);
-      }
-    }
-  }
+  $senator['party'] = $senator_wrapper->field_party->value();
 
   // Add senator's headshot image.
   $field_image_headshot = $senator_wrapper->field_image_headshot->value();

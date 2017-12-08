@@ -1,7 +1,7 @@
 name = nys_variables
 core = 7.x
 package = NY STATE SENATE
-version = 7.x-1.48
+version = 7.x-1.49
 project = nys_variables
 dependencies[] = calendar
 dependencies[] = captcha
@@ -151,6 +151,7 @@ features[variable][] = media_height
 features[variable][] = media_wysiwyg_wysiwyg_allowed_types
 features[variable][] = media_wysiwyg_wysiwyg_browser_plugins
 features[variable][] = media_wysiwyg_wysiwyg_upload_directory
+features[variable][] = menu_token_entities
 features[variable][] = recaptcha_noscript
 features[variable][] = recaptcha_size
 features[variable][] = recaptcha_tabindex

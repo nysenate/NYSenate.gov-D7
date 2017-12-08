@@ -116,7 +116,9 @@ $twitter_share_blurb = '"'.$fields['field_featured_quote']->content.'" - Sen.'.e
       </div>
       <div class="c-legislation-info">
         <h3 class="c-bill-num"><?php echo $fields['field_featured_bill']->content; ?></h3>
-        <h4 class="c-bill-topic"><?php echo $fields['field_issues']->content;?></h4>
+        <?php if(!empty($fields['field_issues']->content)): ?>
+          <h4 class="c-bill-topic"><?php echo $fields['field_issues']->content; ?></h4>
+        <?php endif; ?>
         <?php
         echo $row->graph_html;  // See /sites/all/themes/nysenate/template.php
         ?>
@@ -125,13 +127,13 @@ $twitter_share_blurb = '"'.$fields['field_featured_quote']->content.'" - Sen.'.e
           <?php if($fields['field_ol_last_status_date']): ?>
             <p class="c-bill-update--date"><?php if($fields['field_ol_last_status_date']) echo $fields['field_ol_last_status_date']->content; ?></p>
           <?php endif; ?>
-          <p class="c-bill-update--location"><?php echo $row->display_status; ?></p>
+            <p class="c-bill-update--location"><?php echo $row->display_status; ?></p>
         </div>
 
         <?php if(!empty($fields['field__constituent_vote']->content)):?>        
           <div class="c-bill-polling med-bg">
-               <?php echo $fields['field__constituent_vote']->content; ?>
-           </div>
+          <?php echo $fields['field__constituent_vote']->content; ?>
+          </div>
         <?php endif; ?>
       </div>
 

@@ -31,3 +31,20 @@ Feature: As an anonymous user I should be able to support and oppose bills
     And I wait for AJAX to finish
     Then I should not see "Street Address field is required"
     Then the response should contain "Thank you for your participation."
+
+  Scenario: Anonymous user can view bill with no amendments
+    Given I am not logged in
+    When I go to "/legislation/bills/2017/s897"
+    Then I should see "S897 - BILL TEXT"
+
+  Scenario: Anonymous user can view a substituted bill
+    Given I am not logged in
+    When I go to "/legislation/bills/2017/s1069"
+    Then I should see "CURRENT BILL STATUS VIA A380"
+
+  Scenario: Anonymous user can view bill with multiple amendments
+    Given I am not logged in
+    When I go to "/legislation/bills/2017/s3983"
+    And I should see a ".c-detail--section-title" element
+    And I should see a "div.c-bill--amendment-details.c-bill-section h3.c-detail--subhead.c-detail--section-title" element
+    Then the "div.c-bill--amendment-details.c-bill-section h3.c-detail--subhead.c-detail--section-title" element should contain "BILL AMENDMENTS"

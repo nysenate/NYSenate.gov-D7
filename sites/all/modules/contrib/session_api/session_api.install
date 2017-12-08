@@ -69,3 +69,14 @@ function session_api_update_7101() {
 function session_api_update_7102() {
   db_change_field('session_api', 'session_id', 'session_id', array('type' => 'varchar', 'length' => 128, 'not null' => TRUE));
 }
+
+/**
+ * Implements hook_update_N().
+ *
+ * Sets the expire time to 0 if it was previously set to -1.
+ */
+function session_api_update_7103() {
+  if (variable_get('session_api_cookie_expire_time', 2592000) == -1) {
+    variable_set('session_api_cookie_expire_time', 0);
+  }
+}

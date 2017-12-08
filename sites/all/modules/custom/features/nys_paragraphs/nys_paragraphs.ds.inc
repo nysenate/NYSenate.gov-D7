@@ -464,6 +464,7 @@ function nys_paragraphs_ds_layout_settings_info() {
     'layout_attributes_merge' => 1,
     'layout_link_attribute' => '',
     'layout_link_custom' => '',
+    'layout_disable_css' => FALSE,
   );
   $export['paragraphs_item|pg_featured_bills|default'] = $ds_layout;
 

@@ -436,7 +436,7 @@ function nys_variables_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'honeypot_element_name';
-  $strongarm->value = 'link';
+  $strongarm->value = 'middle_name';
   $export['honeypot_element_name'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -763,6 +763,30 @@ function nys_variables_strongarm() {
   $strongarm->name = 'media_wysiwyg_wysiwyg_upload_directory';
   $strongarm->value = '';
   $export['media_wysiwyg_wysiwyg_upload_directory'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'menu_token_entities';
+  $strongarm->value = array(
+    'node' => 'node',
+    'taxonomy_term' => 'taxonomy_term',
+    'taxonomy_vocabulary' => 'taxonomy_vocabulary',
+    'user' => 'user',
+    'cer' => 0,
+    'entityform' => 0,
+    'entityform_type' => 0,
+    'unmanaged_files' => 0,
+    'field_collection_item' => 0,
+    'flagging' => 0,
+    'paragraphs_item' => 0,
+    'privatemsg_message' => 0,
+    'redirect' => 0,
+    'file' => 0,
+    'rules_config' => 0,
+    'menu_link' => 0,
+  );
+  $export['menu_token_entities'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

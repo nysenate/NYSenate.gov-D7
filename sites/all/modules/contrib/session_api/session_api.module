@@ -68,11 +68,10 @@ function session_api_get_sid($create = TRUE) {
       $session_id = drupal_hash_base64(uniqid(mt_rand(), TRUE));
     }
 
-    // Set expiration time. If -1, then use an expiration time of 0, which will
-    // cause the cookie to expire when the session ends (i.e, when the browser
-    // closes).
-    $seconds = variable_get('session_api_cookie_expire_time', 2592000);
-    $expire = $seconds === -1 ? REQUEST_TIME + $seconds : 0;
+    // Set expiration time. If 0, the cookie will expire when the session ends
+    // (i.e, when the browser closes).
+    $expire = variable_get('session_api_cookie_expire_time', 2592000);
+    $expire_timestamp = ($expire == 0) ? 0 : REQUEST_TIME + $expire;
 
     // Update the session timeout.
     db_merge('session_api')
@@ -88,7 +87,7 @@ function session_api_get_sid($create = TRUE) {
 
     // Set cookie using the same domain that Drupal's own session cookie uses.
     $cookie_domain = ini_get('session.cookie_domain');
-    setcookie(session_api_get_cookie_name(), $session_id, $expire, '/', $cookie_domain);
+    setcookie(session_api_get_cookie_name(), $session_id, $expire_timestamp, '/', $cookie_domain);
   }
 
   return $sid;
@@ -117,7 +116,7 @@ function session_api_cron() {
   // Fetch list of outdated sids.
   $query = db_select('session_api', 'sap');
   $query->fields('sap', array('sid'));
-  $query->condition('sap.timestamp', REQUEST_TIME - variable_get('session_api_cookie_expire_time', 2592000), '<');
+  $query->condition('sap.timestamp', REQUEST_TIME - variable_get('session_api_cookie_purge_time', 2592000), '<');
   $outdated_sids = $query->execute()->fetchCol();
 
   if (!empty($outdated_sids)) {

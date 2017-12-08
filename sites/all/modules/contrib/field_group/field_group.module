@@ -1108,7 +1108,7 @@ function field_group_pre_render_tab(&$element, $group, &$form) {
  * Implements hook_field_group_build_pre_render_alter().
  * @param Array $elements by address.
  */
-function field_group_field_group_build_pre_render_alter(& $element) {
+function field_group_field_group_build_pre_render_alter(&$element) {
 
   // Someone is doing a node view, in a node view. Reset content.
   // TODO Check if this breaks something else.
