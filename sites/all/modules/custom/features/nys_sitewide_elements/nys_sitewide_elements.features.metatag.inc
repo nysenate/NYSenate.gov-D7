@@ -447,14 +447,41 @@ function nys_sitewide_elements_metatag_export_default() {
       'keywords' => array(
         'value' => 'government, legislation, bills, laws, new york, public policy',
       ),
+      'rating' => array(
+        'value' => 'general',
+      ),
+      'image_src' => array(
+        'value' => 'https://www.nysenate.gov/sites/default/files/dsc_0419.jpg',
+      ),
       'canonical' => array(
         'value' => '[site:url]',
       ),
       'shortlink' => array(
         'value' => '[site:url]',
       ),
+      'geo.position' => array(
+        'value' => '42.651401,-73.757339',
+      ),
+      'geo.placename' => array(
+        'value' => 'New York State Capitol',
+      ),
+      'geo.region' => array(
+        'value' => 'US-NY',
+      ),
+      'icbm' => array(
+        'value' => '42.651401,-73.7611643',
+      ),
       'itemtype' => array(
         'value' => 'Organization',
+      ),
+      'itemprop:name' => array(
+        'value' => 'The New York State Senate',
+      ),
+      'itemprop:description' => array(
+        'value' => 'Connect with elected members of the New York State Legislature. Review changes to the laws of New York, and share your reaction with your representative.',
+      ),
+      'itemprop:image' => array(
+        'value' => 'https://www.nysenate.gov/sites/default/files/dsc_0419.jpg',
       ),
       'og:type' => array(
         'value' => 'government',
@@ -465,14 +492,23 @@ function nys_sitewide_elements_metatag_export_default() {
       'og:title' => array(
         'value' => 'The New York State Senate',
       ),
+      'og:determiner' => array(
+        'value' => 'auto',
+      ),
       'og:description' => array(
-        'value' => 'NYSenate.gov is designed to increase public participation in the legislative process.',
+        'value' => 'Connect with elected members of the New York State Legislature. Review changes to the laws of New York, and share your reaction with your representative.',
+      ),
+      'og:updated_time' => array(
+        'value' => '[site:current-date:year_only]-[site:current-date:month_only]-[site:current-date:day_only]',
+      ),
+      'og:see_also' => array(
+        'value' => 'http://www.ny.gov,http://assembly.state.ny.us',
       ),
       'og:image' => array(
-        'value' => 'http://live-ny-senate.pantheon.io/sites/default/files/styles/1280x510/public/DSC_0419.JPG',
+        'value' => 'https://www.nysenate.gov/sites/default/files/dsc_0419.jpg',
       ),
       'og:image:secure_url' => array(
-        'value' => 'http://live-ny-senate.pantheon.io/sites/default/files/styles/1280x510/public/DSC_0419.JPG',
+        'value' => 'https://www.nysenate.gov/sites/default/files/dsc_0419.jpg',
       ),
       'og:image:type' => array(
         'value' => 'image/jpeg',
@@ -483,17 +519,38 @@ function nys_sitewide_elements_metatag_export_default() {
       'og:image:height' => array(
         'value' => 510,
       ),
+      'og:latitude' => array(
+        'value' => 42.651401,
+      ),
+      'og:longitude' => array(
+        'value' => -73.7611643,
+      ),
+      'og:street_address' => array(
+        'value' => 'State Street and Washington Avenue',
+      ),
       'og:locality' => array(
         'value' => 'Albany',
       ),
       'og:region' => array(
         'value' => 'NY',
       ),
+      'og:postal_code' => array(
+        'value' => 11224,
+      ),
+      'og:country_name' => array(
+        'value' => 'United States of America',
+      ),
+      'og:phone_number' => array(
+        'value' => '+1 (518) 455-2800',
+      ),
       'twitter:card' => array(
         'value' => 'summary_large_image',
       ),
       'twitter:site' => array(
         'value' => '@nysenate',
+      ),
+      'twitter:site:id' => array(
+        'value' => 20419776,
       ),
       'twitter:url' => array(
         'value' => '[site:url]',
@@ -502,19 +559,16 @@ function nys_sitewide_elements_metatag_export_default() {
         'value' => 'The New York State Senate',
       ),
       'twitter:description' => array(
-        'value' => 'NYSenate.gov is designed to increase public participation in the legislative process.',
+        'value' => 'Connect with elected members of the New York State Legislature. Review changes to the laws of New York, and share your reaction with your representative.',
+      ),
+      'twitter:image' => array(
+        'value' => 'https://www.nysenate.gov/sites/default/files/dsc_0419.jpg',
       ),
       'twitter:image:width' => array(
         'value' => 1280,
       ),
       'twitter:image:height' => array(
         'value' => 510,
-      ),
-      'twitter:image' => array(
-        'value' => 'http://live-ny-senate.pantheon.io/sites/default/files/styles/1280x510/public/DSC_0419.JPG',
-      ),
-      'og:street_address' => array(
-        'value' => 'Washington and State Street',
       ),
     ),
   );
@@ -536,14 +590,17 @@ function nys_sitewide_elements_metatag_export_default() {
       'og:title' => array(
         'value' => '[node:title]',
       ),
-      'og:description' => array(
-        'value' => '[node:summary]',
-      ),
       'og:updated_time' => array(
         'value' => '[node:changed:custom:c]',
       ),
       'og:image' => array(
         'value' => '[node:field_image_main]',
+      ),
+      'og:image:width' => array(
+        'value' => 1200,
+      ),
+      'og:image:height' => array(
+        'value' => 1200,
       ),
       'article:published_time' => array(
         'value' => '[node:created:custom:c]',
@@ -559,6 +616,63 @@ function nys_sitewide_elements_metatag_export_default() {
       ),
       'twitter:image' => array(
         'value' => '[node:field_image_main]',
+      ),
+    ),
+  );
+
+  // Exported Metatag config instance: node:article.
+  $config['node:article'] = array(
+    'instance' => 'node:article',
+    'disabled' => FALSE,
+    'config' => array(
+      'description' => array(
+        'value' => '',
+      ),
+      'itemprop:description' => array(
+        'value' => '',
+      ),
+      'og:image' => array(
+        'value' => '',
+      ),
+      'og:image:width' => array(
+        'value' => '',
+      ),
+      'og:image:height' => array(
+        'value' => '',
+      ),
+      'twitter:description' => array(
+        'value' => '',
+      ),
+      'twitter:image' => array(
+        'value' => '',
+      ),
+    ),
+  );
+
+  // Exported Metatag config instance: node:event.
+  $config['node:event'] = array(
+    'instance' => 'node:event',
+    'config' => array(
+      'description' => array(
+        'value' => '',
+      ),
+      'itemprop:description' => array(
+        'value' => '',
+      ),
+      'og:image' => array(
+        'value' => '',
+      ),
+      'og:image:width' => array(
+        'value' => '',
+      ),
+      'og:image:height' => array(
+        'value' => '',
+      ),
+      'twitter:description' => array(
+        'value' => '',
+      ),
+      'twitter:image' => array(
+        'value' => '',
       ),
     ),
   );
@@ -600,6 +714,40 @@ function nys_sitewide_elements_metatag_export_default() {
       ),
       'twitter:image' => array(
         'value' => 'http://www.nysenate.gov/sites/default/files/ny_senate_petitions_share.png',
+      ),
+    ),
+  );
+
+  // Exported Metatag config instance: node:press_release.
+  $config['node:press_release'] = array(
+    'instance' => 'node:press_release',
+    'config' => array(
+      'description' => array(
+        'value' => '',
+      ),
+      'itemprop:description' => array(
+        'value' => '',
+      ),
+      'og:image' => array(
+        'value' => '',
+      ),
+      'og:image:width' => array(
+        'value' => '',
+      ),
+      'og:image:height' => array(
+        'value' => '',
+      ),
+      'twitter:description' => array(
+        'value' => '',
+      ),
+      'twitter:image' => array(
+        'value' => '',
+      ),
+      'twitter:image:width' => array(
+        'value' => 1200,
+      ),
+      'twitter:image:height' => array(
+        'value' => 1200,
       ),
     ),
   );

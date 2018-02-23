@@ -47,6 +47,7 @@ if ($form_id === 'advpoll_choice_form') {
 /**
  * Implements node_form_validate().
  */
+
 function nys_advpoll_node_form_validate(&$form, &$form_state) {
   if (drupal_strlen($form_state['values']['title']) > 60) {
     form_set_error('title', t('Your question is too long, please limit to 60 characters'));

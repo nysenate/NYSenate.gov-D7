@@ -839,6 +839,684 @@ function nys_student_submissions_field_default_field_instances() {
   );
 
   // Exported field_instance:
+  // 'entityform-new_york_senate_youth_leadership-field_attach_letter_of_recommend'.
+  $field_instances['entityform-new_york_senate_youth_leadership-field_attach_letter_of_recommend'] = array(
+    'bundle' => 'new_york_senate_youth_leadership',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'file',
+        'settings' => array(),
+        'type' => 'file_default',
+        'weight' => 6,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'entityform',
+    'field_name' => 'field_attach_letter_of_recommend',
+    'label' => 'Attach Letter of Recommendation',
+    'required' => 1,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'description_field' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'txt doc docx pdf',
+      'filefield_paths' => array(
+        'active_updating' => 0,
+        'file_name' => array(
+          'options' => array(
+            'pathauto' => 0,
+            'slashes' => 0,
+            'transliterate' => 0,
+          ),
+          'value' => '[file:ffp-name-only-original].[file:ffp-extension-original]',
+        ),
+        'file_path' => array(
+          'options' => array(
+            'pathauto' => 0,
+            'slashes' => 0,
+            'transliterate' => 0,
+          ),
+          'value' => '',
+        ),
+        'redirect' => 0,
+        'retroactive_update' => 0,
+      ),
+      'filefield_paths_enabled' => 1,
+      'max_filesize' => '100 MB',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'file',
+      'settings' => array(
+        'insert' => 0,
+        'insert_absolute' => 0,
+        'insert_class' => '',
+        'insert_default' => 'auto',
+        'insert_styles' => array(
+          'auto' => 'auto',
+          'icon_link' => 0,
+          'image' => 0,
+          'image_45x45' => 0,
+          'image_60x60' => 0,
+          'image_80x60' => 0,
+          'image_160x160' => 0,
+          'image_200x125' => 0,
+          'image_280x280' => 0,
+          'image_360x200' => 0,
+          'image_380x215' => 0,
+          'image_400x240' => 0,
+          'image_440x230' => 0,
+          'image_680x510' => 0,
+          'image_760x377' => 0,
+          'image_1280x510' => 0,
+          'image_1346x330' => 0,
+          'image_embed_landscape_400x225' => 0,
+          'image_embed_portrait_225x345' => 0,
+          'image_large' => 0,
+          'image_large_retina' => 0,
+          'image_media_thumbnail' => 0,
+          'image_medium' => 0,
+          'image_medium_retina' => 0,
+          'image_retina_100x100' => 0,
+          'image_square_thumbnail' => 0,
+          'image_thumbnail' => 0,
+          'image_thumbnail_retina' => 0,
+          'image_user_dashboard_100x100' => 0,
+          'link' => 0,
+        ),
+        'insert_width' => '',
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'file_generic',
+      'weight' => 14,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'entityform-new_york_senate_youth_leadership-field_attach_statement_from_stud'.
+  $field_instances['entityform-new_york_senate_youth_leadership-field_attach_statement_from_stud'] = array(
+    'bundle' => 'new_york_senate_youth_leadership',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'deleted' => 0,
+    'description' => '(brief statement, max 500 words)',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'file',
+        'settings' => array(),
+        'type' => 'file_default',
+        'weight' => 10,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'entityform',
+    'field_name' => 'field_attach_statement_from_stud',
+    'label' => 'Attach statement from student about an accomplishment they’ve had and why it is important',
+    'required' => 1,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'description_field' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'txt doc docx pdf',
+      'filefield_paths' => array(
+        'active_updating' => 0,
+        'file_name' => array(
+          'options' => array(
+            'pathauto' => 0,
+            'slashes' => 0,
+            'transliterate' => 0,
+          ),
+          'value' => '[file:ffp-name-only-original].[file:ffp-extension-original]',
+        ),
+        'file_path' => array(
+          'options' => array(
+            'pathauto' => 0,
+            'slashes' => 0,
+            'transliterate' => 0,
+          ),
+          'value' => 'students/earthday/[current-date:custom:Y]',
+        ),
+        'redirect' => 0,
+        'retroactive_update' => 0,
+      ),
+      'filefield_paths_enabled' => 1,
+      'max_filesize' => '100 MB',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'file',
+      'settings' => array(
+        'insert' => 0,
+        'insert_absolute' => 0,
+        'insert_class' => '',
+        'insert_default' => 'auto',
+        'insert_styles' => array(
+          'auto' => 'auto',
+          'icon_link' => 0,
+          'image' => 0,
+          'image_45x45' => 0,
+          'image_60x60' => 0,
+          'image_80x60' => 0,
+          'image_160x160' => 0,
+          'image_200x125' => 0,
+          'image_280x280' => 0,
+          'image_360x200' => 0,
+          'image_380x215' => 0,
+          'image_400x240' => 0,
+          'image_440x230' => 0,
+          'image_680x510' => 0,
+          'image_760x377' => 0,
+          'image_1280x510' => 0,
+          'image_1346x330' => 0,
+          'image_embed_landscape_400x225' => 0,
+          'image_embed_portrait_225x345' => 0,
+          'image_large' => 0,
+          'image_large_retina' => 0,
+          'image_media_thumbnail' => 0,
+          'image_medium' => 0,
+          'image_medium_retina' => 0,
+          'image_retina_100x100' => 0,
+          'image_square_thumbnail' => 0,
+          'image_thumbnail' => 0,
+          'image_thumbnail_retina' => 0,
+          'image_user_dashboard_100x100' => 0,
+          'link' => 0,
+        ),
+        'insert_width' => '',
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'file_generic',
+      'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'entityform-new_york_senate_youth_leadership-field_category_being_nominated_f'.
+  $field_instances['entityform-new_york_senate_youth_leadership-field_category_being_nominated_f'] = array(
+    'bundle' => 'new_york_senate_youth_leadership',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 7,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'entityform',
+    'field_name' => 'field_category_being_nominated_f',
+    'label' => 'Category Being Nominated for',
+    'required' => 1,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
+      'type' => 'options_select',
+      'weight' => 8,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'entityform-new_york_senate_youth_leadership-field_cumulatve_gpa'.
+  $field_instances['entityform-new_york_senate_youth_leadership-field_cumulatve_gpa'] = array(
+    'bundle' => 'new_york_senate_youth_leadership',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 6,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'entityform',
+    'field_name' => 'field_cumulatve_gpa',
+    'label' => 'Cumulative GPA',
+    'required' => 1,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 7,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'entityform-new_york_senate_youth_leadership-field_nominators_email'.
+  $field_instances['entityform-new_york_senate_youth_leadership-field_nominators_email'] = array(
+    'bundle' => 'new_york_senate_youth_leadership',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'email',
+        'settings' => array(),
+        'type' => 'email_default',
+        'weight' => 4,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'entityform',
+    'field_name' => 'field_nominators_email',
+    'label' => 'Nominator\'s Email',
+    'required' => 0,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'email',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'email_textfield',
+      'weight' => 12,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'entityform-new_york_senate_youth_leadership-field_nominators_name'.
+  $field_instances['entityform-new_york_senate_youth_leadership-field_nominators_name'] = array(
+    'bundle' => 'new_york_senate_youth_leadership',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 2,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'entityform',
+    'field_name' => 'field_nominators_name',
+    'label' => 'Nominator\'s Name',
+    'required' => 1,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 10,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'entityform-new_york_senate_youth_leadership-field_nominators_phone_number'.
+  $field_instances['entityform-new_york_senate_youth_leadership-field_nominators_phone_number'] = array(
+    'bundle' => 'new_york_senate_youth_leadership',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 5,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'entityform',
+    'field_name' => 'field_nominators_phone_number',
+    'label' => 'Nominator\'s Phone Number',
+    'required' => 1,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 13,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'entityform-new_york_senate_youth_leadership-field_nominators_title'.
+  $field_instances['entityform-new_york_senate_youth_leadership-field_nominators_title'] = array(
+    'bundle' => 'new_york_senate_youth_leadership',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 3,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'entityform',
+    'field_name' => 'field_nominators_title',
+    'label' => 'Nominator\'s Title',
+    'required' => 1,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 11,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'entityform-new_york_senate_youth_leadership-field_school'.
+  $field_instances['entityform-new_york_senate_youth_leadership-field_school'] = array(
+    'bundle' => 'new_york_senate_youth_leadership',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Start typing your school\'s name and choose from list. If your school does not show up, <a href="/webforms/school-not-showing-contact-form">please contact us</a>.',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'entityreference',
+        'settings' => array(
+          'bypass_access' => 0,
+          'link' => 0,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 4,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'entityform',
+    'field_name' => 'field_school',
+    'label' => 'School',
+    'required' => 1,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => 1,
+      ),
+      'type' => 'options_select',
+      'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'entityform-new_york_senate_youth_leadership-field_student_address'.
+  $field_instances['entityform-new_york_senate_youth_leadership-field_student_address'] = array(
+    'bundle' => 'new_york_senate_youth_leadership',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 2,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'entityform',
+    'field_name' => 'field_student_address',
+    'label' => 'Student Address',
+    'required' => 1,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 3,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'entityform-new_york_senate_youth_leadership-field_student_email'.
+  $field_instances['entityform-new_york_senate_youth_leadership-field_student_email'] = array(
+    'bundle' => 'new_york_senate_youth_leadership',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'email',
+        'settings' => array(),
+        'type' => 'email_default',
+        'weight' => 5,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'entityform',
+    'field_name' => 'field_student_email',
+    'label' => 'Student Email',
+    'required' => 1,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'email',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'email_textfield',
+      'weight' => 6,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'entityform-new_york_senate_youth_leadership-field_student_grade'.
+  $field_instances['entityform-new_york_senate_youth_leadership-field_student_grade'] = array(
+    'bundle' => 'new_york_senate_youth_leadership',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 8,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'entityform',
+    'field_name' => 'field_student_grade',
+    'label' => 'Student Grade',
+    'required' => 1,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 9,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'entityform-new_york_senate_youth_leadership-field_student_name'.
+  $field_instances['entityform-new_york_senate_youth_leadership-field_student_name'] = array(
+    'bundle' => 'new_york_senate_youth_leadership',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 1,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'entityform',
+    'field_name' => 'field_student_name',
+    'label' => 'Student Name',
+    'required' => 1,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 2,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'entityform-new_york_senate_youth_leadership-field_student_phone_number'.
+  $field_instances['entityform-new_york_senate_youth_leadership-field_student_phone_number'] = array(
+    'bundle' => 'new_york_senate_youth_leadership',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 3,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'entityform',
+    'field_name' => 'field_student_phone_number',
+    'label' => 'Student Phone Number',
+    'required' => 1,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance:
   // 'entityform-school_submissions-field_school_contact_email'.
   $field_instances['entityform-school_submissions-field_school_contact_email'] = array(
     'bundle' => 'school_submissions',
@@ -1092,9 +1770,8 @@ function nys_student_submissions_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'list',
         'settings' => array(),
-        'type' => 'list_default',
+        'type' => 'hidden',
         'weight' => 3,
       ),
     ),
@@ -1283,6 +1960,53 @@ function nys_student_submissions_field_default_field_instances() {
       ),
       'type' => 'file_generic',
       'weight' => 2,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'field_collection_item-field_school_stud_earthday_subm-field_year'.
+  $field_instances['field_collection_item-field_school_stud_earthday_subm-field_year'] = array(
+    'bundle' => 'field_school_stud_earthday_subm',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 4,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_year',
+    'label' => 'Year',
+    'required' => 0,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'default_value' => 'now',
+      'default_value2' => 'same',
+      'default_value_code' => '',
+      'default_value_code2' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'date',
+      'settings' => array(
+        'increment' => 15,
+        'input_format' => 'Y M j - g:i:sa',
+        'input_format_custom' => '',
+        'label_position' => 'none',
+        'no_fieldset' => 0,
+        'text_parts' => array(),
+        'year_range' => '-1:+0',
+      ),
+      'type' => 'date_select',
+      'weight' => 5,
     ),
   );
 
@@ -1507,19 +2231,28 @@ function nys_student_submissions_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('(brief statement, max 500 words)');
   t('Agreement');
+  t('Attach Letter of Recommendation');
+  t('Attach statement from student about an accomplishment they’ve had and why it is important');
   t('Attach your photo');
   t('Attach your submission');
   t('Category');
+  t('Category Being Nominated for');
   t('City');
   t('Contact Email');
   t('Contact Name');
+  t('Cumulative GPA');
   t('Email');
   t('First Name');
   t('Grade');
   t('If your school is not listed, please call: 516-739-1700');
   t('Last Name');
   t('My submission could best be described as');
+  t('Nominator\'s Email');
+  t('Nominator\'s Name');
+  t('Nominator\'s Phone Number');
+  t('Nominator\'s Title');
   t('Phone Number');
   t('Poster Winner?');
   t('School');
@@ -1528,6 +2261,11 @@ function nys_student_submissions_field_default_field_instances() {
   t('Star Rating');
   t('Start typing your school\'s name and choose from list. If your school does not show up, <a href="/webforms/school-not-showing-contact-form">please contact us</a>.');
   t('Street Address');
+  t('Student Address');
+  t('Student Email');
+  t('Student Grade');
+  t('Student Name');
+  t('Student Phone Number');
   t('Student Submissions');
   t('Student\'s Full Name');
   t('Student\'s Name');
@@ -1535,6 +2273,7 @@ function nys_student_submissions_field_default_field_instances() {
   t('Teacher\'s Email');
   t('Teacher\'s Name');
   t('Winner Types');
+  t('Year');
   t('Your email can only be used once to submit a photo. Only one photo per student may be submitted per contest rules.');
   t('Zip Code');
 

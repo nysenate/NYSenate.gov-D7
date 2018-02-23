@@ -594,7 +594,7 @@ function apachesolr_search_delete_search_page_confirm_submit($form, &$form_state
     'The %label search page configuration has been deleted.',
     array('%label' => $form_state['values']['label'])
   ));
-  watchdog('apachesolr_search', 'Deleted search page configuration "@page_id".', array('@page_id' => $form_state['values']['page_id']), WATCHDOG_NOTICE);
+  watchdog('Apache Solr', 'Deleted search page configuration "@page_id".', array('@page_id' => $form_state['values']['page_id']), WATCHDOG_NOTICE);
 
   // Rebuilds the menu cache.
   menu_rebuild();
@@ -650,7 +650,7 @@ function apachesolr_search_get_fields($environment = NULL) {
     return $fields;
   }
   catch (Exception $e) {
-    watchdog('Apache Solr', nl2br(check_plain($e->getMessage())), NULL, WATCHDOG_ERROR);
+    apachesolr_log_exception($env_id, $e);
     drupal_set_message(nl2br(check_plain($e->getMessage())), 'warning');
     drupal_set_message(t('Cannot get information about the fields in the index.'), 'warning');
   }
@@ -969,14 +969,16 @@ function apachesolr_search_mlt_block_defaults($block = array()) {
 
 /**
  * Constructs a list of field names used on the settings form.
+ * TODO: This always assumes the default environment!
  *
  * @return array An array containing a the fields in the solr instance.
  */
 function apachesolr_search_mlt_get_fields() {
   $rows = array();
 
+  $env_id = apachesolr_default_environment();
   try {
-    $solr = apachesolr_get_solr();
+    $solr = apachesolr_get_solr($env_id);
     $fields = $solr->getFields();
     foreach ($fields as $field_name => $field) {
       // 'V' appears in different positions in different Solr versions.
@@ -987,7 +989,7 @@ function apachesolr_search_mlt_get_fields() {
     ksort($rows);
   }
   catch (Exception $e) {
-    watchdog('Apache Solr', nl2br(check_plain($e->getMessage())), NULL, WATCHDOG_ERROR);
+    apachesolr_log_exception($env_id, $e);
   }
 
   return $rows;

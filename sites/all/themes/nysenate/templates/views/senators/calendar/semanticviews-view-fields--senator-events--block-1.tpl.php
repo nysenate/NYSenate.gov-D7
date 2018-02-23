@@ -1,12 +1,11 @@
+<article class="c-event-block c-event-block--list">
 	<div class="c-event-date">
 		<span><?php echo $fields['field_date']->content;?></span> <?php echo $fields['field_date_1']->content;?>
 	</div>
 	
-	<h3 class="c-event-name">
-		<a href="<?php echo $fields['path']->content;?>">
-			<?php echo $fields['title']->content;?>
-		</a>
-	</h3>
+	<a href="<?php echo $fields['path']->content;?>">
+	<h3 class="c-event-name"><?php echo $fields['title']->content;?></h3>
+	</a>
 
 	<?php if(!empty($fields['name']->content)): ?>
 		<a class="c-event-location" href="http://maps.google.com/?q=<?php echo $fields['street']->content;?>+<?php echo $fields['city']->content;?>%2C+<?php echo $fields['province']->content;?>%2C+<?php echo $fields['postal_code']->content;?>" target="_blank">
@@ -26,3 +25,4 @@
 			<?php echo $fields['field_date_2']->content;?>
 		</div>
 	<?php endif; ?>
+</article>

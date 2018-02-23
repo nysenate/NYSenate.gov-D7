@@ -140,6 +140,12 @@ function nys_events_strongarm() {
         'metatags' => array(
           'weight' => '6',
         ),
+        'redirect' => array(
+          'weight' => '8',
+        ),
+        'xmlsitemap' => array(
+          'weight' => '9',
+        ),
       ),
       'display' => array(),
     ),

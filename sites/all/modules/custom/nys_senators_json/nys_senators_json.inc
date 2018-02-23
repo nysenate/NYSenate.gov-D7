@@ -1,20 +1,45 @@
 <?php
+// Path to an output file, relative to site root.
+define('NYS_SENATORS_JSON_OUTFILE', 'senators');
+// The extension to use on the outfile.
+define('NYS_SENATORS_JSON_OUTFILE_EXT', 'json');
+// The wrapper to use to write the file.
+define('NYS_SENATORS_JSON_OUTFILE_WRAPPER', 'public');
+
+function nys_senators_json_request_wrapper() {
+  $shortname = arg(1);
+  nyslog("Found shortname:$shortname");
+  if (!$shortname) {
+    $shortname = '';
+  }
+
+  nys_senators_json($shortname);
+}
 
 /**
  * Loads senator nodes and outputs a subset of the data as JSON.
+ *
+ * @param string $shortname
+ *   The shortname of a specific senator to output.  By default, all
+ *   senators are included.
+ *
+ * @param boolean $write_to_file
+ *   Indicates if the generated JSON should be written to a file
+ *   instead of the HTTP response.
+ *
+ * @throws Exception
  */
-function nys_senators_json() {
+function nys_senators_json($shortname = '', $write_to_file = FALSE) {
   // The array of node IDs to load.  An empty array will load *all* senators.
   $nids = array();
 
   // Check to see if a valid shortname was passed.  If yes, we want to
   // load just that senator.
-  $shortname = arg(1);
-  if ($shortname) {
+  if ((string) $shortname) {
     $ent_query = new EntityFieldQuery();
     try {
       $requested_senator = $ent_query->entityCondition('entity_type', 'node')
-        ->fieldCondition('field_shortname', 'value', arg(1))
+        ->fieldCondition('field_shortname', 'value', (string) $shortname)
         ->execute();
     } catch (Exception $e) {
       $requested_senator = array('node' => NULL);
@@ -47,23 +72,46 @@ function nys_senators_json() {
   $senators_response = array();
   foreach ($senator_nodes as &$senator_node) {
     if (array_key_exists($senator_node->nid, $districts_by_senator)) {
+      nyslog("Adding node {$senator_node->nid}, {$senator_node->title}");
       $senate_district = intval($districts_by_senator[$senator_node->nid]);
       $senator = create_senator_response($senator_node, $senate_district);
       array_push($senators_response, $senator);
     }
   }
 
+  nyslog("Loaded " . count($senators_response) . " senators");
   // If there's only one senator, remove the parent array structure.
   if (count($senators_response) == 1) {
     $senators_response = reset($senators_response);
+    nyslog("removed parent array because only one senator found");
   }
 
-  // Encode to JSON, and push that puppy out.
+  // Create the final JSON-encoded response.
   $json_response = json_encode($senators_response);
-  drupal_add_http_header('Content-Type', 'application/json; charset="UTF-8"');
-  drupal_add_http_header('Content-Length', mb_strlen($json_response));
 
-  exit($json_response);
+  // Output the JSON, either to a file or the response.
+  if ($write_to_file) {
+    // Generate the file name, optionally including the shortname.
+    $dn = NYS_SENATORS_JSON_OUTFILE_WRAPPER . '://json';
+    $good_dir = file_prepare_directory($dn, FILE_MODIFY_PERMISSIONS | FILE_CREATE_DIRECTORY);
+    if (!$good_dir) {
+      throw new Exception("Could not create public://json directory");
+    }
+    $fn = $dn . '/' . NYS_SENATORS_JSON_OUTFILE .
+      ($shortname ? '-' . $shortname : '') .
+      '.' . NYS_SENATORS_JSON_OUTFILE_EXT;
+    nyslog("Attempting to write to $fn");
+
+    // Write the file.
+    file_save_data($json_response, $fn, FILE_EXISTS_REPLACE);
+  }
+  else {
+    // Push that puppy out and kill the request.
+    drupal_add_http_header('Content-Type', 'application/json; charset="UTF-8"');
+    drupal_add_http_header('Content-Length', mb_strlen($json_response));
+    print $json_response;
+    drupal_exit();
+  }
 }
 
 /**

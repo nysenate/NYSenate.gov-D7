@@ -681,6 +681,7 @@ function nys_access_permissions_node_access($node, $op, $account) {
  */
 function _microsite_content_producer_node_types() {
   return array(
+      'advpoll',
     'article',
     'event',
     'initiative',
@@ -712,6 +713,10 @@ function nys_access_permissions_form_alter(&$form, &$form_state, $form_id) {
     $form['field_webform'][LANGUAGE_NONE][0]['target_id']['#autocomplete_path'] = 'ajax/only-my-nodes/webform';
   }
 
+    if (user_has_role(_nys_utils_get_rid_by_name('Microsite Content Producer'), $user) && $form_id == 'article_node_form') {
+        $form['field_paragraphs'][LANGUAGE_NONE][0]['field_pg_poll'][LANGUAGE_NONE][0]['target_id']['#autocomplete_path'] = 'ajax/only-my-nodes/advpoll';
+    }
+
   // If Senator MCP only allow them to set Senators listed in
   // $user->field_senator_management.
   if (user_has_role(_nys_utils_get_rid_by_name('Microsite Content Producer'), $user) && (
@@ -723,7 +728,8 @@ function nys_access_permissions_form_alter(&$form, &$form_state, $form_id) {
     || $form_id === 'press_release_node_form'
     || $form_id === 'questionnaire_node_form'
     || $form_id === 'promotional_banner_node_form'
-    || $form_id === 'video_node_form')) {
+    || $form_id === 'video_node_form'
+    || $form_id === 'adv_node_form')) {
     // Alter field_senator to only display allowed senator(s) for editing user.
     $senators_array = nys_access_permissions_get_allowed_senators_dropdown($user->uid);
     // Remove "None" option for everyone except front page editors.

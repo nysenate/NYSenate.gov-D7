@@ -10,7 +10,7 @@
  */
 function media_ckeditor_rendered_file_in_wysiwyg() {
 
-  // If you would like to see how the $tag_info variable below is built, please
+  // If you would like to see how the $tag_info variable below is built, please:
   // @see media_ckeditor/js/plugins/media/library.js.
   $tag_info = drupal_get_query_parameters();
 

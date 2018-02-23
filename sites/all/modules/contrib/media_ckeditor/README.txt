@@ -10,7 +10,9 @@ INTRODUCTION
 ------------
 
 Current Maintainers:
+ * Joseph Olstad <http://drupal.org/user/1321830>
 
+Previous Maintainers:
  * Devin Carlson <http://drupal.org/user/290182>
 
 Media CKEditor provides a bridge between Media and the stand-alone CKEditor
@@ -33,7 +35,7 @@ CKEditor Library
    http://ckeditor.com/download
 
 CKEditor Library Plugins
- * CKEditor Line Utilities plugin - Compatible with the installed version of CKEditor.
+ * CKEditor Line Utilities plugin - Compatible with CKEditor.
    http://ckeditor.com/addon/lineutils
  * CKEditor Widget plugin - Compatible with the installed version of CKEditor.
    http://ckeditor.com/addon/widget
@@ -65,4 +67,3 @@ INSTALLATION
   plugin for the desired text formats from the CKEditor configuration
   page: '/admin/config/content/ckeditor'.
 * Disable CKEditor's Advanced Content Filter for each of the text formats.
-

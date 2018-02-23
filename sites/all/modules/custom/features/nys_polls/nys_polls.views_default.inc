@@ -28,7 +28,8 @@ function nys_polls_views_default_views() {
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '1';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'node';
@@ -68,20 +69,6 @@ function nys_polls_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'advpoll' => 'advpoll',
   );
-  /* Filter criterion: Content: Poll availability -  start date (advpoll_dates) */
-  $handler->display->display_options['filters']['advpoll_dates_value']['id'] = 'advpoll_dates_value';
-  $handler->display->display_options['filters']['advpoll_dates_value']['table'] = 'field_data_advpoll_dates';
-  $handler->display->display_options['filters']['advpoll_dates_value']['field'] = 'advpoll_dates_value';
-  $handler->display->display_options['filters']['advpoll_dates_value']['operator'] = '<=';
-  $handler->display->display_options['filters']['advpoll_dates_value']['default_date'] = 'now';
-  $handler->display->display_options['filters']['advpoll_dates_value']['year_range'] = '-0:+1';
-  /* Filter criterion: Content: Poll availability - end date (advpoll_dates:value2) */
-  $handler->display->display_options['filters']['advpoll_dates_value2']['id'] = 'advpoll_dates_value2';
-  $handler->display->display_options['filters']['advpoll_dates_value2']['table'] = 'field_data_advpoll_dates';
-  $handler->display->display_options['filters']['advpoll_dates_value2']['field'] = 'advpoll_dates_value2';
-  $handler->display->display_options['filters']['advpoll_dates_value2']['operator'] = '>';
-  $handler->display->display_options['filters']['advpoll_dates_value2']['default_date'] = 'now';
-  $handler->display->display_options['filters']['advpoll_dates_value2']['year_range'] = '-0:+1';
   /* Filter criterion: Content: Is Featured (field_advpoll_featured) */
   $handler->display->display_options['filters']['field_advpoll_featured_value']['id'] = 'field_advpoll_featured_value';
   $handler->display->display_options['filters']['field_advpoll_featured_value']['table'] = 'field_data_field_advpoll_featured';
@@ -90,8 +77,8 @@ function nys_polls_views_default_views() {
     1 => '1',
   );
 
-  /* Display: Block */
-  $handler = $view->new_display('block', 'Block', 'block');
+  /* Display: Featured Poll */
+  $handler = $view->new_display('block', 'Featured Poll', 'block');
   $export['senator_polls'] = $view;
 
   return $export;

@@ -63,7 +63,7 @@ function nys_news_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 14,
+      'weight' => 15,
     ),
   );
 
@@ -83,7 +83,7 @@ function nys_news_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 14,
+        'weight' => 12,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -114,7 +114,7 @@ function nys_news_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 12,
+      'weight' => 7,
     ),
   );
 
@@ -184,7 +184,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_default',
-        'weight' => 13,
+        'weight' => 11,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -291,7 +291,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 17,
+        'weight' => 15,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -323,7 +323,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'apply_chosen' => 0,
       ),
       'type' => 'options_select',
-      'weight' => 9,
+      'weight' => 10,
     ),
   );
 
@@ -386,7 +386,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         ),
       ),
       'type' => 'inline_entity_form',
-      'weight' => 16,
+      'weight' => 17,
     ),
   );
 
@@ -435,7 +435,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'size' => 60,
       ),
       'type' => 'options_select',
-      'weight' => 6,
+      'weight' => 18,
     ),
   );
 
@@ -486,20 +486,22 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'display_label' => 0,
       ),
       'type' => 'options_onoff',
-      'weight' => 7,
+      'weight' => 20,
     ),
   );
 
   // Exported field_instance: 'node-article-field_featured'.
   $field_instances['node-article-field_featured'] = array(
     'bundle' => 'article',
+    'custom_add_another' => '',
+    'custom_remove' => '',
     'default_value' => array(
       0 => array(
         'value' => 0,
       ),
     ),
     'deleted' => 0,
-    'description' => 'Features the article on the front page of the Senator\'s web site.',
+    'description' => 'Features the article on the front page of the Senator\'s website. Make sure you have also uploaded a Main Image.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -521,6 +523,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'weight' => 0,
       ),
     ),
+    'ds_extras_field_template' => '',
     'entity_type' => 'node',
     'field_name' => 'field_featured',
     'label' => 'Is Featured',
@@ -651,7 +654,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 13,
+      'weight' => 8,
     ),
   );
 
@@ -814,7 +817,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 3,
+      'weight' => 9,
     ),
   );
 
@@ -834,7 +837,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
           'view_mode' => 'full',
         ),
         'type' => 'paragraphs_view',
-        'weight' => 18,
+        'weight' => 16,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -860,7 +863,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'feature_image' => -1,
         'pg_accordion' => 'pg_accordion',
         'pg_block_reference' => -1,
-        'pg_entity_form' => -1,
+        'pg_entity_form' => 'pg_entity_form',
         'pg_featured_bills' => 'pg_featured_bills',
         'pg_file_uploads' => -1,
         'pg_image_left' => -1,
@@ -900,7 +903,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
       'module' => 'paragraphs',
       'settings' => array(),
       'type' => 'paragraphs_embed',
-      'weight' => 15,
+      'weight' => 16,
     ),
   );
 
@@ -958,6 +961,177 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
     ),
   );
 
+  // Exported field_instance: 'node-article-field_social_image'.
+  $field_instances['node-article-field_social_image'] = array(
+    'bundle' => 'article',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'image',
+        'settings' => array(
+          'image_link' => '',
+          'image_style' => '',
+        ),
+        'type' => 'image',
+        'weight' => 19,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_social_image',
+    'label' => 'Social Image',
+    'required' => 0,
+    'settings' => array(
+      'alt_field' => 0,
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'default_image' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'png gif jpg jpeg',
+      'filefield_paths' => array(
+        'active_updating' => 0,
+        'file_name' => array(
+          'options' => array(
+            'pathauto' => 0,
+            'slashes' => 0,
+            'transliterate' => 0,
+          ),
+          'value' => '[file:ffp-name-only-original].[file:ffp-extension-original]',
+        ),
+        'file_path' => array(
+          'options' => array(
+            'pathauto' => 1,
+            'slashes' => 1,
+            'transliterate' => 1,
+          ),
+          'value' => 'article/social-images',
+        ),
+        'redirect' => 0,
+        'retroactive_update' => 0,
+      ),
+      'filefield_paths_enabled' => 1,
+      'max_filesize' => '',
+      'max_resolution' => '',
+      'min_resolution' => '',
+      'title_field' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'image',
+      'settings' => array(
+        'insert' => 0,
+        'insert_absolute' => 0,
+        'insert_class' => '',
+        'insert_default' => 'auto',
+        'insert_styles' => array(
+          'auto' => 'auto',
+          'icon_link' => 0,
+          'image' => 0,
+          'image_45x45' => 0,
+          'image_60x60' => 0,
+          'image_80x60' => 0,
+          'image_160x160' => 0,
+          'image_200x125' => 0,
+          'image_280x280' => 0,
+          'image_360x200' => 0,
+          'image_380x215' => 0,
+          'image_400x240' => 0,
+          'image_440x230' => 0,
+          'image_680x510' => 0,
+          'image_760x377' => 0,
+          'image_1280x510' => 0,
+          'image_1346x330' => 0,
+          'image_embed_landscape_400x225' => 0,
+          'image_embed_portrait_225x345' => 0,
+          'image_large' => 0,
+          'image_large_retina' => 0,
+          'image_media_thumbnail' => 0,
+          'image_medium' => 0,
+          'image_medium_retina' => 0,
+          'image_retina_100x100' => 0,
+          'image_square_thumbnail' => 0,
+          'image_thumbnail' => 0,
+          'image_thumbnail_retina' => 0,
+          'image_user_dashboard_100x100' => 0,
+          'link' => 0,
+        ),
+        'insert_width' => '',
+        'preview_image_style' => 'thumbnail',
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'image_image',
+      'weight' => 6,
+    ),
+  );
+
+  // Exported field_instance: 'node-article-field_social_teaser'.
+  $field_instances['node-article-field_social_teaser'] = array(
+    'bundle' => 'article',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 20,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_social_teaser',
+    'label' => 'Social Teaser',
+    'required' => 0,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 7,
+    ),
+  );
+
   // Exported field_instance: 'node-article-field_subtitle'.
   $field_instances['node-article-field_subtitle'] = array(
     'bundle' => 'article',
@@ -1002,7 +1176,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'rows' => 2,
       ),
       'type' => 'text_textarea',
-      'weight' => 13,
+      'weight' => 14,
     ),
   );
 
@@ -2358,7 +2532,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 11,
+      'weight' => 12,
     ),
   );
 
@@ -2668,7 +2842,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 11,
+      'weight' => 8,
     ),
   );
 
@@ -2719,7 +2893,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'display_label' => 0,
       ),
       'type' => 'options_onoff',
-      'weight' => 12,
+      'weight' => 9,
     ),
   );
 
@@ -2790,57 +2964,6 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
       ),
       'type' => 'date_select',
       'weight' => 12,
-    ),
-  );
-
-  // Exported field_instance: 'node-press_release-field_featured'.
-  $field_instances['node-press_release-field_featured'] = array(
-    'bundle' => 'press_release',
-    'default_value' => array(
-      0 => array(
-        'value' => 0,
-      ),
-    ),
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'list',
-        'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 5,
-      ),
-      'search_index' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 24,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_featured',
-    'label' => 'Feature for Associated Senator',
-    'required' => 0,
-    'settings' => array(
-      'custom_add_another' => '',
-      'custom_remove' => '',
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(
-        'display_label' => 1,
-      ),
-      'type' => 'options_onoff',
-      'weight' => 18,
     ),
   );
 
@@ -2954,7 +3077,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 12,
+      'weight' => 13,
     ),
   );
 
@@ -3117,7 +3240,7 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 7,
+      'weight' => 9,
     ),
   );
 
@@ -3253,7 +3376,178 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 17,
+      'weight' => 21,
+    ),
+  );
+
+  // Exported field_instance: 'node-press_release-field_social_image'.
+  $field_instances['node-press_release-field_social_image'] = array(
+    'bundle' => 'press_release',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'image',
+        'settings' => array(
+          'image_link' => '',
+          'image_style' => '',
+        ),
+        'type' => 'image',
+        'weight' => 21,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_social_image',
+    'label' => 'Social Image',
+    'required' => 0,
+    'settings' => array(
+      'alt_field' => 0,
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'default_image' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'png gif jpg jpeg',
+      'filefield_paths' => array(
+        'active_updating' => 0,
+        'file_name' => array(
+          'options' => array(
+            'pathauto' => 0,
+            'slashes' => 0,
+            'transliterate' => 0,
+          ),
+          'value' => '[file:ffp-name-only-original].[file:ffp-extension-original]',
+        ),
+        'file_path' => array(
+          'options' => array(
+            'pathauto' => 1,
+            'slashes' => 1,
+            'transliterate' => 1,
+          ),
+          'value' => 'press-release/social',
+        ),
+        'redirect' => 0,
+        'retroactive_update' => 0,
+      ),
+      'filefield_paths_enabled' => 1,
+      'max_filesize' => '',
+      'max_resolution' => '',
+      'min_resolution' => '',
+      'title_field' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'image',
+      'settings' => array(
+        'insert' => 0,
+        'insert_absolute' => 0,
+        'insert_class' => '',
+        'insert_default' => 'auto',
+        'insert_styles' => array(
+          'auto' => 'auto',
+          'icon_link' => 0,
+          'image' => 0,
+          'image_45x45' => 0,
+          'image_60x60' => 0,
+          'image_80x60' => 0,
+          'image_160x160' => 0,
+          'image_200x125' => 0,
+          'image_280x280' => 0,
+          'image_360x200' => 0,
+          'image_380x215' => 0,
+          'image_400x240' => 0,
+          'image_440x230' => 0,
+          'image_680x510' => 0,
+          'image_760x377' => 0,
+          'image_1280x510' => 0,
+          'image_1346x330' => 0,
+          'image_embed_landscape_400x225' => 0,
+          'image_embed_portrait_225x345' => 0,
+          'image_large' => 0,
+          'image_large_retina' => 0,
+          'image_media_thumbnail' => 0,
+          'image_medium' => 0,
+          'image_medium_retina' => 0,
+          'image_retina_100x100' => 0,
+          'image_square_thumbnail' => 0,
+          'image_thumbnail' => 0,
+          'image_thumbnail_retina' => 0,
+          'image_user_dashboard_100x100' => 0,
+          'link' => 0,
+        ),
+        'insert_width' => '',
+        'preview_image_style' => 'thumbnail',
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'image_image',
+      'weight' => 14,
+    ),
+  );
+
+  // Exported field_instance: 'node-press_release-field_social_teaser'.
+  $field_instances['node-press_release-field_social_teaser'] = array(
+    'bundle' => 'press_release',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 20,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_social_teaser',
+    'label' => 'Social Teaser',
+    'required' => 0,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 15,
     ),
   );
 
@@ -3356,62 +3650,6 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
       ),
       'type' => 'text_textarea_with_summary',
       'weight' => 3,
-    ),
-  );
-
-  // Exported field_instance: 'node-video-field_featured'.
-  $field_instances['node-video-field_featured'] = array(
-    'bundle' => 'video',
-    'default_value' => array(
-      0 => array(
-        'value' => 0,
-      ),
-    ),
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 6,
-      ),
-      'search_index' => array(
-        'label' => 'hidden',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 6,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 6,
-      ),
-      'thumbnail_preview' => array(
-        'label' => 'hidden',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 8,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_featured',
-    'label' => 'Is Featured',
-    'required' => 0,
-    'settings' => array(
-      'custom_add_another' => '',
-      'custom_remove' => '',
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(
-        'display_label' => 0,
-      ),
-      'type' => 'options_onoff',
-      'weight' => 9,
     ),
   );
 
@@ -3785,10 +4023,9 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
   t('Custom Layout Components');
   t('Experimental Content Groupings');
   t('Feature Image');
-  t('Feature for Associated Senator');
   t('Featured Bills');
   t('Featured Image');
-  t('Features the article on the front page of the Senator\'s web site.');
+  t('Features the article on the front page of the Senator\'s website. Make sure you have also uploaded a Main Image.');
   t('For committee use only. This is to feature this content on a Committee\'s detail page.');
   t('Hide from News Feed');
   t('Homepage Hero');
@@ -3813,6 +4050,8 @@ If the article was written by a staffer, but not in the Senator\'s voice, the fi
 If this is a guest post (e.g. from a community figure or leader), then it should be in that individual\'s name.
 
 If the article was written by a staffer, but not in the Senator\'s voice, the field should be left blank.');
+  t('Social Image');
+  t('Social Teaser');
   t('Source Date');
   t('Source Publication Title');
   t('Source URL');

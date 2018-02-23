@@ -52,7 +52,7 @@
   }
 }
 
-.webform-client-form, .webform-client-form LABEL {
+/*.webform-client-form, .webform-client-form LABEL {
   font-family: "Adelle Light", serif;
   font-size: 20px;
   text-transform: none;
@@ -61,26 +61,166 @@
 }  
 
 .webform-client-form LABEL {
-  text-indent:-14px;
-  margin-left:14px;
+  //text-indent:-14px;
+  //margin-left:14px;
   .option {
     color:#666;
     cursor:pointer;
     margin-left:14px;
   }
-}
+}*/
 
-.webform-client-form DIV.form-radios DIV.form-type-radio {
-  margin-left: 14px;
-  LABEL {
-    padding-left:10px;
+
+.webform-client-form {
+  border-top: 1px solid #ccc;
+  margin-top: 36px;
+  font-family: "Adelle Light", serif;
+  font-size: 20px;
+  text-transform: none;
+  color: $grey02;
+  cursor: default;
+  .form-item {
+    clear: both;
+    margin-top: 1.5em;
+  }
+  label {
+    font-family: "Proxima Nova SemiBold";
+    font-size: 20px;
+    text-transform: none;
+    color: $grey02;
+    cursor: default;
+    line-height: 1.3;
+    margin-bottom: .75em;
+    //@extend .drk-text;
+    .form-required {
+      color: $trad_red_lgt;
+    }
+  }
+  .form-item .description {
+    font-size: 14px;
+    text-transform: none;
+    color: $grey03;
+    //@extend .drk-text;
+    font-family: "Proxima Nova SemiBold";
+    margin-bottom: 15px;
+  }
+  .webform-component-textfield, .webform-component-email, .webform-component-textarea {
+    label {
+      margin-bottom: .15em;
+    }
+  }
+  .webform-component-select  {
+    position: relative;
+    LABEL:first-child, .webform-component-radios LABEL:first-child,
+    .webform-component-checkboxes LABEL:first-child {
+      clear: both;
+      padding: 30px 0 6px;
+    }
+    select {
+      @extend .med-text;
+      font-family: "Proxima Nova Semibold";
+      font-size: 14px;
+      padding: 10px 40px 10px 20px;
+      background: none;
+      background-image: none;
+      text-transform: uppercase;
+      min-height: 45px;
+      border: 1px solid #cccccc;
+    }
+    &:after {
+      position: absolute;
+      right: 10px;
+      bottom: 20px;
+      font-size: 25px;
+      @extend .med-text;
+      pointer-events: none;
+      cursor: pointer;
+      content: "\65";
+      font-family: 'senate_icons';
+      display: inline-block;
+      vertical-align: middle;
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px;
+      -webkit-font-smoothing: antialiased;
+    }
+  }
+  fieldset {
+    border: none;
+    margin: 36px 0 -24px;
+    padding: 0 0 9px 0;
+    legend {
+      width: 100%;
+      padding-bottom: 6px;
+      margin-left: 0;
+      border-bottom: 1px solid $grey05;
+      .fieldset-legend {
+        font-family: "Proxima Nova Regular";
+        font-size: 18px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        @extend .drk-text;
+      }
+    }
+  }
+  .webform-component-email LABEL:first-child {
+    padding: 0;
+  }
+  .form-radios {
+    .form-type-radio {
+      margin: .3em 0 0 14px;
+      clear: both;
+      padding: 6px 12px;
+      LABEL.option {
+        font-family: "Proxima Nova Regular";
+        font-size: 18px;
+        //@extend .drk-text;
+        color: $grey02;
+        margin: 1.5px 0 0 24px;
+        float: left;
+        display: block;
+        cursor: pointer;
+      }
+      input[type="radio"] {
+        float: left;
+        margin-left: -12px;
+        margin-right: -7px;
+        margin-top: 3.5px;
+      }
+      &:last-child {
+        margin-bottom: 56px;
+      }
+    }
+  }
+  .form-checkboxes .form-type-checkbox {
+    padding: 0 12px;
+    margin: 0 0 0 14px;
+    input[type="checkbox"] + label {
+      font-family: "Proxima Nova Regular";
+      font-size: 18px;
+      //@extend .drk-text;
+      color: $grey02;
+    }
+  }
+  .webform-grid-question, th.checkbox.webform-grid-option {
+    font-family: "Proxima Nova Regular";
+    font-size: 16px;
+    @extend .drk-text;
+  }
+  .webform-component-grid {
+    margin-top: 30px;
+    .form-type-radio input[type="radio"] {
+      float: none;
+      margin: 0;
+    }
   }
 }
 
+  @media #{$tablet} {
+    .node-type-questionnaire {
 
-
-@media #{$tablet} {
-  .node-type-questionnaire {
-    
+    }
   }
-}

@@ -1,5 +1,8 @@
 Apache Solr integration 7.x-1.x, xxxx-xx-xx
 -----------------------------
+#2338591 by mkalkbrenner: apachesolr_index_get_entities_to_index() randomly fails
+#2334725 by Xano: Remove apachesolr_search.pages.inc.orig
+#2343001 by mkalkbrenner: Retain filters checkbox is missing
 
 Apache Solr integration 7.x-1.8, 2015-12-02
 -----------------------------

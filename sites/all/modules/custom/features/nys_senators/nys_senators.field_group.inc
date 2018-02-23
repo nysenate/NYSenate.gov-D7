@@ -185,7 +185,7 @@ function nys_senators_field_group_info() {
         'required_fields' => 1,
         'id' => '',
         'classes' => 'group-legislation field-group-fieldset',
-        'description' => '',
+        'description' => 'The first bill will show as "Featured" on Senator\'s home page and at top of legislation page. The next 4 will show on Senator\'s home page as more of a list format, and also on Senator\'s legislation page as modified versions of the Featured layout with quotes. All bills added will also show quotes from Senator on the bill node page of Senator sponsored legislation.',
       ),
       'formatter' => 'collapsed',
     ),

@@ -40,7 +40,7 @@
 <?php else: ?>
   <div class="c-event-block c-event-block--featured-image">
     <div class="c-title">Featured Event</div>
-    <div class="c-event-image"><?php echo $fields['field_feature_image']->content; ?></div>
+    <div class="c-event-image"><?php echo $fields['field_image_main']->content; ?></div>
     <div class="c-event-date">
       <span><?php echo $fields['field_date']->content;?></span> <?php echo $fields['field_date_1']->content;?>
     </div>

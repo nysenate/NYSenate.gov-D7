@@ -1,7 +1,7 @@
 name = nys_committees
 core = 7.x
 package = NY STATE SENATE
-version = 7.x-1.37
+version = 7.x-1.38
 project = nys_committees
 dependencies[] = conditional_fields
 dependencies[] = ctools
@@ -86,6 +86,7 @@ features[field_instance][] = field_collection_item-field_members-field_assemblym
 features[field_instance][] = field_collection_item-field_members-field_committee_member_role
 features[field_instance][] = field_collection_item-field_members-field_other_member_role
 features[field_instance][] = field_collection_item-field_members-field_senator
+features[field_instance][] = field_collection_item-field_ol_agenda_bills-field_ol_absent_count
 features[field_instance][] = field_collection_item-field_ol_agenda_bills-field_ol_abstained_count
 features[field_instance][] = field_collection_item-field_ol_agenda_bills-field_ol_aye_count
 features[field_instance][] = field_collection_item-field_ol_agenda_bills-field_ol_aye_wr_count

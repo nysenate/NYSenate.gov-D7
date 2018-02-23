@@ -70,7 +70,11 @@ $associated_senators_count = count($associated_senators_array);
 	<div class="c-newsroom-link"><?php echo $fields['term_node_tid']->content; ?></div>
 	<?php if(isset($fields['field_associated_senator']->content)): ?>
 		<div class="c-senator-card">
+			<?php if (count($associated_senators_array) > 1){ ?>
 			<h4 class="nys-senator--involved"><?php echo count($associated_senators_array).' Senators Involved'; ?></h4>
+			<?php } else {?>
+			<h4 class="nys-senator--involved"><?php echo count($associated_senators_array).' Senator Involved'; ?></h4>
+            <?php }?>
 		</div>
 	<?php elseif(isset($fields['field_senator']->content) && !isset($fields['field_associated_senator']->content)): ?>
 		<div class="c-senator-card">

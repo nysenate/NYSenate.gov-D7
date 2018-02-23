@@ -26,7 +26,7 @@ enabled due to the EVAL command usage.
 
 If you can't upgrade you Redis server:
 
-  - 3.x release will only officially support Redis server <= 2.6
+  - 3.x release will only officially support Redis server <= 2.8 and 3.x
     nevertheless you may use it with Redis 2.4 if you configure your cache
     backend to operate in sharding mode.
 

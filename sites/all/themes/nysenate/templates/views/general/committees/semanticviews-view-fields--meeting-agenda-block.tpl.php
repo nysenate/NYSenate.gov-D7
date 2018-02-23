@@ -4,6 +4,7 @@ $nay_count = ($fields['field_ol_nay_count']->content) ? $fields['field_ol_nay_co
 $ayewr_count = ($fields['field_ol_aye_wr_count']->content) ? $fields['field_ol_aye_wr_count']->content : 0;
 $excused_count = ($fields['field_ol_excused_count']->content) ? $fields['field_ol_excused_count']->content : 0;
 $abstained_count = ($fields['field_ol_abstained_count']->content) ? $fields['field_ol_abstained_count']->content : 0;
+$absent_count = ($fields['field_ol_absent_count']->content) ? $fields['field_ol_absent_count']->content : 0;
 ?>
 <div class="c-update-block">
 	<div class="l-panel-col l-panel-col--lft">
@@ -44,10 +45,12 @@ $abstained_count = ($fields['field_ol_abstained_count']->content) ? $fields['fie
 			<div class="meta-row">
 				<div class="meta-count"><?php echo $ayewr_count; ?></div><div class="meta-label">ayewr</div>
 			</div>
-				<div class="meta-row">
+            <div class="meta-row">
+                <div class="meta-count"><?php echo $absent_count; ?></div><div class="meta-label">absent</div>
+            </div>
+            <div class="meta-row">
 				<div class="meta-count"><?php echo $excused_count; ?></div><div class="meta-label">excused</div>
 			</div>
-				
 			<div class="meta-row">
 				<div class="meta-count"><?php echo $abstained_count; ?></div><div class="meta-label">abstained</div>
 			</div>

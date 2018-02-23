@@ -863,7 +863,7 @@ function apachesolr_clear_cache($env_id) {
     $solr->clearCache();
   }
   catch (Exception $e) {
-    watchdog('Apache Solr', nl2br(check_plain($e->getMessage())), NULL, WATCHDOG_ERROR);
+    apachesolr_log_exception($env_id, $e);
     drupal_set_message(nl2br(check_plain($e->getMessage())), 'warning');
   }
 }
@@ -875,13 +875,14 @@ function apachesolr_clear_cache($env_id) {
  * @todo This is not according to drupal code standards
  */
 function apachesolr_set_stats_message($text, $type = 'status', $repeat = FALSE) {
+  $env_id = apachesolr_default_environment();
   try {
-    $solr = apachesolr_get_solr();
+    $solr = apachesolr_get_solr($env_id);
     $stats_summary = $solr->getStatsSummary();
     drupal_set_message(check_plain(t($text, $stats_summary)), $type, FALSE);
   }
   catch (Exception $e) {
-    watchdog('Apache Solr', nl2br(check_plain($e->getMessage())), NULL, WATCHDOG_ERROR);
+    apachesolr_log_exception($env_id, $e);
   }
 }
 
@@ -1005,7 +1006,7 @@ function apachesolr_cron($env_id = NULL) {
       }
     }
     catch (Exception $e) {
-      watchdog('Apache Solr', nl2br(check_plain($e->getMessage())) . ' in apachesolr_cron', NULL, WATCHDOG_ERROR);
+      apachesolr_log_exception($env_id, $e);
     }
 
     // We can safely process the apachesolr_cron_limit nodes at a time without a
@@ -1372,6 +1373,9 @@ function apachesolr_environment_save($environment) {
     ->fields($environment)
     ->execute();
   // Update the environment variables (if any).
+  db_delete('apachesolr_environment_variable')
+    ->condition('env_id', $environment['env_id'])
+    ->execute();
   foreach ($conf as $name => $value) {
     db_merge('apachesolr_environment_variable')
       ->key(array('env_id' => $environment['env_id'], 'name' => $name))
@@ -1485,7 +1489,7 @@ function apachesolr_server_status($url, $class = NULL) {
       $ping = @$solr->ping(variable_get('apachesolr_ping_timeout', 4));
     }
     catch (Exception $e) {
-      watchdog('Apache Solr', nl2br(check_plain($e->getMessage())), NULL, WATCHDOG_ERROR);
+      apachesolr_log_exception($url, $e);
     }
     $status[$key] = $ping;
   }
@@ -1959,8 +1963,11 @@ function apachesolr_get_index_bundles($env_id, $entity_type) {
  * Implements hook_entity_insert().
  */
 function apachesolr_entity_insert($entity, $type) {
-  // For our purposes there's really no difference between insert and update.
-  return apachesolr_entity_update($entity, $type);
+  // For our purposes there's really no difference between insert and update,
+  // unless $entity->status == 0, then don't bother
+  if(isset($entity->status) && $entity->status) {
+    return apachesolr_entity_update($entity, $type);
+  }
 }
 
 /**
@@ -1993,7 +2000,6 @@ function apachesolr_entity_update($entity, $type) {
   // Include the index file for the status callback
   module_load_include('inc', 'apachesolr', 'apachesolr.index');
   if (apachesolr_entity_should_index($entity, $type)) {
-    $info = entity_get_info($type);
     list($id, $vid, $bundle) = entity_extract_ids($type, $entity);
 
     // Check status callback before sending to the index
@@ -3029,4 +3035,27 @@ function apachesolr_ctools_environment_export($environment, $indent) {
   $additions_top = array();
   $additions_bottom = array('conf' => $environment->conf, 'index_bundles' => $index_bundles);
   return ctools_export_object('apachesolr_environment', $environment, $indent, NULL, $additions_top, $additions_bottom);
+}
+
+/**
+ * Log exceptions.
+ * @param $env_id
+ *   The environment ID.
+ * @param \Exception $e
+ */
+function apachesolr_log_exception($env_id, $exception) {
+  // TODO: Should we call watchdog_exception() from here?
+  $backtrace = $exception->getTrace();
+  $caller = _drupal_get_last_caller($backtrace);
+  watchdog(
+    'Apache Solr',
+    'Exception caught for function %function (line %line of %file), Environment @env_id: ' . nl2br(check_plain($exception->getMessage())),
+    array(
+      '%function' => $caller['function'],
+      '%file' => $caller['file'],
+      '%line' => $caller['line'],
+      '@env_id' => $env_id,
+    ),
+    WATCHDOG_ERROR
+  );
 }

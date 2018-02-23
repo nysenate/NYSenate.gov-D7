@@ -1,0 +1,214 @@
+<?php
+
+/**
+ * Override or insert variables into the node template.
+ */
+function nys_metatags_preprocess_node(&$variables)
+{
+    if ($variables['type'] === 'press_release' || $variables['type'] === 'article' || $variables['type'] === 'event') {
+        //kpr($variables);
+        // OG Tags
+
+        $og_image_width = array(
+            '#tag' => 'meta',
+            '#weight' => 30.1,
+            '#attributes' => array(
+                'property' => 'og:image:width',
+                'content' => 1200
+            ));
+
+        $og_image_height = array(
+            '#tag' => 'meta',
+            '#weight' => 30.2,
+            '#attributes' => array(
+                'property' => 'og:image:height',
+                'content' => 1200
+            ));
+
+        if (!empty($variables['field_social_teaser'])) {
+            $og_description = array(
+                '#tag' => 'meta',
+                '#weight' => 29.8,
+                '#attributes' => array(
+                    'property' => 'og:description',
+                    'content' => $variables['field_social_teaser'][0]['value']
+                ));
+
+            $twitter_description = array(
+                '#tag' => 'meta',
+                '#weight' => 40,
+                '#attributes' => array(
+                    'name' => 'twitter:description',
+                    'content' => $variables['field_social_teaser'][0]['value']
+                ));
+
+            $page_description = array(
+                '#tag' => 'meta',
+                '#attributes' => array(
+                    'name' => 'description',
+                    'content' => $variables['field_social_teaser'][0]['value']
+                ));
+
+            $itemprop_description = array(
+                '#tag' => 'meta',
+                '#weight' => 70.1,
+                '#attributes' => array(
+                    'itemprop' => 'description',
+                    'content' => $variables['field_social_teaser'][0]['value']
+                ));
+        } elseif (!empty($variables['body'])) {
+            $og_description = array(
+                '#tag' => 'meta',
+                '#weight' => 29.8,
+                '#attributes' => array(
+                    'property' => 'og:description',
+                    'content' => strip_tags(text_summary($variables['body'][0]['value']))
+                ));
+
+            $twitter_description = array(
+                '#tag' => 'meta',
+                '#weight' => 40,
+                '#attributes' => array(
+                    'property' => 'twitter:description',
+                    'content' => strip_tags(text_summary($variables['body'][0]['value']))
+                ));
+
+            $page_description = array(
+                '#tag' => 'meta',
+                '#attributes' => array(
+                    'name' => 'description',
+                    'content' => strip_tags(text_summary($variables['body'][0]['value']))
+                ));
+
+            $itemprop_description = array(
+                '#tag' => 'meta',
+                '#weight' => 70.1,
+                '#attributes' => array(
+                    'itemprop' => 'description',
+                    'content' => strip_tags(text_summary($variables['body'][0]['value']))
+                ));
+        }
+
+        if (!empty($variables['field_social_image'][0]['uri'])) {
+            $og_image = array(
+                '#tag' => 'meta',
+                '#weight' => 29.9,
+                '#attributes' => array(
+                    'property' => 'og:image',
+                    'content' => file_create_url($variables['field_social_image'][0]['uri'])
+                ));
+
+            $og_image_secure_url = str_replace('http://', 'https://', file_create_url($variables['field_social_image'][0]['uri']));
+
+            $og_image_secure = array(
+                '#tag' => 'meta',
+                '#weight' => 29.99,
+                '#attributes' => array(
+                    'property' => 'og:image:secure_url',
+                    'content' => $og_image_secure_url
+                ));
+
+            $og_image_type = array(
+                '#tag' => 'meta',
+                '#weight' => 30,
+                '#attributes' => array(
+                    'property' => 'og:image:type',
+                    'content' => $variables['field_social_image'][0]['filemime']
+                ));
+
+            $twitter_image = array(
+                '#tag' => 'meta',
+                '#weight' => 40.1,
+                '#attributes' => array(
+                    'name' => 'twitter:image',
+                    'content' => file_create_url($variables['field_social_image'][0]['uri'])
+                ));
+        } elseif (!empty($variables['field_image_main'][0]['uri'])) {
+            $og_image = array(
+                '#tag' => 'meta',
+                '#weight' => 29.9,
+                '#attributes' => array(
+                    'property' => 'og:image',
+                    'content' => file_create_url($variables['field_image_main'][0]['uri'])
+                ));
+
+            $og_image_secure_url = str_replace('http://', 'https://', file_create_url($variables['field_image_main'][0]['uri']));
+
+            $og_image_secure = array(
+                '#tag' => 'meta',
+                '#weight' => 29.99,
+                '#attributes' => array(
+                    'property' => 'og:image:secure_url',
+                    'content' => $og_image_secure_url
+                ));
+
+            $og_image_type = array(
+                '#tag' => 'meta',
+                '#weight' => 30,
+                '#attributes' => array(
+                    'property' => 'og:image:type',
+                    'content' => $variables['field_image_main'][0]['filemime'])
+            );
+
+            $twitter_image = array(
+                '#tag' => 'meta',
+                '#weight' => 40.1,
+                '#attributes' => array(
+                    'name' => 'twitter:image',
+                    'content' => file_create_url($variables['field_image_main'][0]['uri'])
+                ));
+        } elseif ($variables['type'] === 'press_release') {
+            $og_image = array(
+                '#tag' => 'meta',
+                '#weight' => 29.9,
+                '#attributes' => array(
+                    'property' => 'og:image',
+                    'content' => 'http://www.nysenate.gov/sites/default/files/ny_senate_press_release_share.png'
+                ));
+
+            $og_image_secure = array(
+                '#tag' => 'meta',
+                '#weight' => 29.99,
+                '#attributes' => array(
+                    'property' => 'og:image:secure_url',
+                    'content' => 'https://www.nysenate.gov/sites/default/files/ny_senate_press_release_share.png'
+                ));
+
+            $og_image_type = array(
+                '#tag' => 'meta',
+                '#weight' => 30,
+                '#attributes' => array(
+                    'property' => 'og:image:type',
+                    'content' => 'image/png'
+                ));
+            $twitter_image = array(
+                '#tag' => 'meta',
+                '#weight' => 40.1,
+                '#attributes' => array(
+                    'name' => 'twitter:image',
+                    'content' => 'https://www.nysenate.gov/sites/default/files/ny_senate_press_release_share.png'
+                ));
+
+        } else {
+            $og_image = NULL;
+        }
+
+
+        if (isset($og_description) && !empty($og_description)) {
+            drupal_add_html_head($og_description, 'og_description');
+            drupal_add_html_head($twitter_description, 'twitter_description');
+            drupal_add_html_head($page_description, 'page_description');
+            drupal_add_html_head($itemprop_description, 'itemprop_description');
+        }
+
+        if (isset($og_image) && !empty($og_image)) {
+            drupal_add_html_head($og_image_width, 'og_image_width');
+            drupal_add_html_head($og_image_height, 'og_image_height');
+        }
+
+        drupal_add_html_head($og_image, 'og_image');
+        drupal_add_html_head($og_image_type, 'og_image_type');
+        drupal_add_html_head($og_image_secure, 'og_image_secure');
+        drupal_add_html_head($twitter_image, 'twitter_image');
+    }
+}

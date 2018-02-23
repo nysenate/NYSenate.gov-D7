@@ -6,7 +6,7 @@
  */
 
 /**
- * Implements hook_init().
+ * Implements hook_nys_messaging_contact_message_sent().
  */
 function nys_msglog_nys_messaging_contact_message_sent($form_values, $mail) {
   global $user;

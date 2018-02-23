@@ -79,6 +79,7 @@ function nys_open_data_field_default_field_bases() {
     'module' => 'list',
     'settings' => array(
       'allowed_values' => array(
+        'annual_reports' => 'Annual Committee Report',
         'payroll' => 'Payroll Report',
         'expenditure' => 'Expenditure Report',
         'nomination' => 'NY State and Municipal Facilities Program Project Nomination',

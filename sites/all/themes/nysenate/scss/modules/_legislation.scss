@@ -212,6 +212,8 @@ h4.c-bill-topic {
   margin: 0;
   font-family: "Proxima Nova Regular";
   font-size: 12px;
+  line-height: 1.4;
+  display: inline;
   &:before {
     content: "|";
     display: inline-block;

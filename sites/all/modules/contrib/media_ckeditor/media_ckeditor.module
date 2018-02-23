@@ -81,7 +81,7 @@ function media_ckeditor_media_browser_params_alter(&$stored_params) {
         'audio',
         'image',
         'video',
-        'document'
+        'document',
       ));
     }
   }
@@ -110,7 +110,12 @@ function media_ckeditor_form_field_ui_field_edit_form_alter(&$form, &$form_state
 function media_ckeditor_pre_render_media($element) {
   // If the media widget has been configured to have an Insert button, we'll
   // communicate that information through javascript settings.
-  $instance = field_info_instance($element['#entity_type'], $element['#field_name'], $element['#bundle']);
+  if (!isset($element['#entity_type']) && !isset($element['#field_name']) && !isset($element['#bundle'])) {
+    $instance = FALSE;
+  }
+  else {
+    $instance = field_info_instance($element['#entity_type'], $element['#field_name'], $element['#bundle']);
+  }
   if (!empty($instance['settings']['wysiwyg_insert'])) {
     $element['#attached']['js'][] = array(
       'type' => 'setting',

@@ -29,7 +29,7 @@ function media_ckeditor_install() {
         if ($i === 'media') {
           // Update the path variable to the new path.
           $plugin['path'] = '%base_path%' . $mod_path . '/js/plugins/media/';
-          // Update the plugin with the new path overriding anything that was there before.
+          // Update the plugin with the new path.
           $profile_settings['loadPlugins'][$i] = $plugin;
         }
       }
@@ -69,7 +69,7 @@ function media_ckeditor_update_7201() {
         if ($i === 'media') {
           // Update the path variable to the new path.
           $plugin['path'] = '%base_path%' . $mod_path . '/js/plugins/media/';
-          // Update the plugin with the new path overriding anything that was there before.
+          // Update the plugin with the new path.
           $profile_settings['loadPlugins'][$i] = $plugin;
         }
       }

@@ -397,6 +397,56 @@ function nys_committees_field_default_field_instances() {
   );
 
   // Exported field_instance:
+  // 'field_collection_item-field_ol_agenda_bills-field_ol_absent_count'.
+  $field_instances['field_collection_item-field_ol_agenda_bills-field_ol_absent_count'] = array(
+    'bundle' => 'field_ol_agenda_bills',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => '',
+        ),
+        'type' => 'number_integer',
+        'weight' => 8,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_ol_absent_count',
+    'label' => 'Absent Count',
+    'required' => 0,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'max' => '',
+      'min' => 0,
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(),
+      'type' => 'number',
+      'weight' => 15,
+    ),
+  );
+
+  // Exported field_instance:
   // 'field_collection_item-field_ol_agenda_bills-field_ol_abstained_count'.
   $field_instances['field_collection_item-field_ol_agenda_bills-field_ol_abstained_count'] = array(
     'bundle' => 'field_ol_agenda_bills',
@@ -1908,6 +1958,7 @@ function nys_committees_field_default_field_instances() {
   t('(e.g. "Bi-weekly during legislative session") ');
   t('140 characters, max.');
   t('<p>Do not include the type of committee in this field (i.e. for the Health Committee, only include the word \'Health\' here).</p><p class="next">Write in the type of committee (i.e. Committee, Task Force, etc.) which will display on the front-end.</p>');
+  t('Absent Count');
   t('Abstained Count');
   t('Agenda Addendum');
   t('Agenda Bills');

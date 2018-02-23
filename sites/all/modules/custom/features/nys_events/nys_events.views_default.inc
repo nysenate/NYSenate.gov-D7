@@ -1206,7 +1206,7 @@ function nys_events_views_default_views() {
   $handler->display->display_options['empty']['area_text_custom']['table'] = 'views';
   $handler->display->display_options['empty']['area_text_custom']['field'] = 'area_text_custom';
   $handler->display->display_options['empty']['area_text_custom']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area_text_custom']['content'] = 'No events are currently scheduled during %2, %3 in Albany.';
+  $handler->display->display_options['empty']['area_text_custom']['content'] = 'No events are currently scheduled during the month of %2 in Albany.';
   $handler->display->display_options['empty']['area_text_custom']['tokenize'] = TRUE;
   $handler->display->display_options['defaults']['relationships'] = FALSE;
   /* Relationship: Content: Location (field_location) */
@@ -1353,32 +1353,15 @@ function nys_events_views_default_views() {
   $handler->display->display_options['arguments']['field_senator_target_id']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_senator_target_id']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_senator_target_id']['summary_options']['items_per_page'] = '25';
-  /* Contextual filter: Date: Date (node) */
-  $handler->display->display_options['arguments']['date_argument']['id'] = 'date_argument';
-  $handler->display->display_options['arguments']['date_argument']['table'] = 'node';
-  $handler->display->display_options['arguments']['date_argument']['field'] = 'date_argument';
-  $handler->display->display_options['arguments']['date_argument']['default_action'] = 'default';
-  $handler->display->display_options['arguments']['date_argument']['default_argument_type'] = 'date';
-  $handler->display->display_options['arguments']['date_argument']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['date_argument']['use_fromto'] = 'no';
-  $handler->display->display_options['arguments']['date_argument']['date_fields'] = array(
-    'field_data_field_date.field_date_value' => 'field_data_field_date.field_date_value',
-  );
-  $handler->display->display_options['arguments']['date_argument']['date_method'] = 'AND';
-  /* Contextual filter: Context Year */
-  $handler->display->display_options['arguments']['date_argument_1']['id'] = 'date_argument_1';
-  $handler->display->display_options['arguments']['date_argument_1']['table'] = 'node';
-  $handler->display->display_options['arguments']['date_argument_1']['field'] = 'date_argument';
-  $handler->display->display_options['arguments']['date_argument_1']['ui_name'] = 'Context Year';
-  $handler->display->display_options['arguments']['date_argument_1']['default_action'] = 'default';
-  $handler->display->display_options['arguments']['date_argument_1']['default_argument_type'] = 'date';
-  $handler->display->display_options['arguments']['date_argument_1']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['date_argument_1']['granularity'] = 'year';
-  $handler->display->display_options['arguments']['date_argument_1']['use_fromto'] = 'no';
-  $handler->display->display_options['arguments']['date_argument_1']['date_fields'] = array(
-    'field_data_field_date.field_date_value' => 'field_data_field_date.field_date_value',
-  );
-  $handler->display->display_options['arguments']['date_argument_1']['date_method'] = 'AND';
+  /* Contextual filter: Content: Published on -  start date (field_date) */
+  $handler->display->display_options['arguments']['field_date_value']['id'] = 'field_date_value';
+  $handler->display->display_options['arguments']['field_date_value']['table'] = 'field_data_field_date';
+  $handler->display->display_options['arguments']['field_date_value']['field'] = 'field_date_value';
+  $handler->display->display_options['arguments']['field_date_value']['default_argument_type'] = 'date';
+  $handler->display->display_options['arguments']['field_date_value']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_date_value']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_date_value']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['field_date_value']['granularity_reset'] = 0;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
@@ -1480,7 +1463,7 @@ function nys_events_views_default_views() {
   $handler->display->display_options['empty']['area_text_custom']['table'] = 'views';
   $handler->display->display_options['empty']['area_text_custom']['field'] = 'area_text_custom';
   $handler->display->display_options['empty']['area_text_custom']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area_text_custom']['content'] = 'No events are currently scheduled during %2, %3 in the district.';
+  $handler->display->display_options['empty']['area_text_custom']['content'] = 'No events are currently scheduled during the month of %2, in the district.';
   $handler->display->display_options['empty']['area_text_custom']['tokenize'] = TRUE;
   $handler->display->display_options['defaults']['relationships'] = FALSE;
   /* Relationship: Content: Location (field_location) */
@@ -1627,32 +1610,15 @@ function nys_events_views_default_views() {
   $handler->display->display_options['arguments']['field_senator_target_id']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_senator_target_id']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_senator_target_id']['summary_options']['items_per_page'] = '25';
-  /* Contextual filter: Date: Date (node) */
-  $handler->display->display_options['arguments']['date_argument']['id'] = 'date_argument';
-  $handler->display->display_options['arguments']['date_argument']['table'] = 'node';
-  $handler->display->display_options['arguments']['date_argument']['field'] = 'date_argument';
-  $handler->display->display_options['arguments']['date_argument']['default_action'] = 'default';
-  $handler->display->display_options['arguments']['date_argument']['default_argument_type'] = 'date';
-  $handler->display->display_options['arguments']['date_argument']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['date_argument']['use_fromto'] = 'no';
-  $handler->display->display_options['arguments']['date_argument']['date_fields'] = array(
-    'field_data_field_date.field_date_value' => 'field_data_field_date.field_date_value',
-  );
-  $handler->display->display_options['arguments']['date_argument']['date_method'] = 'AND';
-  /* Contextual filter: Context Year */
-  $handler->display->display_options['arguments']['date_argument_1']['id'] = 'date_argument_1';
-  $handler->display->display_options['arguments']['date_argument_1']['table'] = 'node';
-  $handler->display->display_options['arguments']['date_argument_1']['field'] = 'date_argument';
-  $handler->display->display_options['arguments']['date_argument_1']['ui_name'] = 'Context Year';
-  $handler->display->display_options['arguments']['date_argument_1']['default_action'] = 'default';
-  $handler->display->display_options['arguments']['date_argument_1']['default_argument_type'] = 'date';
-  $handler->display->display_options['arguments']['date_argument_1']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['date_argument_1']['granularity'] = 'year';
-  $handler->display->display_options['arguments']['date_argument_1']['use_fromto'] = 'no';
-  $handler->display->display_options['arguments']['date_argument_1']['date_fields'] = array(
-    'field_data_field_date.field_date_value' => 'field_data_field_date.field_date_value',
-  );
-  $handler->display->display_options['arguments']['date_argument_1']['date_method'] = 'AND';
+  /* Contextual filter: Content: Published on -  start date (field_date) */
+  $handler->display->display_options['arguments']['field_date_value']['id'] = 'field_date_value';
+  $handler->display->display_options['arguments']['field_date_value']['table'] = 'field_data_field_date';
+  $handler->display->display_options['arguments']['field_date_value']['field'] = 'field_date_value';
+  $handler->display->display_options['arguments']['field_date_value']['default_argument_type'] = 'date';
+  $handler->display->display_options['arguments']['field_date_value']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_date_value']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_date_value']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['field_date_value']['granularity_reset'] = 0;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
@@ -1755,7 +1721,7 @@ function nys_events_views_default_views() {
   $handler->display->display_options['empty']['area_text_custom']['table'] = 'views';
   $handler->display->display_options['empty']['area_text_custom']['field'] = 'area_text_custom';
   $handler->display->display_options['empty']['area_text_custom']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area_text_custom']['content'] = 'No events are currently scheduled during %2, %3.';
+  $handler->display->display_options['empty']['area_text_custom']['content'] = 'No events are currently scheduled during the month of %2.';
   $handler->display->display_options['empty']['area_text_custom']['tokenize'] = TRUE;
   $handler->display->display_options['defaults']['relationships'] = FALSE;
   /* Relationship: Content: Location (field_location) */
@@ -1920,33 +1886,15 @@ function nys_events_views_default_views() {
   $handler->display->display_options['arguments']['field_senator_target_id']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_senator_target_id']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_senator_target_id']['summary_options']['items_per_page'] = '25';
-  /* Contextual filter: Date: Date (node) */
-  $handler->display->display_options['arguments']['date_argument']['id'] = 'date_argument';
-  $handler->display->display_options['arguments']['date_argument']['table'] = 'node';
-  $handler->display->display_options['arguments']['date_argument']['field'] = 'date_argument';
-  $handler->display->display_options['arguments']['date_argument']['default_action'] = 'default';
-  $handler->display->display_options['arguments']['date_argument']['default_argument_type'] = 'date';
-  $handler->display->display_options['arguments']['date_argument']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['date_argument']['specify_validation'] = TRUE;
-  $handler->display->display_options['arguments']['date_argument']['use_fromto'] = 'no';
-  $handler->display->display_options['arguments']['date_argument']['date_fields'] = array(
-    'field_data_field_date.field_date_value' => 'field_data_field_date.field_date_value',
-  );
-  $handler->display->display_options['arguments']['date_argument']['date_method'] = 'AND';
-  /* Contextual filter: Year Context */
-  $handler->display->display_options['arguments']['date_argument_1']['id'] = 'date_argument_1';
-  $handler->display->display_options['arguments']['date_argument_1']['table'] = 'node';
-  $handler->display->display_options['arguments']['date_argument_1']['field'] = 'date_argument';
-  $handler->display->display_options['arguments']['date_argument_1']['ui_name'] = 'Year Context';
-  $handler->display->display_options['arguments']['date_argument_1']['default_action'] = 'default';
-  $handler->display->display_options['arguments']['date_argument_1']['default_argument_type'] = 'date';
-  $handler->display->display_options['arguments']['date_argument_1']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['date_argument_1']['granularity'] = 'year';
-  $handler->display->display_options['arguments']['date_argument_1']['use_fromto'] = 'no';
-  $handler->display->display_options['arguments']['date_argument_1']['date_fields'] = array(
-    'field_data_field_date.field_date_value' => 'field_data_field_date.field_date_value',
-  );
-  $handler->display->display_options['arguments']['date_argument_1']['date_method'] = 'AND';
+  /* Contextual filter: Content: Published on -  start date (field_date) */
+  $handler->display->display_options['arguments']['field_date_value']['id'] = 'field_date_value';
+  $handler->display->display_options['arguments']['field_date_value']['table'] = 'field_data_field_date';
+  $handler->display->display_options['arguments']['field_date_value']['field'] = 'field_date_value';
+  $handler->display->display_options['arguments']['field_date_value']['default_argument_type'] = 'date';
+  $handler->display->display_options['arguments']['field_date_value']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_date_value']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_date_value']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['field_date_value']['granularity_reset'] = 0;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
@@ -2062,11 +2010,11 @@ function nys_events_views_default_views() {
   $handler->display->display_options['filters']['field_date_value']['field'] = 'field_date_value';
   $handler->display->display_options['filters']['field_date_value']['operator'] = '>=';
   $handler->display->display_options['filters']['field_date_value']['default_date'] = 'now';
-  /* Filter criterion: Content: Feature Image (field_feature_image:fid) */
-  $handler->display->display_options['filters']['field_feature_image_fid']['id'] = 'field_feature_image_fid';
-  $handler->display->display_options['filters']['field_feature_image_fid']['table'] = 'field_data_field_feature_image';
-  $handler->display->display_options['filters']['field_feature_image_fid']['field'] = 'field_feature_image_fid';
-  $handler->display->display_options['filters']['field_feature_image_fid']['operator'] = 'not empty';
+  /* Filter criterion: Content: Image Main (field_image_main:fid) */
+  $handler->display->display_options['filters']['field_image_main_fid']['id'] = 'field_image_main_fid';
+  $handler->display->display_options['filters']['field_image_main_fid']['table'] = 'field_data_field_image_main';
+  $handler->display->display_options['filters']['field_image_main_fid']['field'] = 'field_image_main_fid';
+  $handler->display->display_options['filters']['field_image_main_fid']['operator'] = 'not empty';
 
   /* Display: Senator Home Upcoming Events */
   $handler = $view->new_display('block', 'Senator Home Upcoming Events', 'block_1');
@@ -2111,6 +2059,16 @@ function nys_events_views_default_views() {
   $handler->display->display_options['sorts']['field_date_value']['id'] = 'field_date_value';
   $handler->display->display_options['sorts']['field_date_value']['table'] = 'field_data_field_date';
   $handler->display->display_options['sorts']['field_date_value']['field'] = 'field_date_value';
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: Field: Senator (field_senator) */
+  $handler->display->display_options['arguments']['field_senator_target_id']['id'] = 'field_senator_target_id';
+  $handler->display->display_options['arguments']['field_senator_target_id']['table'] = 'field_data_field_senator';
+  $handler->display->display_options['arguments']['field_senator_target_id']['field'] = 'field_senator_target_id';
+  $handler->display->display_options['arguments']['field_senator_target_id']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['field_senator_target_id']['default_argument_type'] = 'node';
+  $handler->display->display_options['arguments']['field_senator_target_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_senator_target_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_senator_target_id']['summary_options']['items_per_page'] = '25';
 
   /* Display: Committee Featured Event */
   $handler = $view->new_display('block', 'Committee Featured Event', 'featured_committee_event');

@@ -1022,6 +1022,7 @@ function nys_cms_views_default_views() {
     'in_the_news' => 'in_the_news',
     'initiative' => 'initiative',
     'petition' => 'petition',
+    'advpoll' => 'advpoll',
     'press_release' => 'press_release',
     'promotional_banner' => 'promotional_banner',
     'questionnaire' => 'questionnaire',
@@ -1047,7 +1048,9 @@ function nys_cms_views_default_views() {
     13 => 0,
     14 => 0,
     7 => 0,
-    16 => 0,
+    17 => 0,
+    18 => 0,
+    19 => 0,
   );
   $handler->display->display_options['filters']['type']['expose']['reduce'] = TRUE;
   /* Filter criterion: Content: Published */

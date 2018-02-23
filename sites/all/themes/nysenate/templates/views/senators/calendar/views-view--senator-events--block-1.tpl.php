@@ -35,7 +35,7 @@
  }
 
 ?>
-<div class="c-container c-upcoming-container">
+<div class="c-container">
   <?php print render($title_prefix); ?>
   <?php if ($title): ?>
     <?php print $title; ?>
