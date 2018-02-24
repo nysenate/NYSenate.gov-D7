@@ -320,34 +320,6 @@ function nysenate_preprocess_node(&$variables) {
     $variables['embedded_webform'] = $rendered_node;
   }
 
-  if ($variables['type'] === 'press_release') {
-    // OG Tags
-    $full_url = drupal_get_path_alias('node/'.$variables['nid']);
-    $og_url = array('#tag' => 'meta', '#attributes' => array('property' => 'og:url','content' => url($variables['node_url'])));
-    $og_type = array('#tag' => 'meta', '#attributes' => array('property' => 'og:type','content' => 'article'));
-    $og_title = array('#tag' => 'meta', '#attributes' => array('property' => 'og:title','content' => $variables['title']));
-    if (isset($variables['body'][0]['value'])) {
-      $og_description = array('#tag' => 'meta', '#attributes' => array('property' => 'og:description','content' => $variables['body'][0]['value']));
-    }
-    $og_image = !empty($variables['field_image_main'][0]['uri']) ? array(
-      '#tag' => 'meta',
-      '#attributes' => array(
-        'property' => 'og:image',
-        'content' => image_style_url('760x377', $variables['field_image_main'][0]['uri'])
-        )
-      )
-    : NULL;
-
-    drupal_add_html_head($og_url, 'og_url');
-    drupal_add_html_head($og_type, 'og_type');
-    drupal_add_html_head($og_title, 'og_title');
-    if (isset($og_description) && !empty($og_description)) {
-      drupal_add_html_head($og_description, 'og_description');
-    }
-    drupal_add_html_head($og_image, 'og_image');
-
-  }
-
   if ($variables['type'] === 'meeting') {
     // Pull Agenda location and notes fields in the event of non-populated Meeting fields.
     if (empty($variables['body']) || empty($variables['field_meeting_location'])) {
@@ -1068,6 +1040,15 @@ function nysenate_views_pre_render(&$view) {
           'senator_featured_legislation_main', 'nys-bill-status__drk'
       ),
       array(
+          'sen_featured_legis', 'nys-bill-status__drk'
+      ),
+      array(
+          'sen_featured_legis_sub', 'nys-bill-status__drk'
+      ),
+      array(
+          'sen_featured_legis_home_sub', 'nys-bill-status__sml'
+      ),
+      array(
           'senator_legislation_bills', 'nys-bill-status__sml'
       ),
       array(
@@ -1624,9 +1605,15 @@ function nysenate_form_alter(&$form, &$form_state, $form_id){
   if ($form_id == 'school_submissions_entityform_edit_form') {
     $form['field_school_name'][LANGUAGE_NONE]['#options']['_none'] = t('- Start typing school name to narrow list -');
   }
+    if ($form_id == 'new_york_senate_youth_leadership_entityform_edit_form') {
+        $form['field_school'][LANGUAGE_NONE]['#options']['_none'] = t('- Start typing school name to narrow list -');
+    }
   if ($form_id == 'hannon_photo_contest_entityform_edit_form') {
     $form['field_hannon_school_name'][LANGUAGE_NONE]['#options']['_none'] = t('- Select your high school -');
     $form['field_hannon_category'][LANGUAGE_NONE]['#options']['_none'] = t('- Select a category -');
+  }
+  if ($form_id == 'article_node_form') {
+    $form['body'][LANGUAGE_NONE][0]['summary']['#title'] = t('Custom Social Description');
   }
 }
 
@@ -1681,7 +1668,7 @@ function nysenate_pager_link($variables) {
     $attributes['href'] = url('nys-dashboard/questionnaires-users', array('query' => $query));
   else if(isset($parameters['view']) && ($parameters['view'] == 'senator_petitions'))
     $attributes['href'] = url('nys-dashboard/petitions-users', array('query' => $query));
-  else if(isset($parameters['view']) && ($parameters['view'] == 'senator_bills')){
+  else if (isset($parameters['view']) && ($parameters['view'] == 'senator_bills')){
     if(!isset($query['comm_status'])) $query['comm_status'] = 'all';
     if(!isset($query['vote_type'])) $query['vote_type'] = 'all';
     if(!isset($query['bill_name'])) $query['bill_name'] = '';
@@ -1949,3 +1936,4 @@ function nysenate_bill_get_prev_versions($prev_vers_session, $prev_vers_printno)
 
   return $prev_vers_result;
 }
+
