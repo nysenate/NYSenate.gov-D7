@@ -5,15 +5,43 @@
 * File nys_senators_json.module.
 */
 
+// Require the JSON creation functions file.
+require_once 'nys_senators_json.inc';
+
 function nys_senators_json_menu() {
   $items = array();
 
   $items['senators-json'] = array(
     'title' => 'Senators API',
-    'page callback' => 'nys_senators_json',
+    'page callback' => 'nys_senators_json_request_wrapper',
     'access arguments' => array('access content'),
-    'file' => 'nys_senators_json.php',
   );
 
   return $items;
+}
+
+/**
+ * Implements hook_entity_insert().
+ *
+ * If a senator node or district taxonomy term is being updated/inserted,
+ * make sure the JSON output file is updated.
+ */
+function nys_senators_json_entity_insert($entity, $type) {
+  if (($type == 'node' && $entity->type == 'senator')
+    || ($type == 'taxonomy_term' && $entity->vocabulary_machine_name == 'districts')) {
+    nys_senators_json('', TRUE);
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ *
+ * If a senator node or district taxonomy term is being updated/inserted,
+ * make sure the JSON output file is updated.
+ */
+function nys_senators_json_entity_update($entity, $type) {
+  if (($type == 'node' && $entity->type == 'senator')
+    || ($type == 'taxonomy_term' && $entity->vocabulary_machine_name == 'districts')) {
+    nys_senators_json('', TRUE);
+  }
 }

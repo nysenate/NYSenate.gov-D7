@@ -11,63 +11,6 @@ function nys_senators_views_default_views() {
   $export = array();
 
   $view = new view();
-  $view->name = 'bills_for_featuring';
-  $view->description = '';
-  $view->tag = 'default';
-  $view->base_table = 'bill';
-  $view->human_name = 'Bills for Featuring';
-  $view->core = 7;
-  $view->api_version = '3.0';
-  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-  /* Display: Master */
-  $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'none';
-  $handler->display->display_options['cache']['type'] = 'none';
-  $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['pager']['type'] = 'full';
-  $handler->display->display_options['style_plugin'] = 'default';
-  $handler->display->display_options['row_plugin'] = 'fields';
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_bill_id']['id'] = 'field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['table'] = 'field_data_field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['field'] = 'field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['label'] = '';
-  $handler->display->display_options['fields']['field_bill_id']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['name']['id'] = 'name';
-  $handler->display->display_options['fields']['name']['table'] = 'bill';
-  $handler->display->display_options['fields']['name']['field'] = 'name';
-  $handler->display->display_options['fields']['name']['label'] = '';
-  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
-  /* Contextual filter: Broken/missing handler */
-  $handler->display->display_options['arguments']['field_bill_id_value']['id'] = 'field_bill_id_value';
-  $handler->display->display_options['arguments']['field_bill_id_value']['table'] = 'field_data_field_bill_id';
-  $handler->display->display_options['arguments']['field_bill_id_value']['field'] = 'field_bill_id_value';
-  $handler->display->display_options['arguments']['field_bill_id_value']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['field_bill_id_value']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['field_bill_id_value']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['field_bill_id_value']['summary_options']['items_per_page'] = '25';
-
-  /* Display: Entity Reference */
-  $handler = $view->new_display('entityreference', 'Entity Reference', 'entityreference_1');
-  $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['pager']['type'] = 'some';
-  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
-  $handler->display->display_options['style_plugin'] = 'entityreference_style';
-  $handler->display->display_options['style_options']['search_fields'] = array(
-    'field_bill_id' => 'field_bill_id',
-    'name' => 'name',
-  );
-  $handler->display->display_options['defaults']['style_options'] = FALSE;
-  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
-  $handler->display->display_options['row_plugin'] = 'entityreference_fields';
-  $handler->display->display_options['defaults']['row_options'] = FALSE;
-  $export['bills_for_featuring'] = $view;
-
-  $view = new view();
   $view->name = 'current_session_bills';
   $view->description = '';
   $view->tag = 'default';
@@ -365,6 +308,13 @@ function nys_senators_views_default_views() {
 
   /* Display: Senator Featured Legislation Sub */
   $handler = $view->new_display('block', 'Senator Featured Legislation Sub', 'senator_featured_legislation_sub');
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Field: Featured Bill (field_featured_bill) */
+  $handler->display->display_options['filters']['field_featured_bill_target_id']['id'] = 'field_featured_bill_target_id';
+  $handler->display->display_options['filters']['field_featured_bill_target_id']['table'] = 'field_data_field_featured_bill';
+  $handler->display->display_options['filters']['field_featured_bill_target_id']['field'] = 'field_featured_bill_target_id';
+  $handler->display->display_options['filters']['field_featured_bill_target_id']['operator'] = 'not empty';
 
   /* Display: News Type Featured Legislation */
   $handler = $view->new_display('block', 'News Type Featured Legislation', 'news_type_related_legislation');
@@ -2295,443 +2245,6 @@ function nys_senators_views_default_views() {
   $export['senator_about'] = $view;
 
   $view = new view();
-  $view->name = 'senator_bills';
-  $view->description = '';
-  $view->tag = 'default';
-  $view->base_table = 'bill';
-  $view->human_name = 'Senator Bills';
-  $view->core = 7;
-  $view->api_version = '3.0';
-  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-  /* Display: Master */
-  $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'pane 2';
-  $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'none';
-  $handler->display->display_options['cache']['type'] = 'none';
-  $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['query']['options']['distinct'] = TRUE;
-  $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['pager']['type'] = 'load_more';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '5';
-  $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['pager']['options']['id'] = '0';
-  $handler->display->display_options['pager']['options']['quantity'] = '9';
-  $handler->display->display_options['pager']['options']['effects']['speed'] = 'slow';
-  $handler->display->display_options['style_plugin'] = 'semanticviews_default';
-  $handler->display->display_options['style_options']['row']['striping_classes'] = 'u-odd u-even';
-  $handler->display->display_options['row_plugin'] = 'semanticviews_fields';
-  $handler->display->display_options['row_options']['skip_blank'] = 0;
-  $handler->display->display_options['row_options']['semantic_html'] = array(
-    'bill_id' => array(
-      'element_type' => 'div',
-      'class' => '',
-    ),
-    'name' => array(
-      'element_type' => 'div',
-      'class' => '',
-    ),
-    'field_bill_id' => array(
-      'element_type' => 'div',
-      'class' => '',
-    ),
-  );
-  /* Relationship: Broken/missing handler */
-  $handler->display->display_options['relationships']['field_openleg_actions_value']['id'] = 'field_openleg_actions_value';
-  $handler->display->display_options['relationships']['field_openleg_actions_value']['table'] = 'field_data_field_openleg_actions';
-  $handler->display->display_options['relationships']['field_openleg_actions_value']['field'] = 'field_openleg_actions_value';
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['bill_id']['id'] = 'bill_id';
-  $handler->display->display_options['fields']['bill_id']['table'] = 'bill';
-  $handler->display->display_options['fields']['bill_id']['field'] = 'bill_id';
-  $handler->display->display_options['fields']['bill_id']['label'] = '';
-  $handler->display->display_options['fields']['bill_id']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['bill_id']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['name']['id'] = 'name';
-  $handler->display->display_options['fields']['name']['table'] = 'bill';
-  $handler->display->display_options['fields']['name']['field'] = 'name';
-  $handler->display->display_options['fields']['name']['label'] = '';
-  $handler->display->display_options['fields']['name']['alter']['path'] = 'bill/[bill_id]';
-  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_bill_id']['id'] = 'field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['table'] = 'field_data_field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['field'] = 'field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['label'] = '';
-  $handler->display->display_options['fields']['field_bill_id']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_openleg_current_committee']['id'] = 'field_openleg_current_committee';
-  $handler->display->display_options['fields']['field_openleg_current_committee']['table'] = 'field_data_field_openleg_current_committee';
-  $handler->display->display_options['fields']['field_openleg_current_committee']['field'] = 'field_openleg_current_committee';
-  $handler->display->display_options['fields']['field_openleg_current_committee']['label'] = '';
-  $handler->display->display_options['fields']['field_openleg_current_committee']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_openleg_current_committee']['alter']['text'] = 'In [field_openleg_current_committee] Committee';
-  $handler->display->display_options['fields']['field_openleg_current_committee']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_openleg_current_committee']['empty'] = 'Unknown Committee';
-  $handler->display->display_options['fields']['field_openleg_current_committee']['hide_empty'] = TRUE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_openleg_last_action_date']['id'] = 'field_openleg_last_action_date';
-  $handler->display->display_options['fields']['field_openleg_last_action_date']['table'] = 'field_data_field_openleg_last_action_date';
-  $handler->display->display_options['fields']['field_openleg_last_action_date']['field'] = 'field_openleg_last_action_date';
-  $handler->display->display_options['fields']['field_openleg_last_action_date']['label'] = '';
-  $handler->display->display_options['fields']['field_openleg_last_action_date']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_openleg_last_action_date']['empty'] = 'Unknown date';
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_openleg_issues']['id'] = 'field_openleg_issues';
-  $handler->display->display_options['fields']['field_openleg_issues']['table'] = 'field_data_field_openleg_issues';
-  $handler->display->display_options['fields']['field_openleg_issues']['field'] = 'field_openleg_issues';
-  $handler->display->display_options['fields']['field_openleg_issues']['label'] = '';
-  $handler->display->display_options['fields']['field_openleg_issues']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_openleg_actions_status']['id'] = 'field_openleg_actions_status';
-  $handler->display->display_options['fields']['field_openleg_actions_status']['table'] = 'field_data_field_openleg_actions_status';
-  $handler->display->display_options['fields']['field_openleg_actions_status']['field'] = 'field_openleg_actions_status';
-  $handler->display->display_options['fields']['field_openleg_actions_status']['label'] = '';
-  $handler->display->display_options['fields']['field_openleg_actions_status']['element_label_colon'] = FALSE;
-  /* Sort criterion: Broken/missing handler */
-  $handler->display->display_options['sorts']['field_openleg_last_action_date_value']['id'] = 'field_openleg_last_action_date_value';
-  $handler->display->display_options['sorts']['field_openleg_last_action_date_value']['table'] = 'field_data_field_openleg_last_action_date';
-  $handler->display->display_options['sorts']['field_openleg_last_action_date_value']['field'] = 'field_openleg_last_action_date_value';
-  $handler->display->display_options['sorts']['field_openleg_last_action_date_value']['order'] = 'DESC';
-  /* Contextual filter: Global: Null */
-  $handler->display->display_options['arguments']['null']['id'] = 'null';
-  $handler->display->display_options['arguments']['null']['table'] = 'views';
-  $handler->display->display_options['arguments']['null']['field'] = 'null';
-  $handler->display->display_options['arguments']['null']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['null']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['null']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['null']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['filter_groups']['groups'] = array(
-    1 => 'AND',
-    2 => 'OR',
-  );
-  /* Filter criterion: Broken/missing handler */
-  $handler->display->display_options['filters']['type']['id'] = 'type';
-  $handler->display->display_options['filters']['type']['table'] = 'bill';
-  $handler->display->display_options['filters']['type']['field'] = 'type';
-  $handler->display->display_options['filters']['type']['value'] = array(
-    'bill' => 'bill',
-  );
-  $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Broken/missing handler */
-  $handler->display->display_options['filters']['field_openleg_sponsor_target_id']['id'] = 'field_openleg_sponsor_target_id';
-  $handler->display->display_options['filters']['field_openleg_sponsor_target_id']['table'] = 'field_data_field_openleg_sponsor';
-  $handler->display->display_options['filters']['field_openleg_sponsor_target_id']['field'] = 'field_openleg_sponsor_target_id';
-  $handler->display->display_options['filters']['field_openleg_sponsor_target_id']['group'] = 2;
-  /* Filter criterion: Broken/missing handler */
-  $handler->display->display_options['filters']['field_openleg_multisponsors_target_id']['id'] = 'field_openleg_multisponsors_target_id';
-  $handler->display->display_options['filters']['field_openleg_multisponsors_target_id']['table'] = 'field_data_field_openleg_multisponsors';
-  $handler->display->display_options['filters']['field_openleg_multisponsors_target_id']['field'] = 'field_openleg_multisponsors_target_id';
-  $handler->display->display_options['filters']['field_openleg_multisponsors_target_id']['group'] = 2;
-
-  /* Display: Block */
-  $handler = $view->new_display('block', 'Block', 'bills_main');
-  $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['defaults']['use_ajax'] = FALSE;
-  $handler->display->display_options['use_ajax'] = TRUE;
-  $handler->display->display_options['defaults']['empty'] = FALSE;
-  /* No results behavior: Global: Text area */
-  $handler->display->display_options['empty']['area']['id'] = 'area';
-  $handler->display->display_options['empty']['area']['table'] = 'views';
-  $handler->display->display_options['empty']['area']['field'] = 'area';
-  $handler->display->display_options['empty']['area']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area']['content'] = 'No sponsored bills so far';
-  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
-  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
-  $handler->display->display_options['filter_groups']['groups'] = array(
-    1 => 'AND',
-    2 => 'OR',
-  );
-  $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Broken/missing handler */
-  $handler->display->display_options['filters']['type']['id'] = 'type';
-  $handler->display->display_options['filters']['type']['table'] = 'bill';
-  $handler->display->display_options['filters']['type']['field'] = 'type';
-  $handler->display->display_options['filters']['type']['value'] = array(
-    'bill' => 'bill',
-  );
-  $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Broken/missing handler */
-  $handler->display->display_options['filters']['field_openleg_sponsor_target_id']['id'] = 'field_openleg_sponsor_target_id';
-  $handler->display->display_options['filters']['field_openleg_sponsor_target_id']['table'] = 'field_data_field_openleg_sponsor';
-  $handler->display->display_options['filters']['field_openleg_sponsor_target_id']['field'] = 'field_openleg_sponsor_target_id';
-  $handler->display->display_options['filters']['field_openleg_sponsor_target_id']['group'] = 2;
-  /* Filter criterion: Broken/missing handler */
-  $handler->display->display_options['filters']['field_openleg_multisponsors_target_id']['id'] = 'field_openleg_multisponsors_target_id';
-  $handler->display->display_options['filters']['field_openleg_multisponsors_target_id']['table'] = 'field_data_field_openleg_multisponsors';
-  $handler->display->display_options['filters']['field_openleg_multisponsors_target_id']['field'] = 'field_openleg_multisponsors_target_id';
-  $handler->display->display_options['filters']['field_openleg_multisponsors_target_id']['group'] = 2;
-
-  /* Display: For Homepage */
-  $handler = $view->new_display('block', 'For Homepage', 'bills_homepage');
-  $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['defaults']['use_ajax'] = FALSE;
-  $handler->display->display_options['use_ajax'] = TRUE;
-  $handler->display->display_options['defaults']['pager'] = FALSE;
-  $handler->display->display_options['pager']['type'] = 'some';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '4';
-  $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
-  $handler->display->display_options['filter_groups']['groups'] = array(
-    1 => 'AND',
-    2 => 'OR',
-  );
-  $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Broken/missing handler */
-  $handler->display->display_options['filters']['type']['id'] = 'type';
-  $handler->display->display_options['filters']['type']['table'] = 'bill';
-  $handler->display->display_options['filters']['type']['field'] = 'type';
-  $handler->display->display_options['filters']['type']['value'] = array(
-    'bill' => 'bill',
-  );
-  $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Broken/missing handler */
-  $handler->display->display_options['filters']['field_openleg_sponsor_target_id']['id'] = 'field_openleg_sponsor_target_id';
-  $handler->display->display_options['filters']['field_openleg_sponsor_target_id']['table'] = 'field_data_field_openleg_sponsor';
-  $handler->display->display_options['filters']['field_openleg_sponsor_target_id']['field'] = 'field_openleg_sponsor_target_id';
-  $handler->display->display_options['filters']['field_openleg_sponsor_target_id']['group'] = 2;
-  /* Filter criterion: Broken/missing handler */
-  $handler->display->display_options['filters']['field_openleg_multisponsors_target_id']['id'] = 'field_openleg_multisponsors_target_id';
-  $handler->display->display_options['filters']['field_openleg_multisponsors_target_id']['table'] = 'field_data_field_openleg_multisponsors';
-  $handler->display->display_options['filters']['field_openleg_multisponsors_target_id']['field'] = 'field_openleg_multisponsors_target_id';
-  $handler->display->display_options['filters']['field_openleg_multisponsors_target_id']['group'] = 2;
-
-  /* Display: Dashboard Home */
-  $handler = $view->new_display('block', 'Dashboard Home', 'bills_dashboard_home');
-  $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['defaults']['group_by'] = FALSE;
-  $handler->display->display_options['group_by'] = TRUE;
-  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
-  $handler->display->display_options['style_plugin'] = 'semanticviews_default';
-  $handler->display->display_options['style_options']['row']['striping_classes'] = 'u-odd u-even';
-  $handler->display->display_options['defaults']['style_options'] = FALSE;
-  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
-  $handler->display->display_options['row_plugin'] = 'semanticviews_fields';
-  $handler->display->display_options['row_options']['skip_blank'] = 0;
-  $handler->display->display_options['row_options']['semantic_html'] = array(
-    'bill_id' => array(
-      'element_type' => 'div',
-      'class' => '',
-    ),
-    'name' => array(
-      'element_type' => 'div',
-      'class' => '',
-    ),
-    'field_bill_id' => array(
-      'element_type' => 'div',
-      'class' => '',
-    ),
-  );
-  $handler->display->display_options['defaults']['row_options'] = FALSE;
-  $handler->display->display_options['defaults']['empty'] = FALSE;
-  /* No results behavior: Global: Text area */
-  $handler->display->display_options['empty']['area']['id'] = 'area';
-  $handler->display->display_options['empty']['area']['table'] = 'views';
-  $handler->display->display_options['empty']['area']['field'] = 'area';
-  $handler->display->display_options['empty']['area']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area']['content'] = 'You have no bills so far';
-  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
-  $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Relationship: Broken/missing handler */
-  $handler->display->display_options['relationships']['field_openleg_actions_value']['id'] = 'field_openleg_actions_value';
-  $handler->display->display_options['relationships']['field_openleg_actions_value']['table'] = 'field_data_field_openleg_actions';
-  $handler->display->display_options['relationships']['field_openleg_actions_value']['field'] = 'field_openleg_actions_value';
-  $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['bill_id']['id'] = 'bill_id';
-  $handler->display->display_options['fields']['bill_id']['table'] = 'bill';
-  $handler->display->display_options['fields']['bill_id']['field'] = 'bill_id';
-  $handler->display->display_options['fields']['bill_id']['label'] = '';
-  $handler->display->display_options['fields']['bill_id']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['bill_id']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['name']['id'] = 'name';
-  $handler->display->display_options['fields']['name']['table'] = 'bill';
-  $handler->display->display_options['fields']['name']['field'] = 'name';
-  $handler->display->display_options['fields']['name']['label'] = '';
-  $handler->display->display_options['fields']['name']['alter']['path'] = 'bill/[bill_id]';
-  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_bill_id']['id'] = 'field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['table'] = 'field_data_field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['field'] = 'field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['label'] = '';
-  $handler->display->display_options['fields']['field_bill_id']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_openleg_issues']['id'] = 'field_openleg_issues';
-  $handler->display->display_options['fields']['field_openleg_issues']['table'] = 'field_data_field_openleg_issues';
-  $handler->display->display_options['fields']['field_openleg_issues']['field'] = 'field_openleg_issues';
-  $handler->display->display_options['fields']['field_openleg_issues']['label'] = '';
-  $handler->display->display_options['fields']['field_openleg_issues']['element_label_colon'] = FALSE;
-  /* Field: nay_votes */
-  $handler->display->display_options['fields']['view']['id'] = 'view';
-  $handler->display->display_options['fields']['view']['table'] = 'views';
-  $handler->display->display_options['fields']['view']['field'] = 'view';
-  $handler->display->display_options['fields']['view']['ui_name'] = 'nay_votes';
-  $handler->display->display_options['fields']['view']['label'] = '';
-  $handler->display->display_options['fields']['view']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['view']['element_default_classes'] = FALSE;
-  $handler->display->display_options['fields']['view']['view'] = 'bills_voting_subview';
-  $handler->display->display_options['fields']['view']['arguments'] = '[!bill_id]/nay';
-  /* Field: aye_votes */
-  $handler->display->display_options['fields']['view_1']['id'] = 'view_1';
-  $handler->display->display_options['fields']['view_1']['table'] = 'views';
-  $handler->display->display_options['fields']['view_1']['field'] = 'view';
-  $handler->display->display_options['fields']['view_1']['ui_name'] = 'aye_votes';
-  $handler->display->display_options['fields']['view_1']['label'] = '';
-  $handler->display->display_options['fields']['view_1']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['view_1']['element_default_classes'] = FALSE;
-  $handler->display->display_options['fields']['view_1']['view'] = 'bills_voting_subview';
-  $handler->display->display_options['fields']['view_1']['arguments'] = '[!bill_id]/aye';
-  /* Field: constituent_aye_votes */
-  $handler->display->display_options['fields']['view_2']['id'] = 'view_2';
-  $handler->display->display_options['fields']['view_2']['table'] = 'views';
-  $handler->display->display_options['fields']['view_2']['field'] = 'view';
-  $handler->display->display_options['fields']['view_2']['ui_name'] = 'constituent_aye_votes';
-  $handler->display->display_options['fields']['view_2']['label'] = '';
-  $handler->display->display_options['fields']['view_2']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['view_2']['view'] = 'bills_voting_subview';
-  $handler->display->display_options['fields']['view_2']['display'] = 'constituent_votes';
-  $handler->display->display_options['fields']['view_2']['arguments'] = '[!bill_id]/aye/!1';
-  /* Field: constituent_nay_votes */
-  $handler->display->display_options['fields']['view_3']['id'] = 'view_3';
-  $handler->display->display_options['fields']['view_3']['table'] = 'views';
-  $handler->display->display_options['fields']['view_3']['field'] = 'view';
-  $handler->display->display_options['fields']['view_3']['ui_name'] = 'constituent_nay_votes';
-  $handler->display->display_options['fields']['view_3']['label'] = '';
-  $handler->display->display_options['fields']['view_3']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['view_3']['view'] = 'bills_voting_subview';
-  $handler->display->display_options['fields']['view_3']['display'] = 'constituent_votes';
-  $handler->display->display_options['fields']['view_3']['arguments'] = '[!bill_id]/nay/!1';
-  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
-  $handler->display->display_options['filter_groups']['groups'] = array(
-    1 => 'AND',
-    2 => 'OR',
-  );
-  $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Broken/missing handler */
-  $handler->display->display_options['filters']['type']['id'] = 'type';
-  $handler->display->display_options['filters']['type']['table'] = 'bill';
-  $handler->display->display_options['filters']['type']['field'] = 'type';
-  $handler->display->display_options['filters']['type']['value'] = array(
-    'bill' => 'bill',
-  );
-  $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Broken/missing handler */
-  $handler->display->display_options['filters']['field_openleg_sponsor_target_id']['id'] = 'field_openleg_sponsor_target_id';
-  $handler->display->display_options['filters']['field_openleg_sponsor_target_id']['table'] = 'field_data_field_openleg_sponsor';
-  $handler->display->display_options['filters']['field_openleg_sponsor_target_id']['field'] = 'field_openleg_sponsor_target_id';
-  $handler->display->display_options['filters']['field_openleg_sponsor_target_id']['group'] = 2;
-  /* Filter criterion: Broken/missing handler */
-  $handler->display->display_options['filters']['field_openleg_multisponsors_target_id']['id'] = 'field_openleg_multisponsors_target_id';
-  $handler->display->display_options['filters']['field_openleg_multisponsors_target_id']['table'] = 'field_data_field_openleg_multisponsors';
-  $handler->display->display_options['filters']['field_openleg_multisponsors_target_id']['field'] = 'field_openleg_multisponsors_target_id';
-  $handler->display->display_options['filters']['field_openleg_multisponsors_target_id']['group'] = 2;
-
-  /* Display: Resolutions */
-  $handler = $view->new_display('block', 'Resolutions', 'resolutions_main');
-  $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['defaults']['use_ajax'] = FALSE;
-  $handler->display->display_options['use_ajax'] = TRUE;
-  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
-  $handler->display->display_options['style_plugin'] = 'semanticviews_default';
-  $handler->display->display_options['style_options']['row']['striping_classes'] = 'u-odd u-even';
-  $handler->display->display_options['defaults']['style_options'] = FALSE;
-  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
-  $handler->display->display_options['row_plugin'] = 'semanticviews_fields';
-  $handler->display->display_options['row_options']['skip_blank'] = 0;
-  $handler->display->display_options['row_options']['semantic_html'] = array(
-    'bill_id' => array(
-      'element_type' => 'div',
-      'class' => '',
-    ),
-    'name' => array(
-      'element_type' => 'div',
-      'class' => '',
-    ),
-    'field_bill_id' => array(
-      'element_type' => 'div',
-      'class' => '',
-    ),
-  );
-  $handler->display->display_options['defaults']['row_options'] = FALSE;
-  $handler->display->display_options['defaults']['empty'] = FALSE;
-  /* No results behavior: Global: Text area */
-  $handler->display->display_options['empty']['area']['id'] = 'area';
-  $handler->display->display_options['empty']['area']['table'] = 'views';
-  $handler->display->display_options['empty']['area']['field'] = 'area';
-  $handler->display->display_options['empty']['area']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area']['content'] = 'No sponsored resolutions so far';
-  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
-  $handler->display->display_options['defaults']['relationships'] = FALSE;
-  $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['bill_id']['id'] = 'bill_id';
-  $handler->display->display_options['fields']['bill_id']['table'] = 'bill';
-  $handler->display->display_options['fields']['bill_id']['field'] = 'bill_id';
-  $handler->display->display_options['fields']['bill_id']['label'] = '';
-  $handler->display->display_options['fields']['bill_id']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['bill_id']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['name']['id'] = 'name';
-  $handler->display->display_options['fields']['name']['table'] = 'bill';
-  $handler->display->display_options['fields']['name']['field'] = 'name';
-  $handler->display->display_options['fields']['name']['label'] = '';
-  $handler->display->display_options['fields']['name']['alter']['path'] = 'bill/[bill_id]';
-  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_bill_id']['id'] = 'field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['table'] = 'field_data_field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['field'] = 'field_bill_id';
-  $handler->display->display_options['fields']['field_bill_id']['label'] = '';
-  $handler->display->display_options['fields']['field_bill_id']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_openleg_current_committee']['id'] = 'field_openleg_current_committee';
-  $handler->display->display_options['fields']['field_openleg_current_committee']['table'] = 'field_data_field_openleg_current_committee';
-  $handler->display->display_options['fields']['field_openleg_current_committee']['field'] = 'field_openleg_current_committee';
-  $handler->display->display_options['fields']['field_openleg_current_committee']['label'] = '';
-  $handler->display->display_options['fields']['field_openleg_current_committee']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_openleg_current_committee']['alter']['text'] = 'In [field_openleg_current_committee] Committee';
-  $handler->display->display_options['fields']['field_openleg_current_committee']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_openleg_current_committee']['empty'] = 'Unknown Committee';
-  $handler->display->display_options['fields']['field_openleg_current_committee']['hide_empty'] = TRUE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_openleg_last_action_date']['id'] = 'field_openleg_last_action_date';
-  $handler->display->display_options['fields']['field_openleg_last_action_date']['table'] = 'field_data_field_openleg_last_action_date';
-  $handler->display->display_options['fields']['field_openleg_last_action_date']['field'] = 'field_openleg_last_action_date';
-  $handler->display->display_options['fields']['field_openleg_last_action_date']['label'] = '';
-  $handler->display->display_options['fields']['field_openleg_last_action_date']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_openleg_last_action_date']['empty'] = 'Unknown date';
-  $handler->display->display_options['defaults']['sorts'] = FALSE;
-  /* Sort criterion: Broken/missing handler */
-  $handler->display->display_options['sorts']['bill_id']['id'] = 'bill_id';
-  $handler->display->display_options['sorts']['bill_id']['table'] = 'bill';
-  $handler->display->display_options['sorts']['bill_id']['field'] = 'bill_id';
-  $handler->display->display_options['sorts']['bill_id']['order'] = 'DESC';
-  $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Contextual filter: Broken/missing handler */
-  $handler->display->display_options['arguments']['field_openleg_sponsor_target_id']['id'] = 'field_openleg_sponsor_target_id';
-  $handler->display->display_options['arguments']['field_openleg_sponsor_target_id']['table'] = 'field_data_field_openleg_sponsor';
-  $handler->display->display_options['arguments']['field_openleg_sponsor_target_id']['field'] = 'field_openleg_sponsor_target_id';
-  $handler->display->display_options['arguments']['field_openleg_sponsor_target_id']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['field_openleg_sponsor_target_id']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['field_openleg_sponsor_target_id']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['field_openleg_sponsor_target_id']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
-  $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Broken/missing handler */
-  $handler->display->display_options['filters']['type']['id'] = 'type';
-  $handler->display->display_options['filters']['type']['table'] = 'bill';
-  $handler->display->display_options['filters']['type']['field'] = 'type';
-  $handler->display->display_options['filters']['type']['value'] = array(
-    'resolution' => 'resolution',
-  );
-  $handler->display->display_options['filters']['type']['group'] = 1;
-  $export['senator_bills'] = $view;
-
-  $view = new view();
   $view->name = 'senator_contact_blocks';
   $view->description = '';
   $view->tag = 'default';
@@ -2999,6 +2512,373 @@ function nys_senators_views_default_views() {
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
   $export['senator_homepage_recent_legislation'] = $view;
+
+  $view = new view();
+  $view->name = 'senator_legislation';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'node';
+  $view->human_name = 'Senator Legislation';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Senator Legislation';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '1';
+  $handler->display->display_options['pager']['options']['offset'] = '1';
+  $handler->display->display_options['style_plugin'] = 'semanticviews_default';
+  $handler->display->display_options['row_plugin'] = 'semanticviews_fields';
+  $handler->display->display_options['row_options']['skip_blank'] = 0;
+  $handler->display->display_options['row_options']['semantic_html'] = array(
+    'field_featured_quote' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+    'field_featured_bill' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+    'field_ol_last_status' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+    'field_ol_latest_status_committee' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+    'field__constituent_vote' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+    'field_ol_sponsor' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+    'field_party' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+    'field_ol_all_statuses' => array(
+      'element_type' => 'div',
+      'class' => '',
+      'label_element_type' => 'label',
+      'label_class' => '',
+    ),
+    'field_image_headshot' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+    'field_issues' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+    'field_ol_name' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+    'nid' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+    'field_ol_all_statuses_1' => array(
+      'element_type' => 'div',
+      'class' => '',
+      'label_element_type' => 'label',
+      'label_class' => '',
+    ),
+    'field_ol_chamber' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+    'field_ol_last_status_date' => array(
+      'element_type' => 'div',
+      'class' => '',
+      'label_element_type' => 'label',
+      'label_class' => '',
+    ),
+    'field_ol_sponsor_1' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+    'field_ol_co_sponsors' => array(
+      'element_type' => 'div',
+      'class' => '',
+    ),
+  );
+  /* Relationship: Content: Featured Legislation (field_featured_legislation) */
+  $handler->display->display_options['relationships']['field_featured_legislation_value']['id'] = 'field_featured_legislation_value';
+  $handler->display->display_options['relationships']['field_featured_legislation_value']['table'] = 'field_data_field_featured_legislation';
+  $handler->display->display_options['relationships']['field_featured_legislation_value']['field'] = 'field_featured_legislation_value';
+  $handler->display->display_options['relationships']['field_featured_legislation_value']['required'] = TRUE;
+  $handler->display->display_options['relationships']['field_featured_legislation_value']['delta'] = '-1';
+  /* Relationship: relationship to bill entity */
+  $handler->display->display_options['relationships']['field_featured_bill_target_id']['id'] = 'field_featured_bill_target_id';
+  $handler->display->display_options['relationships']['field_featured_bill_target_id']['table'] = 'field_data_field_featured_bill';
+  $handler->display->display_options['relationships']['field_featured_bill_target_id']['field'] = 'field_featured_bill_target_id';
+  $handler->display->display_options['relationships']['field_featured_bill_target_id']['relationship'] = 'field_featured_legislation_value';
+  $handler->display->display_options['relationships']['field_featured_bill_target_id']['ui_name'] = 'relationship to bill entity';
+  /* Field: Field: Quote */
+  $handler->display->display_options['fields']['field_featured_quote']['id'] = 'field_featured_quote';
+  $handler->display->display_options['fields']['field_featured_quote']['table'] = 'field_data_field_featured_quote';
+  $handler->display->display_options['fields']['field_featured_quote']['field'] = 'field_featured_quote';
+  $handler->display->display_options['fields']['field_featured_quote']['relationship'] = 'field_featured_legislation_value';
+  $handler->display->display_options['fields']['field_featured_quote']['label'] = '';
+  $handler->display->display_options['fields']['field_featured_quote']['element_label_colon'] = FALSE;
+  /* Field: Field: Featured Bill */
+  $handler->display->display_options['fields']['field_featured_bill']['id'] = 'field_featured_bill';
+  $handler->display->display_options['fields']['field_featured_bill']['table'] = 'field_data_field_featured_bill';
+  $handler->display->display_options['fields']['field_featured_bill']['field'] = 'field_featured_bill';
+  $handler->display->display_options['fields']['field_featured_bill']['relationship'] = 'field_featured_legislation_value';
+  $handler->display->display_options['fields']['field_featured_bill']['label'] = '';
+  $handler->display->display_options['fields']['field_featured_bill']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_featured_bill']['settings'] = array(
+    'bypass_access' => 0,
+    'link' => 1,
+  );
+  /* Field: Content: Last Status */
+  $handler->display->display_options['fields']['field_ol_last_status']['id'] = 'field_ol_last_status';
+  $handler->display->display_options['fields']['field_ol_last_status']['table'] = 'field_data_field_ol_last_status';
+  $handler->display->display_options['fields']['field_ol_last_status']['field'] = 'field_ol_last_status';
+  $handler->display->display_options['fields']['field_ol_last_status']['relationship'] = 'field_featured_bill_target_id';
+  $handler->display->display_options['fields']['field_ol_last_status']['label'] = '';
+  $handler->display->display_options['fields']['field_ol_last_status']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_ol_last_status']['type'] = 'list_key';
+  /* Field: Content: Latest Committee Status */
+  $handler->display->display_options['fields']['field_ol_latest_status_committee']['id'] = 'field_ol_latest_status_committee';
+  $handler->display->display_options['fields']['field_ol_latest_status_committee']['table'] = 'field_data_field_ol_latest_status_committee';
+  $handler->display->display_options['fields']['field_ol_latest_status_committee']['field'] = 'field_ol_latest_status_committee';
+  $handler->display->display_options['fields']['field_ol_latest_status_committee']['label'] = '';
+  $handler->display->display_options['fields']['field_ol_latest_status_committee']['element_label_colon'] = FALSE;
+  /* Field: Content:  Constituent Vote */
+  $handler->display->display_options['fields']['field__constituent_vote']['id'] = 'field__constituent_vote';
+  $handler->display->display_options['fields']['field__constituent_vote']['table'] = 'field_data_field__constituent_vote';
+  $handler->display->display_options['fields']['field__constituent_vote']['field'] = 'field__constituent_vote';
+  $handler->display->display_options['fields']['field__constituent_vote']['relationship'] = 'field_featured_bill_target_id';
+  $handler->display->display_options['fields']['field__constituent_vote']['label'] = '';
+  $handler->display->display_options['fields']['field__constituent_vote']['element_label_colon'] = FALSE;
+  /* Field: Content: Sponsor */
+  $handler->display->display_options['fields']['field_ol_sponsor']['id'] = 'field_ol_sponsor';
+  $handler->display->display_options['fields']['field_ol_sponsor']['table'] = 'field_data_field_ol_sponsor';
+  $handler->display->display_options['fields']['field_ol_sponsor']['field'] = 'field_ol_sponsor';
+  $handler->display->display_options['fields']['field_ol_sponsor']['relationship'] = 'field_featured_bill_target_id';
+  $handler->display->display_options['fields']['field_ol_sponsor']['label'] = '';
+  $handler->display->display_options['fields']['field_ol_sponsor']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_ol_sponsor']['settings'] = array(
+    'bypass_access' => 0,
+    'link' => 1,
+  );
+  /* Field: Content: Party Affiliation */
+  $handler->display->display_options['fields']['field_party']['id'] = 'field_party';
+  $handler->display->display_options['fields']['field_party']['table'] = 'field_data_field_party';
+  $handler->display->display_options['fields']['field_party']['field'] = 'field_party';
+  $handler->display->display_options['fields']['field_party']['label'] = '';
+  $handler->display->display_options['fields']['field_party']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_party']['type'] = 'list_key';
+  $handler->display->display_options['fields']['field_party']['delta_offset'] = '0';
+  /* Field: Content: All Statuses */
+  $handler->display->display_options['fields']['field_ol_all_statuses']['id'] = 'field_ol_all_statuses';
+  $handler->display->display_options['fields']['field_ol_all_statuses']['table'] = 'field_data_field_ol_all_statuses';
+  $handler->display->display_options['fields']['field_ol_all_statuses']['field'] = 'field_ol_all_statuses';
+  $handler->display->display_options['fields']['field_ol_all_statuses']['type'] = 'text_plain';
+  /* Field: Content: Member Headshot */
+  $handler->display->display_options['fields']['field_image_headshot']['id'] = 'field_image_headshot';
+  $handler->display->display_options['fields']['field_image_headshot']['table'] = 'field_data_field_image_headshot';
+  $handler->display->display_options['fields']['field_image_headshot']['field'] = 'field_image_headshot';
+  $handler->display->display_options['fields']['field_image_headshot']['label'] = '';
+  $handler->display->display_options['fields']['field_image_headshot']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_image_headshot']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_image_headshot']['settings'] = array(
+    'image_style' => '45x45',
+    'image_link' => 'content',
+  );
+  /* Field: Field: Issues */
+  $handler->display->display_options['fields']['field_issues']['id'] = 'field_issues';
+  $handler->display->display_options['fields']['field_issues']['table'] = 'field_data_field_issues';
+  $handler->display->display_options['fields']['field_issues']['field'] = 'field_issues';
+  $handler->display->display_options['fields']['field_issues']['relationship'] = 'field_featured_bill_target_id';
+  $handler->display->display_options['fields']['field_issues']['label'] = '';
+  $handler->display->display_options['fields']['field_issues']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_issues']['delta_offset'] = '0';
+  /* Field: Content: Name */
+  $handler->display->display_options['fields']['field_ol_name']['id'] = 'field_ol_name';
+  $handler->display->display_options['fields']['field_ol_name']['table'] = 'field_data_field_ol_name';
+  $handler->display->display_options['fields']['field_ol_name']['field'] = 'field_ol_name';
+  $handler->display->display_options['fields']['field_ol_name']['relationship'] = 'field_featured_bill_target_id';
+  $handler->display->display_options['fields']['field_ol_name']['label'] = '';
+  $handler->display->display_options['fields']['field_ol_name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_ol_name']['type'] = 'text_trimmed';
+  $handler->display->display_options['fields']['field_ol_name']['settings'] = array(
+    'trim_length' => '220',
+  );
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['relationship'] = 'field_featured_bill_target_id';
+  $handler->display->display_options['fields']['nid']['label'] = '';
+  $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
+  /* Field: Content: All Statuses */
+  $handler->display->display_options['fields']['field_ol_all_statuses_1']['id'] = 'field_ol_all_statuses_1';
+  $handler->display->display_options['fields']['field_ol_all_statuses_1']['table'] = 'field_data_field_ol_all_statuses';
+  $handler->display->display_options['fields']['field_ol_all_statuses_1']['field'] = 'field_ol_all_statuses';
+  $handler->display->display_options['fields']['field_ol_all_statuses_1']['relationship'] = 'field_featured_bill_target_id';
+  /* Field: Content: Chamber */
+  $handler->display->display_options['fields']['field_ol_chamber']['id'] = 'field_ol_chamber';
+  $handler->display->display_options['fields']['field_ol_chamber']['table'] = 'field_data_field_ol_chamber';
+  $handler->display->display_options['fields']['field_ol_chamber']['field'] = 'field_ol_chamber';
+  $handler->display->display_options['fields']['field_ol_chamber']['relationship'] = 'field_featured_bill_target_id';
+  $handler->display->display_options['fields']['field_ol_chamber']['label'] = '';
+  $handler->display->display_options['fields']['field_ol_chamber']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_ol_chamber']['type'] = 'list_key';
+  /* Field: Content: Last Status Date */
+  $handler->display->display_options['fields']['field_ol_last_status_date']['id'] = 'field_ol_last_status_date';
+  $handler->display->display_options['fields']['field_ol_last_status_date']['table'] = 'field_data_field_ol_last_status_date';
+  $handler->display->display_options['fields']['field_ol_last_status_date']['field'] = 'field_ol_last_status_date';
+  $handler->display->display_options['fields']['field_ol_last_status_date']['relationship'] = 'field_featured_bill_target_id';
+  $handler->display->display_options['fields']['field_ol_last_status_date']['settings'] = array(
+    'format_type' => 'long',
+    'custom_date_format' => '',
+    'fromto' => 'both',
+    'multiple_number' => '',
+    'multiple_from' => '',
+    'multiple_to' => '',
+    'show_remaining_days' => 0,
+  );
+  /* Field: Content: Sponsor */
+  $handler->display->display_options['fields']['field_ol_sponsor_1']['id'] = 'field_ol_sponsor_1';
+  $handler->display->display_options['fields']['field_ol_sponsor_1']['table'] = 'field_data_field_ol_sponsor';
+  $handler->display->display_options['fields']['field_ol_sponsor_1']['field'] = 'field_ol_sponsor';
+  $handler->display->display_options['fields']['field_ol_sponsor_1']['relationship'] = 'field_featured_bill_target_id';
+  $handler->display->display_options['fields']['field_ol_sponsor_1']['label'] = '';
+  $handler->display->display_options['fields']['field_ol_sponsor_1']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_ol_sponsor_1']['type'] = 'entityreference_entity_id';
+  $handler->display->display_options['fields']['field_ol_sponsor_1']['settings'] = array(
+    'view_mode' => 'default',
+    'links' => 1,
+    'use_content_language' => 1,
+  );
+  /* Field: Content: Co Sponsors */
+  $handler->display->display_options['fields']['field_ol_co_sponsors']['id'] = 'field_ol_co_sponsors';
+  $handler->display->display_options['fields']['field_ol_co_sponsors']['table'] = 'field_data_field_ol_co_sponsors';
+  $handler->display->display_options['fields']['field_ol_co_sponsors']['field'] = 'field_ol_co_sponsors';
+  $handler->display->display_options['fields']['field_ol_co_sponsors']['relationship'] = 'field_featured_bill_target_id';
+  $handler->display->display_options['fields']['field_ol_co_sponsors']['label'] = '';
+  $handler->display->display_options['fields']['field_ol_co_sponsors']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_ol_co_sponsors']['type'] = 'entityreference_entity_id';
+  $handler->display->display_options['fields']['field_ol_co_sponsors']['settings'] = array(
+    'bypass_access' => 0,
+    'link' => 0,
+  );
+  $handler->display->display_options['fields']['field_ol_co_sponsors']['delta_offset'] = '0';
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  /* Field: Content: Featured Legislation */
+  $handler->display->display_options['fields']['field_featured_legislation']['id'] = 'field_featured_legislation';
+  $handler->display->display_options['fields']['field_featured_legislation']['table'] = 'field_data_field_featured_legislation';
+  $handler->display->display_options['fields']['field_featured_legislation']['field'] = 'field_featured_legislation';
+  $handler->display->display_options['fields']['field_featured_legislation']['label'] = '';
+  $handler->display->display_options['fields']['field_featured_legislation']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_featured_legislation']['settings'] = array(
+    'add' => 'Add',
+    'edit' => 'Edit',
+    'translate' => '',
+    'delete' => 'Delete',
+    'description' => 1,
+    'view_mode' => 'full',
+  );
+  $handler->display->display_options['fields']['field_featured_legislation']['delta_offset'] = '0';
+  /* Sort criterion: Content: Featured Legislation (field_featured_legislation:delta) */
+  $handler->display->display_options['sorts']['delta']['id'] = 'delta';
+  $handler->display->display_options['sorts']['delta']['table'] = 'field_data_field_featured_legislation';
+  $handler->display->display_options['sorts']['delta']['field'] = 'delta';
+  /* Contextual filter: Content: Nid */
+  $handler->display->display_options['arguments']['nid']['id'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['table'] = 'node';
+  $handler->display->display_options['arguments']['nid']['field'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['nid']['default_argument_type'] = 'node';
+  $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['nid']['break_phrase'] = TRUE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'senator' => 'senator',
+  );
+  /* Filter criterion: Field: Featured Bill (field_featured_bill) */
+  $handler->display->display_options['filters']['field_featured_bill_target_id']['id'] = 'field_featured_bill_target_id';
+  $handler->display->display_options['filters']['field_featured_bill_target_id']['table'] = 'field_data_field_featured_bill';
+  $handler->display->display_options['filters']['field_featured_bill_target_id']['field'] = 'field_featured_bill_target_id';
+  $handler->display->display_options['filters']['field_featured_bill_target_id']['relationship'] = 'field_featured_legislation_value';
+  $handler->display->display_options['filters']['field_featured_bill_target_id']['operator'] = 'not empty';
+
+  /* Display: Featured Legislation */
+  $handler = $view->new_display('block', 'Featured Legislation', 'sen_featured_legis');
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '1';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'senator' => 'senator',
+  );
+  /* Filter criterion: Field: Featured Bill (field_featured_bill) */
+  $handler->display->display_options['filters']['field_featured_bill_target_id']['id'] = 'field_featured_bill_target_id';
+  $handler->display->display_options['filters']['field_featured_bill_target_id']['table'] = 'field_data_field_featured_bill';
+  $handler->display->display_options['filters']['field_featured_bill_target_id']['field'] = 'field_featured_bill_target_id';
+  $handler->display->display_options['filters']['field_featured_bill_target_id']['relationship'] = 'field_featured_legislation_value';
+  $handler->display->display_options['filters']['field_featured_bill_target_id']['operator'] = 'not empty';
+
+  /* Display: Featured Legislation Sub */
+  $handler = $view->new_display('block', 'Featured Legislation Sub', 'sen_featured_legis_sub');
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '4';
+  $handler->display->display_options['pager']['options']['offset'] = '1';
+
+  /* Display: Featured Leg Home Sub */
+  $handler = $view->new_display('block', 'Featured Leg Home Sub', 'sen_featured_legis_home_sub');
+  $handler->display->display_options['defaults']['css_class'] = FALSE;
+  $handler->display->display_options['css_class'] = 'c-news-container';
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '4';
+  $handler->display->display_options['pager']['options']['offset'] = '1';
+  $export['senator_legislation'] = $view;
 
   $view = new view();
   $view->name = 'senator_petition';

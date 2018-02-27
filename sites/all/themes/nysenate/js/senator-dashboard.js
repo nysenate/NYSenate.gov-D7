@@ -17,7 +17,7 @@
 				$(this).parent().find('form').toggle();
 			});
 
-			// AJAX function to handle loading of issues			
+			// AJAX function to handle loading of issues
 			$('.view-senator-dashboard-issues.view-display-id-block .more-link a').live('click', function(e){
 				e.preventDefault();
 				e.stopPropagation();
@@ -43,7 +43,7 @@
 						$('.view-senator-dashboard-issues.view-display-id-block .view-content').append(source.find('.view-content').html());
 					}
 				});
-			});			
+			});
 
 			// AJAX function to retrieve users on senator dashboard issues tab
 			$('.view-senator-dashboard-issues.view-display-id-block .issue-container .user-list .pagination-centered ul.pager li a').live('click', function(e){
@@ -136,11 +136,10 @@
 							_comm_status = $('select.comm_status').val();
 							_bill_name = $('input[name="namesearch"]').val();
 							_loaded_user = $('input#loaded_user').val();
-
 							_url = '/nys-dashboard/bills-users?view=senator_bills&comm_status='+_comm_status+'&vote_type='+_vote_type+'&bill_name='+_bill_name+'&userid='+_loaded_user;
 							break;
 					}
-					
+
 
 					// make ajax call for paging between users for each issue
 					$.ajax(_url, {
@@ -165,7 +164,7 @@
 				$(this).parent().find('.user-list').toggle();
 			});
 
-			// AJAX function to handle loading of issues			
+			// AJAX function to handle loading of issues
 			$('.view-senator-dashboard-petitions-and-questionnaires.view-display-id-questionnaires .more-link a').live('click', function(e){
 				e.preventDefault();
 				e.stopPropagation();
@@ -219,7 +218,7 @@
 				$(this).parent().find('.user-list').toggle();
 			});
 
-			// AJAX function to handle loading of petitions			
+			// AJAX function to handle loading of petitions
 			$('.view-senator-dashboard-petitions-and-questionnaires.view-display-id-petitions .more-link a').live('click', function(e){
 				e.preventDefault();
 				e.stopPropagation();
@@ -289,15 +288,15 @@
 
 			// Moved this functionality to submit event of form submit enclosing this button
 			/*$('.bill-name-search').live('change', function(e){
-				
+
 				e.preventDefault();
 				e.stopPropagation();
-				
+
 				var _vote_type = $('select.vote_type').val();
 				var _comm_status = $('select.comm_status').val();
 				var _bill_name = $(this).val();
 				var _url = '/nys-dashboard/bills-users?view=senator_bills&comm_status='+_comm_status+'&vote_type='+_vote_type+'&bill_name='+_bill_name;
-				
+
 				// make ajax call for paging between users for each issue
 				$.ajax(_url, {
 					success: function(data) {
@@ -315,13 +314,13 @@
 				var parentForm = $(this).parents('form');
 				e.preventDefault();
 				e.stopPropagation();
-				
+
 				var _vote_type = parentForm.find('select.vote_type').val();
 				var _comm_status = parentForm.find('select.comm_status').val();
 				var _bill_name = parentForm.find('input.bill-name-search').val();
 				var _loaded_user = $('input#loaded_user').val();
 				var _url = '/nys-dashboard/bills-users?view=senator_bills&comm_status='+_comm_status+'&vote_type='+_vote_type+'&bill_name='+_bill_name+'&userid='+_loaded_user;
-				
+
 				// make ajax call for paging between users for each issue
 				$.ajax(_url, {
 					success: function(data) {
@@ -348,7 +347,7 @@
 	}
 
 	NYS_DB.init();
-		
+
 })(jQuery, Drupal);
 
 

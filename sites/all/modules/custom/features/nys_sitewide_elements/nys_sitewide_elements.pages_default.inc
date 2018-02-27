@@ -1386,11 +1386,49 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   $display->content['new-f66f4b67-da8d-4cdd-86fd-ea03d0e2b682'] = $pane;
   $display->panels['content'][2] = 'new-f66f4b67-da8d-4cdd-86fd-ea03d0e2b682';
   $pane = new stdClass();
+  $pane->pid = 'new-deb87bac-be35-41a8-860d-bf7a9768dee7';
+  $pane->panel = 'content';
+  $pane->type = 'views';
+  $pane->subtype = 'senator_legislation';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'override_pager_settings' => 0,
+    'use_pager' => 0,
+    'nodes_per_page' => '5',
+    'pager_id' => '0',
+    'offset' => '0',
+    'more_link' => 0,
+    'feed_icons' => 0,
+    'panel_args' => 0,
+    'link_to_view' => 0,
+    'args' => '',
+    'url' => '',
+    'display' => 'sen_featured_legis',
+    'context' => array(
+      0 => 'argument_entity_id:node_1.nid',
+    ),
+    'override_title' => 1,
+    'override_title_text' => '',
+    'override_title_heading' => 'h2',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 3;
+  $pane->locks = array();
+  $pane->uuid = 'deb87bac-be35-41a8-860d-bf7a9768dee7';
+  $display->content['new-deb87bac-be35-41a8-860d-bf7a9768dee7'] = $pane;
+  $display->panels['content'][3] = 'new-deb87bac-be35-41a8-860d-bf7a9768dee7';
+  $pane = new stdClass();
   $pane->pid = 'new-c1c8b25e-6b12-41b9-9acb-40a6ab99922c';
   $pane->panel = 'content';
   $pane->type = 'views';
   $pane->subtype = 'featured_legislation';
-  $pane->shown = TRUE;
+  $pane->shown = FALSE;
   $pane->access = array();
   $pane->configuration = array(
     'override_pager_settings' => 0,
@@ -1418,11 +1456,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 3;
+  $pane->position = 4;
   $pane->locks = array();
   $pane->uuid = 'c1c8b25e-6b12-41b9-9acb-40a6ab99922c';
   $display->content['new-c1c8b25e-6b12-41b9-9acb-40a6ab99922c'] = $pane;
-  $display->panels['content'][3] = 'new-c1c8b25e-6b12-41b9-9acb-40a6ab99922c';
+  $display->panels['content'][4] = 'new-c1c8b25e-6b12-41b9-9acb-40a6ab99922c';
   $pane = new stdClass();
   $pane->pid = 'new-08cf0cb5-274e-467e-91b3-6008cc393256';
   $pane->panel = 'content';
@@ -1456,11 +1494,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 4;
+  $pane->position = 5;
   $pane->locks = array();
   $pane->uuid = '08cf0cb5-274e-467e-91b3-6008cc393256';
   $display->content['new-08cf0cb5-274e-467e-91b3-6008cc393256'] = $pane;
-  $display->panels['content'][4] = 'new-08cf0cb5-274e-467e-91b3-6008cc393256';
+  $display->panels['content'][5] = 'new-08cf0cb5-274e-467e-91b3-6008cc393256';
   $pane = new stdClass();
   $pane->pid = 'new-9c3654bd-ae6f-45ce-85a3-5444a8090ed9';
   $pane->panel = 'content';
@@ -1493,11 +1531,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 5;
+  $pane->position = 6;
   $pane->locks = array();
   $pane->uuid = '9c3654bd-ae6f-45ce-85a3-5444a8090ed9';
   $display->content['new-9c3654bd-ae6f-45ce-85a3-5444a8090ed9'] = $pane;
-  $display->panels['content'][5] = 'new-9c3654bd-ae6f-45ce-85a3-5444a8090ed9';
+  $display->panels['content'][6] = 'new-9c3654bd-ae6f-45ce-85a3-5444a8090ed9';
   $pane = new stdClass();
   $pane->pid = 'new-a7b0f50e-e85b-48c5-8412-595a2bd1fb08';
   $pane->panel = 'content';
@@ -1530,11 +1568,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 6;
+  $pane->position = 7;
   $pane->locks = array();
   $pane->uuid = 'a7b0f50e-e85b-48c5-8412-595a2bd1fb08';
   $display->content['new-a7b0f50e-e85b-48c5-8412-595a2bd1fb08'] = $pane;
-  $display->panels['content'][6] = 'new-a7b0f50e-e85b-48c5-8412-595a2bd1fb08';
+  $display->panels['content'][7] = 'new-a7b0f50e-e85b-48c5-8412-595a2bd1fb08';
   $pane = new stdClass();
   $pane->pid = 'new-c101573f-6d77-4024-b811-592695cded78';
   $pane->panel = 'content';
@@ -1568,11 +1606,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 7;
+  $pane->position = 8;
   $pane->locks = array();
   $pane->uuid = 'c101573f-6d77-4024-b811-592695cded78';
   $display->content['new-c101573f-6d77-4024-b811-592695cded78'] = $pane;
-  $display->panels['content'][7] = 'new-c101573f-6d77-4024-b811-592695cded78';
+  $display->panels['content'][8] = 'new-c101573f-6d77-4024-b811-592695cded78';
   $pane = new stdClass();
   $pane->pid = 'new-3cf1e583-fc3b-4d7d-9b21-45067b363ba1';
   $pane->panel = 'content';
@@ -1607,11 +1645,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 8;
+  $pane->position = 9;
   $pane->locks = array();
   $pane->uuid = '3cf1e583-fc3b-4d7d-9b21-45067b363ba1';
   $display->content['new-3cf1e583-fc3b-4d7d-9b21-45067b363ba1'] = $pane;
-  $display->panels['content'][8] = 'new-3cf1e583-fc3b-4d7d-9b21-45067b363ba1';
+  $display->panels['content'][9] = 'new-3cf1e583-fc3b-4d7d-9b21-45067b363ba1';
   $pane = new stdClass();
   $pane->pid = 'new-b8b48d3a-8ff6-4fee-851a-4d93c6cc055d';
   $pane->panel = 'content';
@@ -1629,11 +1667,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 9;
+  $pane->position = 10;
   $pane->locks = array();
   $pane->uuid = 'b8b48d3a-8ff6-4fee-851a-4d93c6cc055d';
   $display->content['new-b8b48d3a-8ff6-4fee-851a-4d93c6cc055d'] = $pane;
-  $display->panels['content'][9] = 'new-b8b48d3a-8ff6-4fee-851a-4d93c6cc055d';
+  $display->panels['content'][10] = 'new-b8b48d3a-8ff6-4fee-851a-4d93c6cc055d';
   $pane = new stdClass();
   $pane->pid = 'new-c8797a74-60ea-4652-a490-29fdef1dd195';
   $pane->panel = 'content';
@@ -1666,35 +1704,35 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 10;
+  $pane->position = 11;
   $pane->locks = array();
   $pane->uuid = 'c8797a74-60ea-4652-a490-29fdef1dd195';
   $display->content['new-c8797a74-60ea-4652-a490-29fdef1dd195'] = $pane;
-  $display->panels['content'][10] = 'new-c8797a74-60ea-4652-a490-29fdef1dd195';
+  $display->panels['content'][11] = 'new-c8797a74-60ea-4652-a490-29fdef1dd195';
   $pane = new stdClass();
-  $pane->pid = 'new-48834b8a-2242-46fb-8a02-831eb05f452b';
+  $pane->pid = 'new-ecf5b0e6-ce6c-466b-8421-bbdf2ed9107c';
   $pane->panel = 'content';
   $pane->type = 'views';
-  $pane->subtype = 'legislation_bills';
-  $pane->shown = FALSE;
+  $pane->subtype = 'senator_legislation';
+  $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
     'override_pager_settings' => 0,
-    'use_pager' => 1,
+    'use_pager' => 0,
     'nodes_per_page' => '4',
     'pager_id' => '0',
-    'offset' => '0',
+    'offset' => '1',
     'more_link' => 0,
     'feed_icons' => 0,
     'panel_args' => 0,
     'link_to_view' => 0,
     'args' => '',
     'url' => '',
-    'display' => 'senator_homepage_legislation_bills',
+    'display' => 'sen_featured_legis_home_sub',
     'context' => array(
-      0 => '',
+      0 => 'argument_entity_id:node_1.nid',
     ),
-    'override_title' => 0,
+    'override_title' => 1,
     'override_title_text' => '',
     'override_title_heading' => 'h2',
   );
@@ -1704,11 +1742,11 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 11;
+  $pane->position = 12;
   $pane->locks = array();
-  $pane->uuid = '48834b8a-2242-46fb-8a02-831eb05f452b';
-  $display->content['new-48834b8a-2242-46fb-8a02-831eb05f452b'] = $pane;
-  $display->panels['content'][11] = 'new-48834b8a-2242-46fb-8a02-831eb05f452b';
+  $pane->uuid = 'ecf5b0e6-ce6c-466b-8421-bbdf2ed9107c';
+  $display->content['new-ecf5b0e6-ce6c-466b-8421-bbdf2ed9107c'] = $pane;
+  $display->panels['content'][12] = 'new-ecf5b0e6-ce6c-466b-8421-bbdf2ed9107c';
   $pane = new stdClass();
   $pane->pid = 'new-de6d36f1-823e-4729-a0a5-2670eb0dcf62';
   $pane->panel = 'content';
@@ -1742,11 +1780,49 @@ function nys_sitewide_elements_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 12;
+  $pane->position = 13;
   $pane->locks = array();
   $pane->uuid = 'de6d36f1-823e-4729-a0a5-2670eb0dcf62';
   $display->content['new-de6d36f1-823e-4729-a0a5-2670eb0dcf62'] = $pane;
-  $display->panels['content'][12] = 'new-de6d36f1-823e-4729-a0a5-2670eb0dcf62';
+  $display->panels['content'][13] = 'new-de6d36f1-823e-4729-a0a5-2670eb0dcf62';
+  $pane = new stdClass();
+  $pane->pid = 'new-48834b8a-2242-46fb-8a02-831eb05f452b';
+  $pane->panel = 'content';
+  $pane->type = 'views';
+  $pane->subtype = 'legislation_bills';
+  $pane->shown = FALSE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'override_pager_settings' => 0,
+    'use_pager' => 1,
+    'nodes_per_page' => '4',
+    'pager_id' => '0',
+    'offset' => '0',
+    'more_link' => 0,
+    'feed_icons' => 0,
+    'panel_args' => 0,
+    'link_to_view' => 0,
+    'args' => '',
+    'url' => '',
+    'display' => 'senator_homepage_legislation_bills',
+    'context' => array(
+      0 => '',
+    ),
+    'override_title' => 0,
+    'override_title_text' => '',
+    'override_title_heading' => 'h2',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 14;
+  $pane->locks = array();
+  $pane->uuid = '48834b8a-2242-46fb-8a02-831eb05f452b';
+  $display->content['new-48834b8a-2242-46fb-8a02-831eb05f452b'] = $pane;
+  $display->panels['content'][14] = 'new-48834b8a-2242-46fb-8a02-831eb05f452b';
   $pane = new stdClass();
   $pane->pid = 'new-6d48b677-c38b-444b-a41e-423e93990d10';
   $pane->panel = 'footer_first';

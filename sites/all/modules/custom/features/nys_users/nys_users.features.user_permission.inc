@@ -928,6 +928,17 @@ function nys_users_user_default_permissions() {
     'module' => 'user',
   );
 
+  // Exported permission: 'create advpoll content'.
+  $permissions['create advpoll content'] = array(
+    'name' => 'create advpoll content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Frontpage Editor' => 'Frontpage Editor',
+      'Microsite Content Producer' => 'Microsite Content Producer',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'create agenda content'.
   $permissions['create agenda content'] = array(
     'name' => 'create agenda content',
@@ -995,17 +1006,6 @@ function nys_users_user_default_permissions() {
       'Web Administrator' => 'Web Administrator',
     ),
     'module' => 'node',
-  );
-
-  // Exported permission: 'create field_accessible_sitewide'.
-  $permissions['create field_accessible_sitewide'] = array(
-    'name' => 'create field_accessible_sitewide',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Frontpage Editor' => 'Frontpage Editor',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
   );
 
   // Exported permission: 'create field_assemblymen_chair'.
@@ -1376,6 +1376,15 @@ function nys_users_user_default_permissions() {
     'module' => 'webform',
   );
 
+  // Exported permission: 'delete any advpoll content'.
+  $permissions['delete any advpoll content'] = array(
+    'name' => 'delete any advpoll content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'delete any agenda content'.
   $permissions['delete any agenda content'] = array(
     'name' => 'delete any agenda content',
@@ -1663,6 +1672,17 @@ function nys_users_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Web Administrator' => 'Web Administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own advpoll content'.
+  $permissions['delete own advpoll content'] = array(
+    'name' => 'delete own advpoll content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Frontpage Editor' => 'Frontpage Editor',
+      'Microsite Content Producer' => 'Microsite Content Producer',
     ),
     'module' => 'node',
   );
@@ -2144,6 +2164,15 @@ function nys_users_user_default_permissions() {
     'module' => 'webform',
   );
 
+  // Exported permission: 'edit any advpoll content'.
+  $permissions['edit any advpoll content'] = array(
+    'name' => 'edit any advpoll content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'edit any agenda content'.
   $permissions['edit any agenda content'] = array(
     'name' => 'edit any agenda content',
@@ -2447,17 +2476,6 @@ function nys_users_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'edit field_accessible_sitewide'.
-  $permissions['edit field_accessible_sitewide'] = array(
-    'name' => 'edit field_accessible_sitewide',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Frontpage Editor' => 'Frontpage Editor',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
   // Exported permission: 'edit field_assemblymen_chair'.
   $permissions['edit field_assemblymen_chair'] = array(
     'name' => 'edit field_assemblymen_chair',
@@ -2527,6 +2545,17 @@ function nys_users_user_default_permissions() {
       'Web Administrator' => 'Web Administrator',
     ),
     'module' => 'metatag',
+  );
+
+  // Exported permission: 'edit own advpoll content'.
+  $permissions['edit own advpoll content'] = array(
+    'name' => 'edit own advpoll content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Frontpage Editor' => 'Frontpage Editor',
+      'Microsite Content Producer' => 'Microsite Content Producer',
+    ),
+    'module' => 'node',
   );
 
   // Exported permission: 'edit own agenda content'.
@@ -2614,17 +2643,6 @@ function nys_users_user_default_permissions() {
       'Web Administrator' => 'Web Administrator',
     ),
     'module' => 'node',
-  );
-
-  // Exported permission: 'edit own field_accessible_sitewide'.
-  $permissions['edit own field_accessible_sitewide'] = array(
-    'name' => 'edit own field_accessible_sitewide',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Frontpage Editor' => 'Frontpage Editor',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
   );
 
   // Exported permission: 'edit own field_assemblymen_chair'.
@@ -3843,17 +3861,6 @@ function nys_users_user_default_permissions() {
     'module' => 'disqus',
   );
 
-  // Exported permission: 'view field_accessible_sitewide'.
-  $permissions['view field_accessible_sitewide'] = array(
-    'name' => 'view field_accessible_sitewide',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Frontpage Editor' => 'Frontpage Editor',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
   // Exported permission: 'view field_assemblymen_chair'.
   $permissions['view field_assemblymen_chair'] = array(
     'name' => 'view field_assemblymen_chair',
@@ -3961,17 +3968,6 @@ function nys_users_user_default_permissions() {
       'Administrator' => 'Administrator',
     ),
     'module' => 'location',
-  );
-
-  // Exported permission: 'view own field_accessible_sitewide'.
-  $permissions['view own field_accessible_sitewide'] = array(
-    'name' => 'view own field_accessible_sitewide',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Frontpage Editor' => 'Frontpage Editor',
-      'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'field_permissions',
   );
 
   // Exported permission: 'view own field_assemblymen_chair'.

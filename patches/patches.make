@@ -82,6 +82,11 @@ projects[features][subdir] = contrib
 projects[features][version] = 2.10
 projects[features][patch][] = https://www.drupal.org/files/issues/features-array-intersect-fix-2884104-2.patch
 
+projects[features][type] = module
+projects[features][subdir] = contrib
+projects[features][version] = 2.10
+projects[features][patch][] = https://www.drupal.org/files/issues/features-rules_dont_revert-2701957-25.patch
+
 ; Field collection feeds
 projects[field_collection_feeds][type] = module
 projects[field_collection_feeds][subdir] = contrib

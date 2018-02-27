@@ -11,6 +11,176 @@ function nys_student_submissions_views_default_views() {
   $export = array();
 
   $view = new view();
+  $view->name = 'hannon_high_schools';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'node';
+  $view->human_name = 'Hannon High Schools';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Hannon High Schools';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'role';
+  $handler->display->display_options['access']['role'] = array(
+    6 => '6',
+    17 => '17',
+  );
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['style_plugin'] = 'list';
+  $handler->display->display_options['style_options']['type'] = 'ol';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
+  /* Sort criterion: Content: Title */
+  $handler->display->display_options['sorts']['title']['id'] = 'title';
+  $handler->display->display_options['sorts']['title']['table'] = 'node';
+  $handler->display->display_options['sorts']['title']['field'] = 'title';
+  $handler->display->display_options['filter_groups']['groups'] = array(
+    1 => 'AND',
+    2 => 'OR',
+  );
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'school' => 'school',
+  );
+  $handler->display->display_options['filters']['type']['group'] = 1;
+  /* Filter criterion: Content: Grade Organization (field_school_grade_organization) */
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['id'] = 'field_school_grade_organization_value';
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['table'] = 'field_data_field_school_grade_organization';
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['field'] = 'field_school_grade_organization_value';
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['value'] = 'Senior High';
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['group'] = 1;
+  /* Filter criterion: Content: Title */
+  $handler->display->display_options['filters']['title_3']['id'] = 'title_3';
+  $handler->display->display_options['filters']['title_3']['table'] = 'node';
+  $handler->display->display_options['filters']['title_3']['field'] = 'title';
+  $handler->display->display_options['filters']['title_3']['operator'] = 'not';
+  $handler->display->display_options['filters']['title_3']['value'] = 'Massapequa High School, Senior High';
+  $handler->display->display_options['filters']['title_3']['group'] = 1;
+  /* Filter criterion: Content: Title */
+  $handler->display->display_options['filters']['title_2']['id'] = 'title_2';
+  $handler->display->display_options['filters']['title_2']['table'] = 'node';
+  $handler->display->display_options['filters']['title_2']['field'] = 'title';
+  $handler->display->display_options['filters']['title_2']['operator'] = 'contains';
+  $handler->display->display_options['filters']['title_2']['value'] = 'Our Lady of Mercy Academy';
+  $handler->display->display_options['filters']['title_2']['group'] = 2;
+  /* Filter criterion: Content: Title */
+  $handler->display->display_options['filters']['title_1']['id'] = 'title_1';
+  $handler->display->display_options['filters']['title_1']['table'] = 'node';
+  $handler->display->display_options['filters']['title_1']['field'] = 'title';
+  $handler->display->display_options['filters']['title_1']['operator'] = 'contains';
+  $handler->display->display_options['filters']['title_1']['value'] = 'Holy Trinity Diocesan High School';
+  $handler->display->display_options['filters']['title_1']['group'] = 2;
+  /* Filter criterion: Content: Title */
+  $handler->display->display_options['filters']['title']['id'] = 'title';
+  $handler->display->display_options['filters']['title']['table'] = 'node';
+  $handler->display->display_options['filters']['title']['field'] = 'title';
+  $handler->display->display_options['filters']['title']['operator'] = 'contains';
+  $handler->display->display_options['filters']['title']['value'] = 'Regis High School';
+  $handler->display->display_options['filters']['title']['group'] = 2;
+  /* Filter criterion: Location: Postal Code */
+  $handler->display->display_options['filters']['postal_code_4']['id'] = 'postal_code_4';
+  $handler->display->display_options['filters']['postal_code_4']['table'] = 'location';
+  $handler->display->display_options['filters']['postal_code_4']['field'] = 'postal_code';
+  $handler->display->display_options['filters']['postal_code_4']['value'] = '11010';
+  $handler->display->display_options['filters']['postal_code_4']['group'] = 2;
+  /* Filter criterion: Location: Postal Code */
+  $handler->display->display_options['filters']['postal_code']['id'] = 'postal_code';
+  $handler->display->display_options['filters']['postal_code']['table'] = 'location';
+  $handler->display->display_options['filters']['postal_code']['field'] = 'postal_code';
+  $handler->display->display_options['filters']['postal_code']['value'] = '11501';
+  $handler->display->display_options['filters']['postal_code']['group'] = 2;
+  /* Filter criterion: Location: Postal Code */
+  $handler->display->display_options['filters']['postal_code_1']['id'] = 'postal_code_1';
+  $handler->display->display_options['filters']['postal_code_1']['table'] = 'location';
+  $handler->display->display_options['filters']['postal_code_1']['field'] = 'postal_code';
+  $handler->display->display_options['filters']['postal_code_1']['value'] = '11530';
+  $handler->display->display_options['filters']['postal_code_1']['group'] = 2;
+  /* Filter criterion: Location: Postal Code */
+  $handler->display->display_options['filters']['postal_code_5']['id'] = 'postal_code_5';
+  $handler->display->display_options['filters']['postal_code_5']['table'] = 'location';
+  $handler->display->display_options['filters']['postal_code_5']['field'] = 'postal_code';
+  $handler->display->display_options['filters']['postal_code_5']['value'] = '11550';
+  $handler->display->display_options['filters']['postal_code_5']['group'] = 2;
+  /* Filter criterion: Location: Postal Code */
+  $handler->display->display_options['filters']['postal_code_2']['id'] = 'postal_code_2';
+  $handler->display->display_options['filters']['postal_code_2']['table'] = 'location';
+  $handler->display->display_options['filters']['postal_code_2']['field'] = 'postal_code';
+  $handler->display->display_options['filters']['postal_code_2']['value'] = '11553';
+  $handler->display->display_options['filters']['postal_code_2']['group'] = 2;
+  /* Filter criterion: Location: Postal Code */
+  $handler->display->display_options['filters']['postal_code_11']['id'] = 'postal_code_11';
+  $handler->display->display_options['filters']['postal_code_11']['table'] = 'location';
+  $handler->display->display_options['filters']['postal_code_11']['field'] = 'postal_code';
+  $handler->display->display_options['filters']['postal_code_11']['value'] = '11554';
+  $handler->display->display_options['filters']['postal_code_11']['group'] = 2;
+  /* Filter criterion: Location: Postal Code */
+  $handler->display->display_options['filters']['postal_code_10']['id'] = 'postal_code_10';
+  $handler->display->display_options['filters']['postal_code_10']['table'] = 'location';
+  $handler->display->display_options['filters']['postal_code_10']['field'] = 'postal_code';
+  $handler->display->display_options['filters']['postal_code_10']['value'] = '11590';
+  $handler->display->display_options['filters']['postal_code_10']['group'] = 2;
+  /* Filter criterion: Location: Postal Code */
+  $handler->display->display_options['filters']['postal_code_9']['id'] = 'postal_code_9';
+  $handler->display->display_options['filters']['postal_code_9']['table'] = 'location';
+  $handler->display->display_options['filters']['postal_code_9']['field'] = 'postal_code';
+  $handler->display->display_options['filters']['postal_code_9']['value'] = '11714';
+  $handler->display->display_options['filters']['postal_code_9']['group'] = 2;
+  /* Filter criterion: Location: Postal Code */
+  $handler->display->display_options['filters']['postal_code_8']['id'] = 'postal_code_8';
+  $handler->display->display_options['filters']['postal_code_8']['table'] = 'location';
+  $handler->display->display_options['filters']['postal_code_8']['field'] = 'postal_code';
+  $handler->display->display_options['filters']['postal_code_8']['value'] = '11735';
+  $handler->display->display_options['filters']['postal_code_8']['group'] = 2;
+  /* Filter criterion: Location: Postal Code */
+  $handler->display->display_options['filters']['postal_code_7']['id'] = 'postal_code_7';
+  $handler->display->display_options['filters']['postal_code_7']['table'] = 'location';
+  $handler->display->display_options['filters']['postal_code_7']['field'] = 'postal_code';
+  $handler->display->display_options['filters']['postal_code_7']['value'] = '11756';
+  $handler->display->display_options['filters']['postal_code_7']['group'] = 2;
+  /* Filter criterion: Location: Postal Code */
+  $handler->display->display_options['filters']['postal_code_6']['id'] = 'postal_code_6';
+  $handler->display->display_options['filters']['postal_code_6']['table'] = 'location';
+  $handler->display->display_options['filters']['postal_code_6']['field'] = 'postal_code';
+  $handler->display->display_options['filters']['postal_code_6']['value'] = '11758';
+  $handler->display->display_options['filters']['postal_code_6']['group'] = 2;
+  /* Filter criterion: Location: Postal Code */
+  $handler->display->display_options['filters']['postal_code_3']['id'] = 'postal_code_3';
+  $handler->display->display_options['filters']['postal_code_3']['table'] = 'location';
+  $handler->display->display_options['filters']['postal_code_3']['field'] = 'postal_code';
+  $handler->display->display_options['filters']['postal_code_3']['value'] = '11803';
+  $handler->display->display_options['filters']['postal_code_3']['group'] = 2;
+
+  /* Display: Hannon HS */
+  $handler = $view->new_display('page', 'Hannon HS', 'page');
+  $handler->display->display_options['path'] = 'hannon-high-schools';
+  $export['hannon_high_schools'] = $view;
+
+  $view = new view();
   $view->name = 'student_hannon_photo_contest';
   $view->description = '';
   $view->tag = 'default';
@@ -740,6 +910,156 @@ function nys_student_submissions_views_default_views() {
   $handler = $view->new_display('entityreference', 'Hannon D6 HS', 'entityreference_2');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '30';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'entityreference_style';
+  $handler->display->display_options['style_options']['search_fields'] = array(
+    'title' => 'title',
+  );
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'entityreference_fields';
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['filter_groups']['groups'] = array(
+    1 => 'AND',
+    3 => 'OR',
+    2 => 'OR',
+  );
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'school' => 'school',
+  );
+  $handler->display->display_options['filters']['type']['group'] = 1;
+  /* Filter criterion: Content: Grade Organization (field_school_grade_organization) */
+  $handler->display->display_options['filters']['field_school_grade_organization_value_1']['id'] = 'field_school_grade_organization_value_1';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_1']['table'] = 'field_data_field_school_grade_organization';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_1']['field'] = 'field_school_grade_organization_value';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_1']['value'] = 'K-12 School';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_1']['group'] = 3;
+  /* Filter criterion: Content: Grade Organization (field_school_grade_organization) */
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['id'] = 'field_school_grade_organization_value';
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['table'] = 'field_data_field_school_grade_organization';
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['field'] = 'field_school_grade_organization_value';
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['value'] = 'Senior High';
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['group'] = 3;
+  /* Filter criterion: Content: Grade Organization (field_school_grade_organization) */
+  $handler->display->display_options['filters']['field_school_grade_organization_value_2']['id'] = 'field_school_grade_organization_value_2';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_2']['table'] = 'field_data_field_school_grade_organization';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_2']['field'] = 'field_school_grade_organization_value';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_2']['value'] = 'Junior Senior School';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_2']['group'] = 3;
+  /* Filter criterion: Content: Title */
+  $handler->display->display_options['filters']['title_1']['id'] = 'title_1';
+  $handler->display->display_options['filters']['title_1']['table'] = 'node';
+  $handler->display->display_options['filters']['title_1']['field'] = 'title';
+  $handler->display->display_options['filters']['title_1']['operator'] = 'contains';
+  $handler->display->display_options['filters']['title_1']['value'] = 'Our Lady of Mercy Academy';
+  $handler->display->display_options['filters']['title_1']['group'] = 2;
+  /* Filter criterion: Content: Title */
+  $handler->display->display_options['filters']['title_2']['id'] = 'title_2';
+  $handler->display->display_options['filters']['title_2']['table'] = 'node';
+  $handler->display->display_options['filters']['title_2']['field'] = 'title';
+  $handler->display->display_options['filters']['title_2']['operator'] = 'contains';
+  $handler->display->display_options['filters']['title_2']['value'] = 'Holy Trinity Diocesan High School';
+  $handler->display->display_options['filters']['title_2']['group'] = 2;
+  /* Filter criterion: Content: Title */
+  $handler->display->display_options['filters']['title']['id'] = 'title';
+  $handler->display->display_options['filters']['title']['table'] = 'node';
+  $handler->display->display_options['filters']['title']['field'] = 'title';
+  $handler->display->display_options['filters']['title']['operator'] = 'contains';
+  $handler->display->display_options['filters']['title']['value'] = 'Regis High School';
+  $handler->display->display_options['filters']['title']['group'] = 2;
+  /* Filter criterion: Field: Senate District (field_district) */
+  $handler->display->display_options['filters']['field_district_target_id']['id'] = 'field_district_target_id';
+  $handler->display->display_options['filters']['field_district_target_id']['table'] = 'field_data_field_district';
+  $handler->display->display_options['filters']['field_district_target_id']['field'] = 'field_district_target_id';
+  $handler->display->display_options['filters']['field_district_target_id']['value'] = array(
+    6291 => '6291',
+  );
+  $handler->display->display_options['filters']['field_district_target_id']['group'] = 2;
+  /* Filter criterion: Content: Title */
+  $handler->display->display_options['filters']['title_3']['id'] = 'title_3';
+  $handler->display->display_options['filters']['title_3']['table'] = 'node';
+  $handler->display->display_options['filters']['title_3']['field'] = 'title';
+  $handler->display->display_options['filters']['title_3']['operator'] = 'not';
+  $handler->display->display_options['filters']['title_3']['value'] = 'Hebrew Academy Of Nassau';
+
+  /* Display: K-8 */
+  $handler = $view->new_display('entityreference', 'K-8', 'entityreference_3');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'entityreference_style';
+  $handler->display->display_options['style_options']['search_fields'] = array(
+    'title' => 'title',
+  );
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'entityreference_fields';
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['filter_groups']['groups'] = array(
+    1 => 'AND',
+    2 => 'OR',
+  );
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'school' => 'school',
+  );
+  $handler->display->display_options['filters']['type']['group'] = 1;
+  /* Filter criterion: Content: Grade Organization (field_school_grade_organization) */
+  $handler->display->display_options['filters']['field_school_grade_organization_value_2']['id'] = 'field_school_grade_organization_value_2';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_2']['table'] = 'field_data_field_school_grade_organization';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_2']['field'] = 'field_school_grade_organization_value';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_2']['value'] = 'Junior High';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_2']['group'] = 2;
+  /* Filter criterion: Content: Grade Organization (field_school_grade_organization) */
+  $handler->display->display_options['filters']['field_school_grade_organization_value_1']['id'] = 'field_school_grade_organization_value_1';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_1']['table'] = 'field_data_field_school_grade_organization';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_1']['field'] = 'field_school_grade_organization_value';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_1']['value'] = 'Middle';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_1']['group'] = 2;
+  /* Filter criterion: Content: Grade Organization (field_school_grade_organization) */
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['id'] = 'field_school_grade_organization_value';
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['table'] = 'field_data_field_school_grade_organization';
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['field'] = 'field_school_grade_organization_value';
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['value'] = 'Elementary';
+  $handler->display->display_options['filters']['field_school_grade_organization_value']['group'] = 2;
+  /* Filter criterion: Content: Grade Organization (field_school_grade_organization) */
+  $handler->display->display_options['filters']['field_school_grade_organization_value_3']['id'] = 'field_school_grade_organization_value_3';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_3']['table'] = 'field_data_field_school_grade_organization';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_3']['field'] = 'field_school_grade_organization_value';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_3']['value'] = 'K-12';
+  $handler->display->display_options['filters']['field_school_grade_organization_value_3']['group'] = 2;
+
+  /* Display: All HS */
+  $handler = $view->new_display('entityreference', 'All HS', 'entityreference_4');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'entityreference_style';
   $handler->display->display_options['style_options']['search_fields'] = array(
@@ -1378,8 +1698,8 @@ function nys_student_submissions_views_default_views() {
   $handler->display->display_options['filters']['created']['id'] = 'created';
   $handler->display->display_options['filters']['created']['table'] = 'entityform';
   $handler->display->display_options['filters']['created']['field'] = 'created';
-  $handler->display->display_options['filters']['created']['operator'] = '>=';
-  $handler->display->display_options['filters']['created']['value']['value'] = '2017-02-07';
+  $handler->display->display_options['filters']['created']['operator'] = '<=';
+  $handler->display->display_options['filters']['created']['value']['value'] = '2017-12-31';
   /* Filter criterion: Field collection item: Show? (field_school_show_student) */
   $handler->display->display_options['filters']['field_school_show_student_value']['id'] = 'field_school_show_student_value';
   $handler->display->display_options['filters']['field_school_show_student_value']['table'] = 'field_data_field_school_show_student';
@@ -1558,8 +1878,445 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['filters']['created']['id'] = 'created';
   $handler->display->display_options['filters']['created']['table'] = 'entityform';
   $handler->display->display_options['filters']['created']['field'] = 'created';
-  $handler->display->display_options['filters']['created']['operator'] = '>=';
-  $handler->display->display_options['filters']['created']['value']['value'] = '2017-02-07';
+  $handler->display->display_options['filters']['created']['operator'] = '<=';
+  $handler->display->display_options['filters']['created']['value']['value'] = '2017-12-31';
+
+  /* Display: Earth Day Archives */
+  $handler = $view->new_display('block', 'Earth Day Archives', 'block_4');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Archived Submissions';
+  $handler->display->display_options['defaults']['use_ajax'] = FALSE;
+  $handler->display->display_options['use_ajax'] = TRUE;
+  $handler->display->display_options['defaults']['exposed_form'] = FALSE;
+  $handler->display->display_options['exposed_form']['type'] = 'better_exposed_filters';
+  $handler->display->display_options['exposed_form']['options']['expose_sort_order'] = FALSE;
+  $handler->display->display_options['exposed_form']['options']['bef'] = array(
+    'general' => array(
+      'input_required' => 0,
+      'text_input_required' => array(
+        'text_input_required' => array(
+          'value' => 'Select any filter and click on Apply to see results',
+          'format' => 'full_html',
+        ),
+      ),
+      'allow_secondary' => 0,
+      'secondary_label' => 'Advanced options',
+      'secondary_collapse_override' => '0',
+    ),
+    'created_1' => array(
+      'bef_format' => 'default',
+      'more_options' => array(
+        'autosubmit' => 0,
+        'is_secondary' => 0,
+        'any_label' => '',
+        'bef_filter_description' => '',
+        'tokens' => array(
+          'available' => array(
+            0 => 'global_types',
+          ),
+        ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
+        'datepicker_options' => '',
+      ),
+    ),
+  );
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'list';
+  $handler->display->display_options['style_options']['grouping'] = array(
+    0 => array(
+      'field' => 'field_school_legal_name',
+      'rendered' => 1,
+      'rendered_strip' => 0,
+    ),
+    1 => array(
+      'field' => 'field_school_grade',
+      'rendered' => 1,
+      'rendered_strip' => 0,
+    ),
+  );
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['row_options']['inline'] = array(
+    'field_school_student_full_name' => 'field_school_student_full_name',
+  );
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_school_name_target_id']['id'] = 'field_school_name_target_id';
+  $handler->display->display_options['relationships']['field_school_name_target_id']['table'] = 'field_data_field_school_name';
+  $handler->display->display_options['relationships']['field_school_name_target_id']['field'] = 'field_school_name_target_id';
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_district_target_id']['id'] = 'field_district_target_id';
+  $handler->display->display_options['relationships']['field_district_target_id']['table'] = 'field_data_field_district';
+  $handler->display->display_options['relationships']['field_district_target_id']['field'] = 'field_district_target_id';
+  $handler->display->display_options['relationships']['field_district_target_id']['relationship'] = 'field_school_name_target_id';
+  /* Relationship: Entityform Submission: Student Submissions (field_school_stud_earthday_subm) */
+  $handler->display->display_options['relationships']['field_school_stud_earthday_subm_value']['id'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['relationships']['field_school_stud_earthday_subm_value']['table'] = 'field_data_field_school_stud_earthday_subm';
+  $handler->display->display_options['relationships']['field_school_stud_earthday_subm_value']['field'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['relationships']['field_school_stud_earthday_subm_value']['label'] = 'Field Collection Items';
+  $handler->display->display_options['relationships']['field_school_stud_earthday_subm_value']['delta'] = '-1';
+  /* Relationship: Field collection item: Attach your submission (field_school_submission_upload:fid) */
+  $handler->display->display_options['relationships']['field_school_submission_upload_fid']['id'] = 'field_school_submission_upload_fid';
+  $handler->display->display_options['relationships']['field_school_submission_upload_fid']['table'] = 'field_data_field_school_submission_upload';
+  $handler->display->display_options['relationships']['field_school_submission_upload_fid']['field'] = 'field_school_submission_upload_fid';
+  $handler->display->display_options['relationships']['field_school_submission_upload_fid']['relationship'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: School Legal Name */
+  $handler->display->display_options['fields']['field_school_legal_name']['id'] = 'field_school_legal_name';
+  $handler->display->display_options['fields']['field_school_legal_name']['table'] = 'field_data_field_school_legal_name';
+  $handler->display->display_options['fields']['field_school_legal_name']['field'] = 'field_school_legal_name';
+  $handler->display->display_options['fields']['field_school_legal_name']['relationship'] = 'field_school_name_target_id';
+  $handler->display->display_options['fields']['field_school_legal_name']['label'] = '';
+  $handler->display->display_options['fields']['field_school_legal_name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_school_legal_name']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: School Name */
+  $handler->display->display_options['fields']['field_school_name']['id'] = 'field_school_name';
+  $handler->display->display_options['fields']['field_school_name']['table'] = 'field_data_field_school_name';
+  $handler->display->display_options['fields']['field_school_name']['field'] = 'field_school_name';
+  $handler->display->display_options['fields']['field_school_name']['label'] = '';
+  $handler->display->display_options['fields']['field_school_name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_school_name']['element_type'] = 'h4';
+  $handler->display->display_options['fields']['field_school_name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_school_name']['settings'] = array(
+    'link' => 0,
+  );
+  /* Field: Field: Senator */
+  $handler->display->display_options['fields']['field_senator']['id'] = 'field_senator';
+  $handler->display->display_options['fields']['field_senator']['table'] = 'field_data_field_senator';
+  $handler->display->display_options['fields']['field_senator']['field'] = 'field_senator';
+  $handler->display->display_options['fields']['field_senator']['relationship'] = 'field_district_target_id';
+  $handler->display->display_options['fields']['field_senator']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_senator']['settings'] = array(
+    'link' => 0,
+  );
+  /* Field: File: Mime type */
+  $handler->display->display_options['fields']['filemime']['id'] = 'filemime';
+  $handler->display->display_options['fields']['filemime']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['filemime']['field'] = 'filemime';
+  $handler->display->display_options['fields']['filemime']['relationship'] = 'field_school_submission_upload_fid';
+  $handler->display->display_options['fields']['filemime']['label'] = '';
+  $handler->display->display_options['fields']['filemime']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['filemime']['element_label_colon'] = FALSE;
+  /* Field: Field collection item: Attach your submission */
+  $handler->display->display_options['fields']['field_school_submission_upload']['id'] = 'field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload']['table'] = 'field_data_field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload']['field'] = 'field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload']['relationship'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['fields']['field_school_submission_upload']['label'] = '';
+  $handler->display->display_options['fields']['field_school_submission_upload']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_school_submission_upload']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_school_submission_upload']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_school_submission_upload']['type'] = 'file_url_plain';
+  $handler->display->display_options['fields']['field_school_submission_upload']['settings'] = array(
+    'file_view_mode' => 'default',
+  );
+  /* Field: File: Extension */
+  $handler->display->display_options['fields']['extension']['id'] = 'extension';
+  $handler->display->display_options['fields']['extension']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['extension']['field'] = 'extension';
+  $handler->display->display_options['fields']['extension']['relationship'] = 'field_school_submission_upload_fid';
+  $handler->display->display_options['fields']['extension']['label'] = '';
+  $handler->display->display_options['fields']['extension']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['extension']['element_label_colon'] = FALSE;
+  /* Field: Field collection item: Student's Full Name */
+  $handler->display->display_options['fields']['field_school_student_full_name']['id'] = 'field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['table'] = 'field_data_field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['field'] = 'field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['relationship'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['fields']['field_school_student_full_name']['label'] = '';
+  $handler->display->display_options['fields']['field_school_student_full_name']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_school_student_full_name']['alter']['text'] = '<a href="[field_school_submission_upload]">[field_school_student_full_name] <span>([extension])</span></a>';
+  $handler->display->display_options['fields']['field_school_student_full_name']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: Grade */
+  $handler->display->display_options['fields']['field_school_grade']['id'] = 'field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['table'] = 'field_data_field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['field'] = 'field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['label'] = '';
+  $handler->display->display_options['fields']['field_school_grade']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_school_grade']['element_label_colon'] = FALSE;
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Entityform Submission: Grade (field_school_grade) */
+  $handler->display->display_options['sorts']['field_school_grade_value']['id'] = 'field_school_grade_value';
+  $handler->display->display_options['sorts']['field_school_grade_value']['table'] = 'field_data_field_school_grade';
+  $handler->display->display_options['sorts']['field_school_grade_value']['field'] = 'field_school_grade_value';
+  $handler->display->display_options['sorts']['field_school_grade_value']['allowed_values'] = '1';
+  /* Sort criterion: Field collection item: Student&#039;s Full Name (field_school_student_full_name) */
+  $handler->display->display_options['sorts']['field_school_student_full_name_value']['id'] = 'field_school_student_full_name_value';
+  $handler->display->display_options['sorts']['field_school_student_full_name_value']['table'] = 'field_data_field_school_student_full_name';
+  $handler->display->display_options['sorts']['field_school_student_full_name_value']['field'] = 'field_school_student_full_name_value';
+  $handler->display->display_options['sorts']['field_school_student_full_name_value']['relationship'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: Field: Senator (field_senator) */
+  $handler->display->display_options['arguments']['field_senator_target_id']['id'] = 'field_senator_target_id';
+  $handler->display->display_options['arguments']['field_senator_target_id']['table'] = 'field_data_field_senator';
+  $handler->display->display_options['arguments']['field_senator_target_id']['field'] = 'field_senator_target_id';
+  $handler->display->display_options['arguments']['field_senator_target_id']['relationship'] = 'field_district_target_id';
+  $handler->display->display_options['arguments']['field_senator_target_id']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['field_senator_target_id']['default_argument_type'] = 'node';
+  $handler->display->display_options['arguments']['field_senator_target_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_senator_target_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_senator_target_id']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Entityform Submission: Entityform Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'entityform';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'earth_day' => 'earth_day',
+  );
+  /* Filter criterion: Entityform Submission: Date submitted */
+  $handler->display->display_options['filters']['created']['id'] = 'created';
+  $handler->display->display_options['filters']['created']['table'] = 'entityform';
+  $handler->display->display_options['filters']['created']['field'] = 'created';
+  $handler->display->display_options['filters']['created']['operator'] = '<=';
+  $handler->display->display_options['filters']['created']['value']['value'] = '2017-12-31';
+  /* Filter criterion: Field collection item: Show? (field_school_show_student) */
+  $handler->display->display_options['filters']['field_school_show_student_value']['id'] = 'field_school_show_student_value';
+  $handler->display->display_options['filters']['field_school_show_student_value']['table'] = 'field_data_field_school_show_student';
+  $handler->display->display_options['filters']['field_school_show_student_value']['field'] = 'field_school_show_student_value';
+  $handler->display->display_options['filters']['field_school_show_student_value']['relationship'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['filters']['field_school_show_student_value']['operator'] = 'not';
+  $handler->display->display_options['filters']['field_school_show_student_value']['value'] = array(
+    0 => '0',
+  );
+  /* Filter criterion: Field collection item: Year (field_year) */
+  $handler->display->display_options['filters']['field_year_value']['id'] = 'field_year_value';
+  $handler->display->display_options['filters']['field_year_value']['table'] = 'field_data_field_year';
+  $handler->display->display_options['filters']['field_year_value']['field'] = 'field_year_value';
+  $handler->display->display_options['filters']['field_year_value']['relationship'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['filters']['field_year_value']['value']['value'] = '2017';
+  $handler->display->display_options['filters']['field_year_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_year_value']['expose']['operator_id'] = 'field_year_value_op';
+  $handler->display->display_options['filters']['field_year_value']['expose']['label'] = 'Select Year';
+  $handler->display->display_options['filters']['field_year_value']['expose']['description'] = 'Archive only goes back to 2017';
+  $handler->display->display_options['filters']['field_year_value']['expose']['operator'] = 'field_year_value_op';
+  $handler->display->display_options['filters']['field_year_value']['expose']['identifier'] = 'field_year_value';
+  $handler->display->display_options['filters']['field_year_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    17 => 0,
+    18 => 0,
+    19 => 0,
+  );
+  $handler->display->display_options['filters']['field_year_value']['granularity'] = 'year';
+  $handler->display->display_options['filters']['field_year_value']['year_range'] = '-1:2017';
+
+  /* Display: ED Past Winners */
+  $handler = $view->new_display('block', 'ED Past Winners', 'block_5');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Past Poster Winners';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['row_options']['inline'] = array(
+    'field_school_student_full_name' => 'field_school_student_full_name',
+  );
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['header'] = FALSE;
+  $handler->display->display_options['defaults']['footer'] = FALSE;
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_school_name_target_id']['id'] = 'field_school_name_target_id';
+  $handler->display->display_options['relationships']['field_school_name_target_id']['table'] = 'field_data_field_school_name';
+  $handler->display->display_options['relationships']['field_school_name_target_id']['field'] = 'field_school_name_target_id';
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_district_target_id']['id'] = 'field_district_target_id';
+  $handler->display->display_options['relationships']['field_district_target_id']['table'] = 'field_data_field_district';
+  $handler->display->display_options['relationships']['field_district_target_id']['field'] = 'field_district_target_id';
+  $handler->display->display_options['relationships']['field_district_target_id']['relationship'] = 'field_school_name_target_id';
+  /* Relationship: Entityform Submission: Student Submissions (field_school_stud_earthday_subm) */
+  $handler->display->display_options['relationships']['field_school_stud_earthday_subm_value']['id'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['relationships']['field_school_stud_earthday_subm_value']['table'] = 'field_data_field_school_stud_earthday_subm';
+  $handler->display->display_options['relationships']['field_school_stud_earthday_subm_value']['field'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['relationships']['field_school_stud_earthday_subm_value']['label'] = 'Field Collection Items';
+  $handler->display->display_options['relationships']['field_school_stud_earthday_subm_value']['delta'] = '-1';
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_senator_target_id']['id'] = 'field_senator_target_id';
+  $handler->display->display_options['relationships']['field_senator_target_id']['table'] = 'field_data_field_senator';
+  $handler->display->display_options['relationships']['field_senator_target_id']['field'] = 'field_senator_target_id';
+  $handler->display->display_options['relationships']['field_senator_target_id']['relationship'] = 'field_district_target_id';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Field collection item: Year */
+  $handler->display->display_options['fields']['field_year']['id'] = 'field_year';
+  $handler->display->display_options['fields']['field_year']['table'] = 'field_data_field_year';
+  $handler->display->display_options['fields']['field_year']['field'] = 'field_year';
+  $handler->display->display_options['fields']['field_year']['relationship'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['fields']['field_year']['label'] = '';
+  $handler->display->display_options['fields']['field_year']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_year']['alter']['text'] = '[field_year] Winner(s)';
+  $handler->display->display_options['fields']['field_year']['element_type'] = 'h3';
+  $handler->display->display_options['fields']['field_year']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_year']['settings'] = array(
+    'format_type' => 'year_only',
+    'custom_date_format' => '',
+    'fromto' => 'both',
+    'multiple_number' => '',
+    'multiple_from' => '',
+    'multiple_to' => '',
+    'show_remaining_days' => 0,
+  );
+  /* Field: Field collection item: Student's Full Name */
+  $handler->display->display_options['fields']['field_school_student_full_name']['id'] = 'field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['table'] = 'field_data_field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['field'] = 'field_school_student_full_name';
+  $handler->display->display_options['fields']['field_school_student_full_name']['relationship'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['fields']['field_school_student_full_name']['label'] = '';
+  $handler->display->display_options['fields']['field_school_student_full_name']['alter']['text'] = '<a href="[field_school_submission_upload]">[field_school_student_full_name] <span>([extension])</span></a>';
+  $handler->display->display_options['fields']['field_school_student_full_name']['element_type'] = 'strong';
+  $handler->display->display_options['fields']['field_school_student_full_name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_school_student_full_name']['element_wrapper_type'] = 'p';
+  /* Field: Entityform Submission: Grade */
+  $handler->display->display_options['fields']['field_school_grade']['id'] = 'field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['table'] = 'field_data_field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['field'] = 'field_school_grade';
+  $handler->display->display_options['fields']['field_school_grade']['label'] = '';
+  $handler->display->display_options['fields']['field_school_grade']['element_type'] = 'p';
+  $handler->display->display_options['fields']['field_school_grade']['element_class'] = 'nospace';
+  $handler->display->display_options['fields']['field_school_grade']['element_label_colon'] = FALSE;
+  /* Field: Content: School Legal Name */
+  $handler->display->display_options['fields']['field_school_legal_name']['id'] = 'field_school_legal_name';
+  $handler->display->display_options['fields']['field_school_legal_name']['table'] = 'field_data_field_school_legal_name';
+  $handler->display->display_options['fields']['field_school_legal_name']['field'] = 'field_school_legal_name';
+  $handler->display->display_options['fields']['field_school_legal_name']['relationship'] = 'field_school_name_target_id';
+  $handler->display->display_options['fields']['field_school_legal_name']['label'] = '';
+  $handler->display->display_options['fields']['field_school_legal_name']['element_type'] = 'p';
+  $handler->display->display_options['fields']['field_school_legal_name']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: School Name */
+  $handler->display->display_options['fields']['field_school_name']['id'] = 'field_school_name';
+  $handler->display->display_options['fields']['field_school_name']['table'] = 'field_data_field_school_name';
+  $handler->display->display_options['fields']['field_school_name']['field'] = 'field_school_name';
+  $handler->display->display_options['fields']['field_school_name']['label'] = '';
+  $handler->display->display_options['fields']['field_school_name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_school_name']['element_type'] = 'p';
+  $handler->display->display_options['fields']['field_school_name']['element_class'] = 'nospace';
+  $handler->display->display_options['fields']['field_school_name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_school_name']['settings'] = array(
+    'link' => 0,
+  );
+  /* Field: Field: Senator */
+  $handler->display->display_options['fields']['field_senator']['id'] = 'field_senator';
+  $handler->display->display_options['fields']['field_senator']['table'] = 'field_data_field_senator';
+  $handler->display->display_options['fields']['field_senator']['field'] = 'field_senator';
+  $handler->display->display_options['fields']['field_senator']['relationship'] = 'field_district_target_id';
+  $handler->display->display_options['fields']['field_senator']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_senator']['settings'] = array(
+    'link' => 0,
+  );
+  /* Field: Field collection item: Attach your submission */
+  $handler->display->display_options['fields']['field_school_submission_upload']['id'] = 'field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload']['table'] = 'field_data_field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload']['field'] = 'field_school_submission_upload';
+  $handler->display->display_options['fields']['field_school_submission_upload']['relationship'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['fields']['field_school_submission_upload']['label'] = '';
+  $handler->display->display_options['fields']['field_school_submission_upload']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_school_submission_upload']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_school_submission_upload']['type'] = 'file_rendered';
+  $handler->display->display_options['fields']['field_school_submission_upload']['settings'] = array(
+    'file_view_mode' => 'default',
+  );
+  /* Field: Field: Senate District */
+  $handler->display->display_options['fields']['field_district']['id'] = 'field_district';
+  $handler->display->display_options['fields']['field_district']['table'] = 'field_data_field_district';
+  $handler->display->display_options['fields']['field_district']['field'] = 'field_district';
+  $handler->display->display_options['fields']['field_district']['relationship'] = 'field_school_name_target_id';
+  $handler->display->display_options['fields']['field_district']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_district']['settings'] = array(
+    'link' => 0,
+  );
+  /* Field: Taxonomy term: District Number */
+  $handler->display->display_options['fields']['field_district_number']['id'] = 'field_district_number';
+  $handler->display->display_options['fields']['field_district_number']['table'] = 'field_data_field_district_number';
+  $handler->display->display_options['fields']['field_district_number']['field'] = 'field_district_number';
+  $handler->display->display_options['fields']['field_district_number']['relationship'] = 'field_district_target_id';
+  $handler->display->display_options['fields']['field_district_number']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_district_number']['settings'] = array(
+    'thousand_separator' => '',
+    'prefix_suffix' => 1,
+  );
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Field collection item: Student&#039;s Full Name (field_school_student_full_name) */
+  $handler->display->display_options['sorts']['field_school_student_full_name_value']['id'] = 'field_school_student_full_name_value';
+  $handler->display->display_options['sorts']['field_school_student_full_name_value']['table'] = 'field_data_field_school_student_full_name';
+  $handler->display->display_options['sorts']['field_school_student_full_name_value']['field'] = 'field_school_student_full_name_value';
+  $handler->display->display_options['sorts']['field_school_student_full_name_value']['relationship'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: Field: Senator (field_senator) */
+  $handler->display->display_options['arguments']['field_senator_target_id']['id'] = 'field_senator_target_id';
+  $handler->display->display_options['arguments']['field_senator_target_id']['table'] = 'field_data_field_senator';
+  $handler->display->display_options['arguments']['field_senator_target_id']['field'] = 'field_senator_target_id';
+  $handler->display->display_options['arguments']['field_senator_target_id']['relationship'] = 'field_district_target_id';
+  $handler->display->display_options['arguments']['field_senator_target_id']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['field_senator_target_id']['default_argument_type'] = 'node';
+  $handler->display->display_options['arguments']['field_senator_target_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_senator_target_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_senator_target_id']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Entityform Submission: Entityform Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'entityform';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'earth_day' => 'earth_day',
+  );
+  /* Filter criterion: Field collection item: Poster Winner? (field_school_featured_entry) */
+  $handler->display->display_options['filters']['field_school_featured_entry_value']['id'] = 'field_school_featured_entry_value';
+  $handler->display->display_options['filters']['field_school_featured_entry_value']['table'] = 'field_data_field_school_featured_entry';
+  $handler->display->display_options['filters']['field_school_featured_entry_value']['field'] = 'field_school_featured_entry_value';
+  $handler->display->display_options['filters']['field_school_featured_entry_value']['relationship'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['filters']['field_school_featured_entry_value']['value'] = array(
+    1 => '1',
+  );
+  /* Filter criterion: Entityform Submission: Date submitted */
+  $handler->display->display_options['filters']['created']['id'] = 'created';
+  $handler->display->display_options['filters']['created']['table'] = 'entityform';
+  $handler->display->display_options['filters']['created']['field'] = 'created';
+  $handler->display->display_options['filters']['created']['operator'] = '<=';
+  $handler->display->display_options['filters']['created']['value']['value'] = '2017-12-31';
+  /* Filter criterion: Field collection item: Year (field_year) */
+  $handler->display->display_options['filters']['field_year_value']['id'] = 'field_year_value';
+  $handler->display->display_options['filters']['field_year_value']['table'] = 'field_data_field_year';
+  $handler->display->display_options['filters']['field_year_value']['field'] = 'field_year_value';
+  $handler->display->display_options['filters']['field_year_value']['relationship'] = 'field_school_stud_earthday_subm_value';
+  $handler->display->display_options['filters']['field_year_value']['value']['value'] = '2017';
+  $handler->display->display_options['filters']['field_year_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_year_value']['expose']['operator_id'] = 'field_year_value_op';
+  $handler->display->display_options['filters']['field_year_value']['expose']['label'] = 'View by Year';
+  $handler->display->display_options['filters']['field_year_value']['expose']['operator'] = 'field_year_value_op';
+  $handler->display->display_options['filters']['field_year_value']['expose']['identifier'] = 'field_year_value';
+  $handler->display->display_options['filters']['field_year_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    17 => 0,
+    18 => 0,
+    19 => 0,
+  );
+  $handler->display->display_options['filters']['field_year_value']['granularity'] = 'year';
   $export['student_submissions'] = $view;
 
   $view = new view();
@@ -1716,7 +2473,7 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['fields']['field_school_grade']['field'] = 'field_school_grade';
   $handler->display->display_options['fields']['field_school_grade']['label'] = '';
   $handler->display->display_options['fields']['field_school_grade']['element_label_colon'] = FALSE;
-  /* Field: Entityform Submission: Teacher's Name */
+  /* Field: Entityform Submission: Contact Name */
   $handler->display->display_options['fields']['field_school_contact_name']['id'] = 'field_school_contact_name';
   $handler->display->display_options['fields']['field_school_contact_name']['table'] = 'field_data_field_school_contact_name';
   $handler->display->display_options['fields']['field_school_contact_name']['field'] = 'field_school_contact_name';
@@ -1883,7 +2640,7 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['filters']['created']['field'] = 'created';
   $handler->display->display_options['filters']['created']['operator'] = '>=';
   $handler->display->display_options['filters']['created']['value']['value'] = '2017-02-07';
-  /* Filter criterion: Entityform Submission: Teacher&#039;s Name (field_school_contact_name) */
+  /* Filter criterion: Entityform Submission: Contact Name (field_school_contact_name) */
   $handler->display->display_options['filters']['field_school_contact_name_value']['id'] = 'field_school_contact_name_value';
   $handler->display->display_options['filters']['field_school_contact_name_value']['table'] = 'field_data_field_school_contact_name';
   $handler->display->display_options['filters']['field_school_contact_name_value']['field'] = 'field_school_contact_name_value';
@@ -1918,6 +2675,8 @@ NYS Senator, District [field_district_number]</p>
 
   /* Display: Earth Day Submissions */
   $handler = $view->new_display('page', 'Earth Day Submissions', 'page');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Earth Day Submissions';
   $handler->display->display_options['defaults']['access'] = FALSE;
   $handler->display->display_options['access']['type'] = 'role';
   $handler->display->display_options['access']['role'] = array(
@@ -2075,7 +2834,7 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['fields']['field_school_grade']['field'] = 'field_school_grade';
   $handler->display->display_options['fields']['field_school_grade']['label'] = '';
   $handler->display->display_options['fields']['field_school_grade']['element_label_colon'] = FALSE;
-  /* Field: Entityform Submission: Teacher's Name */
+  /* Field: Entityform Submission: Contact Name */
   $handler->display->display_options['fields']['field_school_contact_name']['id'] = 'field_school_contact_name';
   $handler->display->display_options['fields']['field_school_contact_name']['table'] = 'field_data_field_school_contact_name';
   $handler->display->display_options['fields']['field_school_contact_name']['field'] = 'field_school_contact_name';
@@ -2156,15 +2915,15 @@ NYS Senator, District [field_district_number]</p>
       'selected' => 1,
       'postpone_processing' => 0,
       'skip_confirmation' => 0,
+      'skip_permission_check' => 0,
       'override_label' => 0,
       'label' => '',
       'settings' => array(
         'show_all_tokens' => 0,
         'display_values' => array(
           'field_school_stud_earthday_subm::field_school_featured_entry' => 'field_school_stud_earthday_subm::field_school_featured_entry',
-          'field_school_stud_earthday_subm::field_school_student_full_name' => 'field_school_stud_earthday_subm::field_school_student_full_name',
-          'field_school_stud_earthday_subm::field_school_submission_upload' => 'field_school_stud_earthday_subm::field_school_submission_upload',
           'field_school_stud_earthday_subm::field_school_show_student' => 'field_school_stud_earthday_subm::field_school_show_student',
+          'field_school_stud_earthday_subm::field_year' => 'field_school_stud_earthday_subm::field_year',
         ),
       ),
     ),
@@ -2176,6 +2935,109 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['fields']['field_school_show_student']['relationship'] = 'field_school_stud_earthday_subm_value';
   $handler->display->display_options['fields']['field_school_show_student']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_school_show_student']['alter']['text'] = 'Show status: [field_school_show_student]';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Entityform Submission: Entityform Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'entityform';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'earth_day' => 'earth_day',
+  );
+  /* Filter criterion: Field: Senator (field_senator) */
+  $handler->display->display_options['filters']['field_senator_target_id']['id'] = 'field_senator_target_id';
+  $handler->display->display_options['filters']['field_senator_target_id']['table'] = 'field_data_field_senator';
+  $handler->display->display_options['filters']['field_senator_target_id']['field'] = 'field_senator_target_id';
+  $handler->display->display_options['filters']['field_senator_target_id']['relationship'] = 'field_district_target_id';
+  $handler->display->display_options['filters']['field_senator_target_id']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_senator_target_id']['expose']['operator_id'] = 'field_senator_target_id_op';
+  $handler->display->display_options['filters']['field_senator_target_id']['expose']['label'] = 'Senator';
+  $handler->display->display_options['filters']['field_senator_target_id']['expose']['operator'] = 'field_senator_target_id_op';
+  $handler->display->display_options['filters']['field_senator_target_id']['expose']['identifier'] = 'field_senator_target_id';
+  $handler->display->display_options['filters']['field_senator_target_id']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    16 => 0,
+  );
+  /* Filter criterion: Content: Title */
+  $handler->display->display_options['filters']['title']['id'] = 'title';
+  $handler->display->display_options['filters']['title']['table'] = 'node';
+  $handler->display->display_options['filters']['title']['field'] = 'title';
+  $handler->display->display_options['filters']['title']['relationship'] = 'field_school_name_target_id';
+  $handler->display->display_options['filters']['title']['operator'] = 'contains';
+  $handler->display->display_options['filters']['title']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['title']['expose']['operator_id'] = 'title_op';
+  $handler->display->display_options['filters']['title']['expose']['label'] = 'School';
+  $handler->display->display_options['filters']['title']['expose']['operator'] = 'title_op';
+  $handler->display->display_options['filters']['title']['expose']['identifier'] = 'title';
+  $handler->display->display_options['filters']['title']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    16 => 0,
+  );
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_filter'] = 1;
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_min_chars'] = '0';
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_field'] = 'title';
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_raw_dropdown'] = 1;
+  $handler->display->display_options['filters']['title']['expose']['autocomplete_dependent'] = 0;
+  /* Filter criterion: Entityform Submission: Date submitted */
+  $handler->display->display_options['filters']['created']['id'] = 'created';
+  $handler->display->display_options['filters']['created']['table'] = 'entityform';
+  $handler->display->display_options['filters']['created']['field'] = 'created';
+  $handler->display->display_options['filters']['created']['operator'] = '>=';
+  $handler->display->display_options['filters']['created']['value']['value'] = '2018-02-09';
+  /* Filter criterion: Entityform Submission: Contact Name (field_school_contact_name) */
+  $handler->display->display_options['filters']['field_school_contact_name_value']['id'] = 'field_school_contact_name_value';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['table'] = 'field_data_field_school_contact_name';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['field'] = 'field_school_contact_name_value';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['operator'] = 'contains';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['operator_id'] = 'field_school_contact_name_value_op';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['label'] = 'Teacher Name';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['operator'] = 'field_school_contact_name_value_op';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['identifier'] = 'field_school_contact_name_value';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+    3 => 0,
+    10 => 0,
+    11 => 0,
+    13 => 0,
+    14 => 0,
+    7 => 0,
+    16 => 0,
+    17 => 0,
+  );
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['autocomplete_filter'] = 1;
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['autocomplete_min_chars'] = '0';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['autocomplete_field'] = 'field_school_contact_name';
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['autocomplete_raw_dropdown'] = 1;
+  $handler->display->display_options['filters']['field_school_contact_name_value']['expose']['autocomplete_dependent'] = 0;
   $handler->display->display_options['path'] = 'admin/entityforms/earthday';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Earth Day Submissions';
@@ -2251,7 +3113,7 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['fields']['field_school_grade']['table'] = 'field_data_field_school_grade';
   $handler->display->display_options['fields']['field_school_grade']['field'] = 'field_school_grade';
   $handler->display->display_options['fields']['field_school_grade']['element_label_colon'] = FALSE;
-  /* Field: Entityform Submission: Teacher's Name */
+  /* Field: Entityform Submission: Contact Name */
   $handler->display->display_options['fields']['field_school_contact_name']['id'] = 'field_school_contact_name';
   $handler->display->display_options['fields']['field_school_contact_name']['table'] = 'field_data_field_school_contact_name';
   $handler->display->display_options['fields']['field_school_contact_name']['field'] = 'field_school_contact_name';
@@ -2516,7 +3378,7 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['fields']['field_senator']['settings'] = array(
     'link' => 0,
   );
-  /* Field: Entityform Submission: Teacher's Name */
+  /* Field: Entityform Submission: Contact Name */
   $handler->display->display_options['fields']['field_school_contact_name']['id'] = 'field_school_contact_name';
   $handler->display->display_options['fields']['field_school_contact_name']['table'] = 'field_data_field_school_contact_name';
   $handler->display->display_options['fields']['field_school_contact_name']['field'] = 'field_school_contact_name';
@@ -2704,7 +3566,7 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['filters']['created']['field'] = 'created';
   $handler->display->display_options['filters']['created']['operator'] = '>=';
   $handler->display->display_options['filters']['created']['value']['value'] = '2017-02-07';
-  /* Filter criterion: Entityform Submission: Teacher&#039;s Name (field_school_contact_name) */
+  /* Filter criterion: Entityform Submission: Contact Name (field_school_contact_name) */
   $handler->display->display_options['filters']['field_school_contact_name_value']['id'] = 'field_school_contact_name_value';
   $handler->display->display_options['filters']['field_school_contact_name_value']['table'] = 'field_data_field_school_contact_name';
   $handler->display->display_options['filters']['field_school_contact_name_value']['field'] = 'field_school_contact_name_value';
@@ -2798,7 +3660,7 @@ NYS Senator, District [field_district_number]</p>
   $handler->display->display_options['fields']['field_school_grade']['table'] = 'field_data_field_school_grade';
   $handler->display->display_options['fields']['field_school_grade']['field'] = 'field_school_grade';
   $handler->display->display_options['fields']['field_school_grade']['element_label_colon'] = FALSE;
-  /* Field: Entityform Submission: Teacher's Name */
+  /* Field: Entityform Submission: Contact Name */
   $handler->display->display_options['fields']['field_school_contact_name']['id'] = 'field_school_contact_name';
   $handler->display->display_options['fields']['field_school_contact_name']['table'] = 'field_data_field_school_contact_name';
   $handler->display->display_options['fields']['field_school_contact_name']['field'] = 'field_school_contact_name';

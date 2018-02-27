@@ -19,9 +19,12 @@
   * `composer install`
   * `npm install`
 * To run the tests, execute the script:
-  * cd private/tests/behat
+  * `cd private/tests/behat`
   * `./behat-run.sh`
   * Note: This script must run in the environment hosting the local development site
+* To run specific tests, run the behat binary directly and pass in scenario name or tags
+  * `bin/behat --tags @register`
+  * `bin/behat --name="Anonymous user"`
 
 ## Current tests
 
@@ -41,6 +44,9 @@
 ## Current defined step definitions
 ```
 default | Given I click the :arg1 element
+default | Given I log in as :name
+default | Given I log in as user with :name email
+default | When I clean up test user account created
 default | Then Fill :field with a random loremipsum
 default | Then Fill :field with an existent loremipsum
 default | Then Fill :field with a random mail
@@ -157,8 +163,10 @@ default | Then /^the "(?P<field>(?:[^"]|\\")*)" field should contain "(?P<value>
 default | Then /^the "(?P<field>(?:[^"]|\\")*)" field should not contain "(?P<value>(?:[^"]|\\")*)"$/
 default | Then /^(?:|I )should see (?P<num>\d+) "(?P<element>[^"]*)" elements?$/
 default | Then /^the "(?P<checkbox>(?:[^"]|\\")*)" checkbox should be checked$/
+default | Then /^the "(?P<checkbox>(?:[^"]|\\")*)" checkbox is checked$/
 default | Then /^the checkbox "(?P<checkbox>(?:[^"]|\\")*)" (?:is|should be) checked$/
-default | Then /^the "(?P<checkbox>(?:[^"]|\\")*)" checkbox should not be checked$/
+default | Then /^the "(?P<checkbox>(?:[^"]|\\")*)" checkbox should (?:be unchecked|not be checked)$/
+default | Then /^the "(?P<checkbox>(?:[^"]|\\")*)" checkbox is (?:unchecked|not checked)$/
 default | Then /^the checkbox "(?P<checkbox>(?:[^"]|\\")*)" should (?:be unchecked|not be checked)$/
 default | Then /^the checkbox "(?P<checkbox>(?:[^"]|\\")*)" is (?:unchecked|not checked)$/
 default | Then /^print current URL$/

@@ -1196,38 +1196,6 @@ function nys_utils_views_pre_view(&$view, &$display_id, &$args) {
  * Implements hook_views_query_alter().
  */
 function nys_utils_views_query_alter(&$view, &$query) {
-  if ($view->name == 'bills_voting_subview') {
-
-    $join = new views_join();
-    $join->table = 'votingapi_vote';
-    $join->field = 'entity_id';
-    $join->left_table = 'bill';
-    $join->left_field = 'bill_id';
-    $join->type = 'left';
-
-    $vote_val = $view->args[1] == "aye" ? 1 : 0;
-
-    $query->add_relationship('votes_relation', $join, 'votingapi_vote');
-    $query->add_field('votes_relation', "value", 'value_votes');
-    $query->add_field(NULL, '*', 'count_aster', array('function' => 'count'));
-    $query->add_where(0, 'votes_relation.value', $vote_val, '=');
-
-    $query->add_groupby('votes_relation.value');
-
-    if ($view->current_display == 'constituent_votes') {
-      $join2 = new views_join();
-      $join2->table = 'field_data_field_senator';
-      $join2->field = 'entity_id';
-      $join2->left_table = 'votes_relation';
-      $join2->left_field = 'uid';
-      $join2->type = 'left';
-
-      $query->add_relationship('voter', $join2, 'field_data_field_senator');
-      $query->add_where(0, 'voter.entity_type', 'user', '=');
-      $query->add_where(0, 'voter.field_senator_target_id', $view->args[2], '=');
-    }
-  }
-
   // Query alter recently passed and signed by to only show bills per 2yr session.
   if (
     ($view->name == 'upcoming_legislation_calendar' && $view->current_display == 'signed_by_governor') ||

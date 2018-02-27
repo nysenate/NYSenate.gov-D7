@@ -482,7 +482,7 @@ function nys_polls_field_default_field_instances() {
       ),
     ),
     'deleted' => 0,
-    'description' => 'Checking "Featured" will automatically place the Senator\'s most recent poll on their home page.',
+    'description' => 'Checking "Featured" will automatically place the Senator\'s most recent featured poll on their home page.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -685,7 +685,7 @@ function nys_polls_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('<strong>If no image is chosen, a default image will be shown.</strong>');
   t('Approval voting weighs each vote against each individual choice rather than pooling all votes.');
-  t('Checking "Featured" will automatically place the Senator\'s most recent poll on their home page.');
+  t('Checking "Featured" will automatically place the Senator\'s most recent featured poll on their home page.');
   t('Close poll');
   t('Cookie duration');
   t('Display results');

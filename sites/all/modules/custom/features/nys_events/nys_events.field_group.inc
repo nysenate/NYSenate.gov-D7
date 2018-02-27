@@ -21,7 +21,7 @@ function nys_events_field_group_info() {
   $field_group->parent_name = 'group_promotion';
   $field_group->data = array(
     'label' => 'Committee Settings',
-    'weight' => '24',
+    'weight' => '25',
     'children' => array(
       0 => 'field_committee_featured',
       1 => 'field_committee',
@@ -49,7 +49,7 @@ function nys_events_field_group_info() {
   $field_group->mode = 'form';
   $field_group->parent_name = '';
   $field_group->data = array(
-    'label' => 'Dicoverability',
+    'label' => 'Discoverability',
     'weight' => '5',
     'children' => array(
       0 => 'field_issues',
@@ -57,12 +57,14 @@ function nys_events_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Discoverability',
       'instance_settings' => array(
-        'description' => '',
-        'classes' => 'group-discoverability field-group-fieldset',
         'required_fields' => 1,
+        'id' => '',
+        'classes' => 'group-discoverability field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsible',
     ),
   );
   $field_groups['group_discoverability|node|event|form'] = $field_group;
@@ -111,7 +113,7 @@ function nys_events_field_group_info() {
   $field_group->parent_name = 'group_promotion';
   $field_group->data = array(
     'label' => 'Senator Microsite Settings',
-    'weight' => '22',
+    'weight' => '24',
     'children' => array(
       0 => 'field_featured',
       1 => 'field_senator',
@@ -140,10 +142,10 @@ function nys_events_field_group_info() {
   $field_group->parent_name = 'group_discoverability';
   $field_group->data = array(
     'label' => 'Promotion and Visibility',
-    'weight' => '11',
+    'weight' => '12',
     'children' => array(
-      0 => 'group_microsite_settings',
-      1 => 'group_committee_settings',
+      0 => 'group_committee_settings',
+      1 => 'group_microsite_settings',
     ),
     'format_type' => 'htabs',
     'format_settings' => array(
@@ -154,6 +156,36 @@ function nys_events_field_group_info() {
     ),
   );
   $field_groups['group_promotion|node|event|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_social_sharing|node|event|form';
+  $field_group->group_name = 'group_social_sharing';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'event';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Social Sharing',
+    'weight' => '4',
+    'children' => array(
+      0 => 'field_social_image',
+      1 => 'field_social_teaser',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'label' => 'Social Sharing',
+      'instance_settings' => array(
+        'required_fields' => 1,
+        'id' => '',
+        'classes' => 'group-social-sharing field-group-fieldset',
+        'description' => 'These fields can be used for alternative Facebook and Twitter images and teasers, instead of the Main Image and beginning text of Description field.',
+      ),
+      'formatter' => 'collapsed',
+    ),
+  );
+  $field_groups['group_social_sharing|node|event|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -188,10 +220,11 @@ function nys_events_field_group_info() {
   // Included for use with string extractors like potx.
   t('Committee Settings');
   t('Content');
-  t('Dicoverability');
+  t('Discoverability');
   t('Event Video Settings');
   t('Promotion and Visibility');
   t('Senator Microsite Settings');
+  t('Social Sharing');
 
   return $field_groups;
 }

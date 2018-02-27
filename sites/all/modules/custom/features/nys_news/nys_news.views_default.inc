@@ -1619,6 +1619,13 @@ function nys_news_views_default_views() {
   $handler->display->display_options['filters']['field_hide_feed_value']['value'] = array(
     1 => '1',
   );
+  /* Filter criterion: Views: Views Exclude Previous */
+  $handler->display->display_options['filters']['views_exclude_previous']['id'] = 'views_exclude_previous';
+  $handler->display->display_options['filters']['views_exclude_previous']['table'] = 'node';
+  $handler->display->display_options['filters']['views_exclude_previous']['field'] = 'views_exclude_previous';
+  $handler->display->display_options['filters']['views_exclude_previous']['value'] = array(
+    'node_load' => 'node_load',
+  );
   $handler->display->display_options['block_description'] = 'Senator All News Tab';
 
   /* Display: Feed */
@@ -2064,6 +2071,13 @@ function nys_news_views_default_views() {
   $handler->display->display_options['filters']['field_hide_feed_value']['operator'] = 'not';
   $handler->display->display_options['filters']['field_hide_feed_value']['value'] = array(
     1 => '1',
+  );
+  /* Filter criterion: Views: Views Exclude Previous */
+  $handler->display->display_options['filters']['views_exclude_previous']['id'] = 'views_exclude_previous';
+  $handler->display->display_options['filters']['views_exclude_previous']['table'] = 'node';
+  $handler->display->display_options['filters']['views_exclude_previous']['field'] = 'views_exclude_previous';
+  $handler->display->display_options['filters']['views_exclude_previous']['value'] = array(
+    'node_load' => 'node_load',
   );
 
   /* Display: Media Inquiries */
@@ -2626,6 +2640,16 @@ function nys_news_views_default_views() {
   $handler->display->display_options['arguments']['field_senator_target_id']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_senator_target_id']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_senator_target_id']['summary_options']['items_per_page'] = '25';
+  /* Contextual filter: Content: Nid */
+  $handler->display->display_options['arguments']['nid']['id'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['table'] = 'node';
+  $handler->display->display_options['arguments']['nid']['field'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['nid']['default_argument_type'] = 'node';
+  $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['nid']['not'] = TRUE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
@@ -2643,6 +2667,13 @@ function nys_news_views_default_views() {
     'article' => 'article',
     'in_the_news' => 'in_the_news',
     'press_release' => 'press_release',
+  );
+  /* Filter criterion: Views: Views Exclude Previous */
+  $handler->display->display_options['filters']['views_exclude_previous']['id'] = 'views_exclude_previous';
+  $handler->display->display_options['filters']['views_exclude_previous']['table'] = 'node';
+  $handler->display->display_options['filters']['views_exclude_previous']['field'] = 'views_exclude_previous';
+  $handler->display->display_options['filters']['views_exclude_previous']['value'] = array(
+    'node_load' => 'node_load',
   );
   $handler->display->display_options['block_description'] = 'Senator News List Article Footer';
 

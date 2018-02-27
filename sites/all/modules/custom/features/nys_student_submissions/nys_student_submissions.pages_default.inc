@@ -402,12 +402,15 @@ function nys_student_submissions_default_page_manager_pages() {
     ),
   );
   $display = new panels_display();
-  $display->layout = 'foundation_1col';
+  $display->layout = 'f2cb_earthday';
   $display->layout_settings = array();
   $display->panel_settings = array(
     'style_settings' => array(
       'default' => NULL,
       'middle' => NULL,
+      'top' => NULL,
+      'tabs' => NULL,
+      'bottom' => NULL,
     ),
   );
   $display->cache = array();
@@ -418,8 +421,169 @@ function nys_student_submissions_default_page_manager_pages() {
   $display->content = array();
   $display->panels = array();
   $pane = new stdClass();
+  $pane->pid = 'new-e0157d12-e09e-4fac-a674-73e955390ce0';
+  $pane->panel = 'bottom';
+  $pane->type = 'views';
+  $pane->subtype = 'promo_banner_senators_committees';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'override_pager_settings' => 0,
+    'use_pager' => 0,
+    'nodes_per_page' => '4',
+    'pager_id' => '0',
+    'offset' => '0',
+    'more_link' => 0,
+    'feed_icons' => 0,
+    'panel_args' => 1,
+    'link_to_view' => 0,
+    'args' => '',
+    'url' => '',
+    'display' => 'senator_microsite_interior_footer',
+    'context' => array(
+      0 => '',
+    ),
+    'override_title' => 0,
+    'override_title_text' => '',
+    'override_title_heading' => 'h2',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 0;
+  $pane->locks = array();
+  $pane->uuid = 'e0157d12-e09e-4fac-a674-73e955390ce0';
+  $display->content['new-e0157d12-e09e-4fac-a674-73e955390ce0'] = $pane;
+  $display->panels['bottom'][0] = 'new-e0157d12-e09e-4fac-a674-73e955390ce0';
+  $pane = new stdClass();
+  $pane->pid = 'new-cc43c7e7-0028-4275-a1da-ffdf34848353';
+  $pane->panel = 'tabs';
+  $pane->type = 'views';
+  $pane->subtype = 'student_submissions';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'override_pager_settings' => 0,
+    'use_pager' => 0,
+    'nodes_per_page' => '0',
+    'pager_id' => '0',
+    'offset' => '0',
+    'more_link' => 0,
+    'feed_icons' => 0,
+    'panel_args' => 1,
+    'link_to_view' => 0,
+    'args' => '',
+    'url' => '',
+    'display' => 'block_2',
+    'context' => array(
+      0 => 'argument_entity_id:node_1.nid',
+    ),
+    'override_title' => 1,
+    'override_title_text' => 'All 2017 Poster Submissions',
+    'override_title_heading' => 'h2',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array(
+    'css_id' => 'panel1',
+    'css_class' => 'content active',
+  );
+  $pane->extras = array();
+  $pane->position = 0;
+  $pane->locks = array();
+  $pane->uuid = 'cc43c7e7-0028-4275-a1da-ffdf34848353';
+  $display->content['new-cc43c7e7-0028-4275-a1da-ffdf34848353'] = $pane;
+  $display->panels['tabs'][0] = 'new-cc43c7e7-0028-4275-a1da-ffdf34848353';
+  $pane = new stdClass();
+  $pane->pid = 'new-35dbd87a-6417-4d64-98b2-b9ebf96cb209';
+  $pane->panel = 'tabs';
+  $pane->type = 'views';
+  $pane->subtype = 'student_submissions';
+  $pane->shown = FALSE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'override_pager_settings' => 0,
+    'use_pager' => 0,
+    'nodes_per_page' => '0',
+    'pager_id' => '0',
+    'offset' => '0',
+    'more_link' => 0,
+    'feed_icons' => 0,
+    'panel_args' => 0,
+    'link_to_view' => 0,
+    'args' => '',
+    'url' => '',
+    'display' => 'block_4',
+    'context' => array(
+      0 => '',
+    ),
+    'override_title' => 0,
+    'override_title_text' => '',
+    'override_title_heading' => 'h2',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array(
+    'css_id' => 'panel2',
+    'css_class' => 'content',
+  );
+  $pane->extras = array();
+  $pane->position = 1;
+  $pane->locks = array();
+  $pane->uuid = '35dbd87a-6417-4d64-98b2-b9ebf96cb209';
+  $display->content['new-35dbd87a-6417-4d64-98b2-b9ebf96cb209'] = $pane;
+  $display->panels['tabs'][1] = 'new-35dbd87a-6417-4d64-98b2-b9ebf96cb209';
+  $pane = new stdClass();
+  $pane->pid = 'new-fb884470-2bad-4d4c-b45d-342128108314';
+  $pane->panel = 'tabs';
+  $pane->type = 'views';
+  $pane->subtype = 'student_submissions';
+  $pane->shown = FALSE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'override_pager_settings' => 0,
+    'use_pager' => 0,
+    'nodes_per_page' => '0',
+    'pager_id' => '0',
+    'offset' => '0',
+    'more_link' => 0,
+    'feed_icons' => 0,
+    'panel_args' => 0,
+    'link_to_view' => 0,
+    'args' => '',
+    'url' => '',
+    'display' => 'block_5',
+    'context' => array(
+      0 => '',
+    ),
+    'override_title' => 0,
+    'override_title_text' => '',
+    'override_title_heading' => 'h2',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array(
+    'css_id' => 'panel3',
+    'css_class' => 'content',
+  );
+  $pane->extras = array();
+  $pane->position = 2;
+  $pane->locks = array();
+  $pane->uuid = 'fb884470-2bad-4d4c-b45d-342128108314';
+  $display->content['new-fb884470-2bad-4d4c-b45d-342128108314'] = $pane;
+  $display->panels['tabs'][2] = 'new-fb884470-2bad-4d4c-b45d-342128108314';
+  $pane = new stdClass();
   $pane->pid = 'new-c9805355-97d6-417d-a997-5165f2017916';
-  $pane->panel = 'middle';
+  $pane->panel = 'top';
   $pane->type = 'entity_field';
   $pane->subtype = 'node:field_student_earthday_letter';
   $pane->shown = TRUE;
@@ -446,10 +610,10 @@ function nys_student_submissions_default_page_manager_pages() {
   $pane->locks = array();
   $pane->uuid = 'c9805355-97d6-417d-a997-5165f2017916';
   $display->content['new-c9805355-97d6-417d-a997-5165f2017916'] = $pane;
-  $display->panels['middle'][0] = 'new-c9805355-97d6-417d-a997-5165f2017916';
+  $display->panels['top'][0] = 'new-c9805355-97d6-417d-a997-5165f2017916';
   $pane = new stdClass();
   $pane->pid = 'new-784663eb-a5c3-47c8-8c2d-89a95045312c';
-  $pane->panel = 'middle';
+  $pane->panel = 'top';
   $pane->type = 'views';
   $pane->subtype = 'student_submissions';
   $pane->shown = TRUE;
@@ -484,83 +648,7 @@ function nys_student_submissions_default_page_manager_pages() {
   $pane->locks = array();
   $pane->uuid = '784663eb-a5c3-47c8-8c2d-89a95045312c';
   $display->content['new-784663eb-a5c3-47c8-8c2d-89a95045312c'] = $pane;
-  $display->panels['middle'][1] = 'new-784663eb-a5c3-47c8-8c2d-89a95045312c';
-  $pane = new stdClass();
-  $pane->pid = 'new-cc43c7e7-0028-4275-a1da-ffdf34848353';
-  $pane->panel = 'middle';
-  $pane->type = 'views';
-  $pane->subtype = 'student_submissions';
-  $pane->shown = TRUE;
-  $pane->access = array();
-  $pane->configuration = array(
-    'override_pager_settings' => 0,
-    'use_pager' => 0,
-    'nodes_per_page' => '0',
-    'pager_id' => '0',
-    'offset' => '0',
-    'more_link' => 0,
-    'feed_icons' => 0,
-    'panel_args' => 1,
-    'link_to_view' => 0,
-    'args' => '',
-    'url' => '',
-    'display' => 'block_2',
-    'context' => array(
-      0 => 'argument_entity_id:node_1.nid',
-    ),
-    'override_title' => 1,
-    'override_title_text' => 'All 2017 Poster Submissions',
-    'override_title_heading' => 'h2',
-  );
-  $pane->cache = array();
-  $pane->style = array(
-    'settings' => NULL,
-  );
-  $pane->css = array();
-  $pane->extras = array();
-  $pane->position = 2;
-  $pane->locks = array();
-  $pane->uuid = 'cc43c7e7-0028-4275-a1da-ffdf34848353';
-  $display->content['new-cc43c7e7-0028-4275-a1da-ffdf34848353'] = $pane;
-  $display->panels['middle'][2] = 'new-cc43c7e7-0028-4275-a1da-ffdf34848353';
-  $pane = new stdClass();
-  $pane->pid = 'new-e0157d12-e09e-4fac-a674-73e955390ce0';
-  $pane->panel = 'middle';
-  $pane->type = 'views';
-  $pane->subtype = 'promo_banner_senators_committees';
-  $pane->shown = TRUE;
-  $pane->access = array();
-  $pane->configuration = array(
-    'override_pager_settings' => 0,
-    'use_pager' => 0,
-    'nodes_per_page' => '4',
-    'pager_id' => '0',
-    'offset' => '0',
-    'more_link' => 0,
-    'feed_icons' => 0,
-    'panel_args' => 1,
-    'link_to_view' => 0,
-    'args' => '',
-    'url' => '',
-    'display' => 'senator_microsite_interior_footer',
-    'context' => array(
-      0 => '',
-    ),
-    'override_title' => 0,
-    'override_title_text' => '',
-    'override_title_heading' => 'h2',
-  );
-  $pane->cache = array();
-  $pane->style = array(
-    'settings' => NULL,
-  );
-  $pane->css = array();
-  $pane->extras = array();
-  $pane->position = 3;
-  $pane->locks = array();
-  $pane->uuid = 'e0157d12-e09e-4fac-a674-73e955390ce0';
-  $display->content['new-e0157d12-e09e-4fac-a674-73e955390ce0'] = $pane;
-  $display->panels['middle'][3] = 'new-e0157d12-e09e-4fac-a674-73e955390ce0';
+  $display->panels['top'][1] = 'new-784663eb-a5c3-47c8-8c2d-89a95045312c';
   $display->hide_title = PANELS_TITLE_PANE;
   $display->title_pane = 'new-c9805355-97d6-417d-a997-5165f2017916';
   $handler->conf['display'] = $display;

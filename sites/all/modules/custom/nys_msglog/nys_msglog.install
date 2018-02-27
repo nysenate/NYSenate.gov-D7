@@ -29,7 +29,7 @@ function nys_msglog_schema() {
       'sender_ip' => array(
         'type' => 'varchar',
         'size' => 'normal',
-        'length' => 15,
+        'length' => 45,
         'not null' => true,
         'description' => 'IP address of user making submission',
       ),
@@ -125,15 +125,6 @@ function nys_msglog_schema() {
         'not null' => true,
         'description' => 'Recipient email address',
       ),
-      /**
-       * For future reference, integration with SpamAssassin, et al.
-       *
-       * 'spam_rating' => array(
-       * 'type' => 'text',
-       * 'size' => 'normal',
-       * 'description' => 'Response information from SA/Mollum checks',
-       * )
-       */
     ),
     'primary key' => array('id'),
     'indexes' => array(
@@ -152,4 +143,19 @@ function nys_msglog_update_7000() {
   $query = 'ALTER TABLE `message_log` MODIFY `time_sent` TIMESTAMP ' .
            'NOT NULL DEFAULT CURRENT_TIMESTAMP';
   db_query($query);
+}
+
+/**
+ * Increase length of sender_ip col to 45 chars.
+ */
+function nys_msglog_update_7001() {
+  $spec = array(
+    'type' => 'varchar',
+    'size' => 'normal',
+    'length' => 45,
+    'not null' => true,
+    'description' => 'IP address of user making submission',
+  );
+
+  db_change_field('message_log', 'sender_ip', 'sender_ip', $spec);
 }

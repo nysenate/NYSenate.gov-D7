@@ -1,0 +1,13 @@
+name = "Views Exclude Previous"
+description = "Views Exclude Previous provides a views filter which exlcudes nodes that have already been loaded/displayed on the current page."
+dependencies[] = views
+package = Views
+core = 7.x
+files[] = views/views_exclude_previous_handler_filter.inc
+
+; Information added by drupal.org packaging script on 2013-10-19
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "views_exclude_previous"
+datestamp = "1382164742"
+

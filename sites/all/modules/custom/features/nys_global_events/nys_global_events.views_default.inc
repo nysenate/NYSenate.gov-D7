@@ -1474,6 +1474,17 @@ function nys_global_events_views_default_views() {
   $handler->display->display_options['fields']['field_ol_sponsor_name']['relationship'] = 'field_ol_bill_target_id';
   $handler->display->display_options['fields']['field_ol_sponsor_name']['label'] = '';
   $handler->display->display_options['fields']['field_ol_sponsor_name']['element_label_colon'] = FALSE;
+  /* Field: Field collection item: Absent Count */
+  $handler->display->display_options['fields']['field_ol_absent_count']['id'] = 'field_ol_absent_count';
+  $handler->display->display_options['fields']['field_ol_absent_count']['table'] = 'field_data_field_ol_absent_count';
+  $handler->display->display_options['fields']['field_ol_absent_count']['field'] = 'field_ol_absent_count';
+  $handler->display->display_options['fields']['field_ol_absent_count']['relationship'] = 'field_ol_agenda_bills_value';
+  $handler->display->display_options['fields']['field_ol_absent_count']['label'] = '';
+  $handler->display->display_options['fields']['field_ol_absent_count']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_ol_absent_count']['settings'] = array(
+    'thousand_separator' => '',
+    'prefix_suffix' => 0,
+  );
   /* Field: Field collection item: Abstained Count */
   $handler->display->display_options['fields']['field_ol_abstained_count']['id'] = 'field_ol_abstained_count';
   $handler->display->display_options['fields']['field_ol_abstained_count']['table'] = 'field_data_field_ol_abstained_count';

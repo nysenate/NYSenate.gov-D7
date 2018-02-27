@@ -36,6 +36,13 @@ WILL NOT HANDLE DEPENDENCIES CORRECTLY
  - Windows (x86) Installer: https://nodejs.org/dist/v0.12.3/node-v0.12.3-x86.msi
  - Windows (x64) Installer: https://nodejs.org/dist/v0.12.3/x64/node-v0.12.3-x64.msi
 
+**NOTE:** 2017-12-12 These installation instructions are broken due to dependency
+version drift.  As of this writing, the request package must be pinned to version 
+2.81 for node-sass to successfully install.  This can be accomplished by executing
+this command prior to running `npm install`:
+
+    npm install request@2.81
+
 If you already have a different version of Node.js installed, you will need to use the Node
 Version Manager (nvm) on Mac (https://github.com/creationix/nvm/blob/master/README.markdown)
 or nvm-windows on Windows (https://github.com/coreybutler/nvm-windows) to download,

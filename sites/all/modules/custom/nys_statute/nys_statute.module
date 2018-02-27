@@ -50,14 +50,14 @@ function nys_statute_legislation_not_found() {
     $fast_404_html = variable_get('404_fast_html', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>');
   }
 
-  
+
   if (isset($_GET['page'])) {
     $page = $_GET['page'];
   }
   else {
      $page = '';
   }
-  
+
   // Replace @path in the variable with the page path.
   print strtr($fast_404_html, array('@path' => check_plain($page)));
 }
@@ -72,7 +72,7 @@ function nys_statute_legislation_not_found() {
  *
  * Returns: The HTML markup of the  Breadcrumb <nav> element.
  */
-function nys_statute_get_breadcrumb_markup($parent_statute_id, $node_title, $law_id, $location_id, $doc_type, $doc_level_id) {
+function nys_statute_get_breadcrumb_markup($parent_statute_id, $node_title, $law_id, $location_id = '', $doc_type = '', $doc_level_id = '') {
   $output_array = array();
   $current_statute_id = $parent_statute_id;
   $index = 0;
@@ -317,7 +317,7 @@ function nys_statute_get_law_type_link_markup($law_id) {
  *
  * Returns a non active `title link` to the current page without a href.
  */
-function nys_statute_get_this_page_link_markup($title, $law_id, $location_id, $doc_type, $doc_level_id) {
+function nys_statute_get_this_page_link_markup($title, $law_id, $location_id = '', $doc_type = '', $doc_level_id = '') {
   if ($law_id == 'all') {
     return '<a class="c-law--inactive-breadcrumb" >All</a>';
   }

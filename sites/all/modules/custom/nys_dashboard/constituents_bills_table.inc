@@ -379,7 +379,7 @@ function nys_dashboard_senators_bills_table($form_state) {
   $pager = "";
   $quantity = round($quantity);
   if ($total_bills_count > $limit) {
-    $pager = theme('pager',array('quantity'=> $quantity ,'tags' => array('<<','<','','>','>>'), 'parameters' => array('view' => 'senator_bills')));
+    $pager = theme('pager', array('quantity' => $quantity, 'tags' => array('<<', '<', '', '>', '>>'), 'parameters' => array('view' => 'senator_bills')));
   }
 
   return '<div id="senator_constituents_table">' . $table . $pager . '</div>';

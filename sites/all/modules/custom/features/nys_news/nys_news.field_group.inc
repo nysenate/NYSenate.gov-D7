@@ -82,7 +82,7 @@ function nys_news_field_group_info() {
   $field_group->parent_name = 'group_promotion_and_visibility';
   $field_group->data = array(
     'label' => 'Committee Settings',
-    'weight' => '23',
+    'weight' => '24',
     'children' => array(
       0 => 'field_committee_featured',
       1 => 'field_committee',
@@ -170,7 +170,7 @@ function nys_news_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Discoverability',
-    'weight' => '2',
+    'weight' => '3',
     'children' => array(
       0 => 'field_issues',
       1 => 'group_site_promotion',
@@ -228,7 +228,7 @@ function nys_news_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Discoverability',
-    'weight' => '6',
+    'weight' => '7',
     'children' => array(
       0 => 'field_issues',
       1 => 'group_promotion_and_visibility',
@@ -404,11 +404,9 @@ function nys_news_field_group_info() {
   $field_group->parent_name = 'group_promotion_and_visibility';
   $field_group->data = array(
     'label' => 'Senator Microsite Settings',
-    'weight' => '20',
+    'weight' => '23',
     'children' => array(
-      0 => 'group_committee_settings',
-      1 => 'group_senator_microsite_settings',
-      2 => 'group_senators',
+      0 => 'field_senator',
     ),
     'format_type' => 'htab',
     'format_settings' => array(
@@ -433,10 +431,10 @@ function nys_news_field_group_info() {
   $field_group->parent_name = 'group_discoverability';
   $field_group->data = array(
     'label' => 'Promotion and Visibility',
-    'weight' => '8',
+    'weight' => '10',
     'children' => array(
-      0 => 'group_microsite_settings',
-      1 => 'group_committee_settings',
+      0 => 'group_committee_settings',
+      1 => 'group_microsite_settings',
       2 => 'group_sitewide_settings',
     ),
     'format_type' => 'htabs',
@@ -489,7 +487,7 @@ function nys_news_field_group_info() {
   $field_group->parent_name = 'group_discoverability';
   $field_group->data = array(
     'label' => 'Promotion and Visibility',
-    'weight' => '4',
+    'weight' => '10',
     'children' => array(
       0 => 'group_committee_settings',
       1 => 'group_microsite_settings',
@@ -517,7 +515,7 @@ function nys_news_field_group_info() {
   $field_group->parent_name = 'group_site_promotion';
   $field_group->data = array(
     'label' => 'Sitewide Settings',
-    'weight' => '7',
+    'weight' => '10',
     'children' => array(
       0 => 'field_image_hero',
       1 => 'field_accessible_sitewide',
@@ -546,7 +544,7 @@ function nys_news_field_group_info() {
   $field_group->parent_name = 'group_promotion_and_visibility';
   $field_group->data = array(
     'label' => 'Sitewide Settings',
-    'weight' => '21',
+    'weight' => '22',
     'children' => array(
       0 => 'field_accessible_sitewide',
       1 => 'field_associated_senator',
@@ -595,6 +593,66 @@ function nys_news_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
+  $field_group->identifier = 'group_social_sharing|node|article|form';
+  $field_group->group_name = 'group_social_sharing';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'article';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Social Sharing',
+    'weight' => '2',
+    'children' => array(
+      0 => 'field_social_image',
+      1 => 'field_social_teaser',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'label' => 'Social Sharing',
+      'instance_settings' => array(
+        'required_fields' => 1,
+        'id' => '',
+        'classes' => 'group-social-sharing field-group-fieldset',
+        'description' => 'These fields can be used for alternative Facebook and Twitter images and teasers, instead of the Main Image and beginning text of Body field.',
+      ),
+      'formatter' => 'collapsed',
+    ),
+  );
+  $field_groups['group_social_sharing|node|article|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_social_sharing|node|press_release|form';
+  $field_group->group_name = 'group_social_sharing';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'press_release';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Social Sharing',
+    'weight' => '6',
+    'children' => array(
+      0 => 'field_social_teaser',
+      1 => 'field_social_image',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'label' => 'Social Sharing',
+      'instance_settings' => array(
+        'required_fields' => 1,
+        'id' => '',
+        'classes' => 'group-social-sharing field-group-fieldset',
+        'description' => 'These fields can be used for alternative Facebook and Twitter images and teasers, instead of the Main Image and beginning text of Body field.',
+      ),
+      'formatter' => 'collapsed',
+    ),
+  );
+  $field_groups['group_social_sharing|node|press_release|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
   $field_group->identifier = 'group_source_info|node|in_the_news|form';
   $field_group->group_name = 'group_source_info';
   $field_group->entity_type = 'node';
@@ -635,6 +693,7 @@ function nys_news_field_group_info() {
   t('Promotion and Visibility');
   t('Senator Microsite Settings');
   t('Sitewide Settings');
+  t('Social Sharing');
   t('Source Information');
 
   return $field_groups;

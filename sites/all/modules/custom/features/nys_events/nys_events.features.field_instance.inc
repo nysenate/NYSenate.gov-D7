@@ -497,13 +497,15 @@ function nys_events_field_default_field_instances() {
   // Exported field_instance: 'node-event-field_featured'.
   $field_instances['node-event-field_featured'] = array(
     'bundle' => 'event',
+    'custom_add_another' => '',
+    'custom_remove' => '',
     'default_value' => array(
       0 => array(
         'value' => 0,
       ),
     ),
     'deleted' => 0,
-    'description' => '',
+    'description' => 'You must include a <strong>Main Image</strong> for featured event to show.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -525,6 +527,7 @@ function nys_events_field_default_field_instances() {
         'weight' => 0,
       ),
     ),
+    'ds_extras_field_template' => '',
     'entity_type' => 'node',
     'field_name' => 'field_featured',
     'label' => 'Featured on Senator\'s event page',
@@ -973,6 +976,177 @@ function nys_events_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-event-field_social_image'.
+  $field_instances['node-event-field_social_image'] = array(
+    'bundle' => 'event',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'image',
+        'settings' => array(
+          'image_link' => '',
+          'image_style' => '',
+        ),
+        'type' => 'image',
+        'weight' => 33,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_social_image',
+    'label' => 'Social Image',
+    'required' => 0,
+    'settings' => array(
+      'alt_field' => 0,
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'default_image' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'png gif jpg jpeg',
+      'filefield_paths' => array(
+        'active_updating' => 0,
+        'file_name' => array(
+          'options' => array(
+            'pathauto' => 0,
+            'slashes' => 0,
+            'transliterate' => 0,
+          ),
+          'value' => '[file:ffp-name-only-original].[file:ffp-extension-original]',
+        ),
+        'file_path' => array(
+          'options' => array(
+            'pathauto' => 1,
+            'slashes' => 1,
+            'transliterate' => 1,
+          ),
+          'value' => 'events/social',
+        ),
+        'redirect' => 0,
+        'retroactive_update' => 0,
+      ),
+      'filefield_paths_enabled' => 1,
+      'max_filesize' => '',
+      'max_resolution' => '',
+      'min_resolution' => '',
+      'title_field' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'image',
+      'settings' => array(
+        'insert' => 0,
+        'insert_absolute' => 0,
+        'insert_class' => '',
+        'insert_default' => 'auto',
+        'insert_styles' => array(
+          'auto' => 'auto',
+          'icon_link' => 0,
+          'image' => 0,
+          'image_45x45' => 0,
+          'image_60x60' => 0,
+          'image_80x60' => 0,
+          'image_160x160' => 0,
+          'image_200x125' => 0,
+          'image_280x280' => 0,
+          'image_360x200' => 0,
+          'image_380x215' => 0,
+          'image_400x240' => 0,
+          'image_440x230' => 0,
+          'image_680x510' => 0,
+          'image_760x377' => 0,
+          'image_1280x510' => 0,
+          'image_1346x330' => 0,
+          'image_embed_landscape_400x225' => 0,
+          'image_embed_portrait_225x345' => 0,
+          'image_large' => 0,
+          'image_large_retina' => 0,
+          'image_media_thumbnail' => 0,
+          'image_medium' => 0,
+          'image_medium_retina' => 0,
+          'image_retina_100x100' => 0,
+          'image_square_thumbnail' => 0,
+          'image_thumbnail' => 0,
+          'image_thumbnail_retina' => 0,
+          'image_user_dashboard_100x100' => 0,
+          'link' => 0,
+        ),
+        'insert_width' => '',
+        'preview_image_style' => 'thumbnail',
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'image_image',
+      'weight' => 10,
+    ),
+  );
+
+  // Exported field_instance: 'node-event-field_social_teaser'.
+  $field_instances['node-event-field_social_teaser'] = array(
+    'bundle' => 'event',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'You are not limited to a character count here, but generally Facebook will only use about 200, anything else may be truncated.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 34,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_social_teaser',
+    'label' => 'Social Teaser',
+    'required' => 0,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 11,
+    ),
+  );
+
   // Exported field_instance: 'node-event-field_ustream_url'.
   $field_instances['node-event-field_ustream_url'] = array(
     'bundle' => 'event',
@@ -1184,9 +1358,13 @@ function nys_events_field_default_field_instances() {
   t('Location');
   t('Main image for the event.');
   t('Senator');
+  t('Social Image');
+  t('Social Teaser');
   t('Start Date/Time and End Date/Time');
   t('Video Archive');
   t('Video Status');
+  t('You are not limited to a character count here, but generally Facebook will only use about 200, anything else may be truncated.');
+  t('You must include a <strong>Main Image</strong> for featured event to show.');
 
   return $field_instances;
 }
