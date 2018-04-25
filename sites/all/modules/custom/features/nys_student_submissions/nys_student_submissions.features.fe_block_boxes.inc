@@ -19,7 +19,7 @@ function nys_student_submissions_default_fe_block_boxes() {
 <p><a href="/admin/entityforms/earthday">Earth Day 2017 Student Submissions</a></p>
 
 <p><a href="/hannon/photo-contest-submissions">Senator Hannon Photo Contest Submissions</a></p>
-';
+<p><a href="/admin/entityforms/student-leadership-award">Student Leadership Award Submissions</a></p>';
 
   $export['student_submissions'] = $fe_block_boxes;
 
