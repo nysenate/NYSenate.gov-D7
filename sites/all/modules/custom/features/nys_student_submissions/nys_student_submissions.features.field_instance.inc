@@ -363,6 +363,47 @@ function nys_student_submissions_field_default_field_instances() {
   );
 
   // Exported field_instance:
+  // 'entityform-hannon_photo_contest-field_hannon_district_status'.
+  $field_instances['entityform-hannon_photo_contest-field_hannon_district_status'] = array(
+    'bundle' => 'hannon_photo_contest',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => array(
+      0 => array(
+        'value' => 1,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 15,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'entityform',
+    'field_name' => 'field_hannon_district_status',
+    'label' => 'District Status',
+    'required' => 0,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 12,
+    ),
+  );
+
+  // Exported field_instance:
   // 'entityform-hannon_photo_contest-field_hannon_first_name'.
   $field_instances['entityform-hannon_photo_contest-field_hannon_first_name'] = array(
     'bundle' => 'hannon_photo_contest',
@@ -796,6 +837,47 @@ function nys_student_submissions_field_default_field_instances() {
       'settings' => array(),
       'type' => 'number',
       'weight' => 12,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'entityform-hannon_photo_contest-field_school_show_student'.
+  $field_instances['entityform-hannon_photo_contest-field_school_show_student'] = array(
+    'bundle' => 'hannon_photo_contest',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => array(
+      0 => array(
+        'value' => 1,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 14,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'entityform',
+    'field_name' => 'field_school_show_student',
+    'label' => 'Show?',
+    'required' => 0,
+    'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 11,
     ),
   );
 
@@ -2243,6 +2325,7 @@ function nys_student_submissions_field_default_field_instances() {
   t('Contact Email');
   t('Contact Name');
   t('Cumulative GPA');
+  t('District Status');
   t('Email');
   t('First Name');
   t('Grade');

@@ -1,5 +1,13 @@
 <?php
-// Logging levels
+
+/**
+ * @file
+ * Helper functions for the accumulator-integrity drush command.
+ *
+ * @see nys_accumulator.drush.inc
+ */
+
+// Logging levels.
 define('NYS_LOGGING_ERROR', 1);
 define('NYS_LOGGING_WARN', 2);
 define('NYS_LOGGING_REPORT', 3);
@@ -84,11 +92,19 @@ function _output($msg, $level = NYS_LOGGING_INFO) {
 
   $stamp = date("Y-m-d H:i:s");
   $lvlname = strtoupper($levels[$level]);
-  $output[] = ['level' => $level, 'levelname' => $lvlname, 'ts' => $stamp, 'msg' => $msg];
+  $output[] = [
+    'level' => $level,
+    'levelname' => $lvlname,
+    'ts' => $stamp,
+    'msg' => $msg,
+  ];
 }
 
 function _integrity_check_get_object_property($array, $prop) {
-  return array_map(function ($i) use ($prop) { return $i->$prop; }, $array);
+  return array_map(
+    function ($i) use ($prop) {
+      return $i->$prop;
+    }, $array);
 }
 
 function _integrity_check_action_types() {
@@ -324,7 +340,6 @@ function _integrity_check_auth_bill_follow($start_time, $end_time) {
     $flagging_records[$key] = $val;
   }
 
-
   // The two arrays should have the same keys.  Do a diff comparison to
   // find any records with no match.
   $diff = FALSE;
@@ -465,8 +480,7 @@ function _integrity_check_auth_bill_vote($start_time, $end_time) {
     $nid = basename(json_decode($val->msg_info)->event_info->content_url);
     $key = $val->user_id . '_' . $nid;
     if (!array_key_exists($key, $accumulator_records)
-      || $val->created_at > $accumulator_records[$key]->created_at)
-    {
+      || $val->created_at > $accumulator_records[$key]->created_at) {
       $accumulator_records[$key] = $val;
     }
   }
@@ -564,7 +578,6 @@ function _integrity_check_auth_issue_follow($start_time, $end_time) {
     $flagging_records[$key] = $val;
   }
 
-
   // The two arrays should have the same keys.  Do a diff comparison to
   // find any records with no match.
   $diff = FALSE;
@@ -646,7 +659,6 @@ function _integrity_check_auth_committee_follow($start_time, $end_time) {
     $key = $val->uid . '_' . $val->entity_id . '_' . $val->timestamp;
     $flagging_records[$key] = $val;
   }
-
 
   // The two arrays should have the same keys.  Do a diff comparison to
   // find any records with no match.

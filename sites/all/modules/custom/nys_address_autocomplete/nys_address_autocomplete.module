@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @file
+ * Hook implementations for the NYS Address Auto-complete module.
+ */
+
 use Drupal\gmap\GmapDefaults;
 
 /**
@@ -12,15 +18,6 @@ function nys_address_autocomplete_element_info() {
     '#theme_wrappers' => array('form_element'),
     '#type' => 'fieldset',
     '#attached' => nys_address_autocomplete_get_form_attachments(),
-
-    // Making this a tree might help with compartmentalization, but it is
-    // hardly necessary, and creates work.  Probably don't need it.
-    /*'#tree' => TRUE,*/
-
-    // To use a custom theme for this container.  Early changes to this
-    // module allowed for using standard Drupal.  This is here only as
-    // a reminder.
-    /*'#theme' => 'auto_address',*/
   );
 
   // The actual text box to be linked to the autocompletion JS.
@@ -98,10 +95,12 @@ function nys_address_autocomplete_element_info() {
 
 /**
  * Generates the array to be used for the field type's #attached property.
+ *
  * Almost all of this function was cannibalized from addressfield_autocomplete
  * module.
  *
- * @return array See #attached in Forms API.
+ * @return array
+ *   See #attached in Forms API.
  */
 function nys_address_autocomplete_get_form_attachments() {
 
@@ -160,32 +159,19 @@ function nys_address_autocomplete_get_form_attachments() {
 }
 
 /**
- * An unused theme function for the field type.  Since created, the field type
- * now uses standard Drupal methods, so this is unnecessary.  Left in as a
- * reminder of how to implement it in the future.
- */
-/*
-function theme_auto_address($element) {
-  nyslog(var_export($element,1));
-  return "<input type='text' name='guess' value='woot3' />";
-}
-*/
-
-/**
- * Implements hook_theme() for nys_address_autocomplete module.
- *
- * @return array
+ * Implements hook_theme().
  */
 function nys_address_autocomplete_theme() {
   return array(
     'auto_address' => array(
-      'arguments' => array('element' => NULL)
+      'arguments' => array('element' => NULL),
     ),
   );
 }
 
 /**
  * Implements hook_libraries_info().
+ *
  * Add the geocomplete javascript library.
  */
 function nys_address_autocomplete_libraries_info() {
@@ -224,12 +210,9 @@ function nys_address_autocomplete_libraries_info() {
 }
 
 /**
- * Ensures the "places" library is added to the gmap library references.
  * Implements hook_gmap().
  *
- * @param $op
- * @param $map
- * @return array
+ * Ensures the "places" library is added to the gmap library references.
  */
 function nys_address_autocomplete_gmap($op, &$map) {
   switch ($op) {

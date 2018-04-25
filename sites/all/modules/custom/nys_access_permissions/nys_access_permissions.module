@@ -120,7 +120,8 @@ function nys_access_permissions_field_attach_view_alter(&$output, $context) {
 
   $nw = entity_metadata_wrapper($context['entity_type'], $context['entity']);
 
-  // Check if the video has a redirect URL, otherwise prepare the global redirect URL.
+  // Check if the video has a redirect URL, otherwise prepare the global
+  // redirect URL.
   $url = isset($nw->field_video_redirect) ? $nw->field_video_redirect->value() : filter_xss(variable_get('nys_vid_redir_url'));
 
   $is_node = $context['entity_type'] == 'node';
@@ -132,7 +133,8 @@ function nys_access_permissions_field_attach_view_alter(&$output, $context) {
   $ip_range = !empty($ip_top) ? "$ip_bottom-$ip_top" : $ip_bottom;
   $in_ip = _nys_ip_in_range(ip_address(), $ip_range);
 
-  // Leaving this as an array in case we need to add more statuses in the future.
+  // Leaving this as an array in case we need to add more statuses in the
+  // future.
   $stream_array = array('streaming_redirect');
   $is_streaming = isset($nw->field_video_status) && in_array($nw->field_video_status->value(), $stream_array);
   $node_vid_fields = array();
@@ -175,7 +177,7 @@ function nys_access_permissions_permission() {
     'senator dropdown exempt' => array(
       'title' => t('Exempt from Senator Dropdown Restrictions'),
       'description' => t('User will have all Senators available in dropdown select fields'),
-    )
+    ),
   );
 }
 
@@ -309,7 +311,13 @@ function nys_access_permissions_admin() {
     '#type' => 'checkboxes',
     '#title' => t('Logging Level'),
     '#default_value' => variable_get('integrity_check_log_level', 2),
-    '#options' => [1 => 'Error', 2 => 'Warning', 3 => 'Report', 4 => 'Info', 5 => 'Debug'],
+    '#options' => [
+      1 => 'Error',
+      2 => 'Warning',
+      3 => 'Report',
+      4 => 'Info',
+      5 => 'Debug',
+    ],
     '#description' => t('Messages levels to include in the drush command output.  Note that only "Report" level items are included in the email version.'),
   );
 
@@ -347,7 +355,7 @@ function nys_access_permissions_admin() {
     '#title' => t('Current NY State Senate Session Year'),
     '#type'  => 'textfield',
     '#size' => 4,
-    '#default_value' => variable_get('nys_session_year')
+    '#default_value' => variable_get('nys_session_year'),
   );
   $form['senate_settings']['nys_senate_status'] = array(
     '#title' => t('Custom NY State Senate Status Text'),
@@ -418,7 +426,7 @@ function nys_access_permissions_admin() {
     '#name' => 'member_listing_pdf',
     '#title' => t('Member Listing PDF'),
     '#default_value' => variable_get('member_listing_pdf', ''),
-    '#upload_location' => 'public://pdfs/'
+    '#upload_location' => 'public://pdfs/',
   );
 
   $form['senate_settings']['pdfs']['session_calendar_pdf'] = array(
@@ -426,7 +434,7 @@ function nys_access_permissions_admin() {
     '#name' => 'session_calendar_pdf',
     '#title' => t('Session Calendar PDF'),
     '#default_value' => variable_get('session_calendar_pdf', ''),
-    '#upload_location' => 'public://pdfs/'
+    '#upload_location' => 'public://pdfs/',
   );
 
   $form['senate_settings']['pdfs']['public_hearing_schedule'] = array(
@@ -434,7 +442,7 @@ function nys_access_permissions_admin() {
     '#name' => 'public_hearing_schedule',
     '#title' => t('Public Hearing Schedule PDF'),
     '#default_value' => variable_get('public_hearing_schedule', ''),
-    '#upload_location' => 'public://pdfs/'
+    '#upload_location' => 'public://pdfs/',
   );
 
   $form['senate_settings']['slack_integration'] = array(
@@ -681,7 +689,7 @@ function nys_access_permissions_node_access($node, $op, $account) {
  */
 function _microsite_content_producer_node_types() {
   return array(
-      'advpoll',
+    'advpoll',
     'article',
     'event',
     'initiative',
@@ -713,9 +721,9 @@ function nys_access_permissions_form_alter(&$form, &$form_state, $form_id) {
     $form['field_webform'][LANGUAGE_NONE][0]['target_id']['#autocomplete_path'] = 'ajax/only-my-nodes/webform';
   }
 
-    if (user_has_role(_nys_utils_get_rid_by_name('Microsite Content Producer'), $user) && $form_id == 'article_node_form') {
-        $form['field_paragraphs'][LANGUAGE_NONE][0]['field_pg_poll'][LANGUAGE_NONE][0]['target_id']['#autocomplete_path'] = 'ajax/only-my-nodes/advpoll';
-    }
+  if (user_has_role(_nys_utils_get_rid_by_name('Microsite Content Producer'), $user) && $form_id == 'article_node_form') {
+    $form['field_paragraphs'][LANGUAGE_NONE][0]['field_pg_poll'][LANGUAGE_NONE][0]['target_id']['#autocomplete_path'] = 'ajax/only-my-nodes/advpoll';
+  }
 
   // If Senator MCP only allow them to set Senators listed in
   // $user->field_senator_management.
@@ -864,7 +872,8 @@ function nys_access_permissions_get_allowed_senators_dropdown($target_user = NUL
       $query->addField('fdf_sm', 'field_senator_management_target_id', 'nid');
       $query->addField('n', 'title');
 
-      // If the user is not exempt from filtering, filter by the user's allowance.
+      // If the user is not exempt from filtering, filter by the user's
+      // allowance.
       if (!user_access('senator dropdown exempt', $check_user)) {
         $query->condition('fdf_sm.bundle', 'user')
           ->condition('fdf_sm.entity_id', $check_user_id);
@@ -885,10 +894,11 @@ function nys_access_permissions_get_allowed_senators_dropdown($target_user = NUL
   return $select_options[$check_user_id];
 }
 
-
 /**
- * Implements hook_views_query_alter
- * Admin View of All Bills that a Microsite Editor Can Manage on Behalf of the Senator
+ * Implements hook_views_query_alter().
+ *
+ * Admin View of all bills that a Microsite Editor can manage on behalf of the
+ * Senator.
  */
 function nys_access_permissions_views_query_alter(&$view, &$query) {
   global $user;
@@ -897,12 +907,12 @@ function nys_access_permissions_views_query_alter(&$view, &$query) {
   JOIN node n ON n.nid = sm.field_senator_management_target_id
   WHERE sm.bundle = 'user' AND sm.entity_id = :uid";
 
-  if(($view->name == 'administer_legislation_bills') && ($view->current_display == 'admin_senator_bills' || $view->current_display == 'admin_senator_resolutions')) {
-    if($query->where[1]['conditions'][0]['field'] == 'field_data_field_ol_sponsor.field_ol_sponsor_target_id') {
+  if (($view->name == 'administer_legislation_bills') && ($view->current_display == 'admin_senator_bills' || $view->current_display == 'admin_senator_resolutions')) {
+    if ($query->where[1]['conditions'][0]['field'] == 'field_data_field_ol_sponsor.field_ol_sponsor_target_id') {
 
       $result = db_query($sm_query, array(":uid" => $user->uid));
       $sponsor_keys = array();
-      foreach($result as $key => $r) {
+      foreach ($result as $key => $r) {
         $sponsor_keys[$key] = $r->nid;
       }
       $query->where[1]['conditions'][0]['field'] = 'field_data_field_ol_sponsor.field_ol_sponsor_target_id';
@@ -911,10 +921,10 @@ function nys_access_permissions_views_query_alter(&$view, &$query) {
     }
   }
 
-  if(($view->name == 'administer_committtees') && ($view->current_display == 'admin_senator_committees')) {
+  if (($view->name == 'administer_committtees') && ($view->current_display == 'admin_senator_committees')) {
     $result = db_query($sm_query, array(":uid" => $user->uid));
     $sponsor_keys = array();
-    foreach($result as $key => $r) {
+    foreach ($result as $key => $r) {
       $sponsor_keys[$key] = $r->nid;
     }
     $query->where[1]['conditions'][1]['field'] = 'field_data_field_chair.field_chair_target_id';
@@ -922,10 +932,10 @@ function nys_access_permissions_views_query_alter(&$view, &$query) {
     $query->where[1]['conditions'][1]['operator'] = 'IN';
   }
 
-  if(($view->name == 'administer_senators') && ($view->current_display == 'admin_micro_senators')) {
+  if (($view->name == 'administer_senators') && ($view->current_display == 'admin_micro_senators')) {
     $result = db_query($sm_query, array(":uid" => $user->uid));
     $sponsor_keys = array();
-    foreach($result as $key => $r) {
+    foreach ($result as $key => $r) {
       $sponsor_keys[$key] = $r->nid;
     }
 
@@ -979,12 +989,11 @@ function nys_access_permissions_views_query_alter(&$view, &$query) {
     $query->where[3]['conditions'][0]['operator'] = 'IN';
   }
 
-
-  //blair implementation
-  if(($view->name == 'taxonomy_editor') && ($view->current_display == 'admin_large_taxonomy')) {
+  // Blair implementation.
+  if (($view->name == 'taxonomy_editor') && ($view->current_display == 'admin_large_taxonomy')) {
     $result = db_query($sm_query, array(":uid" => $user->uid));
     $sponsor_keys = array();
-    foreach($result as $key => $r) {
+    foreach ($result as $key => $r) {
       $sponsor_keys[$key] = $r->nid;
     }
     $query->where[1]['conditions'][0]['field'] = 'node_field_data_field_senator.nid';

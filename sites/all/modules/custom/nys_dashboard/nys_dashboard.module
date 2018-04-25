@@ -1708,7 +1708,7 @@ function nys_dashboard_views_pre_render(&$view) {
             $row->aye_count = db_query('SELECT field_ol_aye_count_value FROM field_data_field_ol_aye_count WHERE entity_id = :fid LIMIT 1', array(':fid' => $vote['value']))->fetchField();
             $row->abstained_count = db_query('SELECT field_ol_abstained_count_value FROM field_data_field_ol_abstained_count WHERE entity_id = :fid LIMIT 1', array(':fid' => $vote['value']))->fetchField();
             $row->absent_count = db_query('SELECT field_ol_absent_count_value FROM field_data_field_ol_absent_count WHERE entity_id = :fid LIMIT 1', array(':fid' => $vote['value']))->fetchField();
-            $row->session_year = db_query('SELECT field_ol_session_value FROM field_data_field_ol_session WHERE entity_id = :fid LIMIT 1', array(':fid' => $row->nid))->fetchField();
+            $row->session_year = db_query('SELECT field_ol_session_value FROM field_data_field_ol_session WHERE entity_id = :fid LIMIT 1', array(':fid' => $bill->nid))->fetchField();
             $row->vote_date = db_query('SELECT field_publication_date_value FROM field_data_field_publication_date WHERE entity_id = :fid LIMIT 1', array(':fid' => $vote['value']))->fetchField();
             $row->vote_year = new DateTime($row->vote_date);
             $row->vote_year = $row->vote_year->format('Y');

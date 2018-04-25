@@ -6636,12 +6636,12 @@ input[type="text"].c-law-search-field-input {
   font-family: "Proxima Nova Regular";
   font-size: 14px; }
 
-.c-law--law-name, .c-law--law-id {
+.c-law--global-law-name, .c-law--law-id {
   font-size: 16px;
   line-height: 20px;
   margin-bottom: 10px; }
 
-.c-law--law-name a {
+.c-law--global-law-name a {
   color: #444444; }
 
 .c-law--law-id {
@@ -6665,11 +6665,11 @@ a.c-law--inactive-breadcrumb {
   font-weight: bold; }
 
 .c-law-doc-text {
-  margin-top: 2em;
-  font-size: 16px;
+  margin-bottom: 1em;
+  margin-top: 1em;
+  font-size: 20px;
   line-height: 1.5em;
-  padding: 1em;
-  font-family: "Adelle Light"; }
+  font-family: "Adelle Light", serif; }
 
 .c-law-sibling-links {
   font-size: 14px; }
@@ -6689,7 +6689,7 @@ a.c-law--inactive-breadcrumb {
     font-size: 26px; }
   .c-law--action-heading.sm-heading {
     font-size: 20px; }
-  .c-law--law-name, .c-law--law-id {
+  .c-law--global-law-name, .c-law--law-id {
     font-size: 20px; }
   .c-law--search-result-title {
     font-size: 17px; }
@@ -20401,6 +20401,18 @@ body.node-type-transcript .field-name-field-ol-text {
     margin-bottom: 30px; }
   .page-news-and-issues .nys-title + p {
     line-height: 32px; } }
+
+body.maintenance-page {
+  text-align: center;
+  padding-top: 5%; }
+  body.maintenance-page img {
+    width: 10%;
+    margin: 0 auto; }
+  body.maintenance-page #container #content-content {
+    font-size: 24px; }
+
+.krumo-node img {
+  width: 4%; }
 
 .admin-menu .fixed {
   top: emCalc(29px); }

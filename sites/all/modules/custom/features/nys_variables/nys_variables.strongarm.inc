@@ -903,7 +903,7 @@ function nys_variables_strongarm() {
     'toggle_main_menu' => 1,
     'toggle_secondary_menu' => 1,
     'default_logo' => 0,
-    'logo_path' => 'sites/all/themes/nysenate/favicon.ico',
+    'logo_path' => 'sites/all/themes/nysenate/nys_logo.png',
     'logo_upload' => '',
     'default_favicon' => 1,
     'favicon_path' => '',

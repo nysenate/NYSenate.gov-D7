@@ -1,19 +1,22 @@
 <?php
+
+/**
+ * @file
+ * Defines drush commands for the nys_accumulator module.
+ */
+
 require_once 'inc/nys_accumulator.drush.commands.inc';
 
 /**
  * Implements hook_drush_command().
- *
- * @return
- *   An associative array describing your command(s).
  *
  * @see drush_parse_command()
  */
 function nys_accumulator_drush_command() {
   $commands = _integrity_check_action_types();
   $command_text = '';
-  foreach ($commands as $key=>$val) {
-    $command_text .= "$key (" . implode(', ',$val). ")\n";
+  foreach ($commands as $key => $val) {
+    $command_text .= "$key (" . implode(', ', $val) . ")\n";
   }
   $items = [
     'accumulator-integrity' => [

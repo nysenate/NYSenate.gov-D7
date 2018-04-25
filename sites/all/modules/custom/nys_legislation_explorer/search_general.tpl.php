@@ -61,12 +61,19 @@ if (!isset($total)) {
                   $bill_chamber = $doc->sm_field_ol_chamber[0];
                   $bill_active = !empty($doc->sm_field_ol_active_version) ? $doc->sm_field_ol_active_version : NULL;
                   $url_path = ($search['type'] == 'f_bill') ? 'bills' : 'resolutions';
+
+                  if(isset($doc->url)) {
+                    $bill_url = parse_url($doc->url, PHP_URL_PATH);
+                  }
+                  elseif (empty($bill_active)) {
+                    $bill_url = '/legislation/'  . $url_path . '/' . $bill_session . '/' . $bill_print_no;
+                  }
             ?>
             <div class="c-block c-list-item c-block-legislation">
               <!-- Bill / Resolution search result listing -->
                 <div class="c-bill-meta">
                   <h3 class="c-bill-num">
-                    <a href="/legislation/<?php print $url_path . '/' . $bill_session . '/' . $bill_print_no; if (!empty($bill_active)): print $bill_active; endif; ?>">
+                    <a href="<?php print $bill_url; ?>">
                       <?php if ($search['type'] == 'f_bill'): ?> Bill <?php endif; ?>
                       <?php if ($search['type'] == 'f_resolution'): ?> Resolution<br/> <?php endif; ?>
                       <?php echo $bill_print_no ?>
@@ -80,7 +87,7 @@ if (!isset($total)) {
                 </div>
                 <div class="c-bill-body">
                   <p class="c-bill-descript">
-                    <a href="/legislation/<?php print $url_path . '/' . $bill_session . '/' . $bill_print_no ?>">
+                    <a href="<?php print $bill_url; ?>">
                       <?php print $doc->ts_ol_title ?>
                     </a>
                   </p>
@@ -119,7 +126,7 @@ if (!isset($total)) {
           <?php foreach($resp->response->docs as &$doc): ?>
             <div class="c-block c-list-item c-block-legislation">
               <h3 class="c-bill-num">
-                <a href="<?php print '/calendar/sessions/' . date('F-d-Y', $doc->its_ol_cal_date) . '/senate-session-' . date('m-d-y', $doc->its_ol_cal_date) ?>">
+                <a href="<?php print '/calendar/sessions/' . strtolower(date('F-d-Y', $doc->its_ol_cal_date)) . '/session-' . date('n-j-y', $doc->its_ol_cal_date) ?>">
                   Floor Calendar <?php echo substr($doc->label, 5) . ' (' . $doc->its_field_ol_year . ')' ?>
                 </a>
               </h3>

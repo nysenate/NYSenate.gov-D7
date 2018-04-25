@@ -1,7 +1,46 @@
 <?php
+
 /**
  * @file
  * Code for the NYS CMS feature.
  */
 
 include_once 'nys_cms.features.inc';
+
+/**
+ * Implements hook_entity_update().
+ */
+function nys_cms_entity_update($node) {
+  _nys_cms_clear_views_cache();
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function nys_cms_entity_insert($node) {
+  _nys_cms_clear_views_cache();
+}
+
+/**
+ * Helper function to clear cache of specific views on node update.
+ */
+function _nys_cms_clear_views_cache() {
+  $views = array(
+    'admin_views_user_custom',
+    'accessible_sitewide',
+    'admin_views_node_custom',
+    'administer_committtees',
+    'administer_districts',
+    'administer_legislation_bills',
+    'administer_senators',
+    'all_petitions',
+    'clone_of_administer_issues',
+    'internal_user_audit_report',
+    'taxonomy_editor',
+  );
+
+  // Clear caches for the list of views above.
+  foreach ($views as $v) {
+    cache_clear_all($v, 'cache_views_data', TRUE);
+  }
+}

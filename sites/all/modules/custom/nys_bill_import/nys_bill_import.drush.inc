@@ -1,14 +1,14 @@
 <?php
 
+/**
+ * @file
+ * Drush integration functions for the nys_agenda_import module.
+ */
+
 define("DATETIME_FORMAT", "Y-m-d\TH:i:s");
 
 /**
  * Implements hook_drush_command().
- *
- * @return
- *   An associative array describing your command(s).
- *
- * @see drush_parse_command()
  */
 function nys_bill_import_drush_command() {
   $items = array();
@@ -20,7 +20,7 @@ function nys_bill_import_drush_command() {
       "billids"   => "Comma separated list of bill ids to fetch. e.g. S1234-2015,S2180-2015",
       "session" => "Re-import all bills during the specified session year. e.g. 2015",
       "offset" => "If reimporting a session year, set an optional offset to pick up from a failed import.",
-      "reset-lock" => "Clears any locks."
+      "reset-lock" => "Clears any locks.",
     ),
   );
 
@@ -31,25 +31,27 @@ function nys_bill_import_drush_command() {
       "to"        => "Check against bill updates that occurred up to this datetime (default: now)",
       "session"   => "Check against bills in a session year. This option takes priority over 'from' and 'to' dates if specified. (default: none)",
       "session-to-date" => "Check against bills in the current session. (default: false)",
-      "year-to-date" => "Check against bills since the start of the year. (default: false)"
-    )
+      "year-to-date" => "Check against bills since the start of the year. (default: false)",
+    ),
   );
 
   return $items;
 }
 
+/**
+ * Callback for the 'bill-qa' command.
+ */
 function drush_nys_bill_import_bill_qa() {
   // Check the lock.
-  $is_locked      = variable_get("bill_qa_is_locked", false);
-  $last_lock_time = variable_get("bill_qa_last_lock_time", strtotime("now"));
+  $is_locked = variable_get("bill_qa_is_locked", FALSE);
 
   if (!$is_locked) {
     drupal_set_message(t("Start time: @start", ['@start' => date(DATE_ISO8601, strtotime("now"))]));
     $from = drush_get_option("from", date(DATETIME_FORMAT, strtotime('-1 day', strtotime("now"))));
-    $to   = drush_get_option("to", date(DATETIME_FORMAT, strtotime("now")));
+    $to = drush_get_option("to", date(DATETIME_FORMAT, strtotime("now")));
     $session = drush_get_option("session");
-    $session_to_date = drush_get_option("session-to-date", false);
-    $year_to_date = drush_get_option("year-to-date", false);
+    $session_to_date = drush_get_option("session-to-date", FALSE);
+    $year_to_date = drush_get_option("year-to-date", FALSE);
 
     if ($session_to_date) {
       $year = date("Y");
@@ -57,20 +59,23 @@ function drush_nys_bill_import_bill_qa() {
     }
 
     if ($year_to_date) {
-      $from = date(DATETIME_FORMAT, mktime(0,0,1,1,1, date("Y")));
+      $from = date(DATETIME_FORMAT, mktime(0, 0, 1, 1, 1, date("Y")));
       $to = date(DATETIME_FORMAT, strtotime("now"));
     }
 
     nys_bill_import_bill_qa($from, $to, $session);
     drupal_set_message(t("End time: @end", ['@end' => date(DATE_ISO8601, strtotime("now"))]));
 
-    variable_set("bill_qa_is_locked", false);
+    variable_set("bill_qa_is_locked", FALSE);
   }
   else {
     drupal_set_message(t("The bill qa process is already running."));
   }
 }
 
+/**
+ * Callback for the 'bill-import' command.
+ */
 function drush_nys_bill_import_bill_import() {
   drupal_set_message(t("Start time: @start", ['@start' => date("m/d/Y H:i:s", strtotime("now"))]));
   $interval     = variable_get("bill_import_interval", 60 * 5);
@@ -79,49 +84,51 @@ function drush_nys_bill_import_bill_import() {
   $timestamp    = drush_get_option("timestamp", variable_get("bill_import_last_update", "2000-01-01T00:00:00"));
 
   if (drush_get_option("reset-lock") !== NULL) {
-    variable_set("bill_import_is_locked", false);
+    variable_set("bill_import_is_locked", FALSE);
   }
 
   $bill_id_arr = array();
   $bill_id_regex = "/([ASLREJKBC][0-9]{1,5}[A-Z]?)-([0-9]{4})/";
-  foreach (explode(",", strtoupper($bill_ids_str)) as $key=>$val) {
+  foreach (explode(",", strtoupper($bill_ids_str)) as $key => $val) {
     $bill_id = trim($val);
-    $matches = null;
+    $matches = NULL;
     if ($bill_id && preg_match($bill_id_regex, $bill_id, $matches)) {
       array_push($bill_id_arr, array($matches[1], $matches[2]));
     }
   }
 
   // Check the lock.
-  $is_locked      = variable_get("bill_import_is_locked", false);
+  $is_locked = variable_get("bill_import_is_locked", FALSE);
   $last_lock_time = variable_get("bill_import_last_lock_time", strtotime("now"));
 
-  // If another process isn't running or that process has been locked > 5 minutes.
+  // If another process isn't running or that process has been locked > 5
+  // minutes.
   if (!$is_locked || (strtotime("now") - $last_lock_time) > 300) {
     // Update the lock.
-    variable_set("bill_import_is_locked", true);
+    variable_set("bill_import_is_locked", TRUE);
     variable_set("bill_import_last_lock_time", strtotime("now"));
 
     drupal_set_message(t("Executing..."));
     if (!empty($bill_id_arr)) {
-      foreach ($bill_id_arr as $key=>$val) {
+      foreach ($bill_id_arr as $key => $val) {
         nys_bill_import_fetch($val[1], $val[0]);
       }
     }
-    else if (!empty($session)) {
+    elseif (!empty($session)) {
       $offset = drush_get_option('offset', 1);
       nys_bill_import_re_import($session, $offset);
     }
     else {
       nys_bill_import_run($timestamp);
     }
-    variable_set("bill_import_is_locked", false);
+    variable_set("bill_import_is_locked", FALSE);
     variable_set('bill_import_next_execution', time() + $interval);
-   } else {
-     drupal_set_message(t("Skipping execution..."));
-     drupal_set_message(t("Is locked: '@lock'", ['@lock' => $is_locked]));
-     drupal_set_message(t("Last lock time: '@lock'", ['@lock' => date("m/d/y h:i:s", $last_lock_time)]));
-   }
+  }
+  else {
+    drupal_set_message(t("Skipping execution..."));
+    drupal_set_message(t("Is locked: '@lock'", ['@lock' => $is_locked]));
+    drupal_set_message(t("Last lock time: '@lock'", ['@lock' => date("m/d/y h:i:s", $last_lock_time)]));
+  }
 
   drupal_set_message(t("End time: @end", ['@end' => date("m/d/Y H:i:s", strtotime("now"))]));
 }

@@ -42,12 +42,11 @@ function nys_statute_import_process_statutes($law_id, $run_type) {
     $statute_chapter_document_obj_wrapper = new StdClass();
     $statute_chapter_document_obj_wrapper->documents = $law_tree->documents;
     $chapter_parent_location_id = nys_statute_get_law_type($law_tree->documents->lawId);
-    nys_statute_import_process_a_statute_object($statute_chapter_document_obj_wrapper, $run_type, $chapter_parent_location_id);
+    nys_statute_import_process_a_statute_object($statute_chapter_document_obj_wrapper, 'PARENT', $chapter_parent_location_id);
 
     // Call the recursive process_document function to process document tree.
     $parent_location_id = $law_tree->documents->lawId;
     nys_statute_import_process_document($law_tree->documents->documents, $run_type, $parent_location_id);
-
   }
   elseif ($law_tree != NULL && is_object($law_tree) == TRUE
   ) {
@@ -55,8 +54,7 @@ function nys_statute_import_process_statutes($law_id, $run_type) {
     $statute_chapter_document_obj_wrapper = new StdClass();
     $statute_chapter_document_obj_wrapper->documents = $law_tree->documents;
     $chapter_parent_location_id = nys_statute_get_law_type($law_tree->documents->lawId);
-    nys_statute_import_process_a_statute_object($statute_chapter_document_obj_wrapper, $run_type, $chapter_parent_location_id);
-
+    nys_statute_import_process_a_statute_object($statute_chapter_document_obj_wrapper, 'PARENT', $chapter_parent_location_id);
   }
 
 }
@@ -69,52 +67,53 @@ function nys_statute_import_process_statutes($law_id, $run_type) {
  *   $run_type - IMPORT-ALL | UPDATE-ALL | UPDATE-RANGE | AUDIT-ALL |.
  *   $parent_location_id - location ID of the parent node.
  */
-function nys_statute_import_process_document($documents_obj, $run_type, $parent_location_id = '', $prev_sibling_location_id = '', $prev_sibling_link_title = '', $next_sibling_location_id = '', $next_sibling_link_title = '') {
-  if (is_array($documents_obj->items) == TRUE && $documents_obj->size > 0) {
-    foreach ($documents_obj->items as $index => $statute_document_obj) {
-      $last_row_index = count($documents_obj->items) - 1;
+ function nys_statute_import_process_document($documents_obj, $run_type, $parent_location_id = '', $prev_sibling_location_id = '', $prev_sibling_link_title = '', $next_sibling_location_id = '', $next_sibling_link_title = '') {
+   if (is_array($documents_obj->items) == TRUE && $documents_obj->size > 0) {
+     foreach ($documents_obj->items as $index => $statute_document_obj) {
+       $last_row_index = count($documents_obj->items) - 1;
 
-      // Set the Sibling links for each page.
-      if ($index == 0) {
-        // This is a first child. Create next sibling link.
-        $prev_sibling_location_id = '';
-        $prev_sibling_link_title = '';
-        $next_sibling_location_id = $documents_obj->items[$index + 1]->locationId;
-        $next_sibling_link_title = substr($documents_obj->items[$index + 1]->docType . ' ' . $documents_obj->items[$index + 1]->docLevelId . ' - ' . $documents_obj->items[$index + 1]->title, 0, 255);
-      }
-      elseif ($index == $last_row_index) {
-        // This is the last child. Create prev sibling link.
-        $prev_sibling_location_id = $documents_obj->items[$index - 1]->locationId;
-        $prev_sibling_link_title = substr($documents_obj->items[$index - 1]->docType . ' ' . $documents_obj->items[$index - 1]->docLevelId . ' - ' . $documents_obj->items[$index - 1]->title, 0, 255);
-        $next_sibling_location_id = '';
-        $next_sibling_link_title = '';
-      }
-      else {
-        // This is a middle child. Create prev and next sibling link.
-        $prev_sibling_location_id = $documents_obj->items[$index - 1]->locationId;
-        $prev_sibling_link_title = substr($documents_obj->items[$index - 1]->docType . ' ' . $documents_obj->items[$index - 1]->docLevelId . ' - ' . $documents_obj->items[$index - 1]->title, 0, 255);
-        $next_sibling_location_id = $documents_obj->items[$index + 1]->locationId;
-        $next_sibling_link_title = substr($documents_obj->items[$index + 1]->docType . ' ' . $documents_obj->items[$index + 1]->docLevelId . ' - ' . $documents_obj->items[$index + 1]->title, 0, 255);
-      }
+       // Set the Sibling links for each page.
+       if ($index == 0) {
+         // This is a first child. Create next sibling link.
+         $prev_sibling_location_id = '';
+         $prev_sibling_link_title = '';
+         $next_sibling_location_id = $documents_obj->items[$index + 1]->locationId;
+         $next_sibling_link_title = substr('<span class="nav-label">' . $documents_obj->items[$index + 1]->docType . ' ' . $documents_obj->items[$index + 1]->docLevelId . '</span><span class="nav-body">' . $documents_obj->items[$index + 1]->title, 0, 248)  . '</span>';
+       }
+       elseif ($index == $last_row_index) {
+         // This is the last child. Create prev sibling link.
+         $prev_sibling_location_id = $documents_obj->items[$index - 1]->locationId;
+         $prev_sibling_link_title = substr('<span class="nav-label">' . $documents_obj->items[$index - 1]->docType . ' ' . $documents_obj->items[$index - 1]->docLevelId . '</span><span class="nav-body">' . $documents_obj->items[$index - 1]->title, 0, 248) . '</span>';
+         $next_sibling_location_id = '';
+         $next_sibling_link_title = '';
+       }
+       else {
+         // This is a middle child. Create prev and next sibling link.
+         $prev_sibling_location_id = $documents_obj->items[$index - 1]->locationId;
+         $prev_sibling_link_title = substr('<span class="nav-label">' . $documents_obj->items[$index - 1]->docType . ' ' . $documents_obj->items[$index - 1]->docLevelId . '</span><span class="nav-body">' . $documents_obj->items[$index - 1]->title, 0, 248) . '</span>';
 
-      // Process the document here.
-      $statute_document_obj_wrapper = new StdClass();
-      $statute_document_obj_wrapper->documents = $statute_document_obj;
-      nys_statute_import_process_a_statute_object($statute_document_obj_wrapper, $run_type, $parent_location_id, $prev_sibling_location_id, $prev_sibling_link_title, $next_sibling_location_id, $next_sibling_link_title);
+         $next_sibling_location_id = $documents_obj->items[$index + 1]->locationId;
+         $next_sibling_link_title = substr('<span class="nav-label">' . $documents_obj->items[$index + 1]->docType . ' ' . $documents_obj->items[$index + 1]->docLevelId . '</span><span class="nav-body">' . $documents_obj->items[$index + 1]->title, 0, 248) . '</span>';
+       }
 
-      usleep(NYS_STATUTE_IMPORT_SLEEP_MICROSECONDS);
+       // Process the document here.
+       $statute_document_obj_wrapper = new StdClass();
+       $statute_document_obj_wrapper->documents = $statute_document_obj;
+       nys_statute_import_process_a_statute_object($statute_document_obj_wrapper, $run_type, $parent_location_id, $prev_sibling_location_id, $prev_sibling_link_title, $next_sibling_location_id, $next_sibling_link_title);
 
-      // If it has a child parse it.
-      if ($statute_document_obj->documents->size > 0) {
-        // Recursive call to itself.
-        nys_statute_import_process_document($statute_document_obj->documents, $run_type, $statute_document_obj->locationId, $prev_sibling_location_id, $prev_sibling_link_title, $next_sibling_location_id, $next_sibling_link_title);
-      }
+       usleep(NYS_STATUTE_IMPORT_SLEEP_MICROSECONDS);
 
-    }
+       // If it has a child parse it.
+       if ($statute_document_obj->documents->size > 0) {
+         // Recursive call to itself.
+         nys_statute_import_process_document($statute_document_obj->documents, $run_type, $statute_document_obj->locationId, $prev_sibling_location_id, $prev_sibling_link_title, $next_sibling_location_id, $next_sibling_link_title);
+       }
 
-  }
+     }
 
-}
+   }
+
+ }
 
 /**
  * Updates a range of statutes.
@@ -471,12 +470,11 @@ function nys_statute_import_set_values(&$node, $law_doc, $law_tree, $run_type, $
     }
 
     $next_sibling_info = nys_statute_import_get_sibling_law_info($law_tree->documents->lawId, 'NEXT');
-    if ($prev_sibling_info !== FALSE) {
+    if ($next_sibling_info !== FALSE) {
       $node->field_nextsibling[LANGUAGE_NONE][0]['url'] = NYS_STATUTE_IMPORT_BASE_PATH . $next_sibling_info->lawId;
       $node->field_nextsibling[LANGUAGE_NONE][0]['title'] = $next_sibling_info->name;
       $node->field_nextsibling[LANGUAGE_NONE][0]['attributes'] = array();
     }
-
   }
   elseif ($run_type == 'GRAND-PARENT') {
     // Grandparent links dont have a NYS_STATUTE_STATUTE_ID_DELIMITER.
@@ -705,7 +703,7 @@ function nys_statute_import_compare_values(&$node, $law_doc, $law_tree, $run_typ
   }
   elseif ($run_type == 'PARENT') {
     // Parent sibling links.
-    $prev_sibling_info = nys_statute_import_get_sibling_law_info($law_tree->documents->lawId, 'PREVIOUS');
+    $prev_sibling_info = nys_statute_import_get_sibling_law_info( $law_tree->documents->lawId, 'PREVIOUS');
     if ($prev_sibling_info !== FALSE) {
       if (strcmp($node->field_prevsibling[LANGUAGE_NONE][0]['url'], NYS_STATUTE_IMPORT_BASE_PATH . $prev_sibling_info->lawId) != 0) {
         return 'prevSibling - url MISMATCH';
@@ -716,7 +714,7 @@ function nys_statute_import_compare_values(&$node, $law_doc, $law_tree, $run_typ
     }
 
     $next_sibling_info = nys_statute_import_get_sibling_law_info($law_tree->documents->lawId, 'NEXT');
-    if ($prev_sibling_info !== FALSE) {
+    if ($next_sibling_info !== FALSE) {
       if (strcmp($node->field_nextsibling[LANGUAGE_NONE][0]['url'], NYS_STATUTE_IMPORT_BASE_PATH . $next_sibling_info->lawId) != 0) {
         return 'nextSibling - url MISMATCH';
       }
@@ -724,6 +722,7 @@ function nys_statute_import_compare_values(&$node, $law_doc, $law_tree, $run_typ
         return 'nextSibling - title MISMATCH';
       }
     }
+
   }
   elseif ($run_type == 'GRAND-PARENT') {
     // Grandparent links dont have a NYS_STATUTE_STATUTE_ID_DELIMITER.
@@ -1582,13 +1581,88 @@ function create_ancestor_node($run_type, $law_id, $name, $law_type, $chapter, $p
 }
 
 /**
- * Gets the of parents siblings.
+ * Gets the inf0 of parents siblings.
  *
  * Params:
  *   $law_type - UNCONSILIDATED etc
  *   $direction - PREVIOUS - NEXT.
  */
-function nys_statute_import_get_sibling_law_info($law_type, $direction) {
+function nys_statute_import_get_sibling_law_info($law_id, $direction) {
+  $law_type_array = array();
+  $law_type = '';
+  $current_law_id_index = 0;
+  $index = 0;
+
+  $laws = nys_statute_import_get_law_listings();
+  // Find $law_type.
+  foreach ($laws as $key => $law) {
+    if ($law->lawId == $law_id) {
+      $law_type = $law->lawType;
+      break;
+    }
+  }
+
+  // Create an array of the requested type.
+  foreach ($laws as $key => $law) {
+
+    if ($law->lawType == $law_type) {
+      $law_type_array[] = $law;
+    }
+    $index++;
+  }
+
+  // The $law_type_array contains a set of all the requested law_types.
+  // Sort the law_types by their names.
+  uasort($law_type_array, function($a, $b) {
+    return $a->name <=> $b->name;
+  });
+
+  // The $law_type_array contains a set of all the requested law_types.
+  // Sort the law_types by their names.
+  uasort($law_type_array, function($a, $b) {
+    return $a->name <=> $b->name;
+  });
+  // Get an array with sequential indexes.
+  $sorted_law_type_array = array_merge($law_type_array);
+  // The $law_type_array contains a sorted set of all the requested law_types.
+  $law_listing_count = count($law_type_array);
+  // Find the desired $law_id.
+  foreach ($sorted_law_type_array as $key => $law_listing) {
+
+    if ($law_listing->lawId == $law_id) {
+      if ($direction == 'PREVIOUS') {
+        // If its the first array element.
+        if ($key == 0) {
+          return FALSE;
+        }
+        else {
+          return $sorted_law_type_array[$key - 1];
+        }
+      }
+      elseif ($direction == 'NEXT') {
+        // If its the last array element.
+        if ($key == ($law_listing_count - 1)) {
+          return FALSE;
+        }
+        else {
+          return $sorted_law_type_array[$key + 1];
+        }
+      }
+    }
+  }
+
+  return FALSE;
+
+}
+
+/**
+ * Gets the inf0 of parents siblings.
+ *
+ * Params:
+ *   $law_type - UNCONSILIDATED etc
+ *   $direction - PREVIOUS - NEXT.
+ */
+function nys_statute_import_get_sibling_law_info_obj($law_type, $direction) {
   $law_listings = nys_statute_get_law_listings();
   $last_element = count($law_listings) - 1;
   $index = 0;

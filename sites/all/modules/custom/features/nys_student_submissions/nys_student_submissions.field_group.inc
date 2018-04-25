@@ -23,12 +23,11 @@ function nys_student_submissions_field_group_info() {
     'label' => 'Contact Information',
     'weight' => '5',
     'children' => array(
-      0 => 'field_hannon_phone_num',
-      1 => 'field_hannon_street_address',
-      2 => 'field_hannon_city',
+      0 => 'field_hannon_city',
+      1 => 'field_hannon_phone_num',
+      2 => 'field_hannon_street_address',
       3 => 'field_hannon_zip_code',
       4 => 'field_school_teachers_email',
-      5 => 'field_hannon_student_email',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -86,8 +85,8 @@ function nys_student_submissions_field_group_info() {
     'label' => 'Administrative',
     'weight' => '8',
     'children' => array(
-      0 => 'field_hannon_winner_types',
-      1 => 'field_hannon_star_rating',
+      0 => 'field_hannon_star_rating',
+      1 => 'field_hannon_winner_types',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(

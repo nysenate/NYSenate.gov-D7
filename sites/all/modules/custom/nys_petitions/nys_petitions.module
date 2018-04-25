@@ -34,6 +34,13 @@ function nys_petitions_node_view($node, $view_mode, $langcode) {
     return;
   }
   $node->content['petition_form'] = drupal_get_form('nys_petitions_petition_form', $node);
+
+  // If there's no alias for this petitions node, redirect to 404.
+  $current_path = current_path();
+  $path_alias = drupal_lookup_path('alias', $current_path);
+  if (!$path_alias) {
+    drupal_not_found();
+  }
 }
 
 /**

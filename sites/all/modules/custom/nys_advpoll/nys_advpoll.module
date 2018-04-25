@@ -1,9 +1,8 @@
 <?php
 
-
 /**
  * @file
- * NYS Advanced Poll Settings Module
+ * NYS Advanced Poll Settings Module.
  *
  * Provides custom settings for Advanced Poll module.
  */
@@ -13,9 +12,9 @@
  */
 function nys_advpoll_form_advpoll_node_form_alter(&$form, &$form_state, $instance) {
   $form['title']['#attributes'] = array(
-        'size' => 60,
-        'maxlength' => 60,
-    );
+    'size' => 60,
+    'maxlength' => 60,
+  );
   $form['title']['#description'] = t('Your question is limited to 60 characters. Choose wisely.');
   $form['#validate'][] = 'nys_advpoll_node_form_validate';
   $form['advpoll_choice'][LANGUAGE_NONE][0]['choice']['#attributes']['placeholder'] = 'e.g. "Yes" or "Approve" or "Agree"';
@@ -35,10 +34,10 @@ function nys_advpoll_form_advpoll_node_form_alter(&$form, &$form_state, $instanc
 }
 
 /**
- * Implements hook_form_alter()
+ * Implements hook_form_alter().
  */
-function nys_advpoll_form_alter(&$form, &$form_state, $form_id){
-if ($form_id === 'advpoll_choice_form') {
+function nys_advpoll_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id === 'advpoll_choice_form') {
     $form['submit']['#value'] = "Submit";
     $form['submit']['#attributes']['class'][] = 'c-block--btn icon-before__check med-bg';
   }
@@ -47,7 +46,6 @@ if ($form_id === 'advpoll_choice_form') {
 /**
  * Implements node_form_validate().
  */
-
 function nys_advpoll_node_form_validate(&$form, &$form_state) {
   if (drupal_strlen($form_state['values']['title']) > 60) {
     form_set_error('title', t('Your question is too long, please limit to 60 characters'));

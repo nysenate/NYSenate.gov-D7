@@ -137,14 +137,12 @@ function nysenate_preprocess_html(&$variables){
       'preprocess' => FALSE
     )
   );
-
-  if(drupal_is_front_page()) {
+  if (drupal_is_front_page()) {
    $homepage_hero_content_type = (string) db_query("SELECT n.type FROM nodequeue_nodes nn JOIN node n ON n.nid = nn.nid WHERE nn.qid = 1 LIMIT 1;")->fetchField();
-   if(!empty($homepage_hero_content_type)) {
+   if (!empty($homepage_hero_content_type)) {
      $variables['classes_array'][] = 'homepage-hero-content-type-' . $homepage_hero_content_type;
    }
   }
-
 }
 
 function nysenate_preprocess_page(&$variables) {
@@ -880,48 +878,194 @@ function nysenate_preprocess_node(&$variables) {
     }
   }
 
-   // important to only load these in full view_mode, or else you can get duplicates
-   // on certain content types that use the same template for teaser and full view_modes
-  if($variables['view_mode'] == 'full') {
-    $full_node_url = $GLOBALS['base_url'] . $variables['node_url'];
-    $content_type = str_replace('_', ' ', $variables['type']);
-    $social_share_vars = array(
-      'social_share_title' => 'share this ' . $content_type,
-      'node_url' => $full_node_url,
-      'title' => $variables['title'],
-      'CTA' => 'Check out this ' . $content_type,
-    );
+  /** --- STATUTES --- */
+  if ($variables['type'] === 'statute') {
+    // Determine whether to render_text
 
-    if(in_array($variables['type'], array('webform', 'page_content'))) {
-      $social_share_vars['social_share_title'] = t('share this page');
-      $social_share_vars['CTA'] = t('Check out this page');
+    // Context
+    $law_id_components = count(explode('/',$variables['field_statuteid'][0]['value']));
+
+    $variables['should_render_law_text'] = FALSE;
+    $variables['text_length'] = 0;
+
+    if ($variables['field_doctype'][0]['value'] == 'SECTION') {
+      $variables['should_render_law_text'] = TRUE;
+      // Determine doc length for formatting purposes
+      $variables['text_length'] = strlen($variables['field_text'][0]['value']);
     }
 
-    if(in_array($variables['type'], array('student_program', 'in_the_news'))) {
-      $social_share_vars['social_share_title'] = t('share this article');
-      $social_share_vars['CTA'] = t('Check out this article');
+    $variables['is_grand_or_greater'] = FALSE;
+    $variables['is_root'] = FALSE;
+    $variables['is_great'] = FALSE;
+
+    if ($law_id_components == 1) {
+      $variables['is_grand_or_greater'] = TRUE;
     }
 
-    if(in_array($variables['type'], array('open_data'))) {
-      $social_share_vars['social_share_title'] = t('share this open data report');
-      $social_share_vars['CTA'] = t('Check out this open data report');
+
+
+    $reserved_law_ids = [
+      "CONSOLIDATED",
+      "UNCONSOLIDATED",
+      "COURTACTS",
+      "RULES",
+    ];
+
+    if ($variables['is_grand_or_greater'] == TRUE) {
+      foreach ($reserved_law_ids as $match) {
+        if ($match == $variables['field_statuteid'][0]['value']) {
+          $variables['is_great'] = TRUE;
+          break;
+        }
+        if ("all" == $variables['field_statuteid'][0]['value']) {
+          $variables['is_root'] = TRUE;
+          break;
+        }
+      }
+    }
+    // Breadcrumb Variables
+    $variables['default_root_url'] = "/legislation/laws/all";
+    $variables['default_root_breadcrumb_text'] = t('The Laws of New York');
+
+    $variables['great_grandparent_url'] = "/legislation/laws/" . $variables['field_lawtype'][0]['value'];
+    $variables['great_grandparent_display_text'] = "The Laws of New York";
+
+
+    // Prepare Global Title
+    $top_level_law_id = $variables['field_lawtype'][0]['value'];
+    switch ($top_level_law_id) {
+      case 'all':
+          // Should be "Laws, Court Acts, and Legislative Chamber Rules"
+        $global_law_title = 'The Laws of New York';
+        $law_template_class = 0;
+        break;
+      case 'CONSOLIDATED':
+        $global_law_title = 'Consolidated Laws';
+        $law_template_class = 1;
+        break;
+      case 'UNCONSOLIDATED':
+        $global_law_title = 'Unconsolidated Laws';
+        $law_template_class = 1;
+        break;
+      case 'COURTACTS':
+        $global_law_title = 'Court Acts';
+        $law_template_class = 1;
+        break;
+      case 'RULES':
+        $global_law_title = 'Legislative Chamber Rules';
+        $law_template_class = 1;
+        break;
+      default:
+        $global_law_title = 'New York State' . nys_statute_get_law_name($variables['field_lawid'][0]['value']) . ' Law';
+        $law_template_class = 2;
+        break;
     }
 
-    if(in_array($variables['type'], array('advpoll'))) {
-      $social_share_vars['social_share_title'] = t('share this poll');
-      $social_share_vars['CTA'] = t('Check out this poll');
-    }
+    $variables['global_law_title'] = $global_law_title;
+    $variables['law_template_class'] = $law_template_class;
 
-    if(arg(0) == 'node' && $variables['nid'] == arg(1)) { // don't show on embedded nodes, such as webform embedded within questionnaire
-      $variables['social_buttons'] = theme('social_buttons', $social_share_vars);
-    }
 
+
+
+    // Prepare template variables from sibling nodes.
+    // Get lawID from URL. TODO: statute nodes should use entity references for siblings.
+    if (isset($variables['field_prevsibling'][0]['url'])) {
+      $law_id = _get_sibling_statute_id_from_url($variables['field_prevsibling'][0]['url']);
+      $prev_sibling_statute_node = _statute_entity_wrapper_by_law_id($law_id);
+      $variables['prev_sibling_docType'] = $prev_sibling_statute_node->field_doctype->value();
+      $variables['prev_sibling_docLevelId']= $prev_sibling_statute_node->field_doclevelid->value();
+      $variables['prev_sibling_title'] = $prev_sibling_statute_node->title->value();
+      $variables['prev_sibling_lawid'] = $prev_sibling_statute_node->field_lawid->value();
+
+      $prev_link_array = array(
+        '#tag' => 'link',
+        '#attributes' => array(
+          'rel' => 'prev',
+          'href' => $variables['field_prevsibling'][0]['url'],
+        ),
+      );
+      drupal_add_html_head($prev_link_array, 'google_prev');
+    }
+    if (isset($variables['field_nextsibling'][0]['url'])) {
+      $law_id = _get_sibling_statute_id_from_url($variables['field_nextsibling'][0]['url']);
+      $next_sibling_statute_node = _statute_entity_wrapper_by_law_id($law_id);
+      $variables['next_sibling_docType'] = $next_sibling_statute_node->field_doctype->value();
+      $variables['next_sibling_docLevelId']= $next_sibling_statute_node->field_doclevelid->value();
+      $variables['next_sibling_title'] = $next_sibling_statute_node->title->value();
+      $variables['next_sibling_lawid'] = $next_sibling_statute_node->field_lawid->value();
+      $next_link_array = array(
+        '#tag' => 'link',
+        '#attributes' => array(
+          'rel' => 'next',
+          'href' => $variables['field_nextsibling'][0]['url'],
+        ),
+      );
+      drupal_add_html_head($next_link_array, 'google_next');
+
+    }
+    // echo print_r($variables);
   }
+    // important to only load these in full view_mode, or else you can get duplicates
+    // on certain content types that use the same template for teaser and full view_modes
+  if($variables['view_mode'] == 'full') {
+        $full_node_url = $GLOBALS['base_url'] . $variables['node_url'];
+        $content_type = str_replace('_', ' ', $variables['type']);
+        $social_share_vars = array(
+            'social_share_title' => 'share this ' . $content_type,
+            'node_url' => $full_node_url,
+            'title' => $variables['title'],
+            'CTA' => 'Check out this ' . $content_type,
+        );
 
-  $variables['isSenateUser'] = module_invoke('nys_wtis', 'is_internal');
+        if(in_array($variables['type'], array('webform', 'page_content'))) {
+            $social_share_vars['social_share_title'] = t('share this page');
+            $social_share_vars['CTA'] = t('Check out this page');
+        }
+
+        if(in_array($variables['type'], array('student_program', 'in_the_news'))) {
+            $social_share_vars['social_share_title'] = t('share this article');
+            $social_share_vars['CTA'] = t('Check out this article');
+        }
+
+        if(in_array($variables['type'], array('open_data'))) {
+            $social_share_vars['social_share_title'] = t('share this open data report');
+            $social_share_vars['CTA'] = t('Check out this open data report');
+        }
+
+        if(in_array($variables['type'], array('advpoll'))) {
+            $social_share_vars['social_share_title'] = t('share this poll');
+            $social_share_vars['CTA'] = t('Check out this poll');
+        }
+
+        if(arg(0) == 'node' && $variables['nid'] == arg(1)) { // don't show on embedded nodes, such as webform embedded within questionnaire
+            $variables['social_buttons'] = theme('social_buttons', $social_share_vars);
+        }
+
+    }
+
+    // $variables['isSenateUser'] = module_invoke('nys_wtis', 'is_internal');
 
   return $variables;
 }
+
+function _statute_entity_wrapper_by_law_id($statute_id) {
+    $result = db_query("SELECT `entity_id` FROM `field_data_field_statuteid` WHERE field_statuteid_value = :statuteId",
+        array(':statuteId' => $statute_id));
+    $entity_id = $result->fetchObject()->entity_id;
+    $statute_node_obj = entity_metadata_wrapper('node',$entity_id);
+    //echo var_dump($statute_node_obj);
+    return $statute_node_obj;
+}
+
+function _get_sibling_statute_id_from_url($sibling_url) {
+    $path_filter_elements = ['legislation','laws',''];
+    $url = $sibling_url;
+    $parts = explode('/',$url);
+    $intersect = array_intersect($path_filter_elements, $parts);
+    $id_components = array_merge(array_diff($path_filter_elements, $intersect), array_diff($parts, $intersect));
+    return $statute_id = implode('/',$id_components);
+}
+
 
 function nysenate_preprocess_taxonomy_term(&$variables) {
   if ($variables['vocabulary_machine_name'] === 'districts'){

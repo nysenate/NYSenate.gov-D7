@@ -27,7 +27,8 @@ function location_contact_name_views_data() {
       'left_field' => 'lid',
       'field' => 'lid',
     ),
-    // location_contact_name links to node_revision through location_instance via lid.
+    // location_contact_name links to node_revision through location_instance
+    // via lid.
     'node_revision' => array(
       'left_table' => 'location_instance',
       'left_field' => 'lid',

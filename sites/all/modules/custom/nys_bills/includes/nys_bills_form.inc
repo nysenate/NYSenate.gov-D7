@@ -134,68 +134,6 @@ function nys_bills_bill_form($form, &$form_state, $node) {
     '#type' => ($texttype == 'hidden' ? $texttype : 'auto_address'),
   );
 
-
-  /*
-  $form['addr_street'] = array(
-    '#type' => $texttype,
-    '#title' => 'Street Address',
-    '#required' => TRUE,
-    '#description' => t('Your valid home address is used to determine which NY State Senator Represents you.'),
-    '#maxlength' => 1023,
-    '#size' => 40,
-  );
-
-    if (!empty($form_info['street'])) {
-      $form['addr_street']['#default_value'] = $form_info['street'];
-    }
-
-    $form['addr_opt'] = array(
-      '#type' => $texttype,
-      '#title' => t('Apt/Suite/Floor (Optional)'),
-      '#maxlength' => 1023,
-      '#size' => 12,
-    );
-
-    if (!empty($form_info['additional'])) {
-      $form['addr_opt']['#default_value'] = $form_info['additional'];
-    }
-
-    $form['addr_city'] = array(
-      '#type' => $texttype,
-      '#title' => t('City'),
-      '#required' => TRUE,
-      '#maxlength' => 255,
-      '#size' => 35,
-    );
-
-    if (!empty($form_info['city'])) {
-      $form['addr_city']['#default_value'] = $form_info['city'];
-    }
-
-    $form['addr_state'] = array(
-      '#type' => $texttype,
-      '#title' => t('State'),
-      '#required' => TRUE,
-      '#maxlength' => 255,
-      '#size' => 35,
-    );
-
-    if (!empty($form_info['province'])) {
-      $form['addr_state']['#default_value'] = $form_info['province'];
-    }
-
-    $form['addr_zip'] = array(
-      '#type' => $texttype,
-      '#title' => t('Postal Code'),
-      '#required' => TRUE,
-      '#maxlength' => 5,
-      '#size' => 5,
-    );
-
-    if (!empty($form_info['postal_code'])) {
-      $form['addr_zip']['#default_value'] = $form_info['postal_code'];
-    }
-  */
   $form['register'] = array(
     '#type' => 'checkbox',
     '#default_value' => 1,

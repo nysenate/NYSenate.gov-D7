@@ -125,7 +125,7 @@ function nys_legislation_explorer_general_search() {
       if ($redirect && $resp && $resp->response->numFound == 1 && ($type == 'f_calendar' || $type == 'f_agenda')) {
         $doc = $resp->response->docs[0];
         if ($type == 'f_calendar') {
-          drupal_goto('/calendar/sessions/' . date('F-d-Y', $doc->its_ol_cal_date) . '/senate-session-' . date('m-d-y', $doc->its_ol_cal_date));
+          drupal_goto('/calendar/sessions/' . strtolower(date('F-d-Y', $doc->its_ol_cal_date)) . '/session-' . date('n-j-y', $doc->its_ol_cal_date));
           return FALSE;
         }
         elseif ($type == 'f_agenda') {

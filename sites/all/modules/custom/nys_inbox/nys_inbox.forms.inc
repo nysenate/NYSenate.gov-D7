@@ -437,6 +437,7 @@ function nys_inbox_form_submit($form, &$form_state) {
   if (isset($form_state['input']['op']) && $form_state['input']['op'] == 'Delete') {
     if (!empty($form_state['input']['list'])) {
       // convert list of mids to list of threads
+      nys_inbox_scrub_for_flip($form_state['input']['list']);
       $messages = privatemsg_message_load_multiple($form_state['input']['list']);
       $thread_ids = array();
       foreach($messages as $message) {
@@ -946,7 +947,7 @@ function nys_inbox_forward_form($form, &$form_state, $recipients = '', $subject 
 
   $thread_id = arg(5);
 
-  $thread = privatemsg_thread_load($thread_id);
+  $thread = privatemsg_thread_load($thread_id, $user);
 
   module_load_include('inc', 'privatemsg', 'privatemsg.pages');
 
@@ -1012,9 +1013,12 @@ function nys_inbox_forward_form($form, &$form_state, $recipients = '', $subject 
  * Form validation logic for the contact form.
  */
 function nys_inbox_forward_form_validate($form, &$form_state) {
-  if (!valid_email_address($form_state['values']['email'])) {
-    form_set_error('email', t('That e-mail address is not valid.'));
-  }
+    if (!valid_email_address($form_state['values']['email'])) {
+      form_set_error('email', t('That e-mail address is not valid.'));
+    }
+    if (empty($form_state['values']['subject'])) {
+      form_set_error('subject', t('The subject line cannot be empty.'));
+    }
 }
 
 function nys_inbox_forward_form_submit($form, &$form_state) {
@@ -1103,7 +1107,7 @@ function nys_inbox_reply_form($form, &$form_state) {
 
   else if (!$is_bulk_message) {
 
-    $thread = privatemsg_thread_load($thread_id);
+    $thread = privatemsg_thread_load($thread_id, $account);
 
     $participants_themed =_nys_inbox_format_participants($thread['participants'], 4);
 
@@ -1299,4 +1303,19 @@ function nys_inbox_delete_submit($form, &$form_state) {
     }
   }
   $form_state['redirect'] = $form_state['values']['delete_destination'];
+}
+
+/**
+ * Checks the options for the tableselect.
+ * If the options array contains other than a number or string.
+ * array_flip warnings get generated. So data is set to 0.
+ */
+function nys_inbox_scrub_for_flip(&$some_array) {
+  if (is_array($some_array)) {
+    foreach ($some_array as $key => $value) {
+      if (empty($value)) {
+        $some_array[$key] = 0;
+      }
+    }
+  }
 }

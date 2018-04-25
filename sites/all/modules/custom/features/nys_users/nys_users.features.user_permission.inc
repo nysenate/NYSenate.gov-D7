@@ -424,24 +424,6 @@ function nys_users_user_default_permissions() {
     'module' => 'features',
   );
 
-  // Exported permission: 'administer feeds'.
-  $permissions['administer feeds'] = array(
-    'name' => 'administer feeds',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'feeds',
-  );
-
-  // Exported permission: 'administer feeds_tamper'.
-  $permissions['administer feeds_tamper'] = array(
-    'name' => 'administer feeds_tamper',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'feeds_tamper',
-  );
-
   // Exported permission: 'administer field collections'.
   $permissions['administer field collections'] = array(
     'name' => 'administer field collections',
@@ -3195,15 +3177,6 @@ function nys_users_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Web Administrator' => 'Web Administrator',
-    ),
-    'module' => 'actions_permissions',
-  );
-
-  // Exported permission: 'execute views_bulk_operations_archive_action'.
-  $permissions['execute views_bulk_operations_archive_action'] = array(
-    'name' => 'execute views_bulk_operations_archive_action',
-    'roles' => array(
-      'Administrator' => 'Administrator',
     ),
     'module' => 'actions_permissions',
   );

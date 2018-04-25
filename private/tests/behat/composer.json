@@ -1,7 +1,9 @@
 {
   "require": {
     "drupal/drupal-extension": "3.3.0",
-    "integratedexperts/behat-screenshot": "^0.6.2"
+    "integratedexperts/behat-screenshot": "^0.6.2",
+    "drush/drush": "~8.1",
+    "pantheon-systems/terminus": "~1.7"
   },
   "require-dev": {
     "jordigiros/MinkFieldRandomizer": "dev-master"

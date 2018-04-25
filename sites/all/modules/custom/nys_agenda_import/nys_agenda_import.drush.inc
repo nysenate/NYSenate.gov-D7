@@ -1,10 +1,12 @@
 <?php
 
 /**
+ * @file
+ * Drush integration functions for the nys_agenda_import module.
+ */
+
+/**
  * Implements hook_drush_command().
- *
- * @return
- *   An associative array describing your command(s).
  *
  * @see drush_parse_command()
  */
@@ -24,6 +26,9 @@ function nys_agenda_import_drush_command() {
   return $items;
 }
 
+/**
+ * Callback for the agenda-import command.
+ */
 function drush_nys_agenda_import_agenda_import() {
   echo "Start time: " . date("m/d/Y H:i:s", strtotime("now")) . "\r\n";
 
@@ -44,7 +49,8 @@ function drush_nys_agenda_import_agenda_import() {
     "agenda_import_last_lock_time", strtotime("now")
   );
 
-  // If another process isn't running or that process has been locked > 5 minutes.
+  // If another process isn't running or that process has been locked > 5
+  // minutes.
   if ($reset_lock || !$is_locked
     || (strtotime("now") - $last_lock_time) > 300
   ) {
@@ -71,7 +77,8 @@ function drush_nys_agenda_import_agenda_import() {
           variable_set('agenda_import_next_execution', time() + $interval);
         }
       }
-    } catch (InvalidArgumentException $ex) {
+    }
+    catch (InvalidArgumentException $ex) {
       drush_log($ex->getMessage(), 'failed');
     } finally {
       variable_set("agenda_import_is_locked", FALSE);
@@ -91,8 +98,10 @@ function drush_nys_agenda_import_agenda_import() {
  *
  * Throws an exception if not.
  *
- * @param $param_name string parameter name
- * @param $value      string|int parameter value
+ * @param string $param_name
+ *   The parameter name.
+ * @param mixed $value
+ *   The value to check.
  */
 function drush_nys_agenda_import_verify_int($param_name, $value) {
   if (!(is_int($value) || ctype_digit($value))) {
@@ -105,9 +114,11 @@ function drush_nys_agenda_import_verify_int($param_name, $value) {
 /**
  * Parses a comma separated list of agenda ids into an array of agenda ids.
  *
- * @param $agenda_ids_raw string comma separated agenda ids
+ * @param string $agenda_ids_raw
+ *   Comma separated agenda ids.
  *
- * @return array parsed agenda ids with year and week broken out
+ * @return array
+ *   Parsed agenda ids with year and week broken out.
  */
 function drush_nys_agenda_import_parse_agenda_ids($agenda_ids_raw) {
   $agenda_ids = [];

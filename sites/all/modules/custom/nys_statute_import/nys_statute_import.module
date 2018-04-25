@@ -590,6 +590,14 @@ function nys_statute_import_get_last_law_id() {
 }
 
 /**
+ * Returns the law name for an index.
+ */
+function nys_statute_import_get_law_name($index) {
+   $laws = array_values(nys_statute_import_get_law_listings());
+   return (isset($laws[$index - 1]->name) ? $laws[$index - 1]->name : '' );
+}
+
+/**
  * Returns the number of Law Id processed.
  */
 function nys_statute_import_get_qty_law_ids_processed() {

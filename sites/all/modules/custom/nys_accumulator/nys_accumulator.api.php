@@ -19,9 +19,10 @@
 /**
  * Provides access to an accumulator message record prior to insertion.
  *
- * @param $row
- *   The array of row information to be inserted.
- * @return $row
+ * @param array $row
+ *   The row information to be inserted.
+ *
+ * @return array
  *   The modified row.
  */
 function hook_nys_accumulator_preinsert($row) {

@@ -1,0 +1,13 @@
+# Jenkins CI/Pantheon configuration
+default:
+  extensions:
+    Behat\MinkExtension:
+      base_url: http://test-example.com
+    Drupal\DrupalExtension:
+      blackbox: ~
+      api_driver: 'drush'
+      drush:
+        alias: 'test-example.test-build'
+      text:
+        username_field: 'E-mail or username'
+        log_in: 'Login to account'

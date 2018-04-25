@@ -60,8 +60,8 @@ div.row.c-law-link-container.search-results nav.breadcrumbs.c-law-breadcrumbs a 
 }
 
 div.row.c-law-link-container.search-results div.columns.medium-4 {
-    padding-right: 2%;
-    width: 24%;
+  padding-right: 2%;
+  width: 24%;
 }
 
 div.row.c-law-link-container.search-results div.columns.medium-8 {
@@ -82,15 +82,367 @@ div.page div.row.c-law-link-container:last-child {
   border-bottom: transparent !important;
 }
 
-div.large-12 div.section:nth-last-of-type(2) {
-  border-bottom: transparent !important;
-}
-
 .node-type-statute .c-law-link:nth-last-of-type(1) {
   border-bottom: solid 1px transparent;
 }
 
 div.columns.medium-8 p.c-law-link-title a {
   font-size: 20px !important;
+}
+
+/* +++++++++++++++++++++++++  */
+hr.divider {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.node-type-statute #global-law-name {
+  font-size: 14px;
+  font-family: "Proxima Nova SemiBold";
+  color: rgb(102, 102, 102);
+}
+
+nav.c-law-breadcrumbs {
+
+}
+
+#law-title-block {
+  /*margin-top: 5px;*/
+  padding-top: 20px;
+  padding-bottom: 20px;
+  display: block;
+  float: left;
+  width: 66%;
+  font-family: 'Adelle Bold', serif;
+  font-size: 32px;
+}
+
+#law-title-block #doc-type {
+  font-family: 'Adelle Bold', serif;
+  font-size: 32px;
+}
+
+#law-title-block #location-id {
+  font-family: 'Adelle Bold', serif;
+  font-size: 32px;
+}
+
+#law-title-block #page-title {
+  font-family: 'Adelle Bold', serif;
+  font-size: 32px;
+}
+
+#law-title-block #law-text-title {
+  font-family: 'Adelle Light', serif;
+  font-size: 20px;
+  display: block;
+}
+
+.node-type-statute main.l-row--main {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+/* Law Navigation */
+
+.node-type-statute div.previous_sibling {
+  max-width: 50%;
+  display: inline;
+  float: left;
+  margin: 20px 0px;
+}
+.node-type-statute div.next_sibling {
+  max-width: 50%;
+  display: inline;
+  float: right;
+  margin: 20px 0px;
+}
+
+.node-type-statute .left-arrow {
+  min-height: 40px;
+  display: block;
+
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 0px;
+  font-family: "Proxima Nova Regular", sans-serif;
+  font-size: 14px;
+  line-height: 15px;
+  color: rgb(143,143,143);
+  text-transform: capitalize !important;
+}
+
+.node-type-statute .left-arrow::before {
+  content: "Prev";
+  font-family: "Proxima Nova Bold", sans-serif;
+  color: rgb(43, 106, 144);
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.node-type-statute .right-arrow {
+  min-height: 40px;
+  display: block;
+  /*background-image: url("img/right-arrow.png");*/
+  /*background-repeat: no-repeat;*/
+  /*background-position: top right;*/
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 0;
+  font-family: "Proxima Nova Regular", sans-serif;
+  font-size: 14px;
+  line-height: 15px;
+  color: rgb(143,143,143);
+  text-transform: capitalize !important;
+  text-align: right;
+}
+
+.node-type-statute .right-arrow::before {
+  content: "Next";
+  color: rgb(43, 106, 144);
+  text-transform: uppercase;
+  font-family: "Proxima Nova Bold", sans-serif;
+  font-weight: bold;
+}
+
+.node-type-statute .left-up-arrow {
+  min-height: 56px;
+  display: block;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 0px;
+  font-family: "Proxima Nova Regular", sans-serif;
+  font-size: 14px;
+  line-height: 15px;
+  color: rgb(143,143,143);
+  text-transform: capitalize !important;
+}
+.node-type-statute .left-up-arrow::before {
+  content: "Up one level";
+  color: rgb(43, 106, 144);
+  text-transform: uppercase;
+  font-family: "Proxima Nova Bold", sans-serif;
+  font-weight: bold;
+}
+
+.node-type-statute .right-up-arrow {
+  min-height: 56px;
+  display: block;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 0px;
+  font-family: "Proxima Nova Regular", sans-serif;
+  font-size: 14px;
+  line-height: 15px;
+  text-align: right;
+  color: rgb(143,143,143);
+  text-transform: capitalize !important;
+}
+
+.node-type-statute .right-up-arrow::before {
+  content: "Up one level ";
+  color: rgb(43, 106, 144);
+  text-transform: uppercase;
+  font-family: "Proxima Nova Bold", sans-serif;
+  font-weight: bold;
+}
+
+
+.node-type-statute div.row.c-law-sibling-links span.nav-label {
+  display: block;
+  font-family: "Proxima Nova Bold", sans-serif;
+  font-size: 14px;
+  line-height: 15px;
+  color: rgb(90,90,90);
+  text-transform: capitalize !important;
+  padding-bottom: 5px;
+
+}
+
+/*.node-type-statute div.row.c-law-sibling-links span.nav-label:after {*/
+/*padding-bottom: 50px;*/
+/*}*/
+
+.node-type-statute div.row.c-law-sibling-links span.nav-body {
+
+  font-family: "Proxima Nova Regular", sans-serif;
+  color: rgb(90,90,90);
+  text-transform: capitalize !important;
+  font-size: 14px;
+  line-height: 15px;
+}
+
+.node-type-statute ol.nys-associated-topics {
+  margin: 20px 0px;
+}
+
+.node-type-statute ol.nys-associated-topics li {
+  margin-right: 0px;
+  white-space: normal;
+  display: inline;
+  line-height: 18px;
+}
+
+.node-type-statute ol.nys-associated-topics li:after {
+  content: " / ";
+  font-weight: bold;
+  color: goldenrod;
+}
+
+.node-type-statute ol.nys-associated-topics:last-child:after {
+  content: " / ";
+}
+
+.node-type-statute ol.nys-associated-topics,
+.node-type-statute ol.nys-associated-topics a,
+.node-type-statute ol.nys-associated-topics a span {
+  cursor: pointer;
+}
+
+.node-type-statute a.c-law--inactive-breadcrumb span.crumb-label {
+  font-family: "Proxima Nova Regular", sans-serif;
+  color: rgb(43, 106, 144);
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 18px;
+  text-transform: capitalize;
+}
+
+.node-type-statute a.c-law--inactive-breadcrumb span.crumb-body {
+  font-family: "Proxima Nova Regular", sans-serif;
+  color: rgb(143,143,143);
+  font-size: 15px;
+  line-height: 18px;
+  text-transform: capitalize;
+}
+
+
+
+.node-type-statute div.c-law-doc-wrapper {
+  background-color: rgb(238, 238, 238);
+  padding: 20px;
+  margin: 10px 0px;
+}
+/* For the CMA and CMS law types */
+pre.c-law-pre-doc-text {
+  width: 85ch;
+  margin-top: 1em;
+  font-size: 16px;
+  line-height: 1.5em;
+  padding: 1em;
+  font-family: "Courier New", Courier, monospace;
+  white-space: pre;
+}
+
+.node-type-statute .c-detail--social {
+  width: 31%;
+  display: block;
+  float: right;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 20px
+}
+.node-type-statute .c-detail--social .c-detail--subhead {
+  max-width: 100%;
+  text-align: left;
+  display: block;
+  float: none;
+}
+
+.node-type-statute .c-detail--social ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /*overflow: hidden;*/
+  float: none;
+}
+
+.node-type-statute .c-detail--social li {
+  float: left;
+  text-align: left;
+}
+
+/*.node-type-statute .c-detail--social li:before {*/
+  /*margin: 0 0 0 20px;*/
+/*}*/
+
+
+.node-type-statute .c-detail--social-item {
+  display: block;
+  width: 60px;
+  height: 40px;
+  background: inherit;
+}
+
+.node-type-statute .c-detail--social-item:after {
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  font-size: 28px;
+  line-height: 40px;
+  color: #2B6990;
+}
+
+
+
+@media only screen and (max-width: 481px) {
+  pre.c-law-pre-doc-text {
+    font-size: 7px;
+  }
+
+  .node-type-statute .c-detail--social-item {
+    background: inherit;
+  }
+  .node-type-statute .c-detail--social-item:after {
+    color: #2B6990;
+    text-align: right;
+  }
+  .node-type-statute .c-detail--social {
+    width: 100%;
+    display: block;
+    float: left;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    display: none;
+
+  }
+  #law-title-block {
+    /*margin-top: 5px;*/
+    padding-top: 20px;
+    padding-bottom: 20px;
+    display: block;
+    float: right;
+    width: 100%;
+  }
+  .node-type-statute div.row.c-law-sibling-links span.nav-body {
+    display: none;
+  }
+}
+
+
+@media screen and (min-width: 481px) and (max-width: 770px) {
+  pre.c-law-pre-doc-text {
+    font-size: 9px;
+  }
+  .node-type-statute .c-detail--social {
+    display: none;
+    width: 100%;
+    display: block;
+    float: left;
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+  #law-title-block {
+    /*margin-top: 5px;*/
+    padding-top: 20px;
+    padding-bottom: 20px;
+    display: block;
+    float: right;
+    width: 100%;
+  }
+  .node-type-statute div.row.c-law-sibling-links span.nav-body {
+    display: none;
+  }
 }
 

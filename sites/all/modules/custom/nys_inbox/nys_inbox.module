@@ -287,11 +287,14 @@ function nys_inbox_mail($key, &$message, $params) {
   );
 
   // Take a few defaults from the passed parameters.
-  $message['body'][] = $params['body'];
+  if (isset($params['body'])) {
+    $message['body'][] = $params['body'];
+  }
   // For subject and content-type header, replace message data only if the params entry is populated.
   if (isset($params['subject'])) {
     $message['subject'] = $params['subject'];
   }
+  // Grab the content type.
   if (isset($params['content-type'])) {
     $message['headers']['Content-Type'] = $params['content-type'];
   }

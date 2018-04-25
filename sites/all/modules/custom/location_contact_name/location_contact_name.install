@@ -79,7 +79,8 @@ function location_contact_name_update_5300() {
     db_create_table('location_contact_name', $schema['location_contact_name']);
   }
   else {
-    // If the table WAS created (i.e. user manually fixed bug and reinstalled), g/c the postal_code column.
+    // If the table WAS created (i.e. user manually fixed bug and reinstalled),
+    // g/c the postal_code column.
     if (db_field_exists('location_contact_name', 'postal_code')) {
       db_drop_field('location_contact_name', 'postal_code');
     }

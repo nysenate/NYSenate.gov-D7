@@ -47,9 +47,16 @@ function nys_statute_drush_command() {
  * $arg1  -  An optional argument.
  */
 function drush_nys_statute_test_statute($arg1 = NULL) {
-  $retval = nys_statute_test_statute($arg1);
-  drush_log($retval, 'ok');
 
+  $node = nys_statute_node_load_by_statute_id($arg1);
+  if ($node === FALSE) {
+    print "$arg1 NOT FOUND. \r\nExample: ABP/212";
+  }
+  else {
+    print_r($node);
+  }
+  
   // Log to the command line with an OK status.
   drush_log('Completed Test.', 'ok');
+  
 }

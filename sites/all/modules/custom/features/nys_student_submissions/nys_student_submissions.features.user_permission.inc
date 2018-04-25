@@ -10,6 +10,15 @@
 function nys_student_submissions_user_default_permissions() {
   $permissions = array();
 
+  // Exported permission: 'create field_hannon_district_status'.
+  $permissions['create field_hannon_district_status'] = array(
+    'name' => 'create field_hannon_district_status',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'field_permissions',
+  );
+
   // Exported permission: 'create field_hannon_star_rating'.
   $permissions['create field_hannon_star_rating'] = array(
     'name' => 'create field_hannon_star_rating',
@@ -46,6 +55,15 @@ function nys_student_submissions_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Student Contest Judge' => 'Student Contest Judge',
+    ),
+    'module' => 'field_permissions',
+  );
+
+  // Exported permission: 'edit field_hannon_district_status'.
+  $permissions['edit field_hannon_district_status'] = array(
+    'name' => 'edit field_hannon_district_status',
+    'roles' => array(
+      'Administrator' => 'Administrator',
     ),
     'module' => 'field_permissions',
   );
@@ -90,6 +108,15 @@ function nys_student_submissions_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
+  // Exported permission: 'edit own field_hannon_district_status'.
+  $permissions['edit own field_hannon_district_status'] = array(
+    'name' => 'edit own field_hannon_district_status',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'field_permissions',
+  );
+
   // Exported permission: 'edit own field_hannon_star_rating'.
   $permissions['edit own field_hannon_star_rating'] = array(
     'name' => 'edit own field_hannon_star_rating',
@@ -130,6 +157,15 @@ function nys_student_submissions_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
+  // Exported permission: 'view field_hannon_district_status'.
+  $permissions['view field_hannon_district_status'] = array(
+    'name' => 'view field_hannon_district_status',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'field_permissions',
+  );
+
   // Exported permission: 'view field_hannon_star_rating'.
   $permissions['view field_hannon_star_rating'] = array(
     'name' => 'view field_hannon_star_rating',
@@ -166,6 +202,15 @@ function nys_student_submissions_user_default_permissions() {
     'roles' => array(
       'Administrator' => 'Administrator',
       'Student Contest Judge' => 'Student Contest Judge',
+    ),
+    'module' => 'field_permissions',
+  );
+
+  // Exported permission: 'view own field_hannon_district_status'.
+  $permissions['view own field_hannon_district_status'] = array(
+    'name' => 'view own field_hannon_district_status',
+    'roles' => array(
+      'Administrator' => 'Administrator',
     ),
     'module' => 'field_permissions',
   );

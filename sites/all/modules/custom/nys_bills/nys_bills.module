@@ -45,7 +45,7 @@ function nys_bills_user_login(&$edit, $account) {
       // matching the current user's email address.  We need
       // fid (flagging PK) and vote_id (votingapi_vote PK).
       $bills_records = db_select('nys_bills_anon')
-        ->fields('nys_bills_anon', array('sid','fid','vote_id'))
+        ->fields('nys_bills_anon', array('sid', 'fid', 'vote_id'))
         ->condition('email', $this_user->mail)
         // This is now limited to the most-recent record.
         ->orderBy('sid', 'DESC')
@@ -85,10 +85,6 @@ function nys_bills_user_login(&$edit, $account) {
           ->execute();
         nyslog("update return=" . var_export($vote_update, 1));
 
-        // TODO: Implement sanity check/error reporting?
-        // Here, $(flag|vote)_update should hold number of rows changed.
-        // Each should match their respective count($all_ids).
-
         // Remove the anonymous user records.
         nyslog("deleting anonymous records:\n" . var_export($change_ids['anon'], 1));
         db_delete('nys_bills_anon')
@@ -115,6 +111,13 @@ function nys_bills_user_login(&$edit, $account) {
 function nys_bills_node_view($node, $view_mode, $langcode) {
   if ($node->type == 'bill' && $view_mode == 'full') {
     $node->content['bill_form'] = drupal_get_form('nys_bills_bill_form', $node);
+
+    // If there's no alias for this bills node, redirect to 404.
+    $current_path = current_path();
+    $path_alias = drupal_lookup_path('alias', $current_path);
+    if (!$path_alias) {
+      drupal_not_found();
+    }
   }
 }
 
@@ -161,7 +164,7 @@ function _nys_bills_record_anonymous_user($node, $values) {
   // Create a default registration form ...
   $registration_form_state = _nys_registration_create_form_object($values);
   $registration_form_state['object']->agree_terms = TRUE;
-  $registration_form_state['object']->fbuid       = NULL;
+  $registration_form_state['object']->fbuid = NULL;
 
   // ... and call SAGE district lookup.
   nys_registration_wizard_next($registration_form_state);
@@ -205,8 +208,13 @@ function _nys_bills_record_anonymous_user($node, $values) {
  *
  * See the wrapped function for a description of parameters.
  *
- * @param $conditions
- * @param null $fields
+ * @param array $conditions
+ *   An array of ('field_name' => 'field_value') elements used as query
+ *   conditions.
+ * @param null|array $fields
+ *   An array of field names to include in the return.  If nothing is passed,
+ *   a default list of fields is used.
+ *
  * @return mixed|null
  *   An object representing a single anonymous record, or NULL if none found.
  */
@@ -352,7 +360,7 @@ function nys_bills_votingapi_insert($votes) {
       ->condition('bid', $the_vote['entity_id'])
       ->condition('session_id', $sid)
       ->execute();
-    nyslog("updating nys_bills_anon vote_id={$the_vote['vote_id']}, ret=".var_export($update,1));
+    nyslog("updating nys_bills_anon vote_id={$the_vote['vote_id']}, ret=" . var_export($update, 1));
   }
 }
 
@@ -507,6 +515,9 @@ function nys_bills_send_private_message($message) {
   return $bills_flag_message;
 }
 
+/**
+ * Helper function to retrieved cached bills data.
+ */
 function nys_bills_get_bill_versions($node_type, $bill_base_print_no, $bill_session_year) {
   // We're using drupal_html_class() ensure that parameters
   // have no spaces in them.
@@ -522,13 +533,13 @@ function nys_bills_get_bill_versions($node_type, $bill_base_print_no, $bill_sess
 
   $results = [];
   if ($bill_base_print_no && $bill_session_year && $node_type) {
-    $query = "SELECT n.title, n.nid, os.field_ol_session_value " .
-      "FROM field_data_field_ol_base_print_no pn JOIN node n " .
-      "ON n.nid = pn.entity_id " .
-      "JOIN field_data_field_ol_session os " .
-      "ON os.entity_id = pn.entity_id AND os.bundle = pn.bundle " .
-      "WHERE pn.field_ol_base_print_no_value = :base_print_no " .
-      "AND pn.bundle = :bundle AND os.field_ol_session_value = :session_year;";
+    $query = "SELECT n.title, n.nid, os.field_ol_session_value
+      FROM field_data_field_ol_base_print_no pn JOIN node n
+      ON n.nid = pn.entity_id
+      JOIN field_data_field_ol_session os
+      ON os.entity_id = pn.entity_id AND os.bundle = pn.bundle
+      WHERE pn.field_ol_base_print_no_value = :base_print_no
+      AND pn.bundle = :bundle AND os.field_ol_session_value = :session_year;";
     $queryargs = [
       ':base_print_no' => $bill_base_print_no,
       ':bundle' => $node_type,
@@ -545,4 +556,3 @@ function nys_bills_get_bill_versions($node_type, $bill_base_print_no, $bill_sess
   cache_set($cid, $results, 'cache', CACHE_PERMANENT);
   return $results;
 }
-

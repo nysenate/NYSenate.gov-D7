@@ -246,10 +246,7 @@ abstract class YearlySpotcheckDumpQuery extends SpotcheckDumpQuery {
    * @param int $year
    */
   protected function addConditions($query, $year) {
-    $or = db_or();
-    $or->condition($this::$year_alias . '.' . $this::$year_field, $year, '=');
-    $or->condition($this::$year_alias . '.' . $this::$year_field, $year + 1, '=');
-    $query->condition($or);
+    $query->condition($this::$year_alias . '.' . $this::$year_field, $year, '=');
   }
 }
 

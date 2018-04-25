@@ -109,9 +109,9 @@ Feature: As an anonymous user I should be able to support and oppose bills
     And I press "Oppose this bill"
     And I wait for AJAX to finish
     And the response should contain "Success! Your NY State Senate Account has been created. You can activate your account by visiting the URL that was just sent to the email address you provided."
-    Then I log in as "146681"
+    Then I log in as user with "useremail@example.com" email
     And I go to "/user"
-    And I click "Manage Kevin S. Parker's inbox"
+    And I click "Manage John Smith's inbox"
     Then I should see "Behat Test-user opposed A8723"
     And I should see "Behat message for senator"
     And I clean up test user account created
@@ -122,7 +122,7 @@ Feature: As an anonymous user I should be able to support and oppose bills
     And I click "Nay"
     And I fill in "First Name" with "Behat"
     And I fill in "Last Name" with "Test-user"
-    And I fill in "Email Address" with "nys.senate.dev+emailtest@gmail.com"
+    And I fill in "Email Address" with "useremail@example.com"
     And I click the ".autocomplete-manual-switch" element
     And I fill in "Street Address" with "426 2nd St #3"
     And I fill in "City" with "Brooklyn"
