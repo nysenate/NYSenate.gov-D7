@@ -1,35 +1,35 @@
 /*-------------------------------------
 /
-/ EMBEDDED ITEMS 
+/	EMBEDDED ITEMS
 / shows up within articles
 / and about page
 /
 /-------------------------------------*//*-------------------------------------
-/ BLOCKQUOTE
+/	BLOCKQUOTE
 /-------------------------------------*/.c-blockquote {color: #444444;font-family: "Adele SemiBold";font-size: 18px;line-height: 1.3em;margin-bottom: 20px;}/*-------------------------------------
-/ PULL QUOTE -- actually blockquote.
+/	PULL QUOTE -- actually blockquote.
 /-------------------------------------*/.c-pullquote {margin: 0;position: relative;color: #444444;font-family: "Adelle Semibold";padding: 50px 0 40px;font-size: 18px;line-height: 1.3em;}.c-pullquote p:before {position: absolute;top: 0;left: -0.2em;font-size: 2.7em;}.c-pullquote:before {position: absolute;top: 0;left: -0.2em;font-size: 2.7em;}blockquote {margin: 0;border: none;}blockquote p {border: none;margin: 0;position: relative;color: #444444;font-family: "Adelle Semibold";padding: 50px 0 40px;font-size: 18px;line-height: 1.3em;}blockquote p:before {position: absolute;top: 0;left: -0.2em;font-size: 2.7em;}.c-pullquote--citation {display: block;margin-top: 20px;color: #444444;font-family: "Proxima Nova Regular";text-transform: uppercase;font-size: 12px;}/*-------------------------------------
-/ EMBED IMG - 
+/	EMBED IMG -
 /-------------------------------------*/.media-media_landscape_image,.c-embed-img,.c-news--body .media-element-container,.page-node-about .media-element-container {display: block;clear: left;width: 100%;margin-bottom: 20px;}.media-element-container.media-media_portrait_image,.media-element-container.media-media_landscape_image {max-width: 400px;}/*----------------------------
 / EMBED VIDEO
 /----------------------------*/.c-embed-vid,.media-youtube-video {width: 100%;clear: both;margin-bottom: 40px;}/*----------------------------
 / EMBED CAPTION
 /----------------------------*/.c-embed-caption {display: block;width: 100%;padding: 10px 20px;background: #EEEEEE;font-family: "Proxima Nova Regular";font-size: 12px;line-height: 1.5em;letter-spacing: 0.05em;}.c-embed-caption:empty {padding: 0;background: transparent;}/*-------------------------------------
-/ CUSTOM BUTTON
-/ Solid bg - color set on element 
-/   varies based on Senator theme
-/   span as child with text
-/ ** assumes absolutely positoned at 
-/   at the bottom of its parent
+/	CUSTOM BUTTON
+/ Solid bg - color set on element
+/		varies based on Senator theme
+/ 	span as child with text
+/ ** assumes absolutely positoned at
+/		at the bottom of its parent
 /-------------------------------------*/.webform-submit {text-align: left;text-decoration: none;text-transform: uppercase;color: #fff;font-family: "Proxima Nova SemiBold";letter-spacing: 0.2em;margin-bottom: 60px;-webkit-transition: background-color 0.25s ease 0s;-moz-transition: background-color 0.25s ease 0s;-ms-transition: background-color 0.25s ease 0s;-o-transition: background-color 0.25s ease 0s;transition: background-color 0.25s ease 0s;}.webform-submit:before {display: inline-block;vertical-align: middle;text-align: center;height: 100%;margin-right: 0.1em;font-size: 32px;}.webform-submit span {vertical-align: middle;width: 80%;line-height: 1.5em;}.webform-submit span a {color: #fff;vertical-align: middle;display: inline-block;}.webform-submit:hover {color: #fff;}.c-block--btn {position: absolute;bottom: 0;left: 0;width: 100%;margin: 0;padding: 0;text-align: left;text-decoration: none;text-transform: uppercase;color: #fff;font-family: "Proxima Nova SemiBold";letter-spacing: 0.2em;font-size: 12px;line-height: 60px;height: 60px;}.c-block--btn:before {display: inline-block;vertical-align: middle;text-align: center;height: 100%;margin-right: 0.1em;font-size: 32px;}.c-block--btn span {display: inline-block;vertical-align: middle;width: 80%;line-height: 1.5em;}.c-block--btn span a {color: #fff;vertical-align: middle;display: inline-block;}.c-block--btn:hover {color: #fff;}/*-------------------------------------
-/ CTA BUTTON
+/	CTA BUTTON
 /-------------------------------------*/.c-btn--cta {display: inline-block;position: relative;padding: 0 20px;height: 60px;min-width: 215px;color: #fff;text-align: center;text-transform: uppercase;font-family: "Proxima Nova SemiBold";font-size: 12px;letter-spacing: 0.2em;line-height: 60px;}.c-btn--cta a {color: #fff;}.c-btn--cta__sign {min-width: 250px;padding: 0;text-align: left;}.c-btn--cta__sign:before {display: none;}.c-btn--cta__sign .flag-wrapper {display: block;position: relative;height: 100%;width: 100%;}.c-btn--cta__sign .flag-wrapper .unflag-disabled,.c-btn--cta__sign .flag-wrapper .flag-link-toggle {position: relative;display: block;height: 100%;width: 100%;padding: 0 20px;}.c-btn--cta__sign .flag-wrapper .unflag-disabled:before,.c-btn--cta__sign .flag-wrapper .flag-link-toggle:before {margin-right: 10px;font-size: 28px;}.c-btn--cta__sign .flag-wrapper .unflag-disabled {padding: 0 15px;}.c-btn--cta__sign .flag-wrapper .unflag-disabled:before {display: none;}.c-btn--cta__sign .flag-wrapper .flag-throbber {position: absolute;top: 0;left: 0;right: 0;bottom: 0;margin: auto;height: 20px;width: 20px;pointer-events: none;}.c-btn--cta__sign .flag-success-message {position: absolute;top: 60px;left: 0;width: 280px;padding: 10px 20px;background: #EEEEEE;white-space: nowrap;font-size: 12px;line-height: 12px;font-family: "Proxima Nova SemiBold";color: #666666;text-transform: none;}.c-btn--cta__sign .flag-success-message:before {display: inline-block;vertical-align: middle;font-size: 15px;}.c-btn--cta__sign .flag-success-message .message-text {display: inline-block;vertical-align: middle;}.c-btn--cta__sign .flag-success-message .message-text span {display: block;}.c-btn--cta__sign .flag-success-message .message-text span + span {margin-top: 5px;white-space: normal;}.c-btn--cta-caption {display: block;margin: 20px 0;color: #666666;font-family: "Proxima Nova Regular";font-size: 12px;}/*-------------------------------------
-/ HALF BUTTON
+/	HALF BUTTON
 /-------------------------------------*/.c-half-btn {width: 49.5%;}.c-half-btn--left {left: 0;}.c-half-btn--right {left: auto;right: 0;}/*--------------------------------------
-/ REVEAL BUTTON
-/ used to hide and show content
-/ full-width, variable text and 
-/ open / close arrow
+/	REVEAL BUTTON
+/	used to hide and show content
+/	full-width, variable text and
+/	open / close arrow
 /--------------------------------------*/.nys-btn-more {clear: both;display: block;position: relative;width: 100%;min-height: 50px;margin-bottom: 20px;padding: 0;background: #EEEEEE;text-align: center;text-transform: uppercase;color: #2B6990;font-family: "Proxima Nova SemiBold";font-size: 14px;letter-spacing: 0.1em;line-height: 50px;}.nys-btn-more:after {margin-top: -0.1em;font-size: 1.5em;}.nys-btn-more--bg {background: #2B6990;color: #fff;}/*-------------------------------------
 / TOGGLE BUTTON
 /-------------------------------------*/.c-block--btn-toggle {z-index: 5;top: 0;right: 0;left: auto;height: 42px;width: 42px;}.c-block--btn-toggle:after {width: 100%;height: 100%;padding-left: 0.1em;text-align: center;line-height: 42px;font-size: 26px;}.c-block__collapsed .c-block--btn-toggle {position: absolute;height: 42px;width: 42px;}.c-block__collapsed .c-block--btn-toggle:after {font-size: 26px;line-height: 42px;}/*-------------------------------------
@@ -44,7 +44,7 @@
 /-------------------------------*/.c-senator-footer {padding: 0px 20px 30px 20px;background: #EEEEEE;}.c-senator-footer .l-row {max-width: 440px;}.c-senator-footer a {font-size: 11px;letter-spacing: 0.1em;font-family: "Proxima Nova SemiBold";text-transform: uppercase;}.c-senator-footer .c-nav---list {padding: 0;}.c-senator-footer .c-nav---list li {width: auto;}.c-senator-footer-col {width: 25%;float: left;}.c-senator-footer-col__home {width: 100%;padding-bottom: 10px;border-bottom: 2px solid #e1e1e3;margin-bottom: 20px;}.c-senator-footer-col__home a {float: left;width: 100%;margin-top: 25px;color: #444444;}.c-senator-footer-col__home a span {color: #444444;padding-left: 20px;}.c-senator-footer-col__home a span:before {display: none;}.c-senator-footer-col__home img.c-seal-footer {width: 42px;height: 42px;float: left;margin-top: -15px;background: none;}.c-senator-footer-col__nav {width: 70%;border-right: 2px solid #e1e1e3;min-height: 150px;}.c-senator-footer-col__nav ul {margin: 0;padding-left: 0;list-style: none;}.c-senator-footer-col__nav li {font-size: 11px;line-height: 1em;margin-bottom: 25px;}.c-senator-footer-col__nav li:last-child {margin-bottom: 0;}.c-senator-footer-col__nav li a {color: #444444;}.c-senator-footer-col__nav .c-nav--list {height: auto;display: block;width: auto;padding: 0;}.c-senator-footer-col__nav .c-nav--list li {border: none;width: 100%;margin-bottom: 25px;}.c-senator-footer-col__nav .c-nav--list li:last-child {margin-bottom: 0;}.c-senator-footer-col__nav .c-nav--list li a {padding: 0;text-align: left;}.senator-inactive .c-senator-footer-col__nav .c-nav--list li {display: inline-block;width: auto;padding-right: 0;}.senator-inactive .c-senator-footer-col__nav .c-nav--list li:nth-child(1),.senator-inactive .c-senator-footer-col__nav .c-nav--list li:nth-child(2),.senator-inactive .c-senator-footer-col__nav .c-nav--list li:nth-child(3) {display: none;}.senator-inactive .c-senator-footer-col__nav .c-nav--list li a {display: none;}.senator-inactive .c-senator-footer-col__nav .c-nav--list li a.visible {display: block;}.c-senator-footer-col__social {width: 30%;padding-left: 30px;}.c-senator-footer-col__social ul {margin: 0;padding: 0;}.c-senator-footer-col__social li {display: block;float: left;clear: left;margin-top: 10px;height: 25px;}.c-senator-footer-col__social li:first-child {margin-top: 0;}.c-senator-footer-col__social li a {font-size: 26px;display: block;width: 40px;}.c-senator-footer-col__social li a.icon-replace__twitter:after,.c-senator-footer-col__social li a.c-btn--twitter:after,.c-senator-footer-col__social li a.share-icon-twitter:after,.c-senator-footer-col__social li a.c-detail--social-item.twitter:after {margin-left: 5px;}.c-senator-footer-col__newsletter {width: 100%;margin-top: 25px;}.c-senator-footer-col__newsletter .c-btn__newsletter,.c-senator-footer-col__newsletter .c-btn__contact {height: 50px;margin: 0 0 10px 0;padding: 0;text-transform: uppercase;font-size: 14px;line-height: 14px;letter-spacing: 0.1em;font-family: "Proxima Nova SemiBold";width: 100%;display: block;color: #fff;text-decoration: none;text-align: center;}.c-senator-footer-col__newsletter .c-btn__newsletter span:before,.c-senator-footer-col__newsletter .c-btn__contact span:before {margin-right: 5px;font-size: 34px;line-height: 14px;}.c-senator-footer-caption {color: #666;font-size: 11px;line-height: 1em;font-family: 'Proxima Nova Regular';display: none;}.c-senator-footer-caption span.full-name {display: none;}.inactive-pallette .c-senator-footer--legislation,.inactive-pallette .c-senator-footer--calendar,.inactive-pallette .c-senator-footer--contact,.inactive-pallette .c-senator-footer-col__social,.inactive-pallette .c-senator-footer-col__newsletter {display: none;}.inactive-pallette .c-senator-footer-col__nav {border: none;}/*------------------------------
 / SITE FOOTER
 /-------------------------------*/.c-site-footer {overflow: hidden;min-height: 75px;background: #eaeaec;padding: 0px 20px 25px;}.c-site-footer .l-row {max-width: 440px;overflow: hidden;}.c-site-footer a {font-family: 'Proxima Nova Regular';font-size: 11px;text-decoration: none;color: #444444;}.c-site-footer ul {max-width: 440px;margin: 0 auto;padding: 0;list-style: none;}.c-site-footer ul li {margin-top: 15px;width: 50%;float: left;}.c-site-footer ul li + li {margin-top: 15px;}.c-senator-footer-caption {margin: 0;}/*----------------------------
-/ Transition Speeds
+/	Transition Speeds
 /-----------------------------*//*------------------------------
 / SITE WIDE TOP BAR
 /-------------------------------*/.c-header-bar {height: 60px;background: #fff;z-index: 10;overflow: hidden;-webkit-transition: height 0.3s ease 0s;-moz-transition: height 0.3s ease 0s;-ms-transition: height 0.3s ease 0s;-o-transition: height 0.3s ease 0s;transition: height 0.3s ease 0s;}.c-topbar {position: relative;display: block;height: 100%;width: 100%;}.c-topbar:before {content: "";height: 100%;width: 1px;margin-left: -1px;display: inline-block;vertical-align: middle;}.c-page-title {display: inline-block;vertical-align: middle;margin: 0;font-family: 'FreightText Book';font-size: 12px;}.c-page-title a {position: relative;display: inline-block;vertical-align: middle;min-width: 250px;color: #444444;white-space: nowrap;}.c-page-title a:before {content: "";display: inline-block;vertical-align: middle;width: 20px;height: 20px;margin-right: 10px;background: transparent url("/sites/all/themes/nysenate/images/nys_logo_header240x240.jpg") center center no-repeat;background-size: cover;-webkit-transition: all 0.15s ease 0s;-moz-transition: all 0.15s ease 0s;-ms-transition: all 0.15s ease 0s;-o-transition: all 0.15s ease 0s;transition: all 0.15s ease 0s;}/*----------------------------
@@ -56,29 +56,29 @@
 / BILLS - following or not
 / ISSUES - following or not
 /
-/ DEFAULT IS SENATOR
+/	DEFAULT IS SENATOR
 /
 /----------------------------*/.c-actionbar,.c-senate-status {position: relative;display: block;top: 0;width: 100%;height: 60px;padding: 0 60px 0 18px;-webkit-transition: margin 0.25s ease 0s;-moz-transition: margin 0.25s ease 0s;-ms-transition: margin 0.25s ease 0s;-o-transition: margin 0.25s ease 0s;transition: margin 0.25s ease 0s;}.c-actionbar:before,.c-senate-status:before {content: "";position: relative;display: inline-block;height: 100%;width: 1px;vertical-align: middle;margin-left: -4px;}.c-actionbar .c-actionbar--cta,.c-senate-status .c-actionbar--cta {margin: 0;color: #fff;font-size: 18px;max-width: 320px;}.c-actionbar .c-actionbar--info,.c-senate-status .c-actionbar--info {display: inline-block;vertical-align: middle;}.c-actionbar .c-actionbar--info .c-actionbar--cta,.c-senate-status .c-actionbar--info .c-actionbar--cta {font-size: 14px;}.c-actionbar .nys-senator,.c-senate-status .nys-senator {margin-bottom: 0;}.c-actionbar .nys-senator--title,.c-senate-status .nys-senator--title {margin: 0 0 3px 0;color: #fff;text-transform: uppercase;font-family: "Proxima Nova Regular";font-size: 12px;line-height: 1em;letter-spacing: 0.1em;}.c-actionbar .nys-senator--name,.c-senate-status .nys-senator--name {color: #fff;text-transform: capitalize;font-family: "Adelle Regular";font-size: 15px;line-height: 1.2em;letter-spacing: 0.05em;}.c-actionbar .c-block--btn,.c-senate-status .c-block--btn {position: absolute;top: 0;right: 0;bottom: 0;left: auto;height: 100%;width: 100%;border: none;font-size: 12px;}.c-actionbar .c-block--btn a,.c-senate-status .c-block--btn a {display: block;position: relative;width: 100%;height: 100%;padding: 0 18px;line-height: 60px;color: #fff;}.c-actionbar .c-block--btn a:before,.c-senate-status .c-block--btn a:before {line-height: 60px;font-size: 32px;margin-right: 18px;}.c-actionbar .c-block--btn:before,.c-actionbar .c-block--btn:after,.c-senate-status .c-block--btn:before,.c-senate-status .c-block--btn:after {line-height: 60px;font-size: 32px;margin-right: 18px;}.c-actionbar [class*="c-btn--follow-"],.c-senate-status [class*="c-btn--follow-"] {padding: 0;}.c-actionbar [class*="c-btn--follow-"]:before,.c-actionbar [class*="c-btn--follow-"]:after,.c-senate-status [class*="c-btn--follow-"]:before,.c-senate-status [class*="c-btn--follow-"]:after {display: none;}.c-actionbar [class*="c-btn--follow-"] .flag-throbber,.c-senate-status [class*="c-btn--follow-"] .flag-throbber {position: absolute;top: 0;}.c-actionbar [class*="c-btn--follow-"] .flag-wrapper,.c-senate-status [class*="c-btn--follow-"] .flag-wrapper {position: absolute;top: 0;left: 0;height: 100%;width: 100%;}.c-actionbar [class*="c-btn--follow-"] .flag-link-toggle,.c-senate-status [class*="c-btn--follow-"] .flag-link-toggle {position: relative;top: 0;left: 0;height: 100%;width: 100%;padding: 0 18px;line-height: 60px;}.c-actionbar [class*="c-btn--follow-"] .flag-link-toggle:before,.c-senate-status [class*="c-btn--follow-"] .flag-link-toggle:before {line-height: 60px;font-size: 32px;margin-right: 18px;}.c-actionbar [class*="c-btn--follow-"] .flag-success-message,.c-senate-status [class*="c-btn--follow-"] .flag-success-message {position: absolute;top: 60px;left: 0;width: 100%;background: #EEEEEE;padding: 0;white-space: nowrap;font-family: "Proxima Nova SemiBold";color: #666666;text-transform: none;}.c-actionbar [class*="c-btn--follow-"] .flag-success-message .close-message,.c-senate-status [class*="c-btn--follow-"] .flag-success-message .close-message {position: absolute;display: block;top: 0;right: 0;width: 30px;height: 30px;padding: 0;}.c-actionbar [class*="c-btn--follow-"] .flag-success-message .close-message:after,.c-senate-status [class*="c-btn--follow-"] .flag-success-message .close-message:after {color: #666666;font-size: 23px;line-height: 30px;}.c-actionbar [class*="c-btn--follow-"] .message-text,.c-senate-status [class*="c-btn--follow-"] .message-text {display: block;padding: 30px 20px 20px;}.c-actionbar [class*="c-btn--follow-"] .message-text p,.c-senate-status [class*="c-btn--follow-"] .message-text p {display: inline-block;vertical-align: middle;font-size: 12px;line-height: 12px;font-family: "Proxima Nova SemiBold";}.c-actionbar [class*="c-btn--follow-"] .message-text p > span,.c-senate-status [class*="c-btn--follow-"] .message-text p > span {display: block;}.c-actionbar [class*="c-btn--follow-"] .message-text:before,.c-senate-status [class*="c-btn--follow-"] .message-text:before {display: inline-block;vertical-align: middle;font-size: 15px;}.c-actionbar [class*="c-btn--follow-"] .flag-success-btn,.c-senate-status [class*="c-btn--follow-"] .flag-success-btn {text-transform: uppercase;}.c-actionbar [class*="c-btn--follow-"] .flag-success-btn:before,.c-senate-status [class*="c-btn--follow-"] .flag-success-btn:before {margin-right: 5px;}.c-actionbar--loggedin .c-block--btn {width: 60px;}.c-actionbar--loggedin .c-block--btn:after {width: 100%;text-align: center;}.front .c-actionbar,.front .c-senate-status {max-width: 420px;margin: 0 auto;}.front .l-header .c-actionbar,.front .l-header .c-senate-status {max-width: none;}.front .l-header .c-actionbar.hidden,.front .l-header .c-senate-status.hidden {margin-top: -60px;}.front .c-senate-status {text-align: center;padding: 0;height: 50px;color: white;font-size: 18px;background: #CB8D37;}.front .c-senate-status .c-status-text {padding: 13px 45px 13px 0px;color: #fff;text-decoration: none;display: inline-block;position: relative;}.front .c-senate-status .c-status-text:after {content: "";width: 30px;height: 30px;background: url("/sites/all/themes/nysenate/images/gavel.png");background-size: 100%;background-position: 75%;background-repeat: no-repeat;top: 10px;right: 5px;position: absolute;}/*------------------------------
-/ NAV -
+/	NAV -
 /-------------------------------*/.c-nav--wrap {position: fixed;top: -100vh;left: 0;right: 0;bottom: 0;height: 100vh;width: 100vw;z-index: 6;-webkit-transition: top 0.3s ease-out 0s;-moz-transition: top 0.3s ease-out 0s;-ms-transition: top 0.3s ease-out 0s;-o-transition: top 0.3s ease-out 0s;transition: top 0.3s ease-out 0s;}.c-nav {position: absolute;top: 0;left: 0;width: 100%;height: 100%;padding: 0;-webkit-transition: height 0.3s ease-out 0s;-moz-transition: height 0.3s ease-out 0s;-ms-transition: height 0.3s ease-out 0s;-o-transition: height 0.3s ease-out 0s;transition: height 0.3s ease-out 0s;}.c-nav > nav {position: absolute;top: 0;bottom: 0;right: 0;left: 0;margin: auto;width: 100%;height: 100%;padding: 125px 0 0 0;overflow: scroll;}.c-nav .c-header--btn {position: relative;display: block;bottom: 0;left: 0;width: 100%;height: 72px;padding: 0 0 0 30px;color: #fff;font-family: 'Proxima Nova SemiBold';font-size: 12px;line-height: 72px;text-transform: uppercase;letter-spacing: 0.1em;}.c-nav .c-header--btn:hover {color: #fff;}.c-nav .c-header--btn:before {font-size: 1.65em;margin-top: -0.25em;margin-right: 8px;}.c-nav .c-header--btn.has-avatar:before {display: none;}.c-nav .c-header--btn.has-avatar > span,.c-nav .c-header--btn.has-avatar > img {display: inline-block;vertical-align: middle;}.c-nav .c-header--btn.has-avatar img {height: 45px;width: 45px;margin-right: 15px;overflow: hidden;-webkit-border-radius: 50%;border-radius: 50%;background-clip: padding-box;}.c-nav .c-header--btn-senator {border-top: 1px solid #fff;}.c-nav .c-header--btn-senator .nys-senator--title,.c-nav .c-header--btn-senator .nys-senator--name {color: #fff;}.c-nav .c-header--btn-find-senator {border-top: 1px solid #fff;}.c-nav .c-header--btn-edit {border-top: 1px solid #fff;}.c-mobile-login--list {position: relative;width: 100%;height: 72px;margin-top: 20px;bottom: 0;left: 0;}.c-mobile-login--list .c-header--btn-logout:last-child,.c-mobile-login--list .c-header--btn-login:last-child {padding-bottom: 60px;height: 132px;}.c-mobile-login--list .c-header--btn-logout:last-child > a,.c-mobile-login--list .c-header--btn-login:last-child > a {display: block;position: absolute;height: 100%;width: 100%;top: 0;left: 0;padding-left: 65px;color: #fff;}.c-site-search {position: absolute;top: 40px;width: 100%;padding: 30px 20px 20px 20px;margin: 0;}.c-site-search .c-site-search--box {display: block;background: none;border: none;height: 45px;margin: 0 45px 0 0;padding: 0 0 0 20px;box-shadow: none;background: #fff;overflow: hidden;-webkit-border-radius: 5px;border-radius: 5px;background-clip: padding-box;float: left;}.c-site-search--title {display: none;}.c-block-advanced-search-link {margin-bottom: 30px;}.c-block-advanced-search-link .c-advanced-search--link {color: #CB8D37;text-transform: uppercase;font-size: 13px;}.c-site-search--btn:focus,.c-site-search--btn {position: absolute;top: 30px;right: 20px;padding: 0;height: 45px;width: 45px;font-size: 22px;background: transparent;}.c-site-search--btn:focus:after,.c-site-search--btn:after {width: 100%;padding: 0;line-height: 45px;}.c-site-search--btn:focus:hover,.c-site-search--btn:hover {background: transparent;}.search-open .c-site-search--btn.u-tablet-plus {display: none;}.c-nav--toggle {position: absolute;z-index: 10;top: 0;right: 0;left: auto;height: 40px;width: 40px;background: #fff;}.c-nav--toggle:after {width: 100%;margin-left: 1px;font-size: 24px;line-height: 60px;text-align: center;}.c-nav--toggle:hover {background: #fff;}.c-nav--list {list-style: none;padding: 0 20px;}.c-nav--list li {margin-top: 0;border-top: 1px solid #fff;text-transform: uppercase;font-family: "Proxima Nova Regular";font-size: 13px;letter-spacing: 0.1em;line-height: 1em;}.c-nav--list li a {display: block;height: auto;width: 100%;padding: 20px 0 20px 10px;}.c-nav--social {border-top: 1px solid #fff;margin: 0 20px;padding: 20px 0 0 5px;line-height: 1em;}.c-nav--social li {display: inline-block;border: none;margin-right: 10px;}.c-nav--social li a {width: 28px;height: 0;padding: 28px 0 0 0;font-size: 28px;color: #fff;}.c-nav--social li a:after {height: 28px;width: 28px;line-height: 28px;}.nav-open {max-height: 100vh;overflow: hidden;}.nav-open .c-nav--wrap {top: 0;}.nav-open .c-nav--toggle {position: absolute;height: 40px;width: 40px;}.nav-open .c-nav--toggle:after {font-size: 24px;}.collapsed .c-nav--toggle:after {line-height: 60px;color: #fff;}.senator-inactive .c-senator-nav--wrap .c-senator-nav .c-nav--list li {display: inline-block;width: auto;}.senator-inactive .c-senator-nav--wrap .c-senator-nav .c-nav--list li a {display: none;}.senator-inactive .c-senator-nav--wrap .c-senator-nav .c-nav--list li a.visible {display: block;}/* Admin Menu on Frontend
 ---------------------------------------------------------------------- */#admin-menu ul {clear: none;font-size: 10px;}body.adminimal-menu div#admin-menu a,body.adminimal-menu div#admin-menu span {font-size: 11px;font-family: 'Proxima Nova Regular';}/*-----------------------------
 /
-/ HERO AREAS
-/ 
+/	HERO AREAS
+/
 /-----------------------------*//*------------------------------
 / SITEWIDE HERO
 /-------------------------------*/.c-hero--tout {position: relative;padding: 0;}.c-hero--tout.c-hero--featured {padding: 20px;max-width: 440px;background: #fff;}.c-hero--welcome {padding: 30px 20px 30px;color: #444444;font-family: "Adelle Light";font-size: 24px;line-height: 1.5em;background: #fff;}.c-hero--welcome a {color: #CB8D37;border-bottom: 1px dotted;font-style: italic;-webkit-transition: color 0.2s ease 0s;-moz-transition: color 0.2s ease 0s;-ms-transition: color 0.2s ease 0s;-o-transition: color 0.2s ease 0s;transition: color 0.2s ease 0s;}.c-hero--welcome a:hover {color: #F1AF58;}.c-hero--date {display: inline-block;margin: 0 10px 20px 0;font-family: "Proxima Nova Regular";color: #888888;font-size: 12px;}.c-hero--committee {display: inline-block;margin-bottom: 20px;padding-left: 15px;border-left: 1px solid #AAAAAA;text-transform: uppercase;font-family: "Proxima Nova SemiBold";color: #CB8D37;font-size: 11px;letter-spacing: 0.1em;}.c-hero--title {color: #444444;font-family: "Adelle Light";font-size: 24px;line-height: 1.3em;}.c-hero--title a {color: #444444;}.c-hero--cta {position: relative;width: 100%;background: #2B6990;}.c-hero--cta:before {content: "";display: inline-block;vertical-align: middle;height: 100%;}.c-hero--cta .c-block--btn {position: relative;display: block;background: #004C71;font-size: 13px;}.c-hero--cta-msg {margin: 0;padding: 0 20px;display: inline-block;vertical-align: middle;color: #fff;font-family: "Adelle Regular";font-size: 15px;line-height: 1.5em;}/*------------------------------
 / SITEWIDE -- IN SESSION HERO
 / contains video element
 /-------------------------------*/.c-hero__in-session {background: #444444;}/*
-  TODO: make sure aspect ratio is correct
-  currently using 560 x 315 or .5625
+	TODO: make sure aspect ratio is correct
+	currently using 560 x 315 or .5625
 */.c-hero--video-wrapper {position: relative;width: 100%;height: 0;padding-top: 56.25%;}.c-hero--video {display: block;position: absolute;top: 0;left: 0;width: 100%;height: 100%;}.c-hero--video-info {padding: 30px 20px;}.c-video-info--title {font-family: "Proxima Nova Regular";color: #888888;font-size: 14px;text-transform: uppercase;letter-spacing: 0.1em;}.c-video-info--evt-title {font-family: "Adelle Light";color: #fff;font-size: 20px;}.c-video-info--date {margin: 0;font-family: "Proxima Nova Regular";color: #888888;font-size: 16px;}.c-hero--docket-wrapper {padding-top: 20px;}.c-docket--title {margin-bottom: 7px;font-family: "Proxima Nova Regular";color: #fff;font-size: 16px;text-transform: uppercase;letter-spacing: 0.1em;}.c-docket {max-width: 60%;height: 148px;list-style: none;overflow-y: scroll;overflow-x: hidden;}.c-docket--item {font-size: 17px;line-height: 1;padding: 10px 0;}.c-docket--bill-num {font-family: "Adelle SemiBold";color: #E29C44;}.c-docket--bill-num:after {content: "-";margin: 0 0.4em 0 0.7em;color: #888888;}.c-docket--bill-cat {font-family: "Proxima Nova Regular";color: #888888;font-size: 14px;text-transform: uppercase;}/*------------------------------
 / SENATOR HERO
 /-------------------------------*/.c-senator-hero {position: relative;}.c-senator-hero--info {padding: 20px 20px 60px;}.c-senator-hero--title {margin: 0 0 3px 0;font-family: "Proxima Nova Regular";text-transform: uppercase;line-height: 1em;letter-spacing: 0.1em;font-size: 12px;}.c-senator-hero--name {font-family: "Adelle Light";color: #fff;line-height: 1.2em;letter-spacing: 0.05em;font-size: 26px;margin: 0 0 15px 0;text-transform: capitalize;}.c-senator-hero--name a {color: #fff;}.c-senator-hero--roles {margin-bottom: 15px;font-family: "Proxima Nova SemiBold";color: #fff;font-size: 14px;letter-spacing: 0.1em;line-height: 1.3em;}.c-senator-hero--district {margin: 0 0 15px 0;text-transform: uppercase;font-family: "Proxima Nova Regular";font-size: 12px;}.c-senator-hero--district div {display: inline;}.c-senator-hero--social {display: none;}.c-senator-hero--contact-btn {height: 60px;padding-left: 20px;}.l-row--hero-live .c-actionbar {max-width: 1500px;}.c-hero-livestream-wrapper {background-color: #323232;color: white;}.c-hero-livestream-wrapper .c-video-redirect {color: #888888;padding: 1.5em;margin-left: auto;margin-right: auto;text-align: center;}.c-hero-livestream-wrapper .c-video-redirect a {color: white;}.c-hero-livestream-wrapper .c-hero-livestream-video {width: 100%;display: inline-block;}.c-hero-livestream-wrapper .c-hero-livestream-video .file-video-ustream .content {width: 100%;display: inline-block;position: relative;padding-bottom: 52.25%;padding-top: 59px;height: 0;}.c-hero-livestream-wrapper .c-hero-livestream-video .file-video-ustream .content iframe {position: absolute;top: 0;left: 0;width: 100% !important;height: 100% !important;}.c-hero-livestream-wrapper .c-hero-livestream-data {width: 100%;max-height: 70%;overflow-y: auto;display: inline-block;vertical-align: top;padding: 40px 30px;}.c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-meta h3 {font-family: "Adelle Light";font-size: 20px;line-height: 26px;margin-bottom: 15px;}.c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-meta h3 a {color: white;}.c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-meta .livestream-date {color: #888888;}.c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-description {display: block;font-weight: normal;line-height: 1.5;margin-bottom: 0.5rem;font-family: 'Proxima Nova Regular';font-size: 16px;}.c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-links {margin: 20px 0 20px 0;padding: 0;width: 90%;}.c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-links li {line-height: 16px;font-size: 16px;font-family: 'Proxima Nova Regular';}.c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-links a {color: #CB8D37;display: inline-block;width: 89%;vertical-align: top;}.c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-session-link {font-family: "Proxima Nova Regular";font-size: 12px;line-height: 18px;color: white;text-transform: uppercase;display: block;margin: 10px 0 0 0;}.c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched {margin-top: 20px;}.c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched label {color: white;}.c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched ul li {list-style: none;font-family: "Proxima Nova Regular";color: #888;font-size: 95.5%;line-height: 26px;text-transform: uppercase;display: inline;margin: 0 3.4% 0 0;}.c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched ul li:after {content: "|";display: inline;padding-left: 10px;}.c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched ul li a {font-family: "Adelle SemiBold";color: #CB8D37;font-size: 111%;}.c-hero-livestream-wrapper .c-hero-livestream-data .c-hero-livestream-sched ul li:last-child:after {display: none;}/*-------------------------------------------------
 /
-/ Chapter style
-/ TODO: Collapsible. 
+/	Chapter style
+/	TODO: Collapsible.
 / Also - not sure if 'chapters' is abstacted enough
 /
 /-------------------------------------------------*/.node-chapter {border-top: 1px solid #b0b0b0;overflow: hidden;}.node-chapter .node-title {position: relative;z-index: 3;padding: 15px 0 20px;background: #fff;color: #444444;font-family: "Adelle Light";font-size: 18px;line-height: 1.3em;cursor: pointer;margin: 0;}.node-chapter .content {position: relative;z-index: 1;}.node-chapter:last-child {margin-bottom: 20px;}.c-chapter-cta {display: block;margin-top: 5px;font-family: "Proxima Nova Regular";font-size: 12px;text-transform: uppercase;}.c-chapter__collapsed .content {display: none;}/*----------------------------------------------
@@ -92,12 +92,12 @@
 / BILLS / LEGISLATION -- featured -- COLLAPSED
 /---------------------------------------------*/.c-block__collapsed .c-bill-descript,.c-block__collapsed .c-bill-polling,.c-block__collapsed .sponsors {display: none;}.c-block__collapsed.c-block-legislation .c-block--btn-toggle {position: absolute;right: 0;left: auto;}.c-block__collapsed.c-block-legislation .c-block--btn-toggle:after {font-size: 26px;}.c-block__collapsed .c-legislation-info {padding-bottom: 20px;}.c-block__collapsed .c-legislation--quote .c-pullquote {padding-top: 50px;padding-bottom: 12px;font-size: 14px;line-height: 1.5em;}.c-block__collapsed .c-legislation--quote .c-pullquote:before {font-size: 3em;top: 0.35em;}.c-block__collapsed .c-legislation--quote .c-pullquote--citation {margin-top: 7px;font-size: 12px;}.c-block__collapsed .c-quote--title {display: none;}.c-block__collapsed .c-pullquote--citation.u-quote--has-img {display: block;}.c-block__collapsed .c-legislation--sponsor {display: none;}.c-search-legislation--link .c-container--link {position: relative;padding: 30px 0;float: left;}.c-bill--action-line-senate {text-transform: uppercase;}.c-bill--action-line-assembly {text-transform: capitalize;}.c-bill--actions-table THEAD {background-color: white;}.cbill--actions-table--row {padding: 18px 0px;border-bottom: 1px solid #bbbbbb;}.cbill--actions-table--row TD {line-height: 26px;background-color: white;}.cbill--actions-table--row:last-of-type {border-bottom: none;}TABLE.c-bill--actions-table {border: none;}TABLE.c-bill--actions-table,TABLE.c-bill--actions-table TBODY TR TD {color: #666;}.c-bill--session-year {font-size: 14px;color: #666666;font-family: "Proxima Nova SemiBold";margin-bottom: 15px;}.c-bill--actions-table-header {text-align: right;}.c-bill--actions-table-header STRONG {font-family: "Proxima Nova Regular";}.c-bill--action-line-senate.stricken,.c-bill--action-line-assembly.stricken {background-color: #A00101;font-family: "Proxima Nova SemiBold";color: white;border-radius: 4px;padding: 4px 8px;}.c-bill--actions-table-col1 {width: 30%;text-align: left;vertical-align: top;}.c-bill--actions-table-col2 {width: 70%;text-align: left;vertical-align: top;}.c-bill--action-line-senate.amended,.c-bill--action-line-assembly.amended {background-color: #2B6990;font-family: "Proxima Nova SemiBold";border-radius: 4px;color: white;padding: 4px 8px;}.c-bill--action-line-senate.substituted,.c-bill--action-line-assembly.substituted {background-color: #f1af58;font-family: "Proxima Nova SemiBold";border-radius: 4px;color: white;padding: 4px 8px;}.c-bill--vote {margin-bottom: 40px;clear: both;}.c-bill--vote-details.vote-header {width: 155px;height: 50px;font-size: 13px;color: #888888;margin-top: 10px;float: right;}.c-bill--vote-details.vote-header STRONG {font-family: 'Proxima Nova Regular';}.c-bill--vote-details .c-bill--vote-details-wrapper .vote-container {margin: 15px 0 0px 0;}.node-type-bill .c-detail--related .field-name-field-issues ul.links,.node-type-resolution .c-detail--related .field-name-field-issues ul.links {list-style-type: none;padding-left: 0;}.node-type-bill .c-detail--related .field-name-field-issues .textformatter-list,.node-type-resolution .c-detail--related .field-name-field-issues .textformatter-list {list-style-type: none;}.node-type-bill .c-detail--related .field-name-field-issues .textformatter-list li,.node-type-resolution .c-detail--related .field-name-field-issues .textformatter-list li {display: inline-block;margin: 0 10px 0 0;font-family: "Proxima Nova SemiBold";font-size: 12px;line-height: 14px;color: #CB8D37;text-transform: uppercase;}.node-type-bill .c-detail--related .field-name-field-issues .textformatter-list li a,.node-type-resolution .c-detail--related .field-name-field-issues .textformatter-list li a {color: #CB8D37;}.c-bill--substituted .c-bill--flag {border: 1px solid #CB8D37;color: #CB8D37;background: white;}.c-bill--substituted.c-bill-action--sub-flag {width: 100%;}.c-bill--substituted.c-bill-action--sub-flag .c-bill--flag {width: 100%;text-align: center;}.c-detail--subhead.c-detail--section-title.c-bill-detail--subhead {border-bottom: 1px solid #ddd;padding-bottom: 8px;}.trad_blue .c-quote--content a {color: #1B5187;}.cont_blue .c-quote--content a {color: #04A9C5;}.purple .c-quote--content a {color: #90668F;}.trad_red .c-quote--content a {color: #87002F;}.cont_red .c-quote--content a {color: #C62526;}.orange .c-quote--content a {color: #F0673D;}.trad_green .c-quote--content a {color: #60A35F;}.cont_green .c-quote--content a {color: #65C5B6;}.trad_blue .c-block-legislation-featured .c-bill-update--location,.cont_blue .c-block-legislation-featured .c-bill-update--location,.purple .c-block-legislation-featured .c-bill-update--location,.trad_red .c-block-legislation-featured .c-bill-update--location,.cont_red .c-block-legislation-featured .c-bill-update--location,.orange .c-block-legislation-featured .c-bill-update--location,.trad_green .c-block-legislation-featured .c-bill-update--location,.cont_green .c-block-legislation-featured .c-bill-update--location {display: inline;line-height: 1.3;}.trad_blue .c-block-legislation-featured .c-bill-update--location a,.cont_blue .c-block-legislation-featured .c-bill-update--location a,.purple .c-block-legislation-featured .c-bill-update--location a,.trad_red .c-block-legislation-featured .c-bill-update--location a,.cont_red .c-block-legislation-featured .c-bill-update--location a,.orange .c-block-legislation-featured .c-bill-update--location a,.trad_green .c-block-legislation-featured .c-bill-update--location a,.cont_green .c-block-legislation-featured .c-bill-update--location a {color: #fff;border-bottom: solid 0.05em #fff;}.trad_blue .c-block-legislation-featured .c-bill-update--location a:hover,.cont_blue .c-block-legislation-featured .c-bill-update--location a:hover,.purple .c-block-legislation-featured .c-bill-update--location a:hover,.trad_red .c-block-legislation-featured .c-bill-update--location a:hover,.cont_red .c-block-legislation-featured .c-bill-update--location a:hover,.orange .c-block-legislation-featured .c-bill-update--location a:hover,.trad_green .c-block-legislation-featured .c-bill-update--location a:hover,.cont_green .c-block-legislation-featured .c-bill-update--location a:hover {border-bottom: none;}.trad_blue .c-block-legislation-featured .c-bill-update--date,.cont_blue .c-block-legislation-featured .c-bill-update--date,.purple .c-block-legislation-featured .c-bill-update--date,.trad_red .c-block-legislation-featured .c-bill-update--date,.cont_red .c-block-legislation-featured .c-bill-update--date,.orange .c-block-legislation-featured .c-bill-update--date,.trad_green .c-block-legislation-featured .c-bill-update--date,.cont_green .c-block-legislation-featured .c-bill-update--date {display: inline;line-height: 1.3;}/*----------------------------------------------
 / NYS Legislation Explorer
-/ covers: NYS Laws, Advanced Legislation 
+/ covers: NYS Laws, Advanced Legislation
 /         search, and Find My Senator
-/---------------------------------------------*//* Laws */.c-law--law-title {font-family: "Adelle SemiBold";color: #444444;}.c-law-link {display: block;padding: 20px 0;border-bottom: 1px solid #e3e8ec;font-family: "Proxima Nova Regular";font-size: 14px;color: #2B6A90;}.c-law--law-type,.c-law--action-heading {display: block;margin-bottom: 20px;font-family: "Adelle Semibold";margin-top: 40px;border-bottom: 1px solid #AAAAAA;padding: 0 0 10px 0;font-size: 18px;color: #444444;}.c-law--law-type a {color: #444444;}.c-law--law-type a:hover {color: #2B6A90;}.c-law-descript {margin-bottom: 20px;}.c-law--action-heading,.c-law--action-heading-sm {font-size: 18px;color: #444;margin-top: 0;margin-bottom: 10px;border-bottom: none;}.c-law--search-loader {height: 20px;width: 20px;margin: auto;display: none;}.c-law--search-container {padding: 25px 40px;background: #EEEEEE;margin-bottom: 40px;}.c-law--search-results-container {background: #fbfbfb;padding: 20px;display: none;margin-bottom: 20px;}.c-law-search-field {position: relative;padding-bottom: 20px;}input[type="text"].c-law-search-field-input {margin-bottom: 0;height: 45px;}.c-site-search--btn.c-law-search-field--icon-glass,.c-site-search--btn.c-law-search-field--icon-glass:focus {top: 0;right: 0;}.c-law--search-results-container.c-law--searching {opacity: 0.3;}.c-law--search-result-msg,.c-law--search-result-warnmsg {font-size: 18px;font-family: "Adelle Semibold";color: #444;padding-top: 10px;}.c-law--search-result-warnmsg {color: red;}.c-law--search-result-container {padding: 20px 0;border-bottom: 1px solid #ddd;}.c-law--search-result-location {text-transform: capitalize;text-decoration: underline;font-weight: bold;font-size: 16px;color: #2B6A90;}.c-law--search-result-title {margin-top: 0;margin-bottom: 5px;font-size: 16px;}.c-law--search-result-highlight {color: #555;font-size: 14px;}.c-law--search-result-highlight em {font-weight: bold;background: #fff7bd;padding: 5px;font-style: normal;}.c-law--show-more {font-size: 18px;text-align: center;padding: 10px;}.c-law-link-container {display: block;overflow: auto;border-bottom: 1px solid #AAAAAA;padding: 20px 0;}.c-law-link-container:last-of-type {border-bottom: none;}.c-law-link-left {width: 30%;float: left;}.c-law-link-loc-id {margin-bottom: 0.5em;font-family: "Adelle Bold";line-height: 1em;font-size: 20px;letter-spacing: 0.05em;color: #444444;}.c-law-link-loc-id a {color: #444444;}.c-law-link-loc-id a:hover {color: #2B6A90;}.c-law-link-title {margin: 0 0 10px 0;color: #444444;}.c-law-link-contained-sections {display: inline-block;margin: 0 0.25em 0 0;font-family: "Proxima Nova Regular";font-size: 14px;}.c-law--law-name,.c-law--law-id {font-size: 16px;line-height: 20px;margin-bottom: 10px;}.c-law--law-name a {color: #444444;}.c-law--law-id {color: #999999;}.breadcrumbs.c-law-breadcrumbs {border-style: solid none solid none;border-radius: 0;color: #2B6A90;margin-bottom: 20px;padding: 20px 1px;background: none;}.breadcrumbs.c-law-breadcrumbs a {font-size: 14px;line-height: 1.5rem;}a.c-law--inactive-breadcrumb {color: #333;cursor: default;font-weight: bold;}.c-law-doc-text {margin-top: 2em;font-size: 16px;line-height: 1.5em;padding: 1em;font-family: "Adelle Light";}.c-law-sibling-links {font-size: 14px;}.c-law-sibling-links .columns {padding: 10px;}.c-law-sibling-links a {text-transform: uppercase;}/*-------------------------------------------------
+/---------------------------------------------*//* Laws */.c-law--law-title {font-family: "Adelle SemiBold";color: #444444;}.c-law-link {display: block;padding: 20px 0;border-bottom: 1px solid #e3e8ec;font-family: "Proxima Nova Regular";font-size: 14px;color: #2B6A90;}.c-law--law-type,.c-law--action-heading {display: block;margin-bottom: 20px;font-family: "Adelle Semibold";margin-top: 40px;border-bottom: 1px solid #AAAAAA;padding: 0 0 10px 0;font-size: 18px;color: #444444;}.c-law--law-type a {color: #444444;}.c-law--law-type a:hover {color: #2B6A90;}.c-law-descript {margin-bottom: 20px;}.c-law--action-heading,.c-law--action-heading-sm {font-size: 18px;color: #444;margin-top: 0;margin-bottom: 10px;border-bottom: none;}.c-law--search-loader {height: 20px;width: 20px;margin: auto;display: none;}.c-law--search-container {padding: 25px 40px;background: #EEEEEE;margin-bottom: 40px;}.c-law--search-results-container {background: #fbfbfb;padding: 20px;display: none;margin-bottom: 20px;}.c-law-search-field {position: relative;padding-bottom: 20px;}input[type="text"].c-law-search-field-input {margin-bottom: 0;height: 45px;}.c-site-search--btn.c-law-search-field--icon-glass,.c-site-search--btn.c-law-search-field--icon-glass:focus {top: 0;right: 0;}.c-law--search-results-container.c-law--searching {opacity: 0.3;}.c-law--search-result-msg,.c-law--search-result-warnmsg {font-size: 18px;font-family: "Adelle Semibold";color: #444;padding-top: 10px;}.c-law--search-result-warnmsg {color: red;}.c-law--search-result-container {padding: 20px 0;border-bottom: 1px solid #ddd;}.c-law--search-result-location {text-transform: capitalize;text-decoration: underline;font-weight: bold;font-size: 16px;color: #2B6A90;}.c-law--search-result-title {margin-top: 0;margin-bottom: 5px;font-size: 16px;}.c-law--search-result-highlight {color: #555;font-size: 14px;}.c-law--search-result-highlight em {font-weight: bold;background: #fff7bd;padding: 5px;font-style: normal;}.c-law--show-more {font-size: 18px;text-align: center;padding: 10px;}.c-law-link-container {display: block;overflow: auto;border-bottom: 1px solid #AAAAAA;padding: 20px 0;}.c-law-link-container:last-of-type {border-bottom: none;}.c-law-link-left {width: 30%;float: left;}.c-law-link-loc-id {margin-bottom: 0.5em;font-family: "Adelle Bold";line-height: 1em;font-size: 20px;letter-spacing: 0.05em;color: #444444;}.c-law-link-loc-id a {color: #444444;}.c-law-link-loc-id a:hover {color: #2B6A90;}.c-law-link-title {margin: 0 0 10px 0;color: #444444;}.c-law-link-contained-sections {display: inline-block;margin: 0 0.25em 0 0;font-family: "Proxima Nova Regular";font-size: 14px;}.c-law--global-law-name,.c-law--law-id {font-size: 16px;line-height: 20px;margin-bottom: 10px;}.c-law--global-law-name a {color: #444444;}.c-law--law-id {color: #999999;}.breadcrumbs.c-law-breadcrumbs {border-style: solid none solid none;border-radius: 0;color: #2B6A90;margin-bottom: 20px;padding: 20px 1px;background: none;}.breadcrumbs.c-law-breadcrumbs a {font-size: 14px;line-height: 1.5rem;}a.c-law--inactive-breadcrumb {color: #333;cursor: default;font-weight: bold;}.c-law-doc-text {margin-bottom: 1em;margin-top: 1em;font-size: 20px;line-height: 1.5em;font-family: "Adelle Light", serif;}.c-law-sibling-links {font-size: 14px;}.c-law-sibling-links .columns {padding: 10px;}.c-law-sibling-links a {text-transform: uppercase;}/*-------------------------------------------------
 /
-/ INITIATIVE BLOCK 
-/ half lives on almost every page
+/	INITIATIVE BLOCK
+/	half lives on almost every page
 / full size is on most pages
 / class will have to updated
 /
@@ -109,91 +109,91 @@
 / PRESS RELEASES
 /----------------------------------------*/.c-block-press-release {padding-top: 20px;padding-bottom: 30px;margin-bottom: 0;border-top: 1px solid #AAAAAA;}.first:first-child .c-block-press-release {border-top: none;}.c-press-release--header {margin-bottom: 15px;}.c-press-release--title {margin-bottom: 3px;font-family: "Adelle Bold";font-size: 16px;line-height: 1em;color: #222222;}.c-press-release--topic,.c-featured-story-issue-tag a {text-transform: uppercase;font-family: "Proxima Nova Semibold";font-size: 12px;line-height: 1em;letter-spacing: 0.05em;}.c-press-release--topic:hover,.c-featured-story-issue-tag a:hover {text-decoration: underline;}.c-press-release--body {position: relative;}.c-press-release--body__has-img {padding-right: 120px;}.c-press-release--descript {margin-bottom: 10px;font-size: 18px;line-height: 1.3em;font-family: "Adelle Light";}.c-press-release--descript a {color: #444444;}.c-press-release--senator {margin: 10px 0;color: #888888;font-family: "Proxima Nova Regular";font-size: 12px;line-height: 1em;}.c-press-release--date {margin: 0;color: #888888;font-family: "Proxima Nova Regular";font-size: 12px;line-height: 1em;}.c-press-release--img {max-width: 100px;margin-left: 20px;position: absolute;top: 0;right: 0;}.trad_blue .c-press-release--descript a {color: #1B5187;}.cont_blue .c-press-release--descript a {color: #04A9C5;}.purple .c-press-release--descript a {color: #90668F;}.trad_red .c-press-release--descript a {color: #87002F;}.cont_red .c-press-release--descript a {color: #C62526;}.orange .c-press-release--descript a {color: #F0673D;}.trad_green .c-press-release--descript a {color: #60A35F;}.cont_green .c-press-release--descript a {color: #65C5B6;}/*-------------------------------------------------------
 /
-/   Committee Updates
-/   Exists on : Committee Detail Page
+/ 	Committee Updates
+/ 	Exists on : Committee Detail Page
 /
 /-------------------------------------------------------*/.c-updates-container .dropdown {display: block;}.c-updates-container .l-tab-bar {display: none;}.c-updates-container .c-update-block {overflow: hidden;display: block;position: relative;border-top: 1px solid #AAAAAA;}.c-updates-container .c-update-block .l-left {margin-top: 20px;}.c-updates-container .c-update-block .l-left .c-type {font-family: 'Adelle Bold';font-size: 16px;color: #444444;margin-bottom: 10px;}.c-updates-container .c-update-block .l-left .c-category {width: 100%;margin: 0 0 20px 0;color: #CB8D37;text-transform: uppercase;font-size: 12px;font-family: 'Proxima Nova SemiBold';}.c-updates-container .c-update-block .l-right .c-name {font-family: 'Adelle Light';font-size: 18px;color: #444444;padding-right: 30px;}.c-updates-container .c-update-block .l-right .c-name a {color: #444444;}.c-updates-container .c-update-block .l-right .c-date {font-family: 'Proxima Nova Regular';font-size: 14px;color: #888888;margin-top: 10px;}.c-updates-container .c-update-block .c-image {width: 220px;height: 125px;float: right;margin-top: 30px;display: none;}.c-updates-container .c-update-block--image .l-right {width: 270px;}.c-updates-container .c-update-block--image .l-right .c-name {padding-right: 0;}.c-updates-container .c-more {color: #2B6990;text-transform: uppercase;text-align: center;background-color: #EEEEEE;font-size: 14px;font-family: 'Proxima Nova SemiBold';padding: 20px 0;width: 100%;outline: none;border: none;}.c-updates-container .c-more:after {margin-left: 5px;font-weight: bold;}/*-------------------------------------------------------
 /
-/   How the Senate Works
-/ - variant : How We Create a Budget
+/ 	How the Senate Works
+/	- variant : How We Create a Budget
 /
 /-------------------------------------------------------*/.c-senate-works-container {padding-bottom: 60px;background-color: #EEEEEE;}.c-senate-works-container .c-container--header {position: static;padding: 25px 0 0 25px;border: none;}.c-senate-works-container .c-container--link {bottom: 0;top: auto;width: 100%;height: 60px;padding: 23px 0 23px 25px;color: #444444;background-color: #EAEAEA;}.c-senate-works-container .c-container--link:before {font-size: 17px;margin-top: -2px;line-height: 12px;}.c-senate-works-container .c-container--link:after {display: none;}.c-senate-works-container .c-carousel--btn {top: -50px;}.c-senate-works-container .c-carousel {width: 500%;margin: 25px 0 0 0;padding: 0;list-style: none;}.c-senate-works-container .c-carousel--item {width: 20%;margin: 0;float: left;}.c-senate-works--illustration {position: relative;display: block;width: 120px;height: 120px;margin: 0 auto;background: #F1AF58;overflow: hidden;-webkit-border-radius: 50%;border-radius: 50%;background-clip: padding-box;text-align: center;font-family: "Adelle Regular";color: #fff;font-size: 16px;line-height: 1.3em;}.c-senate-works--illustration > span {position: absolute;z-index: 3;display: block;height: 40px;top: 0;bottom: 0;right: 0;left: 0;margin: auto;}.c-senate-works--illustration.illustration--committee-votes:before {left: 0.3em;font-size: 42px;}.c-senate-works--illustration.illustration--floor-votes:before {left: 0.2em;font-size: 42px;}.c-senate-works--illustration:before {font-family: 'senate_icons';position: absolute;top: 0;left: 0;bottom: 0;right: 0;margin: auto;text-align: center;line-height: 120px;color: #fff;font-size: 36px;}.c-senate-works-step-description {margin: 25px 0 20px 0;line-height: 100%;text-align: center;font-family: "Proxima Nova Regular";font-size: 13px;color: #444444;}.l-carousel-outer {position: relative;}.l-carousel-outer .l-carousel-inner {width: 120px;margin: 0 auto;height: 270px;overflow: hidden;position: relative;}.l-carousel-outer .l-carousel-inner .mobile-carousel {position: absolute;top: 0;width: 760px;}.l-carousel-outer .arrow {position: absolute;top: 29%;cursor: pointer;color: #aaa;font-family: 'Proxima Nova SemiBold';font-size: 26px;}.l-carousel-outer .left-arrow {left: 15px;}.l-carousel-outer .right-arrow {right: 15px;}.c-senators-committees-header {overflow: hidden;position: relative;padding-bottom: 60px;}.c-senators-committees-header p {margin-bottom: 20px;}.c-senators-committees-header .c-container--link {top: auto;bottom: 0;width: 50%;padding-right: 20px;text-align: right;}.c-senators-committees-header .c-container--link:after {position: absolute;bottom: 3px;right: 0;}.views-exposed-form .views-exposed-widget {padding: 0;}/*-------------------------------------------------------
 /
-/   SENATORS LIST
-/   Exists on : Senators Listing Page
+/ 	SENATORS LIST
+/ 	Exists on : Senators Listing Page
 /
 /-------------------------------------------------------*/.c-senators-container {overflow: hidden;}.c-senators-container .views-exposed-widget {position: relative;width: 100%;}.c-senators-container .views-exposed-widget .views-widget:after {position: absolute;right: 10px;top: 5px;font-size: 25px;color: #2B6990;pointer-events: none;cursor: pointer;}.c-senator-block {background-color: #F4F4F7;overflow: hidden;margin-bottom: 20px;position: relative;min-height: 80px;-webkit-transition: background-color 0.2s ease 0s;-moz-transition: background-color 0.2s ease 0s;-ms-transition: background-color 0.2s ease 0s;-o-transition: background-color 0.2s ease 0s;transition: background-color 0.2s ease 0s;}.c-senator-block .nys-senator--thumb {overflow: hidden;-webkit-border-radius: 0;border-radius: 0;background-clip: padding-box;height: 80px;width: 80px;margin: 0 15px 0 0;}.c-senator-block .nys-senator--position {text-transform: uppercase;font-family: "Proxima Nova Regular";font-size: 10px;line-height: 18px;}.c-senator-block .nys-senator--name {font-size: 14px;margin: 0 0 10px 0;}.c-senator-block .nys-senator--district {color: #888888;font-size: 10px;}.c-senator-block .nys-senator--party {color: #666666;margin-right: 0.5em;text-transform: uppercase;}.c-senator-block .c-position {margin: 15px 0 0 15px;font-family: "Proxima Nova Regular";text-transform: uppercase;color: #fff;font-size: 11px;line-height: 1.3em;}.c-senator-block .c-name {font-family: "Adelle Light";font-size: 17px;line-height: 120%;color: #444444;margin: 20px 0 0 100px;}.c-senator-block .c-name a {color: #444444;}.c-senator-block .c-party-conf {margin: 15px 0 0 15px;font-family: "Proxima Nova Regular";text-transform: uppercase;font-size: 12px;line-height: 1.3em;}.c-senator-block .c-district {text-transform: uppercase;display: block;font-size: 11px;margin: 10px 0 0 100px;}.c-senator-block .c-district a {color: #AAAAAA;}.c-senator-block:hover .nys-senator--name,.c-senator-block:hover .nys-senator--district,.c-senator-block:hover .nys-senator--party {color: #fff;}.c-senator-block.co-chair .nys-senator--position,.c-senator-block.co-chair .nys-senator--name,.c-senator-block.co-chair .nys-senator--party,.c-senator-block.co-chair .nys-senator--district {color: #fff;}.c-senator-block.co-chair .nys-senator--name {margin-bottom: 5px;}/*-------------------------------------------------------
 /
-/   SENATE DIRECTORIES
-/ right below the senator list
+/ 	SENATE DIRECTORIES
+/	right below the senator list
 /
 /-------------------------------------------------------*/.c-senate-directory--container {margin-bottom: 50px;}.c-senate-directory--container .c-container--title {font-size: 14px;margin-bottom: 20px;}.c-senate-directory {max-width: 560px;padding: 30px 20px;background: #F4F4F7;overflow: hidden;}.c-directory--section {padding: 0 10px 20px;}.c-directory--section + .c-directory--section {padding-top: 30px;padding-bottom: 0;border-top: 1px solid #AAAAAA;}.c-directory--title {color: #444444;font-family: "Adelle Bold";font-size: 18px;}.c-directory--link {display: block;padding-top: 10px;margin: 0;}.c-directory--link:before {font-size: 25px;margin-right: 10px;}/*-------------------------------------------------
 /
-/ INITIATIVE BLOCK 
-/ half lives on almost every page
+/	INITIATIVE BLOCK
+/	half lives on almost every page
 / full size is on most pages
 / class will have to updated
 /
 /-------------------------------------------------*/.c-block--chair {position: relative;padding: 0;}.c-block--chair.c-block {margin-bottom: 40px;}.c-block--chair .c-block--btn {padding-left: 20px;}.c-block--chair img {display: block;}.c-chair--content {padding: 30px 20px 90px;}.c-chair--content .c-chair-block--position {margin-bottom: 5px;font-family: "Proxima Nova Regular";text-transform: uppercase;color: #fff;font-size: 12px;line-height: 1.3em;}.c-chair--content .c-party-conf {margin-top: 20px;font-family: "Proxima Nova Regular";text-transform: uppercase;color: #fff;font-size: 12px;line-height: 1.3em;}.c-chair--descript {margin-bottom: 5px;font-family: "Proxima Nova Regular";text-transform: uppercase;color: #323232;font-size: 12px;line-height: 1.3em;}.c-chair--title {font-family: "Adelle Regular";color: #fff;font-size: 22px;line-height: 1.2em;}.c-chair--title a {color: #fff;}.c-chair--meta {list-style: none;}.c-chair--meta li {display: inline-block;padding-right: 7px;color: #fff;font-family: "Adelle Regular";font-size: 14px;line-height: 1.2em;}.c-chair--meta li + li {border-left: 2px solid #fff;padding-left: 7px;}/*-------------------------------------------------------
 /
-/   COMMITTEES LIST
-/   Exists on : Senators Listing Page
+/ 	COMMITTEES LIST
+/ 	Exists on : Senators Listing Page
 /
 /-------------------------------------------------------*/.c-committees-container {overflow: hidden;margin-bottom: 30px;width: 100%;}.c-committees-container .c-container-title {padding: 20px 0 0 0;border-top: 1px solid #AAAAAA;color: #444444;font-family: "Adelle SemiBold";font-size: 18px;}.c-committees-container h3 {font-family: "Adelle SemiBold";color: #444444;font-size: 14px;padding: 30px 0 0 0;}.c-committees-container table {border: none;width: 100%;}.c-committees-container table td {padding: 0;display: block;}.c-committees-container table tr.even,.c-committees-container table tr.alt,.c-committees-container table tr:nth-of-type(even) {background: none;}.c-committees-container .c-category-title {margin-top: 30px;display: block;width: 100%;color: #444444;font-family: "Adelle SemiBold";font-size: 20px;}.c-committees-container .c-committee-link {display: block;width: 100%;padding: 10px 0;border-bottom: 1px solid #e3e8ec;}.c-committees-container .c-committee-link .c-committee-title {margin-top: 0px;padding-bottom: 0px;font-family: "Proxima Nova Regular";font-size: 14px;text-transform: capitalize;}.c-committees-container tr.row-last .c-committee-link {border-bottom: none;}/*-------------------------------------------------------
 /
-/   NEWS CLUSTER
-/   Covers: News Videos, Press Releases and Tweets
-/   Exists on : Homepage
+/ 	NEWS CLUSTER
+/ 	Covers: News Videos, Press Releases and Tweets
+/ 	Exists on : Homepage
 /
 /-------------------------------------------------------*/.c-news-container {overflow: hidden;display: block;}.c-news-container .c-container--header {margin-bottom: -1px;}.c-news-container .c-title,.c-news-container .c-title h3 {font-family: "Proxima Nova Regular";font-size: 14px;font-weight: normal;text-transform: uppercase;position: relative;padding-bottom: 20px;padding-top: 20px;margin: 0;}.c-news-container .c-title h2,.c-news-container .c-title h3 h2 {font-size: 14px;}.c-news-container .c-title .c-newsroom,.c-news-container .c-title h3 .c-newsroom {position: absolute;right: 0;top: 0;border: 1px solid #AAAAAA;padding: 9px 12px;margin-top: 10px;}.c-news-container .c-title .c-newsroom:after,.c-news-container .c-title h3 .c-newsroom:after {font-size: 15px;vertical-align: bottom;}.c-news-container .c-news-date {font-family: "Proxima Nova Regular";font-size: 13px;color: #AAAAAA;text-transform: none;padding-left: 9px;}.c-news-container .c-news-block {margin: 0px;padding-bottom: 40px;overflow: hidden;font-family: "Proxima Nova Regular";position: relative;border-top: 1px solid #AAAAAA;}.c-news-container .c-news-block.u-odd {clear: left;}.c-news-container .c-news-block .c-newsroom-name {font-family: "Adelle Light";font-size: 19px;margin: 0px 0px 25px 0px;line-height: 120%;min-width: 100%;}.c-news-container .c-news-block .c-newsroom-name a {color: #444444;}.c-news-container .c-news-block .c-newsroom-image {margin-bottom: 20px;width: 100%;}.c-news-container .c-news-block .c-newsroom-image iframe {max-width: 360px;max-height: 202px;}.c-news-container .c-news-block .c-senator-card {margin-top: 20px;}.c-news-container .c-news-block .c-newsroom-link {font-size: 13px;text-transform: uppercase;}.c-news-container .c-news-block .l-twitter-container {display: table;}.c-news-container .c-news-block .l-twitter-container img {display: table-cell;vertical-align: middle;width: 60px;height: 60px;}.c-news-container .c-news-block .l-twitter-container .c-twitter_info {display: table-cell;vertical-align: middle;padding-left: 20px;}.c-news-container .c-news-block .l-twitter-container .c-twitter_info h3 {font-family: "Proxima Nova Regular";color: #666666;font-size: 18px;}.c-news-container .c-news-block .l-twitter-container .c-twitter_info a {font-size: 14px;}.c-news-container .c-news-block .c-tweet {margin-top: 20px;margin-bottom: 25px;color: #444444;font-size: 19px;line-height: 120%;}.c-news-container .c-news-block .c-timestamp {font-size: 12px;color: #888888;}.c-news-container .c-news-block .nys-senator--info > span {display: none;}.c-news-container .c-news-block .nys-senator--name {font-family: "Proxima Nova Regular";font-size: 14px;}.c-news-container .c-news-block .nys-senator--party,.c-news-container .c-news-block .nys-senator--district {color: #888888;font-family: "Proxima Nova SemiBold";text-transform: uppercase;font-size: 10px;}.c-news-container .c-news-block .nys-senator--involved {color: #E29C44;font-family: "Proxima Nova SemiBold";font-size: 14px;}.c-news-container .c-news-block .nys-senator--involved:before {background-color: #E29C44;color: white;height: 30px;width: 30px;line-height: 30px;text-align: center;font-size: 20px;margin-left: 0;padding-left: 3px;color: #fff;overflow: hidden;-webkit-border-radius: 50%;border-radius: 50%;background-clip: padding-box;margin-right: 8px;}.c-news-block-tweet .c-title h3 {display: inline;}/*-------------------------------------------------------
 /
-/   FEATURED STORY / VIDEO BLOCK
-/   Covers: Featured Story and Video
-/   Exists on : Homepage
+/ 	FEATURED STORY / VIDEO BLOCK
+/ 	Covers: Featured Story and Video
+/ 	Exists on : Homepage
 /
 /-------------------------------------------------------*/.c-event-featured-story {overflow: hidden;padding-bottom: 40px;}.c-event-featured-story .c-title {font-family: "Proxima Nova Regular";font-size: 14px;font-weight: normal;text-transform: uppercase;border-top: 1px solid #D8D8D8;position: relative;margin-bottom: 20px;padding-top: 20px;}.c-event-featured-story .l-left {width: 100%;}.c-event-featured-story .c-story-name {font-family: "Adelle Light";font-size: 24px;margin: 0px;line-height: 120%;padding-top: 16px;max-width: 440px;margin-bottom: 25px;}.c-event-featured-story .c-story-name a {color: #444444;}.c-event-featured-story .c-story-image {width: 100%;}.c-event-featured-story .c-story-link {color: #CB8D37;font-family: "Proxima Nova SemiBold";font-size: 14px;}.view-display-id-hp_featured_stories {margin-top: 40px;padding-bottom: 0;}.view-display-id-hp_featured_stories .odd {width: 100%;float: left;margin-bottom: 40px;}.view-display-id-hp_featured_stories .even {width: 100%;float: left;}/*-------------------------------------------------------
 /
-/   FEATURED STORY / VIDEO BLOCK
-/   Covers: Featured Story and Video
-/   Exists on : Homepage
+/ 	FEATURED STORY / VIDEO BLOCK
+/ 	Covers: Featured Story and Video
+/ 	Exists on : Homepage
 /
 /-------------------------------------------------------*/.c-featured_video {overflow: hidden;padding-bottom: 40px;}.c-featured_video .c-featured_video--title {font-family: "Proxima Nova Regular";font-size: 14px;font-weight: normal;text-transform: uppercase;border-top: 2px solid #D8D8D8;position: relative;margin-bottom: 10px;padding-top: 20px;}.c-featured_video .c-featured_video--name {font-family: "Adelle Light";font-size: 28px;margin: 0px;line-height: 120%;padding-top: 16px;margin-bottom: 10px;}.c-featured_video .c-featured_video--name a {color: #444444;}.c-featured_video .c-featured_video--date_issues {margin: 0;color: #888888;font-family: "Proxima Nova Regular";font-size: 12px;line-height: 1em;}.c-featured_video .c-featured_video--date_issues a {color: #CB8D37;font-weight: bold;text-transform: uppercase;}.c-featured_video .c-featured_video--youtube {width: 100%;text-align: right;font-family: "Proxima Nova Regular";font-size: 14px;line-height: 1em;margin: 40px 0 0 0;padding-bottom: 40px;border-bottom: 2px solid #AAAAAA;}.c-featured_video .c-featured_video--youtube a {color: #CB8D37;font-weight: bold;text-transform: uppercase;}.c-featured-video-teaser .view-on-youtube {color: #CB8D37;}/*-------------------------------------------------------
 /
-/   FEATURED STORY / VIDEO BLOCK
-/   Covers: Featured Story and Video
-/   Exists on : Homepage
+/ 	FEATURED STORY / VIDEO BLOCK
+/ 	Covers: Featured Story and Video
+/ 	Exists on : Homepage
 /
 /-------------------------------------------------------*/.c-featured-video-teaser {padding-bottom: 40px;width: 100%;float: left;}.c-featured-video-teaser .l-left {width: 100%;}.c-featured-video-teaser .c-story-name {font-family: "Adelle Light";font-size: 24px;margin: 0px;line-height: 120%;padding-top: 16px;max-width: 440px;margin-bottom: 25px;}.c-featured-video-teaser .c-story-name a {color: #444444;}.c-featured-video-teaser .c-story-image {width: 100%;}.c-featured-video-teaser .c-story-link {font-family: "Proxima Nova SemiBold";font-size: 14px;color: #CB8D37;}.c-featured-video-teaser .c-featured_video--date_issues {margin: 0;color: #888888;font-family: "Proxima Nova Regular";font-size: 12px;line-height: 1em;}.c-featured-video-teaser .c-featured_video--date_issues a {color: #CB8D37;font-weight: bold;text-transform: uppercase;}.c-featured-video-teaser .c-featured_video--youtube {width: 100%;text-align: right;font-family: "Proxima Nova Regular";font-size: 14px;line-height: 1em;margin: 40px 0 0 0;padding-bottom: 20px;float: left;}.c-featured-video-teaser .c-featured_video--youtube a {color: #CB8D37;font-weight: bold;text-transform: uppercase;}/*-------------------------------------------------------
 /
-/   EVENTS CLUSTER BLOCK
-/   Covers: Featured Issues
-/   Exists on : Homepage
+/ 	EVENTS CLUSTER BLOCK
+/ 	Covers: Featured Issues
+/ 	Exists on : Homepage
 /
 /-------------------------------------------------------*/.c-event-cluster-featured-issue {overflow: hidden;}.c-event-cluster-featured-issue .c-title {font-family: "Proxima Nova Regular";font-size: 14px;font-weight: normal;text-transform: uppercase;border-top: 2px solid #D8D8D8;position: relative;margin-bottom: 20px;padding-top: 20px;}.c-event-cluster-featured-issue .l-left {float: left;width: 100%;}.c-event-cluster-featured-issue .l-left .c-link-title {border: none;display: block;padding: 0px 0;color: #444444;font-family: "Adelle Light";font-size: 24px;line-height: 130%;}.c-event-cluster-featured-issue .l-right {float: left;width: 100%;margin-top: 20px;}.c-event-cluster-featured-issue .c-event-image {width: 100%;float: left;}.c-event-cluster-featured-issue .c-description {font-family: "Adelle Light";font-size: 24px;margin: 0px;line-height: 120%;padding-top: 16px;max-width: 440px;float: left;clear: left;color: #444444;}.c-event-cluster-featured-issue .c-link {border-top: 2px solid #d4d4d4;display: block;padding: 30px 0;color: #444444;font-family: "Adelle Light";font-size: 16px;line-height: 130%;}.c-event-cluster-featured-issue .c-link-with-image {display: table;}.c-event-cluster-featured-issue .c-link-with-image .c-link-image {display: table-cell;vertical-align: middle;min-width: 80px;min-height: 60px;width: 80px;height: 60px;}.c-event-cluster-featured-issue .c-link-with-image .c-link-title {display: table-cell;vertical-align: middle;padding-left: 20px;width: 100%;}.c-event-cluster-featured-issue h3 {font-size: inherit;font-family: inherit;display: inline;line-height: inherit;}/*-------------------------------------------------------
 /
-/   MAP BLOCK
+/ 	MAP BLOCK
 / Covers: Map Display
 / Exists on : Districts About Page
 /
 /-------------------------------------------------------*/.c-map-block {margin: 35px 0px 50px 0px;width: 100%;height: 150px;display: block;}.c-map-block .map {width: 100%;height: 100%;display: block;}.calendar-dls {max-width: 100%;margin: 0 auto;}.calendar-dls .block-title {font-family: "Proxima Nova Regular";color: #444444;font-size: 14px;line-height: 18px;text-transform: uppercase;margin-bottom: 10px;}.calendar-dls .cal-dl-wrapper {background-color: #EEEEEE;padding: 30px;}.calendar-dls .cal-dl-wrapper .l-col,.calendar-dls .cal-dl-wrapper .c-block--associated-senators .nys-senator,.c-block--associated-senators .calendar-dls .cal-dl-wrapper .nys-senator,.calendar-dls .cal-dl-wrapper .c-initiative-honorees .field-item,.c-initiative-honorees .calendar-dls .cal-dl-wrapper .field-item {padding: 0 10px 20px;}.calendar-dls .cal-dl-wrapper .l-col + .l-col,.calendar-dls .cal-dl-wrapper .c-block--associated-senators .nys-senator + .l-col,.c-block--associated-senators .calendar-dls .cal-dl-wrapper .nys-senator + .l-col,.calendar-dls .cal-dl-wrapper .c-initiative-honorees .field-item + .l-col,.c-initiative-honorees .calendar-dls .cal-dl-wrapper .field-item + .l-col,.calendar-dls .cal-dl-wrapper .c-block--associated-senators .l-col + .nys-senator,.c-block--associated-senators .calendar-dls .cal-dl-wrapper .l-col + .nys-senator,.calendar-dls .cal-dl-wrapper .c-block--associated-senators .nys-senator + .nys-senator,.c-block--associated-senators .calendar-dls .cal-dl-wrapper .nys-senator + .nys-senator,.calendar-dls .cal-dl-wrapper .c-initiative-honorees .c-block--associated-senators .field-item + .nys-senator,.c-block--associated-senators .calendar-dls .cal-dl-wrapper .c-initiative-honorees .field-item + .nys-senator,.c-initiative-honorees .calendar-dls .cal-dl-wrapper .c-block--associated-senators .field-item + .nys-senator,.c-block--associated-senators .c-initiative-honorees .calendar-dls .cal-dl-wrapper .field-item + .nys-senator,.calendar-dls .cal-dl-wrapper .c-initiative-honorees .l-col + .field-item,.c-initiative-honorees .calendar-dls .cal-dl-wrapper .l-col + .field-item,.calendar-dls .cal-dl-wrapper .c-block--associated-senators .c-initiative-honorees .nys-senator + .field-item,.c-initiative-honorees .calendar-dls .cal-dl-wrapper .c-block--associated-senators .nys-senator + .field-item,.c-block--associated-senators .calendar-dls .cal-dl-wrapper .c-initiative-honorees .nys-senator + .field-item,.c-initiative-honorees .c-block--associated-senators .calendar-dls .cal-dl-wrapper .nys-senator + .field-item,.calendar-dls .cal-dl-wrapper .c-initiative-honorees .field-item + .field-item,.c-initiative-honorees .calendar-dls .cal-dl-wrapper .field-item + .field-item {padding-top: 30px;padding-bottom: 0;border-top: 1px solid #AAAAAA;}.calendar-dls .cal-dl-wrapper .l-col h3,.calendar-dls .cal-dl-wrapper .c-block--associated-senators .nys-senator h3,.c-block--associated-senators .calendar-dls .cal-dl-wrapper .nys-senator h3,.calendar-dls .cal-dl-wrapper .c-initiative-honorees .field-item h3,.c-initiative-honorees .calendar-dls .cal-dl-wrapper .field-item h3 {margin-bottom: 10px;font-family: "Adelle Bold";color: #444444;font-size: 18px;line-height: 25px;}.calendar-dls .cal-dl-wrapper .l-col ul,.calendar-dls .cal-dl-wrapper .c-block--associated-senators .nys-senator ul,.c-block--associated-senators .calendar-dls .cal-dl-wrapper .nys-senator ul,.calendar-dls .cal-dl-wrapper .c-initiative-honorees .field-item ul,.c-initiative-honorees .calendar-dls .cal-dl-wrapper .field-item ul {list-style: none;}.calendar-dls .cal-dl-wrapper .l-col ul li,.calendar-dls .cal-dl-wrapper .c-block--associated-senators .nys-senator ul li,.c-block--associated-senators .calendar-dls .cal-dl-wrapper .nys-senator ul li,.calendar-dls .cal-dl-wrapper .c-initiative-honorees .field-item ul li,.c-initiative-honorees .calendar-dls .cal-dl-wrapper .field-item ul li {display: block;}.calendar-dls .cal-dl-wrapper .l-col ul li a,.calendar-dls .cal-dl-wrapper .c-block--associated-senators .nys-senator ul li a,.c-block--associated-senators .calendar-dls .cal-dl-wrapper .nys-senator ul li a,.calendar-dls .cal-dl-wrapper .c-initiative-honorees .field-item ul li a,.c-initiative-honorees .calendar-dls .cal-dl-wrapper .field-item ul li a {display: block;font-family: "Proxima Nova Regular";color: #2B6990;font-size: 12px;line-height: 18px;text-transform: uppercase;}.calendar-dls .cal-dl-wrapper .l-col ul li a:before,.calendar-dls .cal-dl-wrapper .c-block--associated-senators .nys-senator ul li a:before,.c-block--associated-senators .calendar-dls .cal-dl-wrapper .nys-senator ul li a:before,.calendar-dls .cal-dl-wrapper .c-initiative-honorees .field-item ul li a:before,.c-initiative-honorees .calendar-dls .cal-dl-wrapper .field-item ul li a:before {font-size: 25px;margin-right: 10px;}.c-committee-status-bar {border-top: 2px solid #D8D8D8;padding-top: 20px;width: 100%;margin-bottom: 30px;overflow: hidden;}.c-committee-status-bar .c-circle {width: 8px;height: 8px;display: block;background-color: #f2ae59;float: left;-webkit-border-radius: 50%;-moz-border-radius: 50%;border-radius: 50%;}.c-committee-status-bar .l-divider {margin-left: 8px;background-color: #444444;width: 1px;height: 10px;display: block;float: left;}.c-committee-status-bar .c-video-status,.c-committee-status-bar .c-committee-status {float: left;font-family: 'Proxima Nova Regular';font-size: 12px;color: #444444;text-transform: uppercase;margin-left: 8px;}/*-------------------------------------------------------
 /
-/ LISTING BLOCK
+/	LISTING BLOCK
 / Covers: People Listing and Senator Committees Modules
 / Exists on : Senator About
 /
 /-------------------------------------------------------*/.c-listing-block {background: #EEEEEE;padding: 25px 20px 5px;margin-bottom: 20px;}.c-listing-block h3 {font-family: "Adelle SemiBold";font-size: 16px;line-height: 1em;margin-bottom: 20px;}.c-listing-block ul {list-style: none;padding: 0;margin: 0;}.c-listing-block a,.c-listing-block p {display: block;font-family: "Proxima Nova SemiBold";font-size: 14px;}.c-listing-block span {display: block;margin-top: 5px;font-family: "Proxima Nova Regular";color: #444444;text-transform: uppercase;font-size: 12px;line-height: 1;}.c-listing-block--item {margin-bottom: 18px;}.c-listing-block--item a {line-height: 1.3em;}.c-video-container .c-video {width: 100%;display: block;}.c-video-container .c-tag-list {margin-top: 20px;list-style: none;}.c-video-container .c-tag-list .c-tag {float: left;margin-right: 14px;text-transform: uppercase;font-size: 10px;font-family: 'Proxima Nova SemiBold';}.c-video-container .c-tag-list .c-tag .c-link {color: green;text-decoration: none;}/*-------------------------------------------------------
 /
-/   EVENTS BLOCK
-/   Covers: Featured Event with Image, Featured Event no 
-/   Image, Todays Event, Event Listing
-/   Exists on :
+/ 	EVENTS BLOCK
+/ 	Covers: Featured Event with Image, Featured Event no
+/		Image, Todays Event, Event Listing
+/ 	Exists on :
 /
 /-------------------------------------------------------*/.c-event-address {font-family: "Proxima Nova Regular";}.c-event-name {color: #444444;}.c-event-name a {color: #444444;}.c-event-block .c-event-date-multiday > div {display: inline-block;}.c-event-block .c-event-date-multiday .c-event-date-separator {font-size: 2em;vertical-align: middle;margin-right: 5px;}.c-calendar--today .nys-title {font-size: 30px;margin-top: 12px;font-family: 'Adelle SemiBold';}.c-event-block--today {margin: 0 0 10px 0;padding: 30px 0;position: relative;background-color: #EEEEEE;overflow: hidden;font-family: "Proxima Nova Regular";}.c-event-block--today .c-event-name {font-family: "Adelle Light";font-size: 24px;margin: 18px 20px 20px 20px;line-height: 120%;float: left;clear: left;}.c-event-block--today .c-event-location {font-size: 14px;margin-left: 20px;float: left;clear: left;color: #222222;}.c-event-block--today .c-event-location span {margin-right: 7px;font-size: 18px;}.c-event-block--today .c-event-address {margin-top: 15px;color: #888888;font-size: 14px;line-height: 140%;display: none;margin-bottom: 0;}.c-event-block--today .c-event-time {margin-top: 0;font-size: 14px;margin-left: 20px;float: left;clear: left;}.c-event-block--today .c-event-time span {font-family: "Proxima Nova SemiBold";font-size: 16px;}.c-event-block--today .c-event-rsvp {margin: 20px 0 0 0;padding: 9px 11px;text-transform: uppercase;font-family: "Proxima Nova SemiBold";display: inline-block;text-decoration: none;border: 1px solid #ABABAB;border-top: 2px solid #AAAAAA;font-size: 12px;margin-left: 20px;float: left;clear: left;}.c-no-events {background-color: #F4F4F7;padding: 20px 20px;margin-bottom: 40px;width: 100%;}.c-no-events p {font-family: "Adelle Light";font-size: 16px;margin: 0;line-height: 120%;width: 100%;text-align: left;}.c-event-block--list {margin: 0;padding-top: 16px;padding-bottom: 40px;border-top: 1px solid #AAAAAA;overflow: hidden;font-family: "Proxima Nova Regular";position: relative;}.c-event-block--list .c-title {font-family: "Proxima Nova Regular";font-size: 14px;font-weight: normal;text-transform: uppercase;margin-bottom: 20px;}.c-event-block--list .c-event-image {width: 100%;}.c-event-block--list .c-event-date {text-transform: uppercase;font-size: 12px;position: absolute;top: 20px;left: 0;line-height: 130%;}.c-event-block--list .c-event-date span {font-family: "Adelle Bold";display: block;font-size: 26px;margin-bottom: 6px;}.c-event-block--list .c-event-name {font-family: "Adelle Light";font-size: 24px;margin: 0px 0px 25px 60px;line-height: 120%;}.c-event-block--list .c-event-location {font-size: 14px;margin-left: 60px;float: left;clear: left;color: #222222;}.c-event-block--list .c-event-location span {margin-right: 7px;font-size: 18px;}.c-event-block--list .c-event-address {margin-top: 15px;color: #888888;font-size: 14px;line-height: 140%;display: none;}.c-event-block--list .c-event-time {margin-top: 10px;display: none;font-family: "Proxima Nova SemiBold";font-size: 14px;}.c-event-block--list .c-event-rsvp {margin: 20px 0 0 60px;padding: 9px 11px;text-transform: uppercase;font-family: "Proxima Nova SemiBold";display: inline-block;text-decoration: none;border: 1px solid #ABABAB;border-top: 2px solid #AAAAAA;font-size: 12px;float: left;clear: left;}.c-event-block--list .c-meeting-video--status:before {padding: 0;margin-left: 0;border-left: none;}.c-event-block--list .c-event-video {clear: both;margin-top: 24px;}.first .c-event-block--list {border-top: none;}.view-grouping + .view-grouping .first .c-event-block--list {border-top: 1px solid #AAAAAA;}.c-event-block--featured {margin: 0;padding-top: 16px;padding-bottom: 40px;border-top: 2px solid #D8D8D8;font-family: "Proxima Nova Regular";}.c-event-block--featured:after {content: "";display: table;clear: both;}.c-event-block--featured .c-title {font-family: "Proxima Nova Regular";font-size: 14px;font-weight: normal;text-transform: uppercase;margin-bottom: 20px;}.c-event-block--featured .c-event-image {width: 100%;}.c-event-block--featured .c-event-date {margin-top: -15px;text-transform: uppercase;font-size: 16px;}.c-event-block--featured .c-event-date span {font-family: "Adelle Bold";}.c-event-block--featured .c-event-date span:after {content: "/";display: inline-block;font-family: "Proxima Nova Regular";margin: 0px 0px 0px 5px;}.c-event-block--featured .c-event-date SPAN:last-of-type:after {content: "";}.c-event-block--featured .c-event-name {font-family: "Adelle Light";font-size: 24px;margin: 18px 0px 25px 0px;line-height: 120%;}.c-event-block--featured .c-event-location {font-size: 14px;color: #222222;}.c-event-block--featured .c-event-location span {margin-right: 7px;font-size: 18px;}.c-event-block--featured .c-event-address {margin-top: 15px;color: #888888;font-size: 14px;line-height: 140%;}.c-event-block--featured .c-event-time {margin-top: 10px;font-size: 14px;font-family: "Proxima Nova SemiBold";}.c-event-block--featured .c-event-rsvp {margin: 20px 0 0 0;padding: 9px 11px;text-transform: uppercase;font-family: "Proxima Nova SemiBold";display: inline-block;text-decoration: none;border: 1px solid #ABABAB;border-top: 2px solid #AAAAAA;font-size: 12px;}.c-event-block--featured .addthisevent-drop {margin-top: 20px;}.c-event-block--featured-image {margin: 0;padding-top: 16px;padding-bottom: 40px;font-family: "Proxima Nova Regular";}.c-event-block--featured-image:after {content: "";display: table;clear: both;}.c-event-block--featured-image .c-title {font-family: "Proxima Nova Regular";font-size: 14px;font-weight: normal;text-transform: uppercase;margin-bottom: 20px;}.c-event-block--featured-image .c-event-image {width: 100%;}.c-event-block--featured-image .c-event-date {margin-top: 30px;text-transform: uppercase;font-size: 16px;}.c-event-block--featured-image .c-event-date span {font-family: "Adelle Bold";}.c-event-block--featured-image .c-event-date span:after {content: "/";display: inline-block;font-family: "Proxima Nova Regular";margin: 0px 0px 0px 5px;}.c-event-block--featured-image .c-event-date SPAN:last-of-type:after {content: "";}.c-event-block--featured-image .c-event-name {font-family: "Adelle Light";font-size: 24px;margin: 18px 0px 25px 0px;line-height: 120%;}.c-event-block--featured-image .c-event-location {font-size: 14px;color: #222222;}.c-event-block--featured-image .c-event-location span {margin-right: 7px;font-size: 18px;}.c-event-block--featured-image .c-event-address {margin-top: 15px;color: #888888;font-size: 14px;line-height: 140%;}.c-event-block--featured-image .c-event-time {margin-top: 20px;font-size: 14px;}.c-event-block--featured-image .c-event-rsvp {margin: 20px 0 0 0;padding: 9px 11px;text-transform: uppercase;font-family: "Proxima Nova SemiBold";display: inline-block;text-decoration: none;border: 1px solid #ABABAB;border-top: 2px solid #AAAAAA;font-size: 12px;}.c-event-block--featured-image .addthisevent-drop {margin-top: 20px;}.c-upcoming-container {overflow: hidden;display: block;}.c-upcoming-container .c-container--header {margin-bottom: -1px;}.c-upcoming-container .c-title {font-family: "Proxima Nova Regular";font-size: 14px;font-weight: normal;text-transform: uppercase;border-bottom: 2px solid #D8D8D8;position: relative;padding-bottom: 20px;margin-bottom: -2px;}.c-upcoming-container .c-title .c-calendar {position: absolute;right: 0;top: 0;}.c-upcoming-container .c-title .c-calendar:after {font-size: 15px;vertical-align: bottom;}.c-upcoming-container .c-event-block--upcoming {margin: 0px;padding: 20px 0 40px;overflow: hidden;font-family: "Proxima Nova Regular";position: relative;border-top: 1px solid #D8D8D8;}.c-upcoming-container .c-event-block--upcoming.u-odd {clear: left;}.c-upcoming-container .c-event-block--upcoming .c-event-date {text-transform: uppercase;font-size: 12px;position: absolute;top: 20px;left: 0;line-height: 130%;}.c-upcoming-container .c-event-block--upcoming .c-event-date span {font-family: "Adelle Bold";display: block;font-size: 26px;margin-bottom: 6px;}.c-upcoming-container .c-event-block--upcoming .c-event-name {font-family: "Adelle Light";font-size: 24px;margin: 0px 0px 25px 60px;line-height: 120%;}.c-upcoming-container .c-event-block--upcoming .c-event-location {font-size: 14px;margin-left: 60px;color: #222222;}.c-upcoming-container .c-event-block--upcoming .c-event-location span {margin-right: 7px;font-size: 18px;}.c-upcoming-container .c-event-block--upcoming .c-event-address {margin-top: 15px;color: #888888;font-size: 14px;line-height: 140%;display: none;margin-bottom: 0px;}.c-upcoming-container .c-event-block--upcoming .c-event-time {margin-top: 20px;display: none;font-size: 14px;}.c-event--title {margin-bottom: 20px;font-family: "Adelle Bold";font-size: 32px;line-height: 1.3em;}.event_detail_page .c-event-block--featured-image {border-top: none;}.c-upcoming-container.today {background-color: #EEEEEE;padding: 40px 5% 0 5%;}.c-upcoming-container.today .c-title {color: #444444;font-size: 24px;font-family: 'Adelle SemiBold';text-transform: capitalize;}.c-upcoming-container.today .c-title a {font-family: "Proxima Nova Regular";font-size: 14px;font-weight: normal;text-transform: uppercase;}.c-upcoming-container.today .c-event-name {font-size: 18px;width: 100%;margin-left: 0;}.c-upcoming-container.today .c-event-time {color: #888888;font-size: 14px;}.c-upcoming-container.today .c-event-location {margin-left: 0;}.view-previous-sessions .c-event-block--list {padding-bottom: 64px;}.view-previous-sessions .c-event-block--list .c-event-date {float: left;width: 70px;text-transform: uppercase;font-size: 14px;margin-top: 0;position: static;line-height: 1;}.view-previous-sessions .c-event-block--list .c-event-date span.date-day span {font-size: 40px;}.view-previous-sessions .c-event-block--list .c-event-date span.date-month span {font-family: "Proxima Nova Regular";font-size: 14px;}.view-previous-sessions .c-event-block--list .c-event-name {margin-bottom: 0;}.view-previous-sessions .c-event-block--list .c-event-location {clear: none;float: none;}.view-previous-sessions .c-event-block--list .c-event-video {margin-left: 70px;}.c-referred-title-bar {font-size: 12px;font-family: 'Proxima Nova Regular';text-transform: uppercase;overflow: hidden;margin-bottom: 10px;}.c-referred-title-bar .c-title,.c-referred-title-bar .c-votes {display: none;}.c-reference-block {border-top: 1px solid #AAAAAA;padding-top: 20px;padding-bottom: 30px;color: #444444;position: relative;}.c-reference-block .c-number {font-family: 'Adelle Bold';font-size: 24px;}.c-reference-block .c-referred-committee {font-family: 'Proxima Nova Regular';font-size: 10px;text-transform: uppercase;margin-top: 10px;}.c-reference-block .c-title {font-family: 'Adelle Light';font-size: 18px;margin: 20px 0;}.c-reference-block .l-senator-container {position: relative;height: 30px;margin-bottom: 20px;}.c-reference-block .l-senator-container .c-senator-photo {position: absolute;top: 0;left: 0;width: 30px;height: 30px;}.c-reference-block .l-senator-container .c-senator-name {margin-left: 40px;font-size: 14px;font-family: 'Proxima Nova Regular';margin-top: 3px;padding-top: 2px;}.c-reference-block .l-senator-container .c-senator-district {margin-left: 40px;font-family: 'Proxima Nova SemiBold';font-size: 10px;}.c-reference-block .c-votes {list-style: none;text-transform: uppercase;}.c-reference-block .c-votes .c-count {font-size: 10px;font-family: 'Proxima Nova Regular';}.c-reference-block .c-votes .c-count .c-number {font-size: 10px;font-family: 'Proxima Nova SemiBold';width: 28px;display: inline-block;}.c-twitter-block-container {margin-bottom: 40px;}.c-twitter-block-container .c-container--title {padding: 20px 0 30px;border-top: 1px solid #AAAAAA;letter-spacing: 0.05em;}.c-twitter-block-container .l-tweets {position: relative;overflow: hidden;padding: 20px;background-color: #EEEEEE;}.c-twitter-block-container .l-twitter-user {padding-bottom: 20px;}.c-twitter-block-container .c-twitter--logo {display: inline-block;vertical-align: middle;width: 60px;height: 60px;}.c-twitter-block-container .c-twitter--logo > img {background-color: transparent;}.c-twitter-block-container .c-twitter-user--info {display: inline-block;vertical-align: middle;margin-left: 20px;}.c-twitter-block-container .c-twitter-user--info p {font-size: 12px;line-height: 1;}.c-twitter-block-container .c-twitter-user--name {font-family: 'Proxima Nova Regular';font-size: 19px;color: #666666;}.c-twitter-block-container .c-twitter-user--link {font-family: 'Proxima Nova SemiBold';font-size: 12px;text-transform: uppercase;color: #CB8D37;}.c-twitter-block-container .c-twitter-user--follow {display: block;margin: 20px 0 0 0;padding: 7px 0;border: 1px solid #AAAAAA;width: 75px;background-color: #fff;text-align: center;color: #CB8D37;font-size: 12px;line-height: 1;font-family: 'Proxima Nova SemiBold';text-transform: uppercase;}.c-twitter-block-container .c-twitter-block {overflow: hidden;padding: 20px 0 20px;border-top: 1px solid #AAAAAA;}.c-twitter-block-container .c-twitter-block .c-tweet {font-family: 'Adelle Light';font-size: 18px;color: #888888;margin-bottom: 30px;}.c-twitter-block-container .c-twitter-block .c-tweet a {color: #444444;}.c-twitter-block-container .c-twitter-block .c-timestamp {display: block;float: left;font-family: 'Proxima Nova Regular';font-size: 12px;color: #888888;}.c-twitter-block-container .c-twitter-block .c-timestamp em {font-style: normal;}.c-twitter-block-container .c-twitter-block .c-web_intents {position: relative;display: block;float: right;margin-top: -6px;}.c-twitter-block-container .c-twitter-block .c-web_intents span {display: inline-block;}.c-twitter-block-container .c-twitter-block .c-web_intents a {display: block;position: relative;padding: 0;height: 28px;width: 35px;color: #888888;}.c-twitter-block-container .c-twitter-block .c-web_intents a:after {padding: 0;font-size: 28px;}.c-twitter-block-container .c-twitter-block .c-web_intents a[href*="intent/favorite"],.c-twitter-block-container .c-twitter-block .c-web_intents a[href*="intent/retweet"],.c-twitter-block-container .c-twitter-block .c-web_intents a[href*="intent/tweet"] {padding: 0 5px;}.c-twitter-block-container .c-twitter-block .c-web_intents a[href*="intent/favorite"]:after,.c-twitter-block-container .c-twitter-block .c-web_intents a[href*="intent/retweet"]:after,.c-twitter-block-container .c-twitter-block .c-web_intents a[href*="intent/tweet"]:after {top: -6px;left: 5px;}.c-twitter-block-container .last .c-twitter-block {padding-bottom: 0;}.view-issues-listings {width: 100%;margin-bottom: 50px;}.view-issues-listings .view-header {overflow: hidden;}.view-issues-listings .view-header .nys-subtitle-title {margin-top: 20px;}.view-issues-listings .c-explore-issues--descript {margin-bottom: 20px;}.view-issues-listings .view-content {width: 100%;overflow: hidden;margin: 0;}.c-block--explore-issues {width: 100%;text-align: right;font-family: "Proxima Nova Regular";font-weight: bold;font-size: 14px;line-height: 1em;letter-spacing: 0.1em;text-transform: uppercase;}.c-block--explore-issues a {color: #CB8D37;}.c-block--explore-issues a:after {margin-top: -3px;font-size: 18px;}.c-block--issue {position: relative;width: 100%;float: left;margin: 0 auto 20px;height: 120px;padding: 0 0 35px 0;}.c-block--issue .c-issue-block--title {position: absolute;top: 0;left: 0;width: 100%;height: 100%;margin-bottom: 35px;font-family: 'Proxima Nova Regular';text-transform: uppercase;font-size: 14px;letter-spacing: 0.1em;}.c-block--issue .c-issue-block--title a {position: absolute;display: block;top: 0;left: 0;height: 100%;width: 100%;padding: 20px 20px 35px 20px;color: #fff;background: #F1AF58;-webkit-transition: background 0.2s ease 0s;-moz-transition: background 0.2s ease 0s;-ms-transition: background 0.2s ease 0s;-o-transition: background 0.2s ease 0s;transition: background 0.2s ease 0s;}.c-block--issue .c-issue-block--title a:hover {background: #E29C44;}.c-block--issue .c-block--btn {position: absolute;bottom: 0;left: 0;width: 100%;height: 35px;margin: 0;text-decoration: none;text-transform: uppercase;font-family: "Proxima Nova SemiBold";letter-spacing: 0.2em;font-size: 10px;line-height: 35px;}.c-block--issue .c-block--btn span {line-height: 35px;}.c-block--issue .c-block--btn a {display: block;width: 100%;color: #fff;font-size: 10px;line-height: 35px;padding: 0 10px 0 20px;letter-spacing: 1px;-webkit-transition: background 0.2s ease 0s;-moz-transition: background 0.2s ease 0s;-ms-transition: background 0.2s ease 0s;-o-transition: background 0.2s ease 0s;transition: background 0.2s ease 0s;}.c-block--issue .c-block--btn a:hover {background: #AAAAAA;}.c-block--issue .c-block--btn a:before {font-size: 16px;}.c-block--issue .c-block--btn .flag-action {background-color: #E29C44;}.c-block--issue .c-block--btn .flag-action:hover {background-color: #CB8D37;}.c-block--issue .c-block--btn .unflag-action {background-color: #CB8D37;}.c-block--issue .c-block--btn .flag-wrapper {position: relative;display: block;width: 100%;}.c-block--issue .c-block--btn .flag-success-message {position: absolute;top: -85px;left: 0;height: 120px;width: 100%;padding: 20px 20px 35px 20px;}.c-block--issue .c-block--btn .message-text p {position: relative;padding-top: 15px;color: #fff;font-family: 'Proxima Nova Regular';text-transform: uppercase;font-size: 14px;letter-spacing: 0.1em;z-index: 2;pointer-events: none;}.c-block--issue .c-block--btn .message-text p span {line-height: 1;display: block;}.c-block--issue .c-block--btn .message-text p span + span {display: none;}.c-block--issue .c-block--btn .close-message {position: absolute;top: 0;left: 0;width: 100%;height: 100%;background-color: #E29C44;z-index: 1;-webkit-transition: background 0.2s ease 0s;-moz-transition: background 0.2s ease 0s;-ms-transition: background 0.2s ease 0s;-o-transition: background 0.2s ease 0s;transition: background 0.2s ease 0s;}.c-block--issue .c-block--btn .close-message:after {position: absolute;top: 5px;right: 15px;left: auto;width: 20px;font-size: 23px;}.c-block--issue .c-block--btn .close-message:hover {background: #AAAAAA;}.c-block--issue .c-block--btn .flag-success-btn {position: absolute;z-index: 3;width: 100%;bottom: 0;left: 0;background-color: #E29C44;-webkit-transition: background 0.2s ease 0s;-moz-transition: background 0.2s ease 0s;-ms-transition: background 0.2s ease 0s;-o-transition: background 0.2s ease 0s;transition: background 0.2s ease 0s;}.c-block--issue .c-block--btn .flag-success-btn:hover {background-color: #F1AF58;}.c-block--issue .c-block--btn .flag-throbber {position: absolute;top: 0;left: 20px;height: 35px;width: 35px;pointer-events: none;}.view-filters {margin-left: 0px;}.view-filters select {color: #2B6990;font-family: "Proxima Nova SemiBold";font-size: 14px;padding: 10px 40px 10px 20px;background: none;background-image: none;text-transform: uppercase;min-height: 45px;}.ajax-progress-throbber { /*display: none !important;*/}.ajax-progress-throbber .throbber { /*display: none !important;*/background: transparent url(../images/ajax-loader.gif) no-repeat 0px center !important;height: 16px !important;width: 16px !important;}/*---------------------------------
-/ 
-/   QUICK FACTS
-/ and
-/ WHAT WE'VE BEEN UP TO
-/ illustrated module
+/
+/ 	QUICK FACTS
+/	and
+/	WHAT WE'VE BEEN UP TO
+/	illustrated module
 /
 /---------------------------------*/.c-stats--container {
   background-color: #F1AF58;
@@ -324,10 +324,10 @@
   background-position: 0 100%;
 }/*-------------------------------------
 /
-/ I WANT TO...
-/ a container with three links in it
-/ senator - either find or your (depends on logged in state)
-/ explore issues and see all news
+/	I WANT TO...
+/	a container with three links in it
+/	senator - either find or your (depends on logged in state)
+/	explore issues and see all news
 /
 /-------------------------------------*/.c-container--want-to .c-container--header {
   padding-bottom: 15px;
@@ -815,10 +815,10 @@ div.ctools-modal-content .modal-content {
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
 }/*---------------------------------------
-/ ACCORDION LISTS:
-/ collapsible lists with abstracts on 
-/ various topics. 
-/   overwrites some foundation
+/	ACCORDION LISTS:
+/	collapsible lists with abstracts on
+/	various topics.
+/ 	overwrites some foundation
 /---------------------------------------*/.nys-accordion--header {
   display: block;
   clear: both;
@@ -1065,10 +1065,10 @@ div.ctools-modal-content .modal-content {
   padding: 0 20px;
 }/*---------------------------
 /
-/ WIDGET STYLES
-/ only applies to the buttons
-/ on featured legislation
-/ and the voting on bill detail
+/	WIDGET STYLES
+/	only applies to the buttons
+/	on featured legislation
+/	and the voting on bill detail
 /
 /---------------------------*/.nys-bill-vote .c-block--btn {
   color: #D0D0D0;
@@ -1469,7 +1469,7 @@ h2.pg-subtitle {
   font-size: 30px;
   margin: 36px 0 24px;
 }/*----------------------------------------
-/ PARAGRAPH STYLES 
+/ PARAGRAPH STYLES
 /----------------------------------------*/.node-paragraph-page h2.c-container--title {
   margin: 1px;
 }
@@ -1576,7 +1576,7 @@ p.c-tour-contact--loc,p.c-tour-contact--phone {
 .c-block--pg-accordion .node-chapter .node-title {
   margin: 0;
 }/*----------------------------------------
-/ Slider Carousel Paragraph 
+/ Slider Carousel Paragraph
 /----------------------------------------*/.slick-arrow {
   border-radius: 0 !important;
   background: #2B6990;
@@ -2023,7 +2023,7 @@ a.tweetabletext:before {
 .page-search-legislation .search-page-top-form .c-site-search {
   display: none;
 }/*------------------------------------
-/ HOMEPAGE
+/	HOMEPAGE
 /-------------------------------------*/.front .pane-nys-blocks-want-to {
   display: none;
 }
@@ -2220,7 +2220,7 @@ a.tweetabletext:before {
 #main-content + .pane-nys-blocks-how-create-budget-block .c-senate-works-container {
   margin-top: 0;
 }/*------------------------------------
-/ NEWS:
+/	NEWS:
 /-------------------------------------*/.c-news--head,.c-questionnaire--head {
   margin-bottom: 20px;
 }
@@ -2334,7 +2334,7 @@ a.tweetabletext:before {
   background-color: #2B6990;
   margin: 15px 0 40px 0;
 }/*------------------------------------
-/ INITIATIVES PAGE
+/	INITIATIVES PAGE
 /-------------------------------------*/.c-initiative--header {
   margin-bottom: 20px;
 }
@@ -2464,7 +2464,7 @@ a.tweetabletext:before {
 .c-block--initiative-honorees .field-collection-item-field-honorees .content .view-mode-full {
   margin-bottom: 18px;
 }/*------------------------------------
-/ PETITION PAGE
+/	PETITION PAGE
 /-------------------------------------*/.c-petition--head {
   margin-bottom: 15px;
 }
@@ -2547,8 +2547,8 @@ a.tweetabletext:before {
   clear: left;
 }/*-------------------------------------------------------
 /
-/   Committee Detail Header
-/   Exists on : Committee Detail Page
+/ 	Committee Detail Header
+/ 	Exists on : Committee Detail Page
 /
 /-------------------------------------------------------*/.c-senator-block img {
   float: left;
@@ -2697,8 +2697,8 @@ a.tweetabletext:before {
   padding-top: 20px;
 }/*-------------------------------------------------------
 /
-/   Senate Members
-/   Exists on : Senators Detail Page
+/ 	Senate Members
+/ 	Exists on : Senators Detail Page
 /
 /-------------------------------------------------------*/.c-members-title {
   border-top: 2px solid #AAAAAA;
@@ -2828,7 +2828,7 @@ a.tweetabletext:before {
   margin-right: 7px;
   font-size: 18px;
 }/*------------------------------------
-/ CALENDAR - SENATOR
+/	CALENDAR - SENATOR
 /-------------------------------------*/.c-upcoming--header {
   position: relative;
   height: 42px;
@@ -2894,7 +2894,7 @@ a.tweetabletext:before {
 .view-senator-events.view-display-id-upcoming_events > .view-content > div.first .c-event-block--list,.view-senator-events.view-display-id-senator_upcoming_albany > .view-content > div.first .c-event-block--list,.view-senator-events.view-display-id-senator_upcoming_district > .view-content > div.first .c-event-block--list {
   border-top: 2px solid #AAAAAA;
 }/*------------------------------------
-/ GLOBAL CALENDAR
+/	GLOBAL CALENDAR
 /-------------------------------------*/.page-events #footer-last {
   clear: both;
 }
@@ -3350,18 +3350,18 @@ a.tweetabletext:before {
   border-color: #444;
   background: #666;
 }/*------------------------------------
-/ DASHBOARD:
+/	DASHBOARD:
 /-------------------------------------*/.page-user-dashboard {
  /*------------------------------------
-  / LEFT SIDEBAR
+  /	LEFT SIDEBAR
   /-------------------------------------*/ /*------------------------------------
-  / RIGHT CONTENT AREA
+  /	RIGHT CONTENT AREA
   /-------------------------------------*/ /*------------------------------------
-  / Constituent Dashboard
+  /	Constituent Dashboard
   /-------------------------------------*/ /*------------------------------------
-  / Senator Dashboard
+  /	Senator Dashboard
   /-------------------------------------*/ /*------------------------------------------------
-  / Constituent Dashboard General Element Overrides
+  /	Constituent Dashboard General Element Overrides
   /-----------------------------------------------*/;
 }
 
@@ -6476,10 +6476,10 @@ a.tweetabletext:before {
   background-color: #FFFFFF;
   padding: 0px 5px;
 }/*--------------------------------
-/ DETAIL PAGES
-/   Bills
-/ Resolutions
-/ Issues
+/	DETAIL PAGES
+/ 	Bills
+/	Resolutions
+/	Issues
 /----------------------------------------------*/.c-detail--header {
   margin-bottom: 20px;
 }
@@ -6730,7 +6730,7 @@ a.tweetabletext:before {
   font-size: 18px;
   line-height: 1.4em;
 }/*---------------------------
-/ BILL & RESOLUTION
+/	BILL & RESOLUTION
 /---------------------------*/.c-action--items {
   list-style: none;
   width: 100%;
@@ -6812,7 +6812,7 @@ a.tweetabletext:before {
   font-family: "Proxima Nova Regular";
   font-size: 12px;
 }/*---------------------------
-/ BILL SPECIFIC
+/	BILL SPECIFIC
 /---------------------------*/.c-bill--flags {
   overflow: hidden;
   margin-top: 20px;
@@ -7266,7 +7266,7 @@ a.tweetabletext:before {
   text-transform: capitalize;
   font-size: 14px;
 }/*---------------------------
-/ RESOLUTION SPECIFIC
+/	RESOLUTION SPECIFIC
 /---------------------------*/.bill-resolution .c-detail--sponsors {
   margin-bottom: 60px;
 }
@@ -7275,7 +7275,7 @@ a.tweetabletext:before {
   width: 100%;
   margin-bottom: 60px;
 }/*---------------------------
-/ ISSUES SPECIFIC
+/	ISSUES SPECIFIC
 /---------------------------*/.c-issue--followers {
   color: #888888;
   text-transform: uppercase;
@@ -7347,10 +7347,10 @@ a.tweetabletext:before {
 .c-issue--mentions .nys-senator--party {
   color: #888888;
 }/*---------------------------
-/ ISSUES SPECIFIC -
-/ tablet and above
+/	ISSUES SPECIFIC -
+/	tablet and above
 /---------------------------*//*---------------------------
-/ SENATOR DETAIL
+/	SENATOR DETAIL
 /---------------------------*/.nys-title--events {
   border-bottom: 1px solid #AAAAAA;
   margin-bottom: 0;
@@ -7952,7 +7952,7 @@ a.tweetabletext:before {
   clear: both;
   margin: 20px 0 5px;
 }/*------------------------------------
-/ ISSUE DETAIL
+/	ISSUE DETAIL
 /-------------------------------------*/.flag-success-message {
   width: 487px;
   top: 100px;
@@ -8186,7 +8186,7 @@ a.tweetabletext:before {
 .page-taxonomy.section-issues .c-top-content-wrapper .pane-senators-talking-about-issue .view-senators-talking-about-issue .view-content .odd .views-field-field-image-hero img,.page-taxonomy.section-issues .c-top-content-wrapper .pane-senators-talking-about-issue .view-senators-talking-about-issue .view-content .even .views-field-field-image-hero img {
   border-radius: 45px;
 }/*------------------------------------
-/ ISSUE DETAIL
+/	ISSUE DETAIL
 /-------------------------------------*/.page-explore-issues #views-exposed-form-explore-issues-explore-issues .views-submit-button,.page-explore-issues #views-exposed-form-explore-issues-solr-explore-issues .views-submit-button,.page-explore-issues #views-exposed-form-explore-issues-tabs-explore-issues-alpha .views-submit-button {
   position: relative;
   top: inherit;
@@ -8207,7 +8207,7 @@ a.tweetabletext:before {
   width: 100%;
   float: left;
 }/*------------------------------------
-/ Student Program and Alumni Testimonial
+/	Student Program and Alumni Testimonial
 /-------------------------------------*/.page-student-programs .large-12.columns,.page-alumni-testimonial .large-12.columns {
   padding: 0;
 }
@@ -9583,7 +9583,7 @@ form.entitytype-hannon_photo_contest-form .form-item #edit-field-agreement.descr
   padding: 0 40px;
 }/*-------------------------------
 /
-/ MEETING DETAIL PAGE
+/	MEETING DETAIL PAGE
 /
 /-------------------------------*/.c-meeting-detail--header {
   padding-top: 20px;
@@ -10529,7 +10529,7 @@ form.entitytype-hannon_photo_contest-form .form-item #edit-field-agreement.descr
   text-transform: none;
   color: #222;
   cursor: default;
-}  
+}
 
 .webform-client-form LABEL {
   //text-indent:-14px;
@@ -11441,7 +11441,7 @@ body.node-type-transcript .field-name-field-ol-text {
   margin-bottom: 20px;
 }/*----------------------------------------
 /
-/ CONTACT PAGE STYLES
+/	CONTACT PAGE STYLES
 /
 /-----------------------------------------*/.contact-form .columns.medium-6 {
   width: 100%;
@@ -11455,9 +11455,27 @@ body.node-type-transcript .field-name-field-ol-text {
   letter-spacing: 0.2em;
 }/*----------------------------
 /
-/ News & Issues Page
+/	News & Issues Page
 /
-/----------------------------*/.admin-menu .fixed {
+/----------------------------*/body.maintenance-page {
+  text-align: center;
+  padding-top: 5%;
+}
+
+body.maintenance-page img {
+  width: 10%;
+  margin: 0 auto;
+}
+
+body.maintenance-page #container #content-content {
+  font-size: 24px;
+}
+
+.krumo-node img {
+  width: 4%;
+}
+
+.admin-menu .fixed {
   top: emCalc(29px);
 }
 
@@ -11693,7 +11711,7 @@ body.node-type-transcript .field-name-field-ol-text {
     font-size: 20px;
   }
 
-  .c-law--law-name,.c-law--law-id {
+  .c-law--global-law-name,.c-law--law-id {
     font-size: 20px;
   }
 
