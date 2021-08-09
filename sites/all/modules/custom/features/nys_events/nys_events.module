@@ -1,0 +1,19 @@
+<?php
+/**
+ * @file
+ * Code for the nys_events feature.
+ */
+
+include_once 'nys_events.features.inc';
+
+/**
+ * Implements hook_form_alter().
+ */
+function nys_events_form_alter(&$form, &$form_state, $form_id) {
+  if (isset($form['type']['#value']) && $form['type']['#value'] == 'event') {
+    $langauge = $form['language']['#value'];
+    if (isset($form['field_location'][$language][0]['#title'])) {
+      $form['field_location'][$language][0]['#title'] = t('Location <span class="form-required" title="This field is required.">*</span>');
+    }
+  }
+}

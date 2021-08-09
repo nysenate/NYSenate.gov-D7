@@ -1,0 +1,77 @@
+version: 2
+# https://circleci.com/docs/configuration#machine
+jobs:
+    # @todo, separate build and test phases.
+    build:
+        docker:
+            - image: quay.io/pantheon-public/build-tools-ci:1.x
+        working_directory: ~/pantheon_advanced_page_cache
+        environment:
+            BASH_ENV: ~/.bashrc
+            TZ: "/usr/share/zoneinfo/America/Los_Angeles"
+            TERMINUS_SITE: d7papc
+        steps:
+            - checkout
+            - restore_cache:
+                key: dependency-cache-{{ checksum "tests/composer.lock" }}
+            - run:
+                name: Composer install
+                command: |
+                  cd tests && composer install
+                  drush help
+            - save_cache:
+                key: dependency-cache-{{ checksum "tests/composer.lock" }}
+                paths:
+                  - ~/.composer/cache
+            - run:
+                name: PHP Code Sniff
+                command: cd tests && composer codesniff
+#            - run:
+#                name: Unit Tests for Behat helper
+#                command: composer phpunit
+            - run:
+                name: login-pantheon
+                command: |
+                  terminus auth:login -n --machine-token="$TERMINUS_TOKEN"
+                  terminus env:list --field=id $TERMINUS_SITE | grep -v '[a-z]' | grep -Eo '[0-9]{1,9}' | sort --numeric-sort --reverse | sed 1,7d | xargs -n1 -I ENV terminus env:delete --yes $TERMINUS_SITE.ENV
+            - run:
+                name: make-multidev
+                command: |
+                  touch $HOME/.ssh/config
+                  echo "StrictHostKeyChecking no" >> "$HOME/.ssh/config"
+                  terminus env:create $TERMINUS_SITE.dev ${CIRCLE_BUILD_NUM}
+            - run:
+                name: Set up site
+                command: |
+                  terminus connection:set ${TERMINUS_SITE}.${CIRCLE_BUILD_NUM} sftp
+                  # try installing twice to avoid inconsistent errors on site-install.
+                  terminus drush ${TERMINUS_SITE}.${CIRCLE_BUILD_NUM} -- site-install -y ||  terminus drush ${TERMINUS_SITE}.${CIRCLE_BUILD_NUM} -- site-install -y
+                  terminus drush ${TERMINUS_SITE}.${CIRCLE_BUILD_NUM} -- dl views -y
+                  terminus drush ${TERMINUS_SITE}.${CIRCLE_BUILD_NUM} -- en views -y
+                  terminus drush ${TERMINUS_SITE}.${CIRCLE_BUILD_NUM} -- views-enable frontpage
+                  # Don't enable this module until settings.php has been changed.
+                  terminus drush ${TERMINUS_SITE}.${CIRCLE_BUILD_NUM} -- dl d8cache -y
+                  terminus env:commit ${TERMINUS_SITE}.${CIRCLE_BUILD_NUM} --message="adding contrib modules" --force
+            - run:
+                name: Add and enable Pantheon Advanced Page Cache
+                command: |
+                  terminus connection:set ${TERMINUS_SITE}.${CIRCLE_BUILD_NUM} git
+                  git config --global user.email "circleci@example.com"
+                  git config --global user.name "CircleCI"
+                  cd /tmp && git clone $(terminus connection:info ${TERMINUS_SITE}.${CIRCLE_BUILD_NUM} --field=git_url) ${TERMINUS_SITE}
+                  cd ${TERMINUS_SITE}
+                  git checkout ${CIRCLE_BUILD_NUM}
+                  mkdir sites/all/modules/pantheon_advanced_page_cache
+                  cp -r ~/pantheon_advanced_page_cache/* sites/all/modules/pantheon_advanced_page_cache/
+                  rm -rf sites/all/modules/pantheon_advanced_page_cache/tests/vendor
+                  git status
+                  git add sites/all/modules/pantheon_advanced_page_cache/
+                  git commit -m 'Adding pantheon_advanced_page_cache'
+                  cat ~/pantheon_advanced_page_cache/tests/settings.d8cache.txt >> sites/default/settings.php
+                  git status
+                  git add sites/default/settings.php
+                  git commit -m 'd8cache changes to settings.php'
+                  git push
+            - run:
+                name: run behat
+                command: cd tests && ./behat/run-behat.sh

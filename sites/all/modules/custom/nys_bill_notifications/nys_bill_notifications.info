@@ -1,0 +1,10 @@
+name = NYS Bill Notifications
+description = Handles sending notifications about changed bills.
+core = 7.x
+package = NY STATE SENATE
+
+dependencies[] = nys_subscriptions
+dependencies[] = nys_utils
+dependencies[] = nys_bills
+dependencies[] = nys_bill_import
+dependencies[] = nys_sendgrid

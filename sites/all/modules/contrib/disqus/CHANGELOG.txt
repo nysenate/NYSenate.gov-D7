@@ -1,0 +1,36 @@
+CHANGELOG for Disqus for Drupal 7
+
+Disqus 7.x-1.12
+=================================
+- #2508209 by Eric_A: Add Feeds support
+- #2501743 by PJnes: Default Disqus status is always TRUE
+
+Disqus 7.x-1.11
+=================================
+- #2499753 by Fanyalla: Reduce number of calls to the database
+- #1821146 by DElion, slashrsm, JayeshSolanki: Fixed SSO login, which was incorrectly redirecting to disqus.com
+- #2339153 by jenlampton: Fixed "Toggle Disqus comments" permission required to toggle core comments.
+- #2329899 by JayeshSolanki | mredding: Fixed undefined disqus object in disqus_node_update error.
+- #2259383 by JayeshSolanki | Owen Barton: Fixed Disqus API settings hidden once you have the API library correctly installed.
+- #2243243 by rafalB: Default status per content type.
+- #2266877 by aasarava: Undefined index in disqus_node_delete error.
+- #2142607 by Neptun | Andrew Perriman: Cannot disable avatars in recent comments block.
+- #1579492 by zuuperman: Expose disqus as a display field with hook_field_extra_fields().
+- #2169911 by _wdm_: Adding node edit comment info.
+- #2144035 by slashrsm | destinationsound: A "Configure block" link shows to anonymous users.
+- #863122 by jlyon | osman | RobLoach: Add Display Suite support.
+
+Disqus 7.x-1.10
+=================================
+- #1783636 by nunoveloso: Fix typos in hook_variable_info().
+- #2111397 by slashrsm | joco: Cache disqus_comments block per-user if using SSO.
+- #2109505 by tkngdwn: Added Official Disqus PHP API Support.
+- #2114647 by Grayside: Added Decompose disqus_element_post_render() into more manageable API functions.
+- #1537548 by Owen Barton, Grayside | kevinwalsh: Added Altering user data passed to Disqus SSO.
+- #1783636 by jeroen12345: Added Implement hook_variable_info() in order to allow variable disqus_domain() (shortname) to be translated.
+- #2083329 by slashrsm, thedavidmeister | dianikol: The link to get api key is lead to a 404 page.
+- #2021905 by tkngdwn: Record file usage for SSO logo.
+- #2040057 by mandar.harkare, RobLoach | steven.wichers: Hook_uninstall() removes variables not belonging to Disqus.
+- #2021905 by Grayside, pblissmt: Custom SSO logo admin.
+- #2017385 by marcingy: Fixed Disqus creates a notice when no domain is defined.
+- #969202 by geerlingguy, aaronbauman, alias.mac, pcavanaugh, nadavoid, dashohoxha | animelion: Fixed Respect protocol of the page request.

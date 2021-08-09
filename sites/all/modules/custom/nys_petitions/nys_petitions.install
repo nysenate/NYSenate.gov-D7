@@ -1,0 +1,158 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the NYS petitions module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function nys_petitions_schema() {
+  $schema['nys_petitions'] = array(
+    'description' => 'Petitions Metadata for anonymous submissions.',
+    'fields' => array(
+      'sid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique signature ID.',
+      ),
+      'pid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Petition Node ID.',
+      ),
+      'fid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Petition Flag ID.',
+      ),
+      'session_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Session Identifier ID.',
+      ),
+      'email' => array(
+        'type' => 'varchar',
+        'length' => 254,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Email address.',
+      ),
+      'first_name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'First name.',
+      ),
+      'last_name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Last name.',
+      ),
+      'addr_street' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => 'Street Address.',
+      ),
+      'addr_opt' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => 'Optional Address.',
+      ),
+      'addr_city' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'City Address.',
+      ),
+      'addr_state' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'State Address.',
+      ),
+      'addr_zip' => array(
+        'type' => 'varchar',
+        'length' => 31,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Zip Address.',
+      ),
+      'senator' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'description' => 'Senator NID.',
+      ),
+      'district_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'description' => 'District Taxonomy term ID.',
+      ),
+      'district_number' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'District number.',
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'unsigned' => FALSE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "Timestamp of the signature.",
+      ),
+    ),
+    'primary key' => array('sid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function nys_petitions_uninstall() {
+  drupal_set_message('Successfully uninstalled NYS Petitions.');
+}
+
+/**
+ * Update records of anonymous petitions.
+ */
+function nys_petitions_update_7100() {
+  return nys_petitions_update_clean_anonymous_petitions();
+}
+
+/**
+ * Anonymous petition record updates, round 2.
+ */
+function nys_petitions_update_7101() {
+  // The variable names were updated from *7000* to *7101*.  If a *7101*
+  // variable exists, then the update version has already run.
+  $work_is_done = variable_get('nys_petitions_update_7101_complete', FALSE);
+  if (!$work_is_done) {
+    if (db_table_exists('nysbackup_petitions')) {
+      db_rename_table('nysbackup_petitions', 'nysbackup_petitions_7000');
+    }
+    if (db_table_exists('nysbackup_flagging')) {
+      db_rename_table('nysbackup_flagging', 'nysbackup_flagging_7000');
+    }
+    variable_del('nys_petitions_update_7000_complete');
+    variable_del('nys_petitions_update_save_flagging');
+    variable_del('nys_petitions_update_save_petitions');
+    variable_del('nys_petitions_update_7000_pointer');
+    return nys_petitions_update_clean_anonymous_petitions();
+  }
+}

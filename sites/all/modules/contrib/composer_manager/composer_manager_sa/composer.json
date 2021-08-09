@@ -1,0 +1,14 @@
+{
+    "name": "drupal/composer_manager_sa",
+    "description": "Check for known security issues in Composer libraries from FriendsOfPHP/security-advisories.",
+    "require": {
+        "sensiolabs/security-checker": "~2.0"
+    },
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Andrew Berry",
+            "email": "deviantintegral@gmail.com"
+        }
+    ]
+}

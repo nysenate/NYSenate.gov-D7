@@ -1,0 +1,13 @@
+diff --git a/views_load_more.js b/views_load_more.js
+index 5506eec..46c08d7 100644
+--- a/views_load_more.js
++++ b/views_load_more.js
+@@ -50,7 +50,7 @@
+     // jquery selector to replace the content with.
+     // Provide sensible defaults for unordered list, ordered list and table
+     // view styles.
+-    var content_query = targetList && !response.options.content ? '> .view-content ' + targetList : response.options.content || '> .view-content';
++    var content_query = targetList && !response.options.content ? '.view-content ' + targetList : response.options.content || '.view-content';
+ 
+     // If we're using any effects. Hide the new content before adding it to the DOM.
+     if (effect.showEffect != 'show') {

@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the NYS OpenLeg module.
+ */
+
+function nys_openleg_install() {
+  // Attempt to use the API key from existing legacy configuration.
+  variable_set('nys_openleg_api_key', variable_get('openleg_key', ''));
+
+  // Add the new permission to the Administrator role
+  $role = user_role_load_by_name('administrator');
+  user_role_grant_permissions($role->rid, ['administer openleg settings']);
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function nys_openleg_schema() {
+  return [
+    'cache_openleg' => drupal_get_schema_unprocessed('system', 'cache'),
+  ];
+}

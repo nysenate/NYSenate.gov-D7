@@ -1,0 +1,46 @@
+.node-type-resolution {
+
+	.field-name-field-issues {
+		ul {
+			li {
+				display: inline-block;
+				margin-right: 15px;
+			}
+		}
+	}
+	.field-name-field-image-main {
+		padding-top: 55px;
+		clear: both;
+	}
+	.c-block--img {
+		margin-top: 40px;
+	}
+	.c-bill--details {
+		dl {
+			dd {
+				color: $grey04;
+				@media #{$tablet} {
+					float: left;
+				}
+			}
+		}
+	}
+	.c-detail--social {
+		.c-container--header__top-border .c-detail--subhead {
+				text-align: right;
+				padding-right: 22px;
+			}
+		.c-block.c-block--social {
+			a {
+			  font-size: 26px;
+			  position: relative;
+			  display: inline-block;
+			  width: 30px;
+			  margin: 0 20px;
+			  &.icon-replace__mail {
+				  margin-right: 0;
+			  }
+			}
+		}
+	} 
+}

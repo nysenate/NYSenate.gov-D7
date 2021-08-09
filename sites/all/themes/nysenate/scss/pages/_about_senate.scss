@@ -1,0 +1,1036 @@
+/*------------------------------------
+/ ABOUT SENATE
+/------------------------------------- */
+// do NOT use global top padding on about
+.section-about main.l-row--main {
+  padding-top: 0;
+}
+
+// margin for promo banners at bottom
+.section-about {
+
+  .view-promo-banner-senators-committees {
+    margin-top: 40px;
+  }
+}
+
+@media #{$tablet} {
+
+  .section-about {
+
+    .view-promo-banner-senators-committees {
+      margin-top: 60px;
+    }
+  }
+}
+
+.c-block--about {
+  margin-bottom: 0;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.c-about--welcome {
+  background: #fff;
+  padding: 0 20px 40px;
+}
+
+.nys-title--about {
+  margin: 30px 0 20px;
+}
+
+.c-block-legislative-search-itro {
+
+  .c-container--link {
+    top: inherit;
+    position: relative;
+    margin: 40px 0;
+    display: block;
+    float: right;
+  }
+}
+
+.view-student-programs-news {
+  position: relative;
+}
+
+.pane-student-programs-news {
+
+  .view-display-id-block_2 {
+    position: relative;
+
+    .c-container--link {
+      position: relative;
+      margin: 40px 0 0;
+      float: right;
+    }
+  }
+
+  #section-6 {
+    @include clearfix;
+    overflow: hidden;
+  }
+}
+
+.nys-btn--gold {
+  @include transition(background-color, 0.2s, ease);
+  position: relative;
+  display: block;
+  padding: 20px 10px;
+  background: $yellow01;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: "Proxima Nova SemiBold";
+  font-size: 14px;
+  letter-spacing: 0.1em;
+
+  &:hover {
+    color: #fff;
+    background: $yellow03;
+  }
+}
+
+.c-about--img {
+  margin-bottom: 25px;
+}
+
+.c-block--full-bleed {
+  float: left;
+  padding-top: 30px;
+  padding-bottom: 0;
+  background: $grey06;
+
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    display: block;
+    height: 100%;
+    width: 370px;
+    top: 0;
+    background: $grey06;
+  }
+
+  &:after {
+    left: 100%;
+  }
+
+  &:before {
+    right: 100%;
+  }
+
+  .c-container--header {
+    margin-bottom: 20px;
+  }
+
+  // senate works has different styles
+  .c-senate-works-container {
+    background-color: $yellow01;
+    margin: 40px 0 0 0;
+
+    .c-container--header {
+      margin-bottom: 0;
+    }
+
+    .c-container--title {
+      margin-bottom: 0;
+      color: #fff;
+      text-transform: none;
+      font-family: "Adelle Regular";
+      font-size: 18px;
+    }
+
+    .c-container--link {
+      width: 100%;
+      padding: 10px 0 20px;
+      text-align: right;
+      color: $orange01;
+      background: $grey06;
+
+      &:before {
+        display: none;
+      }
+
+      &:after {
+        display: inline-block;
+        position: relative;
+      }
+    }
+  }
+  .c-carousel--btn {
+
+    &:after{
+      color: $orange01;
+    }
+  }
+
+  .c-senate-works--illustration {
+    background: $yellow02;
+  }
+}
+
+@media #{$tablet} {
+
+  .c-block--about {
+    margin-bottom: 0;
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .c-about--welcome {
+    padding: 20px 60px 60px;
+  }
+
+  .section-about {
+
+    .c-stats--container {
+      margin-top: 0;
+    }
+  }
+
+  .c-block--full-bleed {
+    padding-top: 60px;
+    padding-bottom: 0;
+
+    .c-senate-works-container {
+      background-color: transparent;
+
+      .c-container--title {
+        color: $grey02;
+        text-transform: uppercase;
+        font-family: "Proxima Nova Regular";
+        font-size: 16px;
+      }
+
+      .c-container--link {
+        width: auto;
+        padding: 0;
+      }
+    }
+
+    .c-senate-works--illustration {
+      background: $yellow01;
+    }
+  }
+}
+
+/*-----------------------------------
+/ about senate page nav
+/------------------------------------*/
+.c-about--nav {
+  display: none;
+}
+
+@media #{$desktop} {
+
+  .c-about--nav {
+    @include transition(height, 0.25s, ease);
+    display: block;
+    position: fixed;
+    // kill triangle but fixes hover
+    overflow: hidden;
+    z-index: 40;
+    top: 270px;
+    right: 20px;
+    width: 220px;
+    height: 275px;
+    padding-right: 20px;
+
+    // triangle
+    &:after {
+      content: "";
+      display: block;
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      margin: auto;
+      width: 0;
+      height: 0;
+      border-top: 20px solid transparent;
+      border-bottom: 20px solid transparent;
+      border-left: 20px solid $blue01;
+    }
+
+    > ul {
+      @include transition(top, 0.2s, ease);
+      list-style: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 400px;
+      width: 200px;
+      padding: 20px 25px;
+      background: $blue01;
+    }
+
+    li {
+      @extend .icon-before__see-more;
+      position: relative;
+      padding-left: 20px;
+      font-family: "Proxima Nova Regular";
+      font-size: 14px;
+      line-height: 14px;
+      -webkit-transition: opacity 0.25s ease .2s,
+        padding .2s ease;
+      -moz-transition: opacity 0.25s ease .2s,
+        padding .2s ease;
+      -ms-transition: opacity 0.25s ease .2s,
+        padding .2s ease;
+      -o-transition: opacity 0.25s ease .2s,
+        padding .2s ease;
+      transition: opacity 0.25s ease .2s,
+        padding .2s ease;
+
+      & + li {
+        margin-top: 18px;
+      }
+
+      &:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        color: #fff;
+      }
+
+      a {
+        display: block;
+        color: #fff;
+      }
+    }
+
+    //collapsed state
+    &.collapsed {
+      @include transition(height, 0.35s, ease);
+      height: 50px;
+
+      > ul {
+        @include transition(top, 0.35s, ease);
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+
+      li {
+        padding: 18px 0 18px;
+        opacity: 0;
+        -webkit-transition: opacity 0.1s ease,
+          padding 0.2s ease 0.1s,
+          margin 0.2s ease 0.1s;
+        -moz-transition: opacity 0.1s ease,
+          padding 0.2s ease 0.1s,
+          margin 0.2s ease 0.1s;
+        -ms-transition: opacity 0.1s ease,
+          padding 0.2s ease 0.1s,
+          margin 0.2s ease 0.1s;
+        -o-transition: opacity 0.1s ease,
+          padding 0.2s ease 0.1s,
+          margin 0.2s ease 0.1s;
+        transition: opacity 0.1s ease,
+          padding 0.2s ease 0.1s,
+          margin 0.2s ease 0.1s;
+
+        & + li {
+          margin-top: 0;
+        }
+
+        &.active {
+          opacity: 1;
+        }
+
+        &:before {
+          content: "";
+        }
+      }
+
+      &:hover {
+        @include transition(height, .25s, ease);
+        height: 310px;
+
+        > ul {
+          top: 0 !important;
+          padding: 20px 25px;
+        }
+
+        li {
+          padding: 0 0 0 20px;
+          opacity: 1;
+          -webkit-transition: opacity 0.25s ease .2s,
+            padding .2s ease,
+            margin .2s ease;
+          -moz-transition: opacity 0.25s ease .2s,
+            padding .2s ease,
+            margin .2s ease;
+          -ms-transition: opacity 0.25s ease .2s,
+            padding .2s ease,
+            margin .2s ease;
+          -o-transition: opacity 0.25s ease .2s,
+            padding .2s ease,
+            margin .2s ease;
+          transition: opacity 0.25s ease .2s,
+            padding .2s ease,
+            margin .2s ease;
+
+          & + li {
+            margin-top: 18px;
+          }
+
+          &:before {
+            content: "\65";
+          }
+        }
+      }
+    }
+  }
+}
+
+// how the senate works
+.c-block--about-rules,
+.c-block--about-leadership {
+
+  .c-container--header {
+    padding-bottom: 15px;
+  }
+
+  .c-container--title {
+    font-size: 14px;
+  }
+
+  p {
+    margin-bottom: 20px;
+  }
+
+  .nys-btn--gold {
+    margin-bottom: 40px;
+  }
+}
+
+.c-block--about-leadership {
+  padding-bottom: 20px;
+
+  .c-container--link {
+    position: absolute;
+    top: auto;
+    bottom: 0;
+  }
+}
+
+.c-block .c-block--about-rules {
+  margin-top: 55px;
+  margin-bottom: 25px;
+}
+
+@media #{$tablet} {
+
+  .c-block--about-how {
+
+    p {
+      margin-bottom: 40px;
+    }
+
+    .c-senate-works-container {
+      margin-top: 60px;
+    }
+  }
+
+  .c-block--about-rules,
+  .c-block--about-leadership {
+
+    .c-container--header {
+      padding-bottom: 20px;
+    }
+
+    .c-container--title {
+      font-size: 16px;
+    }
+  }
+}
+
+// map
+.c-block--about-map {
+
+  .nys-btn--gold {
+    margin-top: 30px;
+  }
+
+  .c-about-map-wrap {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-top: 80%;
+
+    > iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      border: none;
+    }
+  }
+
+  .c-map--btn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    background: transparent;
+    border: none;
+  }
+}
+
+@media #{$desktop} {
+
+  .c-block--about-map {
+
+    .c-map--btn {
+      display: none;
+    }
+  }
+}
+
+// timeline
+.c-block--about-timeline {
+  padding-bottom: 70px;
+
+  .nys-subtitle-title {
+    margin-bottom: 20px;
+  }
+
+  .c-container--link {
+    position: absolute;
+    top: auto;
+    bottom: 20px;
+  }
+
+  .c-timeline {
+    position: relative;
+    width: 100%;
+    height: 615px;
+    padding-top: 100%;
+    overflow: hidden;
+
+    > div {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0;
+    }
+  }
+
+  .timeline-line {
+    border-bottom: 4px solid #fff;
+  }
+
+  .timeline-item {
+    position: relative;
+    float: left;
+    padding: 35px 25px 25px;
+    width: 270px;
+
+    .content {
+      position: relative;
+      display: block;
+      padding: 20px;
+      background-color: #fff;
+      text-align: left;
+      overflow: visible;
+
+      // triangle at top
+      &:before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: -15px;
+        right: 0;
+        left: 0;
+        margin: auto;
+        width: 0;
+        height: 0;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-bottom: 30px solid #fff;
+      }
+    }
+
+    .timeline-mark {
+      position: absolute;
+      top: -30px;
+      left: 0;
+      right: 0;
+      width: 30px;
+      margin: auto;
+      color: $blue01;
+      font-family: "Adelle Bold";
+      font-size: 14px;
+
+      &:before {
+        @include border-radius (50%);
+        content: "";
+        position: absolute;
+        display: block;
+        left: 0;
+        right: 0;
+        bottom: -24px;
+        margin: auto;
+        height: 24px;
+        width: 24px;
+        background: #fff;
+      }
+
+      &:after {
+        @include border-radius (50%);
+        content: "";
+        position: absolute;
+        display: block;
+        left: 0;
+        right: 0;
+        margin: auto;
+        height: 16px;
+        width: 16px;
+        bottom: -20px;
+        background: #fff;
+        border: 4px solid $blue01;
+      }
+    }
+  }
+
+  .c-timeline-item--header {
+    color: $grey02;
+    text-transform: uppercase;
+    font-family: "Proxima Nova Regular";
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  .c-timeline-item--body {
+    color: $grey03;
+    font-family: "Proxima Nova Regular";
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .c-timeline-mv-left,
+  .c-timeline-mv-right {
+    position: absolute;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: $blue01;
+    font-family: "Proxima Nova SemiBold";
+    font-size: 12px;
+    letter-spacing: 0.1em;
+  }
+
+  .c-timeline-mv-left {
+    @extend .icon-before__left;
+    left: 0;
+
+    &:before {
+      margin-top: -2px;
+      font-size: 21px;
+    }
+  }
+
+  .c-timeline-mv-right {
+    @extend .icon-after__right;
+    right: 0;
+
+    &:after {
+      margin-top: -2px;
+      font-size: 21px;
+    }
+  }
+}
+
+@media #{$tablet} {
+
+  .c-block--about-timeline {
+    padding-bottom: 70px;
+
+    .c-timeline {
+      padding-top: 45%;
+
+      .menu {
+        display: block;
+        position: absolute;
+        top: auto;
+        top: 0;
+        height: 20px;
+        width: 100%;
+        z-index: 10;
+      }
+    }
+  }
+}
+
+// senate seal
+.c-block--about-seal {
+
+  > ul {
+    list-style: none;
+    margin: 30px 0 20px;
+    counter-reset: seal-counter;
+
+    li {
+      position: relative;
+      padding-left: 40px;
+
+      & + li {
+        margin-top: 20px;
+      }
+
+      &:before {
+        @include border-radius (50%);
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 27px;
+        width: 28px;
+        background: $yellow01;
+        text-align: center;
+        font-size: 18px;
+        line-height: 28px;
+        color: #fff;
+        font-family: Verdana;
+        content: counter(seal-counter);
+        counter-increment: seal-counter;
+      }
+
+      &:first-of-type {
+        &:before {
+          padding-left: 1px;
+        }
+      }
+    }
+  }
+}
+
+@media #{$tablet} {
+
+  .c-block--about-seal {
+
+    .c-seal--img {
+      width: 60%;
+      max-width: 470px;
+      margin: 0 auto;
+    }
+  }
+}
+
+// tour
+.c-block--about-tour {
+
+  p {
+    margin-bottom: 20px;
+  }
+
+  .c-tour--carousel {
+    position: relative;
+    margin-bottom: 40px;
+  }
+
+  .c-carousel--btn {
+    height: 45px;
+    width: 45px;
+    background: $blue01;
+
+    &:after {
+      top: 9px;
+      color: $grey06;
+      font-size: 28px;
+    }
+
+    &.prev {
+      left: -20px;
+    }
+
+    &.next {
+      right: -20px;
+    }
+  }
+  .c-tour--carousel-wrap {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .c-carousel {
+    // amount of items * 100%
+    width: 2400%;
+  }
+
+  .c-carousel--item {
+    width: 4.16667%;
+  }
+
+  .c-tour--carousel-caption {
+    display: block;
+    margin: 0;
+    padding: 10px 10px 10px 20px;
+    background: #fff;
+    font-family: "Proxima Nova Regular";
+    font-size: 12px;
+    letter-spacing: 0.05em;
+  }
+
+  .c-tour-contact {
+    margin-bottom: 40px;
+  }
+
+  .c-tour-contact--title {
+    margin: 0 0 5px 0;
+    padding-right: 20px;
+    font-size: 18px;
+    line-height: 1.2em;
+  }
+
+  .c-tour-contact--loc,
+  .c-tour-contact--phone {
+    margin: 0;
+    font-family: "Proxima Nova Regular";
+    font-size: 16px;
+    line-height: 1.2em;
+  }
+
+  .nys-btn--gold {
+    margin-bottom: 60px;
+  }
+}
+
+@media #{$tablet} {
+
+  .c-block--about-tour {
+
+    p {
+      margin-bottom: 40px;
+    }
+
+    .c-carousel--btn {
+      height: 55px;
+      width: 55px;
+
+      &:after {
+        top: 12px;
+        font-size: 32px;
+      }
+    }
+
+    .c-tour-contact {
+      position: absolute;
+      left: 340px;
+    }
+    .nys-btn--gold {
+      width: 300px;
+      float: left;
+    }
+  }
+}
+
+// about student program
+
+.view-display-id-block_1 {
+
+  .views-field-field-image-main {
+    float: none;
+    max-width: 380px;
+    margin: 0 20px 20px 0;
+  }
+
+  .views-field-title {
+    font-family: "Proxima Nova Regular";
+    font-size: 16px;
+    line-height: 18px;
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    color: $grey02;
+    border-bottom: 1px solid $grey05;
+
+    a {
+      color: $grey02;
+    }
+  }
+
+  .view-content {
+
+    .odd,
+    .even {
+
+      .nys-arrow-link {
+        margin-top: 10px;
+        float: right;
+
+        a {
+          color: $yellow03;
+          font-size: 12px;
+          line-height: 14px;
+        }
+
+        @media #{$tablet} {
+          float: none;
+        }
+      }
+    }
+  }
+}
+
+.c-block--about-student-programs {
+  padding-bottom: 20px;
+  margin-top: 60px;
+
+  .c-container--link {
+    position: absolute;
+    top: auto;
+    bottom: 0;
+  }
+}
+
+@media #{$tablet} {
+
+  .view-display-id-block_1 {
+
+    .views-field-field-image-main {
+      float: left;
+      max-width: 380px;
+    }
+  }
+}
+
+.c-student-program-are-you {
+
+  .gen-col {
+    width: 100%;
+    display: block;
+
+    h3 {
+      font-family: "Adelle Bold";
+      font-size: 18px;
+      line-height: 32px;
+      color: $grey03;
+      margin: 20px 0 10px 0;
+    }
+
+    a {
+      @include transition(background-color, 0.25s, ease);
+      display: block;
+      width: 100%;
+      padding: 30px 20px;
+      background-color: $yellow01;
+      color: white;
+      font-family: "Proxima Nova SemiBold";
+      font-size: 14px;
+      line-height: 18px;
+      text-align: center;
+      text-transform: uppercase;
+
+      &:hover {
+        background-color: $yellow02;
+      }
+    }
+
+    &:first-of-type {
+      margin-right: 9%;
+    }
+  }
+}
+.view-display-id-block_2 {
+
+  .view-content {
+
+    .odd,
+    .even {
+
+      .nys-arrow-link {
+        margin-top: 10px;
+
+        a {
+          color: $yellow03;
+        }
+      }
+    }
+  }
+}
+
+.view-id-student_programs_news {
+  overflow: hidden;
+  padding-bottom: 40px;
+}
+
+@media #{$tablet} {
+
+  .c-student-program-are-you {
+
+    .gen-col {
+      width: 45%;
+      display: inline-block;
+    }
+  }
+
+  .view-id-student_programs_news {
+    padding-bottom: 60px;
+  }
+}
+
+// access to information
+.c-block--about-access {
+
+  .c-container--link {
+    position: relative;
+    float: right;
+    margin: 10px 0 20px;
+  }
+
+  .l-col {
+
+    .nys-subtitle-title {
+      clear: both;
+      margin: 20px 0 5px;
+    }
+  }
+}
+
+@media #{$tablet} {
+
+  .c-block--about-access {
+
+    .c-container--link {
+      float: left;
+    }
+
+    .l-col {
+
+      .nys-subtitle-title {
+        margin-top: 40px;
+        color: $grey02;
+        font-family: "Adelle Bold";
+        font-size: 18px;
+      }
+
+      .nys-subtitle-title__sans-serif {
+        color: $grey03;
+        font-family: "Proxima Nova SemiBold";
+        font-size: 15px;
+      }
+    }
+
+    .l-col-2 + .l-col-2 {
+
+      .nys-subtitle-title:first-child {
+        margin-top: 0;
+      }
+    }
+
+    .nys-btn--gold {
+      margin-top: 20px;
+    }
+  }
+}
+
+.space-bottom {
+  margin-bottom: 48px;
+}

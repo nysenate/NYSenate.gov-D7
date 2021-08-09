@@ -1,0 +1,345 @@
+/*------------------------------------
+/	HOMEPAGE
+/-------------------------------------*/
+.front {
+	.pane-nys-blocks-want-to {
+		display: none;
+	}
+}
+.pane-views {
+	&.pane-calendar,
+	&.pane-legislative-events {
+		position: relative;
+		margin: 40px 0 40px 0;
+		padding-bottom: 40px;
+		
+		.block-title,
+		.pane-title {
+			font-family: "Adelle SemiBold";
+			color: $grey02;
+			font-size: 20px;
+			line-height: 1em;
+			padding-bottom: 20px;
+		}
+
+		.view {	
+			// the link
+			.view-header {
+
+				.upcoming-events-link {
+					position: absolute;
+					display: block;
+					top: auto;
+					right: 0;
+					bottom: 0;
+					font-family: "Proxima Nova SemiBold";
+					font-size: 15px;
+					line-height: 18px;
+					color: $orange01;
+					text-transform: uppercase;
+				}
+			}
+
+			.view-empty {
+				h3 {
+					font-family: "Adelle SemiBold";
+					font-size: 20px;
+					line-height: 32px;
+					color: $grey02;
+				}
+			}
+			// body of the upcoming evts
+			.view-content {		
+				background-color: $grey06;
+				padding: 25px;
+
+				// DATE GROUP - contains many evts
+				> .view-grouping {
+					border-top: 1px solid $grey05;
+					padding: 20px 0; 
+
+					&:first-child {
+						border-top: none;
+						padding-top: 0;
+					}
+					&:last-child {
+						padding-bottom: 0;
+					}
+
+					> .view-grouping-header {
+						display: none;
+					}
+
+					> .view-grouping-content {
+
+						> .view-grouping {
+
+							// wrapper for DATE
+							.view-grouping-header {
+								display: block;
+								float: left;
+								// DATE text
+								.date-display-single {
+									text-transform: uppercase;
+									font-family: "Adelle Bold";
+									color: $grey02;
+									font-size: 16px;
+									line-height: 18px;
+								}
+							}
+
+							.view-grouping-content{
+								.date-title { display: none; }
+								> .date-title { display: block; }
+								// MONTH text
+								.title,
+								.date-title {
+									clear: none;
+									border-top: none;
+									padding: 0;
+									font-size: 12px;
+									font-family: "Proxima Nova Regular";
+									color: $grey02;
+									text-transform: uppercase;
+									line-height: 18px;
+
+									&:before {
+										content: "/";
+										margin: 0 3px 0 5px;
+									}
+								}
+								// individual event
+								> div {
+									clear: left;
+									border-top: 1px solid #d2d2d2;
+									padding: 12px 0;
+
+									&.first {
+										border-top: none;
+									}
+									&.last {
+										padding-bottom: 0;
+									}
+								}
+							}	
+						}
+					}
+				}
+
+				.event-title {
+					a {
+						font-family: "Adelle Light";
+						font-size: 18px;
+						line-height: 26px;
+						color: $grey02;
+						display: block;
+						
+					}
+				}
+			}
+		}
+	}
+
+	&.pane-calendar {
+		.view-calendar.view-display-id-block_2 {
+
+			.view-content {
+
+				.view-grouping-content {
+
+						.event-title a {
+							font-family: "Adelle Light";
+							font-size: 18px;
+							line-height: 26px;
+							color: $grey02;
+						}
+						.event-senator {
+							a {
+								text-transform: uppercase;
+								color: $orange01;
+								font-family: "Proxima Nova SemiBold";
+								font-size: 14px;
+								line-height: 16px;
+							}
+						}
+						.event-location-name {
+							font-family: "Proxima Nova Regular";
+							font-size: 14px;
+							line-height: 19px;
+							color: $grey02;
+							&:before {
+								color: $blue01;
+							}
+						}
+						.event-location,
+						.event-date {
+							font-family: "Proxima Nova Regular";
+							font-size: 14px;
+							line-height: 22px;
+							color: $grey04;
+						}
+						.event-date {
+							font-size: 14px;
+							line-height: 30px;
+							color: $grey02;
+						}
+				}
+			}
+		}
+	}	
+}
+
+.pane-nys-blocks-home-leg-accordion{
+	margin-bottom: 60px;
+	.view-upcoming-legislation-calendar.view-display-id-floor_calendar {
+		.view-header {
+			  font-family: 'Proxima Nova Regular';
+			  font-size: 16px;
+			  text-transform: uppercase;
+			  margin-bottom: 10px;
+			  span {
+			  	font-family: 'Proxima Nova SemiBold';
+			  	span {
+			  		font-family: 'Proxima Nova Semibold';
+			  	}
+			  }
+		}
+	}
+	.nys-accordion--header {
+		position: relative;
+		span.date {
+			text-transform: uppercase;
+		  	font-family: "Proxima Nova Regular";
+		  	font-size: 16px;
+		}
+		a {
+			bottom: 5px;
+  			top: auto;
+		}
+	}
+}
+// ensure top modules do NOT have margin - conflicts with global padding on main content 
+#main-content + .pane-nys-blocks-how-create-budget-block {
+	.c-senate-works-container { margin-top: 0; }
+}
+
+@media #{$tablet} {
+	.front {
+		.pane-nys-blocks-want-to {
+			display: block;
+		}
+	}
+	.pane-views {
+		&.pane-calendar,
+		&.pane-legislative-events {
+			position: relative;
+			margin: 40px 0 40px 0;
+			padding: 40px;
+			background-color: $grey06;
+			
+			.block-title,
+			.pane-title {
+				font-size: 26px;
+				line-height: 1em;
+				padding-bottom: 15px;
+			}
+
+			.view {	
+				// the link
+				.view-header {
+
+					.upcoming-events-link {
+						top: 40px;
+						right: 40px;
+						bottom: auto;
+						line-height: 26px;
+					}
+				}
+
+				.view-empty {
+					h3 {
+						font-family: "Adelle SemiBold";
+						font-size: 26px;
+						line-height: 32px;
+						color: $grey02;
+					}
+				}
+				// body of the upcoming evts
+				.view-content {		
+					padding: 0;
+
+					// DATE GROUP - contains many evts
+					> .view-grouping {
+						border-top: 1px solid $grey05;
+						padding: 40px 0; 
+						@include clearfix;
+
+						&:first-child {
+							border-top: 1px solid $grey05;
+							padding-top: 40px;
+						}
+
+						> .view-grouping-content {
+							position: relative;
+
+							> .view-grouping {
+
+								// wrapper for DATE
+								.view-grouping-header {
+									width: 20%;
+
+									// DATE text
+									.date-display-single {
+										display: block;
+										font-size: 40px;
+										line-height: 26px; // set to same line height as title - so they line up.
+									}
+								}
+
+								.view-grouping-content{
+									float: left;
+									width: 80%;
+
+									// MONTH text
+									.title,
+									.date-title {
+										padding: 0;
+										position: absolute;
+										left: 0;
+										top: 32px; 
+
+										font-size: 16px;
+										line-height: 1em;
+										letter-spacing: 0.1em;
+
+										&:before {
+											display: none;
+										}
+									}
+									// individual event
+									> div {
+										padding: 20px 0;
+
+										&.first {
+											padding-top: 0;
+										}
+									}
+								}	
+							}
+						}
+					}
+
+					.event-title {
+						a {
+							
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@media #{$desktop} {
+	
+}

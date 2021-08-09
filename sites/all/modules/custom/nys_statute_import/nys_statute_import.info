@@ -1,0 +1,11 @@
+name = Statute Import
+description = Imports statutes from OpenLeg into Drupal.
+core = 7.x
+
+package = NY STATE SENATE
+
+dependencies[] = nys_statute
+;dependencies[] = nys_legislation_explorer
+
+;dependencies[] = entity
+;dependencies[] = views

@@ -1,0 +1,10 @@
+name = Transcript Import
+description = Imports transcripts from OpenLeg into Drupal.
+core = 7.x
+
+dependencies[] = field
+dependencies[] = entity
+dependencies[] = node
+dependencies[] = nys_utils
+
+files[] = classes/Processor.inc

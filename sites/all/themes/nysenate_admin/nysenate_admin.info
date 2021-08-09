@@ -1,0 +1,8 @@
+name = NY STATE SENATE ADMIN
+description = Custom sub-theme based on the Adminimal base theme.
+core = 7.x
+engine = phptemplate
+base theme = adminimal
+
+stylesheets[all][] = css/nysenate_admin.css
+scripts[] = js/nysenate_admin.js

@@ -1,0 +1,16 @@
+// Make sure the charset is set appropriately
+@charset "UTF-8";
+
+// Core
+// The following imports bootstrap the theme.
+// You may comment out bourbon if you don't want to use its library of mixins.
+// The theme will have compilation errors if Foundation is not imported.
+
+// Global Zurb Foundation variables.
+// @import "vendor/foundation/variables";
+// Comment out this import if you don't want to use normalize.
+@import "vendor/foundation/normalize";
+// Comment out this import below if you are customizing you imports below.
+@import "vendor/foundation/foundation";
+// Comment out this import if you don't want to use Bourbon, a replacement for Compass mixins.
+@import "bourbon";

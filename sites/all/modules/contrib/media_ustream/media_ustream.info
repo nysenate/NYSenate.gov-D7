@@ -1,0 +1,15 @@
+name = Media: UStream
+description = Provides UStream support to the Media module.
+package = Media
+core = 7.x
+files[] = includes/MediaInternetUStreamHandler.inc
+files[] = includes/MediaUStreamStreamWrapper.inc
+files[] = includes/media_ustream.formatters.inc
+dependencies[] = media_internet
+
+; Information added by Drupal.org packaging script on 2014-08-06
+version = "7.x-1.0-beta1+1-dev"
+core = "7.x"
+project = "media_ustream"
+datestamp = "1407348575"
+

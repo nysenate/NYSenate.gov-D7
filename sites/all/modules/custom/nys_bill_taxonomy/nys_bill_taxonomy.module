@@ -1,0 +1,239 @@
+<?php
+
+/**
+ * @file
+ * A module to apply genealogy taxonomies to bills during OpenLeg imports.
+ */
+
+/**
+ * Builds an array of genealogy taxonomy vocabularies.
+ *
+ * Builds an array of the known taxonomy vocabularies required by this
+ * module.  If different vocabularies are needed, the return of this
+ * function should be modified accordingly.
+ *
+ * @return array
+ *   An array of taxonomy vocabulary definitions.
+ */
+function nys_bill_taxonomy_default_vocabulary() {
+  return [
+    'prev_ver' => (object) [
+      'name' => 'Previous Versions',
+      'machine_name' => 'prev_ver',
+      'description' => 'Previous Version tree',
+      'module' => 'nys_bill_taxonomy',
+    ],
+  ];
+}
+
+/**
+ * Pre-loads and creates (if necessary) taxonomy vocabularies.
+ *
+ * Establishes that the required vocabularies exist, and populates a static
+ * variable with an array of vocabulary objects.  On first call, the existing
+ * vocabularies are loaded.  Any required items which don't already exist are
+ * added, and all items are tagged with their vid.
+ *
+ * @return array
+ *   An array of vocabulary objects.
+ */
+function nys_bill_taxonomy_verify_vocabulary() {
+  // A static to hold the loaded and verified vocabularies required by for this
+  // module.  Should be an array of vocabulary objects.
+  static $vocabularies = NULL;
+
+  // If the static has not been populated, populate it now.
+  if (is_null($vocabularies)) {
+    // Get the defaults.
+    $vocabularies = nys_bill_taxonomy_default_vocabulary();
+
+    // Use EntityFieldQuery to load existing vocabularies.  All of them should
+    // be tagged with the name of this module.
+    $query = new EntityFieldQuery();
+    $result = $query->entityCondition('entity_type', 'taxonomy_vocabulary')
+      ->propertyCondition('module', 'nys_bill_taxonomy')
+      ->execute();
+
+    // The query may return a NULL.  Make sure we have an array.
+    $found_vocab = isset($result['taxonomy_vocabulary']) ? $result['taxonomy_vocabulary'] : [];
+
+    // Get the key `vid` values found by the query and load the actual objects.
+    $id_array = array_keys($found_vocab);
+    $loaded_vocab = entity_load('taxonomy_vocabulary', $id_array);
+
+    // For each of the loaded vocabularies, apply the `vid` value to its
+    // entry in the static array.  For 'bills', record the vid for reference.
+    foreach ($loaded_vocab as $key => $val) {
+      if (isset($vocabularies[$val->machine_name])) {
+        $vocabularies[$val->machine_name]->vid = $val->vid;
+      }
+    }
+
+    // For each of the known required vocabularies, if a `vid` value is not
+    // populated then it was not found in the loaded list.  Create it.
+    foreach ($vocabularies as $key => $val) {
+      if (empty($val->vid)) {
+        $val->hierarchy = 0;
+        if (!taxonomy_vocabulary_save($val)) {
+          drupal_set_message(t("Could not create vocabulary entry for '@name' (machine_name=@key)", [
+            '@name' => $val->name,
+            '@key' => $key,
+          ]), 'error');
+
+        }
+        else {
+          drupal_set_message(t("Added new vocabulary for '@name' (machine_name=@key)", [
+            '@name' => $val->name,
+            '@key' => $key,
+          ]));
+        }
+      }
+    }
+  }
+
+  return $vocabularies;
+}
+
+/**
+ * Implements hook_node_presave().
+ *
+ * Applies taxonomy terms to a bill/resolution node.  This will iterate
+ * through all the known required vocabulary items, calling its assignment
+ * function, if it exists.
+ */
+function nys_bill_taxonomy_node_presave($node) {
+  // Only do work on bills and resolutions.
+  // 2017-11-06, exempting resolutions from taxonomy.
+  if (in_array($node->type, ['bill'])) {
+    $tax = nys_bill_taxonomy_verify_vocabulary();
+    foreach ($tax as $key => $val) {
+      $function = "nys_bill_taxonomy_assign_terms_$key";
+      if (function_exists($function)) {
+        $function($node);
+      }
+    }
+  }
+}
+
+/**
+ * Function specific to correlating nodes with previous versions.
+ *
+ * @param object $node
+ *   The node receiving taxonomy assignments.
+ */
+function nys_bill_taxonomy_assign_terms_prev_ver($node) {
+  // Initialize some work variables.
+  $term_name = '';
+  $refs = [];
+
+  // EMW will throw an exception if anything untoward happens, so be prepared.
+  // If the node can't be wrapped, or if the field values cannot be found,
+  // assume there is no data and move on.
+  try {
+    $wrapped = entity_metadata_wrapper('node', $node);
+    $prev_ver = json_decode($wrapped->field_ol_previous_versions->value());
+    $chamber = $wrapped->field_ol_chamber->value() == 'senate' ? 'S' : 'A';
+  }
+  catch (EntityMetadataWrapperException $e) {
+    $prev_ver = [];
+    $wrapped = NULL;
+  }
+
+  // If there is data for previous versions, rearrange it into an array based
+  // on session years.
+  if ($wrapped) {
+    if (is_array($prev_ver) && count($prev_ver)) {
+      foreach ($prev_ver as $val) {
+        if ($val->basePrintNo[0] == $chamber) {
+          $refs[$val->session] = $val->basePrintNo;
+        }
+      }
+    }
+    // Add the current bill to the refs, to handle bills with no
+    // previous versions. #11438.
+    $this_session = $wrapped->field_ol_session->value();
+    if ($this_session && !isset($refs[$this_session])) {
+      $refs[$this_session] = $wrapped->field_ol_base_print_no->value();
+    }
+  }
+
+  // Sort the array by the year, and grab the first one.  The term should be
+  // built as the standard '<year>-<print_num>' format.
+  if (count($refs)) {
+    ksort($refs, SORT_NUMERIC);
+    $print_num = reset($refs);
+    $session = key($refs);
+    $term_name = "{$session}-{$print_num}";
+  }
+
+  // If a term name was constructed, then apply it to the node.
+  if ($term_name) {
+    // Try to load the term by name.
+    $terms = taxonomy_get_term_by_name($term_name, 'prev_ver');
+
+    // If a term is available, GREAT!  Use its tid for the assignment.
+    if (is_array($terms) && count($terms)) {
+      $tid = key($terms);
+    }
+    // If no term was available, create one.
+    else {
+      // Load the vocabulary for "prev_ver".  We need the vid.
+      $vocab = taxonomy_vocabulary_machine_name_load('prev_ver');
+      // Create the new term's array.
+      $new_term = (object) ['vid' => $vocab->vid, 'name' => $term_name];
+      // Save it.
+      $terms = taxonomy_term_save($new_term);
+      // Grab the new tid.
+      $tid = $new_term->tid;
+    }
+
+    // If we have a tid, assign it to the node via our wrapper.  Field is set
+    // to hold one ID, so send it alone.  If it is altered to hold multiple,
+    // change $tid to an array: [$tid].
+    if ($tid) {
+      try {
+        $wrapped->field_bill_multi_session_root->set($tid);
+      }
+      catch (EntityMetadataWrapperException $e) {
+        drupal_set_message(t("Failed to set root taxonomy id: @msg", ['@msg' => $e->getMessage()]));
+      }
+    }
+  }
+}
+
+/**
+ * Discovers bill nodes which have been assigned a specific taxonomy
+ * term for their multi-session root.  NOTE: The taxonomy terms are
+ * built as '<session>-<print_num>'.
+ *
+ * @param $term_name string A taxonomy term, e.g., 2013-S123.
+ *
+ * @return array An array of node IDs (empty array if none found).
+ */
+function nys_bill_taxonomy_load_bills_from_term($term_name) {
+  $terms = taxonomy_get_term_by_name($term_name, 'prev_ver');
+  $tid = (is_array($terms) && count($terms)) ? key($terms) : 0;
+
+  return nys_bill_taxonomy_load_bills_from_tid($tid);
+}
+
+/**
+ * Discovers bill nodes which have been assigned a specific taxonomy
+ * term ID for their multi-session root.
+ *
+ * @param $tid int The tid of the taxonomy term.
+ *
+ * @return array An array of node IDs (empty array if none found).
+ */
+function nys_bill_taxonomy_load_bills_from_tid($tid) {
+  $query = new EntityFieldQuery();
+  $result = $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'bill')
+    ->fieldCondition('field_bill_multi_session_root', 'tid', $tid)
+    ->execute();
+  $ret = [];
+  if (isset($result['node'])) {
+    $ret = array_keys($result['node']);
+  }
+  return $ret;
+}

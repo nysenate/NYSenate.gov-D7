@@ -1,0 +1,31 @@
+diff --git b/sites/all/modules/contrib/sendgrid_integration/composer.json a/sites/all/modules/contrib/sendgrid_integration/composer.json
+index ace7fb916..a98a4f652 100644
+--- b/sites/all/modules/contrib/sendgrid_integration/composer.json
++++ a/sites/all/modules/contrib/sendgrid_integration/composer.json
+@@ -11,7 +11,13 @@
+     "grid",
+     "php"
+   ],
++  "repositories": [
++    {
++      "type": "vcs",
++      "url": "https://github.com/rtblair/sendgrid-php-ng"
++    }
++  ],
+   "require": {
+-    "fastglass/sendgrid": ">=1.0.6"
++    "fastglass/sendgrid": "dev-master#12555a06bd312ca19da3902104e90b80b1b076c8"
+   }
+ }
+diff --git b/sites/all/modules/contrib/sendgrid_integration/inc/sendgrid.mail.inc a/sites/all/modules/contrib/sendgrid_integration/inc/sendgrid.mail.inc
+index 078066af5..9c857f751 100644
+--- b/sites/all/modules/contrib/sendgrid_integration/inc/sendgrid.mail.inc
++++ a/sites/all/modules/contrib/sendgrid_integration/inc/sendgrid.mail.inc
+@@ -1,5 +1,7 @@
+ <?php
+ 
++use Fastglass\SendGrid;
++
+ /**
+  * @file
+  * Implements Drupal MailSystemInterface.

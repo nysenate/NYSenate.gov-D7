@@ -1,0 +1,118 @@
+<?php
+/**
+ * @file
+ * Code for the NYS OpenData module.
+ */
+
+require_once 'nys_opendata.inc';
+
+/**
+ * Implements hook_menu().
+ * Adds the AJAX handler for front-end datatables.
+ */
+function nys_opendata_menu() {
+  $items = [];
+  $items['open-data/datasrc/%'] = [
+    'title' => 'NYS Open Data Datasource Callback',
+    'description' => 'SendGrid Integration Settings',
+    'page callback' => 'nys_opendata_fetch_datasource',
+    'page arguments' => [2],
+    'access callback' => TRUE,
+    'file' => 'nys_opendata.inc',
+  ];
+  return $items;
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ *
+ * Find any CSV files associated with open_data node types, and render
+ * them with datatables.js.
+ *
+ * @param $variables
+ */
+function nys_opendata_preprocess_node(&$variables) {
+  // Act only on 'open_data' nodes.
+  $node_type = $variables['node']->type ?? '';
+  if ($node_type == 'open_data') {
+    // Collector for all tables being rendered.
+    $all_tables = [];
+
+    // $count keeps the files in the same order.
+    $count = 0;
+
+    // Iterate through the associated file
+    foreach (($variables['field_open_data_file'] ?? []) as $one_file) {
+
+      // Get the data.
+      $file = NULL;
+      $this_fid = 0;
+      if (($one_file['filemime'] ?? '') == 'text/csv') {
+        $file = new NysOpenDataCsv($one_file['fid']);
+        $this_fid = $file->get('fid') ?? 0;
+      }
+
+      if ($this_fid) {
+
+        // Increment the weight/count.
+        // Increment by two to account for the possibility of removed data.
+        $count += 2;
+
+        // Some references.
+        $table_key = 'managed-csv-datatable-' . $this_fid;
+        $caption = $one_file['description'] ?? '';
+
+        // Generate the render array for this file.  Making a caption
+        // separate from dataTables is much more flexible.
+        $all_tables[$table_key] = [
+          '#attributes' => [
+            'class' => [
+              'managed-csv-datatable-container',
+              $table_key,
+            ],
+            'data-fid' => $this_fid,
+          ],
+          '#type' => 'container',
+          '#weight' => $count,
+          'datatable_caption' => [
+            '#markup' => $caption,
+            '#prefix' => '<div class="managed-csv-datatable-caption">',
+            '#suffix' => '</div>',
+          ],
+          'datatable' => $file->buildRenderArray() + [
+              '#weight' => $count,
+              '#attributes' => ['class' => ['managed-csv-datatable']],
+            ],
+        ];
+
+        // Hey, someone named 'Geneva' is on the phone asking about this code...?
+        if ($file->get('extra')) {
+          $markup = array_map(
+            function ($v) {
+              return implode(' ', $v);
+            },
+            $file->get('extra')
+          );
+          $all_tables[$table_key . '_removed'] = [
+            '#markup' => preg_replace('/#[ ]+/', '', implode(" ", $markup)),
+            '#prefix' => '<pre class="managed-csv-removed-data">',
+            '#suffix' => '</pre>',
+            '#weight' => $count - 1,
+          ];
+        }
+      }
+    }
+
+    // If any tables were rendered, add the datatables JS, CSS, and
+    // the initializer script.  The collection array becomes the
+    // parent container.
+    if (count($all_tables)) {
+      $all_tables += [
+        '#attached' => nys_opendata_construct_attached(),
+        '#attributes' => ['class' => ['managed-csv'],],
+        '#type' => 'container',
+      ];
+      $variables['open_data_tables'] = drupal_render($all_tables);
+    }
+  }
+}

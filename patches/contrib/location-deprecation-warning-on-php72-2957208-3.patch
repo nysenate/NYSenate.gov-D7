@@ -1,0 +1,13 @@
+diff --git a/sites/all/modules/contrib/location/location.module b/sites/all/modules/contrib/location/location.module
+index d82963b..935d9a7 100644
+--- a/sites/all/modules/contrib/location/location.module
++++ b/sites/all/modules/contrib/location/location.module
+@@ -1241,7 +1241,7 @@ function _location_autocomplete($country, $string = '') {
+   }
+
+   if (!empty($provinces)) {
+-    while (list($code, $name) = each($provinces)) {
++    foreach ($provinces as $code => $name) {
+       if ($counter < 5) {
+         if (preg_match($string, strtolower($name))) {
+           $matches[$name] = $name;

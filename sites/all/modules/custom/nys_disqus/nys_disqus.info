@@ -1,0 +1,5 @@
+name = NYS DISQUS
+description = Module to customize Disqus identifiers to use session and bill number.
+package = NY STATE SENATE
+core = 7.x
+dependencies[] = disqus

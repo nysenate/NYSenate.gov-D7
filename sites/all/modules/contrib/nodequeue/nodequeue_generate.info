@@ -1,0 +1,13 @@
+name = Nodequeue generate
+description = Bulk assign nodes into queues for quickly populating a site.
+package = Development
+dependencies[] = nodequeue
+core = 7.x
+
+files[] = nodequeue_generate.module
+
+; Information added by Drupal.org packaging script on 2020-07-31
+version = "7.x-2.3"
+core = "7.x"
+project = "nodequeue"
+datestamp = "1596221684"

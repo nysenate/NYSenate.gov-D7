@@ -1,0 +1,6 @@
+name = Calendar Import
+description = Imports calendars from OpenLeg into Drupal.
+core = 7.x
+
+dependencies[] = entity
+dependencies[] = views

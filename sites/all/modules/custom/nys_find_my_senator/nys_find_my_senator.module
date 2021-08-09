@@ -1,0 +1,28 @@
+<?php
+
+/**
+* @file
+* File nys_find_my_senator.module.
+*/
+
+function nys_find_my_senator_menu() {
+  $items = array();
+
+  $items['find-my-senator'] = array(
+    'title' => 'Find My Senator',
+    'page callback' => 'nys_legislation_explorer_district_search',
+    'access arguments' => array('access content'),
+    'file' => 'nys_find_my_senator_district_search.php',
+  );
+
+ return $items;
+}
+
+function nys_find_my_senator_theme() {
+  return array(
+    'legislation_explorer_search_district' => array(
+       'variables' => array(),
+       'template' => 'search_district',
+    )
+  );
+}

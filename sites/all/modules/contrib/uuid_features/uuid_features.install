@@ -1,0 +1,38 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the uuid_features module.
+ */
+
+/**
+ * Implements hook_enable().
+ */
+function uuid_features_enable() {
+  db_update('system')
+    ->fields(array(
+      'weight' => -50,
+    ))
+    ->condition('name', 'uuid_features')
+    ->condition('type', 'module')
+    ->execute();
+}
+
+/**
+ * Convert uuid_features_(entity|file)_* as entity type specific.
+ */
+function uuid_features_update_7000() {
+  $entity_info = entity_get_info();
+  foreach ($entity_info as $type => $info) {
+    if (isset($info['uuid features']) && $info['uuid features']) {
+      foreach (variable_get('uuid_features_entity_' . $type, array()) as $key => $value) {
+        variable_set('uuid_features_entity_' . $type . '_' . $key, $value);
+      }
+      variable_del('uuid_features_entity_' . $type);
+
+      foreach (variable_get('uuid_features_file_' . $type, array()) as $key => $value) {
+        variable_set('uuid_features_file_' . $type . '_' . $key, $value);
+      }
+      variable_del('uuid_features_file_' . $type);
+    }
+  }
+}

@@ -1,0 +1,120 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the NYS SAGE module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function nys_sage_schema() {
+  $schema['nys_sage_log'] = array(
+    'description' => 'Store for raw returns from calls to SAGE API.',
+    'fields' => array(
+      'sage_id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique call ID.',
+      ),
+      'success' => array(
+        'type' => 'varchar',
+        'length' => 35,
+        'description' => 'A copy of the SAGE response property "status".',
+        'not null' => TRUE,
+        'default' => 'NO_STATUS',
+      ),
+      'email' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'description' => 'A copy of the user email associated with this call.',
+        'not null' => TRUE,
+        'default' => 'NO_EMAIL',
+      ),
+      'district' => array(
+        'type' => 'int',
+        'description' => 'A copy of the district assignment returned with this call',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'matchlevel' => array(
+        'type' => 'varchar',
+        'length' => '10',
+        'description' => 'A copy of the matchLevel attribute of the SAGE response.',
+        'not null' => TRUE,
+        'default' => 'N/A',
+      ),
+      'is_validated' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'description' => 'True/False indicating is uspsValidated was set.',
+        'not null' => TRUE,
+        'default' => '0',
+      ),
+      'url' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'description' => 'Full API URL called',
+      ),
+      'headers' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'description' => 'JSON-encoded request headers which triggered the SAGE call',
+      ),
+      'form_data' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'description' => 'Form data (or other args) received by the caller.',
+      ),
+      'response' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'description' => 'Response from API call.',
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'unsigned' => FALSE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "Timestamp of the call.",
+      ),
+    ),
+    'primary key' => array('sage_id'),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function nys_sage_install() {
+  // Propagate old variable value from nys_registration, then delete it.
+  $use_diag = variable_get('nys_sage_diagnostics', FALSE);
+  variable_del('nys_sage_diagnostics');
+
+  // Configure default values.
+  variable_set('nys_sage_logging', $use_diag);
+  variable_set('nys_sage_api_endpoint', 'pubgeo.nysenate.gov/api/v2/');
+  variable_set('nys_sage_use_ssl', TRUE);
+  variable_set('nys_sage_ssl_verifypeer', TRUE);
+}
+/**
+ * Implements hook_uninstall().
+ */
+function nys_sage_uninstall() {
+  // Remove module variables.
+  variable_del('nys_sage_diagnostics');
+  variable_del('nys_sage_logging');
+  variable_del('nys_sage_api_endpoint');
+  variable_del('nys_sage_use_ssl');
+  variable_del('nys_sage_ssl_verifypeer');
+  drupal_set_message('Successfully uninstalled NYS SAGE.');
+}
+
+/**
+ * Add logging retention variable.
+ */
+function nys_sage_update_7101() {
+  variable_set('nys_sage_maximum_retention', 15);
+}

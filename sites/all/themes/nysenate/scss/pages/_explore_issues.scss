@@ -1,0 +1,49 @@
+/*------------------------------------
+/	ISSUE DETAIL
+/-------------------------------------*/
+.page-explore-issues {
+	#views-exposed-form-explore-issues-explore-issues,
+	#views-exposed-form-explore-issues-solr-explore-issues,
+	#views-exposed-form-explore-issues-tabs-explore-issues-alpha {
+		.views-submit-button {
+			position: relative;
+			top: inherit;
+			right: inherit;
+			float: right;
+			button {
+				position: absolute;
+				top: 37px;
+				right: -31px;
+				width: 45px;
+				background: none;
+			}
+		}
+	}
+	.view-explore-issues-tabs{
+		margin-bottom: 60px;
+		width:100%;
+		float: left;
+	}
+}
+
+@media #{$tablet} {
+	.page-explore-issues {
+		#views-exposed-form-explore-issues-explore-issues,
+		#views-exposed-form-explore-issues-solr-explore-issues,
+		#views-exposed-form-explore-issues-tabs-explore-issues-alpha {
+			.views-submit-button {
+				position: relative;
+				top: inherit;
+				right: inherit;
+				float: right;
+				button {
+					top: 43px;
+					right: 20px;
+				}
+			}
+		}
+		.view-explore-issues-tabs{
+			margin-bottom: 60px;
+		}
+	}
+}

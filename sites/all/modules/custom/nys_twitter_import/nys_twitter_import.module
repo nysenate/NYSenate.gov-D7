@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * A module to import tweets from Twitter.
+ */
+
+/**
+ * Implements hook_help().
+ *
+ * Displays help and module information.
+ */
+function nys_twitter_import_help($path, $arg) {
+  if ($path == "admin/help#nys_twitter_import") {
+    return '<p>' . t("A module to import tweets from Twitter.") . '</p>';
+  }
+}
+
+
+/**
+ * Implements twitter_cron.
+ */
+function nys_twitter_import_run() {
+  twitter_cron();
+}

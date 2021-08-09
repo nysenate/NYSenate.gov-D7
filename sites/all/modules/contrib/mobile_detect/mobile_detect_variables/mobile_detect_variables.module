@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Sub-module to provide $is_mobile and $is_table to preprocess and templates.
+ */
+
+
+/**
+ * Implements template_preprocess().
+ */
+function mobile_detect_variables_preprocess(&$variables, $hook) {
+  switch ($hook) {
+    case 'html':   
+    case 'node':
+    case 'page':
+    case 'region':  
+    case 'zone':
+      $static = &drupal_static(__FUNCTION__);
+      
+      if (empty($static)) {
+        $detect = mobile_detect_get_object();
+        $static = array();
+        
+        if (!isset($detect)) {
+          $static['is_mobile'] = NULL;
+          $static['is_tablet'] = NULL;
+          $static['is_handheld'] = NULL;
+        }
+         else {
+          $static['is_mobile'] = $detect->isMobile();
+          $static['is_tablet'] = $detect->isTablet();
+          $static['is_handheld'] = $detect->isMobile() && !$detect->isTablet();
+        }
+      }
+      
+      $variables['is_mobile'] = $static['is_mobile'];
+      $variables['is_tablet'] = $static['is_tablet'];
+      $variables['is_handheld'] = $static['is_handheld'];
+
+      break; 
+  }
+}

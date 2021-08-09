@@ -1,0 +1,120 @@
+<?php
+/**
+ * @file
+ * Hook implementations for the nys_cache module.
+ */
+
+/**
+ * Implements hook_node_insert().
+ */
+function nys_cache_node_insert($node) {
+  _nys_cache_senators_invalidate_cache($node);
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function nys_cache_node_update($node) {
+  _nys_cache_senators_invalidate_cache($node);
+}
+
+/**
+ * Implements hook_node_delete().
+ */
+function nys_cache_node_delete($node) {
+  _nys_cache_senators_invalidate_cache($node);
+}
+
+function _nys_cache_senators_invalidate_cache($node) {
+  $node_wrapper = entity_metadata_wrapper('node', $node);
+  $tags = [];
+  switch ($node->type) {
+    case 'article':
+    case 'advpoll':
+    case 'initiative':
+    case 'in_the_news':
+    case 'petition':
+    case 'press_release':
+    case 'video':
+    case 'promotional_banner':
+    case 'event':
+      $senator = $node_wrapper->field_senator->value();
+      if ($senator) {
+        $nid = $node_wrapper->field_senator->nid->value();
+      }
+      break;
+    case 'senator':
+      $nid = $node->nid;
+      // Invalidate the tag for the senators View at /senators-committees
+      $tags[] = 'views:senators';
+      break;
+  }
+  if (isset($nid)) {
+    $tags[] = 'node:' . $nid;
+  }
+  if (!empty($tags)) {
+    drupal_invalidate_cache_tags($tags);
+  }
+}
+
+/**
+ * Implements hook_nodequeue_add().
+ *
+ * There are Views on the homepage whose content is controlled by items in a
+ * nodequeue. If the queue is updated, invalidate the Views cache tags.
+ *
+ * @see d8cache_views_pre_render().
+ */
+function nys_cache_nodequeue_add($sqid, $nid) {
+  _nys_cache_homepage_invalidate_cache($sqid);
+}
+
+/**
+ * Implements hook_nodequeue_remove().
+ */
+function nys_cache_nodequeue_remove($sqid, $nid) {
+  _nys_cache_homepage_invalidate_cache($sqid);
+}
+
+function _nys_cache_homepage_invalidate_cache($sqid) {
+  if ($subq = nodequeue_load_subqueue($sqid)) {
+    switch ($subq->title) {
+      case "Homepage Hero":
+        $view_tag = "views:homepage_hero.homepage_hero";
+        break;
+      case "Homepage Featured Story":
+        $view_tag = "views:homepage_news.hp_featured_stories";
+        break;
+      case "Frontpage News":
+        $view_tag = "views:homepage_news.hp_news_updates";
+        break;
+      case "Sitewide Footer Promotional Banners":
+        $view_tag = "views:promo_banner_senators_committees.news_issues_promos";
+        break;
+      default:
+        $view_tag = '';
+    }
+    if ($view_tag) {
+      // If the homepage is cached when a queue is empty, it won't store the
+      // View specific tag. Because the homepage_hero View is in general
+      // displayed (except in session) we use it to bust the homepage.
+      $tags = [$view_tag,'views:homepage_hero'];
+      drupal_invalidate_cache_tags($tags);
+    }
+  }
+}
+
+/**
+ * Implements hook_pre_emit_cache_tags_alter().
+ */
+function nys_cache_pre_emit_cache_tags_alter(&$tags) {
+  $alias_path = drupal_get_path_alias();
+  if (strpos($alias_path, 'legislation/laws') !== FALSE) {
+    // Statute page caches are invalidated more frequently then desired. To
+    // reduce the number of purge requests sent to Pantheon's Varnish replace
+    // the default tags with just the node:nid tag. This will allow us to still
+    // invalidate the page if needed.
+    $tag = 'node:' . arg(1);
+    $tags = [$tag];
+  }
+}

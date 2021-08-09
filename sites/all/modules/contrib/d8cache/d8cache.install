@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * D8Cache schema for cache_tags.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function d8cache_schema() {
+  $schema['d8cache_cache_tags'] = array(
+    'description' => 'Cache table for tracking cache tag invalidations.',
+    'fields' => array(
+      'tag' => array(
+        'description' => 'Namespace-prefixed tag string.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'invalidations' => array(
+        'description' => 'Number incremented when the tag is invalidated.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('tag'),
+  );
+
+  return $schema;
+}

@@ -1,0 +1,367 @@
+<?php
+
+/**
+ * @file
+ * This file contains tests for the privatemsg groups module
+ */
+
+/**
+ * Test cases for the privatemsg_groups module.
+ */
+class PrivatemsgGroupsTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Privatemsg Groups functionality',
+      'description' => 'Tests sending messages to organic groups',
+      'group' => 'Privatemsg',
+      'dependencies' => array('og'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('privatemsg', 'privatemsg_groups', 'privatemsg_filter', 'pm_block_user', 'og');
+
+    // Add OG group field to a the node's "page" bundle.
+    og_create_field(OG_GROUP_FIELD, 'node', 'page');
+
+    // Create group managers for these tests.
+    $this->group1_manager = $this->drupalCreateUser(array('administer group', 'access content', 'create page content', 'edit own page content',
+      'read privatemsg', 'write privatemsg', 'write privatemsg to all organic groups', 'view organic groups recipients'));
+    $this->group2_manager = $this->drupalCreateUser(array('administer group', 'access content', 'create page content', 'edit own page content',
+      'read privatemsg', 'write privatemsg', 'write privatemsg to own organic groups', 'view organic groups recipients'));
+    // Create group members for these tests
+    $this->user1 = $this->drupalCreateUser(array('read privatemsg', 'write privatemsg'));
+
+    // Create group nodes.
+    $settings = array(
+      'type' => 'page',
+      OG_GROUP_FIELD . '[und][0][value]' => 1,
+      'uid' => $this->group1_manager->uid
+    );
+    $this->group1 = $this->drupalCreateNode($settings);
+    $settings['uid'] =  $this->group2_manager->uid;
+    $this->group2 = $this->drupalCreateNode($settings);
+
+    // Add user as group member.
+    og_group('node', $this->group1->nid, array('entity' => $this->user1->uid));
+
+    drupal_static_reset('privatemsg_recipient_get_types');
+  }
+
+  /**
+   * Test sending message to a group using privatemsg_new_thread API method.
+   */
+  function testSendMessagetoGroupAPI() {
+    $recipient = clone $this->group1;
+    $recipient->recipient = $this->group1->nid;
+    $recipient->type = _privatemsg_groups_get_group_recipient_type('node');
+    privatemsg_new_thread(array($recipient), $subject = $this->randomName(10), $body = $this->randomName(50), array('author' => $this->group1_manager));
+
+    $this->drupalLogin($this->user1);
+    $this->drupalGet('messages');
+    $this->assertRaw($subject . '</a> <span class="marker">new</span>', t('Message is displayed as new'));
+
+    $this->clickLink($subject);
+    $this->assertText($body, t('Thread starter body displayed.'));
+  }
+
+  /**
+   * Test batch sending using API and cron.
+   */
+  function testSendMessagetoGroupCron() {
+    variable_set('privatemsg_recipient_small_threshold', 20);
+    variable_set('privatemsg_cron_recipient_per_run', 20);
+
+    // Create 26 users (more than are allowed to be process directly).
+    $users = array();
+    for ($i = 0; $i < 25; $i++) {
+      $users[$i] = $this->drupalCreateUser(array('read privatemsg', 'write privatemsg'));
+      // Add user to group1.
+      og_group('node', $this->group1->nid, array('entity' => $users[$i]->uid));
+    }
+
+    $recipient = clone $this->group1;
+    $recipient->recipient = $this->group1->nid;
+    $recipient->type = _privatemsg_groups_get_group_recipient_type('node');
+
+    privatemsg_new_thread(array($recipient), $subject = $this->randomName(10), $body = $this->randomName(50), array('author' => $this->group1_manager));
+
+    // Run cron.
+    privatemsg_cron();
+
+    // Test a few recipients to see if they received the message.
+    foreach (array(0, 5, 17) as $uid) {
+      $this->drupalLogin($users[$uid]);
+      $this->drupalGet('messages');
+      $this->assertRaw($subject . '</a> <span class="marker">new</span>', t('Message is displayed as new'));
+
+      $this->clickLink($subject);
+      $this->assertText($body, t('Thread starter body displayed.'));
+    }
+
+    // Make sure that user 20 has not yet received the message.
+    $this->drupalLogin($users[20]);
+    $this->drupalGet('messages');
+    $this->assertNoText($subject, t('Message is not yet displayed for this user'));
+
+    // Run cron again.
+    privatemsg_cron();
+
+    // Test that the remaining recipients do now see the message too.
+    foreach (array(20, 24) as $uid) {
+      $this->drupalLogin($users[$uid]);
+      $this->drupalGet('messages');
+      $this->assertRaw($subject . '</a> <span class="marker">new</span>', t('Message is displayed as new'));
+
+      $this->clickLink($subject);
+      $this->assertText($body, t('Thread starter body displayed.'));
+    }
+  }
+
+  /**
+   * Test batch sending from GUI.
+   */
+  function testSendMessagetoGroupBatch() {
+    variable_set('privatemsg_recipient_small_threshold', 20);
+    // Create 25 users (more than are allowed to be process directly).
+    $users = array();
+    for ($i = 0; $i < 25; $i++) {
+      $users[$i] = $this->drupalCreateUser(array('read privatemsg', 'write privatemsg'));
+      // Add user to group1.
+      og_group('node', $this->group1->nid, array('entity' => $users[$i]->uid));
+    }
+    $this->drupalLogin($this->group1_manager);
+
+    // Send a message to the group shared by all users.
+    $edit = array(
+      'recipient' => $this->group1->title . '[group]',
+      'subject' => $this->randomName(10),
+      'body[value]' => $this->randomName(50),
+    );
+    $this->drupalPost('messages/new', $edit, t('Send message'));
+    $this->assertText(t('A message has been sent to @group (group).', array('@group' => $this->group1->title)));
+
+    // Test a few recipients to see if they all received the message.
+    foreach ($users as $user) {
+      $this->drupalLogin($user);
+      $this->drupalGet('messages');
+      $this->assertRaw($edit['subject'] . '</a> <span class="marker">new</span>', t('Message is displayed as new'));
+
+      $this->clickLink($edit['subject']);
+      $this->assertText($edit['body[value]'], t('Thread starter body displayed.'));
+    }
+  }
+
+  /**
+   * Test global permissions and group permission.
+   */
+  function testPermission() {
+    // Attempt to send message to group1 with no permission.
+    $this->drupalLogin($this->user1);
+    $edit = array(
+      'recipient' => $this->group1->title . '[group]',
+      'subject' => $this->randomName(10),
+      'body[value]' => $this->randomName(50),
+    );
+    $this->drupalPost('messages/new', $edit, t('Send message'));
+    $this->assertText(t('You must include at least one valid recipient.'));
+    $this->drupalLogout();
+
+    // Attempt to send message to group1 with write to all permission but
+    // no group permission.
+    $user2 = $this->drupalCreateUser(array('read privatemsg', 'write privatemsg', 'write privatemsg to all organic groups'));
+    og_group('node', $this->group1->nid, array('entity' => $user2->uid));
+    $this->drupalLogin($user2);
+    $this->drupalPost('messages/new', $edit, t('Send message'));
+    $this->assertText(t('A message has been sent to @group (group).', array('@group' => $this->group1->title)));
+    $this->drupalLogout();
+
+    // Attempt to send message to group1 with write to own permission but
+    // no group permission.
+    $user3 = $this->drupalCreateUser(array('read privatemsg', 'write privatemsg', 'write privatemsg to own organic groups'));
+    og_group('node', $this->group1->nid, array('entity' => $user3->uid));
+    $this->drupalLogin($user3);
+    $this->drupalPost('messages/new', $edit, t('Send message'));
+    $this->assertText(t('You must include at least one valid recipient.'));
+    $this->drupalLogout();
+
+    // Attempt to send message to group1 with write to own permission and
+    // group permission.
+    $roles = array_flip(og_roles('node', 'page', $this->group1->nid));
+    og_role_change_permissions($roles[OG_AUTHENTICATED_ROLE], array(
+      'write privatemsg to group' => 1,
+    ));
+    $user4 = $this->drupalCreateUser(array('read privatemsg', 'write privatemsg', 'write privatemsg to own organic groups'));
+    og_group('node', $this->group1->nid, array('entity' => $user4->uid));
+    $this->drupalLogin($user4);
+    $this->drupalPost('messages/new', $edit, t('Send message'));
+    $this->assertText(t('A message has been sent to @group (group).', array('@group' => $this->group1->title)));
+    // Attempt to send message to group2 with write to own permission
+    $edit['recipient'] = $this->group2->title . '[group]';
+    $this->drupalPost('messages/new', $edit, t('Send message'));
+    $this->assertText(t('You must include at least one valid recipient.'));
+  }
+
+  /**
+   * Test sending message to group using GUI.
+   */
+  function testSendMessageToGroup() {
+    $user2 = $this->drupalCreateUser(array('read privatemsg', 'write privatemsg', 'view organic groups recipients'));
+    og_group('node', $this->group1->nid, array('entity' => $user2->uid));
+
+    $group_name = $this->group1->title;
+    $this->drupalLogin($this->group1_manager);
+
+    // Verify autocomplete feature.
+    $json = $this->drupalGet('messages/autocomplete/' . drupal_substr($group_name, 0, 2));
+    $autocomplete = (array)json_decode($json);
+    $this->assertEqual($autocomplete[$group_name . ', '], $group_name);
+
+    // Access the form through a url that pre-fills the recipient field.
+    $this->drupalGet('messages/new/'._privatemsg_groups_get_group_recipient_type('node').'_'.$this->group1->nid);
+
+    // Send a message to group1.
+    $edit = array(
+      'subject' => $this->randomName(10),
+      'body[value]' => $this->randomName(50),
+    );
+    $this->drupalPost(NULL, $edit, t('Send message'));
+    $this->assertText(t('A message has been sent to @group (group).', array('@group' => $group_name)));
+
+    // Log in as user1 and check that the message is listed, is marked as new
+    // and can be marked as read.
+    $this->drupalLogin($this->user1);
+    $this->drupalGet('messages');
+    $this->assertRaw($edit['subject'] . '</a> <span class="marker">new</span>', t('Message is displayed as new'));
+
+    $this->clickLink($edit['subject']);
+    $this->assertText($edit['body[value]'], t('Thread starter body displayed.'));
+
+    // Make sure that the user does not see the group.
+    $this->assertNoText(t('@group (group)', array('@group' => $group_name)));
+
+    // Reply to the message, only admin should see this.
+    $reply1 = array(
+      'body[value]' => $this->randomName(50),
+    );
+    $this->drupalPost(NULL, $reply1, t('Send message'));
+
+    $this->drupalGet('messages');
+    $this->assertNoRaw($edit['subject'] . '</a> <span class="marker">new</span>', t('Message is displayed as read'));
+
+    // Login as admin again and check if he sees the response.
+    $this->drupalLogin($this->group1_manager);
+    $this->drupalGet('messages');
+    $this->assertRaw($edit['subject'] . '</a> <span class="marker">new</span>', t('Message is displayed as new'));
+    $this->clickLink($edit['subject']);
+
+    $this->assertText($reply1['body[value]'], t('Reply1 is displayed'));
+
+    // Reply to the message, all recipients should see this.
+    $reply2 = array(
+      'body[value]' => $this->randomName(50),
+    );
+    $this->drupalPost(NULL, $reply2, t('Send message'));
+
+    // Log in as user2 and check that he only sees the messages from admin.
+    $this->drupalLogin($user2);
+    $this->drupalGet('messages');
+    $this->assertRaw($edit['subject'] . '</a> <span class="marker">new</span>', t('Message is displayed as new'));
+    $this->clickLink($edit['subject']);
+    $this->assertText(t('@group (group)', array('@group' => $group_name)));
+
+    $this->assertText($edit['body[value]'], t('Thread starter body is displayed'));
+    $this->assertNoText($reply1['body[value]'], t('Reply1 is not displayed'));
+    $this->assertText($reply2['body[value]'], t('Reply2 is displayed'));
+  }
+
+  /**
+   * Test sending message to group when some members blocked the sender.
+   */
+  function testSendMessageToGroupBlocked() {
+    $user2 = $this->drupalCreateUser(array('read privatemsg', 'write privatemsg'));
+
+    // Block admin as user 2.
+    $this->drupalLogin($user2);
+    $this->drupalPost('messages/blocked', array('name' => $this->group1_manager->name), t('Block user'));
+
+    $this->drupalLogin($this->group1_manager);
+
+    // Send a message to the group of user 1 and 2.
+    $edit = array(
+      'recipient' => $this->group1->title. '[group]',
+      'subject' => $this->randomName(10),
+      'body[value]' => $this->randomName(50),
+    );
+    $this->drupalPost('messages/new', $edit, t('Send message'));
+    $this->assertText(t('A message has been sent to @group (group).', array('@group' => $this->group1->title)));
+
+    // Log in as user1 and check that the message is listed, is marked as new
+    // and can be marked as read.
+    $this->drupalLogin($this->user1);
+    $this->drupalGet('messages');
+    $this->assertRaw($edit['subject'] . '</a> <span class="marker">new</span>', t('Message is displayed as new'));
+
+    $this->clickLink($edit['subject']);
+    $this->assertText($edit['body[value]'], t('Thread starter body displayed.'));
+
+    // Make sure that the user doesn't see the group recipient.
+    $this->assertNoText(t('@group (group)', array('@group' => $this->group1->title)));
+
+    // Log in as user2 and make sure that he didn't received the messages
+    // as he blocks admin.
+    $this->drupalLogin($user2);
+    $this->drupalGet('messages');
+    $this->assertNoText($edit['subject'], t('Message is not displayed'));
+  }
+
+  /**
+   * Test to make sure newly added group member doesn't see old messages.
+   */
+  function testNewUser() {
+    // Send a message to the group of user 1.
+    $this->drupalLogin($this->group1_manager);
+    $edit = array(
+      'recipient' => $this->group1->title . '[group]',
+      'subject' => $this->randomName(10),
+      'body[value]' => $this->randomName(50),
+    );
+    $this->drupalPost('messages/new', $edit, t('Send message'));
+    $this->assertText(t('A message has been sent to @group (group).', array('@group' => $this->group1->title)));
+
+    // Add user 2 to the same group now. The user should not see the message.
+    $user2 = $this->drupalCreateUser(array('read privatemsg', 'write privatemsg'));
+    og_group('node', $this->group1->nid, array('entity' => $user2->uid));
+
+    $this->drupalLogin($user2);
+
+    $this->drupalGet('messages');
+    $this->assertNoText($edit['subject'], t('Newly added user does not see the old message sent to his group'));
+  }
+
+  /**
+   * Verify that deleting a user does not leave stale data behind.
+   */
+  function testDeleteUser() {
+    // Send a message to group 1.
+    $this->drupalLogin($this->group1_manager);
+    $edit = array(
+      'recipient' => $this->group1->title . '[group]',
+      'subject' => $this->randomName(10),
+      'body[value]' => $this->randomName(50),
+    );
+    $this->drupalPost('messages/new', $edit, t('Send message'));
+    $this->assertText(t('A message has been sent to @group (group).', array('@group' => $this->group1->title)));
+
+    $this->drupalLogin($this->user1);
+
+    $this->drupalGet('messages');
+    $this->assertText($edit['subject'], t('Message sent to group is visible.'));
+
+    // Delete user and make sure that no recipient entries of him are left in
+    // table.
+    user_delete($this->user1->uid);
+    $this->assertFalse(db_query_range("SELECT 1 FROM {pm_index} WHERE recipient = :recipient AND type IN ('user', 'hidden')", 0, 1, array(':recipient' => $this->user1->uid))->fetchField());
+  }
+
+}

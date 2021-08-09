@@ -1,0 +1,42 @@
+/* This CSS file needs to be included either in the theme used for
+ * editing content in order to be included in the WYSIWYG edit iframe,
+ * or specifically included in the WYSIWYG config page's
+ * "Define CSS" textfield.
+ */
+span[data-picture-align="left"],
+img[data-picture-align="left"] {
+  float: left;
+}
+span[data-picture-align="right"],
+img[data-picture-align="right"] {
+  float: right;
+}
+span[data-picture-align="center"],
+img[data-picture-align="center"] {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Remove ugly boarders that bunch up in the image dialog table. */
+.cke_dialog_body tr td:last-child {
+  border-right: 0px;
+}
+
+/* The following is an example of what you could put in your theme
+ * to control the size of images. It is formatted as
+ * span[data-picture-mapping="[The machine name of your picture mapping]"
+  span[data-picture-mapping="wide"] {
+    width: 100%;
+  }
+  span[data-picture-mapping="normal"] {
+    width: 50%;
+  }
+  span[data-picture-mapping="narrow"] {
+    width: 33%;
+  }
+  span[data-picture-mapping] img {
+    width: 100%;
+    height: auto;
+  }
+*/

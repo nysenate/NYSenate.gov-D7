@@ -1,0 +1,12 @@
+name = Permissions per Webform
+description = Apply standard Webform permissions to each Webform.
+package = Webform
+core = 7.x
+dependencies[] = webform
+
+; Information added by drupal.org packaging script on 2013-09-27
+version = "7.x-1.0-alpha1"
+core = "7.x"
+project = "permissions_per_webform"
+datestamp = "1380321233"
+

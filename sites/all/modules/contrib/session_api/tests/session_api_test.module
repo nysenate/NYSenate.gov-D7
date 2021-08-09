@@ -1,0 +1,39 @@
+<?php
+
+
+/**
+ * @file
+ * Helper module for Session API tests.
+ */
+
+/**
+ * Implementation of hook_menu().
+ */
+function session_api_test_menu() {
+  $items['session-api-test'] = array(
+    'page callback' => 'session_api_test_page',
+    'access arguments' => array('access content'),
+    'title' => 'Session API test module page',
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_init().
+ */
+function session_api_test_init() {
+  $sid = session_api_get_sid();
+  header('X-Session-Api-Sid: ' . $sid);
+
+  $session_id = db_query("SELECT session_id FROM {session_api} WHERE sid = :sid", array(':sid' => $sid))->fetchField();
+  header('X-Session-Api-Session-Id: ' . $session_id);
+}
+
+/**
+ * Page callback.
+ */
+function session_api_test_page() {
+  return t('Session API Test module enabled.');
+}

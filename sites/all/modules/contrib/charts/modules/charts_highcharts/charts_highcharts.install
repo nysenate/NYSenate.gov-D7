@@ -1,0 +1,24 @@
+<?php
+/**
+ * Installation and update hooks for the Charts Highcharts module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function charts_highcharts_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+  if (function_exists('libraries_detect') && $highcharts_info = libraries_detect('highcharts')) {
+    if (is_dir($highcharts_info['library path'] . '/exporting-server')) {
+      $requirements['highcharts_security'] = array(
+        'title' => $t('Highcharts vulnerability'),
+        'severity' => REQUIREMENT_ERROR,
+        'value' => $t('Dangerous sample code present'),
+        'description' => $t('Your installation of the Highcharts library at "@path" contains a directory named "exporting-server". This directory contains dangerous sample files that may compromise the security of your site. You must delete this directory before you may use the Charts Highcharts module.', array('@path' => $highcharts_info['library path'])),
+      );
+    }
+  }
+
+  return $requirements;
+}

@@ -1,0 +1,131 @@
+<?php
+
+/**
+ * @file
+ * File nyc_statute_import.module.
+ */
+
+ /**
+  * Implements the drush clear-all-statutes casn command.
+  */
+ function nys_statute_delete_clear_all_statutes($arg1) {
+
+   drupal_set_time_limit(20000);
+
+   $result = db_query("SELECT `nid` FROM `node` WHERE `type` = 'statute';");
+
+   $count = 0;
+
+   foreach ($result as $record) {
+     $nid = $record->nid;
+     node_delete($nid);
+     print "Removing Node - $nid \r\n";
+     $count++;
+   }
+
+   print "-------------------------------\r\n";
+   print "Deleted $count Statute Nodes.\r\n";
+
+ }
+
+/**
+ * Implements the drush clear-all-statutes casn command.
+ *
+ *
+ */
+function nys_statute_delete_clear_all_law_ids($arg1) {
+
+  drupal_set_time_limit(20000);
+
+  // Clears all the statutes from open leg.
+  // A Single thread to delete all the statutes for each law_id.
+  nys_statute_import_thread_manager(nys_statute_import_get_law_id_count() + 1,
+                                    1,
+                                    1,
+                                    'nys_statute_delete_setup',
+                                    'nys_statute_delete_teardown',
+                                    0);
+
+  // Clears the grand parents and great grand parent (5).
+  nys_statute_delete_clear_all_statutes($arg1);
+
+}
+
+/**
+ * A multi threaded setup function.
+ *
+ * BUILD THE DRUSH COMMAND TO CALL HERE.
+ * STATIC DATA HERE ???.
+ *
+ * @param int $thread_id
+ *   An identifier for the thread which will execute this command.
+ * @param int $batch_size
+ *   How many tasks this command should work on.
+ * @param int $offset
+ *   The position in a queue of jobs for the first job this command
+ *   should work on.
+ *
+ * @return string
+ *   A command which can be executed on the command line.
+ */
+
+function nys_statute_delete_setup($thread_id, $batch_size, $offset) {
+  // Get law id at offset.
+  $law_id = nys_statute_import_get_law_id($offset);
+  if ($law_id !== FALSE) {
+    print "Begin Delete processing for Law ID " . $law_id . "\r\n";
+    return "drush clear-law-id $law_id";
+  }
+  else {
+    return '';
+  }
+}
+
+/**
+ * A test multi threaded teardown function.
+ *
+ * @param int $thread_id
+ *   The thread which just completed.
+ */
+
+function nys_statute_delete_teardown($law_id) {
+  print "Finished Delete processing for Law ID.\r\n";
+}
+
+/**
+ * Implements the drush clear-law-id  clid  command.
+ */
+function nys_statute_delete_clear_law_id($law_id) {
+  if (!empty($law_id)) {
+    $results = db_query("SELECT `entity_id` FROM `field_data_field_lawid` WHERE `field_lawid_value` = :lawid", array(':lawid' => $law_id));
+    if ($results->rowCount() > 0) {
+      foreach ($results as $nid) {
+        if (!empty($nid->entity_id) && is_numeric($nid->entity_id)) {
+          node_delete($nid->entity_id);
+          print 'Deleted Node Id: ' . $nid->entity_id . "\r\n";
+        }
+      }
+    }
+    else {
+      print "LawId $law_id currently has no statutes.\r\n";
+    }
+  }
+}
+
+/**
+ * Implements the drush get-statute-count  gsc  command.
+ */
+function nys_statute_delete_get_statute_count($arg1 = '') {
+  if (strlen($arg1) == 0) {
+	  $node_count = db_query("SELECT count(*) FROM `node` WHERE `type` = 'statute'")->fetchField();
+  }
+  elseif (strlen($arg1) == 3 && !is_numeric($arg1)) {
+    $node_count = $node_count = db_query("SELECT count(*) FROM `field_data_field_lawid` WHERE `field_lawid_value` = :lawid", array(":lawid" => $arg1))->fetchField();;
+  }
+  else {
+    $node_count = '';
+  }
+
+  print $node_count . "\r\n";
+
+}

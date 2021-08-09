@@ -1,0 +1,44 @@
+diff --git a/picture.module b/picture.module
+index eb1d1d8ab1..9a7646efa8 100644
+--- a/picture.module
++++ b/picture.module
+@@ -1418,6 +1418,7 @@ function theme_picture(array $variables) {
+         '#sizes' => implode(', ', array_unique($sizes)),
+         '#lazyload' => !empty($variables['lazyload']),
+         '#lazyload_aspect_ratio' => $aspect_ratio,
++        '#mime_type' => picture_optimized_style_format($mapping_definition['image_style']),
+       );
+     }
+   }
+@@ -2166,3 +2167,31 @@ function picture_default_breakpoints() {
+
+   return $export;
+ }
++
++/**
++ * Helper gets the mime type of the style by inclusion of its name in the style name.
++ *
++ * If the style name includes '_webp' , '_jp2' or '_jxr' a mime type will be returned.
++ * Otherwise NULL will be returned.
++ */
++function picture_optimized_style_format($image_style_name) {
++  // Determine if its a webp image style.
++  $webp_pos = stripos($image_style_name, '_webp');
++  if ($webp_pos != FALSE) {
++    return 'image/webp';
++  }
++
++  // Determine if its a jp2 image style.
++  $jp2_pos = stripos($image_style_name, '_jp2');
++  if ($jp2_pos != FALSE) {
++    return 'image/jp2';
++  }
++
++  // Determine if its a jxr image style.
++  $jxr_pos = stripos($image_style_name, '_jxr');
++  if ($jxr_pos != FALSE) {
++    return 'image/jxr';
++  }
++
++  return NULL;
++}

@@ -1,0 +1,37 @@
+.c-committee-status-bar {
+	border-top: 2px solid $grey09;
+	padding-top: 20px;
+	width: 100%;
+	margin-bottom: 30px;
+	overflow: hidden;
+
+	.c-circle {
+		width: 8px;
+		height: 8px;
+		display: block;
+		background-color: #f2ae59;
+		float: left;
+		-webkit-border-radius: 50%;
+   		-moz-border-radius: 50%;
+        border-radius: 50%;
+	}
+
+	.l-divider {
+		margin-left: 8px;
+		background-color: $grey02;
+		width: 1px;
+		height: 10px;
+		display: block;
+		float: left;
+	}
+
+	.c-video-status,
+	.c-committee-status {
+		float: left;
+		font-family: 'Proxima Nova Regular';
+		font-size: 12px;
+		color: $grey02;
+		text-transform: uppercase;
+		margin-left: 8px;
+	}
+}

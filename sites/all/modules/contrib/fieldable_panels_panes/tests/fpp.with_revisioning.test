@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * Tests for the Fieldable Panels Panes module with Revisioning.
+ */
+
+/**
+ * Tests for the Fieldable Panels Panes module with Revisioning.
+ */
+class FppWithRevisioningTest extends FppTestHelper {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'FPP tests for Revisioning',
+      'description' => 'Confirm that pane revisioning works correctly.',
+      'group' => 'FPP',
+      'dependencies' => array('ctools', 'panels', 'views', 'panelizer', 'revisioning'),
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp(array $modules = array()) {
+    // Needed for node display.
+    $modules[] = 'panelizer';
+
+    // Needed for workflow logic.
+    $modules[] = 'revisioning';
+
+    parent::setUp($modules);
+  }
+
+  /**
+   * Test Revisioning integration.
+   *
+   * @todo Do this.
+   */
+  public function toDoTestRevisioning() {
+    // Enable Revisioning.
+    // Enable Panelizer.
+    // Customize a node.
+    // Add an FPP.
+    // Revision the display.
+    // Confirm the new revision is ok.
+  }
+
+}

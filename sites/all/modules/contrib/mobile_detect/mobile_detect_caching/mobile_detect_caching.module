@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * @file
+ * Stub module for allowing the main module to work with page level caching.
+ *
+ * This file is intentionally empty.
+ */

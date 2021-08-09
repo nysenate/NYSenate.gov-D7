@@ -1,0 +1,976 @@
+/*-------------------------------
+/
+/	MEETING DETAIL PAGE
+/
+/-------------------------------*/
+
+// HEADER
+
+.c-meeting-detail--header {
+  padding-top: 20px;
+  border-top: 1px solid $grey05;
+}
+
+.c-meeting-detail--meta {
+  margin-bottom: 20px;
+
+  p {
+    display: inline-block;
+    color: $grey02;
+    text-transform: uppercase;
+    font-family: "Proxima Nova Regular";
+    font-size: 12px;
+
+    & + p {
+      margin: 0;
+    }
+  }
+}
+
+.pane-1 {
+  .c-title {
+    font-family: "Adelle SemiBold";
+    font-size: 26px;
+    line-height: 43px;
+    margin-bottom: 10px;
+    color: $grey02;
+  }
+  .c-committee-type {
+    font-family: "Proxima Nova SemiBold";
+    font-size: 14px;
+    color: $yellow03;
+    text-transform: uppercase;
+  }
+}
+
+.c-meeting-detail--live-flag:before {
+  content: "";
+  display: inline-block;
+  background: #506E50;
+  height: 8px;
+  width: 8px;
+  margin-right: 10px;
+  @include border-radius(50%);
+}
+
+.c-meeting-detail--live-flag + .c-meeting-detail--floor-flag {
+  &:before {
+    content: "|";
+    margin: 0 5px;
+  }
+}
+
+.c-meeting-detail---overview {
+
+}
+
+.c-meeting-video--status {
+  color: $grey03;
+  text-transform: uppercase;
+  font-family: "Proxima Nova Regular";
+  font-size: 18px;
+  vertical-align: top;
+  &:before {
+    color: $orange01;
+    font-size: 28px;
+    line-height: 16px;
+    padding: 5px 3px 0 10px;
+    vertical-align: top;
+    margin-left: 10px;
+    border-left: 1px solid $grey05;
+  }
+}
+
+.c-meeting-detail--date {
+  margin-bottom: 15px;
+}
+
+.c-meeting-date--num,
+.c-meeting-news--type {
+  color: $grey02;
+  font-family: "Adelle Bold";
+  font-size: 20px;
+}
+
+.c-meeting-date--month, .c-meeting-date--year {
+  color: $grey02;
+  text-transform: uppercase;
+  font-family: "Proxima Nova Regular";
+  font-size: 16px;
+
+  &:before {
+    content: "/";
+    display: inline-block;
+    margin: 0 2px 0 5px;
+  }
+}
+
+.c-meeting-detail--info {
+  margin-bottom: 30px;
+  .c-event-location {
+    font-size: 14px;
+    color: #222;
+  }
+}
+
+.c-meeting-detail--title {
+  margin-bottom: 20px;
+
+  color: $grey02;
+  font-family: "Adelle Light";
+  font-size: 26px;
+  line-height: 1.2em;
+
+  a {
+    color: $grey02;
+  }
+}
+
+.c-meeting-detail--location-link {
+  display: block;
+  margin: 0 0 10px 0;
+
+  font-family: "Proxima Nova Regular";
+  font-size: 18px;
+  @extend .lgt-text;
+  @extend .icon-before__circle-pin;
+
+  &:before {
+    margin-top: -5px;
+    font-size: 20px;
+  }
+
+  a {
+    @extend .lgt-text;
+  }
+}
+
+.c-meeting-detail--location {
+  margin: 0 0 10px 0;
+  color: $grey04;
+  font-family: "Proxima Nova Regular";
+  font-size: 18px;
+}
+
+.c-meeting-detail--time {
+  margin: 0;
+  color: $grey02;
+  font-family: "Proxima Nova SemiBold";
+  font-size: 18px;
+}
+
+.c-meeting-detail--descript {
+  p {
+    margin-bottom: 15px;
+    font-size: 18px;
+  }
+}
+
+.c-meeting-detail--related {
+  text-transform: uppercase;
+  font-family: "Proxima Nova SemiBold";
+  font-size: 10px;
+  line-height: 1.5em;
+
+  ul {
+    display: inline-block;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      display: inline-block;
+      vertical-align: middle;
+      margin: 0;
+      line-height: 1;
+      font-size: 10px;
+      line-height: 2.5em;
+
+      & + li {
+        margin-left: 5px;
+      }
+    }
+  }
+  p,
+  a {
+    text-transform: uppercase;
+    font-family: "Proxima Nova SemiBold";
+    font-size: 10px;
+    line-height: 2.5em;
+  }
+  p {
+    display: block;
+    float: left;
+    margin-right: 5px;
+  }
+  a {
+    display: inline-block;
+    @extend .link-text;
+
+    & + a {
+      margin-left: 5px;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.node-type-meeting {
+  .panel-pane .pane-content {
+    div {
+      .c-when {
+        font-family: "Proxima Nova Regular";
+        font-size: 14px;
+        line-height: 20px;
+        text-transform: uppercase;
+        color: $grey04;
+      }
+    }
+  }
+  .view-nodequeue-2 {
+    margin-top: 40px;
+  }
+}
+
+@media #{$tablet} {
+  .c-meeting-detail--meta p {
+    font-size: 16px;
+  }
+  .c-meeting-detail--live-flag:before {
+    height: 10px;
+    width: 10px;
+  }
+  .c-meeting-detail--live-flag + .c-meeting-detail--floor-flag {
+    &:before {
+      margin: 0 10px;
+    }
+  }
+  .c-meeting-detail--date {
+    float: left;
+    margin-right: 80px;
+  }
+  .c-meeting-date--num {
+    display: block;
+    font-size: 48px;
+    line-height: 48px;
+  }
+  .c-meeting-date--month, .c-meeting-date--year {
+    display: block;
+    font-size: 20px;
+    line-height: 24px;
+
+    &:before {
+      display: none;
+    }
+  }
+  .c-meeting-detail--info {
+    float: left;
+    margin-bottom: 50px;
+    max-width: 625px;
+  }
+  .c-meeting-detail--title {
+    font-size: 42px;
+    margin-bottom: 30px;
+  }
+  .c-meeting-detail--location-link,
+  .c-meeting-detail--location,
+  .c-meeting-detail--time {
+    font-size: 20px;
+  }
+  .c-meeting-detail--descript {
+    clear: both;
+    margin-bottom: 30px;
+    font-size: 20px;
+  }
+  .c-meeting-detail--related {
+    font-size: 14px;
+    li,
+    p,
+    a {
+      font-size: 12px;
+    }
+    p {
+      margin-right: 15px;
+    }
+    a + a {
+      margin-left: 10px;
+    }
+  }
+  .c-meeting-video--status {
+    font-size: 20px;
+    &:before {
+      padding-top: 7px;
+      font-size: 30px;
+    }
+  }
+}
+
+// VIDEO
+// aspect ration is current 730 x 410
+.c-meeting-detail--embed {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-top: 56.16%;
+
+  .embedded-video,
+  .player,
+  iframe {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// MEETING AGENDA
+.view-meeting-agenda {
+
+  .view-header {
+    overflow: hidden;
+    padding-bottom: 10px;
+
+    h4 {
+      font-family: "Proxima Nova Regular";
+      font-size: 12px;
+      line-height: 1;
+      text-transform: uppercase;
+      color: $grey02;
+    }
+    .bill-title,
+    .bill-actions {
+      display: none;
+    }
+  }
+
+  .view-content {
+    .c-update-block {
+      border-top: 1px solid $grey05;
+    }
+
+    .nys-senator--thumb {
+      height: 30px;
+      width: 30px;
+    }
+  }
+}
+
+// this is different from the above view
+// it's on the committee meetings
+.view-meeting-agenda-block {
+  .view-header {
+    .nys-title {
+      font-size: 18px;
+      line-height: 1;
+      margin-bottom: 30px;
+    }
+  }
+  .c-panel--header {
+    display: block;
+    padding: 0 0 10px 0;
+
+    .l-panel-col {
+      color: $grey02;
+      text-transform: uppercase;
+      font-family: "Proxima Nova Regular";
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .l-panel-col--ctr,
+    .l-panel-col--rgt {
+      display: none;
+    }
+  }
+  .nys-senator {
+    margin: 20px 0 28px;
+  }
+  .first > .c-update-block {
+    border-top: 1px solid $grey05;
+  }
+}
+
+.pane-node-field-ustream {
+  margin-bottom: 60px;
+}
+
+.c-block--session-shares {
+  // margin: 60px 0 0 0;
+  .c-block-social-share {
+    margin-bottom: 0;
+  }
+}
+
+@media #{$tablet} {
+  .view-meeting-agenda {
+
+    .view-header {
+      padding-bottom: 10px;
+
+      h4 {
+        font-size: 16px;
+      }
+
+      .bill-title,
+      .bill-actions {
+        display: block;
+      }
+    }
+    .view-content {
+
+    }
+  }
+  .view-meeting-agenda-block {
+    .view-header {
+      .nys-title {
+        font-size: 26px;
+        margin-bottom: 40px;
+      }
+    }
+    .c-panel--header {
+      padding: 0 0 20px 0;
+
+      .l-panel-col {
+        font-size: 16px;
+      }
+
+      .l-panel-col--ctr,
+      .l-panel-col--rgt {
+        display: block;
+      }
+    }
+    .nys-senator {
+      margin: 20px 0 0;
+    }
+    .first > .c-update-block {
+      border-top: 1px solid $grey05;
+    }
+  }
+}
+
+// CONTENT - agendas
+.c-meeting-section--title {
+  margin: 20px 0 30px;
+  color: $grey02;
+  font-family: "Adelle Semibold";
+  font-size: 18px;
+  line-height: 1;
+}
+
+.c-meeting-list--bill {
+  margin-bottom: 5px;
+
+  color: $grey02;
+  font-family: "Adelle Bold";
+  font-size: 24px;
+  line-height: 1;
+}
+
+.c-meeting-list--issues {
+
+  a {
+    text-transform: uppercase;
+    font-family: "Proxima Nova SemiBold";
+    font-size: 10px;
+    @extend .link-text;
+  }
+}
+
+.c-meeting-list--descript {
+  margin-top: 10px;
+  font-family: "Adelle Light";
+  font-size: 18px;
+
+  a {
+    color: $grey02;
+  }
+}
+
+@media #{$tablet} {
+  .c-meeting-section--title {
+    margin: 20px 0 40px;
+    font-size: 26px;
+  }
+}
+
+// PAST MEETINGS
+.c-meeting-detail--past {
+  overflow: hidden;
+  padding: 25px 0 40px;
+
+  & + .c-meeting-detail--past {
+    border-top: 1px solid $grey05;
+  }
+
+  // uses columns in mobile
+  .l-col {
+    float: left;
+  }
+  .l-col-1-of-2 {
+    width: 20%;
+  }
+  .l-col-2-of-2 {
+    width: 80%;
+    padding-right: 20px;
+  }
+  .c-meeting-detail--date {
+    line-height: 1;
+  }
+  .c-meeting-date--num {
+    display: block;
+    font-size: 24px;
+  }
+  .c-meeting-date--month, .c-meeting-date--year {
+    display: block;
+    font-size: 12px;
+
+    &:before {
+      display: none;
+    }
+  }
+  .c-meeting-detail--title {
+    margin-bottom: 10px;
+    font-size: 18px;
+
+    a {
+      color: $grey02;
+    }
+  }
+  .c-meeting-detail--related {
+    margin-bottom: 10px;
+  }
+  .c-meeting-detail--location-link {
+    color: $grey02;
+
+    &:before {
+      @extend .lgt-text;
+    }
+  }
+  .c-detail--location,
+  .c-detail--time {
+    display: none;
+  }
+}
+
+@media #{$tablet} {
+  .c-meeting-detail--past {
+    padding: 30px 0 60px;
+
+    .l-col-1-of-2 {
+      width: 23%;
+    }
+    .l-col-2-of-2 {
+      width: 77%;
+      padding-right: 10%;
+    }
+    .c-meeting-date--num {
+      font-size: 40px;
+    }
+    .c-meeting-date--month, .c-meeting-date--year {
+      font-size: 16px;
+    }
+    .c-meeting-detail--title {
+      font-size: 24px;
+    }
+    .c-meeting-detail--related {
+      margin-bottom: 20px;
+
+      a {
+        font-size: 12px;
+
+        & + a {
+          margin-left: 5px;
+        }
+      }
+    }
+    .c-detail--location,
+    .c-detail--time {
+      display: block;
+    }
+  }
+}
+
+// COMMITTEE NEWS
+.c-meeting-detail--news {
+  overflow: hidden;
+  padding: 25px 0 40px;
+
+  .c-meeting-news--type {
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+  .c-meeting-detail--related {
+    margin-bottom: 20px;
+  }
+  .c-meeting-detail--title {
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+
+  img {
+    display: none;
+  }
+
+  & + .c-meeting-detail--news {
+    border-top: 1px solid $grey05;
+  }
+
+}
+
+.c-meeting-news--date {
+  color: $grey04;
+  font-family: "Proxima Nova Regular";
+  font-size: 12px;
+}
+
+@media #{$tablet} {
+  .c-meeting-detail--news {
+    padding: 30px 0 60px;
+
+    .c-meeting-news--type {
+      margin-bottom: 5px;
+    }
+    .c-meeting-detail--title {
+      font-size: 24px;
+    }
+
+    img {
+      display: block;
+    }
+  }
+  .c-meeting-news--date {
+    font-size: 14px;
+  }
+}
+
+.node-type-meeting {
+  .columns {
+    padding: 0;
+  }
+  .pane-meeting-details {
+    .view-meeting-details {
+      .view-content {
+        position: relative;
+        .meeting-status {
+          font-family: "Proxima Nova Regular";
+          font-size: 16px;
+          line-height: 20px;
+          color: $grey02;
+          text-transform: uppercase;
+          padding-top: 20px;
+          border-top: 1px solid $grey05;
+          margin-bottom: 25px;
+        }
+        .meeting-title {
+          font-family: "Adelle Light";
+          font-size: 42px;
+          line-height: 46px;
+          color: $grey02;
+          margin-top: -65px;
+        }
+        .meeting-location {
+          font-family: "Proxima Nova Regular";
+          font-size: 14px;
+          line-height: 18px;
+          color: $blue01;
+        }
+        .meeting-date {
+          font-family: "Proxima Nova SemiBold";
+          font-size: 14px;
+          line-height: 21px;
+        }
+        .meeting-day {
+          font-size: 48px;
+          line-height: 30px;
+          margin-bottom: 6px;
+          font-family: "Adelle Bold";
+          color: $grey02;
+        }
+        .meeting-month {
+          line-height: 20px;
+          margin-top: 3px;
+          font-size: 20px;
+          line-height: 28px;
+          color: $grey02;
+          text-transform: uppercase;
+        }
+        .meeting-day,
+        .meeting-month {
+          text-align: center;
+          width: 54px;
+        }
+        .field-name-field-issues {
+          ul {
+            display: inline-block;
+            li {
+              display: inline-block;
+              margin: 0 10px 0 0;
+              &:nth-child(1) {
+                &:before {
+                  content: "Related Issues:";
+                  font-family: "Proxima Nova SemiBold";
+                  font-size: 12px;
+                  line-height: 18px;
+                  text-transform: uppercase;
+                  color: $grey03;
+                  margin-right: 10px;
+                }
+              }
+            }
+          }
+        }
+        .meeting-body {
+          margin: 40px 0 25px 0;
+        }
+        .meeting-title,
+        .meeting-location,
+        .meeting-date {
+          margin: 0 0 15px 28%;
+        }
+      }
+    }
+  }
+  .c-members-title {
+    font-family: "Proxima Nova Regular";
+    font-size: 16px;
+    line-height: 26px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid $grey05;
+    border-top: none;
+    text-transform: uppercase;
+    color: $grey02;
+  }
+  .pane-meeting-agenda .pane-title,
+  .nys-title {
+    font-family: 'Adelle SemiBold';
+    font-size: 26px;
+    line-height: 38px;
+    margin-bottom: 0px;
+    color: $grey02;
+  }
+  .pane-embedded-youtube-video {
+    .view-embedded-youtube-video {
+      .video-embed-description {
+        display: none;
+      }
+    }
+  }
+  .view-meeting-agenda-block {
+    .view-header {
+      // .bill-id,
+      // .bill-title,
+      // .bill-actions {
+      // 	display: inline-block;
+      // 	font-family: "Proxima Nova Regular";
+      // 	font-size: 16px;
+      // 	line-height: 20px;
+      // 	text-transform: uppercase;
+      // 	color: $grey02;
+      // }
+      // .bill-title {
+      // 	margin-left: 20%;
+      // }
+      // .bill-actions {
+      // 	margin-left: 30%;
+      // }
+    }
+    .view-content {
+      .odd,
+      .even {
+        .c-update-block {
+          .l-left {
+            position: absolute;
+            top: 33px;
+            left: 0;
+            margin-top: 0;
+            .c-listing--bill-num {
+              font-size: 30px;
+              a {
+                color: $grey02;
+              }
+            }
+          }
+          .l-right {
+            float: left;
+            margin-left: 26%;
+            margin-top: 0;
+            .l-chair-container {
+              min-height: 45px;
+              margin-top: 15px;
+              img {
+                width: 45px;
+                height: 45px;
+                border-radius: 45px;
+                float: left;
+              }
+              .c-chair_info {
+                margin-left: 55px;
+                .sponsor-name {
+                  font-family: "Proxima Nova Regular";
+                  font-size: 10px;
+                  line-height: 14px;
+                  text-transform: uppercase;
+                  color: $grey05;
+                }
+              }
+            }
+          }
+        }
+        .l-right-actions {
+          margin-left: 60px;
+        }
+      }
+    }
+  }
+  .view-meeting-agenda.view-display-id-block_1,
+  .view-meeting-agenda-block {
+    // .view-header {
+    // 	.bill-title {
+    // 		margin-left: 14%;
+    // 	}
+    // 	.bill-actions {
+    // 		margin-left: 43%;
+    // 	}
+    // }
+    .view-content {
+      .odd,
+      .even {
+        .c-update-block {
+          .l-right {
+            width: 58%;
+            margin-left: 20%;
+          }
+        }
+      }
+    }
+  }
+  .view-committee-meetings {
+    .view-content {
+      .odd,
+      .even {
+        position: relative;
+        // border-top: 1px solid $grey04;
+        .c-event-block--featured {
+          border-top: none;
+        }
+        .c-event-date {
+          position: absolute;
+          top: 20px;
+          left: 0;
+          text-align: left;
+          span {
+            font-family: "Proxima Nova Regular";
+            font-size: 16px;
+            line-height: 24px;
+            text-transform: uppercase;
+            span {
+              font-family: "Adelle Bold";
+              font-size: 40px;
+              line-height: 24px;
+              text-transform: none;
+            }
+          }
+        }
+        .c-event-name {
+          margin: -8px 0px 10px 21%;
+          float: none;
+          a {
+            font-family: "Adelle Light";
+            font-size: 24px;
+            line-height: 24px;
+            color: $grey02;
+          }
+        }
+        .c-category {
+          margin-left: 21%;
+          a {
+            font-family: "Proxima Nova SemiBold";
+            font-size: 12px;
+            line-height: 14px;
+            color: $yellow03;
+            text-transform: uppercase;
+          }
+        }
+        .c-event-location {
+          font-family: "Proxima Nova Regular";
+          font-size: 14px;
+          line-height: 26px;
+          margin-left: 21%;
+          float: none;
+          &:before {
+            color: $blue01;
+            font-size: 20px;
+            margin-top: -3px;
+          }
+        }
+        .c-event-time {
+          font-family: "Proxima Nova SemiBold";
+          font-size: 14px;
+          line-height: 30px;
+          margin: 0 0 0 21%;
+          float: none;
+        }
+      }
+      .first {
+        border-top: none;
+      }
+    }
+  }
+  .block-nys-blocks-how-senate-works-block {
+    max-width: 840px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+  .view-senator-news {
+    .view-content {
+      .u-odd,
+      .u-even {
+        //border-bottom: 1px solid $grey05;
+        .c-update-block {
+          border-top: none;
+          .l-left {
+            position: relative;
+            top: 0px;
+            left: 0;
+            margin-top: 0;
+          }
+          .l-right {
+            float: left;
+            margin-left: 0;
+            margin-top: -7px;
+          }
+          .c-image {
+            margin-top: 0;
+          }
+        }
+      }
+    }
+  }
+  .c-committee-header {
+    margin-top: 40px;
+  }
+}
+
+@media #{$tablet} {
+  .l-right-actions {
+    margin-left: 81% !important;
+  }
+  .view-senator-news {
+    .view-content {
+      .u-odd,
+      .u-even {
+        .c-update-block {
+          .l-left {
+            position: absolute;
+            top: 30px;
+          }
+          .l-right {
+            margin-left: 21%;
+          }
+        }
+      }
+    }
+  }
+}

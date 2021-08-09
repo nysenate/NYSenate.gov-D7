@@ -1,0 +1,23 @@
+.view-filters{
+	margin-left: 0px;
+	select{
+		color: $blue01;
+		font-family: "Proxima Nova SemiBold";
+		font-size: 14px;
+		padding: 10px 40px 10px 20px;
+		background: none;
+		background-image: none;
+		text-transform: uppercase;
+		min-height: 45px;
+	}
+}
+
+.ajax-progress-throbber {
+	/*display: none !important;*/
+	.throbber {
+		/*display: none !important;*/
+		background: transparent url(../images/ajax-loader.gif) no-repeat 0px center !important;
+		height: 16px !important;
+		width: 16px !important;
+	}
+}

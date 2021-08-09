@@ -1,0 +1,88 @@
+<?php
+
+/**
+ * @file
+ * Drupal module that adds Disqus support to Display Suite.
+ */
+
+/**
+ *  Implementation of hook_ds_fields_info().
+ */
+function disqus_ds_ds_fields_info($entity_type) {
+  $fields = array();
+
+  $fields['node'] = array(
+    'disqus_comment' => array(
+      'title' => t('Disqus comments'),
+      'field_type' => DS_FIELD_TYPE_FUNCTION,
+      'function' => '_disqus_ds_comment',
+    ),
+    'disqus_comment_count' => array(
+      'title' => t('Disqus comment count'),
+      'field_type' => DS_FIELD_TYPE_FUNCTION,
+      'function' => '_disqus_ds_comment_count',
+    ),
+  );
+
+  return $fields;
+}
+
+/**
+ * Display the DS comments for a node
+ */
+function _disqus_ds_comment(array &$field) {
+  $entity = $field['entity'];
+  if (isset($entity->disqus) && $entity->disqus['status']) {
+    $settings = array(
+      'disqusComments' => $entity->disqus['domain'],
+      'disqus' => $entity->disqus,
+    );
+    $render = array(
+      '#type' => 'disqus',
+      '#disqus' => $entity->disqus,
+      '#access' => user_access('view disqus comments'),
+      '#attached' => array(
+        'js' => array(
+          array('data' => drupal_get_path('module', 'disqus') . '/disqus.js', 'type' => 'file'),
+          array('data' => $settings, 'type' => 'setting'),
+        ),
+      ),
+    );
+    return drupal_render($render);
+  }
+  return;
+}
+
+
+/**
+ * Display the DS comment count for a node
+ */
+function _disqus_ds_comment_count(array &$field) {
+  $entity = $field['entity'];
+  if (isset($entity->disqus) && $entity->disqus['status']) {
+    $settings = array(
+      'disqusComments' => $entity->disqus['domain'],
+      'disqus' => $entity->disqus,
+    );
+    $render = array(
+      '#theme' => 'link',
+      '#text' => t('Comments'),
+      '#path' => 'node/' . $entity->nid,
+      '#options' => array(
+        'attributes' => array(
+          'data-disqus-identifier' => 'node/' . $entity->nid,
+          'fragment' => 'disqus_thread',
+        ),
+        'html' => false,
+      ),
+      '#attached' => array(
+        'js' => array(
+          array('data' => drupal_get_path('module', 'disqus') . '/disqus.js', 'type' => 'file'),
+          array('data' => $settings, 'type' => 'setting'),
+        ),
+      ),
+    );
+    return drupal_render($render);
+  }
+  return;
+}

@@ -1,0 +1,156 @@
+/*-------------------------------------
+/
+/	I WANT TO...
+/	a container with three links in it
+/	senator - either find or your (depends on logged in state)
+/	explore issues and see all news
+/
+/-------------------------------------*/
+.c-container--want-to {
+
+	.c-container--header {
+		padding-bottom: 15px;
+	}
+	
+	.c-container--title {
+		font-family: "Adelle Semibold";
+		color: $grey02;
+		text-transform: none;
+		font-size: 32px;
+		letter-spacing: normal;
+	}
+}
+
+.c-want-to--item {
+	position: relative;
+	width: 100%;
+	margin: 0 auto;
+
+	.c-want-to--cta {
+		margin: 35px 0 20px;
+		padding-right: 50px;
+		font-family: "Adelle Light";
+		font-size: 16px;
+	}
+
+	.c-block--btn {
+		display: block;
+		position: relative;
+		width: 100%;
+		background: $yellow01;
+		height: 70px;
+		line-height: 70px;
+		text-align: center;
+		font-size: 13px;
+		padding-left: 20px;
+		text-align: left;
+		@include transition(background-color, 0.2s, ease);
+		
+		&:hover {
+			background: $yellow03;
+		}
+	}
+
+	.nys-senator--thumb {
+		height: 45px;
+		width: 46px;
+		margin: 0 10px;
+	}
+
+	&.c-want-to--item__senator {
+		.c-block--btn.loggedin {
+			line-height: 1;
+			text-align: left;
+			padding-left: 0;
+
+			&:before {
+				content: "";
+				width: 1px;
+				height: 100%;
+				display: inline-block;
+				vertical-align: middle;
+			}
+			.c-senator--cta {
+				display: inline-block;
+				vertical-align: middle;
+				width: 140px;
+				font-size: 12px;
+				line-height: 16px;
+			}
+		}
+		.c-block--btn {
+			@extend .icon-before__find-senator;
+		}
+	}
+	&.c-want-to--item__explore {
+		.c-block--btn {
+			@extend .icon-before__search;
+		}
+	}
+	&.c-want-to--item__news {
+		.c-block--btn {
+			@extend .icon-before__presskit;
+		}
+	}
+}
+@media #{$tablet} {
+	.c-container--want-to {
+		margin: 40px 0;
+		
+		.c-container--title {
+			font-size: 38px;
+		}
+	}
+	.c-want-to--item {
+		width: 32%;
+		float: left;
+		height: 190px;
+		margin: 0;
+		padding-bottom: 70px;
+
+		&:before {
+			content: "";
+			display: inline-block;
+			vertical-align: middle;
+			height: 100%;
+			width: 1px;
+			margin-left: -5px;
+		}
+
+		& + .c-want-to--item {
+			margin-left: 2%;
+		}
+		.c-want-to--cta {
+			margin-top: 25px;
+			padding: 0 20px;
+			display: inline-block;
+			vertical-align: middle;
+			font-size: 17px;
+			text-align: center;
+		}
+
+		.c-block--btn {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			padding-left: 0;
+			font-size: 11px;
+			text-align: center;
+
+			&.loggedin {
+				text-align: left;
+			}
+		}
+	}
+}
+
+@media #{$desktop} {
+	.c-want-to--item {
+		.c-want-to--cta {
+
+		}
+		.c-block--btn {
+			font-size: 13px;
+		}
+	}
+}

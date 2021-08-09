@@ -1,0 +1,159 @@
+<?php
+
+/**
+ * @file
+ * Install, update and schema hooks for the FlexSlider Picture module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function flexslider_picture_schema() {
+  $schema = array();
+  $schema['flexslider_picture_optionset'] = array(
+    'description' => 'Saves which flexslider optionsets use picture mappings and which use image styles.',
+    'export' => array(
+      'key' => 'flexslider_optionset',
+      'identifier' => 'flexslider_picture_optionset',
+      'api' => array(
+        'owner' => 'flexslider_picture',
+        'api' => 'flexslider_picture_optionset',
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+    ),
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'The internal identifier.',
+        'no export' => TRUE,
+      ),
+      'flexslider_optionset' => array(
+        'description' => 'The machine-readable option set name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'imagestyle_type' => array(
+        'description' => 'One of image_style or picture_mapping.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'mapping' => array(
+        'description' => 'The picture mapping for this optionset.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+      'fallback' => array(
+        'description' => 'The style machine name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('id'),
+    'indexes' => array(
+      'imagestyle_type' => array('imagestyle_type'),
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function flexslider_picture_install() {
+  // For each existing flexslider config, add a record in
+  // {flexslider_picture_optionset}.
+  $q = db_select('flexslider_optionset', 'f');
+  $q->addField('f', 'name', 'flexslider_optionset');
+  $q->addExpression("'image_style'", 'imagestyle_type');
+  $q->addExpression("''", 'mapping');
+  $q->addExpression("''", 'fallback');
+  db_insert('flexslider_picture_optionset')->fields(array(
+    'flexslider_optionset',
+    'imagestyle_type',
+    'mapping',
+    'fallback',
+  ))->from($q)->execute();
+}
+
+/**
+ * Implements hook_schema_alter().
+ */
+function flexslider_picture_schema_alter(&$schema) {
+  $schema['flexslider_optionset']['join']['flexslider_picture'] = array(
+    'table' => 'flexslider_picture_optionset',
+    'left_key' => 'name',
+    'right_key' => 'flexslider_optionset',
+    'callback' => 'flexslider_picture_join_callback',
+    'load' => array(
+      'imagestyle_type',
+      'mapping',
+      'fallback',
+    ),
+    'fields' => array(
+      'imagestyle_type' => array(
+        'description' => 'One of image_style or picture_mapping.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'mapping' => array(
+        'description' => 'The picture mapping for this optionset.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+      'fallback' => array(
+        'description' => 'The style machine name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+  );
+}
+
+/**
+ * Add the 'fallback' column to the {flexslider_picture_optionset} table.
+ */
+function flexslider_picture_update_7001() {
+  if (!db_field_exists('flexslider_picture_optionset', 'fallback')) {
+    db_add_field(
+      'flexslider_picture_optionset',
+      'fallback',
+      array(
+        'description' => 'The style machine name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      )
+    );
+  }
+}
+
+/**
+ * Add flexslider_picture_optionsets for existing flexslider optionsets.
+ */
+function flexslider_picture_update_7201() {
+  // For each existing flexslider config, add a record in
+  // {flexslider_picture_optionset}.
+  $q = db_select('flexslider_optionset', 'f');
+  $q->addField('f', 'name', 'flexslider_optionset');
+  $q->addExpression("'image_style'", 'imagestyle_type');
+  $q->addExpression("''", 'mapping');
+  $q->addExpression("''", 'fallback');
+  db_insert('flexslider_picture_optionset')->fields(array(
+    'flexslider_optionset',
+    'imagestyle_type',
+    'mapping',
+    'fallback',
+  ))->from($q)->execute();
+}

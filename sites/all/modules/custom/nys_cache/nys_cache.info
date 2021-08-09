@@ -1,0 +1,8 @@
+name = NYS Cache
+description = Custom cache invalidation.
+core = 7.x
+package = NY STATE SENATE
+
+dependencies[] = entity
+dependencies[] = d8cache
+dependencies[] = nodequeue

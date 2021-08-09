@@ -1,0 +1,887 @@
+<?php
+
+/**
+ * @file
+ * This module contains code to add functionality to bill nodes.
+ */
+
+require_once 'includes/nys_bills_form.inc';
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function nys_bills_module_implements_alter(&$implementations, $hook) {
+  if ($hook != 'user_login') {
+    return;
+  }
+
+  // Move user_login hook to the top to circumvent default flag module behavior.
+  $group = array('nys_bills' => $implementations['nys_bills']);
+  unset($implementations['nys_bills']);
+  $implementations = $group + $implementations;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function nys_bills_theme() {
+  return [
+    'nys_bills_amendment_block' => [
+      'template' => 'includes/nys_bills-amendment--block',
+      'variables' => [
+        'amendments' => NULL,
+        'bill_wrapper' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements template_preprocess_hook().
+ * Prepare additional variables for the amendment block template.  The
+ * theme() call will pass the bill node as an EMW object and all the
+ * active amendments as an array of node objects.  This function will
+ * use these items to generate some easy reference variables, as well
+ * as the "same as" and "previous version" HTML.
+ *
+ * @param $vars array The variables for the template.
+ * @param $hook mixed The string or array of strings indicating the hook.
+ */
+function template_preprocess_nys_bills_amendment_block(&$vars, $hook) {
+  try {
+    // Easy reference.
+    $bill_wrapper = $vars['bill_wrapper'];
+
+    // Set some variables for the template.
+    $vars['base_print_no'] = $bill_wrapper->field_ol_base_print_no->value();
+    $vars['session_year'] = $bill_wrapper->field_ol_session->value();
+
+    // Get all the bill's versions.
+    $vars['amended_versions'] = nys_bills_get_bill_versions(
+      $bill_wrapper->type->value(),
+      $vars['base_print_no'],
+      $vars['session_year']
+    );
+
+    // Record the active version for easy reference in the template.
+    $vars['active_version'] = $bill_wrapper->field_ol_active_version->value();
+
+    // Find previous versions based on taxonomy ID for the bill.
+    $related_tid = $bill_wrapper->field_bill_multi_session_root->value()->tid;
+
+    // Check for values in the Same As field for opposite chamber versions.
+    $same_as = drupal_json_decode($bill_wrapper->field_ol_same_as->value());
+
+    // Check status values for the bill and potential committee.
+    $last_status = $bill_wrapper->field_ol_last_status->value();
+    $last_status_comm = $bill_wrapper->field_ol_latest_status_committee->value();
+  }
+  catch (EntityMetadataWrapperException $e) {
+    // If anything went wrong with the wrapper, set some null values
+    // and try to move on.
+    $vars['base_print_no'] = '';
+    $vars['amended_versions'] = [];
+    $vars['active_version'] = '';
+    $related_tid = NULL;
+    $same_as = [];
+    $last_status = '';
+    $last_status_comm = '';
+  }
+
+
+  // Wrap Committee in a link if it is a Senate committee.
+  $vars['comm_status_pre'] = '';
+  if ($last_status == 'IN_SENATE_COMM') {
+    $committee_bill_details = 'Senate ' . $last_status_comm;
+    $target = '/committees/' . drupal_html_class($last_status_comm);
+    $vars['comm_status_pre'] = l(t($committee_bill_details), $target);
+  }
+  if ($last_status == 'IN_ASSEMBLY_COMM') {
+    $committee_bill_details = 'Assembly ' . $last_status_comm;
+    $vars['comm_status_pre'] = t($committee_bill_details);
+  }
+
+  // Initialize new variables, in case errors occur.
+  $previous_versions = [];
+
+  // Load all bills associated with this bill's taxonomy root.
+  $related_metadata = array_filter(
+    nys_bills_get_bill_metadata(
+      nys_bill_taxonomy_load_bills_from_tid($related_tid)
+    ),
+    function($v){return $v->print_num==$v->base_print_num;}
+  );
+
+  // If a "same as" exists, add its previous versions to this bill as well.
+  if (!empty($same_as)) {
+    // Get metadata for all bills related to this one by taxonomy.
+    // If "Same As" entries exist, get all previous versions of those bills.
+    foreach ($same_as as &$billid) {
+      $billid = (object) $billid;
+      $result = nysenate_bill_get_prev_versions($billid->session, $billid->printNo);
+      if (isset($result['node'])) {
+        $billid->nid = array_keys($result['node'])[0];
+      }
+    }
+
+    // Query the database for previous versions of opposite chamber bills.
+    if (!empty($same_as[0]->nid)) {
+      // Get the multi-session root TID for the "same as" bill.
+      $query = db_select('field_data_field_bill_multi_session_root', 'f')
+        ->fields('f', ['field_bill_multi_session_root_tid'])
+        ->condition('f.bundle', 'bill')
+        ->condition('f.deleted', 0)
+        ->condition('f.entity_id', $same_as[0]->nid)
+        ->range(0, 1);
+      $same_as_tid = $query->execute()->fetchField();
+
+      // If a TID is found, add all related bills to the metadata collection.
+      if ($same_as_tid) {
+        $related_metadata += array_filter(
+          nys_bills_get_bill_metadata(
+            nys_bill_taxonomy_load_bills_from_tid($same_as_tid)
+          ),
+          function($v){return $v->print_num==$v->base_print_num;}
+        );
+      }
+    }
+  }
+
+  // Format display items for previous versions.  They need to be categorized
+  // by legislative session.
+  foreach ($related_metadata as $key=>$val) {
+    if (!($val->session == $vars['session_year'])) {
+      $t_sess = nys_bills_standardize_session((int) $val->session);
+      $t_year = substr($t_sess, 0, 4);
+      $t_pnum = strtoupper($val->base_print_num);
+      $t_link = '/legislation/bills/' . $t_year . '/' . $t_pnum;
+      $previous_versions[$t_sess][$t_pnum] = l($t_pnum, $t_link);
+    }
+  }
+
+  // Now add the previous versions and same as to the template variables.
+  $vars['same_as'] = $same_as;
+  $vars['prev_vers'] = [];
+  ksort($previous_versions);
+  foreach ($previous_versions as $index => $prev_leg) {
+    $vars['prev_vers'][$index] = implode(', ', $prev_leg);
+  }
+
+  // Add the prefix text for previous versions
+  if (count($vars['prev_vers']) > 1) {
+    $vars['prev_vers_pre'] = t('Versions Introduced in Other Legislative Sessions:');
+  }
+  else {
+    $current = current(array_keys($previous_versions));
+    $vars['prev_vers_pre'] = 'Versions Introduced in ' . $current .
+      ' Legislative Session:';
+  }
+
+  // Get the base URL for OpenLeg.
+  $vars['ol_base_url'] = variable_get('openleg_base_url');
+
+  // For non amended bills.
+  $vars['version'] = '';
+}
+
+/**
+ * Implements hook_user_login().
+ *
+ * This hook converts flagging and vote entries from being owned
+ * by an anonymous user to being owned by the current user.  It
+ * will reset the user ID associated with the respective records
+ * in flagging and votingapi_vote, and delete the old records
+ * from nys_bills_anon.
+ */
+function nys_bills_user_login(&$edit, $account) {
+  nyslog(__FUNCTION__);
+
+  // This should only act on a user's first login, determined
+  // by $account->access==0.
+  if (!((boolean) $account->access)) {
+
+    // Load the full user.
+    $this_user = user_load($account->uid);
+    if ($this_user) {
+      // Set any outstanding subscriptions to confirmed.
+      nyslog("updating confirmations for user {$account->uid}");
+      $confirm_update = db_update('nys_subscriptions')
+        ->fields(['confirmation_timestamp' => time()])
+        ->condition('uid', $account->uid)
+        ->execute();
+      nyslog("update return=" . var_export($confirm_update, 1));
+
+      // Grab any anonymous user records from nys_bills_anon
+      // matching the current user's email address.  We need
+      // fid (flagging PK) and vote_id (votingapi_vote PK).
+      $bills_records = db_select('nys_bills_anon')
+        ->fields('nys_bills_anon', array('sid', 'fid', 'vote_id'))
+        ->condition('email', $this_user->mail)
+        // This is now limited to the most-recent record.
+        ->orderBy('sid', 'DESC')
+        ->range(0, 1)
+        ->execute();
+
+      // For each bills record returned, update the flagging
+      // and votingapi_vote tables to reflect the new user id.
+      // Optionally, trigger an accumulator event.
+      if ($bills_records->rowCount()) {
+        // Fetch the rows, and initialize the references.
+        $bill_results = $bills_records->fetchAllAssoc('fid', PDO::FETCH_ASSOC);
+        $change_ids = array(
+          'flag' => array(),
+          'vote' => array(),
+          'anon' => array(),
+        );
+        foreach ($bill_results as $rec) {
+          $change_ids['flag'][] = $rec['fid'];
+          $change_ids['vote'][] = $rec['vote_id'];
+          $change_ids['anon'][] = $rec['sid'];
+        }
+        nyslog("change array=\n" . var_export($change_ids, 1));
+        // Update the flagging table.
+        nyslog("updating anonymous flags:\n" . var_export($change_ids['flag'], 1));
+        $flag_update = db_update('flagging')
+          ->fields(array('uid' => $this_user->uid, 'sid' => 0))
+          ->condition('flagging_id', $change_ids['flag'])
+          ->execute();
+        nyslog("update return=" . var_export($flag_update, 1));
+
+        // Update the votingapi_vote table.
+        nyslog("updating anonymous votes:\n" . var_export($change_ids['vote'], 1));
+        $vote_update = db_update('votingapi_vote')
+          ->fields(array('uid' => $this_user->uid))
+          ->condition('vote_id', $change_ids['vote'])
+          ->execute();
+        nyslog("update return=" . var_export($vote_update, 1));
+
+        // Remove the anonymous user records.
+        nyslog("deleting anonymous records:\n" . var_export($change_ids['anon'], 1));
+        db_delete('nys_bills_anon')
+          ->condition('sid', $change_ids['anon'])
+          ->execute();
+      }
+    }
+
+    // If a direct message was sent during registration, update the author
+    // record with the new uid.
+    if (isset($_SESSION['reg_msg_id']) && is_numeric($_SESSION['reg_msg_id'])) {
+      $mid = $_SESSION['reg_msg_id'];
+      db_update('pm_message')
+        ->fields(array('author' => $account->uid))
+        ->condition('mid', $mid)
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function nys_bills_node_view($node, $view_mode, $langcode) {
+  if ($node->type == 'bill' && $view_mode == 'full') {
+    // If there's no alias for this bills node, redirect to 404.
+    $current_path = current_path();
+    $path_alias = drupal_lookup_path('alias', $current_path);
+    if (!$path_alias) {
+      drupal_not_found();
+    }
+
+    $node->content['bill_form'] = drupal_get_form('nys_bills_bill_form', $node);
+
+    // Add settings to javascript that will help with processing vote from
+    // Javascript.
+    $vote_options = nys_bill_vote_get_options();
+    $vote_label_options = array();
+    foreach (array_keys($vote_options) as $vote_value) {
+      $vote_label_options[$vote_value] = nys_bill_vote_get_voted_label($vote_value);
+    }
+    $js_settings = array(
+      'bill_vote' => array(
+        'bill_entity_id' => $node->nid,
+        'bill_name' => nys_bills_get_full_bill_name($node),
+        'vote_options' => $vote_label_options,
+      ),
+    );
+    drupal_add_js($js_settings, array('type' => 'setting'));
+  }
+}
+
+/**
+ * Record info for anon users submitting vote.
+ *
+ * A private function used to record the user information for
+ * anonymous users submitting a bill vote.
+ *
+ * @param object $node
+ *   The bill node object receiving the vote.
+ * @param array $values
+ *   The $form_state['values'] array of the form submission.
+ *
+ * @return bool|int
+ *   Returns the auto-increment value of the newly inserted record,
+ *   or false if the current user is logged in (i.e., not anonymous).
+ */
+function _nys_bills_record_anonymous_user($node, $values) {
+  nyslog(__FUNCTION__);
+
+  // If this user is logged in, exit.
+  global $user;
+  if ($user->uid) {
+    return FALSE;
+  }
+
+  // Some includes to support this process.
+  ctools_include('ajax');
+  ctools_include('object-cache');
+  ctools_include('nys_registration.wizard', 'nys_registration', 'inc');
+
+  // We need to know if a flag object for this bill already exists
+  // within this session.
+  $bills_flag = flag_get_flag('follow_this_bill');
+  $sid = flag_set_sid();
+
+  // If a flag already exists, reset the session so this one is
+  // considered new.  This supports multiple sign-ups at a public computer.
+  if ($bills_flag->is_flagged($node->nid)) {
+    $sid = nys_utils_regenerate_session();
+  }
+
+  // Create a default registration form ...
+  $registration_form_state = _nys_registration_create_form_object($values);
+  $registration_form_state['object']->agree_terms = TRUE;
+  $registration_form_state['object']->fbuid = NULL;
+
+  // ... and call SAGE district lookup.
+  nys_registration_wizard_next($registration_form_state);
+
+  // Retrieve the relevant senator/district information.
+  $senator = !empty($registration_form_state['object']->senator->nid) ? $registration_form_state['object']->senator->nid : NULL;
+  $district_id = !empty($registration_form_state['object']->district_id) ? $registration_form_state['object']->district_id : NULL;
+  $district_number = !empty($registration_form_state['object']->district_number) ? $registration_form_state['object']->district_number : 0;
+
+  // Insert the new anonymous record into nys_bills_anon.
+  nyslog("Inserting into nys_bills_anon");
+  $anon_insert = db_insert('nys_bills_anon')
+    ->fields(array(
+      'bid' => $node->nid,
+      'fid' => 0,
+      'vote_id' => 0,
+      'session_id' => $sid,
+      'email' => $values['email'],
+      'first_name' => $values['first_name'],
+      'last_name' => $values['last_name'],
+      'addr_street' => $values['addr_street'],
+      'addr_opt' => $values['addr_opt'],
+      'addr_city' => $values['addr_city'],
+      'addr_state' => $values['addr_state'],
+      'addr_zip' => $values['addr_zip'],
+      'senator' => $senator,
+      'district_id' => $district_id,
+      'district_number' => $district_number,
+      'timestamp' => REQUEST_TIME,
+      'message' => 0,
+    ))
+    ->execute();
+  nyslog("inserted, return=\n" . var_export($anon_insert, 1));
+
+  // Return the new record PK.
+  return $anon_insert;
+}
+
+/**
+ * Wrapper for _nys_bills_select_anonymous_user() to return a single record.
+ *
+ * See the wrapped function for a description of parameters.
+ *
+ * @param array $conditions
+ *   An array of ('field_name' => 'field_value') elements used as query
+ *   conditions.
+ * @param null|array $fields
+ *   An array of field names to include in the return.  If nothing is passed,
+ *   a default list of fields is used.
+ *
+ * @return mixed|null
+ *   An object representing a single anonymous record, or NULL if none found.
+ */
+function _nys_bills_select_single_anonymous_user($conditions, $fields = NULL) {
+  $return = _nys_bills_select_anonymous_user($conditions, $fields, 1);
+  return count($return) ? $return[0] : NULL;
+}
+
+/**
+ * Queries table nys_bills_anon for matching records and returns an array.
+ *
+ * @param array $conditions
+ *   An array of ('field_name' => 'field_value') elements used as query
+ *   conditions.
+ * @param null|array $fields
+ *   An array of field names to include in the return.  If nothing is passed,
+ *   a default list of fields is used.
+ * @param int $limit
+ *   An integer value used to limit the number of records eligible for return.
+ *
+ * @return array
+ *   An array of objects representing any records found.
+ */
+function _nys_bills_select_anonymous_user($conditions, $fields = NULL, $limit = 0) {
+  // Prepare the fields to be selected, if none have been passed.
+  if (!is_array($fields)) {
+    $fields = array(
+      'sid',
+      'bid',
+      'fid',
+      'vote_id',
+      'email',
+      'senator',
+      'district_id',
+      'district_number',
+    );
+  }
+
+  // Create the base query.
+  $anon_user_records = db_select('nys_bills_anon', 'a')->fields('a', $fields);
+
+  // Add any conditions passed in.
+  foreach ($conditions as $fld => $val) {
+    $anon_user_records->condition($fld, $val);
+  }
+
+  // If a limit was specified, add it to the query.
+  if ((int) $limit) {
+    $anon_user_records->range(0, (int) $limit);
+  }
+
+  // Grab the list.  This could be an empty array.
+  $result = $anon_user_records->execute();
+  $return = $result->fetchAll(PDO::FETCH_OBJ);
+
+  // Return the results.
+  return $return;
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function nys_bills_entity_insert($entity, $type) {
+  // When a new bill is inserted, invalidate the 'bill versions'
+  // and 'previous versions'cache.
+  if ($type == 'node' && $entity->type == 'bill') {
+    nys_bills_clear_bill_versions_cache($entity);
+  }
+
+  // This hook will update nys_bills_anon records for the current session
+  // with the id of the flag being inserted.  It will only act if the
+  // entity being inserted is of type "flagging" and the flag name is
+  // "follow_this_bill".
+  if ($type == 'flagging' && $entity->flag_name == 'follow_this_bill') {
+    // Add the flagging id to the petition signature of the same session.
+    nyslog("follow_this_bill flag found, updating nys_bills_anon");
+    $flagging_id = $entity->flagging_id;
+    $this_update = db_update('nys_bills_anon')
+      ->fields(array('fid' => $flagging_id))
+      ->condition('session_id', $entity->sid)
+      ->condition('fid', 0)
+      ->condition('bid', $entity->entity_id)
+      ->execute();
+    nyslog("nys_bills_anon update result=\n" . var_export($this_update, 1));
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function nys_bills_entity_update($entity, $type) {
+  // When a new bill is updated, invalidate the 'bill versions'
+  // and 'previous versions'cache.
+  if ($type == 'node' && $entity->type == 'bill') {
+    nys_bills_clear_bill_versions_cache($entity);
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function nys_bills_entity_delete($entity, $type) {
+  // When a new bill is deleted, invalidate the 'bill versions'
+  // and 'previous versions'cache.
+  if ($type == 'node' && $entity->type == 'bill') {
+    nys_bills_clear_bill_versions_cache($entity);
+  }
+}
+
+/**
+ * Helper function to clear the cache for certain cache entries.
+ *
+ * @param object $node
+ *   A drupal node object.
+ */
+function nys_bills_clear_bill_versions_cache($node) {
+  $emw = entity_metadata_wrapper('node', $node);
+  $session = $emw->field_ol_session->value();
+  $print_no = $emw->field_ol_base_print_no->value();
+
+  // Clear the cache for the 'previous version' query results as well
+  // as the 'bill versions' query results.
+  $cache_id_identifier = $session . '-' . drupal_html_class($print_no);
+  $bill_versions_cache = 'nys_bills-versions-bill-' . $cache_id_identifier;
+  cache_clear_all($bill_versions_cache, 'cache');
+
+  // If an amendment was created/updated we need to invalidate the cache tag for
+  // the original bill, so the amendments section displays correctly.
+  $versions = nys_bills_get_bill_versions($node->type, $print_no, $session);
+  if (count($versions) > 1) {
+    $tags = [];
+    foreach ($versions as $version) {
+      $tags[] = 'node:' . $version['nid'];
+    }
+    drupal_invalidate_cache_tags($tags);
+  }
+}
+
+/**
+ * Implements hook_votingapi_insert().
+ *
+ * This hook will update nys_bills_anon records for the current session
+ * with the id of the vote being inserted.  If more than one vote is
+ * passed, only the first will be used for the update.
+ */
+function nys_bills_votingapi_insert($votes) {
+  nyslog(__FUNCTION__);
+  if (count($votes)) {
+    nyslog("UPDATING");
+    $sid = flag_set_sid();
+    $the_vote = $votes[0];
+    $update = db_update('nys_bills_anon')
+      ->fields(array('vote_id' => $the_vote['vote_id']))
+      ->condition('bid', $the_vote['entity_id'])
+      ->condition('session_id', $sid)
+      ->execute();
+    nyslog("updating nys_bills_anon vote_id={$the_vote['vote_id']}, ret=" . var_export($update, 1));
+  }
+}
+
+/**
+ * Implements hook_nys_accumulator_user_info().
+ *
+ * Adds anonymous user information to accumulator messages.
+ */
+function nys_bills_nys_accumulator_user_info($user, $response, $options) {
+  nyslog();
+  // If the user is logged in, exit.
+  if ($user->uid != 0 || $response['msg_type'] != 'bill') {
+    return $response;
+  }
+
+  // Only do work if a flag or vote id is present in options.
+  $where = '';
+  if (isset($options['flagging']->flagging_id)) {
+    $where = 'fid = :v';
+    $param = array(':v' => $options['flagging']->flagging_id);
+  }
+  elseif (isset($options['voting'])) {
+    $where = 'bid = :n and session_id = :s';
+    $param = array(
+      ':n' => $options['voting'],
+      ':s' => flag_set_sid($user->uid),
+    );
+  }
+  if (!$where) {
+    return $response;
+  }
+
+  // Try to find the appropriate row.
+  $query = "SELECT * FROM {nys_bills_anon} WHERE $where";
+  $bills_row = db_query($query, $param)->fetchAll();
+
+  // If no row is found, exit.
+  if (empty($bills_row[0]->email)) {
+    return $response;
+  }
+
+  // Prepare the user's information for inclusion.
+  $user_info = array(
+    'signing_id' => $bills_row[0]->sid,
+    'user_email' => $bills_row[0]->email,
+    'first_name' => $bills_row[0]->first_name,
+    'last_name' => $bills_row[0]->last_name,
+    'user_address' => $bills_row[0]->addr_street,
+    'user_city' => $bills_row[0]->addr_city,
+    'user_state' => $bills_row[0]->addr_state,
+    'user_zipcode' => $bills_row[0]->addr_zip,
+    'district_number' => $bills_row[0]->district_number,
+    'district_id' => $bills_row[0]->district_id,
+    'senator_node' => $bills_row[0]->senator,
+  );
+
+  // Include the information in the response.
+  if (!isset($response['msg_info'])) {
+    $response['msg_info'] = array();
+  }
+  $response['msg_info']['form_info'] = $user_info;
+
+  // Return the response.
+  return $response;
+}
+
+/**
+ * Sends a private message to a user when voting on a bill.
+ *
+ * @param array $message
+ *   Array with properties for sending a message.
+ *
+ * @code
+ *   // Expects the following array structure.
+ *   $message = array(
+ *     'senator_nid' => $senator_nid, // Node id for senator's page.
+ *     'author' => $user, // Sender.
+ *     'vote_label' => $vote_label, // Label for user's vote.
+ *     'values' => $values, // Registration form values.
+ *     'node' => $node, // Bills node object.
+ *   );
+ * @endcode
+ *
+ * @return array
+ *   Returns an array of success/error messages.
+ */
+function nys_bills_send_private_message($message) {
+  nyslog();
+
+  // Array for return warnings/errors/success.
+  $bills_flag_message = array();
+  $values = $message['values'];
+
+  if (empty($message['senator_nid'])) {
+    $bills_flag_message[] = t('You must be a NY resident to send messages to a Senator.');
+  }
+  else {
+    // Get the senator's user object.
+    $senator = user_load(nys_utils_senator_get_uid($message['senator_nid']));
+
+    // Get the proper language for the vote type.
+    switch ($message['vote_label']) {
+      case 'Aye':
+        $vote_type = 'supported';
+        break;
+
+      case 'Nay':
+        $vote_type = 'opposed';
+        break;
+
+      default:
+        $vote_type = 'sent a message regarding';
+        break;
+    }
+
+    // Create the subject.
+    $subject = "{$values['first_name']} {$values['last_name']} {$vote_type} " .
+      $message['node']->title;
+
+    // Create the body.
+    $body = '';
+    if ($values['message']) {
+      $body .= "<div style=\"border-left:5px solid #aaaaaa;border-radius:.2em;padding-left:1em\">" .
+        filter_xss($values['message']) . "</div>\n\n- - - - - - - - -\n";
+    }
+    $body .= $message['node']->title;
+    if ($sponsor_name = $message['node']->field_ol_sponsor_name[LANGUAGE_NONE][0]['value']) {
+      $body .= " - " . $sponsor_name;
+    }
+    $body .= "\n" .
+      field_get_items('node', $message['node'], 'field_ol_name')[0]['value'] .
+      "\n" . url($values['pass_thru_url'], array('absolute' => TRUE));
+
+    // Set author and timestamp options.
+    $options = array('timestamp' => REQUEST_TIME, 'author' => $message['author']);
+
+    // Send the message.
+    $new_msg = privatemsg_new_thread(array($senator), $subject, $body, $options);
+
+    // Set the result message.
+    $bills_flag_message[] = ($new_msg['success'] === TRUE)
+      ? t('Your message has been sent.')
+      : t('There was a problem sending your message.');
+
+    // Sending a context message from the bill vote needs the same follow-up as
+    // does sending a new message from the Inbox.  Set the bill_id value to
+    // provide context, and make sure the same hook is fired.
+    $values['bill_id'] = $message['node']->nid;
+    module_invoke_all('nys_inbox_new_message_sent', $values, $new_msg);
+  }
+
+  return $bills_flag_message;
+}
+
+/**
+ * Loads identifying metadata from bill nodes specified by provided
+ * node IDs.  Identifying data consists of nid, title, session, print
+ * number, and base print number.
+ *
+ * @param $nids int|array Node IDs to load.
+ *
+ * @return array An array of query result rows.
+ */
+function nys_bills_get_bill_metadata($nids) {
+  $ret = [];
+  if (!is_array($nids)) {
+    $nids = [$nids];
+  }
+  if (count($nids)) {
+    $query = "SELECT n.nid, n.title, " .
+      "sess.field_ol_session_value AS `session`, " .
+      "pn.field_ol_print_no_value AS `print_num`, " .
+      "bpn.field_ol_base_print_no_value AS `base_print_num` " .
+      "FROM node n " .
+      "LEFT JOIN field_data_field_ol_session sess ON n.nid=sess.entity_id " .
+      "LEFT JOIN field_data_field_ol_print_no pn ON n.nid=pn.entity_id " .
+      "LEFT JOIN field_data_field_ol_base_print_no bpn ON n.nid=bpn.entity_id " .
+      "WHERE n.type='bill' AND n.nid IN (:nid)";
+    $queryargs = [':nid' => $nids];
+    $ret = db_query($query, $queryargs)->fetchAllAssoc('nid');
+  }
+  return $ret;
+}
+
+/**
+ * Helper function to retrieved cached bills data.
+ */
+function nys_bills_get_bill_versions($node_type, $bill_base_print_no, $bill_session_year) {
+  // We're using drupal_html_class() ensure that parameters
+  // have no spaces in them.
+  $cid = 'nys_bills-versions-' .
+    drupal_html_class($node_type) . '-' .
+    drupal_html_class($bill_session_year) . '-' .
+    drupal_html_class($bill_base_print_no);
+
+  // If data is cached, return cached data.
+  if ($cache = cache_get($cid)) {
+    return $cache->data;
+  }
+
+  $results = [];
+  if ($bill_base_print_no && $bill_session_year && $node_type) {
+    $query = "SELECT n.title, n.nid, os.field_ol_session_value
+      FROM field_data_field_ol_base_print_no pn JOIN node n
+      ON n.nid = pn.entity_id
+      JOIN field_data_field_ol_session os
+      ON os.entity_id = pn.entity_id AND os.bundle = pn.bundle
+      WHERE pn.field_ol_base_print_no_value = :base_print_no
+      AND pn.bundle = :bundle AND os.field_ol_session_value = :session_year;";
+    $queryargs = [
+      ':base_print_no' => $bill_base_print_no,
+      ':bundle' => $node_type,
+      ':session_year' => $bill_session_year,
+    ];
+
+    $db_results = db_query($query, $queryargs);
+    foreach ($db_results as $key => $r) {
+      $results[] = ['nid' => $r->nid, 'title' => $r->title];
+    }
+  }
+
+  // Cache data based on cache ID that was set above.
+  cache_set($cid, $results, 'cache', CACHE_PERMANENT);
+  return $results;
+}
+
+function nys_bills_load_active_from_session_base_print($session, $baseprint) {
+  $query = "SELECT n.nid FROM {node} n " .
+    "INNER JOIN {field_data_field_ol_print_no} pn " .
+    "ON n.nid=pn.entity_id AND pn.bundle='bill' " .
+    "INNER JOIN {field_data_field_ol_session} sess " .
+    "ON n.nid=sess.entity_id AND sess.bundle='bill' " .
+    "INNER JOIN {field_data_field_ol_active_version} fa " .
+    "ON n.nid=fa.entity_id AND fa.bundle='bill' " .
+    "INNER JOIN {field_data_field_ol_base_print_no} bpn " .
+    "ON n.nid=bpn.entity_id AND bpn.bundle='bill' " .
+    "WHERE sess.field_ol_session_value=:sess " .
+    "AND bpn.field_ol_base_print_no_value=:bpn " .
+    "AND CONCAT(bpn.field_ol_base_print_no_value, " .
+    "fa.field_ol_active_version_value)=pn.field_ol_print_no_value LIMIT 1";
+  $args = [':sess' => $session, ':bpn' => $baseprint];
+  return db_query($query, $args)->fetchField();
+}
+
+/**
+ * Helper function to grab full Bill name with chamber.
+ *
+ * @param object $node
+ *   Full bill node object.
+ *
+ * @return string
+ *   Returns a full bill name with Chamber + 'Bill' + BillName.
+ */
+function nys_bills_get_full_bill_name($node) {
+  try {
+    $emw = entity_metadata_wrapper('node', $node);
+    $chamber = ucfirst($emw->field_ol_chamber->value());
+    $title = $chamber . ' Bill ' . $emw->label();
+
+    return $title;
+  }
+  catch (EntityMetadataWrapperException $exc) {
+    watchdog(
+      'nys_bills',
+      'EntityMetadataWrapper exception in %function() <pre>@trace</pre>',
+      array('%function' => __FUNCTION__, '@trace' => $exc->getTraceAsString()),
+      WATCHDOG_ERROR
+    );
+  }
+}
+
+/**
+ * Standardizes the session year string for display.  The odd-numbered
+ * year needs to be the first year in the legislative cycle identifier
+ * in order to match Senate procedure.  If a non-integer is passed, the
+ * input is returned untouched.
+ *
+ * @param $session_year int A session year
+ *
+ * @return string The legislative cycle, ready for display.
+ */
+function nys_bills_standardize_session($session_year) {
+  // Initialize the return with the input, in case a non-integer was passed.
+  $ret = $session_year;
+  if (is_int($session_year)) {
+    // The odd numbered year needs to be the first year in the legislative cycle to match Senate procedure.
+    if (($session_year % 2) > 0) {
+      $ret = $session_year . '-' . ($session_year + 1);
+    }
+    else {
+      $ret = ($session_year - 1) . '-' . $session_year;
+    }
+  }
+  return $ret;
+}
+
+function nys_bills_resolve_amendment_sponsors($amendment, $chamber) {
+  $ret = array();
+  $cycle = array('co', 'multi');
+  $senators = get_senator_name_mapping();
+  foreach ($cycle as $type) {
+    $ret[$type] = array();
+    $propname = "field_ol_{$type}_sponsor_names";
+    $sponsors = json_decode($amendment->{$propname}[LANGUAGE_NONE][0]['value']);
+    foreach ($sponsors as $one_sponsor) {
+      switch ($chamber) {
+        case 'senate':
+          $nodeid = nys_utils_get_senator_nid_from_member_id($one_sponsor->memberId);
+          $ret[$type][] = (object) array(
+            'memberId' => $one_sponsor->memberId,
+            'nodeId' => $nodeid,
+            'fullName' => $senators[$nodeid]['full_name'],
+          );
+          break;
+        case 'assembly':
+          $ret[$type][] = (object) array(
+            'memberId' => NULL,
+            'nodeId' => NULL,
+            'fullName' => $one_sponsor->fullName,
+          );
+          break;
+      }
+    }
+  }
+
+  return $ret;
+}

@@ -1,0 +1,11 @@
+name = Media Ckeditor test
+description = Provides hooks for testing Media Ckeditor module functionality.
+package = Media
+core = 7.x
+hidden = FALSE
+
+; Information added by Drupal.org packaging script on 2020-03-22
+version = "7.x-2.14"
+core = "7.x"
+project = "media_ckeditor"
+datestamp = "1584902065"

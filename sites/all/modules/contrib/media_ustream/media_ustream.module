@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @file
+ * The media_ustream/media_ustream.module file.
+ *
+ * Media: UStream provides a stream wrapper and formatters for
+ * videos provided by UStream, available at http://ustream.tv/.
+ *
+ * @TODO:
+ * Tie in UStream API even more.
+ * Allow editors to put in a ustream username to display on the browser.
+ * Allow editors to log in w/ their credentials.
+ */
+
+define('MEDIA_USTREAM_REST_API', 'https://api.ustream.tv');
+
+// Hooks and callbacks for integrating
+// with File Entity module for display.
+require_once dirname(__FILE__) . '/includes/media_ustream.formatters.inc';
+
+/**
+ * Implements hook_media_internet_providers().
+ */
+function media_ustream_media_internet_providers() {
+  $info['MediaInternetUStreamHandler'] = array(
+    'title' => t('UStream'),
+  );
+
+  return $info;
+}
+
+/**
+ * Implements hook_stream_wrappers().
+ */
+function media_ustream_stream_wrappers() {
+  return array(
+    'ustream' => array(
+      'name' => t('UStream videos'),
+      'class' => 'MediaUStreamStreamWrapper',
+      'description' => t('Videos provided by UStream.'),
+      'type' => STREAM_WRAPPERS_READ_VISIBLE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function media_ustream_theme($existing, $type, $theme, $path) {
+  return array(
+    'media_ustream_video' => array(
+      'variables' => array('uri' => NULL, 'options' => array()),
+      'file' => 'media_ustream.theme.inc',
+      'path' => $path . '/themes',
+      'template' => 'media-ustream-video',
+    ),
+  );
+}
+
+/**
+ * Implements hook_file_mimetype_mapping_alter().
+ *
+ * Regster the video/youtube mimetype.
+ */
+function media_ustream_file_mimetype_mapping_alter(&$mapping) {
+  $mapping['mimetypes'][] = 'video/ustream';
+}

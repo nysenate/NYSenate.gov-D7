@@ -1,0 +1,68 @@
+/**
+ * CSS Rules specific to the password reset page.
+ **/
+
+.section-password-reset .password-reset-greeting {
+  font-size: 18pt;
+  font-family: "Adelle Light";
+  margin-top: 3em;
+}
+#nys-registration-password-reset-form .form-item-pass {
+  text-align: center;
+}
+#nys-registration-password-reset-form .form-item-pass > .form-item {
+  float: left;
+  width: 35em;
+  margin: 0 3.5% 0 0;
+  clear: none;
+}
+#nys-registration-password-reset-form .form-item-pass * {
+  text-align: initial;
+}
+#nys-registration-password-reset-form .form-item-pass .description {
+  clear:both;
+}
+#nys-registration-password-reset-form .password-suggestions {
+  width: 46%;
+  top: -1rem;
+  position: relative;
+  margin: 0 0 .5em;
+}
+#nys-registration-password-reset-form .password-suggestions ul {
+  padding-left: 1.5em;
+  margin-top: .5em;
+}
+#nys-registration-password-reset-form .password-suggestions li {
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.75em;
+}
+#nys-registration-password-reset-form .password-strength,
+#nys-registration-password-reset-form .password-confirm {
+  margin-top: 0;
+  text-align: right;
+}
+#nys-registration-password-reset-form .password-strength-text {
+  width: 6em;
+  text-align: right;
+  padding: 0 .5em 0 0;
+}
+#nys-registration-password-reset-form .password-confirm span {
+  display: inline-block;
+  line-height: 1em;
+  padding: .5em 1em;
+  margin: 0 .5em;
+  font-size: .75rem;
+  width: 3.5em;
+  text-align: center;
+}
+#nys-registration-password-reset-form .password-confirm span.ok {
+  background-color: darkgreen;
+  color: white;
+}
+#nys-registration-password-reset-form .password-confirm {
+  text-align: right;
+}
+#nys-registration-password-reset-form input.form-text {
+  text-align: left;
+}

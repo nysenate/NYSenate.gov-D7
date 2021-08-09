@@ -1,0 +1,485 @@
+/*------------------------------
+/ SENATOR HOME DISPLAY 2
+/-------------------------------*/
+
+
+@media #{$tablet} {
+  .row.senator-display-alt {
+    max-width: 72.5rem!important;
+    main.l-row--main {
+      max-width: 1200px;
+    }
+    aside.large-4 {
+      padding-top: 0px;
+    }
+  }
+
+}
+
+@media #{$desktop} {
+  .row.senator-display-alt {
+    max-width:72.5rem!important;
+    main.l-row--main {
+      max-width: 1200px;
+    }
+    aside {
+      //padding-top: 70px;
+    }
+  }
+}
+
+.senator-display2, .senator-display3, .senator-home-flex {
+
+  .c-news-container .c-news-block {
+   // padding: 2%;
+    .c-title {
+      text-transform: uppercase;
+      font-family: "Proxima Nova Regular";
+      font-size: 16px;
+      line-height: 1em;
+      letter-spacing: 0.05em;
+      padding-bottom: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #AAAAAA;
+      position: relative;
+    }
+  }
+  .c-news-container .c-news-block {
+    &.u-odd, &.u-even {
+      //background: #fff;
+    }
+  }
+  .c-news-container .c-news-block {
+    &.first.u-odd, &.last.u-even {
+      //background: $grey06;
+    }
+  }
+  .c-block.c-event-featured-story {
+    margin-bottom: 0;
+  }
+  .c-event-featured-story {
+    //background: $grey06;
+    padding: 3% 1%;
+
+      .c-story-name {
+        padding-top: 0;
+        margin-bottom: 0;
+      }
+      .c-featured-story-issue-tag {
+        padding-top: 24px;
+      }
+      .c-story-teaser p {
+        font-size: 16px;
+        line-height: 24px;
+      }
+  }
+  h2.pane-title {
+    color: #444444;
+    text-transform: uppercase;
+    font-family: "Proxima Nova Regular";
+    font-size: 16px;
+    letter-spacing: 0.1em;
+    line-height: 1em;
+    margin: 0;
+    border-bottom: 1px solid #AAAAAA;
+    padding-bottom: 10px;
+    //margin-left: 10px;
+  }
+  .c-container--header__top-border {
+    //border: none;
+    //padding-left: 3%;
+
+    }
+
+  }
+
+.senator-display3 {
+  .pane-senator-news-panel-pane-1.c-block.c-event-featured-story {
+    margin-top: 40px;
+  }
+  .c-container--footer {
+    .c-container--link {
+      display: none;
+    }
+  }
+  .pane-senator-events-home-events-pane.vertical {
+    padding: 5%;
+    margin-bottom: 30px;
+    background: $grey06;
+    .c-container--footer {
+      .c-container--link {
+        bottom: 0;
+        top: inherit;
+        display: block;
+      }
+    }
+    .c-container--header .c-container--link {
+      display: none;
+    }
+  }
+  .c-event-block--list {
+    .c-event-date {
+      width: 60px;
+      height: 70px;
+    }
+    .c-event-name, .c-event-location, .c-event-address, .c-event-time {
+      float: none;
+      width: 80%;
+      margin-right: 0;
+      margin-left: 60px;
+    }
+    .c-event-location {
+      margin-left: 0;
+    }
+  }
+  .c-block--position-top {
+    margin-top: 40px;
+  }
+  .c-block--position-top.vertical {
+    [class^="icon-before"]:before {
+      display: block;
+      padding-bottom: 24px;
+      font-size: 48px;
+    }
+    .c-initiative--title {
+      line-height: 33px;
+    }
+  }
+}
+
+ul.c-block-services {
+  margin: 0 auto 68px;
+  list-style-type: none;
+  //background: $grey03;
+  height: 100px;
+  padding: 40px 0;
+  text-align: center;
+  //border-bottom: 1px solid $grey05;
+    li {
+      font-family: "Proxima Nova SemiBold";
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      float: left;
+      width: 33%;
+      margin-top: 0;
+      @extend .med-text;
+      font-size: 18px;
+      line-height: 20px;
+    }
+  [class^="icon-before"]:before {
+    display: block;
+    padding-bottom: 24px;
+    font-size: 48px;
+  }
+  }
+
+ul.c-block-services.med-bg {
+  margin: 40px 0;
+  height: 200px;
+  li {
+    color: #fff;
+    font-size: 24px;
+    line-height: 36px;
+    float: none;
+    width: 100%;
+  }
+  [class^="icon-before"]:before {
+    color: #fff;
+  }
+}
+
+.panels-ipe-editing {
+  .l-header.fixed {
+    display: static;
+  }
+  .l-header__collapsed {
+    display: none;
+  }
+  #panels-ipe-regionid-header .panels-ipe-placeholder.panels-ipe-on.panels-ipe-portlet-marker.panels-ipe-portlet-static,
+  #panels-ipe-paneid-658, div#panels-ipe-paneid-592 {
+    display: none!important;
+  }
+  div.panels-ipe-newblock li {
+    padding: 0;
+    float: left;
+    list-style-type: none;
+    margin-top: 0;
+  }
+  #panelizer-save-default, #panels-ipe-save, #panels-ipe-cancel, #panelizer-ipe-revert {
+    padding-left: 34px;
+    border: 0;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    color: #ccc;
+    display: inline-block;
+    font: bold 12px/33px "Open Sans", "Lucida Grande", Tahoma, Verdana, sans-serif;
+    height: 34px;
+    margin: 0 10px;
+  }
+  #panelizer-save-default {
+    display: none;
+  }
+}
+
+div.panels-ipe-pseudobutton-container a.panels-ipe-change-layout {
+  display: none;
+}
+#panels-ipe-edit-control-form{
+  .form-item-revision, .form-item-log {
+    display: none!important;
+  }
+}
+
+//PANELIZER POPUP CONTENT
+@media #{$tablet} {
+
+  div.ctools-modal-content {
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-width: 950px;
+    height: auto;
+    max-height: 100% !important;
+    padding: 0 0 24px;
+    overflow: scroll;
+    .modal-header {
+      width: 100%;
+      .modal-title {
+        float: left;
+        padding: 12px;
+      }
+      a {
+        //margin: 0 25px 0px 0px;
+        //padding-left: .5em;
+        font-size: 12px;
+      }
+    }
+    a.close {
+      //background: none !important;
+      //padding-left: .5em;
+      font-size: 12px;
+      img {
+        top: -12px;
+      }
+    }
+  }
+}
+
+button:focus {
+  //background-color: #008CBA!important;
+}
+
+#panels-ipe-control-container {
+
+  #modalContent {
+    z-index: 1001;
+    position: absolute;
+    top: 200px !important;
+    left: 125px !important;
+    display: block;
+    overflow: hidden;
+    button:focus {
+      background-color: #008CBA!important;
+    }
+    div.ctools-modal-content {
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      width-max: 950px;
+      height: 100%;
+      padding: 20px 50px 20px 20px;
+      overflow: auto;
+      .modal-header {
+        padding: 16px 0 0;
+        width: 100%;
+        .modal-title {
+          float: right;
+        }
+        a {
+          margin: -10px 25px 0px 0px;
+          padding-left: .5em;
+        }
+      }
+      a.close {
+        background: none!important;
+        padding-left: .5em;
+      }
+    }
+  }
+}
+.panels-add-content-modal {
+  margin-top: 24px;
+  background: none;
+  .panels-section-columns {
+    float: left;
+    width: 100%;
+  }
+  .panels-section-column {
+    float: left;
+    .inside {
+      margin-top: -18px;
+    }
+    .content-type-button {
+      overflow: initial;
+      line-height: 1.6em;
+      a {
+        margin-top: 16px;
+      }
+    }
+  }
+  .panels-modal-add-category {
+    line-height: 3em;
+    background: $grey04;
+    border-top: 1px solid #fff;
+    color: #fff!important;
+    font-size: 14px;
+    &.active {
+      background: $yellow01;
+    }
+  }
+  .panels-section-column-categories .inside {
+    padding: 24px 0;
+  }
+  img {
+    width: 20px;
+    float: left;
+  }
+  span {
+    width: 85%;
+    position: relative;
+    top: 3px;
+    left: 3px;
+    font-size: 14px;
+  }
+  [class*="column"] + [class*="column"]:last-child {
+    float: left;
+  }
+}
+
+.panels-ipe-dragbar-admin-title {
+  line-height: 3em;
+  font-family: "Proxima Nova semibold";
+}
+
+.panels-ipe-portlet-content {
+  .l-header-region.l-row.l-row--nav.c-header-bar {
+    visibility: visible!important;
+  }
+}
+div.panels-ipe-pseudobutton-container {
+  background: $yellow01;
+  background-image: none;
+}
+div.panels-ipe-pseudobutton-container a {
+  color: #ffffff;
+}
+
+//HIDE fields in FFP Form
+
+#fieldable-panels-panes-fieldable-panels-pane-content-type-edit-form {
+  /*.form-item-view-mode, .form-item-link {
+    display: none;
+  }*/
+  .form-type-managed-file {
+    min-height: 185px;
+  }
+}
+.pane-fieldable-panels-pane, .pane-senator-legislation-featured-legis-pane {
+  h2.pane-title {
+    display: none;
+    border-bottom: none!important;
+  }
+}
+
+.pane-senator-legislation-featured-legis-list-pane {
+  h2.pane-title {
+   // border-bottom: none!important;
+    display: none;
+  }
+  .c-list-item {
+    border-top: none!important;
+  }
+  .odd, .even {
+    border-top: 1px solid #AAAAAA;
+  }
+  .first.odd, .even:first-of-type, .even:nth-child(2) {
+    border-top: none;
+  }
+}
+
+.view-display-id-sen_featured_legis_home_sub, .view-display-id-featured_legis_list_pane {
+  .c-bill-meta {
+    max-width: inherit;
+    width: 100%;
+    .c-bill-topic {
+      line-height: 1.5;
+    }
+  }
+
+}
+
+/*#ctools-block-content-type-edit-form {
+  .form-item-override-title, .description {
+    //display: none;
+  }
+}*/
+
+.c-container--flex {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+  .c-initiative--content {
+    position: relative;
+    height: 320px;
+    padding: 20px 20px 80px;
+  }
+  .c-block--initiative__half-flex {
+    width: 48%;
+    padding: 3%;
+    height: 345px;
+    margin-bottom: 24px;
+  }
+  .c-block--btn {
+    padding-left: 7%;
+    left: -7%;
+    width: 114%;
+  }
+}
+
+table#field-half-promo-banner-values{
+  width: 100%;
+  select {
+    padding: 6px;
+  }
+  label {
+    margin-top: 6px;
+    font-weight: 600;
+  }
+  button {
+    padding: .5rem 1rem;
+    margin-top: 12px;
+  }
+  .field-multiple-table th.field-label {
+    padding-left: 12px;
+  }
+}
+
+form[action*="promotional_banner_2up/form"] {
+  .form-item-title {
+    display: none;
+  }
+
+}
+
+.ctools-modal-content {
+  button#edit-return {
+    &:focus {
+      background-color: #008CBA !important;
+    }
+    &:hover {
+      background-color: #007095 !important;
+    }
+  }
+}

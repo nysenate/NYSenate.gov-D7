@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * ApacheSolr Autocomplete module install, update and uninstall functions.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function apachesolr_autocomplete_uninstall() {
+  // Delete variables.
+  variable_del('apachesolr_autocomplete_widget');
+  variable_del('apachesolr_autocomplete_suggest_keywords');
+  variable_del('apachesolr_autocomplete_suggest_spellcheck');
+  variable_del('apachesolr_autocomplete_counts');
+}

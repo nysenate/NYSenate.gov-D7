@@ -1,0 +1,13 @@
+name = Mobile Detect ctools
+description = ctools plugins utilizing the Mobile_Detect library
+core = 7.x
+package = Mobile Detect
+
+dependencies[] = mobile_detect
+dependencies[] = ctools
+
+; Information added by Drupal.org packaging script on 2021-05-20
+version = "7.x-1.0"
+core = "7.x"
+project = "mobile_detect"
+datestamp = "1621531908"

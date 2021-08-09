@@ -1,0 +1,141 @@
+<?php
+
+/**
+ * @file
+ * The media_livestream/media_livestream.module file.
+ *
+ * Media: Livestream provides a stream wrapper and formatters for
+ * videos provided by Livestream, available at http://www.livestream.com.
+ *
+ * @TODO:
+ * Tie in Livestream API even more.
+ * Allow editors to put in a livestream username to display on the browser.
+ * Allow editors to log in w/ their credentials.
+ */
+
+// A registry of variable_get defaults.
+include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'media_livestream') . '/includes/media_livestream.variables.inc';
+
+// Hooks and callbacks for integrating
+// with File Entity module for display.
+include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'media_livestream') . '/includes/media_livestream.formatters.inc';
+
+/**
+ * Implements hook_media_internet_providers().
+ */
+function media_livestream_media_internet_providers() {
+  $info['MediaInternetLivestreamHandler'] = array(
+    'title' => t('Livestream'),
+  );
+
+  return $info;
+}
+
+/**
+ * Implements hook_stream_wrappers().
+ */
+function media_livestream_stream_wrappers() {
+  return array(
+    'livestream' => array(
+      'name' => t('Livestream videos'),
+      'class' => 'MediaLivestreamStreamWrapper',
+      'description' => t('Videos provided by Livestream.'),
+      'type' => STREAM_WRAPPERS_READ_VISIBLE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function media_livestream_theme($existing, $type, $theme, $path) {
+  return array(
+    'media_livestream_video' => array(
+      'variables' => array('uri' => NULL, 'options' => array()),
+      'file' => 'media_livestream.theme.inc',
+      'path' => $path . '/includes/themes',
+      'template' => 'media-livestream-video',
+    ),
+  );
+}
+
+/**
+* Implements hook_media_format_form_prepare_alter().
+*/
+function media_livestream_media_format_form_prepare_alter(&$form, &$form_state, $media) {
+  if ($form['#media']->filemime == 'video/livestream') {
+    $settings = array('autosubmit' => TRUE);
+    drupal_add_js(array('media_format_form' => $settings), 'setting');
+  }
+}
+
+/**
+ * Implements hook_file_mimetype_mapping_alter().
+ *
+ * Regster the video/livestream mimetype.
+ */
+function media_livestream_file_mimetype_mapping_alter(&$mapping) {
+  $mapping['mimetypes'][] = 'video/livestream';
+}
+
+/**
+ * Implements hook_file_default_types_alter().
+ *
+ * Adds the video/livestream fake mimetype to video files.
+ */
+function media_livestream_file_default_types_alter(&$types) {
+  $types['video']->mimetypes[] = 'video/livestream';
+}
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function media_livestream_ctools_plugin_api($owner, $api) {
+  static $api_versions = array(
+    'file_entity' => array(
+      'file_default_displays' => 1,
+    ),
+  );
+  if (isset($api_versions[$owner][$api])) {
+    return array('version' => $api_versions[$owner][$api]);
+  }
+}
+
+/**
+ * Resolv the Livestream shortcode to get the
+ * full url to the correct channel/video.
+ */
+function media_livestream_get_short_code($shortcode) {
+  // Set options to fetch the header redirects Livestream trows at us.
+  $options = array(
+    CURLOPT_HEADER         => FALSE,    // Don not return headers. Not sure.
+    CURLOPT_FOLLOWLOCATION => TRUE,     // Follow the link.
+    CURLOPT_RETURNTRANSFER => TRUE,     // This is not what you think.
+    // (see the manual, ^^ still fetches the whole page if i disable it)
+    CURLOPT_ENCODING       => "",       // Do not specify encoding.
+    CURLOPT_CONNECTTIMEOUT => 100,      // Connect timeout.
+    CURLOPT_TIMEOUT        => 100,      // Response timeout.
+    CURLOPT_MAXREDIRS      => 2,        // Stop after 2 redirects.
+    CURLOPT_AUTOREFERER    => TRUE,     // Set the referer on redirect.
+    CURLOPT_USERAGENT      => "Drupal", // Browser ID.
+  );
+
+  // Initialise curl request.
+  $handler  = curl_init($shortcode);
+  curl_setopt_array($handler, $options);
+  // Execute our curl request with our Livesteam shortcode url.
+  $page     = curl_exec($handler);
+  $header   = curl_getinfo($handler);
+  $errornr  = curl_errno($handler);
+  $errormsg = curl_error($handler);
+  // Close request.
+  curl_close($handler);
+
+  // We don't really need the page content, we'r here for the redirect url.
+  $header['page']     = $page;
+  // And we also do not use errors at the moment, but maybe we should.
+  $header['errornr']  = $errornr;
+  $header['errormsg'] = $errormsg;
+
+  return $header;
+}

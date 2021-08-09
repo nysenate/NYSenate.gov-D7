@@ -1,0 +1,13 @@
+{
+  "name": "nysenate/nys_openleg",
+  "description": "An API wrapper for New York State's OpenLegislation service.",
+  "require": {
+    "sendgrid/sendgrid": "v7.5.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Nys_Openleg\\": "src/"
+    }
+  },
+  "license": "MIT"
+}

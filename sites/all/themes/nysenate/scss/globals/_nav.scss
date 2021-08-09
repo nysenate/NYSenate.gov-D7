@@ -1,0 +1,710 @@
+/*------------------------------
+/	NAV -
+/-------------------------------*/
+.c-nav--wrap {
+	position: fixed;
+	top: -100vh;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 100vh;
+	width: 100vw;
+	z-index: 6;
+	@include transition(top, 0.3s, ease-out);
+}
+.c-nav {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	@include transition(height, 0.3s, ease-out);
+
+	> nav {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		margin: auto;
+		width: 100%;
+		height: 100%;
+		padding: 125px 0 0 0; // 40px (topbar height) + 85px (height of search)
+		overflow: scroll;
+		@extend .lgt-bg;
+	}
+
+	.c-header--btn {
+		position: relative;
+		display: block;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 72px;
+		padding: 0 0 0 30px;
+		color: #fff;
+		font-family: 'Proxima Nova SemiBold';
+		font-size: 12px;
+		line-height: 72px;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+
+		@extend .noselect;
+
+		&:hover {
+			color: #fff;
+		}
+
+		&:before {
+			font-size: 1.65em;
+			margin-top: -0.25em;
+			margin-right: 8px;
+		}
+
+		&.has-avatar {
+			&:before {
+				display: none;
+			}
+			> span,
+			> img {
+				display: inline-block;
+				vertical-align: middle;
+			}
+			img {
+				height: 45px;
+				width: 45px;
+				margin-right: 15px;
+				@include border-radius(50%);
+			}
+		}
+	}
+	.c-header--btn-login {
+		@extend .med-bg;
+		@extend .icon-before__recruit-friends;
+	}
+	.c-header--btn-senator {
+		border-top: 1px solid #fff;
+		@extend .med-bg;
+
+		.nys-senator--title,
+		.nys-senator--name {
+			color: #fff;
+		}
+	}
+	.c-header--btn-find-senator {
+		border-top: 1px solid #fff;
+		@extend .med-bg;
+		@extend .icon-before__find-senator;
+	}
+	.c-header--btn-edit {
+		border-top: 1px solid #fff;
+		@extend .med-bg;
+		@extend .icon-before__questionaire;
+	}
+	.c-header--btn-logout {
+		@extend .drk-bg;
+		@extend .icon-before__x;
+	}
+}
+.c-mobile-login--list {
+	position: relative;
+	width: 100%;
+	height: 72px;
+	margin-top: 20px;
+	bottom: 0;
+	left: 0;
+
+	.c-header--btn-logout:last-child,
+	.c-header--btn-login:last-child {
+		padding-bottom: 60px;
+		height: 132px;
+
+		> a {
+			display: block;
+			position: absolute;
+			height: 100%;
+			width: 100%;
+			top: 0;
+			left: 0;
+			padding-left: 65px;
+
+			color: #fff;
+		}
+	}
+}
+.c-site-search {
+	position: absolute;
+	top: 40px;
+	width: 100%;
+	padding: 30px 20px 20px 20px;
+	margin: 0;
+
+	.c-site-search--box {
+		display: block;
+		background: none;
+		border: none;
+		height: 45px;
+		margin: 0 45px 0 0;
+		padding: 0 0 0 20px;
+		box-shadow: none;
+		@extend .med-text;
+		background: #fff;
+		@include border-radius(5px);
+		float:left;
+
+		&::-ms-clear {
+			display: none;
+		}
+	}
+}
+.c-site-search--title {
+	display: none;
+}
+
+.c-block-advanced-search-link {
+  margin-bottom:30px;
+
+  .c-advanced-search--link {
+    color: $orange01;
+    text-transform: uppercase;
+    font-size: 13px;
+  }
+
+}
+
+.c-site-search--btn:focus,
+.c-site-search--btn {
+	position: absolute;
+	top: 30px;
+	right: 20px;
+	padding: 0;
+	height: 45px; // font-size;
+	width: 45px;
+	font-size: 22px;
+	background: transparent;
+	@extend .med-text;
+	@extend .icon-replace__search;
+
+	&:after {
+		width: 100%;
+		padding: 0;
+		line-height: 45px;
+	}
+
+	&:hover {
+		background: transparent;
+		@extend .drk-text;
+
+	}
+}
+
+.search-open .c-site-search--btn.u-tablet-plus { display: none; }
+
+.c-nav--toggle {
+	position: absolute;
+	z-index: 10;
+	top: 0;
+	right: 0;
+	left: auto;
+	height: 40px;
+	width: 40px;
+	background: #fff;
+	@extend .icon-replace__hamburger;
+
+	&:after {
+		width: 100%;
+		margin-left: 1px;
+		font-size: 24px;
+		line-height: 60px;
+		text-align: center;
+		@extend .med-text;
+	}
+
+	&:hover {
+		background: #fff;
+	}
+}
+.c-nav--list {
+	list-style: none;
+	padding: 0 20px;
+
+	li {
+		margin-top: 0;
+		border-top: 1px solid #fff;
+		text-transform: uppercase;
+		font-family: "Proxima Nova Regular";
+		font-size: 13px;
+		letter-spacing: 0.1em;
+		line-height: 1em;
+
+		a {
+			display: block;
+			height: auto;
+			width: 100%;
+			padding: 20px 0 20px 10px;
+			@extend .nav-text;
+		}
+	}
+}
+.c-nav--social {
+	border-top: 1px solid #fff;
+	margin: 0 20px;
+	padding: 20px 0 0 5px;
+	line-height: 1em;
+
+	li {
+		display: inline-block;
+		border: none;
+		margin-right: 10px;
+
+		a {
+			width: 28px;
+			height: 0;
+			padding: 28px 0 0 0;
+			font-size: 28px;
+			color: #fff;
+
+			&:after {
+				height: 28px;
+				width: 28px;
+				line-height: 28px;
+			}
+		}
+	}
+}
+
+
+// nav-open - class added to body through js
+.nav-open {
+	max-height: 100vh;
+	overflow: hidden;
+
+	.c-nav--wrap {
+		top: 0;
+	}
+
+	.c-nav--toggle {
+		position: absolute;
+		height: 40px;
+		width: 40px;
+		@extend .icon-replace__x;
+
+		&:after {
+			font-size: 24px;
+		}
+	}
+}
+// collapsed is added through js on scroll
+// resizes button to fit and gives new bg color
+.collapsed {
+
+	.c-nav--toggle {
+
+		&:after {
+			line-height: 60px;
+			color: #fff;
+		}
+	}
+}
+
+.senator-inactive {
+	.c-senator-nav--wrap .c-senator-nav {
+		.c-nav--list {
+			li {
+				display: inline-block;
+				width: auto;
+
+				a {
+					display: none;
+
+					&.visible {
+						display: block;
+					}
+				}
+			}
+		}
+	}
+}
+
+/* Admin Menu on Frontend
+---------------------------------------------------------------------- */
+#admin-menu ul {
+	clear:none;
+	font-size: 10px;
+}
+
+body.adminimal-menu div#admin-menu a, body.adminimal-menu div#admin-menu span{
+	font-size: 11px;
+	font-family: 'Proxima Nova Regular';
+}
+@media #{$tablet} {
+
+	.c-nav--wrap {
+		position: relative;
+		top: 0;
+		bottom: auto;
+		width: 100%;
+		height: 60px;
+		@include transition(height, 0.3s, ease);
+		overflow: hidden;
+
+		// class added to .c-nav--wrap through js
+		&.closed {
+			height: 0;
+		}
+
+		.c-nav {
+			display: block;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			width: 100%;
+			margin: 0 auto;
+			z-index: 2;
+			height: 60px;
+			background: #fff;
+
+			> nav {
+				position: relative;
+				top: 0;
+				height: 100%;
+				padding: 0;
+				background: #fff;
+				overflow: visible;
+				border-top: 1px solid $grey05;
+				@include transition(none, 0, ease);
+			}
+
+			&.c-senator-nav {
+				position: relative;
+				height: 100px;
+				background: $greyLight;
+				border-bottom: 1px solid $grey05;
+
+				> nav {
+					border: none;
+					background: transparent;
+				}
+
+				li {
+					width: auto;
+				}
+			}
+		}
+	}
+	.c-nav--list {
+		width: 100%;
+		height: 60px;
+		margin: 0;
+		padding: 0 10% 0 0;
+
+		-ms-box-orient: horizontal;
+		display: -webkit-box;
+		display: -moz-box;
+		display: -ms-flexbox;
+		display: -moz-flex;
+		display: -webkit-flex;
+		display: flex;
+
+		-webkit-justify-content: space-between;
+  		justify-content: space-between;
+
+		&.c-senator-nav--list {
+			padding: 0;
+		}
+
+		li {
+			position: relative;
+			width: 100px;
+			height: 100%;
+			display: inline-block;
+			vertical-align: middle;
+			border: none;
+			text-align: left;
+			font-family: 'Proxima Nova SemiBold';
+			font-size: 14px;
+
+			&:before {
+				content: "";
+				position: relative;
+				display: inline-block;
+				vertical-align: middle;
+				height: 100%;
+				width: 0px;
+			}
+
+			a {
+				height: auto;
+				display: inline-block;
+				vertical-align: middle;
+				padding: 0;
+				text-align: center;
+				line-height: 14px;
+			}
+
+			&.active-trail {
+				&:after {
+					content: "";
+					display: block;
+					position: absolute;
+					left: 0;
+					right: 0;
+					top: -15px;
+					margin: auto;
+					height: 20px;
+					width: 20px;
+					background: #fff;
+					border: 1px solid $grey05;
+
+					-moz-transform: rotate(45deg);
+					-ms-transform: rotate(45deg); /* IE 9 */
+					-webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+					transform: rotate(45deg);
+				}
+			}
+		}
+	}
+	// ie9 + 10
+	.no-flexboxlegacy {
+		.c-nav--list {
+			// padding-right: 0;
+			li {
+				margin-right: 3%;
+			}
+		}
+	}
+
+	.search-open .c-site-search .c-site-search--btn,
+	.search-open .c-site-search .c-site-search--btn:focus,
+	.c-site-search--btn:focus,
+	.c-site-search--btn {
+		position: absolute;
+		height: 45px;
+		width: 30px;
+		top: 10px;
+		right: 15px;
+		color: #444;
+		font-size: 22px;
+	}
+	.c-site-search--title {
+		display: block;
+		margin-bottom: 20px;
+		font-family: "Adelle Semibold";
+		font-size: 26px;
+		line-height: 1;
+	}
+	.c-site-search--link {
+		position: absolute;
+		right: 9%;
+		bottom: 35px;
+		color: $orange01;
+		text-transform: uppercase;
+		font-size: 14px;
+		letter-spacing: 0.1em;
+	}
+
+	.c-site-search {
+		position: relative;
+		z-index: 1;
+		top: 0;
+		width: 100%;
+		height: 225px;
+		margin: 0 auto;
+		// margin-top: -225px;
+		max-width: 1500px;
+		padding: 25px 9%;
+		background: $greyLight;
+		@include transition(margin, 0.3s, ease);
+
+		.c-site-search--box {
+			// display: none;
+			border: 1px solid $grey05;
+			@include border-radius(0);
+		}
+
+		.c-site-search--btn {
+			position: relative;
+			top: -45px;
+			right: auto;
+			float: right;
+		}
+	}
+
+	// site search specifically IN nav
+	.c-nav--wrap {
+		position: relative;
+		.c-site-search {
+			position: absolute;
+			top: 60px;
+			left: 0;
+			right: 0;
+			margin: auto;
+			width: 100%;
+			height: 225px;
+
+			&:before,
+			&:after {
+				display: none;
+			}
+		}
+		// class added to .c-nav--wrap through js
+		&.search-open {
+			height: 285px;//60px (orig height) + 225px (search area height)
+
+			.c-site-search {
+
+			}
+			.c-site-search--btn {
+				position: absolute;
+				top: 10px;
+				@extend .icon-replace__x;
+
+				&.u-tablet-plus { display: block; }
+			}
+
+			.c-site-search {
+				.c-site-search--btn {
+					position: relative;
+					top: -45px;
+					@extend .icon-replace__search;
+
+				}
+			}
+		}
+	}
+
+	// make sure not to ruin scroll
+	// on tablet and above
+	.nav-open {
+		height: auto;
+		overflow: scroll;
+
+		// and make sure the buttons doesn't show
+		.c-nav--toggle {
+			display: none;
+		}
+	}
+	// senator nav
+	&.c-senator-nav--wrap {
+		top: 0;
+		height: 100px;
+		margin-top: 0px;
+		z-index: 1;
+		@include transition(all, 0.3s, ease);
+
+		.c-site-search {
+			top: 100px;
+		}
+
+		.c-site-search--btn {
+			top: 0;
+			bottom: 0;
+			margin: auto;
+		}
+
+		.c-site-search {
+			.c-site-search--btn {
+				top: -45px;
+			}
+		}
+
+		&.closed {
+			height: 0;
+		}
+
+		&.search-open {
+			height: 325px; //100px (nav height) + 225px (search area height)
+		}
+	}
+
+	#views-exposed-form-explore-issues-explore-issues,
+	#views-exposed-form-explore-issues-solr-explore-issues,
+	#views-exposed-form-explore-issues-tabs-explore-issues-alpha
+	{
+		position: relative;
+		top: 0;
+		width: 100%;
+		height: 180px;
+		padding: 24px 0;
+		background: $grey06;
+
+		.views-widget-filter-keyword,
+		.views-widget-filter-name{
+			width: 100%;
+			padding: 20px;
+			input {
+				// display: none;
+				border: 1px solid $grey05;
+				width:100%;
+				@include border-radius(0);
+			}
+		}
+
+		.views-submit-button {
+			position: relative;
+			top: -63px;
+			right: auto;
+			float: right;
+			button {
+				position: absolute;
+				top: -50px;
+				right: 20px;
+				padding: 0;
+				height: 45px; // font-size;
+				width: 45px;
+				font-size: 22px;
+				background: transparent;
+				@extend .med-text;
+				@extend .icon-replace__search;
+
+				&:after {
+					width: 100%;
+					line-height: 45px;
+				}
+
+				&:hover {
+					background: transparent;
+					@extend .drk-text;
+				}
+			}
+		}
+	}
+
+	.senator-inactive {
+		.c-senator-nav--wrap .c-senator-nav {
+			.c-nav--list {
+				li {
+					display: inline-block;
+					width: auto;
+					margin-right: 0;
+
+					a {
+						display: none;
+
+						&.visible {
+							display: block;
+							padding-right: 25px;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+
+@media #{$desktop} {
+	.c-nav--wrap {
+		.c-nav {
+
+			li {
+				width: auto;
+			}
+		}
+	}
+}
+

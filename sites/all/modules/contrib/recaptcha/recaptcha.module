@@ -1,0 +1,220 @@
+<?php
+
+/**
+ * @file
+ * Verifies if user is a human without necessity to solve a CAPTCHA.
+ */
+
+require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/ReCaptcha.php';
+require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/RequestMethod.php';
+require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/RequestParameters.php';
+require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/Response.php';
+require_once dirname(__FILE__) . '/src/ReCaptcha/RequestMethod/Drupal7Post.php';
+
+/**
+ * Implements hook_help().
+ */
+function recaptcha_help($path, $arg) {
+  switch ($path) {
+    case 'admin/config/people/captcha/recaptcha':
+      return t('Google <a href="@url">reCAPTCHA</a> is a free service to protect your website from spam and abuse. reCAPTCHA uses an advanced risk analysis engine and adaptive CAPTCHAs to keep automated software from engaging in abusive activities on your site. It does this while letting your valid users pass through with ease.', array('@url' => 'https://www.google.com/recaptcha'));
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function recaptcha_theme() {
+  return array(
+    'recaptcha_widget_noscript' => array(
+      'variables' => array(
+        'widget' => NULL,
+      ),
+      'template' => 'recaptcha-widget-noscript',
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function recaptcha_menu() {
+  $items['admin/config/people/captcha/recaptcha'] = array(
+    'title' => 'reCAPTCHA',
+    'description' => 'Administer the Google No CAPTCHA reCAPTCHA web service.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('recaptcha_admin_settings'),
+    'access arguments' => array('administer recaptcha'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'recaptcha.admin.inc',
+    'weight' => 1,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function recaptcha_permission() {
+  return array(
+    'administer recaptcha' => array(
+      'title' => t('Administer reCAPTCHA'),
+      'description' => t('Administer reCAPTCHA settings'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_captcha().
+ */
+function recaptcha_captcha($op, $captcha_type = '') {
+  global $language;
+
+  switch ($op) {
+    case 'list':
+      return array('reCAPTCHA');
+
+    case 'generate':
+      $captcha = array();
+      if ($captcha_type == 'reCAPTCHA') {
+        $recaptcha_site_key = variable_get('recaptcha_site_key', '');
+        $recaptcha_secret_key = variable_get('recaptcha_secret_key', '');
+        $recaptcha_use_globally = variable_get('recaptcha_use_globally', FALSE);
+
+        if (!empty($recaptcha_site_key) && !empty($recaptcha_secret_key)) {
+          // Build the reCAPTCHA captcha form if site_key and secret_key are
+          // configured. Captcha requires TRUE to be returned in solution.
+          $captcha['solution'] = TRUE;
+          $captcha['captcha_validate'] = 'recaptcha_captcha_validation';
+          $captcha['form']['captcha_response'] = array(
+            '#type' => 'hidden',
+            '#value' => 'Google no captcha',
+          );
+
+          // As the validate callback does not depend on sid or solution, this
+          // captcha type can be displayed on cached pages.
+          $captcha['cacheable'] = TRUE;
+
+          // Check if reCAPTCHA use globally is enabled.
+          $recaptcha_src = 'https://www.google.com/recaptcha/api.js';
+          $recaptcha_src_fallback = 'https://www.google.com/recaptcha/api/fallback';
+          if ($recaptcha_use_globally) {
+            $recaptcha_src = 'https://www.recaptcha.net/recaptcha/api.js';
+            $recaptcha_src_fallback = 'https://www.recaptcha.net/recaptcha/api/fallback';
+          }
+
+          $noscript = '';
+          if (variable_get('recaptcha_noscript', 0)) {
+            $variables = array(
+              'sitekey' => $recaptcha_site_key,
+              'language' => $language->language,
+              'recaptcha_src_fallback' => $recaptcha_src_fallback
+            );
+            $noscript = theme('recaptcha_widget_noscript', array('widget' => $variables));
+          }
+
+          $attributes = array(
+            'class' => 'g-recaptcha',
+            'data-sitekey' => $recaptcha_site_key,
+            'data-theme' => variable_get('recaptcha_theme', 'light'),
+            'data-type' => variable_get('recaptcha_type', 'image'),
+            'data-size' => variable_get('recaptcha_size', ''),
+            'data-tabindex' => variable_get('recaptcha_tabindex', 0),
+          );
+          // Filter out empty tabindex/size.
+          $attributes = array_filter($attributes);
+
+          $captcha['form']['recaptcha_widget'] = array(
+            '#markup' => '<div' . drupal_attributes($attributes) . '></div>',
+            '#suffix' => $noscript,
+          );
+
+          // @todo: #1664602: D7 does not yet support "async" in drupal_add_js().
+          // drupal_add_js(url('https://www.google.com/recaptcha/api.js', array('query' => array('hl' => $language->language), 'absolute' => TRUE)), array('defer' => TRUE, 'async' => TRUE, 'type' => 'external'));
+          $data = array(
+            '#tag' => 'script',
+            '#value' => '',
+            '#attributes' => array(
+              'src' => url($recaptcha_src, array('query' => array('hl' => $language->language), 'absolute' => TRUE)),
+              'async' => 'async',
+              'defer' => 'defer',
+            ),
+          );
+          drupal_add_html_head($data, 'recaptcha_api');
+        }
+        else {
+          // Fallback to Math captcha as reCAPTCHA is not configured.
+          $captcha = captcha_captcha('generate', 'Math');
+        }
+      }
+      return $captcha;
+  }
+}
+
+/**
+ * CAPTCHA Callback; Validates the reCAPTCHA code.
+ */
+function recaptcha_captcha_validation($solution, $response, $element, $form_state) {
+  $recaptcha_secret_key = variable_get('recaptcha_secret_key', '');
+  if (empty($_POST['g-recaptcha-response']) || empty($recaptcha_secret_key)) {
+    return FALSE;
+  }
+
+  // Use drupal_http_request() to circumvent all issues with the Google library.
+  $recaptcha = new \ReCaptcha\ReCaptcha($recaptcha_secret_key, new \ReCaptcha\RequestMethod\Drupal7Post());
+
+  // Ensures the hostname matches. Required if "Domain Name Validation" is
+  // disabled for credentials.
+  if (variable_get('recaptcha_verify_hostname', FALSE)) {
+    $recaptcha->setExpectedHostname($_SERVER['SERVER_NAME']);
+  }
+
+  $resp = $recaptcha->verify(
+    $_POST['g-recaptcha-response'],
+    ip_address()
+  );
+
+  if ($resp->isSuccess()) {
+    // Verified!
+    return TRUE;
+  }
+  else {
+    // Error code reference, https://developers.google.com/recaptcha/docs/verify
+    $error_codes = array(
+      'action-mismatch' => t('Expected action did not match.'),
+      'apk_package_name-mismatch' => t('Expected APK package name did not match.'),
+      'bad-response' => t('Did not receive a 200 from the service.'),
+      'bad-request' => t('The request is invalid or malformed.'),
+      'challenge-timeout' => t('Challenge timeout.'),
+      'connection-failed' => t('Could not connect to service.'),
+      'invalid-input-response' => t('The response parameter is invalid or malformed.'),
+      'invalid-input-secret' => t('The secret parameter is invalid or malformed.'),
+      'invalid-json' => t('The json response is invalid or malformed.'),
+      'missing-input-response' => t('The response parameter is missing.'),
+      'missing-input-secret' => t('The secret parameter is missing.'),
+      'hostname-mismatch' => t('Expected hostname did not match.'),
+      'score-threshold-not-met' => t('Score threshold not met.'),
+      'timeout-or-duplicate' => t('The challenge response timed out or was already verified.'),
+      'unknown-error' => t('Not a success, but no error codes received!'),
+    );
+    foreach ($resp->getErrorCodes() as $code) {
+      if (!isset($error_codes[$code])) {
+        $code = 'unknown-error';
+      }
+      watchdog('reCAPTCHA web service', '@error', array('@error' => $error_codes[$code]), WATCHDOG_ERROR);
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Process variables for recaptcha-widget-noscript.tpl.php.
+ *
+ * @see recaptcha-widget-noscript.tpl.php
+ */
+function template_preprocess_recaptcha_widget_noscript(&$variables) {
+  $variables['sitekey']  = check_plain($variables['widget']['sitekey']);
+  $variables['language'] = check_plain($variables['widget']['language']);
+  $variables['url'] = check_url(url($variables['widget']['recaptcha_src_fallback'], array('query' => array('k' => $variables['widget']['sitekey'], 'hl' => $variables['widget']['language']), 'absolute' => TRUE)));
+}

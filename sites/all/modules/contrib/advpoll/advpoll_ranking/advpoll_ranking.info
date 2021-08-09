@@ -1,0 +1,14 @@
+name = Advanced Ranking Poll
+description = "Extends the functionality of Advanced Poll with borda and instant-runoff style polling."
+dependencies[] = advpoll
+
+core = 7.x
+package = "Voting"
+files[] = js/advpoll-ranking.js
+
+; Information added by Drupal.org packaging script on 2017-09-22
+version = "7.x-3.0"
+core = "7.x"
+project = "advpoll"
+datestamp = "1506054850"
+

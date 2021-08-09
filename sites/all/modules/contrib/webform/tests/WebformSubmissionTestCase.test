@@ -1,0 +1,388 @@
+<?php
+
+/**
+ * Webform module submission tests.
+ */
+class WebformSubmissionTestCase extends WebformTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Webform submission'),
+      'description' => t('Submits a sample webform and checks the database integrity.'),
+      'group' => t('Webform'),
+    );
+  }
+
+  /**
+   * Test sending a submission and check database integrity.
+   */
+  public function testWebformSubmission() {
+    $this->drupalLogin($this->webform_users['admin']);
+    $this->webformReset();
+    $this->webformSubmissionExecute('sample');
+
+    $loggedInUser = $this->loggedInUser;
+
+    $this->drupalLogout();
+
+    // Test webform_get_submission_count().
+    // Counting the anonymous submission doesn't work because
+    // $_SESSION['webform_submission'] is not populated in testing.
+    $this->webformSubmissionExecute('sample');
+
+    $count = webform_get_submission_count($this->webformForm()->nid);
+    $this->assertIdentical((int) $count, 2, 'webform_get_submission_count() counts 2 total submissions.');
+
+    $count = webform_get_submission_count($this->webformForm()->nid, $loggedInUser->uid);
+    $this->assertIdentical((int) $count, 1, 'webform_get_submission_count() counts 1 submission from loggedInUser.');
+
+    // Test _webform_submission_prepare_mail().
+    $node = node_load($this->webformForm()->nid);
+    $submission = webform_get_submissions($node->nid);
+    $submission = array_pop($submission);
+    $email = array(
+      'status' => TRUE,
+      'html' => FALSE,
+      'template' => 'default',
+      'from_address' => 'Test From',
+      'from_name' => 'from@example.com',
+      'subject' => 'Test Subject',
+      'email' => 'to@example.com',
+    );
+    variable_set('webform_email_replyto', TRUE);
+    variable_set('webform_email_address_format', 'long');
+    variable_set('webform_default_from_name', 'Default "From" Name');
+    variable_set('webform_default_from_address', 'default-from@example.com');
+    $prepared_email = _webform_submission_prepare_mail($node, $submission, $email);
+    $this->assertIdentical($prepared_email['mail_params']['email']['from'], '"from@example.com via Default \'From\' Name" <default-from@example.com>', 'From address is correctly set in _webform_submission_prepare_mail().');
+  }
+
+  /**
+   * Test that the correct submissions are offered for download.
+   */
+  public function testWebformSubmissionDownload() {
+    $this->drupalLogin($this->webform_users['userAccess']);
+    $this->webformReset();
+
+    // Create Webform which allows drafts and submit a draft.
+    $webform_settings = array(
+      'allow_draft' => '1',
+    );
+    $this->webformSubmissionExecute('sample', TRUE, $webform_settings);
+
+    $nid = $this->webformForm()->nid;
+
+    // This submit should complete the draft.
+    $this->webformSubmissionExecute('sample');
+    // Create another draft.
+    $this->webformSubmissionExecute('sample', TRUE);
+
+    // Create finished and draft submission as another user.
+    $this->drupalLogin($this->webform_users['editor']);
+    $this->webformSubmissionExecute('sample');
+    $this->webformSubmissionExecute('sample', TRUE);
+
+    // Create finished submission as anonymous.
+    $this->drupalLogout();
+    $this->webformSubmissionExecute('sample');
+    $this->drupalLogin($this->webform_users['editor']);
+
+    // Test webform_download_sids().
+    $sids = webform_download_sids($nid, array('range_type' => 'new', 'completion_type' => 'finished'), (int) $this->webform_users['editor']->uid);
+    $this->assertIdentical($sids, array('1', '3', '5'), 'webform_download_sids() shows correct finished submissions.');
+    $sids = webform_download_sids($nid, array('range_type' => 'new', 'completion_type' => 'draft'), (int) $this->webform_users['editor']->uid);
+    $this->assertIdentical($sids, array('2', '4'), 'webform_download_sids() shows correct draft submissions.');
+
+    // The timestamp of the Webform results download simulated by the call to
+    // webform_update_webform_last_download() needs to be after the timestamps
+    // of the submissions made above. This ensures that the call to time() will
+    // be after the submission timestamps.
+    sleep(1);
+
+    // Record that submissions so-far have been downloaded.
+    // Parameter $sid is not used, so it's value doesn't matter.
+    webform_update_webform_last_download($this->webformForm(), (int) $this->webform_users['editor']->uid, 0, time());
+
+    // Following the simulated download, there are none to download.
+    $sids = webform_download_sids($nid, array('range_type' => 'new', 'completion_type' => 'finished'), (int) $this->webform_users['editor']->uid);
+    $this->assertIdentical($sids, array(), 'webform_download_sids() shows correct finished submissions.');
+    $sids = webform_download_sids($nid, array('range_type' => 'new', 'completion_type' => 'draft'), (int) $this->webform_users['editor']->uid);
+    $this->assertIdentical($sids, array(), 'webform_download_sids() shows correct draft submissions.');
+
+    // Finish the draft, add a new draft, and re-check submission lists.
+    $this->webformSubmissionExecute('sample');
+    $this->webformSubmissionExecute('sample', TRUE);
+    $sids = webform_download_sids($nid, array('range_type' => 'new', 'completion_type' => 'finished'), (int) $this->webform_users['editor']->uid);
+    $this->assertIdentical($sids, array('4'), 'webform_download_sids() shows correct finished submissions.');
+    $sids = webform_download_sids($nid, array('range_type' => 'new', 'completion_type' => 'draft'), (int) $this->webform_users['editor']->uid);
+    $this->assertIdentical($sids, array('6'), 'webform_download_sids() shows correct draft submissions.');
+  }
+
+  /**
+   * Test Webform submission utility functions.
+   *
+   * Test webform_update_webform_last_download() and
+   * webform_download_last_download_info().
+   */
+  public function testWebformSubmissionFunctions() {
+    $node = (object) array('nid' => 1);
+    $uid = 1;
+
+    $result = webform_update_webform_last_download($node, $uid, 10, 1000);
+    $this->assertIdentical($result, MergeQuery::STATUS_INSERT, 'webform_update_webform_last_download() reports successful insert.');
+    $result = webform_download_last_download_info($node->nid, $uid);
+    $test = array(
+      'nid' => '1',
+      'uid' => '1',
+      'sid' => '10',
+      'requested' => '1000',
+      'serial' => NULL,
+    );
+    $this->assertIdentical($result, $test, 'webform_download_last_download_info() returned correct result.');
+
+    $result = webform_update_webform_last_download($node, $uid, 20, 2000);
+    $this->assertIdentical($result, MergeQuery::STATUS_UPDATE, 'webform_update_webform_last_download() reports successful update.');
+    $result = webform_download_last_download_info($node->nid, $uid);
+    $test = array(
+      'nid' => '1',
+      'uid' => '1',
+      'sid' => '20',
+      'requested' => '2000',
+      'serial' => NULL,
+    );
+    $this->assertIdentical($result, $test, 'webform_download_last_download_info() returned correct result.');
+  }
+
+  /**
+   * Test a submission that uses default values, and check database integrity.
+   */
+  public function testWebformSubmissionDefault() {
+    $this->drupalLogin($this->webform_users['admin']);
+    $this->webformReset();
+    $this->webformSubmissionExecute('default');
+    $this->drupalLogout();
+  }
+
+  /**
+   * Test validation errors on each component that has specialized validation.
+   */
+  public function testWebformSubmissionValidate() {
+    $this->drupalLogin($this->webform_users['admin']);
+    $this->webformReset();
+    $this->webformSubmissionValidateExecute();
+    $this->drupalLogout();
+  }
+
+  /**
+   * Test that required fields with no default value can't be submitted as-is.
+   */
+  public function testWebformSubmissionRequiredComponents() {
+    $this->drupalLogin($this->webform_users['admin']);
+    $this->webformReset();
+
+    // Create the Webform test node, and set all components to be required
+    // with no default value.
+    $node = $this->webformForm();
+    $node = node_load($node->nid);
+    foreach ($node->webform['components'] as &$component) {
+      $component['value'] = '';
+      $component['required'] = '1';
+    }
+    node_save($node);
+
+    // Submit the webform with no data. We should get a message that all the
+    // components are required. The exceptions are hidden fields, which can't be
+    // made required, and date fields, which default to the current date when no
+    // default value is provided; therefore, we don't expect a message for
+    // those.
+    $this->drupalPost('node/' . $node->nid, array(), 'Submit', array(), array(), 'webform-client-form-' . $node->nid);
+    foreach ($node->webform['components'] as $component) {
+      if ($component['type'] != 'hidden' && $component['type'] != 'date') {
+        $this->assertText(t('!name field is required.', array('!name' => $component['name'])));
+      }
+    }
+
+    $this->drupalLogout();
+  }
+
+  /**
+   * Test length validation.
+   */
+  public function testWebformSubmissionComponentLength() {
+    $this->drupalLogin($this->webform_users['admin']);
+    $this->webformReset();
+
+    // Create the Webform test node.
+    $node = $this->webformForm();
+    $node = node_load($node->nid);
+
+    // Get the cid of the textfield component.
+    foreach ($node->webform['components'] as &$component) {
+      if ($component['form_key'] === 'textfield') {
+        $textfield_cid = $component['cid'];
+        break;
+      }
+    }
+
+    // Set length validation rules.
+    $node->webform['components'][$textfield_cid]['extra']['maxlength'] = 5;
+    $node->webform['components'][$textfield_cid]['extra']['minlength'] = 4;
+
+    node_save($node);
+
+    // Text value that is too long.
+    $this->drupalPost('node/' . $node->nid, array('submitted[textfield]' => '123456'), 'Submit', array(), array(), 'webform-client-form-' . $node->nid);
+    $this->assertRaw(t('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => $node->webform['components'][$textfield_cid]['name'], '%max' => 5, '%length' => 6)));
+
+    // Text value that is too short.
+    $this->drupalPost('node/' . $node->nid, array('submitted[textfield]' => '123'), 'Submit', array(), array(), 'webform-client-form-' . $node->nid);
+    $this->assertRaw(t('!name cannot be shorter than %min characters but is currently %length characters long.', array('!name' => $node->webform['components'][$textfield_cid]['name'], '%min' => 4, '%length' => 3)));
+
+    // Test value that meets validation rules has no error message.
+    $this->drupalPost('node/' . $node->nid, array('submitted[textfield]' => '12345'), 'Submit', array(), array(), 'webform-client-form-' . $node->nid);
+    $this->assertNoPattern('/ cannot be (longer|shorter) than /');
+  }
+
+  /**
+   * Test webform_submission_data() function.
+   *
+   * Do not save components that do not collect data, for example, markup.
+   */
+  public function testPlainComponentsSubmission() {
+    $node = (object) [
+      'webform' => [
+        'components' => [
+          ['type' => 'date'],
+          ['type' => 'email'],
+          ['type' => 'grid'],
+          ['type' => 'hidden'],
+          ['type' => 'number'],
+          ['type' => 'select'],
+          ['type' => 'textarea'],
+          ['type' => 'textfield'],
+          ['type' => 'time'],
+          ['type' => 'fieldset'],
+          ['type' => 'markup'],
+          ['type' => 'pagebreak'],
+        ],
+      ],
+    ];
+    $submitted = [
+      'date',
+      'email',
+      ['value' => 'grid'],
+      'hidden',
+      'number',
+      'select',
+      'textarea',
+      'textfield',
+      'time',
+      'fieldset',
+      'markup',
+      'pagebreak',
+    ];
+    $test_data = webform_submission_data($node, $submitted);
+    $sample_data = [
+      ['date'],
+      ['email'],
+      ['value' => 'grid'],
+      ['hidden'],
+      ['number'],
+      ['select'],
+      ['textarea'],
+      ['textfield'],
+      ['time'],
+    ];
+    $this->assertIdentical($test_data, $sample_data, 'webform_submission_data() generates correct data array.');
+  }
+
+  /**
+   * Execute the submission test.
+   *
+   * @param string $value_type
+   *   The values to be submitted to the webform. Either "sample" or "default".
+   * @param bool $save_draft
+   *   Whether to save a draft or a final submission.
+   * @param array $webform_settings
+   *   Settings to use for this form. Any unspecific settings will be default.
+   */
+  public function webformSubmissionExecute($value_type = 'sample', $save_draft = FALSE, array $webform_settings = array()) {
+    $path = drupal_get_path('module', 'webform');
+    module_load_include('inc', 'webform', 'includes/webform.submissions');
+
+    // Create a new Webform test node.
+    $node = $this->webformForm($webform_settings);
+    $submission_values = $value_type == 'sample' ? $this->webformPost() : array();
+
+    // Visit the node page with the "foo=bar" query, to test
+    // [current-page:query:?] default values.
+    $this->drupalGet('node/' . $node->nid, array('query' => array('foo' => 'bar')));
+    $this->assertText($node->title, t('Webform node created and accessible at !url', array('!url' => 'node/' . $node->nid)), t('Webform'));
+
+    // Submit our test data.
+    $this->drupalPost(NULL, $submission_values, $save_draft ? 'Save Draft' : 'Submit', array(), array(), 'webform-client-form-' . $node->nid);
+
+    if ($save_draft) {
+      $this->assertText(t('Submission saved. You may return to this form later and it will restore the current values.'), t('Save draft message displayed.'), t('Webform'));
+      return;
+    }
+
+    // Confirm that the submission has been created.
+    $this->assertText($node->webform['confirmation'], t('Confirmation message "@confirmation" received.', array('@confirmation' => $node->webform['confirmation'])), t('Webform'));
+
+    // Get the SID of the new submission.
+    $matches = array();
+    preg_match('/sid=([0-9]+)/', $this->getUrl(), $matches);
+    $sid = isset($matches[1]) ? $matches[1] : NULL;
+
+    // Pull in the database submission and check the values.
+    drupal_static_reset('webform_get_submission');
+    $actual_submission = webform_get_submission($node->nid, $sid);
+
+    $component_info = $this->webformComponents();
+    foreach ($node->webform['components'] as $cid => $component) {
+      $stable_value = $value_type == 'sample' ? $component_info[$component['form_key']]['database values'] : $component_info[$component['form_key']]['database default values'];
+      $actual_value = isset($actual_submission->data[$cid]) ? $actual_submission->data[$cid] : NULL;
+      $result = $this->assertEqual($stable_value, $actual_value, t('Component @form_key data integrity check when using @type values.', array('@form_key' => $component['form_key'], '@type' => $value_type)), t('Webform'));
+      if (!$result || $result === 'fail') {
+        $this->fail(t("Expected !expected\n\nRecieved !recieved", array('!expected' => print_r($stable_value, TRUE), '!recieved' => print_r($actual_value, TRUE))), t('Webform'));
+      }
+    }
+  }
+
+  /**
+   * Execute a validation check for a single component.
+   */
+  public function webformSubmissionValidateExecute() {
+    $path = drupal_get_path('module', 'webform');
+    module_load_include('inc', 'webform', 'includes/webform.submissions');
+
+    // Create a new Webform test node.
+    $node = $this->webformForm();
+
+    // Visit the node page.
+    $this->drupalGet('node/' . $node->nid);
+
+    foreach ($this->webformComponents() as $key => $component_info) {
+      if (isset($component_info['error values'])) {
+        foreach ($component_info['error values'] as $value => $error_message) {
+          $submission_values = array();
+          $submission_values["submitted[$key]"] = $value;
+
+          // Submit our test data.
+          $this->drupalPost('node/' . $node->nid, $submission_values, 'Submit', array(), array(), 'webform-client-form-' . $node->nid);
+
+          // Confirm that the validation error occurred and the submission did
+          // not save.
+          $this->assertRaw($error_message, t('Validation message properly thrown: "%message".', array('%message' => $error_message)), t('Webform'));
+
+          $this->assertFalse(preg_match('/sid=([0-9]+)/', $this->getUrl()), t('Submission not saved.'));
+        }
+      }
+    }
+  }
+
+}

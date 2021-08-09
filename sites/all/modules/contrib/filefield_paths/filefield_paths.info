@@ -1,0 +1,28 @@
+name = File (Field) Paths
+description = Adds improved Token based file sorting and renaming functionalities.
+package = Fields
+test_dependencies[] = pathauto
+test_dependencies[] = redirect
+test_dependencies[] = token
+test_dependencies[] = transliteration
+configure = admin/config/media/file-system/filefield-paths
+core = 7.x
+
+
+
+; Simpletest files.
+
+files[] = tests/filefield_paths.test
+files[] = tests/filefield_paths.general.test
+files[] = tests/filefield_paths.text_replace.test
+files[] = tests/filefield_paths.tokens.test
+files[] = tests/filefield_paths.update.test
+files[] = tests/pathauto.test
+files[] = tests/redirect.test
+files[] = tests/transliteration.test
+
+; Information added by Drupal.org packaging script on 2018-08-14
+version = "7.x-1.1"
+core = "7.x"
+project = "filefield_paths"
+datestamp = "1534256584"

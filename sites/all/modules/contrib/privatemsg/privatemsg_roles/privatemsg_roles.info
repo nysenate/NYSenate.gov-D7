@@ -1,0 +1,14 @@
+name = Privatemsg roles
+description = Allows to send message to all members of a role.
+package = Mail
+core = 7.x
+dependencies[] = privatemsg
+files[]=privatemsg_roles.module
+files[]=privatemsg_roles.test
+
+; Information added by Drupal.org packaging script on 2016-09-11
+version = "7.x-2.0-alpha1"
+core = "7.x"
+project = "privatemsg"
+datestamp = "1473606548"
+

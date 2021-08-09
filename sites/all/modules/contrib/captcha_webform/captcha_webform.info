@@ -1,0 +1,16 @@
+name = CAPTCHA Webform Bridge
+description = Automatically set (or unset) CAPTCHA challenges to webforms.
+package = "Spam control"
+dependencies[] = captcha
+dependencies[] = webform
+core = 7.x
+
+configuration = admin/config/people/captcha/captcha/webform
+
+
+; Information added by Drupal.org packaging script on 2015-08-21
+version = "7.x-1.2"
+core = "7.x"
+project = "captcha_webform"
+datestamp = "1440169446"
+

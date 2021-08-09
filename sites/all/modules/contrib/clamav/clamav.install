@@ -1,0 +1,92 @@
+<?php
+/**
+ * @file
+ * Hook_requirements for the ClamAV module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function clamav_requirements($phase) {
+  $t = get_t();
+  $requirements = array();
+  if ($phase == 'runtime') {
+    // Try to connect on the current settings.
+    $mode = variable_get('clamav_mode', CLAMAV_DEFAULT_MODE);
+    if ($mode == CLAMAV_USE_DAEMON) {
+      $settings = array(
+        'host' => variable_get('clamav_daemon_host', CLAMAV_DEFAULT_HOST),
+        'port' => variable_get('clamav_daemon_port', CLAMAV_DEFAULT_PORT),
+      );
+      $mode = $t('Daemon (over TCP/IP)');
+    }
+    elseif ($mode == CLAMAV_USE_EXECUTABLE) {
+      $settings = variable_get('clamav_executable_path', CLAMAV_DEFAULT_PATH);
+      $mode = $t('Executable');
+    }
+    elseif ($mode == CLAMAV_USE_DAEMON_UNIX_SOCKET) {
+      $settings = array(
+        'unix_socket_path' => variable_get('clamav_daemon_unix_socket', CLAMAV_DEFAULT_UNIX_SOCKET),
+      );
+      $mode = $t('Daemon (over Unix-socket)');
+    }
+
+    require_once dirname(__FILE__) . '/clamav.inc';
+    $ver = clamav_get_version($settings);
+
+    // Report success or failure.
+    $requirements[] = array(
+      'title' => $t('ClamAV'),
+      'value' => empty($ver) ? $t('@mode not found.', array('@mode' => $mode)) : $t('@mode: @version', array('@mode' => $mode, '@version' => $ver)),
+      'severity' => (empty($ver)) ? REQUIREMENT_ERROR : REQUIREMENT_OK,
+      'description' => (empty($ver) && user_access('administer site configuration'))
+        ? l(t('Configure ClamAV'), 'admin/config/media/clamav')
+        : '',
+    );
+  }
+  return $requirements;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function clamav_uninstall() {
+  variable_del('clamav_verbose');
+  variable_del('clamav_executable_path');
+  variable_del('clamav_executable_parameters');
+  variable_del('clamav_daemon_port');
+  variable_del('clamav_daemon_host');
+  variable_del('clamav_mode');
+  variable_del('clamav_enabled');
+  variable_del('clamav_unchecked_files');
+  variable_del('clamav_overridden_schemes');
+}
+
+/**
+ * Remove deprecated variables.
+ */
+function clamav_update_7001() {
+  variable_del('clamav_enable_element_file_widget');
+  variable_del('clamav_enable_element_image_widget');
+}
+
+/**
+ * Reconfigure ClamAV to show that files are being scanned.
+ */
+function clamav_update_7002() {
+  // See http://drupal.org/node/2810103
+  // The configuration checkbox 'Enable ClamAV anti-virus scans' previously had
+  // no effect on whether files were scanned: files were *always* scanned, even
+  // if that checkbox was disabled.
+  // This bug is now fixed, so reconfigure ClamAV so that the behaviour does
+  // not change.
+  if (!variable_get('clamav_enabled', TRUE)) {
+    variable_set('clamav_enabled', TRUE);
+
+    watchdog('ClamAV', 'ClamAV has been reconfigured and is enabled for scanning uploads. Learn more at <a href="@clamav_issue_url">Issue 2810103 on drupal.org</a>.', array('@clamav_issue_url' => url('http://drupal.org/node/2810103')), WATCHDOG_WARNING);
+    $message = t('ClamAV has been reconfigured and is enabled to scan uploads. Visit the <a href="@clamav_config_url">ClamAV configuration page</a> to review the configuration and disable it if necessary.', array(
+      '@clamav_config_url' => url('admin/config/media/clamav'),
+    ));
+    return $message;
+  }
+}

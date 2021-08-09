@@ -1,0 +1,477 @@
+<?php
+
+/**
+ * @file
+ * A module to import calendars from OpenLeg.
+ */
+
+/**
+ * Implements hook_help().
+ *
+ * Displays help and module information.
+ *
+ * @param path 
+ *   Which path of the site we're using to display help
+ * @param arg 
+ *   Array that holds the current path as returned from arg() function
+ */
+function nys_calendar_import_help($path, $arg) {
+  if ($path == "admin/help#nys_calendar_import") {
+    return '<p>' . t("A module to import calendars from OpenLeg.") . '</p>';
+  }
+}
+
+/**
+ * Maps the API's response to fields.
+ * @param node
+ *  The node entity we're mapping values to.
+ * @param cal_result
+ *  The result returned from the calendar API.
+ * @param year
+ *  The calendar's year.
+ * @param cal_no
+ *  The calendar's number.
+ */
+function nys_calendar_import_set_values(&$node, $cal_result) {
+  $node->field_ol_year["und"][0]["value"]     = $cal_result->result->year;
+  $node->field_ol_cal_no["und"][0]["value"]   = $cal_result->result->calendarNumber;
+  $node->field_ol_cal_date["und"][0]["value"] = strtotime($cal_result->result->calDate);
+}
+
+/**
+ * Maps the API's response to field collections.
+ * @param node
+ *  The node entity we're mapping values to.
+ * @param cal_result
+ *  The result returned from the calendar API.
+ * @param year
+ *  The calendar's year.
+ * @param cal_no
+ *  The calendar's number.
+ */
+function nys_calendar_import_set_field_collection(&$node, $cal_result) {
+  // Floor calendar.
+  if (isset($cal_result->result->floorCalendar->entriesBySection->items)) {
+    $field_collection_item = entity_create('field_collection_item', array('field_name' => 'field_ol_cal'));
+    $field_collection_item->setHostEntity('node', $node);
+    $field_collection_item->field_ol_type["und"][0]["value"] = "floor_calendar";
+
+    // Bills.
+    $bills      = array();
+    $bill_index = 0;
+
+    foreach ($cal_result->result->floorCalendar->entriesBySection->items as $reading) {
+      foreach ($reading->items as $bill) {
+        $bills[]  = $bill;
+        $bill_nid = db_query(
+          "SELECT node.nid FROM node, field_data_field_ol_session " .
+          "WHERE node.title = :mytitle AND node.nid = field_data_field_ol_session.entity_id " .
+            "AND field_data_field_ol_session.field_ol_session_value = :mysession",
+        array(":mytitle" => $bill->basePrintNo . $bill->selectedVersion, ":mysession" => $bill->session))->fetchField();
+        if ($bill_nid !== false) {
+          $field_collection_item->field_ol_bill["und"][$bill_index]["target_id"]        = $bill_nid;
+          $field_collection_item->field_ol_bill_cal_number["und"][$bill_index]["value"] = $bill->billCalNo;
+          $bill_index++;
+        }
+      }
+    }
+    $field_collection_item->field_ol_bill_names["und"][0]["value"] = json_encode($bills);
+
+    $field_collection_item->save();
+  }
+
+  // Supplemental calendars.
+  if (isset($cal_result->result->supplementalCalendars->size) && $cal_result->result->supplementalCalendars->size > 0) {
+    foreach ($cal_result->result->supplementalCalendars->items as $index => $item) {
+      $field_collection_item = entity_create('field_collection_item', array('field_name' => 'field_ol_cal'));
+      $field_collection_item->setHostEntity('node', $node);
+
+      $field_collection_item->field_ol_type["und"][0]["value"]    = "supplemental_calendar";
+      $field_collection_item->field_ol_version["und"][0]["value"] = $item->version;
+
+      // Bills.
+      $bills      = array();
+      $bill_index = 0;
+
+      foreach ($item->entriesBySection->items as $reading) {
+        foreach ($reading->items as $bill) {
+          $bills[]  = $bill;
+          $bill_nid = db_query(
+            "SELECT node.nid FROM node, field_data_field_ol_session " .
+            "WHERE node.title = :mytitle AND node.nid = field_data_field_ol_session.entity_id " .
+              "AND field_data_field_ol_session.field_ol_session_value = :mysession",
+          array(":mytitle" => $bill->basePrintNo . $bill->selectedVersion, ":mysession" => $bill->session))->fetchField();
+          if ($bill_nid !== false) {
+            $field_collection_item->field_ol_bill["und"][$bill_index]["target_id"]        = $bill_nid;
+            $field_collection_item->field_ol_bill_cal_number["und"][$bill_index]["value"] = $bill->billCalNo;
+            $bill_index++;
+          }
+        }
+      }
+      $field_collection_item->field_ol_bill_names["und"][0]["value"] = json_encode($bills);
+
+      $field_collection_item->save();
+    }
+  }
+
+  // Active lists.
+  if (isset($cal_result->result->activeLists->size) && $cal_result->result->activeLists->size > 0) {
+    foreach ($cal_result->result->activeLists->items as $index => $item) {
+      $field_collection_item = entity_create('field_collection_item', array('field_name' => 'field_ol_cal'));
+      $field_collection_item->setHostEntity('node', $node);
+
+      $field_collection_item->field_ol_type["und"][0]["value"]        = "active_list";
+      $field_collection_item->field_ol_sequence_no["und"][0]["value"] = $item->sequenceNumber;
+
+      // Bills.
+      $bills      = array();
+      $bill_index = 0;
+
+      foreach ($item->entries->items as $bill) {
+        $bills[]  = $bill;
+        $bill_nid = db_query(
+          "SELECT node.nid FROM node, field_data_field_ol_session " .
+          "WHERE node.title = :mytitle AND node.nid = field_data_field_ol_session.entity_id " .
+            "AND field_data_field_ol_session.field_ol_session_value = :mysession",
+        array(":mytitle" => $bill->basePrintNo . $bill->selectedVersion, ":mysession" => $bill->session))->fetchField();
+        if ($bill_nid !== false) {
+          $field_collection_item->field_ol_bill["und"][$bill_index]["target_id"]        = $bill_nid;
+          $field_collection_item->field_ol_bill_cal_number["und"][$bill_index]["value"] = $bill->billCalNo;
+          $bill_index++;
+        }
+      }
+      $field_collection_item->field_ol_bill_names["und"][0]["value"] = json_encode($bills);
+
+      $field_collection_item->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_cron.
+ */
+function nys_calendar_import_cron() {
+
+  $interval  = variable_get("calendar_import_interval", 60 * 5);
+  $timestamp = variable_get("calendar_import_last_update", "2000-01-01T00:00:00");
+
+  // Check the lock.
+  $is_locked      = variable_get("calendar_import_is_locked", FALSE);
+  $last_lock_time = variable_get("calendar_import_last_lock_time", strtotime("now"));
+
+  // If another process isn't running or that process has been locked > 5 minutes.
+  if (!$is_locked || (strtotime("now") - $last_lock_time) > 300) {
+    // Update the lock.
+    variable_set("calendar_import_is_locked", TRUE);
+    variable_set("calendar_import_last_lock_time", strtotime("now"));
+
+    nys_calendar_import_run($timestamp);
+    variable_set('calendar_import_next_execution', time() + $interval);
+  }
+}
+
+/**
+ * First, fetch results from the updates API.
+ * Iterate and paginate those results and, per calendar, make a request to the calendar API.
+ * Finally, map values and save each calendar as a node.
+ */
+function nys_calendar_import_run($timestamp) {
+  $ol_base_url       = variable_get("openleg_base_url");
+  $base_calendar_url = $ol_base_url . "/api/3/calendars/";
+  $base_updates_url  = $base_calendar_url . "/updates/";
+  $limit             = 1000; // 1000 maximum.
+  $offset            = variable_get("calendar_import_offset", 1);
+  $start_record      = $offset;
+  $throttle          = 1000; // Only pull in $throttle per run.
+  $count             = 0;
+  $more_results      = true;
+  $bad_result        = false;
+  $openleg_key       = variable_get("openleg_key");
+  $last_processed_datetime = variable_get("calendar_import_last_update");
+
+  // We don't need to retrieve more than the $throttle.
+  if ($throttle < $limit) {
+    $limit = $throttle;
+  }
+
+  while ($more_results) {
+    echo "Fetching: " . $base_updates_url . $timestamp . "?offset=" . $offset . "&limit=" . $limit . "&order=asc&key=" . $openleg_key . "\r\n";
+    $base_result   = file_get_contents($base_updates_url . $timestamp . "?offset=" . $offset . "&limit=" . $limit . "&order=asc&key=" . $openleg_key);
+    $base_result   = json_decode($base_result);
+
+    echo "Offset is: " . $offset . "\r\n";
+
+    if (isset($base_result->success) && $base_result->success) {
+      foreach ($base_result->result->items as $item) {
+        // Update the lock.
+        variable_set("calendar_import_last_lock_time", strtotime("now"));
+
+        $last_processed_datetime = $item->processedDateTime;
+        $year    = $item->id->year;
+        $cal_no  = $item->id->calendarNumber;
+        $cal_url = $base_calendar_url . $year . "/" . $cal_no . "?fullText=true&key=" . $openleg_key;
+
+        echo "Fetching: " . $cal_url . "\r\n";
+        $cal_result = file_get_contents($cal_url);
+        $cal_result = json_decode($cal_result);
+
+        if (isset($cal_result->success) && $cal_result->success) {
+          $count++;
+
+          // Create or update existing calendar record.
+          $cal_nid = db_query("SELECT node.nid FROM node, field_data_field_ol_year, field_data_field_ol_cal_no WHERE node.nid = field_data_field_ol_year.entity_id AND node.nid = field_data_field_ol_cal_no.entity_id AND field_data_field_ol_year.field_ol_year_value = :myyear AND field_data_field_ol_cal_no.field_ol_cal_no_value = :mycalno", array(":myyear" => $year, ":mycalno" => $cal_no))->fetchField();
+          if ($cal_nid === false) {
+            // Create a new calendar.
+            $node        = new stdClass;
+            $node->title = $year . " - " . $cal_no;
+            $node->type  = "calendar";
+
+            echo "Found a new calendar: " . $year . " - " . $cal_no . "\r\n";
+          } else {
+            // Update the existing calendar.
+            $node = node_load($cal_nid);
+
+            // Remove existing collections, those will be recreated.
+            if (isset($node->field_ol_cal["und"]) && is_array($node->field_ol_cal["und"])) {
+              $fields = array();
+              foreach ($node->field_ol_cal["und"] as $index => $value) {
+                $fields[] = $value["value"];
+                unset($node->field_ol_cal["und"][$index]);
+              }
+              entity_delete_multiple('field_collection_item', $fields);
+            }
+
+            echo "Found an existing calendar: " . $year . " - " . $cal_no . "\r\n";
+          }
+
+          // Map the calendar's fields.
+          nys_calendar_import_set_values($node, $cal_result);
+
+          // echo "<pre>"; var_dump($node); die;
+
+          if ($cal_nid === false) {
+            // Create a new calendar.
+            node_object_prepare($node);
+            $node->uid = "1";
+          }
+
+          node_save($node);
+
+          // Map the calendars's field collections.
+          nys_calendar_import_set_field_collection($node, $cal_result);
+        } else {
+          $bad_result = true;
+          break;
+        }
+
+        if ($count >= $throttle) {
+          // Hit the $throttle limit, break.
+          break;
+        }
+
+        // Take a break between each request.
+        usleep(100000);
+      }
+
+      if ($bad_result) {
+        // Bad base result. Stop the update prematurely.
+        $more_results = false;
+        $offset       = $start_record + $count;
+        variable_set("calendar_import_offset", $offset);
+      } else if ($count >= $throttle) {
+        // Hit the $throttle limit, don't continue, for now.
+        $more_results = false;
+        $offset       = $start_record + $throttle;
+        variable_set("calendar_import_offset", $offset);
+      } else if ($base_result->offsetEnd < $base_result->total) {
+        // Hit the end of this page and there are more pages to go.
+        $offset = $base_result->offsetEnd + 1;
+        variable_set("calendar_import_offset", $offset);
+      } else {
+        // Hit the end of this page and there are no more pages to go.
+        $more_results = false;
+        variable_set("calendar_import_last_update", $last_processed_datetime);
+        variable_set("calendar_import_last_run", date("Y-m-d\TH:i:s", strtotime("now")));
+        variable_set("calendar_import_offset", 1);
+      }
+    } else {
+      // Bad base result. Stop the update prematurely.
+      $more_results = false;
+      $offset       = $start_record + $count;
+      variable_set("calendar_import_offset", $offset);
+    }
+  }
+
+  // Update the lock.
+  variable_set("calendar_import_is_locked", false);
+}
+
+function _nys_calendar_import_send_calendar_qa_dump($from_date_time, $to_date_time, $session, $part, $totalParts,
+                                                    $cal_ids_json, $isUpdates, $url, $qa_url) {
+  if ($cal_ids_json->result->size > 0) {
+    $cal_ids = array();
+    // maps calendar field collection ids to their parent calendar id and session
+    $cal_id_map = array();
+    foreach ($cal_ids_json->result->items as $item) {
+      if ($isUpdates) {
+        $calendar_year = $item->id->year;
+        $calendar_number = $item->id->calendarNumber;
+      } else  {
+        $calendar_year = $item->year;
+        $calendar_number = $item->calendarNumber;
+      }
+      $result = db_query(
+          'SELECT cal.field_ol_cal_value AS cal_id ' .
+          'FROM node ' .
+          'JOIN field_data_field_ol_cal_no cal_no ON cal_no.entity_id = node.nid ' .
+          'JOIN field_data_field_ol_year year ON year.entity_id = node.nid ' .
+          'JOIN field_data_field_ol_cal cal ON cal.entity_id = node.nid ' .
+          'WHERE cal_no.field_ol_cal_no_value = :calno ' .
+          'AND year.field_ol_year_value = :year',
+          array(":calno" => $calendar_number, ":year" => $calendar_year));
+
+      foreach ($result->fetchAll() as $row) {
+        array_push($cal_ids, $row->cal_id);
+        $cal_id_map[$row->cal_id] = array("year" => $calendar_year, 'calendarNumber' => $calendar_number);
+      }
+    }
+
+    // Load calendar field collections
+    $calendars = entity_load("field_collection_item", $cal_ids);
+
+    $bill_nid_map = array();
+    if (count($cal_ids) > 0) {
+      // Load the titles for bills referenced by the calendars
+      $bill_query_result = db_query(
+          "SELECT node.nid, node.title " .
+          "FROM field_data_field_ol_bill bill " .
+          "JOIN node ON bill.field_ol_bill_target_id = node.nid " .
+          "WHERE bill.entity_id IN (:calids)",
+          array(":calids" => $cal_ids));
+
+      // Map bill titles to their node ids
+      foreach ($bill_query_result->fetchAll() as $row) {
+        $bill_nid_map[$row->nid] = $row->title;
+      }
+    }
+
+    foreach ($calendars as &$node) {
+
+      // Add the calendar id as a field
+      $node->calendar_id[LANGUAGE_NONE][0]['value'] = json_encode($cal_id_map[$node->item_id], JSON_UNESCAPED_UNICODE);
+
+      // Use the node id -> bill title map to convert the array of bill references to an array of bill print numbers
+      $bill_print_nos = array_map(
+          function (&$bill_ref) use ($bill_nid_map) {
+            return $bill_nid_map[$bill_ref['target_id']];
+          },
+          $node->field_ol_bill[LANGUAGE_NONE]);
+      $node->field_ol_bill[LANGUAGE_NONE] = array();
+      $node->field_ol_bill[LANGUAGE_NONE][0]['value'] = json_encode($bill_print_nos, JSON_UNESCAPED_UNICODE);
+
+      // Remove duplicated safe values (not needed here.)
+      foreach ($node as $key => &$value) {
+        if (isset($value[LANGUAGE_NONE][0]['format'])) {
+          $value[LANGUAGE_NONE][0]['format'] = NULL;
+        }
+        if (isset($value[LANGUAGE_NONE][0]['safe_value'])) {
+          $value[LANGUAGE_NONE][0]['safe_value'] = NULL;
+        }
+      }
+    }
+
+    // Send data to OpenLeg
+    $output_arr = array(
+        'from' => $from_date_time,
+        'to' => $to_date_time,
+        'session' => $session,
+        'part' => $part,
+        'totalParts' => $totalParts,
+        'calendars' => $calendars
+    );
+    $output_json = json_encode($output_arr, JSON_UNESCAPED_UNICODE);
+
+
+    echo "\n[POST] ${qa_url}\n";
+    $curl = curl_init($qa_url);
+    curl_setopt($curl, CURLOPT_HEADER, 1);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-type: application/json; charset=UTF-8"));
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $output_json);
+
+    $json_response = curl_exec($curl);
+    $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+    if ($status != 200 && $status != 201) {
+      die("\nError: call to URL $url failed with status $status, response $json_response, curl_error " . curl_error($curl) . ", curl_errno " . curl_errno($curl));
+    } else {
+      echo "\nStatus Code: ${status}\n";
+      echo "\nResponse: ${json_response}";
+    }
+    curl_close($curl);
+  }
+}
+
+function _nys_calendar_import_session_calendar_qa($from_date_time, $to_date_time, $session, $qa_url) {
+  echo "Running Calendar QA against Openleg for calendars during session " . $session . "\n";
+  $ol_base_url   = variable_get("openleg_base_url");
+  $openleg_key   = variable_get("openleg_key");
+
+  $urls = array (
+      $ol_base_url . '/api/3/calendars/' . $session . '/' . '?key=' . $openleg_key,
+      $ol_base_url . '/api/3/calendars/' . ($session + 1) . '/' . '?key=' . $openleg_key
+  );
+  foreach ($urls as $index=>$url) {
+    echo "[GET] ${url}\n";
+    $updates_resp = file_get_contents($url);
+    if ($updates_resp === false) {
+      echo "Failed to retrieve updates from Openleg";
+      return;
+    }
+    $updates_json = json_decode($updates_resp);
+    _nys_calendar_import_send_calendar_qa_dump($from_date_time, $to_date_time, $session, $index + 1, count($urls),
+        $updates_json, false, $url, $qa_url);
+  }
+}
+
+function nys_calendar_import_calendar_qa($from_date_time, $to_date_time, $year, $session) {
+  // Setup
+  $ol_base_url   = variable_get("openleg_base_url");
+  $openleg_key   = variable_get("openleg_key");
+  $qa_url   = $ol_base_url . '/api/3/senatesite/caldump' . '?key=' . $openleg_key;
+  if (isset($session)) {
+    // Handle session calendar qa as a special case
+    _nys_calendar_import_session_calendar_qa($from_date_time, $to_date_time, $session, $qa_url);
+    return;
+  }
+  else if (isset($year)) {
+    echo "Running Calendar QA against Openleg for calendars during year " . $year . "\n";
+    $updates_url   = $ol_base_url . '/api/3/calendars/' . $year . '/' . '?key=' . $openleg_key;
+  }
+  else {
+    echo "Running Calendar QA against Openleg for calendars updated between " . $from_date_time . " and " . $to_date_time . "\n";
+    $updates_url   = $ol_base_url. '/api/3/calendars/updates/' . $from_date_time . '/' . $to_date_time . '?key=' . $openleg_key;
+  }
+
+  // Make Updates API call to retrieve list of calendars that have been updated during the given date/time range.
+  $limit = 100;
+  $offset = 1;
+  $part = 1;
+  do {
+    $url = $updates_url . "&limit=${limit}&offset=${offset}";
+    echo "[GET] ${url}\n";
+    $updates_resp = file_get_contents($url);
+    if ($updates_resp === false) {
+      echo "Failed to retrieve updates from Openleg";
+      return;
+    }
+    $updates_json = json_decode($updates_resp);
+    $total = $updates_json->total;
+    $offsetEnd = $updates_json->offsetEnd;
+    echo "$total calendars will be checked...";
+    _nys_calendar_import_send_calendar_qa_dump($from_date_time, $to_date_time, $year, $part, ceil($total / $limit),
+        $updates_json, true, $url, $qa_url);
+  }
+  while ($offsetEnd < $total);
+}

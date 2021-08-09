@@ -1,0 +1,124 @@
+<?php
+/**
+ * @file
+ * Additional styles for the Panels module.
+ */
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function panels_extra_styles_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'panels') {
+    return "plugins/$plugin_type";
+  }
+}
+
+/**
+ * Render region callback.
+ *
+ * - Wrapper: Element.
+ * - Wrapper: Raw.
+ */
+function theme_panels_extra_styles_wrapper_render_region($vars) {
+  $content = $vars['panes'];
+  $settings = $vars['settings'];
+
+  // Theme.
+  if (!empty($settings['theme']) && $settings['theme']) {
+    $output = theme('panels_default_style_render_region', $vars);
+  }
+  else {
+    $output = implode(PHP_EOL, $content);
+  }
+
+  // Content is wrapped AFTER sending to Panels theming. This behavior is
+  // different than with panes.
+  if (!empty($output)) {
+    $content_wrapper = _panels_extra_styles_wrapper_wrap(!empty($settings['content']) ? $settings['content'] : array());
+    $output
+      = $content_wrapper['prefix'] .
+        $output .
+        $content_wrapper['suffix'];
+  }
+
+  return $output;
+}
+
+/**
+ * Render pane callback.
+ *
+ * - Wrapper: Element.
+ * - Wrapper: Raw.
+ */
+function theme_panels_extra_styles_wrapper_render_pane(&$vars) {
+  $content = &$vars['content'];
+  $settings = $vars['settings'];
+
+  // Content is wrapped BEFORE sending to Panels theming. This behavior is
+  // different than with regions.
+  if (!empty($content->title)) {
+    $title_wrapper = _panels_extra_styles_wrapper_wrap(!empty($settings['title']) ? $settings['title'] : array());
+    $content->title
+      = $title_wrapper['prefix'] .
+        $content->title .
+        $title_wrapper['suffix'];
+  }
+  if (!empty($content->content)) {
+    $content_wrapper = _panels_extra_styles_wrapper_wrap(!empty($settings['content']) ? $settings['content'] : array());
+    $content->content
+      = $content_wrapper['prefix'] .
+        render($content->content) .
+        $content_wrapper['suffix'];
+  }
+
+  // Theme.
+  if (!empty($settings['theme']) && $settings['theme']) {
+    $output = theme('panels_pane', $vars);
+  }
+  else {
+    $title = !empty($content->title) ? $content->title : NULL;
+    $content = !empty($content->content) ? $content->content : NULL;
+    $output = $title . $content;
+  }
+
+  return $output;
+}
+
+/**
+ * Wrap it, wrap it real good.
+ *
+ * @return array
+ *   Array with prefix and suffix keys.
+ */
+function _panels_extra_styles_wrapper_wrap($item = array()) {
+  $wrap['prefix'] = NULL;
+  $wrap['suffix'] = NULL;
+  $wrap['attributes'] = NULL;
+
+  if (!empty($item['attributes'])) {
+    foreach ($item['attributes'] as $key => $value) {
+      if (!empty($value)) {
+        $wrap['attributes'] .= " $key=\"$value\"";
+      }
+    }
+  }
+
+  if (!empty($item['element']) && $item['element'] != 'no_wrapper') {
+    $wrap['prefix'] = '<' . $item['element'] . $wrap['attributes'] . '>';
+    $wrap['suffix'] = '</' .  $item['element'] . '>';
+  }
+
+  if (!empty($item['prefix'])) {
+    $wrap['prefix'] = $item['prefix'];
+  }
+  if (!empty($item['suffix'])) {
+    $wrap['suffix'] = $item['suffix'];
+
+  }
+
+  // Tidy.
+  $wrap['prefix'] = PHP_EOL . $wrap['prefix'];
+  $wrap['suffix'] = $wrap['suffix'] . PHP_EOL;
+
+  return $wrap;
+}

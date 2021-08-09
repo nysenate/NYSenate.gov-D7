@@ -1,0 +1,197 @@
+/*------------------------------------
+/	NEWS:
+/-------------------------------------*/
+// NEWS HEADER AREA
+.c-news--head,
+.c-questionnaire--head {
+	margin-bottom: 20px;
+
+	ul.links {
+
+		display: block;
+		list-style: none;
+		line-height: 25px;
+
+		li {
+			display: inline-block;
+			margin-right: 10px;
+			text-transform: uppercase;
+			font-family: "Proxima Nova SemiBold";
+			white-space: nowrap;
+		}
+
+		a {
+			font-size: 12px;
+			line-height: 1em;
+			@extend .lgt-text;
+		}
+
+	}
+	.field-name-field-issues { padding: 0; }
+}
+.c-news--title {
+	margin-bottom: 15px;
+	font-family: "Adelle Regular";
+	font-size: 22px;
+	line-height: 1.3em;
+}
+.c-news--author,
+.c-news--pub-date {
+	display: inline-block;
+	margin: 0 10px 0 0;
+	text-transform: capitalize;
+	font-family: "Proxima Nova Regular";
+	font-size: 12px;
+}
+.c-news--author {
+	text-transform: uppercase;
+}
+.c-news--pub-date {
+	color: $grey04;
+}
+.c-news--download {
+	display: block;
+	margin-bottom: 20px;
+
+	img { display: none; }
+
+	// download styles
+	.file > a {
+		display: block;
+		margin-top: 15px;
+		//text-transform: uppercase;
+		font-size: 12px;
+		font-family: "Proxima Nova SemiBold";
+		@extend .lgt-text;
+		@extend .icon-before__presskit;
+
+		&:before {
+			font-size: 21px;
+			line-height: 12px;
+		}
+	}
+}
+.c-news--head .c-news--download {
+	margin-bottom: 0;
+}
+@media #{$tablet} {
+	.c-news-download {
+		margin-bottom: 30px;
+	}
+	.c-news--head .c-news--download {
+		margin-bottom: 0;
+	}
+}
+.c-news--subtitle {
+	margin-bottom: 20px;
+	color: $grey02;
+	font-family: "Adelle SemiBold";
+	font-size: 18px;
+	line-height: 1.4em;
+}
+
+
+
+.c-block-quoted-body {
+	padding-left: 40px;
+	border-left: 5px solid #eee;
+}
+/*------------------------------------
+/ 'IN THE NEWS' elements
+/------------------------------------*/
+.c-news--body-title {
+	border-top: 1px solid $grey05;
+	padding: 10px 0 20px;
+	font-family: "Adelle Light";
+	font-size: 18px;
+
+	a {
+		@extend .lgt-text;
+	}
+}
+.c-in-the-news--body {
+
+	.body {
+		border-left: 5px solid $grey06;
+		padding-left: 10px;
+	}
+}
+
+@media #{$tablet} {
+	.c-news--head {
+		margin-bottom: 30px;
+
+		ul.links {
+			display: inline;
+		}
+		.field-name-field-issues {
+			display: inline-block;
+		}
+	}
+	.c-news--title {
+		font-size: 48px;
+		margin-bottom: 30px;
+	}
+	.c-news--author,
+	.c-news--pub-date,
+	.c-news--committees {
+		font-size: 15px;
+		line-height: 1.2em;
+	}
+	.c-news--pub-date {
+		/*border-right: 1px solid $grey04;
+		padding-right: 14px;*/
+	}
+	.c-news--subtitle {
+		font-size: 26px;
+	}
+	// "in the news"
+	.c-news--body-title {
+		padding: 20px 0 30px;
+		font-family: "Adelle Light";
+		font-size: 24px;
+	}
+	.c-in-the-news--body {
+
+		.body {
+			border-left: 10px solid $grey06;
+			padding-left: 30px;
+		}
+	}
+}
+
+//About Senator Embedded Video
+// .page-node-about {
+// 	article {
+// 		.media-element {
+// 			width: 100%;
+// 			display: block;
+// 			position: relative;
+// 			padding-bottom: 52.25%;
+// 			padding-top: 59px;
+// 			height: 0;
+// 			margin-bottom: 2.2em;
+// 			iframe {
+// 				position: absolute;
+// 				top: 0;
+// 				left: 0;
+// 				width: 100% !important;
+// 				height: 100% !important;
+// 			}
+// 		}
+// 	}
+// }
+
+.node-type-webform {
+	.form-item {
+	  margin-right: 1em;
+	  input[type="text"],
+	  input[type="email"] {
+	  	height: 55px;
+	  }
+	}
+	button[type="submit"] {
+		background-color: $blue01;
+		margin: 15px 0 40px 0;
+	}
+}

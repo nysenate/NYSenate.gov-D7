@@ -1,0 +1,124 @@
+/*----------------------------------------
+/ PRESS RELEASES
+/----------------------------------------*/
+
+.c-block-press-release {
+	padding-top: 20px;
+	padding-bottom: 30px;
+	margin-bottom: 0;
+	border-top: 1px solid $grey05;
+}
+.first:first-child {
+	.c-block-press-release {
+		border-top: none;
+	}
+}
+.c-press-release--header {
+	margin-bottom: 15px;
+}
+.c-press-release--title {
+	margin-bottom: 3px;
+	font-family: "Adelle Bold";
+	font-size: 16px;
+	line-height: 1em;
+  color: $grey10;
+}
+.c-press-release--topic,
+.c-featured-story-issue-tag a {
+	text-transform: uppercase;
+	font-family: "Proxima Nova Semibold";
+	font-size: 12px;
+	line-height: 1em;
+	letter-spacing: 0.05em;
+	@extend .link-text;
+
+	&:hover {
+		@extend .link-text;
+		text-decoration: underline;
+	}
+}
+.c-press-release--body {
+	position: relative;
+}
+.c-press-release--body__has-img {
+	padding-right: 120px;
+}
+.c-press-release--descript {
+	margin-bottom: 10px;
+	font-size: 18px;
+	line-height: 1.3em;
+  font-family: "Adelle Light";
+	a{
+		color:$grey02;
+	}
+}
+.c-press-release--senator {
+	margin: 10px 0;
+	color: $grey04;
+	font-family: "Proxima Nova Regular";
+	font-size: 12px;
+	line-height: 1em;
+}
+.c-press-release--date {
+	margin: 0;
+	color: $grey04;
+	font-family: "Proxima Nova Regular";
+	font-size: 12px;
+	line-height: 1em;
+}
+.c-press-release--img {
+	max-width: 100px;
+	margin-left: 20px;
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+@media #{$tablet} {
+	.c-block-press-release {
+		margin-bottom: 0;
+		padding-top: 30px;
+		padding-bottom: 60px;
+	}
+	.c-press-release--header {
+		position: absolute;
+		top: 30px;
+		left: 0;
+		width: 180px;
+	}
+	.c-press-release--title {
+		font-size: 16px;
+		line-height: 30px;
+	}
+	.c-press-release--body {
+		padding-left: 180px;
+		padding-right: 40px;
+	}
+	.c-press-release--descript {
+		font-size: 24px;
+		line-height: 30px;
+    font-family: "Adelle Light";
+	}
+	.c-press-release--senator {
+		font-size: 14px;
+	}
+	.c-press-release--date {
+		font-size: 14px;
+	}
+	.c-press-release--body__has-img {
+		padding-right: 220px;
+		min-height: 125px; // height of img
+	}
+	.c-press-release--img {
+		max-width: 200px;
+		margin-left: 20px;
+	}
+}
+
+.trad_blue .c-press-release--descript a { color: $trad_blue_lgt; }
+.cont_blue .c-press-release--descript a { color: $cont_blue_lgt; }
+.purple .c-press-release--descript a { color: $purple_lgt; }
+.trad_red .c-press-release--descript a { color: $trad_red_lgt; }
+.cont_red .c-press-release--descript a { color: $cont_red_lgt; }
+.orange .c-press-release--descript a { color: $orange_lgt; }
+.trad_green .c-press-release--descript a { color: $trad_green_lgt; }
+.cont_green .c-press-release--descript a { color: $cont_green_lgt; }

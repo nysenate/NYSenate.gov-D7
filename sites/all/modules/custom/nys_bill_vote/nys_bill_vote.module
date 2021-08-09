@@ -1,0 +1,606 @@
+<?php
+
+/**
+ * @file
+ * Allows visitors to rate aye or nay.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function nys_bill_vote_menu() {
+  $menu = [
+    'bill_vote_confirmation/callback/%/%' => [
+      'title' => '',
+      'page callback' => 'nys_bill_vote_confirmation_ajax_callback',
+      'page arguments' => [2, 3],
+      'access callback' => 'user_is_logged_in',
+    ],
+    'bill_vote_autosub/callback/%/%' => [
+      'title' => '',
+      'page callback' => 'nys_bill_vote_autosub_ajax_callback',
+      'page arguments' => [2, 3],
+      'access callback' => 'user_is_logged_in',
+    ],
+  ];
+
+  return $menu;
+}
+
+/**
+ * Ajax callback for vote verification.
+ *
+ * Bill Vote for authenticated users that is performed via url 'intent'
+ * provides a mechanism for the user to confirm that the intent is correct. This
+ * function allows us to make an ajax to confirm that vote.
+ */
+function nys_bill_vote_confirmation_ajax_callback($entity_id, $vote_value) {
+  // Process vote.
+  nys_bill_vote_process_vote('bill', $entity_id, $vote_value);
+}
+
+/**
+ * Ajax callback for auto subscription preferences.
+ *
+ * For each user, a one-time preference dialog will set the user's preference
+ * for auto-subscribing to bills when voting.  This callback handles saving
+ * the preference.  It can also be modified via their dashboard.
+ */
+function nys_bill_vote_autosub_ajax_callback($entity_id, $autosub) {
+  $u = user_load($GLOBALS['user']->uid);
+  $u->field_voting_auto_subscribe[LANGUAGE_NONE][0]['value'] = (int) $autosub;
+  user_save($u);
+
+  if ((int) $autosub && (int) $entity_id) {
+    // Need to get the current node ID, it's taxonomy ID, and user id and email.
+    // The entity_id should be our node ID...look up the tid from there.
+    try {
+      $node_wrapper = entity_metadata_wrapper('node', node_load($entity_id));
+      $tid = $node_wrapper->field_bill_multi_session_root->value()->tid;
+    }
+    catch (EntityMetadataWrapperException $e) {
+      $tid = 0;
+    }
+
+    if ($tid) {
+      $data = [
+        'email' => $u->mail,
+        'tid' => $tid,
+        'nid' => $entity_id,
+        'uid' => $u->uid,
+        'why' => 2,
+        'confirmed' => user_is_logged_in(),
+      ];
+      _real_nys_subscriptions_subscription_signup($data);
+    }
+  }
+}
+
+/**
+ * Translates between vote values and labels.  If a value is passed, the
+ * appropriate label is returned.  If a label is passed, the appropriate
+ * value is returned.  If the passed value is not found in values or labels,
+ * a boolean FALSE is returned.
+ *
+ * @param $number
+ *   A vote value or label to search for.
+ * @return mixed|string
+ *   The vote value or label (depending if a label or value, respectively,
+ *   was passed).  If passed item is not found, boolean FALSE is returned.
+ */
+function nys_bill_vote_get_val($number) {
+  $values = array(
+    0 => 'no',
+    1 => 'yes',
+  );
+  if (array_key_exists($number, $values)) {
+    $ret = $values[$number];
+  }
+  elseif (in_array($number, $values)) {
+    $ret = array_search($number, $values);
+  }
+  else {
+    $ret = false;
+  }
+  return $ret;
+}
+
+/**
+ * @param $entity_type
+ *   The type of entity receiving a vote.  Should always be 'bill'.
+ * @param $entity_id
+ *   The entity ID (i.e., node number) of the entity receiving a vote.
+ * @param $vote_value
+ *   The value of the vote being recorded.
+ * @return array|bool
+ */
+function nys_bill_vote_process_vote($entity_type, $entity_id, $vote_value) {
+  nyslog();
+  global $user;
+
+  $vote_index = nys_bill_vote_get_val($vote_value);
+  nyslog("vote process received value=$vote_value, found index=$vote_index");
+  $ret = false;
+  if ($vote_index !== false) {
+    // Check to see if a vote already exists.
+    // If the user ID is zero, pass it through.
+    if ($user->uid == 0) {
+      $needs_processing = true;
+    } else {
+      $vote_check_criteria = array(
+        'uid' => $user->uid,
+        'entity_id' => $entity_id,
+        'entity_type' => 'node',
+        'tag' => 'nys_bill_vote'
+      );
+      $vote_check = votingapi_select_single_vote_value($vote_check_criteria);
+
+      // If no vote exists, or if the vote is different, process the vote.
+      $needs_processing = (is_null($vote_check) || ($vote_check != $vote_index));
+
+      // Also process auto-subscribe if the user has chosen.
+      $account = user_load($user->uid);
+
+      // If a subscription was requested, create it.
+      if ($account->field_voting_auto_subscribe[LANGUAGE_NONE][0]['value']) {
+        // Need to get the current node ID, it's taxonomy ID, and user id and email.
+        // The entity_id should be our node ID...look up the tid from there.
+        $node_wrapper = entity_metadata_wrapper('node', node_load($entity_id));
+        try {
+          $tid = $node_wrapper->field_bill_multi_session_root->value()->tid;
+        }
+        catch (EntityMetadataWrapperException $e) {
+          $tid = 0;
+        }
+
+        if ($tid && $entity_id) {
+          $data = [
+            'email' => $account->mail,
+            'tid' => $tid,
+            'nid' => $entity_id,
+            'uid' => $account->uid,
+            'why' => 2,
+            'confirmed' => user_is_logged_in(),
+          ];
+          _real_nys_subscriptions_subscription_signup($data);
+        }
+      }
+    }
+
+    if ($needs_processing) {
+      // Set the follow flag on this bill for the current user.
+      $flag = flag_get_flag('follow_this_bill');
+      $flag->flag('flag', $entity_id, user_load($user->uid), TRUE);
+
+      $vote = array(
+        'entity_type' => 'node',
+        'entity_id' => $entity_id,
+        'value_type' => 'option',
+        'value' => $vote_index,
+        'tag' => 'nys_bill_vote',
+      );
+      $ret = votingapi_set_votes($vote);
+    }
+  }
+
+  return $ret;
+}
+
+function nys_bill_vote_get_votes($entity_type, $entity_id, $clear = FALSE) {
+  $entities = &drupal_static(__FUNCTION__, NULL, $clear);
+  if (empty($entities[$entity_type][$entity_id])) {
+    $entities[$entity_type][$entity_id] = votingapi_select_results(array(
+      'tag' => 'nys_bill_vote',
+      'entity_id' => $entity_id,
+      'entity_type' => 'node',
+    ));
+  }
+
+  return $entities[$entity_type][$entity_id];
+}
+
+function nys_bill_vote_get_default($entity_type, $entity_id, $clear = FALSE) {
+  global $user;
+  $entities = &drupal_static(__FUNCTION__, NULL, $clear);
+  if (empty($entities[$entity_type][$entity_id]) && !empty($user->uid)) {
+    $entities[$entity_type][$entity_id] = votingapi_select_votes(array(
+      'tag' => 'nys_bill_vote',
+      'entity_id' => $entity_id,
+      'entity_type' => 'node',
+      'uid' => $user->uid,
+    ));
+  }
+  if (isset($entities[$entity_type][$entity_id][0]['value'])) {
+    return $entities[$entity_type][$entity_id][0]['value'];
+  }
+  else {
+    // TODO: this value is tied to the "maybe" vote option.
+    return 2;
+  }
+}
+
+/**
+ * Basic default options for nys_bill_vote.
+ */
+function nys_bill_vote_get_options() {
+
+  // TODO: remove the "maybe" vote option
+  $options = array(
+    'yes' => t('Aye'),
+    'no' => t('Nay'),
+    'maybe' => t('Maybe'),
+  );
+
+  return $options;
+}
+
+function nys_bill_vote_clean_results($results) {
+  foreach ($results as $key => $value) {
+    $results[$value['function']] = $value['value'];
+    unset($results[$key]);
+  }
+
+  return $results;
+}
+
+function nys_bill_vote_clean_votes($results, $entity_type, $entity_id) {
+  return nys_bill_vote_clean_results($results[$entity_type][$entity_id]);
+}
+
+/**
+ * Default axis available.
+ */
+function nys_bill_vote_get_tags() {
+  return array('nys_bill_vote_aye_nay');
+}
+
+/**
+ * Gets the vote widget label, which expresses the sentiment of an existing
+ * vote, or a more generic label asking for a vote.
+ *
+ * @param string $value The existing vote's yes/no value.
+ *
+ * @return string
+ */
+function nys_bill_vote_get_voted_label($value = '') {
+  // Suss out the label for this rendering.  Default...
+  $label = t('do you support this bill?');
+
+  // If this isn't a bill page, other default...
+  if (!is_bill_page()) {
+    $label = t("what's your position?");
+  }
+
+  // If this is a user examining a bill through their dashboard...
+  if (arg(2) == 'dashboard' && arg(3) == 'bills') {
+    $label = t("Do you support this bill?");
+  }
+
+  // If an existing vote (including one submitted now) is detected ...
+  if ($value == 'yes') {
+    $label = t('You are in favor of this bill');
+  }
+  elseif ($value == 'no') {
+    $label = t('You are opposed to this bill');
+  }
+
+  return $label;
+}
+
+/**
+ * "Private" function to detect the build settings for a vote widget
+ * instance.  These are normally passed as an argument to drupal_get_form(),
+ * but could also be detected from the URL.
+ *
+ * @param array $form_state A Drupal form state array.
+ *
+ * @return array empty array on failure,
+ *               with keys 'entity_id' and 'entity_type' on success.
+ */
+function _nys_bill_vote_widget_build_settings($form_state) {
+  // Try to detect the build settings in form_state.
+  $ret = $form_state['build_info']['args'][0] ?? [];
+
+  // If the required info is not found, try to detect it
+  // from the current request.
+  if (array_diff(['entity_id','entity_type'], array_keys($ret))) {
+    $node_id = (int) arg(1);
+    $node_type = db_query("SELECT type FROM {node} WHERE nid=:nid", [':nid' => $node_id])
+      ->fetchField();
+
+    // If good info is found, use it.
+    if ($node_id && $node_type) {
+      $ret = ['entity_id' => $node_id, 'entity_type' => $node_type];
+    }
+    // Otherwise, set up for a graceful failure.
+    else {
+      $ret = [];
+    }
+  }
+
+  return $ret;
+}
+
+/**
+ * Simple form to allow constituents to vote on bills.  This can be attached
+ * to any form as long as the arguments can identify the bill node receiving
+ * the vote.
+ *
+ * TODO: the drupal_get_form() argument and settings should just be a node
+ *
+ * @param $form
+ * @param $form_state
+ *
+ * @see _nys_bill_vote_widget_build_settings()
+ *
+ * @return array $form The render array for the form.
+ */
+function nys_bill_vote_vote_widget($form, &$form_state) {
+  // In this special case, just leave.
+  if (senator_viewing_constituent_dashboard()) {
+    return $form;
+  }
+
+  // detect the build settings.
+  $form_state['build_info']['args'][0] = _nys_bill_vote_widget_build_settings($form_state);
+
+  // Copy the build settings into $form_state['settings'].  Anything detected in
+  // build_info should take precedence.
+  $settings = $form_state['settings'] ?? [];
+  $form_state['settings'] = array_merge($settings, $form_state['build_info']['args'][0]);
+
+  // Now get the canonical information.
+  $node_type = $form_state['settings']['entity_type'];
+  $node_id = $form_state['settings']['entity_id'];
+
+  // Discover if a vote already exists.
+  $default_vote = nys_bill_vote_get_default($node_type, $node_id);
+  $default_value = nys_bill_vote_get_val($default_vote);
+
+  // Discover if a vote has been submitted.
+  if (!empty($form_state['values']['nys_bill_vote'])) {
+    $default_value = $form_state['values']['nys_bill_vote'];
+  }
+
+  // Add the distinct class.
+  $form['#attributes'] = [
+    'class' => ['nys-bill-vote-form',],
+  ];
+  $form['#id'] = 'nys-bill-vote-vote-widget-' . $node_id;
+
+  $label = nys_bill_vote_get_voted_label($default_value);
+
+  // The main form.
+  $form['nys_bill_vote_container'] = [
+    // Main form attributes.
+    '#type' => 'container',
+    '#attributes' => ['class' => ['nys-bill-vote']],
+    '#id' => 'edit-nys-bill-vote-container-' . $node_id,
+
+    // Primary label.
+    'nys_bill_vote_label' => [
+      '#markup' => '<p class="c-bill-polling--cta">' . $label . '</p>',
+    ],
+
+    // The "Aye" button.
+    'nys_bill_vote_yes' => [
+      '#type' => 'button',
+      '#attributes' => [
+        'class' => ['c-block--btn', 'c-half-btn', 'c-half-btn--left', 'nys-bill-vote-yes'],
+        'value' => 'yes',
+        'type' => 'submit',
+      ],
+      '#id' => 'edit-nys-bill-vote-yes-' . $node_id,
+      '#value' => 'Aye',
+      '#ajax' => [
+        'callback' => 'nys_bill_vote_ajax_callback',
+      ],
+    ],
+
+    // The "Nay" button.
+    'nys_bill_vote_no' => [
+      '#type' => 'button',
+      '#attributes' => [
+        'class' => ['c-block--btn', 'c-half-btn', 'c-half-btn--right', 'nys-bill-vote-no'],
+        'value' => 'no',
+        'type' => 'submit',
+      ],
+      '#id' => 'edit-nys-bill-vote-no-' . $node_id,
+      '#value' => 'Nay',
+      '#ajax' => [
+        'callback' => 'nys_bill_vote_ajax_callback',
+      ],
+    ],
+    '#attached' => array(
+      'js' => array(
+        drupal_get_path('module', 'nys_bill_vote') . '/nys_bill_vote.js',
+      ),
+    ),
+  ];
+
+  // Add honeypot protections.
+  // Removing all honeypot restrictions on the bill voting form TEMPORARILY.
+  // 2020-08-19 SBB.  The time restrictions put in place for the registration
+  // form are preventing users from voting.
+  /*
+  $options = ['honeypot'];
+  if (!((int)$GLOBALS['user']->uid)) {
+    $options[] = ['time_restriction'];
+  }
+  honeypot_add_form_protection($form, $form_state, $options);
+  */
+
+  return $form;
+}
+
+/**
+ * AJAX callback function for bill votes.
+ */
+function nys_bill_vote_ajax_callback($form, $form_state) {
+  nyslog();
+  $entity_type = $form_state['settings']['entity_type'];
+  $entity_id = $form_state['settings']['entity_id'];
+  $value = $form_state['triggering_element']['#attributes']['value'];
+
+  // We want to process the vote if the user is logged in.
+  if (user_is_logged_in()) {
+    nys_bill_vote_process_vote($entity_type, $entity_id, $value);
+    $form['nys_bill_vote']['#default_value'] = nys_bill_vote_get_val(nys_bill_vote_get_default($entity_type, $entity_id, TRUE));
+    $form['nys_bill_vote']['#options'] = nys_bill_vote_get_options();
+  }
+
+  // If the user is on a page that isn't the bill node, send them there.
+  $test_action = trim(parse_url($form['#action'])['path'], '/');
+  $node_match = drupal_get_normal_path($test_action);
+  $bill_path = 'node/' . $entity_id;
+
+  if ($node_match != $bill_path) {
+    $options = array();
+    ctools_include('ajax');
+    // Only attach the value if the user is anonymous, otherwise it is
+    // processed above.
+    if (!user_is_logged_in()) {
+      $options['query'] = array(
+        'intent' => nys_bill_vote_get_intent_from_vote($form_state['values']['op']),
+      );
+    }
+    $commands[] = ctools_ajax_command_redirect($bill_path, 0, $options);
+    return array('#type' => 'ajax', '#commands' => $commands);
+  }
+
+  return array(
+    '#type' => 'ajax',
+    '#commands' => array(
+      array(
+        'command' => 'nysBillVoteUpdate',
+        'vote_label' => nys_bill_vote_get_voted_label($value),
+        'vote_value' => $value,
+      ),
+    ),
+  );
+}
+
+function nys_bill_vote_vote_widget_submit($form, &$form_state) {
+  nyslog();
+  $entity_type = $form_state['settings']['entity_type'];
+  $entity_id = $form_state['settings']['entity_id'];
+  $value = $form_state['values']['nys_bill_vote'];
+  nys_bill_vote_process_vote($entity_type, $entity_id, $value);
+}
+
+/**
+ * Implements hook_views_post_execute.
+ *
+ * This will add bill vote forms to specific view items which rely on
+ * embedding bill nodes into their content, e.g., featured legislation
+ * sections of senator home pages.  The forms will be added to a new
+ * array property of the view ($view->vote_widgets).  The array will be
+ * indexed by the bill's node id.
+ *
+ * @param object $view The view object.
+ */
+function nys_bill_vote_views_post_execute(&$view) {
+  // Initialize.
+  $vote_forms = [];
+
+  // We are only acting on specific views - those which will include bill
+  // node entity references in the results.
+  switch ($view->name) {
+    case 'senator_legislation':
+    case 'featured_legislation':
+    case 'constituent_bills':
+      $node_type = 'bill';
+      break;
+    default:
+      $node_type = '';
+      break;
+  }
+
+  // If the node_type is set, this is a targeted view.
+  if ($node_type) {
+    // For each result ...
+    foreach ($view->result as $key => $val) {
+      // Reset the node ID, and try to find the new one.
+      $nid = '';
+      // Each view will have a different result structure.
+      switch ($view->name) {
+        case 'featured_legislation':
+        case 'senator_legislation':
+          $nid = $val->node_field_data_field_featured_bill_nid;
+          break;
+        case 'constituent_bills':
+          $nid = $val->nid;
+          break;
+      }
+
+      // If a node ID was found, generate the vote form and save it
+      // to the array.
+      if ($nid) {
+        if (!isset($vote_forms[$nid])) {
+          $bill_vote_form_settings = [
+            'entity_type' => $node_type,
+            'entity_id' => $nid,
+          ];
+          $vote_forms[$nid] = drupal_get_form('nys_bill_vote_vote_widget', $bill_vote_form_settings);
+        }
+      }
+    }
+  }
+
+  // If vote_forms has elements, then set the view property to enable access
+  // during rendering of the content.  Oddly, can't set this on the result
+  // row itself...it disappears by the time we get to the TPL.
+  if (count($vote_forms)) {
+    $view->vote_widgets = $vote_forms;
+  }
+}
+
+/**
+ * Implements hook_entity_view.
+ *
+ * Adds the vote_widget pseudo-field to bill entities being loaded through
+ * normal channels.  This enables availability of the form through a call
+ * to render($content['vote_widget']).
+ *
+ * Note that this does not handle embedded entity references in views!
+ * See nys_bill_vote_views_post_execute() for handling view references.
+ *
+ * @param $entity
+ * @param $type
+ * @param $view_mode
+ * @param $langcode
+ */
+function nys_bill_vote_entity_view($entity, $type, $view_mode, $langcode) {
+  $entity_type = $entity->type ?? '';
+
+  // If the entity is a bill, get the form and save it to content.
+  if ($entity_type == 'bill') {
+    $bill_vote_form_settings = [
+      'entity_type' => $entity->type,
+      'entity_id' => $entity->nid,
+    ];
+    $entity->content['vote_widget'] = drupal_get_form('nys_bill_vote_vote_widget', $bill_vote_form_settings);
+  }
+}
+
+/**
+ * Helper function to get 'intent' from a Vote text.
+ *
+ * @param string $vote
+ *   The user's vote. Can be 'Aye' or 'Nay'.
+ *
+ * @return string
+ *   The string intent that corresponds to the user's vote. Could be 'support'
+ *   or 'oppose'.
+ */
+function nys_bill_vote_get_intent_from_vote($vote) {
+  $intent = '';
+  if ($vote == 'Aye') {
+    $intent = 'support';
+  }
+  elseif ($vote == 'Nay') {
+    $intent = 'oppose';
+  }
+
+  return $intent;
+}

@@ -1,0 +1,184 @@
+/*-------------------------------------------------------
+/
+/ 	FEATURED STORY / VIDEO BLOCK
+/ 	Covers: Featured Story and Video
+/ 	Exists on : Homepage
+/
+/-------------------------------------------------------*/
+.c-featured_video {
+	overflow: hidden;
+	padding-bottom: 40px;
+
+	.c-featured_video--title {
+		font-family: "Proxima Nova Regular";
+		font-size: 14px;
+		font-weight: normal;
+		text-transform: uppercase;
+		border-top: 2px solid $grey09;
+		position: relative;
+		margin-bottom: 10px;
+		padding-top: 20px;
+	}
+
+	.c-featured_video--name {
+		font-family: "Adelle Light";
+		font-size: 28px;
+		margin: 0px;
+		line-height: 120%;
+		padding-top: 16px;
+		margin-bottom: 10px;
+		a {
+			color: $grey02;
+		}
+	}
+	.c-featured_video--date_issues {
+		margin: 0;
+		color: #888888;
+		font-family: "Proxima Nova Regular";
+		font-size: 12px;
+		line-height: 1em;
+		a{
+			color:$orange01;
+			font-weight: bold;
+			text-transform: uppercase;
+		}
+	}
+
+	.c-featured_video--youtube{
+		width: 100%;
+		text-align: right;	
+		font-family: "Proxima Nova Regular";
+		font-size: 14px;
+		line-height: 1em;
+		margin: 40px 0 0 0;
+		padding-bottom: 40px;
+		border-bottom: 2px solid $grey05;
+		a{
+			color:$orange01;
+			font-weight: bold;
+			text-transform: uppercase;
+		}
+	}
+}
+.c-featured-video-teaser{
+	.view-on-youtube{
+		color: $orange01;
+	}
+}
+@media #{$tablet} {
+	.c-featured_video {
+		.c-title {
+			font-family: "Proxima Nova Regular";
+			font-size: 14px;
+			font-weight: normal;
+			text-transform: uppercase;
+			border-top: 2px solid $grey09;
+			position: relative;
+			margin-bottom: 10px;
+			padding-top: 20px;
+		}
+	}
+	.c-featured-video-teaser{
+		.view-on-youtube{
+			float: right;
+			margin-top: -20px;
+			font-size: 14px;
+			color: $orange01;
+		}
+	}
+}
+
+/*-------------------------------------------------------
+/
+/ 	FEATURED STORY / VIDEO BLOCK
+/ 	Covers: Featured Story and Video
+/ 	Exists on : Homepage
+/
+/-------------------------------------------------------*/
+.c-featured-video-teaser {
+	padding-bottom: 40px;
+	width: 100%;
+	float: left;
+
+	.l-left {
+ 		width: 100%;
+	}
+
+	.c-story-name {
+		font-family: "Adelle Light";
+		font-size: 24px;
+		margin: 0px;
+		line-height: 120%;
+		padding-top: 16px;
+		max-width: 440px;
+		margin-bottom: 25px;
+		a {
+			color: $grey02;
+		}
+	}
+
+	.c-story-image {
+		width: 100%;
+
+	}
+
+	.c-story-link {
+		font-family: "Proxima Nova SemiBold";
+		font-size: 14px;
+		color:$orange01;
+	}
+
+	.c-featured_video--date_issues {
+		margin: 0;
+		color: #888888;
+		font-family: "Proxima Nova Regular";
+		font-size: 12px;
+		line-height: 1em;
+		a{
+			color:$orange01;
+			font-weight: bold;
+			text-transform: uppercase;
+		}
+	}
+
+	.c-featured_video--youtube{
+		width: 100%;
+		text-align: right;	
+		font-family: "Proxima Nova Regular";
+		font-size: 14px;
+		line-height: 1em;
+		margin: 40px 0 0 0;
+		padding-bottom: 20px;
+		float: left;
+		a{
+			color: $orange01;
+			font-weight: bold;
+			text-transform: uppercase;
+		}
+	}
+}
+
+@media #{$tablet} {
+	.c-featured-video-teaser {
+		.c-title {
+			font-family: "Proxima Nova Regular";
+			font-size: 14px;
+			font-weight: normal;
+			text-transform: uppercase;
+			border-top: 2px solid $grey09;
+			position: relative;
+			margin-bottom: 20px;
+			padding-top: 20px;
+		}
+
+		.l-left {
+	 		float: left;
+	 		width: 50%;
+		}
+
+		.l-right {
+			width: 340px;
+			float: right;
+		}
+	}
+}

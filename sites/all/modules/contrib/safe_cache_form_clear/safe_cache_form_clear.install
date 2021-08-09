@@ -1,0 +1,36 @@
+<?php
+/**
+ * @file
+ * Install hooks for the Safe cache_form Clear module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function safe_cache_form_clear_requirements($phase) {
+  if ($phase == 'install') {
+    return array();
+  }
+  cache_set(__FUNCTION__, __FUNCTION__, 'cache_form', CACHE_TEMPORARY);
+
+  $results = db_select('cache_form')
+    ->fields('cache_form')
+    ->condition('cid', __FUNCTION__)
+    ->execute();
+
+  $cids = $results->fetchCol('cid');
+
+  $t = get_t();
+
+  if (empty($cids)) {
+    return array(
+      'safe-cache-form-clear-cache-backend' => array(
+        'title' => $t('Incorrect cache backend in use.'),
+        'description' => $t('This module will only function correctly if DrupalDatabaseCache is used as the cache backend for cache_form.'),
+        'severity' => REQUIREMENT_ERROR,
+      ),
+    );
+  }
+
+  return array();
+}

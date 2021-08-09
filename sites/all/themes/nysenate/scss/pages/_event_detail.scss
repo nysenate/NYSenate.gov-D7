@@ -1,0 +1,91 @@
+.nys-event-title {
+	margin-bottom: 20px;
+	color: $grey02;
+	font-family: "Adelle Light";
+	font-size: 22px;
+	line-height: 1.2em;
+}
+.event_detail_page {
+	margin-top: 50px;
+
+	.nys-article-title {
+		margin-top: 0;
+	}
+	.c-event-block--featured-image,
+	.c-event-block--featured {
+		padding-top: 0;
+		padding-bottom: 20px;
+		border: none;
+
+		.c-event-image {
+			margin-bottom: 30px;
+		}
+		.c-event-date {
+			margin: 0 0 12px;
+		}
+	}
+	.c-event-address {
+		margin-top: 5px;
+	}
+	.c-event-time {
+		margin-top: 10px;
+	}
+	.nys-associated-topics {
+		display: block;
+		margin-bottom: 20px;
+	}
+}
+
+
+@media #{$tablet} {
+	.nys-event-title {
+		margin-bottom: 30px;
+		font-size: 48px;
+	}
+	.event_detail_page {
+
+		.nys-associated-topics {
+			margin-bottom: 30px;
+		}
+	}
+}
+
+//BUDGET PAGE EVENTS
+
+.view-majority-issues {
+	.c-event-time {
+		margin-top: 0;
+		.icon-before__calendar-month:before {
+			color: #2B6A90;
+			font-size: 18px;
+			padding-right: 10px;
+		}
+		.date-display-single {
+			font-weight: normal;
+			color: #222222;
+			font-family: "Proxima Nova Regular";
+		}
+	}
+	.icon-before__youtube:before {
+		color: #2B6A90;
+		font-size: 18px;
+		padding-right: 10px;
+	}
+}
+
+.page-node-done {
+	.webform-progressbar {
+		margin: 48px auto;
+	}
+	.links {
+		margin: 36px 0;
+		a {
+			background: $blue02;
+			color: #fff;
+			padding: 2% 3%;
+			font-size: 16px;
+			text-transform: uppercase;
+		}
+	}
+}
+

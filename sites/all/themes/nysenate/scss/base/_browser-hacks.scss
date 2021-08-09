@@ -1,0 +1,125 @@
+// Removes web upload button from CAPTCHA enabled forms requiring it's removal
+.has-nys-captcha .form-managed-file button.ajax-processed {
+  display: none !important; 
+  visibility: hidden !important; 
+}
+
+
+
+
+// Firefox hacks. FF is the new IE8
+
+@-moz-document url-prefix() {
+
+	table.privatemsg-list {
+		display: -moz-deck;
+	}
+}
+// hiding ie9 dropdown browser default
+.lte-ie9 {
+	.date-year,
+	.form-type-select,
+	.block-facetapi,
+	.filter-wrapper--bill,
+	.filter-wrapper--constituent,
+	.filter-wrapper--issue-order,
+	.filter-wrapper--msg {
+		position: relative;
+		overflow: hidden;
+		
+		&:before {
+			content: "";
+			display: block;
+			position: absolute;
+			right: 40px;
+			top: 1px;
+			height: 40px;
+			width: 40px;
+			background: #fff;
+			z-index: 4;
+			pointer-events: none;
+		}
+	}
+	.date-year {
+		&:before {
+			height: 45px;
+			right: 41px;
+			pointer-events: none;
+		}
+		&:after {
+			pointer-events: none;
+		}
+	}
+
+	.block-facetapi {
+		.form-type-select {
+			&:before {
+				right: 1px;
+				z-index: 0;
+			}
+		}
+	}
+	.nys-bill-vote {
+		.form-type-select {
+			&:before {
+				display: none;
+			}
+		}
+	}
+	.filter-wrapper--bill {
+		&:before {
+			top: 28px;
+			right: 20px;
+			height: 53px;
+			z-index: 0;
+		}
+	}
+	.filter-wrapper--constituent {
+		&:before {
+			top: -23px;
+			height: 53px;
+		}
+	}
+	.filter-wrapper--issue-order:before {
+		right: 15px;
+		top: 28px;
+		height: 53px;
+		z-index: 0;
+	}
+	.filter-wrapper--msg:before {
+		right: 15px;
+		height: 53px;
+		z-index: 0;
+	}
+}
+
+// CSS hack to allow for responsive Ustream IFRAME containers
+.c-block .media-ustream-video {
+ 	position:relative;
+  	padding-bottom: 56.25%;
+  	height:0;
+  	overflow:hidden;
+}
+
+@media screen and (max-width: 480px) { 
+  .c-block .media-ustream-video {
+    //padding-bottom:50%;
+  }
+}
+
+@media screen and (min-width: 481px) and (max-width: 770px) { 
+  .c-block .media-ustream-video {
+    //padding-bottom:55%;
+  }
+}
+
+
+.c-block .media-ustream-player iframe, .c-block .media-ustream-video iframe {
+  	position:absolute;
+  	top:0;
+  	left:0;
+ 	width:100%;
+ 	height:100%;
+}
+
+

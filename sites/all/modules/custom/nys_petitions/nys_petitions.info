@@ -1,0 +1,12 @@
+name = NYS Petitions
+description = Custom petition functionality for New York Senate.
+package = NY STATE SENATE
+core = 7.x
+dependencies[] = session_api
+dependencies[] = flag
+dependencies[] = honeypot
+dependencies[] = nys_senators
+dependencies[] = nys_registration
+dependencies[] = nys_accumulator
+version = 7.x-1.00
+configure = admin/structure/types/manage/petition

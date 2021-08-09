@@ -1,0 +1,14 @@
+name = Advanced Poll Converter
+description = "Allows selective conversion of standard Drupal Polls to the Advanced Poll format."
+dependencies[] = advpoll
+dependencies[] = votingapi
+
+core = 7.x
+package = "Voting"
+
+; Information added by Drupal.org packaging script on 2017-09-22
+version = "7.x-3.0"
+core = "7.x"
+project = "advpoll"
+datestamp = "1506054850"
+

@@ -1,0 +1,43 @@
+INSTALLING Pictures on NYS.
+
+The nys_picture module contains an install file which enables the other modules.
+Simply enable nys_picture and the other four modules will be enabled as well.
+drush en nys_picture
+
+
+Visit each image style edit page.
+This creates the directory structure in the styles directory.
+  Go to /admin/config/media/image-styles
+  Easiest way is to right click on each edit link and select Open Link in New Tab.
+  This loads the edit page in a new tab which creates the styles directory structure.
+  This forces there to be a uniform set of image style directories matching the breakpoint groups and picture mappings.
+  Some of these directories may never get a derived file placed in them. They could be clutter.
+
+
+
+Appendix
+-----------
+The nys_pictures feature contains 
+Breakpoints        Individual picture <source> elements with their own media queries.
+Breakpoint Groups  Groups of <source> elements (breakpoints) form a <picture> element.
+Image Styles       Each <source> element has a breakpoint to set its scaling and cropping.
+Picture Mappings   Associates Breakpoint groups with image styles. 
+
+The nys_picture module
+Is a series of drush commands to enhance webp images as needed.
+The enhanced-styles-update command might be run one or more times per day.
+Other reporting, auditing and file maintenance commands are included.
+See associated readme file for detailed info.
+
+The breakpoints contrib module.
+Standard D7 breakpoint module is used.
+
+The picture module
+A patched version of the picture.module file adds the media type
+to <source> elements with _webp in their style names.
+
+Imagemagick
+Imagemagick is used by the nys_picture to convert images to the enhanced webp format.
+Image magic is enabled but is NOT set as the default graphics toolkit for the site.
+The remains set to the default gd toolkit as always.
+

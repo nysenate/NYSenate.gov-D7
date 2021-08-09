@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * @file
+ * Installation hooks for the Image Allow Insecure Derivatives module.
+ */
+
+/**
+ * Implements hook_requirements().
+ *
+ * Warn if Image Allow Insecure Derivatives is enabled.
+ *
+ * @param $phase
+ *   The phase in which requirements are checked.
+ */
+function image_allow_insecure_derivatives_requirements($phase) {
+  $requirements = array();
+
+  // Report the current status of Image Allow Insecure Derivatives.
+  if ($phase == 'runtime') {
+    $enabled = variable_get('image_allow_insecure_derivatives', FALSE);
+    $status = array(
+      'title' => t('Image Allow Insecure Derivatives'),
+      'value' => l($enabled ? t('Enabled') : t('Disabled'), 'admin/config/media/image-toolkit'),
+    );
+    if ($enabled) {
+      $status['description'] = t('Allowing insecure image derivates can cause security instabilities. Only use this if you are experiencing image display issues, and understand the security risks.');
+      $status['severity'] = REQUIREMENT_WARNING;
+    }
+    else {
+      $status['severity'] = REQUIREMENT_OK;
+    }
+    $requirements['image_allow_insecure_derivatives'] = $status;
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_install().
+ *
+ * Installing the module will set the value to TRUE.
+ */
+function image_allow_insecure_derivatives_install() {
+  variable_set('image_allow_insecure_derivatives', TRUE);
+}
+
+/**
+ * Implements hook_uninstall().
+ *
+ * Uninstalling the module will remove the variable, making it return to a
+ * default value of FALSE.
+ */
+function image_allow_insecure_derivatives_uninstall() {
+  variable_del('image_allow_insecure_derivatives');
+}

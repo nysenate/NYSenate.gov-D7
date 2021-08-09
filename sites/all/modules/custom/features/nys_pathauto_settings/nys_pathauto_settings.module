@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the NYS Pathauto Settings feature.
+ */
+
+include_once 'nys_pathauto_settings.features.inc';

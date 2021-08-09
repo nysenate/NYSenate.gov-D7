@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the nys_users feature.
+ */
+
+include_once 'nys_users.features.inc';

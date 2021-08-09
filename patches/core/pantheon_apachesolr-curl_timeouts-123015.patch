@@ -1,0 +1,15 @@
+diff --git a/modules/pantheon/pantheon_apachesolr/pantheon_apachesolr.module b/modules/pantheon/pantheon_apachesolr/pantheon_apachesolr.module
+index b6b06db..28f8d6b 100644
+--- a/modules/pantheon/pantheon_apachesolr/pantheon_apachesolr.module
++++ b/modules/pantheon/pantheon_apachesolr/pantheon_apachesolr.module
+@@ -139,8 +139,8 @@ function pantheon_apachesolr_curlopts() {
+   return array(
+     CURLOPT_HEADER => 1,
+     CURLOPT_RETURNTRANSFER => 1,
+-    CURLOPT_TIMEOUT_MS => 5000,
+-    CURLOPT_CONNECTTIMEOUT_MS => 5000,
++    CURLOPT_TIMEOUT_MS => 15000,
++    CURLOPT_CONNECTTIMEOUT_MS => 15000,
+     CURLOPT_HTTPHEADER => array('Content-type:text/xml;', 'Expect:'),
+   );
+ }

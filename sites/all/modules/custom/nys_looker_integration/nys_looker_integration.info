@@ -1,0 +1,10 @@
+name = NYS Looker Integration
+package = NY STATE SENATE
+description = "Allows for embedding Looker assets and managing scheduled plans"
+core = 7.x
+
+dependencies[] = field
+dependencies[] = eck
+
+files[] = inc/nys_looker_api.class.php
+files[] = inc/nys_looker_embed.class.php

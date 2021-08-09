@@ -1,0 +1,7 @@
+
+// These lines are copied to settings.php by the set up
+// script for automated tests.
+$conf['cache_backends'][] = 'sites/all/modules/d8cache/d8cache-ac.cache.inc';
+$conf['cache_class_cache_views_data'] = 'D8CacheAttachmentsCollector';
+$conf['cache_class_cache_block'] = 'D8CacheAttachmentsCollector';
+$conf['cache_class_cache_page'] = 'D8Cache';

@@ -1,0 +1,13 @@
+name = Apache Solr autocomplete
+description = Enables autocomplete on Apache Solr search boxes
+dependencies[] = apachesolr
+dependencies[] = apachesolr_search
+package = Search Toolkit
+core = "7.x"
+
+; Information added by Drupal.org packaging script on 2014-06-24
+version = "7.x-1.4"
+core = "7.x"
+project = "apachesolr_autocomplete"
+datestamp = "1403623729"
+

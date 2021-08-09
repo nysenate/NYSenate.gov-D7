@@ -1,0 +1,208 @@
+<?php
+/**
+ * @file
+ * Google Analytics Event Tracking Module.
+ *
+ * Provides an extention to the google analytics module. Creates an
+ * interfacce for reusable event tracking through the google analytics
+ * event tracking system.
+ */
+
+/**
+ * Implements hook_page_alter().
+ */
+function google_analytics_et_page_alter(&$page) {
+  global $user;
+
+  $id = variable_get('googleanalytics_account', '');
+  $cache_on = variable_get('google_analytics_et_cache_on', FALSE);
+
+  // Get page status code for visibility filtering.
+  $status = drupal_get_http_header('Status');
+  $trackable_status_codes = array(
+    '403 Forbidden',
+    '404 Not Found',
+  );
+
+  $settings = module_invoke_all('google_analytics_et_settings_info');
+
+  // Get all selectors defined by google_analytics_et_api hook.
+  $selectors = &drupal_static(__FUNCTION__);
+  if(!isset($selectors)) {
+    if($cache = cache_get('google_analytics_et_selectors_cache')) {
+      $selectors = $cache->data;
+    }
+    else {
+      $selectors = module_invoke_all('google_analytics_et_api');
+
+      // If the override selectors toggle is TRUE then only load the selectors
+      // from the variable table.
+      $override_hooked_selectors = variable_get('google_analytics_et_selectors_override', FALSE);
+      if ($override_hooked_selectors) {
+        $selectors = variable_get('google_analytics_et_selectors', '');
+      }
+
+      // Sanitize event tracking input to limit the threat of xss.
+      $selectors = _google_analytics_et_sanitize_event_trackers($selectors);
+
+      if($cache_on) {
+        cache_set('google_analytics_et_selectors_cache', $selectors, 'cache');
+      }
+    }
+  }
+
+  // Token replacements. @TODO this should be in an alter hook
+  if (!empty($selectors)) {
+    foreach ($selectors as $out_key => $selector) {
+      if (!empty($selector) && $out_key != 'debug') {
+        foreach($selector as $key => $value) {
+          switch ($key) {
+            case 'label':
+            case 'category':
+            case 'action':
+              $selectors[$out_key][$key] = token_replace($value);
+              break;
+          }
+        }
+      }
+    }
+  }
+  $js = array(
+    'googleAnalyticsETSettings' => array(
+      'selectors' => $selectors,
+      'settings' => $settings,
+    ),
+  );
+  if (!empty($id) && (_googleanalytics_visibility_pages() || in_array($status, $trackable_status_codes)) && _googleanalytics_visibility_user($user)) {
+    // Get the page scope setting from googleanalytics:
+    $scope = variable_get('googleanalytics_js_scope', 'header');
+    drupal_add_js($js, 'setting');
+    drupal_add_js(drupal_get_path('module', 'google_analytics_et') . '/js/google_analytics_et.js', array('scope' => $scope));
+  }
+}
+
+/**
+ * Add a single selector to the list of selectors.
+ */
+function google_analytics_et_add_event_tracker($selector_array) {
+  // Get whole list of event trackers.
+  $event_trackers = google_analytics_et_get_event_trackers();
+
+  // Append this event tracker to the end of the list.
+  $event_trackers[] = $selector_array;
+
+  // Save list of event trackers.
+  variable_set('google_analytics_et_selectors', $event_trackers);
+
+  // Clear cache so the changes will be rendered.
+  cache_clear_all('google_analytics_et', 'cache', TRUE);
+}
+
+/**
+ * Remove a single selector from the list of events being tracked.
+ */
+function google_analytics_et_remove_event_tracker($selector) {
+  // Get whole list of event trackers.
+  $event_trackers = google_analytics_et_get_event_trackers();
+  $new_event_trackers = array();
+
+  // Go through all events and copy all that do not match into the new array.
+  if (is_array($event_trackers)) {
+    foreach ($event_trackers as $key => $value) {
+      if ($event_trackers[$key]['selector'] != $selector) {
+        $new_event_trackers[] = $event_trackers[$key];
+      }
+
+    }
+  }
+
+  // Save list of event trackers.
+  variable_set('google_analytics_et_selectors', $new_event_trackers);
+}
+
+/**
+ * Override the hooked event tracking. Do not load hooks.
+ *
+ * This function can be used to toggle the override status (by not passing
+ * a value) or this function can be used to set the override status outright
+ * by passing TRUE or FALSE.
+ *
+ * @param bool $status
+ *   This can be left to the default value of NULL if one just wishes to
+ *   toggle the override status. If a valid TRUE or FALSE value is passed then
+ *   the override status is changed to that.
+ */
+function google_analytics_et_override_event_tracking($status = NULL) {
+  if ($status == NULL) {
+    $new_status = (variable_get('google_analytics_et_selectors_override', NULL)) ? FALSE : TRUE;
+    variable_set('google_analytics_et_selectors_override', $new_status);
+  }
+  elseif (_google_analytics_et_override_event_tracking_validate($status)) {
+    variable_set('google_analytics_et_selectors_override', $status);
+  }
+}
+
+/**
+ * Validates the input of the override event input function
+ */
+function _google_analytics_et_override_event_tracking_validate($status) {
+  if ($status == TRUE || $status == FALSE) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Sanitizes event tracking data that is being put into javascript.
+ */
+function _google_analytics_et_sanitize_event_trackers($selectors) {
+  $sanitized_selectors = array();
+  if (is_array($selectors)) {
+    foreach ($selectors as $key => $selector) {
+      if($key != 'debug') {
+        foreach ($selector as $s) {
+          if (!is_array($s)) {
+            $s = filter_xss($s);
+          }
+        }
+      }
+      $sanitized_selectors[$key] = $selector;
+    }
+  }
+  return $sanitized_selectors;
+}
+
+/**
+ * Get the event tracking override status.
+ */
+function google_analytics_et_get_event_trackering_override_status() {
+  $status = variable_get('google_analytics_et_selectors_override', FALSE);
+
+  return $status;
+}
+
+/**
+ * Get the event trackers.
+ */
+function google_analytics_et_get_event_trackers() {
+  $et = array();
+
+  $et = variable_get('google_analytics_et_selectors', $et);
+
+  return $et;
+}
+
+/**
+ * Loads the Event Tracking Selectors, Categories, Action, Label, Value, etc.
+ *
+ * Allows other modules to implement custom event tracking though the
+ * Google Analytics Event Tracking API module.
+ *
+ * @ingroup google_analytics_et_api_hooks
+ */
+function google_analytics_et_api() {
+  // Loads the user created selectors from the variable table.
+  return variable_get('google_analytics_et_selectors', array());
+}

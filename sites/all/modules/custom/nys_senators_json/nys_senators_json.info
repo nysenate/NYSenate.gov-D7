@@ -1,0 +1,4 @@
+name = NYSS Senators JSON
+description = JSON Metadata Library
+core = 7.x
+package = NY STATE SENATE

@@ -1,0 +1,53 @@
+<h2>Output style options</h2>
+
+<p><img src="path:output-style-options.png" alt="Output style options form" title="" /></p>
+
+<p>All of these options are <strong>optional</strong>. When an option allows a HTML element and a class attribute, omitting the HTML element will cause the class attribute to be ignored and that content will be output without any HTML wrapping it.</p>
+
+<p><strong>Note</strong> Always input HTML elements without the <code>&lt;</code> and <code>&gt;</code>. Your valid input will be inserted between the angle brackets in the template.</p>
+
+<p><strong>Note</strong> Any class attributes you input will be concatenated and rendered as the class attribute's value in the template. For example, your valid input <code>row node blog</code> as the class attribute for a <code>div</code> element will be rendered as <code>&lt;div class="row node blog"&gt;</code>.</p>
+
+<h3>Grouping title</h3>
+
+<p>For Views where the results are grouped, the HTML <strong>element</strong> and <strong>class attribute</strong> can be specified for the element that wraps the title.</p>
+
+<h3>List</h3>
+
+<p>With this option, Semantic Views can behave like the Views 2 <strong>HTML List</strong> display plugin. HTML unordered, ordered and definition lists can be created in the by choosing a list type. It's important to remember that HTML lists have additional constraints on their child elements. <code>&lt;ul&gt;</code> and <code>&lt;ol&gt;</code> must have <code>&lt;li&gt;</code> children and <code>&lt;dl&gt;</code> must have <code>&lt;dt&gt;</code> and <code>&lt;dd&gt;</code> children.</p>
+
+<h3>Row</h3>
+
+<p>Rows are the results of the executed view. The number of rows in a view display is determined by the pager (or if the number of results is less than the pager limit, the number of results).</p>
+
+<h4>HTML element</h4>
+
+<p>The HTML element for the row is usually <code>&lt;div&gt;</code>.</p>
+
+<h4>Class attribute</h4>
+
+<p>This is the basic class attribute for each row. If it includes a # the row number will be substituted. Multiple class attributes can be specified: <code>row</code> or <code>row row-#</code>.</p>
+
+<h4>First and last classes</h4>
+
+<p>By default, Views row style adds a <code>first</code> class attribute to the first result in the pager and a <code>last</code> class attribute to the last result in the pager.</p>
+
+<h5>First/Last every n<sup>th</sup></h5>
+
+<p>When this is set to <code>0</code>, the <em>first</em> and <em>last</em> class attributes are added first and last results in the pager. If you specify a number greater than 1, <em>first</em> and <em>last</em> class attributes are added at that interval within the pager result set. This can be used to improve upon the <strong>Grid</strong> display plugin that comes with Views 2.</p>
+
+<p>For example, if you have a grid layout with 5 column units with a gutter maintained by right margins on all units except the last one, setting this option to <code>5</code> will add a <code>last</code> class to every 5th result row (not to be confused with rows in your grid layout). <code>first</code> class attributes are added to the first result row in the pager and to each result that follows a <code>last</code> result.</p>
+
+<p>If the following two options are left empty, the <code>first/last every nth</code> option has no effect.</p>
+
+<h5>FIRST class attribute</h5>
+
+<p>This is the actual class attribute that is inserted. It is optional and defaults to <code>first</code>.</p>
+
+<h5>LAST class attribute</h5>
+
+<p>This is the actual class attribute that is inserted. It is optional and defaults to <code>last</code>.</p>
+
+<h4>Striping class attributes</h4>
+
+<p>When this is set, every row will have <em>one</em> of the class attributes specified here. The default is <code>odd even</code> so that <em>n</em> row has a class attribute of <code>odd</code> and <em>n + 1</em> row has a class attribute of <code>even</code>. You are not limited to only two striping class attributes. It's perfectly valid to use <code>north south east west</code> to stripe your rows 4 different ways or to leave this option empty to disable striping.</p>

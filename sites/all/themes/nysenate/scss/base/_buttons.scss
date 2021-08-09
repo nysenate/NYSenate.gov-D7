@@ -1,0 +1,580 @@
+/*-------------------------------------
+/	CUSTOM BUTTON
+/ Solid bg - color set on element 
+/		varies based on Senator theme
+/ 	span as child with text
+/ ** assumes absolutely positoned at 
+/		at the bottom of its parent
+/-------------------------------------*/
+.webform-submit{
+	text-align: left;
+	text-decoration: none;
+	text-transform: uppercase;
+	color: #fff;
+	font-family: "Proxima Nova SemiBold";
+	letter-spacing: 0.2em;	
+	margin-bottom: 60px;
+	@extend .lgt-bg;
+	@include transition(background-color, 0.25s, ease);
+	
+	&:before {
+		display: inline-block;
+		vertical-align: middle;
+		text-align: center;
+		height: 100%;
+		margin-right: 0.1em;
+		font-size: 32px;
+	}
+
+	span {
+		vertical-align: middle;
+		width: 80%;
+		line-height: 1.5em;
+
+		a{
+			color: #fff;
+			vertical-align: middle;
+			display: inline-block;
+		}
+	}
+
+	&:hover {
+		color: #fff;
+		@extend .drk-bg;
+	}
+}
+.c-block--btn {
+	position: absolute; 
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	text-decoration: none;
+	text-transform: uppercase;
+	color: #fff;
+	font-family: "Proxima Nova SemiBold";
+	letter-spacing: 0.2em;
+
+	font-size: 12px;
+	line-height: 60px;
+	height: 60px;
+
+	&:before {
+		display: inline-block;
+		vertical-align: middle;
+		text-align: center;
+		height: 100%;
+		margin-right: 0.1em;
+		font-size: 32px;
+	}
+
+	span {
+		display: inline-block;
+		vertical-align: middle;
+		width: 80%;
+		line-height: 1.5em;
+
+		a{
+			color: #fff;
+			vertical-align: middle;
+			display: inline-block;
+		}
+	}
+
+	&:hover {
+		color: #fff;
+	}
+}
+
+/*-------------------------------------
+/	CTA BUTTON
+/-------------------------------------*/
+.c-btn--cta {
+	display: inline-block;
+	position: relative;
+	padding: 0 20px;
+	height: 60px;
+	min-width: 215px;
+	@extend .lgt-bg;
+
+	color: #fff;
+	text-align: center;
+	text-transform: uppercase;
+	font-family: "Proxima Nova SemiBold";
+	font-size: 12px;
+	letter-spacing: 0.2em;
+	line-height: 60px;
+
+	a {
+		color: #fff;
+	}
+}
+// different icons
+.c-btn--cta__sign {
+	min-width: 250px;
+	padding: 0;
+	text-align: left;
+
+	&:before {
+		display: none;
+	}
+
+	.flag-wrapper {
+		display: block;
+		position: relative;
+		height: 100%;
+		width: 100%;
+
+		.unflag-disabled,
+		.flag-link-toggle {
+			position: relative;
+			display: block;
+			height: 100%;
+			width: 100%;
+			padding: 0 20px;
+
+			@extend .icon-before__petition;
+
+			&:before {
+				margin-right: 10px;
+				font-size: 28px;
+			}
+		}
+
+		.unflag-disabled {
+			padding: 0 15px;
+			&:before {
+				display: none;
+			}
+		}
+
+		.flag-throbber {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			margin: auto;
+			height: 20px;
+			width: 20px;
+			pointer-events: none;
+		}
+	}
+
+	.flag-success-message {
+		position: absolute;
+		top: 60px;
+		left: 0;
+		width: 280px;
+		padding: 10px 20px;
+		background: $grey06;
+		white-space: nowrap;
+
+	  	font-size: 12px;
+  		line-height: 12px;
+  		font-family: "Proxima Nova SemiBold";
+		color: $grey03;
+		text-transform: none;
+
+		@extend .icon-before__circle-check;
+
+		&:before {
+			display: inline-block;
+			vertical-align: middle;
+			font-size: 15px;
+			@extend .med-text;
+		}
+		.message-text {
+			display: inline-block;
+			vertical-align: middle;
+			
+			span {
+				display: block;
+
+				& + span {
+					margin-top: 5px;
+					white-space: normal;
+				}
+			}	
+		}
+	}
+}
+// cta button sometimes has a caption
+.c-btn--cta-caption {
+	display: block;
+	margin: 20px 0;
+	color: $grey03;
+	font-family: "Proxima Nova Regular";
+	font-size: 12px;
+}
+
+@media #{$tablet} {
+	.c-block--btn {
+
+		.flag-success-message {
+			top: 80px;
+			left: auto;
+			right: 0;
+			padding: 20px 30px;
+
+			font-size: 14px;
+			line-height: 14px;
+
+			&:before {
+				font-size: 24px;
+			}
+		}	
+	}
+	.c-btn--cta {
+		padding: 0 30px;
+		min-height: 55px;
+		min-width: 240px;
+
+		font-size: 14px;
+	}
+	.c-btn--cta__sign {
+		padding: 0;
+
+		.flag-wrapper {
+
+			.unflag-disabled,
+			.flag-link-toggle {
+				padding: 0 30px;
+
+				&:before {
+					font-size: 32px;
+				}
+			}
+		}
+
+		.flag-success-message {
+			width: 380px;
+			padding: 20px 30px;
+
+			font-size: 14px;
+			line-height: 14px;
+
+			&:before {
+				font-size: 24px;
+			}
+
+			&.flag-flagged-message {
+				width: 420px;
+			}
+		}
+	}
+}
+
+/*-------------------------------------
+/	HALF BUTTON
+/-------------------------------------*/
+.c-half-btn {
+	width: 49.5%;
+}
+.c-half-btn--left {
+	left: 0;
+}
+.c-half-btn--right {
+	left: auto;
+	right: 0;
+}
+/*--------------------------------------
+/	REVEAL BUTTON
+/	used to hide and show content
+/	full-width, variable text and 
+/	open / close arrow
+/--------------------------------------*/
+.nys-btn-more {
+	clear: both;
+	display: block;
+	position: relative;
+	width: 100%;
+	min-height: 50px;
+	margin-bottom: 20px;
+	padding: 0;
+	background: $grey06;
+
+	text-align: center;
+	text-transform: uppercase;
+	color: $blue01;
+	font-family: "Proxima Nova SemiBold";
+	font-size: 14px;
+	letter-spacing: 0.1em;
+	line-height: 50px;
+	@extend .icon-after__see-more;
+
+	&.open {
+		@extend .icon-after__see-less;
+	}
+
+	&:after {
+		margin-top: -0.1em;
+		font-size: 1.5em;
+	}
+}
+
+.nys-btn-more--bg {
+	background: $blue01;
+	color: #fff;
+}
+
+/*-------------------------------------
+/ TOGGLE BUTTON
+/-------------------------------------*/
+.c-block--btn-toggle {
+	z-index: 5;
+	top: 0;
+	right: 0;
+	left: auto;
+	height: 42px;
+	width: 42px;
+	@extend .icon-replace__minus;
+
+	&:after {
+		width: 100%;
+		height: 100%;
+		padding-left: 0.1em;
+		text-align: center;
+		line-height: 42px;
+		font-size: 26px;
+	}
+}
+
+.c-block__collapsed {
+	.c-block--btn-toggle {
+		position: absolute;
+		height: 42px;
+		width: 42px;
+		@extend .icon-replace__plus;
+
+		&:after {
+			font-size: 26px;
+			line-height: 42px;
+		}
+	}
+}
+/*-------------------------------------
+/ SMALL BUTTON - usually social btn (could rename)
+/-------------------------------------*/
+
+.c-btn--small,
+.share-icon {
+	position: relative;
+	display: inline-block;
+	height: 40px;
+	width: 60px;
+	margin-right: 7%;
+	display: block;
+	float: left;
+	outline: none;
+	@extend .lgt-bg;
+
+	&:after {
+		line-height: 40px;
+		width: 100%;
+		text-align: center;
+		font-size: 30px;
+	}
+
+	&:hover, 
+	&:active, 
+	&:focus {
+		outline: 0;
+	}
+}
+.c-btn--facebook,
+.share-icon-facebook {
+	@extend .icon-replace__facebook;
+	text-indent: -999em;
+	
+	.box {
+		display: none;
+	}
+}
+
+.c-btn--facebook-login {
+	@extend .icon-replace__facebook;
+	text-indent: -999em;
+	
+	.box {
+		display: none;
+	}
+}
+
+.c-btn--twitter,
+.share-icon-twitter {
+	@extend .icon-replace__twitter;
+	text-indent: -999em;
+}
+.c-btn--email,
+.share-icon-email {
+	@extend .icon-replace__mail;
+}
+
+
+#social-links {
+	width: 100%;
+	clear: both;
+	height: 50px;
+	margin-bottom: 40px;
+	text-transform: uppercase;
+	
+	a {
+		&:before,
+		&:after {
+			color: white;
+		}
+		&:before {
+			font-family: "Proxima Nova SemiBold";
+			font-size: 13px;
+			letter-spacing: 2px;
+		}
+	}
+}
+
+@media #{$tablet} {
+	.c-block--btn, 
+	.c-bill-polling--choices-choice {
+		height: 80px;
+		font-size: 15px;
+		line-height: 80px;
+	}
+	// view more button
+	.nys-btn-more {
+		font-size: 16px;
+	}
+
+	// toggle button
+	.c-block--btn-toggle {
+		height: 42px;
+		width: 42px;
+		padding-left: 0.2em;
+	}
+	// sml button
+	.c-btn--small,
+	.share-icon {
+		height: 40px;
+		width: 160px;
+		padding-left: 20px;
+		font-size: 12px;
+		text-indent: 0;
+		line-height: 40px;
+
+		&:after {
+			position: absolute;
+			right: 10px;
+			left: auto;
+			width: auto;
+		}
+
+		&.c-btn--facebook {
+			&:after {
+				right: 0;
+			}
+		}
+	}
+	.c-btn--facebook,
+	.share-icon-facebook {
+		@extend .icon-replace__facebook;
+		text-indent: -999em;
+		
+		.box {
+			display: none;
+		}
+
+		&:before {
+			content: "Facebook";
+			position: absolute;
+			left: 20px;
+			top: 0;
+			font-family: "Proxima Nova SemiBold";
+			font-size: 12px;
+			line-height: 40px;
+			text-indent: 0;
+		}
+	}
+
+	.c-btn--facebook-login {
+		@extend .icon-replace__facebook;
+		text-indent: -999em;
+		width: 222px;
+		margin: 20px 0;
+		
+		.box {
+			display: none;
+		}
+
+		&:before {
+			content: "Facebook Connect";
+			position: absolute;
+			left: 20px;
+			top: 0;
+			font-family: "Proxima Nova SemiBold";
+			font-size: 12px;
+			line-height: 40px;
+			text-indent: 0;
+		}
+	}
+
+	.c-btn--twitter,
+	.share-icon-twitter {
+		@extend .icon-after__twitter;
+		text-indent: -999em;
+
+		&:before {
+			content: "Twitter";
+			position: absolute;
+			left: 20px;
+			top: 0;
+			font-family: "Proxima Nova SemiBold";
+			font-size: 12px;
+			line-height: 40px;
+			text-indent: 0;
+		}
+	}
+	.c-btn--email,
+	.share-icon-email {
+		@extend .icon-after__mail;
+		&:before {
+			content: "Email";
+			position: absolute;
+			left: 20px;
+			top: 0;
+			font-family: "Proxima Nova SemiBold";
+			font-size: 12px;
+			line-height: 40px;
+			text-indent: 0;
+		}
+	}
+}
+
+/* AddThisEvent theme CSS
+---------------------------------------------------------------------- */
+
+/* General */
+.addthisevent 							{visibility:hidden; float:left;}
+.addthisevent span 						{display:none!important;}
+.addthisevent .data 					{display:none!important;}
+
+/* The button */
+.addthisevent-drop {
+	display:inline-block;
+	position:relative;
+	z-index:999998;
+	font-family:Roboto,Optima,Segoe,"Segoe UI",Candara,Calibri,Arial,sans-serif;font-weight:300;color:#333;text-decoration:none;font-size:16px;cursor:pointer;}
+.addthisevent-drop:hover 				{color:#555;font-size:16px;text-decoration:underline;}
+
+/* The drop down */
+.addthisevent_dropdown 					{width:200px;position:absolute;z-index:99999;padding:6px 0px 0px 0px;background:#fff;text-align:left;display:none;margin-top:4px;margin-left:-1px;border-top:1px solid #c8c8c8;border-right:1px solid #bebebe;border-bottom:1px solid #a8a8a8;border-left:1px solid #bebebe;-moz-border-radius:2px;-webkit-border-radius:2px;-webkit-box-shadow:1px 3px 6px rgba(0,0,0,0.15);-moz-box-shadow:1px 3px 6px rgba(0,0,0,0.15);box-shadow:1px 3px 6px rgba(0,0,0,0.15);}
+.addthisevent_dropdown span 			{display:block;line-height:110%;background:#fff;text-decoration:none;font-size:14px;color:#333;padding:8px 10px 9px 15px;}
+.addthisevent_dropdown span:hover 		{background:#f4f4f4;color:#000;text-decoration:none;font-size:14px;}
+.addthisevent_dropdown .copyx 			{height:21px;display:block;position:relative;cursor:default;}
+.addthisevent_dropdown .brx 			{height:1px;overflow:hidden;background:#e0e0e0;position:absolute;z-index:100;left:10px;right:10px;top:9px;}
+.addthisevent_dropdown .frs 			{position:absolute;top:5px;cursor:pointer;right:10px;padding-left:10px;font-style:normal;font-weight:normal;text-align:right;z-index:101;line-height:110%;background:#fff;text-decoration:none;font-size:9px;color:#cacaca;}
+.addthisevent_dropdown .frs:hover 		{color:#6d84b4;}
+
+.addthisevent-drop {
+	margin-top: 20px;
+}

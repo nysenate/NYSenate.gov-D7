@@ -1,0 +1,15 @@
+<?php
+
+
+function nys_bill_vote_field_schema($field) {
+  $columns = array(
+    'value' => array(
+      'type' => 'int', 
+      'not null' => FALSE,
+    ),
+  );
+
+  return array(
+  'columns' => $columns,
+  );
+}

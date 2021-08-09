@@ -1,0 +1,15 @@
+name = Nodequeue Service
+description = Provides a nodequeue service.
+package = Nodequeue
+core = 7.x
+
+dependencies[] = services
+dependencies[] = nodequeue
+
+files[] = nodequeue_service.inc
+
+; Information added by Drupal.org packaging script on 2020-07-31
+version = "7.x-2.3"
+core = "7.x"
+project = "nodequeue"
+datestamp = "1596221684"

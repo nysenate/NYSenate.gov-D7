@@ -1,0 +1,6 @@
+name = NYS SAGE
+description = SAGE API Integration for New York Senate.
+package = NY STATE SENATE
+core = 7.x
+version = 7.x-1.00
+configure = admin/config/services/sage

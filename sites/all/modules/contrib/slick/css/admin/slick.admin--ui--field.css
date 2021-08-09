@@ -1,0 +1,129 @@
+/**
+ * @file
+ * Overrides over-specified tough Seven.
+ */
+
+/* Fix for shiny */
+#field-display-overview .field-formatter-settings-edit-form .form--slick  .form-item {
+  margin: 0;
+}
+
+.form--field.form--slick {
+  background: #fafafa;
+  border: 1px solid #9bacc3;
+  *zoom: 1;
+  box-shadow: 0 0 0 4px #ddf5fb;
+  margin: 30px 0;
+}
+
+.form--field.form--slick::after,
+.form--slick .form-checkboxes::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.form--field.form--slick .form-item {
+  border-bottom: 1px solid #e7e7e7;
+  border-left: 1px solid #e7e7e7;
+  border-top: 0;
+  margin: 0;
+  padding: 20px 10px 12px;
+}
+
+.form--field.form--slick .form-type-radio,
+.form--field.form--slick .form-type-textarea {
+  border: 0;
+}
+
+.form--field.form--slick .form-type-checkboxes {
+  border-bottom: 4px solid #e7e7e7;
+  clear: both;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  padding-top: 0;
+  width: 100%;
+  position: relative;
+}
+
+.form--field.form--slick .form-type-checkboxes > label {
+  background: #e7e7e7;
+  display: block;
+  font-weight: 600;
+  line-height: 42px;
+  margin-top: -1px;
+  min-height: 42px;
+  padding-top: 20px;
+  width: 100%;
+}
+
+#field-display-overview tbody tr.field-formatter-settings-editing {
+  background: #f4fcfe;
+}
+
+#edit-fields-field-media-settings-edit-form-actions {
+  clear: both;
+  float: left;
+  width: 100%;
+}
+
+#edit-style-options-slick.form--slick .fieldset-description {
+  padding: 5px 15px;
+}
+
+#edit-style-options-slick .form-item-style-options-slick-slide-field-wrapper {
+  z-index: 4;
+}
+
+@media (min-width: 64em) {
+  .form--field.form--slick .form-item {
+    display: block;
+    float: left;
+    margin: 0;
+    padding: 20px 0 12px;
+    width: 49.8888%; /* Fix for UNIX rounding margin */
+  }
+
+  .form--field.form--slick .form-checkboxes,
+  .form--field.form--slick .form-type-checkboxes {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  .form--field.form--slick .form-type-textarea {
+    display: block;
+    padding: 12px;
+  }
+
+  .form--field.form--slick .form-item label {
+    width: 180px;
+  }
+
+  .form--field.form--slick .form-type-checkboxes > label {
+    width: 100%;
+  }
+
+  .form--compact.form--slick .form-type-radios {
+    padding-bottom: 0;
+    padding-top: 10px;
+  }
+
+  .form--field.form--slick .form-radios .form-type-radio {
+    min-height: 22px;
+    padding: 0;
+  }
+
+  .form--field.form--slick .form-radios .form-type-radio input {
+    float: none;
+    max-width: 100%;
+  }
+
+  .form--field.form--slick .form-radios .form-type-radio label.option {
+    float: none;
+    min-height: 22px;
+    padding-left: 32px !important;
+    text-align: left;
+    width: auto;
+  }
+}

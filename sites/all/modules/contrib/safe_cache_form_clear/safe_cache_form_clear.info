@@ -1,0 +1,10 @@
+name = "Safe cache_form Clear"
+description = "Safely clear expired items from the cache_form table"
+core = "7.x"
+
+; Information added by Drupal.org packaging script on 2016-02-22
+version = "7.x-1.2"
+core = "7.x"
+project = "safe_cache_form_clear"
+datestamp = "1456171747"
+

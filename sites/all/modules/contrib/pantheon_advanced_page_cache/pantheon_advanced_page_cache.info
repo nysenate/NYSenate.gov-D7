@@ -1,0 +1,12 @@
+name = Pantheon Advanced Page Cache
+description = Advanced page cache capabilities for Pantheon
+package = Performance and scalability
+core = 7.x
+
+dependencies[] = d8cache
+
+; Information added by Drupal.org packaging script on 2021-01-18
+version = "7.x-1.2"
+core = "7.x"
+project = "pantheon_advanced_page_cache"
+datestamp = "1611003777"

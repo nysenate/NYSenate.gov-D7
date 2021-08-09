@@ -1,0 +1,14 @@
+name = Slick UI
+description = "Provides the Slick carousel export UI."
+core = 7.x
+package = Slick
+
+dependencies[] = slick
+
+configure = admin/config/media/slick/ui
+
+; Information added by Drupal.org packaging script on 2018-12-19
+version = "7.x-2.1"
+core = "7.x"
+project = "slick"
+datestamp = "1545225486"

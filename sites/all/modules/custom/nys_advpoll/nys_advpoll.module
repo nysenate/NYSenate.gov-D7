@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * @file
+ * NYS Advanced Poll Settings Module.
+ *
+ * Provides custom settings for Advanced Poll module.
+ */
+
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function nys_advpoll_form_advpoll_node_form_alter(&$form, &$form_state, $instance) {
+  $form['title']['#attributes'] = array(
+    'size' => 60,
+    'maxlength' => 60,
+  );
+  $form['title']['#description'] = t('Your question is limited to 60 characters. Choose wisely.');
+  $form['#validate'][] = 'nys_advpoll_node_form_validate';
+  $form['advpoll_choice'][LANGUAGE_NONE][0]['choice']['#attributes']['placeholder'] = 'e.g. "Yes" or "Approve" or "Agree"';
+  $form['advpoll_choice'][LANGUAGE_NONE][1]['choice']['#attributes']['placeholder'] = 'e.g. "No" or "Disapprove" or "Disagree"';
+  $form['advpoll_choice'][LANGUAGE_NONE][0]['write_in']['#access'] = FALSE;
+  $form['advpoll_choice'][LANGUAGE_NONE][1]['write_in']['#access'] = FALSE;
+  $form['advpoll_options']['#access'] = FALSE;
+  $form['advpoll_behavior']['#access'] = FALSE;
+  $form['advpoll_mode'][LANGUAGE_NONE]['#default_value'] = t('cookie');
+  $form['advpoll_mode']['#access'] = FALSE;
+  $form['advpoll_max_choices']['#access'] = FALSE;
+  $form['advpoll_results']['#access'] = FALSE;
+  $form['advpoll_closed']['#access'] = FALSE;
+  $form['field_image_main'][LANGUAGE_NONE][0]['#default_value']['display'] = TRUE;
+  $form['advpoll_cookie_duration'][LANGUAGE_NONE][0]['value']['#default_value'] = 90;
+  $form['advpoll_choice'][0]['submit']['#id'][] = "my_class";
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function nys_advpoll_form_alter(&$form, &$form_state, $form_id, $user) {
+
+  if ($form_id === 'advpoll_choice_form') {
+    $form['submit']['#value'] = "Submit";
+    $form['submit']['#attributes']['class'][] = 'c-block--btn icon-before__check med-bg';
+  }
+
+}
+
+/**
+ * Implements node_form_validate().
+ */
+function nys_advpoll_node_form_validate(&$form, &$form_state) {
+    if (drupal_strlen($form_state['values']['title']) > 60) {
+        form_set_error('title', t('Your question is too long, please limit to 60 characters'));
+    }
+}
+
+

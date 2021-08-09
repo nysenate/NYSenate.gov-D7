@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the NYS petitions module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function nys_registration_uninstall() {
+  variable_del('nys_sage_diagnostics');
+  drupal_set_message('Successfully uninstalled NYS Petititons.');
+}
+
+/**
+ * Obsolete: code moved to nys_sage module.  This update does nothing now.
+ */
+function nys_registration_update_7100() {
+  if (!db_table_exists('nys_sage_log')) {
+    return "Table nys_sage_log does not exist and is required for this module!";
+  }
+}
+
+/**
+ * Obsolete: code moved to nys_sage module.  This update does nothing now.
+ */
+function nys_registration_update_7101() {
+  return "This update is obsolete.  See module nys_sage.";
+}

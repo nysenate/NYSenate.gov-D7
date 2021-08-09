@@ -1,0 +1,28 @@
+<?php
+/**
+ * @file
+ * Install and update functions for the Charts module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function charts_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+  if ($phase == 'runtime' && !charts_info()) {
+    $requirements['charts'] = array(
+      'title' => $t('Charts'),
+      'value' => $t('No Charts provider installed'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => $t('Charts core module only provides a a common set of functions. You must install a Charts provider module to create charts.'),
+    );
+  }
+  return $requirements;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function charts_uninstall() {
+}

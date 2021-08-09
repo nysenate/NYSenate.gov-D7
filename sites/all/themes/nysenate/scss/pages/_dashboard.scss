@@ -1,0 +1,4352 @@
+/*------------------------------------
+/	DASHBOARD:
+/-------------------------------------*/
+
+.page-user-dashboard {
+  .c-page-title {
+    font-family: "Adelle Regular";
+    a {
+      &:before {
+        display: none;
+      }
+      &:hover {
+        color: $cont_blue_lgt;
+      }
+    }
+  }
+
+  .pane-views-d305eaa52e2b1cc18e518f4b21733969 {
+    #views-exposed-form-explore-issues-explore-issues,
+    #views-exposed-form-explore-issues-solr-explore-issues,
+    #views-exposed-form-explore-issues-tabs-explore-issues-alpha {
+      .views-submit-button {
+        position: relative;
+        top: inherit;
+        right: 18px;
+        float: right;
+
+        button {
+          position: absolute;
+          top: 53px;
+          right: 95%;
+          padding: 0;
+          height: 45px;
+          width: 45px;
+          font-size: 22px;
+          background: transparent;
+        }
+      }
+      .views-widget-filter-keyword input {
+        height: 55px;
+      }
+      .views-widget-filter-name input {
+        height: 55px;
+      }
+    }
+  }
+
+  .l-row--nav {
+    max-width: 100%;
+
+    @media #{$tablet} {
+      padding: 0 40px;
+    }
+  }
+
+  .panel-2col .panel-separator {
+    margin: 0;
+  }
+  .pager-load-more, %pager-load-more {
+    background-color: $grey06;
+    padding: 0;
+    width: 100%;
+    margin: 20px 0;
+    float: left;
+    font-family: "Proxima Nova SemiBold";
+    font-size: 16px;
+    line-height: 41px;
+    font-weight: normal;
+    text-transform: uppercase;
+    color: $blue03;
+    text-align: center;
+    a {
+      padding: 5px 0;
+      display: block;
+    }
+    &.pager-load-more-empty {
+      display: none;
+    }
+  }
+  .issue-header {
+    background-color: $cont_blue_lgt;
+    padding: 5px 0;
+    width: 100%;
+    margin: 0;
+    float: left;
+    font-family: "Proxima Nova SemiBold";
+    font-size: 16px;
+    line-height: 41px;
+    font-weight: normal;
+    text-transform: uppercase;
+    color: white;
+    text-align: center;
+    a {
+      color: #fff;
+    }
+  }
+  label {
+    color: $grey02;
+    text-transform: none;
+  }
+  .filter {
+    color: $cont_blue_lgt;
+    height: 55px;
+    width: 100%;
+    border: 1px solid #C0C0C0;
+    // background: url(../images/svg/see-less-dash.svg) no-repeat 95% center;
+    // background-size: 15px;
+    font-family: "Proxima Nova SemiBold";
+    font-size: 14px;
+    line-height: 18px;
+    text-transform: uppercase;
+    padding: 0 20px;
+    display: block;
+  }
+  .form-wrapper {
+    button {
+      &:after {
+        color: $cont_blue_lgt;
+      }
+    }
+  }
+  .tabs {
+    .c-tab {
+      top: 1px;
+
+      a {
+        color: $cont_blue_lgt !important;
+      }
+      &.active {
+        a {
+          color: $cont_blue_drk !important;
+        }
+      }
+    }
+  }
+  table.bill-data {
+    border: none;
+    td,
+    tr,
+    thead,
+    th {
+      background: none;
+      border: none !important;
+    }
+    thead {
+      th {
+        text-transform: uppercase;
+        display: none;
+        &:first-child {
+          display: block;
+          width: auto;
+        }
+        &.active-list-date {
+          font-family: "Proxima Nova Regular";
+          font-size: 14px;
+          line-height: 18px;
+          color: $grey04;
+        }
+        .active-list-header {
+          font-family: "Proxima Nova SemiBold";
+          font-size: 14px;
+          line-height: 16px;
+          color: $grey03;
+          text-transform: uppercase;
+        }
+      }
+    }
+    td {
+      padding-bottom: 40px;
+      display: block;
+      width: auto;
+      &:nth-child(2),
+      &:nth-child(3) {
+        width: 137px;
+        float: left;
+      }
+      h3 {
+        display: block;
+        min-height: 60px;
+        font-family: "Proxima Nova SemiBold";
+        font-size: 14px;
+        line-height: 16px;
+        color: $grey03;
+        text-transform: uppercase;
+        text-align: center;
+      }
+      .pie-legend {
+        float: none;
+        text-align: center;
+        margin: 0;
+        .yes-votes,
+        .no-votes {
+          display: inline-block;
+          @media #{$tablet} {
+            display: block;
+          }
+        }
+        .yes-votes {
+          margin-right: 5px;
+        }
+        .yes-value,
+        .no-value {
+          font-family: "Adelle Bold";
+          font-size: 18px;
+          line-height: 21px;
+        }
+        .yes-value {
+          color: $cont_blue_lgt;
+        }
+        .yes-value-empty,
+        .no-value-empty {
+          color: $grey14;
+        }
+        .no-value {
+          color: $cont_blue_drk;
+        }
+        .option-label {
+          font-family: "Proxima Nova Regular";
+          font-size: 10px;
+          line-height: 14px;
+          color: $grey04;
+          text-transform: uppercase;
+          margin-bottom: 20px;
+        }
+      }
+      .pieContainer,
+      .pieContainer-empty {
+        height: 137px;
+        width: 137px;
+        position: relative;
+        left: -10px;
+      }
+      .pieBackground {
+        background-color: $cont_blue_drk;
+        position: absolute;
+        width: 130px;
+        height: 130px;
+        -moz-border-radius: 130px;
+        -webkit-border-radius: 130px;
+        -o-border-radius: 130px;
+        border-radius: 130px;
+      }
+      .pieContainer-empty {
+        .pieBackground {
+          background-color: $grey14;
+        }
+      }
+      .pie {
+        position: absolute;
+        width: 130px;
+        height: 130px;
+        -moz-border-radius: 130px;
+        -webkit-border-radius: 130px;
+        -o-border-radius: 130px;
+        border-radius: 130px;
+        clip: rect(0px, 65px, 130px, 0px);
+      }
+      .hold {
+        position: absolute;
+        width: 130px;
+        height: 130px;
+        -moz-border-radius: 130px;
+        -webkit-border-radius: 130px;
+        -o-border-radius: 130px;
+        border-radius: 130px;
+        clip: rect(0px, 130px, 130px, 65px);
+      }
+      #pieSlice1 .pie {
+        background-color: $cont_blue_lgt;
+        -webkit-transform: rotate(50deg);
+        -moz-transform: rotate(50deg);
+        -o-transform: rotate(50deg);
+        transform: rotate(50deg);
+      }
+      .bill-id,
+      .bill-type,
+      .bill-desc {
+        margin-bottom: 10px;
+      }
+      .bill-id {
+        font-family: "Adelle Bold";
+        font-size: 20px;
+        line-height: 30px;
+        a {
+          color: $grey02;
+        }
+      }
+      .bill-type {
+        font-family: "Proxima Nova SemiBold";
+        font-size: 12px;
+        line-height: 15px;
+        color: $cont_blue_lgt;
+        text-transform: uppercase;
+      }
+      .bill-desc {
+        font-family: "Adelle Light";
+        font-size: 16px;
+        line-height: 22px;
+        color: $grey02;
+      }
+      .bill-sponsor {
+        font-family: "Proxima Nova SemiBold";
+        font-size: 10px;
+        line-height: 14px;
+        color: $grey04;
+        text-transform: uppercase;
+      }
+      .bill-sponsor-other {
+        font-family: "Proxima Nova Regular";
+        font-size: 12px;
+        line-height: 14px;
+        color: $grey03;
+      }
+      &.no-votes {
+        .pie-legend {
+          .yes-value, .no-value {
+            color: $grey04;
+          }
+        }
+      }
+    }
+    tbody {
+      border: none !important;
+    }
+  }
+  #nys_inbox .message-body {
+    display: none;
+  }
+  #nys_inbox .message-body.visible {
+    display: block;
+  }
+
+  #nys_inbox .forward-button {
+    display: none;
+  }
+  #nys_inbox .forward-button.visible {
+    display: inline-block;
+  }
+
+  #nys_inbox .reply-button {
+    display: none;
+  }
+  #nys_inbox .reply-button.visible {
+    display: inline-block;
+  }
+
+  #nys_inbox .message-body {
+    .reply-button {
+      float: left;
+      padding: 10px;
+    }
+    .forward-button {
+      float: left;
+      padding: 10px;
+    }
+
+  }
+  #nys_inbox {
+    .no-msgs {
+      font-family: "Adelle Light";
+      font-size: 16px;
+      line-height: 21px;
+      color: $grey04;
+    }
+    form {
+      .search-wrapper {
+        width: 100%;
+        display: block;
+        &:nth-child(2) {
+          margin-left: 0;
+        }
+      }
+      .container-inline.form-wrapper {
+        position: relative;
+        margin-right: 20px;
+        input[type="search"] {
+          height: 55px;
+          background: none;
+        }
+        button {
+          top: 4px;
+          right: 0;
+        }
+      }
+      .inbox-action-links {
+        margin: 25px 0;
+        min-height: 35px;
+        .select-all-messages {
+          float: left;
+          display: inline-block;
+        }
+        .show-in-district {
+          float: left;
+          display: inline-block;
+        }
+        .action-button-wrapper {
+          float: right;
+          display: inline-block;
+          button {
+            display: inline-block;
+            height: 32px;
+            width: auto;
+            padding: 0 18px;
+            font-family: "Proxima Nova SemiBold";
+            font-size: 12px;
+            text-transform: uppercase;
+            background-color: $cont_blue_lgt;
+            &:nth-child(2) {
+              margin-left: 20px;
+            }
+          }
+          .ajax-progress-throbber {
+            display: none;
+          }
+        }
+        & + div {
+          font-size: 16px;
+          font-family: "Proxima Nova Regular";
+          color: $cont_blue_lgt;
+          text-align: center;
+          h4 {
+            font-size: 16px;
+            font-family: "Proxima Nova Regular";
+            color: $cont_blue_lgt;
+          }
+          input + div {
+            margin-bottom: 40px;
+            button,
+            a {
+              display: inline-block;
+              height: 35px;
+              background-color: #04A9C5;
+              color: white;
+              padding: 5px 25px;
+              font-size: 14px;
+              line-height: 25px;
+              vertical-align: top;
+              margin-top: 10px;
+            }
+            button {
+              margin-right: 15px;
+            }
+          }
+        }
+      }
+      &:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+    }
+    table {
+      margin-bottom: 0;
+      thead {
+        th {
+          border-bottom: none;
+          font-family: "Proxima Nova SemiBold";
+          font-size: 12px;
+          text-transform: uppercase;
+          color: $grey03;
+          background-color: $grey06;
+          height: 51px;
+          &:nth-child(3) {
+            display: none;
+          }
+          &.privatemsg-header-subject,
+          &.privatemsg-header-lastupdated {
+            a {
+              color: $grey02;
+            }
+          }
+          a {
+            img {
+              display: none;
+            }
+            &:after {
+              font-family: 'senate_icons';
+              display: inline-block;
+              vertical-align: middle;
+
+              speak: none;
+              font-style: normal;
+              font-weight: normal;
+              font-variant: normal;
+              text-transform: none;
+              padding-left: 3px;
+
+              /* Better Font Rendering =========== */
+              -webkit-font-smoothing: antialiased;
+              -moz-osx-font-smoothing: grayscale;
+
+              content: "\65";
+            }
+          }
+          &.active {
+            a {
+              &:after {
+                content: "\5e";
+              }
+            }
+          }
+        }
+      }
+      tbody {
+        tr {
+          &.even,
+          &.odd {
+            position: relative;
+            td.privatemsg-list-subject,
+            td.privatemsg-message-information {
+              a {
+                color: $grey02;
+              }
+            }
+          }
+          &.privatemsg-unread {
+            td.privatemsg-list-subject-item,
+            td.privatemsg-message-information {
+              a {
+                font-family: "Proxima Nova SemiBold";
+              }
+              .marker {
+                color: $cont_blue_lgt;
+              }
+            }
+            td.privatemsg-list-date {
+              font-family: "Proxima Nova SemiBold";
+            }
+          }
+          td {
+            font-family: "Proxima Nova Regular";
+            color: $grey02;
+            border-bottom: 1px solid #e2e8ec;
+            height: 80px;
+            font-size: 13px;
+            line-height: 18px;
+            vertical-align: top;
+            .authors-name {
+              font-size: 18px;
+              line-height: 25px;
+            }
+            .message-body-toggle {
+              text-indent: -9999em;
+              font-size: 0;
+              display: block;
+              &:before {
+                content: "\65";
+                display: block;
+                width: 28px;
+                height: 24px;
+                font-size: 16px;
+                font-family: 'senate_icons';
+                line-height: 22px;
+              }
+            }
+            &.marker {
+              color: $cont_blue_lgt;
+              font-weight: bold;
+            }
+            &.privatemsg-list-issue {
+              position: relative;
+              .message-action-buttons {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                .reply-button,
+                .forward-button {
+                  height: 32px;
+                  width: auto;
+                  padding: 0 18px;
+                  font-family: "Proxima Nova SemiBold";
+                  font-size: 12px;
+                  line-height: 34px;
+                  text-transform: uppercase;
+                  background-color: $blue03;
+                  color: white !important;
+                  margin: 20px 15px 15px 0;
+                }
+                .forward-button {
+                  margin-left: -168px;
+                }
+              }
+            }
+            .message-body-toggle.up_arrow {
+              &:before {
+                content: "\5e";
+              }
+            }
+            .message-body {
+              font-size: 14px;
+              line-height: 20px;
+              p {
+                font-size: 13px;
+                line-height: 19px;
+                &:last-child {
+                  padding-bottom: 40px;
+                }
+              }
+              div {
+                margin-right: -106px;
+                button {
+                  display: inline-block;
+                  height: 32px;
+                  width: auto;
+                  padding: 0 18px;
+                  font-family: "Proxima Nova SemiBold";
+                  font-size: 12px;
+                  text-transform: uppercase;
+                  background-color: $blue03;
+                  &:nth-child(1) {
+                    margin-left: 20px;
+                  }
+                }
+              }
+            }
+
+            .subject a {
+              font-size: 14px;
+              line-height: 18px;
+              color: $grey03;
+            }
+            &:nth-child(3) {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+    .pagination-centered {
+      height: 51px;
+      background-color: $grey06;
+      border-bottom: 1px solid #DDD;
+      border-left: 1px solid #DDD;
+      border-right: 1px solid #DDD;
+      .pagination {
+        float: right;
+        margin: 12px 10px 0 0;
+        height: 24px;
+        li {
+          display: inline-block;
+          margin: 0 15px 0 0;
+          vertical-align: top;
+          a {
+            color: $cont_blue_med;
+            background: none;
+            line-height: 22px;
+          }
+          &.current {
+            a {
+              background: none;
+              color: $cont_blue_drk;
+            }
+          }
+          &.arrow.first,
+          &.arrow.last,
+          &.unavailable {
+            display: none;
+          }
+          &.arrow.first + .arrow a {
+            text-indent: -9999em;
+            font-size: 0;
+            height: 24px;
+            display: block !important;
+            &:before {
+              content: "\3c";
+              display: block;
+              width: 28px;
+              height: 24px;
+              font-size: 18px;
+              font-family: 'senate_icons';
+              line-height: 22px;
+            }
+          }
+          &.unavailable + .arrow a,
+          a[title="Go to next page"] {
+            text-indent: -9999em;
+            font-size: 0;
+            height: 24px;
+            display: block;
+            &:after {
+              content: "\3e";
+              display: block;
+              width: 28px;
+              height: 24px;
+              font-size: 18px;
+              font-family: 'senate_icons';
+              line-height: 22px;
+              margin-top: -22px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .pane-nys-inbox-nys-inbox {
+    .no-messages {
+      font-family: "Adelle SemiBold";
+      font-size: 18px;
+      line-height: 24px;
+      color: $grey04;
+    }
+    .confirmation {
+      #edit-submit,
+      #edit-cancel {
+        font-size: 12px;
+        line-height: 32px;
+        font-family: "Proxima Nova SemiBold";
+        color: white;
+        text-transform: uppercase;
+        padding: 0 15px;
+        background-color: $cont_blue_lgt;
+        display: block;
+        float: left;
+        &:hover {
+          background-color: $cont_blue_med;
+        }
+      }
+      #edit-cancel {
+        margin-left: 20px;
+      }
+    }
+    .back-to-inbox {
+      font-size: 16px;
+      text-transform: uppercase;
+      font-family: "Proxima Nova SemiBold";
+      display: block;
+      margin-bottom: 35px;
+    }
+    #nys-inbox-message-form {
+      input {
+        height: 49px;
+      }
+      textarea {
+        height: 256px;
+      }
+      button[type="submit"] {
+        font-size: 12px;
+        line-height: 3px;
+        color: white;
+        text-transform: uppercase;
+        height: 32px;
+        padding: 20px 20px 20px 45px;
+        margin: 20px 0 0 0;
+        float: right;
+        background-color: $cont_blue_lgt;
+        &:before {
+          content: "\6e";
+          font-size: 24px;
+          font-family: 'senate_icons';
+          display: block;
+          position: absolute;
+          left: 15px;
+        }
+      }
+    }
+    #privatemsg-form-reply {
+      h2 {
+        font-size: 14px;
+        line-height: 18px;
+        color: $grey03;
+      }
+      .form-type-textarea label {
+        display: none;
+      }
+      .form-textarea {
+        height: 256px;
+      }
+      .filter-wrapper {
+        .filter-help {
+          p {
+            font-size: 14px;
+            a {
+
+            }
+          }
+        }
+        .filter-guidelines {
+          padding: 0 30px;
+          ul li {
+            color: $grey04;
+          }
+        }
+      }
+      button {
+        font-size: 12px;
+        line-height: 3px;
+        color: white;
+        text-transform: uppercase;
+        height: 32px;
+        padding: 20px 20px 20px 45px;
+        margin: 20px 0 0 0;
+        float: right;
+        background-color: $cont_blue_lgt;
+        &:before {
+          content: "\6e";
+          font-size: 24px;
+          font-family: 'senate_icons';
+          display: block;
+          position: absolute;
+          left: 15px;
+        }
+      }
+    }
+    .privatemsg-message {
+      margin: 0 0 40px 0;
+      .privatemsg-message-body,
+      .privatemsg-message-body p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 20px;
+        font-family: "Proxima Nova Regular";
+        margin: 15px 0;
+        color: $grey03;
+      }
+    }
+    .privatemsg-message-participants,
+    .privatemsg-message-participants .nys-dashboard-user-link {
+      font-family: "Adelle Semibold";
+      font-size: 24px;
+      line-height: 32px;
+      border: none;
+      color: $grey02;
+    }
+    .privatemsg-message-participants {
+      .back-to-dash {
+        display: block;
+        font-family: "Proxima Nova SemiBold";
+        font-size: 15px;
+        line-height: 18px;
+        color: #CB8D37;
+        text-transform: uppercase;
+        margin: 0 0 20px 0;
+      }
+      #edit-submitbutton {
+        font-family: "Proxima Nova SemiBold";
+        font-size: 12px;
+        line-height: 32px;
+        text-transform: uppercase;
+        padding: 0 15px;
+        transition: none;
+        &:focus {
+          background-color: $cont_blue_drk;
+        }
+      }
+    }
+    .privatemsg-message-subject {
+      font-family: "Proxima Nova Regular";
+      font-size: 14px;
+      line-height: 18px;
+      color: $grey03;
+    }
+    .privatemsg-message-information {
+      margin: 40px 0 20px 0;
+      .privatemsg-author-name,
+      .privatemsg-message-date,
+      .privatemsg-message-subject {
+        font-family: "Proxima Nova Regular";
+      }
+      .privatemsg-message-actions {
+        float: right;
+        margin: 0 0 5px 0;
+        li {
+          display: inline-block;
+          list-style: none;
+          background-color: $cont_blue_lgt;
+          padding: 0 20px;
+          font-family: "Proxima Nova SemiBold";
+          a {
+            font-size: 12px;
+            line-height: 32px;
+            color: white;
+            text-transform: uppercase;
+          }
+        }
+      }
+      .privatemsg-author-name {
+        font-size: 18px;
+        line-height: 18px;
+        font-weight: normal;
+        padding-right: 0;
+        .nys-dashboard-user-link {
+          color: $grey02;
+          font-size: 18px;
+          line-height: 18px;
+          font-family: "Proxima Nova Regular";
+        }
+      }
+      .private-message-dot,
+      .privatemsg-message-date {
+        font-size: 14px;
+        line-height: 16px;
+        color: $grey04;
+      }
+      .private-message-dot {
+        padding: 0 6px;
+      }
+      &:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+    }
+  }
+  table.stat-data {
+    thead {
+      th {
+        border-bottom: none;
+        font-family: "Proxima Nova SemiBold";
+        font-size: 12px;
+        text-transform: uppercase;
+        color: $grey03;
+        background-color: $grey06;
+        height: 51px;
+        &.verified,
+        &.zip,
+        &.age,
+        &.gender,
+        &.bill,
+        &.messaged {
+          display: none;
+        }
+        &.city,
+        &.vote {
+          border-right: 1px solid $grey13;
+        }
+      }
+    }
+    tbody {
+      tr {
+        td {
+          font-family: "Proxima Nova Regular";
+          font-size: 12px;
+          color: $grey02;
+          border-bottom: 1px solid #e2e8ec;
+          height: 80px;
+          .poll-facebook-share {
+            &:after {
+              color: $cont_blue_med;
+            }
+          }
+          &.name {
+            font-size: 18px;
+            a {
+              color: $grey02;
+            }
+          }
+          &.gender,
+          &.messaged,
+          &.vote {
+            text-transform: uppercase;
+            .date {
+              color: $grey04;
+            }
+          }
+          &.verified {
+            font-size: 25px;
+            a {
+              color: $cont_blue_drk;
+            }
+            .not-verified {
+              font-size: 10px;
+            }
+          }
+          &.city,
+          &.vote {
+            border-right: 1px solid $grey13;
+          }
+          &.verified,
+          &.zip,
+          &.age,
+          &.gender,
+          &.bill,
+          &.messaged {
+            display: none;
+          }
+          &.pager-cell {
+            background-color: $grey06;
+            height: 50px;
+          }
+        }
+        .pager {
+          float: right;
+          margin-right: 20px;
+          .pager-item {
+            display: inline-block;
+            margin: 0 15px 0 0;
+          }
+        }
+      }
+    }
+  }
+  .c-header-bar {
+    border-bottom: 1px solid $blue04;
+
+    &:before {
+      content: "";
+      height: 100%;
+      width: 1px;
+      margin-left: -1px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .c-dashboard-header--btn {
+      font-family: "Proxima Nova SemiBold";
+      font-size: 15px;
+      line-height: 18px;
+      color: $blue03;
+      text-transform: uppercase;
+
+      @extend .icon-after__right;
+    }
+    .c-header--connect {
+      margin-top: -37px;
+    }
+    &.collapsed {
+      .c-header--connect {
+
+      }
+    }
+    .c-nav--toggle {
+      &:after {
+        color: $cont_blue_med;
+      }
+    }
+  }
+  .c-page-title {
+    display: none;
+  }
+  //These following styles may change based on final markup.
+
+  /*------------------------------------
+  /	LEFT SIDEBAR
+  /-------------------------------------*/
+  .c-container--dash-user-card,
+  .c-container--dash-senator-card {
+    padding: 40px;
+    background-color: $grey11;
+    margin-bottom: 0;
+    border-bottom: 1px solid $blue04;
+    border-right: 1px solid $blue04;
+    .dash-user-img,
+    .dash-senator-img {
+      width: 70px;
+      border-radius: 70px;
+    }
+    .vcard {
+      border: none;
+      padding: 0;
+      margin: 10px 0 0 0;
+      font-family: "Proxima Nova Regular";
+      font-size: 12px;
+      line-height: 18px;
+      color: $grey02;
+    }
+    .dash-user-info,
+    .c-container--body,
+    .dash-senator-info {
+      margin: -70px 0 0 90px;
+    }
+    .dash-user-info {
+      .c-container--title {
+        font-family: "Adelle SemiBold";
+        font-size: 18px;
+        line-height: 32px;
+        color: $grey02;
+
+        &.fb {
+          @extend .icon-after__facebook;
+
+          &:after {
+            margin-top: -3px;
+            margin-left: -5px;
+            @extend .med-text;
+            font-size: 26px;
+            line-height: 32px;
+          }
+        }
+      }
+      .c-container--district {
+        font-family: "Proxima Nova Regular";
+        font-size: 12px;
+        text-transform: uppercase;
+        color: $grey04;
+      }
+    }
+    .dash-senator-info {
+      .c-container--title {
+        font-family: "Adelle Light";
+        font-size: 18px;
+        line-height: 32px;
+        color: $grey02;
+      }
+      .c-container--your-s {
+        font-family: "Proxima Nova Regular";
+        font-size: 12px;
+        line-height: 18px;
+        color: $grey03;
+        & a {
+          color: $gen_blue_med;
+        }
+      }
+      p {
+        font-family: "Proxima Nova SemiBold";
+        font-size: 12px;
+        line-height: 18px;
+        color: $grey02;
+        margin: 0;
+        .duties {
+          color: $yellow03;
+          text-transform: uppercase;
+        }
+        a {
+          text-transform: uppercase;
+        }
+      }
+      .c-container--district {
+        font-family: "Proxima Nova Regular";
+        font-size: 12px;
+        text-transform: uppercase;
+        color: $grey04;
+      }
+    }
+    .c-container--body {
+      margin: 0 0 0 90px;
+      p {
+        font-family: "Proxima Nova Regular";
+        font-size: 12px;
+        line-height: 18px;
+        color: $grey02;
+      }
+      .c-dash-edit-profile,
+      .c-dash-msg-senator {
+        margin: 20px 0 10px 0;
+        padding: 0 5px;
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: 0.25em;
+        font-family: "Proxima Nova SemiBold";
+        width: 78px;
+        display: block;
+        color: #fff;
+        text-decoration: none;
+        text-align: center;
+        background-color: $gen_blue_med;
+        &:before {
+          margin-right: 0;
+          font-size: 18px;
+        }
+      }
+      .c-dash-msg-senator {
+        width: 112px;
+        &.inactive {
+          width: auto;
+          line-height: 12px;
+          padding: 5px;
+        }
+        &:before {
+          margin-right: 0;
+          font-size: 18px;
+        }
+      }
+    }
+  }
+  .pane-menu-menu-senator-dashboard-menu,
+  .pane-menu-menu-constituent-dashboard-menu {
+    h2 {
+      font-family: "Adelle SemiBold";
+      font-size: 16px;
+      line-height: 56px;
+      color: $grey03;
+      padding: 20px 40px;
+      border-bottom: 1px solid $blue04;
+      border-right: 1px solid $blue04;
+    }
+    .menu {
+      li {
+        list-style: none;
+        border-bottom: 1px solid $blue04;
+        border-right: 1px solid $blue04;
+        a {
+          display: block;
+          padding: 30px 40px;
+          font-family: "Adelle SemiBold";
+          color: $grey02;
+          font-size: 24px;
+          height: auto;
+          &.active {
+            background-color: white;
+          }
+        }
+      }
+    }
+  }
+  .pane-menu-menu-senator-dashboard-menu {
+    .menu {
+      li {
+        a {
+          &.active {
+            color: $cont_blue_drk;
+          }
+        }
+      }
+    }
+  }
+  .pane-menu-menu-constituent-dashboard-menu {
+    .menu {
+      li {
+        a {
+          &.active {
+            color: $gen_blue_lgt;
+          }
+        }
+      }
+    }
+  }
+  /*------------------------------------
+  /	RIGHT CONTENT AREA
+  /-------------------------------------*/
+
+  /*------------------------------------
+  /	Constituent Dashboard
+  /-------------------------------------*/
+  .view-explore-issues-tabs {
+    .c-container--title {
+      margin-bottom: 20px;
+    }
+    .c-follow-issue--header {
+      position: relative;
+      margin-bottom: 20px;
+      .explore-link {
+        font-family: "Proxima Nova SemiBold";
+        font-size: 17px;
+        line-height: 24px;
+        text-transform: uppercase;
+        color: $yellow03;
+        position: relative;
+        top: inherit;
+        right: inherit;
+      }
+    }
+  }
+  .c-container--const-issues-follow,
+  .c-container--const-bills-follow,
+  .c-container--const-comm-follow,
+  .c-container--const-pet-quest {
+    section {
+      padding-top: 20px;
+      width: 100%;
+      float: left;
+    }
+
+    article {
+      margin-bottom: 20px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #ccc;
+      float: left;
+      width: 100%;
+      // &.last {
+      // 	border-bottom: none;
+      // }
+      .meta {
+        width: 100%;
+        .section {
+          font-family: "Adelle Bold";
+          font-size: 16px;
+          line-height: 30px;
+          color: $grey02;
+        }
+        .issue-type {
+          font-family: "Proxima Nova SemiBold";
+          font-size: 12px;
+          line-height: 14px;
+          color: $yellow03;
+          text-transform: uppercase;
+          a {
+            color: $yellow03;
+          }
+        }
+      }
+      .body {
+        width: 100%;
+        margin: 20px 0 0 0;
+        img {
+          max-width: 100%;
+          float: none;
+        }
+        .entry-title {
+          font-family: "Adelle Light";
+          font-size: 24px;
+          line-height: 32px;
+          color: $grey02;
+          a {
+            color: $grey02;
+          }
+        }
+        .author a,
+        .article-date {
+          font-family: "Proxima Nova Regular";
+          font-size: 14px;
+          line-height: 32px;
+          color: $grey03;
+        }
+        .article-date {
+          color: $grey04;
+          line-height: 20px;
+          display: inline;
+          .issue-type {
+            color: $grey02;
+            a {
+              color: #000;
+              font-size: 14px;
+            }
+          }
+        }
+        .article-committee {
+          display: inline-block;
+          font-family: "Proxima Nova Regular";
+          font-size: 14px;
+          line-height: 18px;
+          &:before {
+            content: "";
+            display: inline-block;
+            width: 1px;
+            height: 10px;
+            background-color: #ccc;
+            margin: 0 10px 0 10px;
+          }
+        }
+        .event-location {
+          font-family: "Proxima Nova Regular";
+          font-size: 14px;
+          line-height: 38px;
+          &:before {
+            color: $blue01;
+            font-size: 23px;
+            margin-top: -3px;
+          }
+        }
+        .event-date-time {
+          font-family: "Proxima Nova SemiBold";
+          font-size: 14px;
+          line-height: 30px;
+          color: $grey02;
+        }
+        ul.nys-bill-status {
+          &.wrapper {
+            margin: 40px 0;
+          }
+          hr {
+            width: 219px;
+            left: -310px;
+          }
+          .nys-bill-status--text {
+            display: none;
+          }
+          li {
+            /*width: 10px;
+            height: 10px;*/
+          }
+          &.nys-bill-status__sml {
+            hr {
+              width: 70%;
+              left: -15%;
+            }
+          }
+        }
+        .timeline {
+          position: relative;
+          width: 144px;
+          height: 22px;
+          margin: 20px 0 10px 0;
+          .strike {
+            position: absolute;
+            height: 1px;
+            top: 9px;
+            width: 92%;
+            background-color: #ccc;
+            z-index: 0;
+          }
+          .steps {
+            position: absolute;
+            top: 0;
+            left: 0;
+            .step {
+              width: 10px;
+              height: 10px;
+              background-color: #e2e8ec;
+              border-radius: 10px;
+              display: inline-block;
+              margin-left: 10px;
+              vertical-align: middle;
+              &:first-child {
+                margin-left: 0;
+              }
+              &.passed {
+                background-color: $blue01;
+              }
+              &.current {
+                border-radius: 0;
+                width: 20px;
+                height: 18px;
+                background-color: white;
+                border: 1px solid #ccc;
+                position: relative;
+                .curr-step-top,
+                .curr-step-bottom {
+                  width: 10px;
+                  height: 10px;
+                  border-radius: 10px;
+                  background-color: $blue01;
+                  position: absolute;
+                }
+                .curr-step-top {
+                  top: -5px;
+                  left: 4px;
+                }
+                .curr-step-bottom {
+                  bottom: -5px;
+                  left: 4px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .first article {
+      // border-top: 1px solid $grey13;
+      padding-top: 0px;
+    }
+    .last {
+      article {
+
+      }
+    }
+
+    #panel2 {
+      padding-top: 30px;
+    }
+    .views-row-even {
+      article {
+        border-bottom: 1px solid #ccc;
+      }
+    }
+    .views-row-last.views-row-even {
+      article {
+        border-bottom: none;
+      }
+    }
+    .views-exposed-form {
+      .form-type-select {
+        position: relative;
+        &:after {
+          @extend .icon-after__see-more;
+          position: absolute;
+          right: 10px;
+          top: 5px;
+          font-size: 25px;
+          color: $blue01;
+          pointer-events: none;
+          cursor: pointer;
+        }
+      }
+      // select.form-select {
+      // 	background: url("/sites/all/themes/nysenate/images/svg/see-less-dash.svg") no-repeat 90% center;
+      // 			background-size: 15px;
+      // }
+    }
+  }
+  .c-container--const-issues-follow {
+    .view-empty {
+      float: left;
+      background: none;
+      padding: 0;
+      .c-container--title {
+        margin-bottom: 30px;
+      }
+      p {
+        margin-bottom: 0px;
+        a {
+          font-family: "Proxima Nova SemiBold";
+          text-transform: uppercase;
+          font-size: 17px;
+          padding-left: 10px;
+          display: block;
+          float: right;
+          margin: 40px 18px 0 0;
+        }
+      }
+    }
+    .top-issue-updates {
+      padding-top: 0px;
+    }
+    .view-explore-issues-tabs {
+      margin: 0;
+      .view-header .c-block-follow-issues {
+        padding-top: 0;
+        br {
+          display: none;
+        }
+        p {
+          font-family: "Adelle SemiBold";
+          font-size: 20px;
+          line-height: 32px;
+          color: $grey02;
+          a {
+            font-family: "Proxima Nova SemiBold";
+            text-transform: uppercase;
+            font-size: 17px;
+            padding-left: 10px;
+            display: block;
+            float: right;
+            margin: 40px 18px 0 0;
+          }
+        }
+      }
+    }
+  }
+  .c-container--const-pet-quest {
+    article {
+      position: relative;
+      .pet-body {
+        width: 100%;
+        float: left;
+      }
+      .pet-share-bar {
+        width: 100%;
+        position: relative;
+        float: left;
+      }
+      .entry-title,
+      .pet-type,
+      .explore-link {
+        font-family: "Proxima Nova SemiBold";
+        font-size: 14px;
+        line-height: 24px;
+        color: $blue01;
+        text-transform: uppercase;
+      }
+      .pet-type a,
+      .explore-link {
+        font-size: 12px;
+        line-height: 18px;
+        color: $yellow03;
+      }
+      .explore-link {
+        display: block;
+      }
+      .author,
+      .article-date,
+      .pet-share-bar p {
+        font-family: "Proxima Nova Regular";
+        font-size: 12px;
+        line-height: 18px;
+        color: $grey03;
+      }
+      .author {
+        margin: 15px 0 4px 0;
+      }
+      .article-date {
+        color: $grey04;
+      }
+      .pet-share-bar p {
+        text-transform: uppercase;
+        font-size: 12px;
+        margin-top: 15px;
+      }
+      .pet-facebook-share,
+      .pet-twitter-share {
+        &:after {
+          font-size: 25px;
+          color: $blue01;
+        }
+      }
+      .pet-facebook-share {
+        margin-left: -10px;
+      }
+    }
+  }
+  .c-container--const-issues-search {
+    .explore-link {
+      position: relative;
+      display: inline-block;
+      right: 0;
+      top: 0;
+      float: right;
+      font-family: "Proxima Nova SemiBold";
+      font-size: 15px;
+      line-height: 18px;
+      color: $orange01;
+      text-transform: uppercase;
+      margin-top: 20px;
+    }
+    .search-wrapper {
+      margin-top: 20px;
+      .form-wrapper {
+        position: relative;
+        .c-site-search--box {
+          height: 55px;
+        }
+        button {
+          top: 4px;
+          right: 0;
+        }
+      }
+    }
+  }
+  .c-container--const-issues-wdgt-follow {
+    .issue-widget-wrapper {
+      margin-top: 40px;
+      .issue-follow-widget {
+        position: relative;
+        width: 100%;
+        height: 120px;
+        background-color: $yellow03;
+        display: inline-block;
+        margin: 0 20px 20px 0;
+        float: left;
+        &:hover {
+          background-color: $grey05;
+        }
+        h3 a {
+          font-family: "Proxima Nova SemiBold";
+          font-size: 16px;
+          line-height: 22px;
+          color: white;
+          text-transform: uppercase;
+          margin: 20px;
+          display: block;
+        }
+        .following,
+        .unfollow,
+        .flag-follow-issue {
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          color: white;
+          font-family: "Proxima Nova SemiBold";
+          font-size: 14px;
+          text-transform: uppercase;
+          width: 100%;
+          padding-left: 20px;
+          a {
+            color: white;
+          }
+        }
+        .unfollow {
+          display: none;
+        }
+        &:hover .unfollow {
+          display: block;
+        }
+        &:hover .following {
+          display: none;
+        }
+      }
+    }
+  }
+  .c-container--const-comm-wdgt-follow {
+    .c-container--body {
+      padding-top: 40px;
+    }
+    .comm-widget-wrapper {
+      h3 a,
+      .unfollow, .unflag-action, .flag-action {
+        font-family: "Proxima Nova SemiBold";
+        color: $blue01;
+        text-transform: uppercase;
+        font-size: 14px;
+        line-height: 20px;
+      }
+      .unfollow, .unflag-action, .flag-action {
+        color: white;
+        font-size: 12px;
+        line-height: 20px;
+        background-color: $blue01;
+        padding: 4px 10px;
+        display: inline-block;
+        margin: 10px 0 30px 0;
+        &:before {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+  .c-container--const-bills-wdgt-follow {
+    .bill-widget-wrapper {
+      margin-top: 40px;
+      // * {
+      // 	color: white;
+      // }
+      .bill-follow-widget {
+        position: relative;
+        width: 100%;
+        height: 516px;
+        background-color: $blue01;
+        display: inline-block;
+        margin: 0 0 30px 0;
+        float: left;
+        padding: 30px;
+
+        h3 {
+          font-family: "Adelle Bold";
+          font-size: 34px;
+          line-height: 24px;
+          a {
+            color: #fff;
+          }
+        }
+        .bill-type,
+        .bill-blurb,
+        .bill-date,
+        .bill-committee,
+        .bill-sponsor-hdr {
+          font-family: "Proxima Nova Regular";
+          color: #fff;
+
+          a {
+            color: #fff;
+          }
+        }
+        .bill-type {
+          font-size: 14px;
+          line-height: 32px;
+          text-transform: uppercase;
+        }
+        .bill-blurb {
+          font-size: 14px;
+          line-height: 20px;
+          margin: 15px 0;
+        }
+        .bill-date {
+          font-size: 14px;
+          line-height: 18px;
+          line-height: 20px;
+          display: inline;
+        }
+        .bill-committee {
+          display: inline;
+          font-size: 14px;
+          line-height: 18px;
+          word-wrap: break-word;
+          a {
+              color: #fff;
+              border-bottom: solid 0.05em #fff;
+              &:hover {
+                border-bottom: none;
+              }
+          }
+          &:before {
+            content: "";
+            display: inline-block;
+            width: 1px;
+            height: 10px;
+            background-color: white;
+            margin: 0 10px 0 10px;
+          }
+        }
+        .bill-sponsor-hdr {
+          font-size: 11px;
+          line-height: 18px;
+          text-transform: uppercase;
+          margin-top: 20px;
+        }
+        .bill-sponsor {
+          font-size: 16px;
+          line-height: 23px;
+          font-family: "Adelle Light";
+
+          a {
+            color: #fff;
+          }
+        }
+        .bill-vote-wrapper {
+          height: 120px;
+          width: 100%;
+          background-color: $blue07;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          p {
+            font-size: 14px;
+            line-height: 40px;
+            text-transform: uppercase;
+            font-family: "Proxima Nova Regular";
+            padding: 0 30px;
+          }
+        }
+        .bill-vote-yes,
+        .bill-vote-no {
+          position: absolute;
+          bottom: 0;
+          width: 50%;
+          height: 80px;
+          background-color: $blue01;
+          font-family: "Proxima Nova SemiBold";
+          font-size: 15px;
+          line-height: 80px;
+          text-transform: uppercase;
+          span {
+            display: block;
+            text-align: center;
+            width: 100%;
+            &:before {
+              font-size: 30px;
+            }
+          }
+        }
+        .bill-vote-no {
+          right: 0;
+          background-color: $blue02;
+        }
+        .timeline {
+          position: relative;
+          width: 144px;
+          height: 22px;
+          margin: 10px 0 10px 0;
+          .strike {
+            position: absolute;
+            height: 1px;
+            top: 9px;
+            width: 92%;
+            background-color: $blue07;
+            z-index: 0;
+          }
+          .steps {
+            position: absolute;
+            top: 0;
+            left: 0;
+            .step {
+              width: 10px;
+              height: 10px;
+              background-color: $blue02;
+              border-radius: 10px;
+              display: inline-block;
+              margin-left: 10px;
+              vertical-align: middle;
+              &:first-child {
+                margin-left: 0;
+              }
+              &.passed {
+                background-color: white;
+              }
+              &.current {
+                border-radius: 0;
+                width: 20px;
+                height: 18px;
+                background-color: $blue01;
+                border: 1px solid $blue07;
+                position: relative;
+                .curr-step-top,
+                .curr-step-bottom {
+                  width: 10px;
+                  height: 10px;
+                  border-radius: 10px;
+                  background-color: $blue02;
+                  position: absolute;
+                }
+                .curr-step-top {
+                  top: -5px;
+                  left: 4px;
+                }
+                .curr-step-bottom {
+                  bottom: -5px;
+                  left: 4px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .c-container--const-bills-follow {
+    .ajax-progress-throbber {
+      top: 40px;
+      position: relative;
+      left: 10px;
+    }
+  }
+  /*------------------------------------
+  /	Senator Dashboard
+  /-------------------------------------*/
+  .c-container--issues {
+    .container--senator-issues-detail {
+      min-height:15rem;
+    }
+    .container--senator-issues-list {
+      margin-top:1rem;
+
+      #dashboard-senator-issue-detail {
+        table {
+          width: 100%;
+
+          td {
+            font-size: 1rem;
+          }
+        }
+        .location.vcard {
+          margin: 0;
+          padding: 0;
+          border: 0 none;
+
+          .street-address {
+            display: inline-block;
+          }
+        }
+      }
+      #issues-include-all {
+        margin: 1em 0 0;
+        vertical-align: middle;
+      }
+
+      #issues-include-all + label {
+        margin: 1em .5em 0;
+        vertical-align: middle;
+      }
+      select {
+        height: auto;
+      }
+      option {
+        line-height: 2em;
+        padding: 0.5em 0;
+        font-size: 1.25em;
+      }
+    }
+    .views-exposed-widget {
+      button {
+        display: none;
+      }
+    }
+    form#senator-issues {
+      .ajax-progress-throbber {
+        top: -30px;
+        left: 0px;
+        display: inline-block;
+      }
+    }
+    .ajax-progress-throbber {
+      top: 40px;
+      position: relative;
+      left: 10px;
+      .throbber {
+        text-align: center;
+        margin: 0 auto;
+      }
+    }
+    .views-exposed-form {
+      .form-item-name {
+        position: relative;
+        &:after {
+          text-indent: 0;
+          top: 12px;
+          cursor: pointer;
+          font-family: 'senate_icons';
+          speak: none;
+          font-style: normal;
+          font-weight: normal;
+          font-variant: normal;
+          text-transform: none;
+          content: "\6d";
+          position: absolute;
+          right: 50px;
+          font-size: 22px;
+          color: $blue03;
+        }
+      }
+      .form-item-sort-by {
+        position: relative;
+        #edit-sort-by {
+          color: $blue03;
+          z-index: 3;
+          position: relative;
+        }
+        &:after {
+          content: "\65" !important;
+          top: 40px;
+          cursor: pointer;
+          font-family: 'senate_icons';
+          speak: none;
+          font-style: normal;
+          font-weight: normal;
+          font-variant: normal;
+          text-transform: none;
+          content: "\6d";
+          position: absolute;
+          right: 10px;
+          font-size: 22px;
+          color: $blue03;
+          z-index: 2;
+        }
+      }
+    }
+    .filter-wrapper,
+    .search-wrapper {
+      margin-right: 30px;
+    }
+    .search-wrapper {
+      width: 100%;
+      .form-wrapper {
+        position: relative;
+        .c-site-search--box {
+          height: 55px;
+          width: 100%;
+        }
+        .c-site-search--btn {
+          top: 5px;
+          right: 0;
+        }
+      }
+    }
+    .filter-wrapper {
+      position: relative;
+      margin-right: 0;
+
+      &:after {
+        @extend .icon-after__see-more;
+        position: absolute;
+        right: 10px;
+        top: 5px;
+        font-size: 25px;
+        color: $cont_blue_lgt;
+        pointer-events: none;
+        cursor: pointer;
+      }
+      &.filter-wrapper--issue-order:after {
+        top: 37px;
+      }
+      &.filter-wrapper--msg:after {
+        top: 11px;
+      }
+    }
+    select {
+      height: 55px;
+      width: 100%;
+      border: 1px solid #C0C0C0;
+      background: none;
+      font-family: "Proxima Nova SemiBold";
+      font-size: 14px;
+      line-height: 18px;
+      text-transform: uppercase;
+      padding: 0 20px;
+      display: block;
+    }
+    select + .issue-container {
+      margin-top: -40px;
+    }
+    .issue-header {
+      margin: 40px 0 0 0;
+      a {
+        color: #fff;
+      }
+    }
+    .issue-header + .pager-load-more {
+      margin: 0;
+    }
+    .issue-follower-header {
+      @extend %pager-load-more;
+      cursor: pointer;
+    }
+    .issue-filters {
+      border-right: 1px solid $grey13;
+      border-left: 1px solid $grey13;
+      border-bottom: 1px solid $grey13;
+      clear: both;
+      padding: 20px 10px;
+      &:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+      .filter {
+        height: 55px;
+        width: 100%;
+        border: 1px solid #C0C0C0;
+        // background: url(../images/svg/see-less-dash.svg) no-repeat 95% center;
+        // background-size: 15px;
+        font-family: "Proxima Nova SemiBold";
+        font-size: 14px;
+        line-height: 18px;
+        text-transform: uppercase;
+        padding: 0 20px;
+        display: block;
+      }
+      .select-all-messages {
+        float: left;
+        label {
+          text-transform: none;
+        }
+      }
+      .show-in-district {
+        float: left;
+        label {
+          text-transform: none;
+        }
+      }
+      .action-button-wrapper {
+        float: right;
+      }
+      button {
+        float: right;
+        height: 32px;
+        width: 115px;
+        padding: 0 18px;
+        font-family: "Proxima Nova SemiBold";
+        font-size: 12px;
+        text-transform: uppercase;
+        background-color: $blue03;
+        &:before {
+          font-size: 20px;
+          margin-top: -3px;
+        }
+      }
+      #senator_constituents_table {
+        clear: both;
+      }
+    }
+  }
+  .c-container--years-updates,
+  .c-container--leading-issues {
+    .c-container--body {
+      padding: 40px 0 0;
+      text-align: center;
+      width: auto;
+      .year-stats {
+        display: inline-block;
+        width: 30%;
+        padding-bottom: 40px;
+        margin: 0 20px;
+        position: relative;
+        vertical-align: top;
+
+        &:after {
+          content: "";
+          width: 1px;
+          height: 47px;
+          border-right: 1px solid $blue04;
+          position: absolute;
+          right: -20px;
+          top: 67px;
+        }
+        &:last-of-type {
+          &:after {
+            display: none;
+          }
+        }
+        &:nth-child(2) {
+          &:after {
+            display: none;
+          }
+        }
+        .year-identifier {
+          position: absolute;
+          width: 100%;
+          text-align: center;
+          font-family: "Proxima Nova Regular";
+          font-size: 12px;
+          line-height: 16px;
+          color: $grey05;
+        }
+        .stat-number {
+          margin-top: 60px;
+          font-family: "Adelle Bold";
+          font-size: 48px;
+          line-height: 56px;
+          color: $grey02;
+        }
+        .stat-identifier {
+          font-family: "Proxima Nova Regular";
+          font-size: 14px;
+          line-height: 18px;
+          margin-top: 10px;
+          a {
+            color: $grey03;
+          }
+        }
+      }
+
+      @media #{$tablet} {
+        .year-stats {
+          width: 100px;
+          padding-bottom: 0;
+
+          &:nth-child(2) {
+            &:after {
+              display: block;
+            }
+          }
+        }
+      }
+    }
+  }
+  .c-container--leading-issues {
+    .year-stats {
+      .stat-number {
+        margin-top: 0px !important;
+      }
+    }
+  }
+  .c-container--active-list {
+    .c-container--body {
+      padding-top: 40px;
+      .view {
+        .tab-title {
+          font-family: "Proxima Nova Regular";
+          font-size: 14px;
+          line-height: 18px;
+          color: $grey04;
+        }
+      }
+    }
+  }
+  .c-container--quest-pet {
+    .tabs-content {
+      label {
+        margin-top: 20px;
+      }
+      .filter {
+        height: 55px;
+        width: 100%;
+        border: 1px solid #C0C0C0;
+        background: url(../images/svg/see-less-dash.svg) no-repeat 95% center;
+        background-size: 15px;
+        font-family: "Proxima Nova SemiBold";
+        font-size: 14px;
+        line-height: 18px;
+        text-transform: uppercase;
+        padding: 0 20px;
+      }
+      .your-petitions,
+      .all-petitions {
+        .poll-signature {
+          .poll-signature-header {
+            background-color: $grey06;
+            padding: 5px 0;
+            width: 100%;
+            margin: 20px 0 0 0;
+            float: left;
+            font-family: "Proxima Nova SemiBold";
+            font-size: 16px;
+            line-height: 41px;
+            font-weight: normal;
+            text-transform: uppercase;
+            color: $blue03;
+            text-align: center;
+          }
+          .poll-signature-list {
+            form {
+              border: 1px solid #CCC;
+              padding: 20px 10px 10px 10px;
+              clear: both;
+              &:after {
+                content: "";
+                display: table;
+                clear: both;
+              }
+              label {
+                margin-top: 0;
+              }
+              .filter-wrapper {
+                position: relative;
+                display: inline-block;
+                &:after {
+                  @extend .icon-after__see-more;
+                  position: absolute;
+                  right: 10px;
+                  top: 11px;
+                  color: $cont_blue_lgt;
+                  font-size: 25px;
+                  pointer-events: none;
+                  cursor: pointer;
+                }
+              }
+              .filter {
+                height: 55px;
+                width: 100%;
+                margin: 0 0 20px 0;
+                border: 1px solid #C0C0C0;
+                background: none;
+                font-family: "Proxima Nova SemiBold";
+                font-size: 14px;
+                line-height: 18px;
+                text-transform: uppercase;
+                padding: 0 20px;
+                display: block;
+              }
+              .inbox-action-links {
+                overflow: hidden;
+
+                @media #{$tablet} {
+                  margin-bottom: 20px;
+                }
+              }
+              .select-all-messages {
+                float: left;
+
+                .form-item {
+                  margin: 0;
+                }
+
+                label {
+                  text-transform: none;
+                }
+              }
+              .show-in-district {
+                float: left;
+
+                .form-item {
+                  margin: 0;
+                }
+
+                label {
+                  text-transform: none;
+                }
+              }
+
+              .action-button-wrapper {
+                float: right;
+                .form-actions {
+                  margin: 0;
+                }
+              }
+              button {
+                // float: right;
+                height: 32px;
+                width: 115px;
+                padding: 0 18px;
+                font-family: "Proxima Nova SemiBold";
+                font-size: 12px;
+                text-transform: uppercase;
+                background-color: $blue03;
+                &:before {
+                  font-size: 20px;
+                  margin-top: -3px;
+                }
+              }
+            }
+          }
+        }
+        .poll-container {
+          h3 {
+            font-family: "Proxima Nova SemiBold";
+            font-size: 16px;
+            line-height: 22px;
+            color: $cont_blue_med;
+            text-transform: uppercase;
+            margin-top: 15px;
+          }
+          .poll-create-date {
+            font-family: "Proxima Nova Regular";
+            font-size: 12px;
+            line-height: 16px;
+            color: $grey04;
+          }
+          .poll-share-bar {
+            p {
+              text-transform: uppercase;
+              font-family: "Proxima Nova Regular";
+              font-size: 12px;
+              line-height: 18px;
+              color: $grey02;
+              margin: 15px 0 5px 0;
+            }
+            .poll-facebook-share,
+            .poll-twitter-share {
+              font-size: 30px;
+              line-height: 19px;
+              display: inline-block;
+              margin: 0 20px 20px 0;
+              &:after {
+                margin-left: -13px;
+              }
+            }
+          }
+          .poll-results {
+            label {
+              margin-top: 5px;
+              font-size: 10px;
+              text-transform: capitalize;
+            }
+            .result-container {
+              height: 20px;
+              position: relative;
+              span {
+                position: relative;
+                float: right;
+                right: -15px;
+              }
+              &:after {
+                display: inline-block;
+                height: 20px;
+                position: absolute;
+                right: -30px;
+                font-size: 10px;
+                color: $grey04;
+              }
+              &.result-1 {
+                width: 100%;
+                background-color: $cont_blue_lgt;
+                &:after {
+                  // content:"1500";
+                }
+              }
+              &.result-2 {
+                background-color: $cont_blue_drk;
+                &:after {
+                  // content:"500";
+                }
+              }
+            }
+          }
+          .poll-results--stacked {
+            display: table;
+
+            label {
+              display: table-row;
+              width: 100%;
+              margin-top: 5px;
+              float: left;
+              font-size: 10px;
+              text-transform: capitalize;
+            }
+
+            .result-container {
+              display: table-row;
+              height: 20px;
+
+              .result {
+                display: table-cell;
+                width: 100%;
+
+                .percent {
+                  height: 20px;
+                  display: inline-block;
+                  float: left;
+
+                  &.result-0 {
+                    background-color: $grey05;
+                  }
+
+                  &.result-1 {
+                    background-color: $cont_blue_lgt;
+                  }
+
+                  &.result-2 {
+                    background-color: $grey04;
+                  }
+
+                  &.result-3 {
+                    background-color: $cont_blue_drk;
+                  }
+                }
+              }
+
+              span {
+                display: table-cell;
+                padding-left: 7px;
+                float: right;
+                white-space: nowrap;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .c-container--bills-leg {
+    .form-wrapper {
+      position: relative;
+      max-width: 320px;
+      input[type="text"] {
+        height: 55px;
+      }
+      button {
+        &:after {
+          top: -14px;
+          right: -12px;
+          left: inherit;
+        }
+      }
+    }
+    .tab-title {
+      font-family: "Adelle Regular";
+      font-size: 18px;
+      line-height: auto;
+      color: $grey02;
+    }
+    table {
+      margin-top: 20px;
+    }
+    .tabs-content {
+      .content {
+        padding-top: 20px;
+      }
+    }
+    .views-exposed-widget {
+      .ajax-progress-throbber {
+        top: 40px;
+        position: relative;
+        left: 10px;
+      }
+    }
+  }
+  #nys_senators_constituents_bills {
+    form {
+      margin-top: 30px;
+
+      .filter-wrapper {
+        position: relative;
+        display: inline-block;
+        margin-right: 1%;
+        width: 100%;
+
+        &.filter-wrapper--bill {
+          &:after {
+            @extend .icon-after__see-more;
+            position: absolute;
+            right: 10px;
+            top: 37px;
+            color: $cont_blue_lgt;
+            font-size: 25px;
+            pointer-events: none;
+            cursor: pointer;
+          }
+        }
+
+        select {
+          max-width: 100%;
+          background: none;
+        }
+        &.search-wrapper {
+          .form-wrapper {
+            top: 1px;
+            position: relative;
+            button, div {
+              top: 5px;
+              right: 10px;
+              cursor: pointer;
+              &:after {
+                color: $blue03;
+              }
+            }
+          }
+          input {
+            height: 55px;
+            &.form-autocomplete {
+              background: none;
+            }
+          }
+        }
+      }
+      .inbox-action-links {
+        clear: both;
+      }
+    }
+    @media #{$tablet} {
+      form {
+        .filter-wrapper {
+          max-width: 33% !important;
+          width: 32%;
+          float: left;
+        }
+      }
+    }
+  }
+  .c-container--senator-bills-messaging {
+    .c-container--body {
+      padding-top: 40px;
+      table {
+        margin-top: 15px;
+      }
+    }
+    form {
+      display: inline-block;
+      &.bills-search {
+        position: relative;
+        width: 100%;
+        margin: 0 20px 0 0;
+        input {
+          height: 55px;
+        }
+        .c-site-search--btn {
+          top: 34px;
+          right: 2px;
+        }
+      }
+      &.bills-filter {
+        width: 100%;
+        div {
+          display: inline-block;
+          width: 100%;
+          margin: 0 20px 0 0;
+          .filter {
+            height: 55px;
+            width: 100%;
+            border: 1px solid #C0C0C0;
+            // background: url(../images/svg/see-less-dash.svg) no-repeat 95% center;
+            // background-size: 15px;
+            font-family: "Proxima Nova SemiBold";
+            font-size: 14px;
+            line-height: 18px;
+            text-transform: uppercase;
+            padding: 0 20px;
+            margin: 0;
+            display: inline-block;
+          }
+          &.col2 {
+            margin: 0;
+          }
+        }
+      }
+      &.bills-msg {
+        width: 100%;
+        clear: both;
+        margin-top: 25px;
+        .select-all-messages {
+          float: left;
+          label {
+            text-transform: none;
+          }
+        }
+        .show-in-district {
+          float: left;
+          label {
+            text-transform: none;
+          }
+        }
+        button {
+          float: right;
+          height: 32px;
+          width: 115px;
+          padding: 0 18px;
+          font-family: "Proxima Nova SemiBold";
+          font-size: 12px;
+          text-transform: uppercase;
+          background-color: $blue03;
+          &:before {
+            font-size: 20px;
+            margin-top: -3px;
+          }
+        }
+      }
+    }
+  }
+  .c-container--senator-constituents {
+    #nys-inbox-senator-constituents-form {
+      .filter-wrapper {
+        display: inline;
+        position: relative;
+
+        &:after {
+          @extend .icon-after__see-more;
+          position: absolute;
+          right: 20px;
+          top: -12px;
+          font-size: 25px;
+          color: $cont_blue_lgt;
+          pointer-events: none;
+          cursor: pointer;
+        }
+      }
+      .filter {
+        height: 55px;
+        width: 100%;
+        border: 1px solid #C0C0C0;
+        background: none;
+        font-family: "Proxima Nova SemiBold";
+        font-size: 14px;
+        line-height: 18px;
+        text-transform: uppercase;
+        padding: 0 30px 0 20px;
+        margin: 0 10px 20px 0;
+        display: inline-block;
+        &:nth-child(3) {
+          //margin: 0 0 20px 0;
+        }
+      }
+      .zip-filter {
+        height: 55px;
+        display: inline-block;
+        width: 100%;
+        background: url(../images/svg/search.svg) no-repeat 95% center;
+        background-size: 15px;
+      }
+      button.form-submit {
+        float: right;
+        height: 32px;
+        width: 115px;
+        padding: 0 18px;
+        font-family: "Proxima Nova SemiBold";
+        font-size: 12px;
+        text-transform: uppercase;
+        background-color: $blue03;
+        &:before {
+          font-size: 20px;
+          margin-top: -3px;
+        }
+      }
+      .form-wrapper {
+        position: relative;
+        width: 100%;
+        //max-width: 320px;
+        input[type="text"],
+        input[type="search"] {
+          height: 55px;
+          background: none;
+        }
+        .c-site-search--btn {
+          width: 45px;
+          background: none;
+          top: 20px;
+          &:after {
+            top: -13px;
+            right: -11px;
+            left: inherit;
+            font-size: 24px;
+          }
+        }
+      }
+      .inbox-action-links {
+        .select-all-messages {
+          float: left;
+          label {
+            text-transform: none;
+          }
+        }
+        .show-in-district {
+          float: left;
+          label {
+            text-transform: none;
+          }
+        }
+        .action-button-wrapper {
+          float: right;
+          button {
+            display: inline-block;
+            height: 32px;
+            width: auto;
+            padding: 0 18px;
+            font-family: "Proxima Nova SemiBold";
+            font-size: 12px;
+            text-transform: uppercase;
+            background-color: $cont_blue_lgt;
+          }
+        }
+      }
+    }
+    #senator_constituents_table {
+      clear: both;
+      .pagination-centered {
+        height: 51px;
+        background-color: $grey06;
+        border-bottom: 1px solid #DDD;
+        border-left: 1px solid #DDD;
+        border-right: 1px solid #DDD;
+        margin-top: -20px;
+        .pagination {
+          float: right;
+          margin: 12px 10px 0 0;
+          height: 24px;
+          li {
+            display: inline-block;
+            margin: 0 15px 0 0;
+            vertical-align: top;
+            a {
+              color: $cont_blue_med;
+              background: none;
+              line-height: 22px;
+            }
+            &.current {
+              a {
+                background: none;
+                color: $cont_blue_drk;
+              }
+            }
+            &.arrow.first,
+            &.arrow.last,
+            &.unavailable {
+              display: none;
+            }
+            &.arrow.first + .arrow a {
+              text-indent: -9999em;
+              font-size: 0;
+              height: 24px;
+              display: block !important;
+              &:before {
+                content: "\3c";
+                display: block;
+                width: 28px;
+                height: 24px;
+                font-size: 18px;
+                font-family: 'senate_icons';
+                line-height: 22px;
+              }
+            }
+            &.unavailable + .arrow a,
+            a[title="Go to next page"] {
+              text-indent: -9999em;
+              font-size: 0;
+              height: 24px;
+              display: block;
+              &:after {
+                content: "\3e";
+                display: block;
+                width: 28px;
+                height: 24px;
+                font-size: 18px;
+                font-family: 'senate_icons';
+                line-height: 22px;
+                margin-top: -22px;
+              }
+            }
+          }
+        }
+      }
+    }
+    label {
+      margin-top: 20px;
+    }
+    table {
+      margin-top: 15px;
+    }
+  }
+  .l-main {
+    padding: 0;
+    max-width: 480px;
+    position: relative;
+    .panel-col-first {
+      display: none;
+      position: absolute;
+      top: 0;
+      z-index: 6;
+      width: 100%;
+      max-width: 400px;
+      padding: 0;
+      background-color: $grey12;
+      height: 100%;
+      .inside {
+        margin: 0;
+      }
+    }
+    .panel-col-last {
+      width: 100%;
+      padding: 40px 20px 0 20px;
+      .panel-pane {
+        border-bottom: 1px solid $blue04;
+        margin-bottom: 30px;
+        &:last-child {
+          border-bottom: none;
+        }
+        .user-edit-reset {
+          margin: 20px 0px;
+          padding: 6px 5px 8px 5px;
+          text-transform: uppercase;
+          font-size: 11px;
+          letter-spacing: 0.25em;
+          font-family: "Proxima Nova SemiBold";
+          width: 150px;
+          display: block;
+          float: right;
+          clear: both;
+          height: 25px;
+          color: #fff;
+          text-decoration: none;
+          text-align: center;
+          background-color: $gen_blue_med;
+        }
+        #edit-account {
+          width: 50%;
+          margin-right: 20px;
+          float: left;
+        }
+        #edit-field-user-receive-emails {
+          width: 30%;
+          margin-top: 20px;
+          float: left;
+          border-top: none;
+        }
+        #edit-field-address-und-0 {
+          border: none;
+          .fieldset-legend {
+            font-weight: normal;
+            font-size: 1.8em;
+            line-height: 1em;
+            margin-bottom: 0.5rem;
+            color: #444;
+            font-family: "Proxima Nova Regular";
+            text-transform: none;
+          }
+        }
+
+      }
+      .c-container--title {
+        text-transform: capitalize;
+        font-family: "Adelle SemiBold";
+        font-size: 18px;
+        line-height: 32px;
+        letter-spacing: 0;
+        color: $grey02;
+      }
+    }
+  }
+  .view-senator-dashboard-issues.view-display-id-block {
+    .view-header {
+      float: left;
+    }
+    .view-filters {
+      .views-widget-sort-by {
+        width: 100%;
+        max-width: 240px;
+      }
+      .views-widget-filter-name {
+        .views-widget {
+          input {
+            height: 55px;
+            max-width: 241px;
+            margin-right: 40px;
+          }
+        }
+      }
+    }
+    .view-content {
+      .issue-container {
+        .user-list {
+          .issue-follower-header {
+            margin: 0;
+          }
+          form {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+  .view-senator-dashboard-petitions-and-questionnaires.view-display-id-questionnaires,
+  .view-senator-dashboard-petitions-and-questionnaires.view-display-id-petitions {
+    .view-content {
+      .poll-container {
+        overflow: hidden;
+        margin: 20px 0;
+        .poll-signature-header {
+          cursor: pointer;
+          margin-bottom: 20px;
+        }
+        .user-list {
+          display: none;
+        }
+
+        .views-row-last {
+          .poll-container {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+
+    @media #{$tablet} {
+      .view-content {
+        .poll-container {
+          margin: 60px 0 40px;
+        }
+        .views-row-last {
+          .poll-container {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+  &.senator-dashboard {
+    .c-container--dash-senator-card {
+      .c-container--your-s {
+        display: none;
+      }
+      .c-dash-senator-action-links {
+        .c-dash-msg-senator {
+          display: none;
+        }
+        .c-dash-senator-site-link {
+          display: block;
+          margin-left: -90px;
+          font-size: 12px;
+          font-family: "Proxima Nova SemiBold";
+          color: $gen_blue_med;
+          @extend .icon-after__arrow;
+
+          &:hover {
+            color: $gen_blue_lgt;
+          }
+        }
+      }
+    }
+  }
+  /*------------------------------------------------
+  /	Constituent Dashboard General Element Overrides
+  /-----------------------------------------------*/
+  &.constituent-dashboard {
+    .view-explore-issues-tabs {
+      .pager-load-more {
+        // width: 97%;
+      }
+    }
+    .pager-load-more {
+      color: $gen_blue_lgt;
+    }
+    .tabs {
+      .c-tab {
+        a {
+          color: $gen_blue_lgt !important;
+        }
+        &.active {
+          a {
+            color: $gen_blue_med !important;
+          }
+        }
+      }
+    }
+    .form-wrapper {
+      button {
+        &:after {
+          color: $gen_blue_med;
+        }
+      }
+    }
+    .filter {
+      color: $gen_blue_med;
+      background: url(../images/svg/see-less.svg) no-repeat 95% center;
+      background-size: 15px;
+    }
+    #nys_inbox {
+      form {
+        .inbox-action-links {
+          .action-button-wrapper {
+            button {
+              background-color: $gen_blue_med;
+            }
+          }
+        }
+      }
+      table {
+        tbody {
+          tr {
+            td {
+              &.privatemsg-list-issue {
+                .message-action-buttons {
+                  .reply-button,
+                  .forward-button {
+                    background-color: $gen_blue_med;
+                  }
+                }
+              }
+              .message-body {
+                div {
+                  button {
+                    background-color: $gen_blue_med;
+                    &:nth-child(1) {
+                      margin-left: 20px;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .pane-nys-inbox-nys-inbox {
+      #nys-inbox-message-form {
+        button[type="submit"] {
+          background-color: $gen_blue_lgt;
+        }
+      }
+    }
+    .panel-col-first {
+      .c-container--dash-user-card,
+      .c-container--dash-senator-card {
+        .c-container--body {
+          .c-container--email a {
+            color: $gen_blue_med;
+          }
+          .c-dash-user-action-links,
+          .c-dash-senator-action-links {
+            .c-dash-msg-senator {
+              background-color: $gen_blue_med;
+            }
+            .c-dash-senator-site-link {
+              font-size: 12px;
+              font-family: "Proxima Nova SemiBold";
+              color: $gen_blue_med;
+              @extend .icon-after__arrow;
+
+              &:hover {
+                color: $gen_blue_lgt;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.page-user-dashboard.nav-open {
+  .l-main {
+    .panel-col-first {
+      display: block;
+      height: 100vh;
+      width: 100%;
+      max-width: 1200px;
+      .inside {
+        overflow-y: scroll;
+        height: 100vh;
+        padding-bottom: 150px;
+      }
+    }
+  }
+}
+
+.page-user-dashboard-issues{
+  #views-exposed-form-explore-issues-explore-issues,
+  #views-exposed-form-explore-issues-solr-explore-issues,
+  #views-exposed-form-explore-issues-tabs-explore-issues-alpha{
+    background: none;
+    width: 320px;
+  }
+}
+
+.page-user-dashboard-bills.senator-dashboard {
+  .c-container--bills-leg {
+    .l-tab-bar {
+      // height: 70px;
+      &.open {
+        // height: 140px;
+      }
+      .c-tab {
+        letter-spacing: 1px;
+        // height: 70px;
+        // margin-top: 22px;
+        background-color: $grey06;
+
+        .c-tab-link{
+          width: 100%;
+          height: 100%;
+          background: none;
+          padding: 0 20% 0 20px;
+          font-size: 14px;
+          line-height: 17px;
+
+          &:before {
+            content: "";
+            display: inline-block;
+            vertical-align: middle;
+            height: 100%;
+            width: 1px;
+            margin-left: -4px;
+          }
+        }
+        &.active {
+          margin-top: 0px;
+          background: none;
+          .c-tab-link{
+            // padding-top: 20px;
+          }
+        }
+        &.const {
+          .c-tab-link {
+            padding-top: 5px;
+            padding-bottom: 4px;
+
+            &:before {
+              display: none;
+            }
+          }
+          &.active {
+            .c-tab-link {
+
+            }
+          }
+        }
+      }
+      .arrow {
+        top: 15px;
+      }
+    }
+    .views-exposed-widget {
+      button {
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: 0.25em;
+        font-family: "Proxima Nova SemiBold";
+        display: block;
+        color: #fff;
+        text-decoration: none;
+        text-align: center;
+        background-color: $gen_blue_med;
+        margin-left: 10px;
+        top: 20px;
+      }
+    }
+  }
+  @media #{$tablet} {
+    .c-container--bills-leg {
+      .l-tab-bar {
+
+        .c-tab {
+          // height: 70px;
+          max-width: 350px;
+          background: none !important;
+          padding: 0;
+
+          .c-tab-link {
+            padding: 0 25px;
+            text-align: center;
+            white-space: normal;
+          }
+          &.const {
+            .c-tab-link {
+              padding-top: 7px;
+              // padding-left: 20px !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width : 1347px) {
+  .page-user-dashboard {
+    .l-main {
+      background: none;
+      .panel-col-first {
+        position: relative;
+        top: 0;
+      }
+    }
+  }
+  .page-user-dashboard.nav-open {
+    .l-main {
+      .panel-col-first {
+        display: block;
+        height: 100vh;
+        position: absolute;
+        z-index: 6;
+      }
+    }
+  }
+}
+
+@media #{$tablet} {
+  .page-user-dashboard {
+    &.constituent-dashboard {
+      #nys_inbox {
+        form {
+          .inbox-action-links {
+            .action-button-wrapper {
+              button {
+                background-color: $gen_blue_lgt;
+              }
+            }
+          }
+        }
+        table {
+          tbody {
+            tr {
+              td {
+                .message-body {
+                  div {
+                    button {
+                      background-color: $gen_blue_lgt;
+                      &:nth-child(1) {
+                        margin-left: 20px;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .c-header-bar {
+      height: 75px;
+      .c-header--connect {
+        right: 40px;
+        margin: 30px 10px 0 0;
+      }
+      .c-page-title {
+        display: inline-block;
+        font-size: 18px;
+      }
+      .c-nav--toggle {
+        display: block;
+        height: 40px;
+        top: 9px;
+        right: 5px;
+        &:after {
+          font-size: 19px;
+        }
+      }
+      &.collapsed {
+        .c-header--connect {
+          margin: 30px 10px 0 0;
+        }
+        .c-nav--toggle {
+          background: none;
+          display: block;
+          top: 8px;
+          transition-property: none;
+          &:after {
+            color: $cont_blue_lgt;
+          }
+        }
+      }
+    }
+    .filter {
+      max-width: 241px;
+    }
+    table.stat-data {
+      thead {
+        th {
+          &.verified,
+          &.zip,
+          &.age,
+          &.gender,
+          &.vote,
+          &.bill,
+          &.messaged {
+            display: table-cell;
+          }
+          &.city,
+          &.vote, {
+            border-right: none;
+          }
+        }
+      }
+      tbody {
+        tr {
+          td {
+            &.verified,
+            &.zip,
+            &.age,
+            &.gender,
+            &.vote,
+            &.bill,
+            &.messaged {
+              display: table-cell;
+            }
+            &.city,
+            &.vote, {
+              border-right: none;
+            }
+          }
+        }
+      }
+    }
+    table.bill-data {
+      thead {
+        th {
+          display: table-cell;
+          &:first-child {
+            display: table-cell;
+          }
+        }
+      }
+      td {
+        display: table-cell;
+        width: 30%;
+        position: relative;
+        &:nth-child(2),
+        &:nth-child(3){
+          width: 35%;
+          float: none;
+        }
+        h3 {
+          display: none;
+        }
+        .pie-legend {
+          float: right;
+          margin-top: 17%;
+          text-align: center;
+          width: 45px;
+          .yes-value,
+          .no-value {
+            font-family: "Adelle Bold";
+            font-size: 18px;
+            line-height: 21px;
+          }
+          .yes-value {
+            color: $cont_blue_med;
+          }
+          .no-value {
+            color: $cont_blue_drk;
+          }
+          .option-label {
+            font-family: "Proxima Nova Regular";
+            font-size: 10px;
+            line-height: 14px;
+            color: $grey04;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+          }
+        }
+        .pieContainer {
+          height: 167px;
+          width: 167px;
+        }
+        .pieBackground {
+          background-color: $cont_blue_drk;
+          position: absolute;
+          width: 150px !important;
+          height: 150px !important;
+          -moz-border-radius: 75px;
+          -webkit-border-radius: 75px;
+          -o-border-radius: 75px;
+          border-radius: 75px;
+        }
+        .pie {
+          position: absolute;
+          width: 150px !important;
+          height: 150px !important;
+          -moz-border-radius: 75px;
+          -webkit-border-radius: 75px;
+          -o-border-radius: 75px;
+          border-radius: 75px;
+          clip: rect(0px, 75px, 150px, 0px);
+        }
+        .hold {
+          position: absolute;
+          width: 150px !important;
+          height: 150px !important;
+          -moz-border-radius: 75px;
+          -webkit-border-radius: 75px;
+          -o-border-radius: 75px;
+          border-radius: 75px;
+          clip: rect(0px, 150px, 150px, 75px);
+        }
+        #pieSlice1 .pie {
+          background-color: $cont_blue_lgt;
+          -webkit-transform:rotate(50deg);
+          -moz-transform:rotate(50deg);
+          -o-transform:rotate(50deg);
+          transform:rotate(50deg);
+        }
+      }
+    }
+    #nys_inbox .message-body {
+      display: none;
+    }
+
+    #nys_inbox .message-preview {
+      display: none;
+    }
+
+    #nys_inbox .messagesearch-highlight {
+      color: $cont_blue_lgt;
+    }
+
+
+    #nys_inbox .message-body.visible {
+      display: block;
+    }
+
+    #nys_inbox .message-preview.visible {
+      display: block;
+    }
+
+    #nys_inbox .message-body button {
+      float: right;
+    }
+    #nys_inbox {
+      form {
+        .search-wrapper {
+          width: 47%;
+          display: inline-block;
+          &:nth-child(2) {
+            margin-left: 5%;
+          }
+        }
+        .container-inline.form-wrapper {
+          position: relative;
+          input[type="search"] {
+            height: 55px;
+          }
+          button {
+            top: 4px;
+          }
+        }
+        .inbox-action-links {
+          margin: 25px 0;
+          min-height: 35px;
+          .select-all-messages {
+            float: left;
+            display: inline-block;
+          }
+          .show-in-district {
+            float: left;
+            display: inline-block;
+          }
+          .action-button-wrapper {
+            float: right;
+            display: inline-block;
+            button {
+              display: inline-block;
+              height: 32px;
+              width: auto;
+              padding: 0 18px;
+              font-family: "Proxima Nova SemiBold";
+              font-size: 12px;
+              text-transform: uppercase;
+              background-color: $blue03;
+              &:nth-child(2) {
+                margin-left: 20px;
+              }
+            }
+          }
+        }
+        &:after {
+          content: "";
+          display: table;
+          clear: both;
+        }
+      }
+      table {
+        margin-bottom: 0;
+        thead {
+          th {
+            &:nth-child(3) {
+              display: table-cell;
+            }
+          }
+        }
+        tbody {
+          tr {
+            td {
+              font-family: "Proxima Nova Regular";
+              color: $grey02;
+              border-bottom: 1px solid #e2e8ec;
+              height: 80px;
+              font-size: 13px;
+              line-height: 18px;
+              vertical-align: top;
+              &:nth-child(3) {
+                display: table-cell;
+              }
+              .message-body {
+                font-size: 14px;
+                line-height: 20px;
+                div {
+                  margin-right: -200px;
+                  button {
+                    display: inline-block;
+                    height: 32px;
+                    width: auto;
+                    padding: 0 18px;
+                    font-family: "Proxima Nova SemiBold";
+                    font-size: 12px;
+                    text-transform: uppercase;
+                    background-color: $blue03;
+                    &:nth-child(1) {
+                      margin-left: 20px;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .tabs {
+      .c-tab {
+        width: 50%;
+      }
+    }
+    /*------------------------------------
+    /	Senator Dashboard
+    /-------------------------------------*/
+    .c-container--senator-constituents {
+      #nys-inbox-senator-constituents-form {
+        .filter {
+          height: 55px;
+          width: 100%;
+          max-width: 324px;
+        }
+        .zip-filter {
+          height: 55px;
+          display: inline-block;
+          max-width: 324px;
+        }
+        .form-wrapper {
+          position: relative;
+          max-width: 320px;
+          input[type="text"],
+          input[type="search"] {
+            height: 55px;
+          }
+          .c-site-search--btn {
+            width: 45px;
+            background: none;
+            top: 10px;
+            &:after {
+              top: -5px;
+              right: -11px;
+              left: inherit;
+              font-size: 24px;
+            }
+          }
+        }
+      }
+    }
+    .c-container--quest-pet {
+      .tabs-content {
+        .filter {
+          max-width: 241px;
+          margin-bottom: 40px;
+        }
+        .your-petitions,
+        .all-petitions {
+          .poll-container {
+            .poll-main-info	{
+              width: 30%;
+              display: inline-block;
+              float: left;
+              padding-right: 20px;
+              border-right: 1px solid $blue04;
+              margin-right: 20px;
+              h3 {
+                margin-top: 0;
+              }
+            }
+            .poll-results {
+              width: 66%;
+              display: inline-block;
+              float: left;
+            }
+          }
+        }
+      }
+    }
+    .c-container--senator-bills-messaging {
+      form {
+        &.bills-search {
+          width: 32%;
+        }
+        &.bills-filter {
+          width: 64%;
+          div {
+            width: 47%;
+          }
+        }
+      }
+    }
+    .c-container--issues {
+      .filter-wrapper,
+      .search-wrapper {
+        display: inline-block;
+        margin-right: 18px;
+        vertical-align: bottom;
+      }
+      .filter-wrapper {
+        width: 320px;
+        margin-right: 0;
+        .filter {
+          max-width: 100%;
+        }
+      }
+      .search-wrapper {
+        max-width: 320px;
+        .form-wrapper {
+          .c-site-search--box {
+            max-width: 320px;
+          }
+        }
+      }
+    }
+    /*------------------------------------
+    /	Constituent Dashboard
+    /-------------------------------------*/
+    .view-explore-issues-tabs,
+    .view-constituent-updates {
+      .c-container--title {
+        margin-bottom: 40px;
+      }
+      .c-follow-issue--header {
+        .explore-link {
+          position: absolute;
+          top: 5px;
+          right: 0;
+        }
+      }
+    }
+    .c-container--const-issues-follow,
+    .c-container--const-bills-follow,
+    .c-container--const-comm-follow,
+    .c-container--const-pet-quest {
+      margin: 0;
+      article {
+        .meta {
+          width: 24%;
+        }
+        .body {
+          width: 65%;
+          margin: -43px 0 0 25%;
+          img {
+            max-width: 220px;
+            float: right;
+            margin-left: 20px;
+          }
+        }
+      }
+    }
+    .c-container--const-comm-follow {
+      #edit-type-wrapper {
+        margin-right: 20px;
+      }
+    }
+    .c-container--const-pet-quest {
+      article {
+        position: relative;
+        .pet-body {
+          width: 75%;
+        }
+        .pet-share-bar {
+          width: 21%;
+          position: relative;
+        }
+      }
+    }
+    .c-container--const-issues-wdgt-follow {
+      .issue-widget-wrapper {
+        .issue-follow-widget {
+          width: 200px;
+          height: 131px;
+        }
+      }
+    }
+    .c-container--const-issues-search {
+      .explore-link {
+        position: absolute;
+        right: 22px;
+        top: 9px;
+        margin-top: 0;
+      }
+      .search-wrapper {
+        max-width: 360px;
+      }
+    }
+    .c-container--const-bills-wdgt-follow {
+      .bill-widget-wrapper {
+        .bill-follow-widget {
+          width: 48%;
+          height: 440px;
+        }
+        .even  {
+          .bill-follow-widget {
+            margin-left: 4%;
+          }
+        }
+      }
+    }
+    /*------------------------------------
+    /	Main columns overrides
+    /-------------------------------------*/
+    .l-main {
+      padding: 0;
+      max-width: 768px;
+      position: relative;
+      .panel-col-first {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 6;
+        width: 100%;
+        max-width: 400px;
+        padding: 0;
+        background-color: $grey12;
+        height: 100%;
+        .inside {
+          margin: 0;
+        }
+      }
+      .panel-col-last {
+        width: 100%;
+        padding: 40px;
+        .panel-pane {
+          margin-bottom: 30px;
+
+          .c-block {
+            margin-bottom: 60px;
+          }
+
+          &:last-child {
+            border-bottom: none;
+          }
+        }
+        .c-container--title {
+          font-family: "Adelle SemiBold";
+          font-size: 24px;
+          line-height: 32px;
+          color: $grey02;
+        }
+      }
+    }
+  }
+}
+
+@media #{$desktop} {
+  .page-user-dashboard {
+    .u-mobile-only {
+      display: none !important;
+    }
+    .c-header-bar {
+      height: 100px;
+      .c-header--connect {
+        margin: 42px 0 0 0;
+      }
+      &.collapsed {
+        height: 40px;
+        .c-header--connect {
+          margin: 12px 0 0 0;
+        }
+      }
+    }
+    .c-page-title {
+      display: inline-block;
+    }
+    .filter {
+      max-width: 241px;
+    }
+    .tabs {
+      .c-tab {
+        width: 50%;
+
+        a {
+          color: $cont_blue_lgt !important;
+        }
+        &.active {
+          a {
+            color: $cont_blue_drk !important;
+          }
+        }
+      }
+    }
+    #nys_inbox .message-body {
+      display: none;
+    }
+
+    #nys_inbox .message-body.visible {
+      display: block;
+    }
+
+    #nys_inbox .message-body button {
+      float: right;
+    }
+
+    #nys_inbox {
+      form {
+        .inbox-action-links {
+          .action-button-wrapper {
+            button {
+              background-color: $cont_blue_lgt;
+            }
+          }
+        }
+      }
+      table {
+        tbody {
+          tr {
+            td {
+              .message-body {
+                div {
+                  button {
+                    background-color: $cont_blue_lgt;
+                    &:nth-child(1) {
+                      margin-left: 20px;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    table.bill-data {
+      thead {
+        th {
+          display: table-cell;
+          text-align: center;
+          &:first-child {
+            display: table-cell;
+          }
+        }
+      }
+      td {
+        display: table-cell;
+        width: auto;
+        &:nth-child(2),
+        &:nth-child(3) {
+          width: auto;
+          float: none;
+        }
+        &.bill-details {
+          .wrapper {
+            border-right: 1px solid #ccc;
+            padding-right: 20px;
+          }
+        }
+        h3 {
+          display: none;
+        }
+        .pie-legend {
+          float: none;
+          margin-top: 43px;
+          margin-right: -25px;
+          text-align: center;
+          width: auto;
+          .yes-value,
+          .no-value {
+            font-family: "Adelle Bold";
+            font-size: 18px;
+            line-height: 21px;
+          }
+          .yes-value {
+            color: $cont_blue_med;
+          }
+          .no-value {
+            color: $cont_blue_drk;
+          }
+          .option-label {
+            font-family: "Proxima Nova Regular";
+            font-size: 10px;
+            line-height: 14px;
+            color: $grey04;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+          }
+        }
+        .pieContainer {
+          // width: 170px;
+          // height: 170px;
+        }
+        .pieBackground {
+          background-color: $cont_blue_drk;
+          position: absolute;
+          width: 160px !important;
+          height: 160px !important;
+          -moz-border-radius: 80px;
+          -webkit-border-radius: 80px;
+          -o-border-radius: 80px;
+          border-radius: 80px;
+        }
+        .pie {
+          position: absolute;
+          width: 160px !important;
+          height: 160px !important;
+          -moz-border-radius: 80px;
+          -webkit-border-radius: 80px;
+          -o-border-radius: 80px;
+          border-radius: 80px;
+          clip: rect(0px, 80px, 160px, 0px);
+        }
+        .hold {
+          position: absolute;
+          width: 160px !important;
+          height: 160px !important;
+          -moz-border-radius: 80px;
+          -webkit-border-radius: 80px;
+          -o-border-radius: 80px;
+          border-radius: 80px;
+          clip: rect(0px, 160px, 160px, 80px);
+        }
+        #pieSlice1 .pie {
+          background-color: $cont_blue_lgt;
+          -webkit-transform: rotate(50deg);
+          -moz-transform: rotate(50deg);
+          -o-transform: rotate(50deg);
+          transform: rotate(50deg);
+        }
+      }
+    }
+    table.stat-data {
+      thead {
+        th {
+          &.verified,
+          &.zip,
+          &.age,
+          &.gender,
+          &.vote,
+          &.bill,
+          &.messaged {
+            display: table-cell;
+          }
+          &.city,
+          &.vote, {
+            border-right: none;
+          }
+        }
+      }
+      tbody {
+        tr {
+          td {
+            &.verified,
+            &.zip,
+            &.age,
+            &.gender,
+            &.vote,
+            &.bill,
+            &.messaged {
+              display: table-cell;
+            }
+            &.city,
+            &.vote, {
+              border-right: none;
+            }
+          }
+        }
+      }
+    }
+
+    /*------------------------------------
+    /	Constituent Dashboard
+    /-------------------------------------*/
+    .c-container--const-issues-follow,
+    .c-container--const-bills-follow,
+    .c-container--const-comm-follow,
+    .c-container--const-pet-quest {
+      article {
+        min-height: 100px;
+        .meta {
+          width: 20%;
+          float: left;
+        }
+        .body {
+          width: 65%;
+          margin: 0 40px 0 0;
+          float: right;
+          img {
+            max-width: 220px;
+            float: right;
+            height: 125px;
+          }
+        }
+      }
+    }
+    .c-container--const-pet-quest {
+      article {
+        position: relative;
+        .pet-body {
+          width: 75%;
+        }
+        .pet-share-bar {
+          width: 21%;
+        }
+        .entry-title,
+        .pet-type,
+        .explore-link {
+          font-family: "Proxima Nova SemiBold";
+          font-size: 18px;
+          line-height: 24px;
+          color: $blue01;
+          text-transform: uppercase;
+        }
+        .pet-type,
+        .explore-link {
+          font-size: 12px;
+          line-height: 18px;
+          color: $yellow03;
+        }
+        .explore-link {
+          display: block;
+        }
+        .author,
+        .article-date,
+        .pet-share-bar p {
+          font-family: "Proxima Nova Regular";
+          font-size: 14px;
+          line-height: 18px;
+          color: $grey03;
+        }
+        .author {
+          margin: 15px 0 4px 0;
+        }
+        .article-date {
+          color: $grey04;
+        }
+        .pet-share-bar p {
+          text-transform: uppercase;
+          font-size: 12px;
+          margin-top: 0;
+        }
+        .pet-facebook-share,
+        .pet-twitter-share {
+          &:after {
+            font-size: 25px;
+            color: $blue01;
+          }
+        }
+        .pet-facebook-share {
+          margin-left: -10px;
+        }
+      }
+    }
+    .c-container--const-comm-follow {
+      .c-container--body {
+        padding-top: 40px;
+      }
+    }
+    .c-container--const-issues-wdgt-follow {
+      .issue-widget-wrapper {
+        .issue-follow-widget {
+          width: 226px;
+          height: 131px;
+        }
+      }
+    }
+    .c-container--const-issues-search {
+      .explore-link {
+        position: absolute;
+        right: 22px;
+        top: 9px;
+        margin-top: 0;
+      }
+      .search-wrapper {
+        max-width: 360px;
+      }
+    }
+    .c-container--const-comm-wdgt-follow {
+      .comm-widget-wrapper {
+        h3,
+        .unfollow {
+          font-size: 18px;
+          line-height: 24px;
+        }
+        .unfollow {
+          font-size: 12px;
+          line-height: 20px;
+        }
+      }
+    }
+    .c-container--const-bills-wdgt-follow {
+      .bill-widget-wrapper {
+        .bill-follow-widget {
+          height: 456px;
+        }
+      }
+    }
+    /*------------------------------------
+    /	Senator Dashboard
+    /-------------------------------------*/
+    .c-container--issues {
+      .filter-wrapper,
+      .search-wrapper {
+        display: inline-block;
+        margin-right: 30px;
+      }
+      .filter-wrapper {
+        width: 241px;
+      }
+      .search-wrapper {
+        max-width: 241px;
+        .form-wrapper {
+          position: relative;
+          .c-site-search--box {
+            height: 55px;
+            max-width: 241px;
+          }
+          .c-site-search--btn {
+            top: 5px;
+            right: 0;
+          }
+        }
+      }
+    }
+    .c-container--senator-constituents {
+      #nys-inbox-senator-constituents-form {
+        .filter {
+          width: 31%;
+        }
+        .zip-filter {
+          width: 31%;
+        }
+      }
+    }
+    .c-container--senator-bills-messaging {
+      form {
+        &.bills-search {
+          width: 32%;
+          input {
+            height: 55px;
+          }
+          .c-site-search--btn {
+            top: 34px;
+            right: 2px;
+          }
+        }
+        &.bills-filter {
+          width: 64%;
+          div {
+            width: 47%;
+          }
+        }
+        &.bills-msg {
+          margin-top: 0;
+        }
+      }
+    }
+    .c-container--bills-leg {
+      .form-wrapper {
+        button {
+          &:after {
+            top: -6px;
+          }
+        }
+      }
+    }
+    .c-container--quest-pet {
+      .tabs-content {
+        .filter {
+          max-width: 320px;
+          margin-bottom: 40px;
+        }
+        .your-petitions,
+        .all-petitions {
+          .poll-signature {
+            .poll-signature-list {
+              .filter {
+                max-width: 241px;
+                background: url(../images/svg/see-less-dash.svg) no-repeat 95% center;
+              }
+            }
+          }
+          .poll-container {
+            .poll-main-info {
+              width: 22%;
+              display: inline-block;
+              float: left;
+              padding-right: 20px;
+              border-right: 1px solid $blue04;
+              margin-right: 20px;
+              h3 {
+                margin-top: 0;
+              }
+            }
+            .poll-results {
+              width: 60%;
+              display: inline-block;
+              float: left;
+            }
+          }
+        }
+      }
+    }
+    .c-container--active-list {
+      .c-container--body {
+        padding-top: 40px;
+      }
+    }
+    .l-main {
+      max-width: 100%;
+      background: url(../images/dash-bg.png) repeat-y;
+      .panel-col-first {
+        display: block;
+        position: relative;
+        width: 30%;
+        max-width: 400px;
+      }
+      .panel-col-last {
+        width: 70%;
+      }
+    }
+    &.constituent-dashboard {
+      .tabs {
+        .c-tab {
+          a {
+            color: $gen_blue_lgt !important;
+          }
+          &.active {
+            a {
+              color: $gen_blue_med !important;
+            }
+          }
+        }
+      }
+      #nys_inbox {
+        form {
+          .inbox-action-links {
+            .action-button-wrapper {
+              button {
+                background-color: $gen_blue_lgt;
+              }
+            }
+          }
+        }
+        table {
+          tbody {
+            tr {
+              td {
+                .message-body {
+                  div {
+                    button {
+                      background-color: $gen_blue_lgt;
+                      &:nth-child(1) {
+                        margin-left: 20px;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media #{$large} {
+  /*
+.page-user-dashboard {
+      table.bill-data {
+          td {
+              .pie-legend {
+                  float: right;
+                  margin-top: 43px;
+                  margin-right: -25px;
+                  text-align: center;
+                  width: 45px;
+              }
+              .pieContainer {
+                  position: relative;
+                  left: 50px;
+              }
+          }
+      }
+  }
+*/
+}
+
+.page-user-dashboard-inbox .filter-wrapper {
+  display: none;
+}
+
+#autocomplete {
+  background-color: #FFFFFF;
+  padding: 0px 5px;
+}

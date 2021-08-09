@@ -1,0 +1,339 @@
+I
+
++-------------------------------------------------------------------------------------------------------+
+|                                          NYS PICTURE DRUSH COMMANDS                                   |
++-------------------------------------------------------------------------------------------------------+
+
++-------------------------------------------------------------------------------------------------------+
+|                                              TABLE OF CONTENTS                                        |
++---------------------------------+---------------------+-----------------------------------------------+
+| DRUSH COMMAND                   | COMMND ALIASES      | COMMAND DESCRIPTION                           |
++---------------------------------+---------------------+-----------------------------------------------+
+| enhanced-styles-update	  | ('esu')             | Updates Enhanced Images added since last run. |
++---------------------------------+---------------------+-----------------------------------------------+
+| enhanced-styles-stop            | ('ess')             | Stops an update or report run.                |
++---------------------------------+---------------------+-----------------------------------------------+
+| enhanced-styles-monitor         | ('esm')             | Shows status of last or current run.          |
++---------------------------------+---------------------+-----------------------------------------------+
+| identify       		  | ('iid')	        | Identify an image files properties.           |
++---------------------------------+---------------------+-----------------------------------------------+
+| iconvert                        | ('icv', 'ic', 'cv') | Imagemagic convert function.                  |
++---------------------------------+---------------------+-----------------------------------------------+
+| enhanced-styles-summary-report  | ('essr')	        | Create a Style Usage Summary Report.          |
++---------------------------------+---------------------+-----------------------------------------------+
+| enhanced-styles-report          | ('esr')		| Create a report for an image style.           |
++---------------------------------+---------------------+-----------------------------------------------+
+| enhanced-file-report            | ('efr')		| Create a report on an Image File.             |
++---------------------------------+---------------------+-----------------------------------------------+
+| enhanced-styles-survey-content  | ('essc')	        | Which Content Types have images or pictures.  |
++---------------------------------+---------------------+-----------------------------------------------+
+| enhanced-styles-survey-views    | ('essv')            | Which Views have images or pictures.          |
++---------------------------------+---------------------+-----------------------------------------------+
+| enhanced-styles-files           | ('esf')		| Lists Managed files.                          |
++---------------------------------+---------------------+-----------------------------------------------+
+| enhanced-styles-delete          | ('esd')             | Delete one or more files.                     |
++---------------------------------+---------------------+-----------------------------------------------+
+| enhanced-styles-copy            | ('esc', 'escp')     | Copies a file.                                |
++---------------------------------+---------------------+-----------------------------------------------+
+| enhanced-styles-rename          | ('esmv')            | Renames a file.                               |
++---------------------------------+---------------------+-----------------------------------------------+
+| enhanced-styles-touch           | ('est')             | Touches a file.                               |
++---------------------------------+---------------------+-----------------------------------------------+
+| enhanced-styles-time            | ('estm')            | Displays the last modified date for a file.   |
++---------------------------------+---------------------+-----------------------------------------------+
+| enhanced-styles-view            | ('esv')             | Views a file in your browser.                 |
++---------------------------------+---------------------+-----------------------------------------------+
+| enhanced-styles-experimantal    | ('ese')		| Experimental.                                 |
++---------------------------------+---------------------+-----------------------------------------------+
+
+
+
++-------------------------------------------------------------------------------------------------------+
+|  enhanced-styles-update	('esu')                                                                       |
++-------------------------------------------------------------------------------------------------------+
+Updates Enhanced Images added since the last run.
+The enhanced-styles-update command iterates thru all image styles with `_webp` in their names.
+Image files in an image style directory added or modified since the last run are converted to webp.
+
+Examples:
+ Standard example                          drush enhanced-styles-update
+ Argument example 1                        drush enhanced-styles-update your_enhanced_style_name
+ Argument example 2                        drush enhanced-styles-update --all-dates
+ Argument example 3                        drush enhanced-styles-update --update-from=2008-09-15T15:53:00
+ Argument example 4                        drush enhanced-styles-update --report-only
+ Argument example 5                        drush enhanced-styles-update --report-only --show-args
+
+Arguments:
+ arg1                                      An optional style name to limit the update to.
+
+Options:
+ --all-dates                               Update from the beginning of time.
+ --report-only                             Does not update. Dumps commands only.
+ --update-from                             Timestamp indicating beginning of
+                                           desired block of updates. (defaults to time of last run)
+--show-args                                Displays the arguments sent to imagemagick convert.
+
+Aliases: esu
+
+
++-------------------------------------------------------------------------------------------------------+
+|  enhanced-styles-stop  ('ess')                                                                        |
++-------------------------------------------------------------------------------------------------------+
+Stops an update, report or populate Run.
+
+Examples:
+ Standard example                          drush enhanced-styles-stop
+
+Aliases: ess
+
+
++-------------------------------------------------------------------------------------------------------+
+|  enhanced-styles-monitor  ('esm')                                                                     |
++-------------------------------------------------------------------------------------------------------+
+Shows status of last or current run.
+
+Examples:
+ Standard example                          drush enhanced-styles-monitor
+
+Aliases: esm
+
+
++-------------------------------------------------------------------------------------------------------+
+|  identify   ('iid')                                                                                   |
++-------------------------------------------------------------------------------------------------------+
+Use Identify to view an image files properties using the Imagemagick identify command.
+
+Examples:
+ Standard example                          drush identify sample.png
+ Argument example                          drush identify styles/thumbnail/public/sample.png
+
+Arguments:
+ arg1                                      Filename or path to image file.
+
+Aliases: iid
+
+
++-------------------------------------------------------------------------------------------------------+
+|  iconvert   ('icv', 'ic', 'cv')                                                                       |
++-------------------------------------------------------------------------------------------------------+
+Use Imagemagic's convert function.
+All imagemagick file names and options must be passed to this command in a single set of quotes.
+
+
+Examples:
+ Argument example                          drush iconvert 'image.png -youroptions image2.png'
+
+Arguments:
+ arg1                                      The complete set of imagemagick convert options. Encased in quotes.
+
+Aliases: icv, ic, cv
+
+
++-------------------------------------------------------------------------------------------------------+
+|  enhanced-styles-summary-report  ('essr')                                                             |
++-------------------------------------------------------------------------------------------------------+
+Create a Style Usage Summary Report. Shows the file types and quantity of files for each style.
+
+Examples:
+ Standard example                          drush enhanced-styles-summary-report
+ Argument example                          drush enhanced-styles-summary-report -all
+
+Options:
+ --all                                     All Image Styles, Enhanced and Un-Enhanced.
+
+Aliases: essr
+
+
++-------------------------------------------------------------------------------------------------------+
+|  enhanced-styles-report   ('esr')                                                                     |
++-------------------------------------------------------------------------------------------------------+
+Creates a report for all enhanced image styles or a single image style.
+Pass in a valid style or any string to choose a style.
+An Imagemagick Identify data is displayed for each file, including mime type, size and bit depth etc.
+example_file.jpg JPEG 200x125 200x125+0+0 8-bit sRGB 29.8KB 0.000u 0:00.000
+
+
+Examples:
+Standard example                          drush enhanced-style-report
+ Argument example 1                        drush enhanced-style-report 400x240_smartphone_webp
+ Argument example 2                        drush enhanced-style-report --all 400x240
+ Argument example 3                        drush enhanced-style-report choose
+
+Arguments:
+ arg1                                      A valid style or an invalid style to choose a style
+
+Aliases: esr
+
+
++-------------------------------------------------------------------------------------------------------+
+|  enhanced-file-report    ('efr')                                                                      |
++-------------------------------------------------------------------------------------------------------+
+Create a report on an Image File.
+Imagemagick Identify data is displayed for the file in each style, including mime type, size etc.
+example_file.jpg JPEG 200x125 200x125+0+0 8-bit sRGB 29.8KB 0.000u 0:00.000
+  thumbnail/public/example_file.jpg JPEG 64x64 64x64+0+0 8-bit sRGB 3.5KB 0.000u 0:00.009
+
+Examples:
+Standard example                          drush enhanced-file-report
+ Argument example 1                        drush enhanced-file-report  your_public_image_file.png
+ Argument example 2                        drush enhanced-file-report  new-senate-seal-760_6_1.png
+
+Arguments:
+ arg1                                     A public image file name or path to a local image file.
+                                          The image file for each style is derived from this image.
+
+Aliases: efr
+
+
++-------------------------------------------------------------------------------------------------------+
+|  enhanced-styles-survey-content    ('essc')                                                           |
++-------------------------------------------------------------------------------------------------------+
+Which Content Types have images or pictures.
+Displays a report showing the display type and format for each image field in every content type.
+This identifies content types with image field displays that are formatted `image` or `picture`.
+
+Examples:
+ Standard example                          enhanced-styles-survey-content
+
+Aliases: essc
+
+
++-------------------------------------------------------------------------------------------------------+
+|  enhanced-styles-survey-views     ('essv')                                                            |
++-------------------------------------------------------------------------------------------------------+
+Which Views have images or pictures.
+Displays a report showing the display type and format for each image field in every view.
+This identifies views with image field displays that are formatted `image` or `picture`.
+
+
+Examples:
+ Standard example                          drush enhanced-styles-survey-views
+
+Aliases: essv
+
+
++-------------------------------------------------------------------------------------------------------+
+|  enhanced-styles-files    ('esf')                                                                     |
++-------------------------------------------------------------------------------------------------------+
+Lists Managed image files. Pass in --all for a complete list
+
+Examples:
+ Standard example                          drush enhanced-styles-files
+ Argument example 1                        drush enhanced-styles-files --all
+ Argument example 2                        drush enhanced-styles-files --audit
+
+Options:
+ --all                                     Displays all managed image files.
+ --audit                                   Reports on managed image files.
+
+Aliases: esf
+
+
++-------------------------------------------------------------------------------------------------------+
+|  enhanced-styles-delete   ('esd')                                                                     |
++-------------------------------------------------------------------------------------------------------+
+Delete one or more files.
+Pass in full or partial path starting at the drupal files directory.
+Pass in --all with a base image file name to delete all derived versions with the same name.
+
+
+Examples:
+ Argument example                          drush enhanced-styles-delete path/to/deleted_file.png
+
+Arguments:
+ arg1                                      Target full or partial path.
+
+Options:
+ --all                                     All Image Styles, Enhnced and Un-Enhanced.
+
+Aliases: esd
+
+
++-------------------------------------------------------------------------------------------------------+
+|  enhanced-styles-copy     ('esc', 'escp')                                                             |
++-------------------------------------------------------------------------------------------------------+
+Copies a file.
+For the source file pass in full or partial path starting at the drupal files directory.
+For the destination file pass in a path starting at the drupal files directory.
+
+Examples:
+ Standard example                          drush enhanced-styles-copy path/to/source/source.png  path/to/destination/dest.png
+
+Arguments:
+ arg1                                      Source full or partial path.
+ arg2                                      Destination full or partial path.
+
+
+Aliases: esc, escp
+
+
++-------------------------------------------------------------------------------------------------------+
+|  enhanced-styles-rename    ('esmv')                                                                   |
++-------------------------------------------------------------------------------------------------------+
+Renames a file.
+For the source file pass in full or partial path starting at the drupal files directory.
+For the destination file pass in a path starting at the drupal files directory.
+
+Examples:
+  arg1                                     drush enhanced-styles-rename path/old_file_name.png path/new_file_name.png
+
+Arguments:
+ arg1                                      Old Name or Path.
+ arg2                                      New Name or Path.
+
+Aliases: esmv
+
+
++-------------------------------------------------------------------------------------------------------+
+|  enhanced-styles-touch     ('est')                                                                    |
++-------------------------------------------------------------------------------------------------------+
+Touches a file.
+For the source file pass in full or partial path starting at the drupal files directory.
+Pass in --force or --new to touch a file that does not exist already.
+
+Examples:
+ Standard example                          drush enhanced-styles-touch file_to_touch.png
+
+Arguments:
+ arg1                                      An optional argument
+
+Options:
+ --force                                   Create file if no file exists.
+ --new                                     Create file if no file exists.
+
+Aliases: est
+
+
++---------------------------------+---------------------+-----------------------------------------------+
+| enhanced-styles-time            | ('estm')            | Displays the last modified date for a file.   |
++---------------------------------+---------------------+-----------------------------------------------+
+Shows the last modification time of a file.
+
+
+Examples:
+ Standard example                          drush enhanced-styles-time
+
+Aliases: estm
+
+
++-------------------------------------------------------------------------------------------------------+
+|  enhanced-styles-view      ('esv')                                                                   |                         |
++-------------------------------------------------------------------------------------------------------+
+Views an image file in your browser.
+Pass in the name of a base image as an argument.
+Pass in --all to open all the derived images with the same name in your browser.
+
+
+Examples:
+ Argument example                          drush image_to_view.png
+
+Arguments:
+ arg1                                      File name or path to view.
+
+Options:
+--all                                     All Image Styles, Enhanced and Un-Enhanced.
+
+Aliases: esv
+
+
++-------------------------------------------------------------------------------------------------------+

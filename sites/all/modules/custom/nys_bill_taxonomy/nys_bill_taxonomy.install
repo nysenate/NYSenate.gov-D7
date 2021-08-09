@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the NYS Bill Taxonomy module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function nys_bill_taxonomy_uninstall() {
+  drupal_set_message(t('Successfully uninstalled NYS Bill Taxonomy.'));
+}
+
+/**
+ * Implements hook_enable().
+ */
+function nys_bill_taxonomy_enable() {
+  // Verify existence of bill taxonomy vocabularies.
+  nys_bill_taxonomy_verify_vocabulary();
+}

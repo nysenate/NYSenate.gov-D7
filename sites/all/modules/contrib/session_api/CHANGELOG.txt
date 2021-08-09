@@ -1,0 +1,13 @@
+7.x-1.0
+=======
+- #1233650 - Added API function `session_api_start_session()` to give
+  finer-grained control for sites running Pressflow.
+
+6.x-1.2
+=======
+- A cookie is now set to track the session ID between log in and log
+  out.
+
+- #380510 - Comment style now conforms to Drupal coding standards.
+
+- #380550 - Implements a better cleanup hook system.

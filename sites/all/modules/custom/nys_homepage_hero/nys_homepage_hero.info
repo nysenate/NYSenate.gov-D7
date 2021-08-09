@@ -1,0 +1,11 @@
+name = NYS Homepage Hero Refresh
+description = Enables automatic refresh of the homepage for client browsers.
+package = NY STATE SENATE
+core = 7.x
+
+files[] = misc/nys_homepage_hero.js
+files[] = nys_homepage_hero.module
+
+
+version = "7.x-1.0"
+dependencies = nodequeue

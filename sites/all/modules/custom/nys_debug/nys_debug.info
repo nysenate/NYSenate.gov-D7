@@ -1,0 +1,7 @@
+name = NYS Debug
+description = Custom module to assist with debugging
+package = NY STATE SENATE
+core = 7.x
+dependencies[] = nys_utils
+dependencies[] = flag
+version = 7.x-1.0

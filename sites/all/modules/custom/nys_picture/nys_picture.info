@@ -1,0 +1,10 @@
+name = nys Picture
+description = Adds a mime `type` attribute to picture source elements. Creates webp and jp2 derivative images.
+package = NY STATE SENATE
+version = 7.x-1.0
+core = 7.x
+
+dependencies[] = breakpoints
+dependencies[] = picture
+dependencies[] = imagemagick
+dependencies[] = nys_pictures

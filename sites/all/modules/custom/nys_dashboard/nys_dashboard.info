@@ -1,0 +1,7 @@
+name = NYS Dashboard
+package = NY STATE SENATE
+description = "NYS Dashboard functionality"
+core = 7.x
+dependencies[] = nys_utils
+dependencies[] = nys_petitions
+version = 7.x-1.01

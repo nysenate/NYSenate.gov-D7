@@ -1,0 +1,5 @@
+name = Messaging, custom code
+description = override and extend privatemsg functionality
+package = NY STATE SENATE
+core = 7.x
+dependencies[] = privatemsg

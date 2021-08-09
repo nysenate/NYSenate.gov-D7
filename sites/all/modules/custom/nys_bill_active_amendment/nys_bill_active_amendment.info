@@ -1,0 +1,6 @@
+
+name = Bill Active Amendment
+description = Handles assignment of active amendment url aliases to bill nodes
+core = 7.x
+package = NY STATE SENATE
+dependencies[] = nys_bills

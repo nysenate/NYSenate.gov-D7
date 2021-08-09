@@ -1,0 +1,4 @@
+name = NYS CAPTCHA
+description = Module to customize the presentation of CAPTCHA controls
+core = 7.x
+dependencies[] = captcha

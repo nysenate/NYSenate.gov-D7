@@ -1,0 +1,4 @@
+# It's helpful to run composer install directly in the module directory for
+# debugging, so we ignore vendor even though most sites should never have this
+# directory.
+/vendor/

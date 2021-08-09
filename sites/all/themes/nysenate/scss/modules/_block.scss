@@ -1,0 +1,23 @@
+// Various Random blocks that appear in various places around the site can be styled here.
+
+//Inactive Senator Banner (Lander, Legislation and Newsroom details)
+.c-sntor-inactive-banner {
+	margin-top: 20px;
+	background-color: $grey06;
+	padding: 30px;
+}
+
+.c-senator-inactive-about h2 {
+    margin: 0;
+    font-family: "Adelle Bold";
+    line-height: 1em;
+    font-size: 30px;
+    margin-bottom: 10px;
+    color: $grey02;
+}
+
+@media #{$tablet} {
+	.c-sntor-inactive-banner {
+		margin-top: 40px;
+	}
+}

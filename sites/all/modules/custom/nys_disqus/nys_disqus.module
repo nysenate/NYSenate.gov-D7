@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file nys_disqus.module.
+ * Customize the presentation of Disqus behavior.
+ */
+
+/**
+ * Implements hook_node_load().
+ */
+function nys_disqus_node_load($nodes, $types) {
+  foreach ($nodes as $node) {
+    if (isset($node->disqus)) {
+      $ident = field_get_items('node', $node, 'field_ol_session')[0]['value'] .
+        '-' . field_get_items('node', $node, 'field_ol_base_print_no')[0]['value'];
+      $node->disqus['identifier'] = $ident;
+    }
+  }
+}

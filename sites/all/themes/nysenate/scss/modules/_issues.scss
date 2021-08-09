@@ -1,0 +1,323 @@
+
+.view-issues-listings{
+	width: 100%;
+	margin-bottom: 50px;
+
+	.view-header{
+		overflow: hidden;
+
+		.nys-subtitle-title {
+			margin-top: 20px;
+		}
+	}
+	.c-explore-issues--descript{
+		margin-bottom: 20px;
+	}
+	.view-content {
+		width: 100%;
+		overflow: hidden;
+		margin: 0;
+	}
+}
+.c-block--explore-issues{
+	width: 100%;
+	text-align: right;
+	font-family: "Proxima Nova Regular";
+	font-weight: bold;
+	font-size: 14px;
+	line-height: 1em;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	
+	a{
+		color: $orange01;
+		@extend .icon-after__right;
+
+		&:after {
+			margin-top: -3px;
+			font-size: 18px;
+		}
+	}
+}
+.c-block--issue {
+	position: relative;
+	width: 100%;
+	float: left;
+	margin: 0 auto 20px;
+	height: 120px;
+	padding: 0 0 35px 0;
+	
+	.c-issue-block--title {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		margin-bottom: 35px;
+		font-family: 'Proxima Nova Regular';
+		text-transform: uppercase;
+		font-size: 14px;
+		letter-spacing: 0.1em;	
+		
+		a {
+			position: absolute;
+			display: block;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+			padding: 20px 20px 35px 20px;
+			color: #fff;
+			background: $yellow01;
+			@include transition(background, 0.2s, ease);
+
+			&:hover {
+				background: $yellow02;
+			}
+		}
+	}
+
+	.c-block--btn {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 35px;
+		margin: 0;
+		text-decoration: none;
+		text-transform: uppercase;
+		font-family: "Proxima Nova SemiBold";
+		letter-spacing: 0.2em;
+		font-size: 10px;
+		line-height: 35px;
+
+		span {
+			line-height: 35px;
+		}
+
+		a {
+			display: block;
+			width: 100%;
+			color: #fff;
+			font-size: 10px;
+			line-height: 35px;
+			padding: 0 10px 0 20px;
+			letter-spacing: 1px;
+			@include transition(background, 0.2s, ease);
+
+			&:hover {
+				background: $grey05;
+			}
+
+			&:before {
+				font-size: 16px;
+			}
+		}
+		.flag-action {
+			background-color: $yellow02;
+			@extend .icon-before__plus;
+
+			&:hover {
+				background-color: $yellow03;
+			}
+		}
+		.unflag-action {
+			background-color: $yellow03;
+			@extend .icon-before__x;
+		}
+		.flag-wrapper {
+			position: relative;
+			display: block;
+			width: 100%;
+		}
+		.flag-success-message {
+			position: absolute;
+			top: -85px; // height of block (120) minus height of button (35)
+			left: 0;
+			height: 120px;
+			width: 100%;
+			padding: 20px 20px 35px 20px;
+		}
+		.message-text p {
+			position: relative;
+			padding-top: 15px;
+			color: #fff;
+			font-family: 'Proxima Nova Regular';
+			text-transform: uppercase;
+			font-size: 14px;
+			letter-spacing: 0.1em;
+			z-index: 2;
+			// allow clickthrough
+			pointer-events: none;
+
+			span {
+				line-height: 1;
+				display: block;
+
+				& + span {
+					display: none;
+				}
+			}
+		}
+		.close-message {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			@extend .icon-replace__x;
+			background-color: $yellow02;
+			z-index: 1;
+
+			&:after {
+				position: absolute;
+				top: 5px;
+				right: 15px;
+				left: auto;
+				width: 20px;
+				font-size: 23px;
+			}
+
+			@include transition(background, 0.2s, ease);
+
+			&:hover {
+				background: $grey05;
+			}
+		}
+
+		.flag-success-btn {
+			position: absolute;
+			z-index: 3;
+			width: 100%;
+			bottom: 0;
+			left: 0;
+			background-color: $yellow02;
+			@include transition(background, 0.2s, ease);
+			@extend .icon-before__mail;
+
+			&:hover {
+				background-color: $yellow01;
+			}
+		}
+
+		.flag-throbber {
+			position: absolute;
+			top: 0;
+			left: 20px;
+			height: 35px;
+			width: 35px;
+			// allow clickthrough
+			pointer-events: none;
+		}
+	}
+}
+
+@media #{$tablet} {
+  // offsets the content so it all lines up
+  .view-issues-listings {
+    margin-bottom: 60px;
+
+    .view-header {
+      position: relative;
+
+      .nys-subtitle-title {
+        margin-top: 30px;
+      }
+    }
+
+    .c-explore-issues--descript {
+      margin-bottom: 40px;
+      line-height: 32px;
+    }
+
+    .c-block--issue-wrapper {
+      float: none;
+      width: 103%;
+      margin-left: 0%;
+
+      &:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+    }
+  }
+
+  .c-block--issue {
+    position: relative;
+    width: 31%;
+    float: left;
+    margin: 20px 2% 0px 0;
+    height: 150px;
+
+    .c-block--btn {
+      font-size: 12px;
+
+      .flag-success-message {
+        position: absolute;
+        top: -115px; // height of block (150) minus height of button (35)
+        height: 150px;
+      }
+      .message-text {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 20px 0 0 20px;
+
+        span {
+          width: 100%;
+        }
+      }
+      .flag-unflagged-message {
+        .message-text {
+          padding-right: 20px;
+        }
+      }
+      .flag-success-btn {
+        padding: 0 20px;
+        font-size: 12px;
+      }
+
+    }
+
+    /**
+     * This overrides the old margins.
+     * Old margins will be used in browsers that don't
+     * support nth-child in this way.
+     *
+     * All are set to 32% width.
+     */
+    &:nth-child(1),
+    &:nth-child(1n + 3),
+    &:nth-child(2),
+    &:nth-child(2n + 3),
+    &:nth-child(3),
+    &:nth-child(3n + 3) {
+      width: 30%;
+    }
+    &:nth-child(1),
+    &:nth-child(1n + 3),
+    &:nth-child(2),
+    &:nth-child(2n + 3) {
+      margin-right: 5%;
+    }
+    &:nth-child(3),
+    &:nth-child(3n + 3) {
+      margin-right: 0;
+    }
+  }
+
+  .c-block--explore-issues{
+    margin-top: 40px;
+    font-size: 16px;
+
+    a:after {
+      font-size: 21px;
+    }
+  }
+
+  .pane-news-by-issue{
+    margin-bottom: 60px;
+  }
+}

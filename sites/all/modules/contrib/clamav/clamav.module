@@ -1,0 +1,166 @@
+<?php
+/**
+ * @file
+ * Integrate ClamAV to allow uploaded files to be scanned for viruses.
+ */
+
+
+// Scan using a ClamAV Daemon over TCP/IP.
+define('CLAMAV_USE_DAEMON', 0);
+// Scan using a ClamAV executable.
+define('CLAMAV_USE_EXECUTABLE', 1);
+// Scan using a ClamAV Daemon over unix-socket.
+define('CLAMAV_USE_DAEMON_UNIX_SOCKET', 2);
+
+// Default: use Daemon-mode over TCP/IP.
+define('CLAMAV_DEFAULT_MODE', CLAMAV_USE_DAEMON);
+
+// Behaviour if the ClamAV scanner is unavailable or does not respond.
+// Prevent unchecked files from being uploaded
+define('CLAMAV_BLOCK_UNCHECKED', 0);
+// Allow unchecked files to be uploaded
+define('CLAMAV_ALLOW_UNCHECKED', 1);
+// Default behaviour for unchecked files - Block unchecked files.
+define('CLAMAV_DEFAULT_UNCHECKED', CLAMAV_BLOCK_UNCHECKED);
+
+// Default host (in Daemon-mode)
+define('CLAMAV_DEFAULT_HOST', 'localhost');
+// Default port (in Daemon-mode)
+define('CLAMAV_DEFAULT_PORT', 3310);
+// Default path (in Executable-mode)
+define('CLAMAV_DEFAULT_PATH', '/usr/bin/clamscan');
+// Default params for executable
+define('CLAMAV_DEFAULT_PARAMS', '');
+// Default unix socket.
+define('CLAMAV_DEFAULT_UNIX_SOCKET', '/var/clamav/clamd');
+
+// The file was not checked (e.g. because the AV daemon wasn't running).
+define('CLAMAV_SCANRESULT_UNCHECKED', -1);
+// The file was checked and found to be clean.
+define('CLAMAV_SCANRESULT_CLEAN', 0);
+// The file was checked and found to be infected.
+define('CLAMAV_SCANRESULT_INFECTED', 1);
+
+// By default, verbose mode is disabled (only infected files are logged).
+define('CLAMAV_VERBOSE_DEFAULT', FALSE);
+
+/**
+ * Implements hook_help().
+ */
+function clamav_help($path, $arg) {
+  $output = '';
+  switch ($path) {
+    case "admin/help#clamav":
+      $output .= '<p>' . t('Clam AntiVirus is an open source anti-virus toolkit for UNIX.') . '</p>';
+      $output .= '<p>' . t('The ClamAV module allows files which are uploaded to Drupal to be scanned by Clam AntiVirus.') . '<br />';
+      $output .=         t('The module does not install ClamAV - visit <a href="http://www.clamav.net/">the ClamAV website</a> for help installing ClamAV.') . '</p>';
+      break;
+
+    case 'admin/config/clamav':
+      break;
+  }
+  return $output;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function clamav_menu() {
+  return array(
+    'admin/config/media/clamav' => array(
+      'title' => 'Anti-virus (ClamAV)',
+      'description' => 'Configure ClamAV virus scanner for file / image fields.',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('clamav_admin_settings'),
+      'access arguments' => array('administer site configuration'),
+      'file' => 'clamav.admin.inc',
+    ),
+  );
+}
+
+/**
+ * Implements hook_file_validate().
+ */
+function clamav_file_validate($file) {
+  $errors = array();
+
+  // If ClamAV scanning has been disabled on the config page, abort early.
+  if (!variable_get('clamav_enabled', TRUE)) {
+    return $errors;
+  }
+
+  // Check whether files of this scheme should be scanned.
+  $scheme = clamav_get_file_scheme($file);
+  if (!empty($scheme) && !clamav_scheme_is_scannable($scheme)) {
+    return $errors;
+  }
+
+  // If any module that implements hook_clamav_file_is_scannable() returns
+  // FALSE then we don't scan this file and finish with no errors.
+  $modules = module_implements('clamav_file_is_scannable');
+  foreach ($modules as $module) {
+    if (module_invoke($module, 'clamav_file_is_scannable', $file) === FALSE) {
+      return $errors;
+    }
+  }
+
+  // Don't try to scan non-existent files.
+  if (!file_exists($file->uri)) {
+    if (variable_get('clamav_verbose', CLAMAV_VERBOSE_DEFAULT)) {
+      watchdog('clamav', 'Non-existent file sent for scanning: %filename (%fileuri)',
+        array('%filename' => $file->filename, '%fileuri' => $file->uri), WATCHDOG_DEBUG);
+    }
+    return $errors;
+  }
+  require_once dirname(__FILE__) . '/clamav.inc';
+  $result = clamav_scan_file($file->uri, $file->filename);
+  if ($result == CLAMAV_SCANRESULT_INFECTED) {
+    $errors[] = t('A virus has been detected in the file. The file will not be accepted.');
+  }
+  elseif ($result == CLAMAV_SCANRESULT_UNCHECKED && variable_get('clamav_unchecked_files', CLAMAV_DEFAULT_UNCHECKED) == CLAMAV_BLOCK_UNCHECKED) {
+    $errors[] = t('The anti-virus scanner was not able to check the file. The file cannot be uploaded. Please contact the site administrator if this problem persists.');
+  }
+
+  return $errors;
+}
+
+/**
+ * Determine the scheme of a file object.
+ *
+ * @param $file
+ *   A file object.
+ *
+ * @return
+ *   The name of a stream wrapper scheme, or FALSE.
+ */
+function clamav_get_file_scheme($file) {
+  $scheme = file_uri_scheme($file->uri);
+  // An ordinary file upload won't have a stream wrapper URI during validation;
+  // instead there's a destination property.
+  // @see: file_save_upload()
+  if (empty($scheme) && isset($file->destination)) {
+    $scheme = file_uri_scheme($file->destination);
+  }
+  return $scheme;
+}
+
+/**
+ * Determine whether files of a given scheme should be scanned.
+ *
+ * @param $scheme
+ *   The name of the scheme.
+ *
+ * @return
+ *   TRUE or FALSE.
+ */
+function clamav_scheme_is_scannable($scheme) {
+  // By default all local schemes should be scannable.
+  $local_schemes = array_keys(file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL));
+  $scheme_is_local = in_array($scheme, $local_schemes);
+
+  // The default can be overridden per scheme.
+  $overridden_schemes = variable_get('clamav_overridden_schemes', array());
+  $scheme_is_overridden = in_array($scheme, $overridden_schemes);
+
+  return ($scheme_is_local xor $scheme_is_overridden);
+}

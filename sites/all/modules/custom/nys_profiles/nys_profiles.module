@@ -1,0 +1,108 @@
+<?php
+
+/**
+ * @file
+ * NYS Advanced Poll Settings Module.
+ *
+ * Provides custom settings for Advanced Poll module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+
+function nys_profiles_menu()
+{
+    $items = array();
+    $items['admin/content/profiles'] = array(
+        'title' => 'Manage Profiles',
+        'page callback' => 'manage_profiles_custom',
+        'access arguments' => array('honorees access'),
+    );
+
+    return $items;
+}
+
+/**
+ * Implements hook_theme()
+ */
+function nys_profiles_theme() {
+    return array(
+        'profiles_page' => array(
+            'render element' => 'elements',
+            'template' => 'templates/page--admin--content--profiles',
+        ),
+    );
+}
+
+/**
+ * Manage profiles page on NY Senate site.
+ */
+function manage_profiles_custom() {
+    return theme('profiles_page');
+}
+
+
+function nys_profiles_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+    $path = current_path();
+    if($path === 'admin/profiles') {
+        foreach ($data['tabs'][0]['output'] as $key => $value) {
+            if ($value['#link']['path'] == "admin/tasks") {
+                unset($data['tabs'][0]['output'][$key]);
+            }
+            if ($value['#link']['path'] == "admin/index") {
+                unset($data['tabs'][0]['output'][$key]);
+            }
+        }
+    }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function nys_profiles_permission()
+{
+    return array(
+        'honorees access' => array(
+            'title' => t('Manage Honoree Profiles for Veterans and Women'),
+            'description' => t('Users will have access to admin page to manage honorees'),
+        ),
+    );
+}
+
+/**
+ * Implements hook_node_form_alter().
+ */
+
+
+function nys_profiles_form_initiative_node_form_alter(&$form, &$form_state){
+    global $user;
+    if (in_array('Microsite Content Producer', $user->roles)) {
+        $groups_to_hide = [
+            'group_admin',
+            'group_public_website',
+            'group_delete'
+        ];
+
+        field_group_hide_field_groups($form, $groups_to_hide);
+    }
+    $form['title']['#description'] = t('This title will show on honoree\'s public webpage profile.');
+    unset($form['field_profile_parking']['und']['#options']['_none']);
+    unset($form['field_profile_guests']['und']['#options']['_none']);
+    unset($form['field_profile_attending']['und']['#options']['_none']);
+}
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+/*function nys_profiles_views_send_form_alter(&$form, &$form_state, $vbo)
+{
+    $items = element_children($form['views_bulk_operations']);
+    foreach ($items as $item) {
+        $row = &$form['views_bulk_operations'][$item];
+
+        // Set a label to style the checkbox.
+        $row['#title'] = t('Select');
+    }
+}*/

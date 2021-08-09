@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the nys_legislation feature.
+ */
+
+include_once 'nys_legislation.features.inc';

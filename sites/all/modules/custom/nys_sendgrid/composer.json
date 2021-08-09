@@ -1,0 +1,8 @@
+{
+  "name": "nysenate/nys_sendgrid",
+  "description": "Implements MailSystemInterface using SendGrid's API v3.",
+  "require": {
+    "sendgrid/sendgrid": "v7.5.0"
+  },
+  "license": "MIT"
+}

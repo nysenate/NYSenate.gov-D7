@@ -1,0 +1,94 @@
+<?php
+
+/**
+ * @file
+ * fingerprintjs2 support for the Login History module.
+ */
+
+/**
+ * Implements hook_login_history_detect_device().
+ */
+function lhfingerprintjs2_login_history_detect_device_alter(&$detection, $edit, $account) {
+  // Parse the Fingerprintjs2 data and put it in $detection.
+  if (!empty($edit) && array_key_exists('lhfingerprintjs', $edit['values'])) {
+    $detection['fingerprintjs2'] = $edit['values']['lhfingerprintjs'];
+  }
+  elseif (array_key_exists('lhfingerprintjs', $_SESSION)) {
+    $detection['fingerprintjs2'] = $_SESSION['lhfingerprintjs'];
+    unset($_SESSION['lhfingerprintjs']);
+  }
+  else {
+    watchdog('lhfingerprintjs', 'Failed to detect fingerprintjs data for this user.', [], WATCHDOG_WARNING);
+  }
+}
+
+/**
+ * Implements hook_login_history_detection_results().
+ */
+function lhfingerprintjs2_login_history_detection_results($login_id, $detection, $old_device_id, $device_id, $account) {
+  if (variable_get('lhfingerprintjs2_record_login_data', TRUE)) {
+    $fingerprintjs = array_key_exists('fingerprintjs2', $detection) ? $detection['fingerprintjs2'] : '';
+    // Use the login_id and save the raw data for later analysis.
+    db_insert('lhfingerprintjs2')
+      ->fields(array(
+        'login_id' => $login_id,
+        'fingerprintjs2' => json_encode($fingerprintjs),
+      ))
+      ->execute();
+  }
+}
+
+/**
+ * Implements hook_library().
+ */
+function lhfingerprintjs2_library() {
+  $items = array();
+  $items['fingerprintjs2'] = array(
+    'title' => 'Fingerprintjs2',
+    'website' => 'https://github.com/Valve/fingerprintjs2',
+    'version' => '1.4.2',
+    'js' => array(
+      drupal_get_path('module', 'lhfingerprintjs2') . '/fingerprint2.min.js' => array(),
+      drupal_get_path('module', 'lhfingerprintjs2') . '/lhfingerprintjs2.js' => array(),
+    ),
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function lhfingerprintjs2_form_alter(&$form, &$form_state, $form_id) {
+  switch ($form_id) {
+    // Password form data is not sent to hook_user_login. This extra submit
+    // function will put the data into $_SESSION so it's available later.
+    case 'user_pass_reset':
+      $form['#submit'][] = 'lhfingerprintjs_password_reset_storage';
+      // Intentionally fall through to the rest of the form altering.
+
+    case 'user_login_block':
+    case 'user_login':
+    case 'user_register_form':
+      // A field to hold the fingerprint data.
+      $form['lhfingerprintjs'] = array(
+        '#type' => 'hidden',
+        '#default_value' => '',
+      );
+
+      // What in the world would we do without our libraries?
+      $form['lhfingerprintjs']['#attached']['library'][] = array('lhfingerprintjs2', 'fingerprintjs2');
+
+      break;
+
+  }
+}
+
+/**
+ * Form submit function, holds onto some data for later use.
+ *
+ * @see lhfingerprintjs2_login_history_detect_device_alter()
+ */
+function lhfingerprintjs_password_reset_storage($form, &$form_state) {
+  $_SESSION['lhfingerprintjs'] = $form_state['values']['lhfingerprintjs'];
+}

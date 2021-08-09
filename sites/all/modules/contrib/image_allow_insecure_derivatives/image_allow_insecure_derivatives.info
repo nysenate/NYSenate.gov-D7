@@ -1,0 +1,12 @@
+name = Image Allow Insecure Derivatives
+description = Provides a configuration option to toggle whether or not Drupal bypasses the token check when generating image derivatives. Warning: Only use this module if you know what you're doing.
+core = 7.x
+
+configure = admin/config/media/image-toolkit
+
+; Information added by drupal.org packaging script on 2013-03-12
+version = "7.x-1.0-alpha1"
+core = "7.x"
+project = "image_allow_insecure_derivatives"
+datestamp = "1363107014"
+

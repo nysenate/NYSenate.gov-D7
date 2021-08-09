@@ -1,0 +1,583 @@
+<?php
+
+/**
+ * @file
+ * NYS Subscriptions. subscribe to a parent bills status changes.
+ */
+
+use \SendGrid\Mail as SG;
+
+define('NYS_SUBSCRIPTIONS_SUBSCRIPTION_KEY', 'nys_subscriptions_subscriber_key');
+define('NYS_SUBSCRIPTIONS_DEFAULT_QUEUE',    'subscription_queue');
+define('NYS_SUBSCRIPTIONS_DEFAULT_SUBJECT',  'Subscription Alert');
+
+// Default maximum run-time in minutes
+define("NYS_SUBSCRIPTIONS_MAX_DRUSH_TIME", 4);
+
+
+// Include queue class and queue handling functions.
+module_load_include('inc', 'nys_subscriptions', 'nys_subscriptions.queue.class');
+module_load_include('inc', 'nys_subscriptions', 'nys_subscriptions.queueitem.class');
+
+// Include legacy subscriptions handlers.
+module_load_include('inc', 'nys_subscriptions', 'nys_subscriptions');
+
+/**
+ * Implements hook_menu().
+ */
+function nys_subscriptions_menu() {
+  $items = array();
+
+  /** *******************************************
+   * BEGIN LEGACY ITEMS
+   ******************************************* */
+  $items['subscriptions/signup/%/%'] = array(
+    'title' => 'Subscribe',
+    'description' => 'Subscriptions Subscribe',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nys_subscriptions_signup_form', 2, 3),
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'nys_subscriptions.signup.inc',
+  );
+
+  $items['subscriptions/subscribe/%'] = array(
+    'title' => 'Confirm Bill Status Notification Subscription',
+    'description' => 'Confirm  Bill Status Notification Subscription',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nys_subscriptions_subscribe_form', 2),
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'nys_subscriptions.subscribe.inc',
+  );
+
+  $items['subscriptions/unsubscribe/%'] = array(
+    'title' => 'You have unsubscribed',
+    'description' => 'You have unsubscribed',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nys_subscriptions_unsubscribe_form', 2),
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'nys_subscriptions.unsubscribe.inc',
+  );
+
+  $items['subscriptions/global-unsubscribe/%'] = array(
+    'title' => 'Unsubscribe from all bill alerts',
+    'description' => 'Confirm unsubscribe from all bill alerts',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nys_subscriptions_global_unsubscribe_form', 2),
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'nys_subscriptions.global_unsubscribe.inc',
+  );
+
+  $items['subscriptions/manage-subscriptions/%'] = array(
+    'title' => 'Manage Bill Subscriptions',
+    'description' => 'Manage Bill Subscriptions',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nys_subscriptions_manage_subscriptions_form', 2),
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'nys_subscriptions.manage_subscriptions.inc',
+  );
+
+  $items['subscriptions/status-message/%'] = array(
+    'title' => 'NYS Subscriptions',
+    'description' => 'NYS Subscriptions',
+    'page callback' => 'nys_subscriptions_status_message',
+    'page arguments' => array(2),
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'nys_subscriptions.inc',
+  );
+  /** *******************************************
+   * END LEGACY ITEMS
+   ******************************************* */
+
+  // Add configuration page for NYS Subscriptions
+  $items['admin/config/services/nys_subscriptions'] = [
+    'title' => 'NYS Subscriptions',
+    'description' => 'Manage NYS Subscriptions',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['nys_subscriptions_config'],
+    'access arguments' => ['administer nys subscriptions'],
+    'type' => MENU_NORMAL_ITEM,
+  ];
+
+  return $items;
+}
+
+/**
+ * Implements hook_nys_subscriptions_queue_list().
+ *
+ * @return array
+ */
+function nys_subscriptions_nys_subscriptions_queue_list() {
+  return [
+    NYS_SUBSCRIPTIONS_DEFAULT_QUEUE => [
+      '#subject' => "Automated Notification",
+    ]
+  ];
+}
+
+/**
+ * Submit handler for bill vote subscription button.
+ *
+ * @param $form
+ * @param $form_state
+ *
+ * @return array Ajax callback result array
+ */
+function nys_subscriptions_subscribe_callback($form, &$form_state) {
+  global $user;
+
+  // Get the entered email address, nid, and tid.  We need to use input here
+  // because the two email controls were added dynamically through AJAX.  They
+  // are not part of the original form definition.
+  $email_address = trim($form_state['input']['email'] ?? '');
+  $tid = (int) ($form_state['values']['tid'] ?? 0);
+  $nid = (int) ($form_state['values']['nid'] ?? 0);
+
+  // Also create the parent ID we'll use to target elements in the AJAX return.
+  // TODO: is there a reason not to use the id presented in $form?
+  $parent_id = '#nys-bill-vote-vote-widget-' . $nid;
+
+  // Check for an embedded form.  This may have been set in form_state already.
+  $is_embed = $form_state['settings']['is_embed'] ?? NULL;
+  if (is_null($is_embed)) {
+    // Get the current node, for reference.
+    $current_node = menu_get_object();
+    $is_embed = ($nid != $current_node->nid);
+  }
+
+  // If the user is logged in, revert to that email address.
+  if (isset($user->mail)) {
+    $email_address = $user->mail;
+  }
+
+  if ($tid && $nid) {
+    // If this is an embedded form, and no email address is available,
+    // redirect to the bill node instead.  This mimics bill voting behavior.
+    if (!$email_address && $is_embed) {
+      ctools_include('ajax');
+      print ajax_render(array(ctools_ajax_command_redirect('/node/' . $nid)));
+      drupal_exit();
+    }
+
+    // If the email address is not valid, return an error.
+    if (!valid_email_address($email_address)) {
+      $form_error = [
+        'email_error_markup' => [
+          '#type' => 'markup',
+          '#markup' => '<div class="subscribe_email_error">Invalid email address. Please use a valid email address.</div>',
+        ],
+      ];
+      $commands = [
+        ajax_command_remove($parent_id . ' .subscribe_email_error'),
+        ajax_command_before($parent_id . ' .nys-subscribe-button', drupal_render($form_error)),
+      ];
+      return ['#type' => 'ajax', '#commands' => $commands];
+    }
+
+    // Everything is awesome.  Generate the subscription.
+    $why = 2;
+    nys_subscriptions_subscription_signup($tid, $nid, $email_address, $why);
+
+    // Send the confirmation email.
+    if (isset($user->uid) && $user->uid) {
+      $markup = 'Your subscription has been processed';
+    }
+    else {
+      $info = ['tid' => $tid, 'nid' => $nid, 'email' => $email_address];
+      $ret = drupal_mail(
+        'nys_subscriptions_confirmation',  // module
+        'confirmation',                    // key
+        '',                                // to (irrelevant with SendGrid API mail)
+        language_default(),                // language
+        ['confirmation' => $info]          // params
+      );
+      /* @var $response \SendGrid\Response */
+      $response = $ret['params']['sendgrid_mail']->response ?? NULL;
+
+      // Return a successful subscription message, and make sure the email
+      // collection controls get removed.
+      if ($response && in_array($response->statusCode(), ['200', '202'])) {
+        $markup = (isset($user->mail))
+          ? 'Your subscription has been processed'
+          : 'Please click the confirmation link in the email that was just sent to ' . $email_address;
+        if ($response->statusCode() == 200) {
+          $markup = '(DEV:SANDBOX) ' . $markup;
+        }
+      }
+      else {
+        $markup = "The system was unable to send your confirmation email. We're working on it. Please try again later.";
+        if (method_exists($response, 'statusCode')) {
+          $code = $response->statusCode();
+          $body = $response->body();
+        }
+        else {
+          $code = '000';
+          $body = 'Response object was not available (false return?)';
+        }
+        $fields = [
+          'email' => $email_address,
+          'authenticated' => isset($user->mail) ? 'YES' : 'NO',
+          'node' => $nid,
+          'code' => $code,
+          'body' => $body,
+        ];
+        nys_sendgrid_report_to_slack($fields);
+      }
+    }
+
+    $form_is_awesome = [
+      'sub_ok' => [
+        '#type' => 'markup',
+        '#markup' => '<hr /><div class="subscribe_result">' . $markup . '</div>',
+      ],
+    ];
+
+    $commands = [
+      ajax_command_remove($parent_id . ' .subscribe_email_error'),
+      ajax_command_remove($parent_id . ' .subscribe_result'),
+      ajax_command_remove($parent_id . ' .subscribe_email_container'),
+      ajax_command_remove($parent_id . ' .nys-subscribe-button'),
+      ajax_command_append($parent_id . ' .nys-bill-subscribe', drupal_render($form_is_awesome)),
+    ];
+    return ['#type' => 'ajax', '#commands' => $commands];
+  }
+}
+
+/**
+ * Ajax submit handler for bill vote subscription button.  Wraps around
+ * nys_subscriptions_subscribe_callback().
+ *
+ * @param $form
+ * @param $form_state
+ *
+ * @return array Ajax callback result array
+ */
+function nys_subscriptions_subscribe_ajax_callback($form, &$form_state) {
+  return nys_subscriptions_subscribe_callback($form, $form_state);
+}
+
+/**
+ * Creates the form for NYS Subscriptions config page, via drupal_get_form()
+ *
+ * @param array $form
+ * @param array $form_state
+ *
+ * @return array
+ */
+function nys_subscriptions_config($form, &$form_state) {
+  // Top level
+  $form['subscriptions'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Subscriptions'),
+    '#description' => t('These options configure the From and To information for subscriptions, including injecting authenticated users or "anonymous" emails into the bill alert workflow as subscribers, and BCC addressing for all alerts.'),
+  ];
+
+  // Sender options
+  $form['subscriptions']['sender_info'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Sender Information'),
+    '#description' => t('Configures the sender\'s information'),
+  ];
+  $form['subscriptions']['sender_info']['nys_subscriptions_from_address'] = [
+    '#type' => 'textfield',
+    '#title' => t('From Address'),
+    '#description' => t('The address from which subscription notifications should be sent.'),
+    '#default_value' => variable_get('nys_subscriptions_from_address', ''),
+  ];
+  $form['subscriptions']['sender_info']['nys_subscriptions_from_name'] = [
+    '#type' => 'textfield',
+    '#title' => t('From Name'),
+    '#description' => t('The plain-text name from which subscription notifications should be sent.'),
+    '#default_value' => variable_get('nys_subscriptions_from_name', ''),
+  ];
+  $form['subscriptions']['sender_info']['nys_subscriptions_replyto_address'] = [
+    '#type' => 'textfield',
+    '#title' => t('Reply-To Address'),
+    '#description' => t('The address to which replies should be sent.'),
+    '#default_value' => variable_get('nys_subscriptions_replyto_address', ''),
+  ];
+  $form['subscriptions']['sender_info']['nys_subscriptions_replyto_name'] = [
+    '#type' => 'textfield',
+    '#title' => t('Reply-To Name'),
+    '#description' => t('The plain-text name to which replies should be sent.'),
+    '#default_value' => variable_get('nys_subscriptions_replyto_name', ''),
+  ];
+
+  // Recipient options
+  $form['subscriptions']['recipients'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Recipient Options'),
+    '#description' => t('Configures recipient options'),
+  ];
+  $form['subscriptions']['recipients']['nys_subscriptions_bcc_address'] = [
+    '#type' => 'textfield',
+    '#title' => t('BCC Address'),
+    '#default_value' => variable_get('nys_subscriptions_bcc_address', ''),
+    '#description' => t('If populated, all outbound emails created by subscriptions will receive this address as a BCC recipient.'),
+  ];
+
+  // Run-time options
+  $form['subscriptions']['runtime'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Run-time Configuration'),
+    '#description' => t('Configures run-time options for drush commands'),
+  ];
+  $form['subscriptions']['runtime']['nys_subscriptions_max_drush_time'] = [
+    '#type' => 'textfield',
+    '#title' => t('Maximum Processing Time'),
+    '#default_value' => variable_get('nys_subscriptions_max_drush_time', NYS_SUBSCRIPTIONS_MAX_DRUSH_TIME),
+    '#description' => t('The maximum allowable runtime for processing queues.  This setting affects the process-queues drush command, dictating how long it will attempt to process each time it is called.  If this limit is exceeded, execution will stop regardless of remaining queue items.  Set to 0 (zero) for no limit, i.e., process all items, always.'),
+  ];
+  // TODO: make this an auto-complete and multi-value
+  $form['subscriptions']['runtime']['nys_subscriptions_suppress_tid'] = [
+    '#type' => 'textfield',
+    '#title' => t('Suppress Alerts'),
+    '#description' => t('A comma-delimited list of taxonomy term IDs for which alerts will not be sent out. Queue items will still be created for these items, but emails will not be generated.  Suppressed queue items will remain in queue until manually flushed, or suppression is removed.'),
+    '#default_value' => variable_get('nys_subscriptions_suppress_tid'),
+  ];
+
+
+
+  return system_settings_form($form);
+}
+
+/**
+ * Implements hook_permission()
+ *
+ * @return array
+ */
+function nys_subscriptions_permission() {
+  return [
+    'administer nys subscriptions' => [
+      'title' => t('Administer NYS Subscriptions Settings'),
+      'description' => t('Administer site-wide settings for NYS Subscriptions'),
+    ],
+  ];
+}
+
+/**
+ * Implements hook_nys_sendgrid_after_send().
+ *
+ * Checks for and reports any failures found in the SendGrid response.
+ *
+ * @param array $message The message array, as returned from drupal_mail().
+ */
+function nys_subscriptions_nys_sendgrid_after_send($message) {
+  static $last_error = FALSE;
+
+  // If there's a failure, report to slack.  But only once!
+  $ret = $message['response'] ?? FALSE;
+  if (is_object($ret) && $message['module'] == 'nys_subscriptions') {
+    $sub_data = $message['params']['subscriptions'] ?? [];
+    if (!in_array($ret->statusCode(), ['202', '200'])) {
+      if (!$last_error || $last_error != $ret->statusCode()) {
+        $fields = [
+          'tid' => $sub_data['tid'] ?? 'none',
+          'code' => $ret->statusCode(),
+          'body' => $ret->body(),
+          'source' => __FUNCTION__,
+        ];
+        $last_error = $ret->statusCode();
+      }
+      else {
+        $fields = ['REPEATED ERROR' => 'Error status code repeated.  See last report.'];
+      }
+      nys_sendgrid_report_to_slack($fields);
+    }
+  }
+}
+
+/**
+ * Implements hook_mail().
+ *
+ * Generates the Sendgrid\Mail object necessary to send a confirmation
+ * email for a subscription request.  It will be expecting a 'confirmation'
+ * key in $params, which must contain an array with the following keys:
+ *   - nid => The node for which a subscription is being made
+ *   - tid => A taxonomy term's ID, typical the node's multi-session root
+ *   - email => The intended recipient's email address
+ *
+ * @param string $mail_key
+ * @param array $message
+ * @param array $params
+ */
+function nys_subscriptions_confirmation_mail($mail_key, &$message, $params): void {
+  // Verify the required information is available
+  $info = $message['params']['confirmation'] ?? [];
+  if (!($info['nid'] && $info['tid'] && $info['email'])) {
+    $message['params']['send'] = FALSE;
+    return;
+  }
+
+  // Construct the base email object, or cancel the send.
+  if (!($mail = _nys_subscriptions_generate_mail_object())) {
+    $message['params']['send'] = FALSE;
+    return;
+  }
+
+  // Load/create some references
+  $node = node_load($info['nid']);
+  $emw = entity_metadata_wrapper('node', $node);
+  $confirm_url = nys_utils_get_base_url() . '/subscriptions/subscribe/' .
+    nys_subscriptions_create_subscription_key($info['email'], $info['tid']) . '/';
+
+  try {
+    // Set the mail template and subject
+    $mail->setTemplateId('5182d9b2-8670-41cb-9f65-5f671541907f');
+    $mail->setGlobalSubject(t('Please Confirm Your NYS Subscription.'));
+
+    // Get some data from the wrapped node
+    $print_num = $emw->field_ol_print_no->value();
+    $sponsor = $emw->field_ol_sponsor_name->value();
+    $section = $emw->field_ol_law_section->value();
+    if (!$sponsor && ($section == 'Budget Bills')) {
+      $sponsor = $section;
+    }
+
+    // Set up the Personalization object.
+    $person = new \SendGrid\Mail\Personalization();
+    $person->addTo(new \SendGrid\Mail\To($info['email'], $info['email']));
+    $person->addSubstitution('%bill.base_print%', $emw->field_ol_base_print_no->value());
+    $person->addSubstitution('%bill.session%', $emw->field_ol_session->value());
+    $person->addSubstitution('%bill.print_number%', $print_num);
+    $person->addSubstitution('%bill.chamber%', ucwords($emw->field_ol_chamber->value()));
+    $person->addSubstitution('%bill.summary%', $emw->field_ol_name->value());
+    $person->addSubstitution('%bill.sponsor%', $sponsor);
+    $person->addSubstitution('%confirm_url%', $confirm_url);
+
+    // Add the subscriber to the Mail object.
+    $mail->addPersonalization($person);
+  } catch (Throwable $e) {
+    // On failure, report to watchdog and cancel the send.
+    watchdog('nys_subscriptions',
+      'Failed to configure mail object for confirmation email',
+      ['msg' => $e->getMessage(), 'info' => $info],
+      WATCHDOG_ERROR
+    );
+    $message['params']['send'] = FALSE;
+    return;
+  }
+
+
+  $message['params']['sendgrid_mail'] = $mail;
+  $message['params']['subject'] = $mail->getGlobalSubject();
+  $message['params']['GA_CampaignName'] = 'subscriptions';
+  $message['params']['GA_CampaignContent'] = 'Confirmation';
+  $message['params']['subscriptions'] = ['tid' => $info['tid']];
+}
+
+/**
+ * Implements hook_mail().
+ *
+ * This will intercept any drupal_mail() call using the module name
+ * 'nys_subscriptions_queueitem'.  It will be expecting a 'queue_item'
+ * key in $params, which must contain an NYSSubscriptionQueueItem object.
+ * If it is not found, the message is flagged to be cancelled.
+ *
+ * This function's primary role is to create the custom Sendgrid\Mail
+ * object, and populate it with all recipient and personalization
+ * information included in the NYSSubscriptionQueueItem.  The From,
+ * Reply-To, and Bcc properties are set from the standard.  Additional
+ * properties to be populated include:
+ *  - To/Cc
+ *  - Subject
+ *  - Template ID
+ *
+ * Additionally, this function adds categories for tracking.
+ *
+ * Other modules can hook into this process through hook_mail_alter(),
+ * and limiting application of changes by detecting the module and key
+ * in $params.
+ *
+ * Strictly for debugging purposes, the SendGrid templates refer to the
+ * token %subscriber_debug%.  Dump information into that token for
+ * real-time debugging of substitutions or other items in the SG API.
+ *
+ * Example, where $val is a Personalization:
+ *   $val->addSubstitution('%subscriber_debug%', var_export($val, 1));
+ *
+ * @param string $mail_key
+ * @param array $message
+ * @param array $params
+ *
+ * @see _nys_subscriptions_generate_mail_object()
+ * @see drupal_mail()
+ * @see \NYSSubscriptionQueueItem
+ * @see \NYSSendGridMailSystem
+ *
+ */
+function nys_subscriptions_queueitem_mail($mail_key, &$message, $params): void {
+  // Verify availability of a queue item object, and create an easy reference.
+  if (!(($message['params']['queue_item'] ?? NULL) instanceof NYSSubscriptionQueueItem)) {
+    $message['params']['send'] = FALSE;
+    return;
+  }
+  /** @var \NYSSubscriptionQueueItem $item */
+  $item = $message['params']['queue_item'];
+
+  // Construct the base email object, or cancel the send.
+  if (!($mail = _nys_subscriptions_generate_mail_object())) {
+    $message['params']['send'] = FALSE;
+    return;
+  }
+
+  // Collect the subject.  A blank subject is not desired, but we'll let it pass.
+  $subject = (($item->substitutions['subject'] ?? NULL) ?? $item->queue->getSubject()) ?: '';
+
+  // Create the mail object.  Passing the initial From prevents a NULL person.
+  // No need to report to slack on any of these conditions, but they will be
+  // logged to watchdog, just in case.
+  try {
+    // Set up the subject and categories.
+    $mail->setGlobalSubject($subject);
+    $mail->addCategory('Automated Email Alerts');
+    // TODO: This needs to be in the bill notifications
+    $mail->addCategory($item->references['primary_event']['name']); // e.g. PASSED_SENATE
+
+    // Set the template ID, if available.
+    if (isset($item->substitutions['template_id'])) {
+      $mail->setTemplateId($item->substitutions['template_id']);
+    }
+  }
+  catch (Throwable $e) {
+    // Report in watchdog
+    watchdog(
+      'nys_subscriptions_queueitem',
+      "Configuration of the Mail object failed",
+      ['msg' => $e->getMessage()],
+      WATCHDOG_ERROR
+    );
+    $message['params']['send'] = FALSE;
+    return;
+  }
+
+  // Add the subscriber personalizations.
+  foreach (($item->substitutions['subscribers'] ?? []) as $key => $val) {
+    if ($val instanceof SG\Personalization) {
+      $mail->addPersonalization($val);
+    }
+  }
+
+  // Add the section tokens, if present.
+  foreach (($item->substitutions['section'] ?? []) as $key => $val) {
+    $mail->addSection($key, $val);
+  }
+
+  // Set the Mail object and other incidental properties in $params
+  // Modules will have the opportunity to hook_mail_alter() afterwards.
+  $message['params']['sendgrid_mail'] = $mail;
+  $message['params']['subject'] = $subject;
+  $message['params']['GA_CampaignName'] = 'subscriptions';
+  // TODO: Move this...primary_event is a reference from bill notifications.
+  $message['params']['GA_CampaignContent'] = $item->references['primary_event']['name'];
+  // TODO: Verify this needs to be in subscriptions vs bill notifications
+  $message['params']['subscriptions'] = [
+    'tid' => (int) $item->data['tid'] ?? 'none',
+    'tax_name' => $item->data['print_num'] ?? 'none',
+  ];
+}

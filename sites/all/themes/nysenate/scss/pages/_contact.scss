@@ -1,0 +1,45 @@
+/*----------------------------------------
+/
+/	CONTACT PAGE STYLES
+/
+/-----------------------------------------*/
+.contact-form {
+	.columns {
+		&.medium-6 {
+			width: 100%;
+		}
+		#edit-submit {
+			margin: 20px 0 5px;
+			font-family: "Proxima Nova SemiBold";
+			text-transform: uppercase;
+			font-size: 14px;
+			letter-spacing: 0.2em;
+			@extend .med-bg;
+		}
+	}
+}
+
+@media #{$tablet} {
+
+	.contact-form {
+		.form-type-radio {
+			display: block;
+			float: left;
+		}
+		.columns {
+			&.medium-6 {
+				width: 50%;
+
+				&:nth-child(odd) {
+					padding-right: 2%;
+				}
+				&:nth-child(even) {
+					padding-left: 2%;
+				}
+			}
+			#edit-submit {
+				font-size: 16px;
+			}
+		}
+	}
+}

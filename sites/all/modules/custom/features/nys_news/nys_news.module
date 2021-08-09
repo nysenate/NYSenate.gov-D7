@@ -1,0 +1,37 @@
+<?php
+/**
+ * @file
+ * Code for the NYS News feature.
+ */
+
+include_once 'nys_news.features.inc';
+
+/**
+ * Hides and keeps the unnecessary yet now non-broken field_bill for safekeeping.
+ */
+function nys_news_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'in_the_news_node_form') {
+    if ($form['field_bill']['#access'] == TRUE) {
+      $form['field_bill']['#access'] = FALSE;
+    }
+  }
+}
+
+/**
+ * Implements hook_views_pre_view().
+ */
+function nys_news_views_pre_view(&$view, &$display_id, &$args) {
+  if ($view->name == 'senator_news' && $display_id == 'senator_news_article_footer') {
+    if (arg(0) == 'node' && is_numeric(arg(1))) {
+      $node_emw = entity_metadata_wrapper('node', arg(1));
+      try {
+        $senator = $node_emw->field_senator->nid->value();
+      }
+      catch (EntityMetadataWrapperException $e) {
+        $senator = 0;
+      }
+
+      $view->set_arguments(array($senator));
+    }
+  }
+}

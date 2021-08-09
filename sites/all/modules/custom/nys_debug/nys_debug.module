@@ -1,0 +1,50 @@
+<?php
+/**
+ * Watchdog logging entry creation:
+ *
+ *     // Prepare the fields to be logged
+ * $log_entry = array(
+ * 'type'        => $type,
+ * 'message'     => $message,
+ * 'variables'   => $variables,
+ * 'severity'    => $severity,
+ * 'link'        => $link,
+ * 'user'        => $user,
+ * 'uid'         => $user_uid,
+ * 'request_uri' => $base_root . request_uri(),
+ * 'referer'     => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
+ * 'ip'          => ip_address(),
+ * // Request time isn't accurate for long processes, use time() instead.
+ * 'timestamp'   => time(),
+ * );
+ */
+function nys_debug_watchdog($log_entry) {
+  // Since the Slack function can write to watchdog, this has the potential to
+  // set up an infinite loop.  This static helps to prevent it.
+  static $in_handler = FALSE;
+
+  // Only act if the handler is not currently being fired, and the log_entry
+  // is for a PHP error/warning/notice.
+  // 2017-08-30 Added admin flag to turn off reporting.
+  if (!$in_handler
+    && is_array($log_entry)
+    && nys_av('type', $log_entry) == 'php'
+    && (int)nys_av('severity', $log_entry, 5) < 4
+    && variable_get('nys_debug_slack_reporting', 0)
+  ) {
+    $in_handler = TRUE;
+    $message = nys_av('message', $log_entry, '');
+    $vars = nys_av('variables', $log_entry);
+    if (is_array($vars)) {
+      $message = str_replace(array_keys($vars), $vars, $message);
+    }
+    $fields = [
+      [ 'title' => 'URL', 'value' => (string) nys_av('request_uri', $log_entry, 'Not Provided'), 'short' => FALSE ],
+      [ 'title' => 'Severity', 'value' => (string) nys_av('severity', $log_entry, 'Not Provided'), 'short' => FALSE ],
+    ];
+    $channel = '#publicwebsite-errors';
+    $title = 'PHP Error/Warning/Notice';
+    nys_utils_send_slack_notification($message, $fields, $channel, $title);
+    $in_handler = FALSE;
+  }
+}

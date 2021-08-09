@@ -1,0 +1,9 @@
+#edit-permissions-per-webform .form-type-checkboxes {
+  float: left;
+  width: 33%;
+}
+
+.form-item-permissions-per-webform-access-own-webform-submissions,
+#edit-permissions-per-webform-permissions-description {
+  clear: both;
+}

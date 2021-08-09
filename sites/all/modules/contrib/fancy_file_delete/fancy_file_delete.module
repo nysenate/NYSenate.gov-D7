@@ -1,0 +1,368 @@
+<?php
+
+/**
+ * Implements hook_permission().
+ */
+function fancy_file_delete_permission() {
+  return array(
+    'administer fancy file delete' => array(
+      'title' => t('Administer Fancy File Delete'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function fancy_file_delete_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id === 'fancy_file_delete_manual') {
+    $form['actions']['submit']['#value'] = 'Engage';
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function fancy_file_delete_menu() {
+  $items = array();
+
+  $items['admin/config/content/fancy_file_delete'] = array(
+    'title' => 'Fancy File Delete',
+    'description' => 'Delete Multiple Files Based off FID or orphaned / unamaged files',
+    'page callback' => 'fancy_file_delete_info',
+    'access arguments' => array('administer fancy file delete'),
+    'file' => 'includes/fancy_file_delete.admin.inc'
+  );
+
+  $items['admin/config/content/fancy_file_delete/info'] = array(
+    'title' => 'Info',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -12,
+  );
+
+  $items['admin/config/content/fancy_file_delete/manual'] = array(
+    'title' => 'Manual',
+    'type' => MENU_LOCAL_TASK,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('fancy_file_delete_manual'),
+    'access arguments' => array('administer fancy file delete'),
+    'weight' => -10,
+    'file' => 'includes/fancy_file_delete.admin.inc'
+  );
+
+  return $items;
+}
+
+/**
+ * Implements of hook_views_api().
+ */
+function fancy_file_delete_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'fancy_file_delete') .'/views',
+  );
+}
+
+/**
+ * Implements of hook_views_pre_view().
+ *
+ * Used when we click on the unmanaged tab / Update View to keep it updated.
+ */
+function fancy_file_delete_views_pre_execute(&$view) {
+  if ($view->name === 'fancy_file_list_unmanaged') {
+    fancy_file_delete_unmanaged_update_view();
+  }
+}
+
+/**
+ * Implements hook_entity_info().
+ *
+ * Add Unmanaged table as entity so we can use it with VBO.
+ */
+function fancy_file_delete_entity_info() {
+  $info = array();
+
+  $info['unmanaged_files'] = array(
+    'label' => t('Unmanaged Files'),
+    'base table' => 'unmanaged_files',
+    'entity keys' => array(
+      'id' => 'unfid',
+      'label' => 'path',
+    ),
+    'module' => 'unmanaged_files',
+  );
+
+  return $info;
+}
+
+/**
+ * Implements hook_action_info().
+ */
+function fancy_file_delete_action_info() {
+  return array(
+    'fancy_file_delete_files' => array(
+      'type' => 'entity',
+      'label' => t('Delete Files'),
+      'configurable' => FALSE,
+      'pass rows' => TRUE,
+      'permissions' => array('administer fancy file delete'),
+    ),
+    'fancy_file_delete_files_force' => array(
+      'type' => 'entity',
+      'label' => t('FORCE Delete Files (No Turning Back!)'),
+      'configurable' => FALSE,
+      'pass rows' => TRUE,
+      'permissions' => array('administer fancy file delete'),
+    ),
+  );
+}
+
+/**
+ * Normal File Delete Action for hook_action_info.
+ */
+function fancy_file_delete_files(&$entity, $context) {
+  module_load_include('inc', 'fancy_file_delete', 'includes/fancy_file_delete.admin');
+  // Set entities to batch our way.
+  $operations = array();
+  foreach ($entity as $key => $value) {
+    if ($key === 'fid' || $key === 'path') {
+      $operations[] = array('fancy_file_delete_batch_delete', array($value, FALSE));
+    }
+  }
+  // Send to batch.
+   _fancy_file_delete_batch_delete_run($operations);
+}
+
+/**
+ * Force File Delete Action for hook_action_info.
+ */
+function fancy_file_delete_files_force(&$entity, $context) {
+  module_load_include('inc', 'fancy_file_delete', 'includes/fancy_file_delete.admin');
+  // Set entities to batch our way.
+  $operations = array();
+  foreach ($entity as $key => $value) {
+    if ($key === 'fid') {
+      $operations[] = array('fancy_file_delete_batch_delete', array($value, TRUE));
+    }
+  }
+  // Send to batch.
+   _fancy_file_delete_batch_delete_run($operations);
+}
+
+/**
+ * Updates the view and populates the unmanaged files table.
+ */
+function fancy_file_delete_unmanaged_update_view() {
+  // Get all files from default standard public & private directories.
+  $directories = fancy_file_delete_unmanaged_get_chosen_dirs();
+  $files = fancy_file_delete_unmanaged_get_files($directories);
+
+  // Remove files from the batch that are not in our latest check.
+  if (count($files)) {
+    db_delete('unmanaged_files')
+      ->condition('path', array($files),'NOT IN')
+      ->execute();
+  }
+  else {
+    db_delete('unmanaged_files')->execute();
+  }
+
+  // Go through and add this to the batch.
+  if (count($files) > 0) {
+    // I changed this to use array chunk & db_query for performance
+    // see issue: https://www.drupal.org/node/2637028
+    $files_chunk = array_chunk($files, ceil(count($files) / 4), TRUE);
+    foreach ($files_chunk as $filez) {
+      $query = "SELECT path FROM {unmanaged_files} WHERE path IN (:files)";
+      $result = db_query($query, array(':files' => $filez))->fetchAll();
+      // Check if this is a first run.
+      if (count($result) == 0) {
+        $new = TRUE;
+      }
+      else {
+        $umsplit[] = $result;
+        $new = FALSE;
+      }
+    }
+
+    // Insert if new.
+    if ($new) {
+      foreach ($files_chunk as $chunk) {
+        foreach ($chunk as $fpath) {
+          $new_files[] = $fpath;
+        }
+      }
+      if (isset($new_files)) {
+        $insert_unmanaged = db_insert('unmanaged_files')->fields(array('path'));
+        // Insert records
+        foreach ($new_files as $key => $value) {
+          $insert_unmanaged->values(array(
+            'path' => $value,
+          ));
+        }
+        $insert_unmanaged->execute();
+      }
+    }
+    else {
+      $um = array();
+      foreach ($umsplit as $trill) {
+        $um = array_merge($um, $trill);
+      }
+
+      // Go in and check it and set it as an array to check.
+      $um_check = array();
+      foreach ($um as $res) {
+        $um_check[] = $res->path;
+      }
+      // Again check the difference, only want ones not in the table.
+      $um_final = array_diff($files, $um_check);
+
+      if (count($um_final) > 0) {
+        $insert_unmanaged = db_insert('unmanaged_files')->fields(array('path'));
+        // Insert records
+        foreach ($um_final as $key => $value) {
+          $insert_unmanaged->values(array(
+            'path' => $value,
+          ));
+        }
+        $insert_unmanaged->execute();
+      }
+    }
+  }
+}
+
+/**
+ * Answer a list of chosen directories from which to delete unmanaged files from.
+ * Defaults to all directories if no choice was previously made.
+ *
+ * @return mixed array
+ */
+function fancy_file_delete_unmanaged_get_chosen_dirs() {
+  $all_dirs = fancy_file_delete_unmanaged_get_directories();
+  $chosen_dirs = variable_get('fancy_file_delete_unmanaged_chosen_dirs', FALSE);
+  if ($chosen_dirs === FALSE) {
+    // Return only public on first pass for performance.
+    // see issue: https://www.drupal.org/node/2637028
+    return array('public://');
+  }
+  else {
+    // Only include directories that currently exist.
+    $chosen = array_intersect($all_dirs, $chosen_dirs);
+    natsort($chosen);
+    return array_values($chosen);
+  }
+}
+
+/**
+ * Answer a list of directories to include/exclude.
+ */
+function fancy_file_delete_unmanaged_get_directories() {
+ $public_dir = variable_get('file_public_path', 'sites/default/files');
+ $private_dir = variable_get('file_private_path', '');
+
+ // If the private path is a sub-path of the public path, exclude it.
+ $exclude_paths = array();
+ if (!empty($private_dir) && strpos($private_dir, $public_dir) === 0) {
+   $exclude_paths[] = $private_dir;
+ }
+
+ // Get all files from default standard file dir.
+ $directories = array('public://');
+ $directories = array_merge($directories, fancy_file_delete_unmanaged_get_sub_directories($public_dir, 'public://', $exclude_paths));
+
+ // Get all files from the private file directory.
+ if (!empty($private_dir)) {
+   // If the public path is a sub-path of the private path, exclude it.
+   $exclude_paths = array();
+   if (!empty($public_dir) && strpos($public_dir, $private_dir) === 0) {
+     $exclude_paths[] = $public_dir;
+   }
+   $directories[] = 'private://';
+   $directories = array_merge($directories, fancy_file_delete_unmanaged_get_sub_directories($private_dir, 'private://', $exclude_paths));
+ }
+ natsort($directories);
+ return array_values($directories);
+}
+
+/**
+ * Answer an array of unmanaged files contained in the directories provided.
+ *
+ * @param array $paths Directory paths e.g. array("public://", "public://media")
+ * @return array of file objects.
+ */
+function fancy_file_delete_unmanaged_get_files(array $paths) {
+  // Get all files from default standard file dir.
+  $file_check = array();
+  foreach ($paths as $path) {
+    $file_check = array_merge($file_check, fancy_file_delete_unmanaged_get_file_uris($path));
+  }
+  $db_check = array();
+
+  // All the files in the file_managed table
+  // I changed this to use db_query for performance.
+  // see issue: https://www.drupal.org/node/2637028
+  $query = db_query('SELECT uri FROM {file_managed}');
+
+  // Set this to a numeric keyed array so we can check this easier.
+  foreach ($query->fetchAll() as $result) {
+    $db_check[] = $result->uri;
+  }
+  // Get the files not in the file_managed table.
+  return array_diff($file_check, $db_check);
+}
+
+/**
+ * Answer an array of directory paths and URI's.
+ *
+ * @param string $dir The file-system path of the directory.
+ * @param string $uri_prefix The prefix, e.g. 'public://' or 'private://'
+ * @param optional array $exclude_paths File-system paths to exclude from the results.
+ * @return array
+ */
+function fancy_file_delete_unmanaged_get_sub_directories($dir, $uri_prefix, array $exclude_paths = array()) {
+  $results = array();
+  $iterator = new RecursiveIteratorIterator(
+    new FancyFileDeleteDirectoryOnlyRecursiveFilterIterator(
+      new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS),
+      $exclude_paths
+    ),
+    RecursiveIteratorIterator::SELF_FIRST, RecursiveIteratorIterator::CATCH_GET_CHILD);
+
+  // Go through each one and add a proper uri.
+  foreach ($iterator as $file) {
+    $results[] = str_replace($dir . '/', $uri_prefix, $file->getPathname());
+  }
+  return $results;
+}
+
+
+/**
+ * Answer an array of file URI's to match against the database.
+ *
+ * @param string $dir The file-system path of the directory.
+ * @return array
+ */
+function fancy_file_delete_unmanaged_get_file_uris($dir) {
+  $file_check = array();
+  $files = file_scan_directory($dir, '/.+/', array('recurse' => FALSE));
+  // Go through each one and replace this with a proper uri.
+  foreach ($files as $file) {
+    if (!is_dir(drupal_realpath($file->uri))) {
+      $file_check[] = $file->uri;
+    }
+  }
+  return $file_check;
+}
+
+/**
+ * Set a list of chosen directories from which to delete unmanaged files from.
+ *
+ * @param array $chosen_dirs
+ */
+function fancy_file_delete_unmanaged_set_chosen_dirs(array $chosen_dirs) {
+  // Only include directories that currently exist.
+  $all_dirs = fancy_file_delete_unmanaged_get_directories();
+  $chosen_dirs = array_intersect($all_dirs, $chosen_dirs);
+  natsort($chosen_dirs);
+  variable_set('fancy_file_delete_unmanaged_chosen_dirs', array_values($chosen_dirs));
+}

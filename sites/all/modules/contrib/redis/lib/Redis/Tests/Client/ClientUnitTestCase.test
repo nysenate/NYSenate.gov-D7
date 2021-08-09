@@ -1,0 +1,66 @@
+<?php
+
+class Redis_Tests_Client_UnitTestCase extends Redis_Tests_AbstractUnitTestCase
+{
+    public static function getInfo()
+    {
+        return array(
+            'name'        => 'Redis client manager',
+            'description' => 'Tests Redis module client manager feature.',
+            'group'       => 'Redis',
+        );
+    }
+
+    protected function getClientInterface()
+    {
+        return 'PhpRedis';
+    }
+
+    public function getManager()
+    {
+        return new Redis_Client_Manager(
+            new Redis_Tests_Client_MockFactory(),
+            array(
+                'default' => array(),
+                'foo' => array(
+                    'host' => 'foo.com',
+                    'port' => 666,
+                ),
+                'bar' => array(
+                    'host' => 'bar.com',
+                ),
+            )
+        );
+    }
+
+    public function testManagerServerList()
+    {
+        $manager = $this->getManager();
+
+        $defaultClient = $manager->getClient();
+        $this->assertTrue(is_object($defaultClient));
+
+        // Ensure defaults are OK
+        $this->assertIdentical(Redis_Client_Manager::REDIS_DEFAULT_HOST, $defaultClient->host);
+        $this->assertIdentical(Redis_Client_Manager::REDIS_DEFAULT_PORT, $defaultClient->port);
+        $this->assertFalse(property_exists($defaultClient, 'base'));
+        $this->assertFalse(property_exists($defaultClient, 'password'));
+
+        $client = $manager->getClient('foo');
+        $this->assertIdentical('foo.com', $client->host);
+        $this->assertIdentical(666, $client->port);
+
+        $client = $manager->getClient('bar');
+        $this->assertIdentical('bar.com', $client->host);
+        $this->assertIdentical(Redis_Client_Manager::REDIS_DEFAULT_PORT, $client->port);
+
+        $this->assertIdentical($defaultClient, $manager->getClient('non_existing'));
+
+        try {
+            $manager->getClient('other_non_existing', false);
+            $this->assert(false);
+        } catch (\InvalidArgumentException $e) {
+            $this->assert(true);
+        }
+    }
+}

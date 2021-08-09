@@ -1,0 +1,538 @@
+// Elements
+//
+// Things to review before you write code here:
+// - Be sure to load after "foundation" import.
+// - Also, before adding styles be sure to modify variables in the
+//   "base/_common.scss" file. You may not need to write any code.
+
+// Headings
+//------------------------------------------
+// h1, h2, h3,
+// h4, h5, h6 {}
+
+// Anchors
+//-----------------------------------------------------------------------------
+// a {}
+
+// a:focus {}
+
+// a.active,
+// a:active,
+// a:hover {}
+
+button:focus {
+  outline: none;
+}
+
+/*------------------------------
+/ FORM INPUTS
+/-------------------------------*/
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+textarea {
+  font-family: 'Proxima Nova Regular';
+  font-size: 1rem;
+  color: $grey10;
+  padding: 0 10px;
+  box-shadow: none;
+
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+textarea {
+  padding: 10px;
+}
+
+label {
+  font-size: 0.8rem;
+  color: $grey04;
+  cursor: pointer;
+  display: block;
+  font-weight: normal;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+  font-family: 'Proxima Nova Regular';
+  text-transform: uppercase;
+  .form-required{
+    color: $orange01;
+  }
+}
+
+.form-item-agree-terms{
+  input[type="checkbox"] + label,
+  input[type="radio"] + label {
+    display: inline-block;
+    margin-left: 20px;
+    margin-right: 1rem;
+    margin-bottom: 0;
+    vertical-align: top;
+    width: 80%;
+  }
+}
+
+.form-item .description{
+  font-family: 'Proxima Nova Regular';
+  border-bottom: none;
+}
+.has-tip:hover, .has-tip:focus {
+  border-bottom: none;
+  color: $orange01;
+}
+
+.image-widget-data {
+  float: left;
+  width: auto;
+  height: 15px;
+}
+
+.file-icon{
+  float: left;
+  width: 15px;
+  height: 15px;
+}
+
+.file-size{
+  clear:both;
+  padding: 10px;
+}
+.image-widget{
+  padding: 0px;
+  width:100%;
+}
+
+.field-type-list-boolean{
+  border-top: 1px solid $grey05;
+}
+
+div.vertical-tabs {
+margin: 2em 0 2em 18em;
+border: 1px solid #ccc;
+position: relative;
+
+  .vertical-tabs-list{
+    font-size: 12px;
+  }
+}
+
+input[type="file"],
+input[type="checkbox"],
+input[type="radio"]{
+  margin: 0.9rem 0 1rem 0;
+}
+
+.edit-field-image-main{
+  width: 100%;
+}
+.form-type-managed-file{
+  width: 100%;
+  border: 1px solid $grey05;
+  padding: 20px;
+  min-height: 385px;
+}
+
+/*------------------------------
+/ FORM BUTTONS
+/-------------------------------*/
+.form-actions{
+  clear:both;
+  button{
+    margin-left: 20px;
+  }
+
+}
+
+// button[type="submit"],
+// input[type="submit"],
+// button.secondary{
+//  padding: 0.8em 2.5em 0.8em 2.5em;
+//  text-transform: uppercase;
+//  font-size: 14px;
+//  letter-spacing: 0.25em;
+//  font-family: "Proxima Nova SemiBold";
+//  width: auto;
+//  display: block;
+//  color: #fff;
+//  text-decoration: none;
+//  text-align: center;
+//  float: right;
+//  margin-bottom: 40px;
+//  border-radius: none;
+//  @extend .lgt-bg;
+
+//  &:after {
+//    line-height: 40px;
+//    width: 100%;
+//    text-align: center;
+//    text-transform: uppercase;
+//  }
+//  &:hover,
+//  &:focus{
+//    color: #fff;
+//    background-color: #004C71;
+//    border-radius: none;
+//  }
+// }
+
+button.radius, .button.radius {
+  border-radius: 0;
+}
+
+button.secondary, .button.secondary.form-submit {
+  @extend .lgt-bg;
+  color: #fff;
+}
+.image-widget-data{
+  button{
+    float:right;
+  }
+}
+
+
+.button-group .button.secondary {
+  padding: 10px 20px;
+  display: block;
+  font-family: 'Proxima Nova SemiBold';
+  font-size: 14px;
+  background-color: #fff;
+  border: 1px solid $grey05;
+  border-left: 1px solid $grey05;
+  color: #004C71;
+  text-transform: uppercase;
+}
+
+.button-group > li:first-child button, .button-group > li:first-child .button {
+  border-left: 1px solid $grey05;
+}
+
+.tabs .button-group {
+
+  > li {
+    padding-bottom: 30px;
+  }
+
+  .button.secondary {
+    margin: 0 10px;
+    background-color: #EEEEEE;
+    text-transform: uppercase;
+    font-family: "Proxima Nova SemiBold";
+    font-size: 14px;
+    letter-spacing: 0.2em;
+  }
+}
+
+.page-user {
+
+  .l-row--main {
+    padding-top: 40px;
+  }
+
+  .button.secondary {
+    display: none;
+  }
+}
+
+.tabs .button-group .button.secondary:hover {
+  color: #1B5187;
+}
+
+.fieldset-legend{
+  font-family: 'Proxima Nova SemiBold';
+  font-size: 14px;
+  color: $orange01;
+}
+.location_dropdown_province.form-select{
+  width: 15em;
+  margin:0;
+}
+// select {}
+
+/*------------------------------
+/ ALERT BOXES
+/-------------------------------*/
+.l-messages {
+  margin: 0 auto 0;
+  max-width: 1500px;
+  background-color: $grey06;
+  padding: 0 20px;
+
+  .large-12{
+    padding: 0;
+  }
+
+
+  .close {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    height: 30px;
+    width: 30px;
+    margin: auto;
+    @extend .icon-replace__x;
+
+    &:after {
+      line-height: 30px;
+    }
+  }
+}
+
+.alert-box {
+  padding: 20px 0;
+}
+
+.alert-box-message {
+  width: 80%;
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0 2%;
+
+  ul,
+  ol {
+    margin: 0;
+    padding: 0;
+  }
+  * + ul,
+  * + ol {
+    margin: 0;
+  }
+}
+
+.l-row--main {
+  .l-messages {
+    .alert-box {
+      padding: 20px;
+    }
+    .close { right: 5px; }
+  }
+}
+
+@media #{$tablet} {
+  .l-messages {
+    padding: 0 9%;
+
+    .alert-box {
+      padding: 30px 0;
+    }
+    .alert-box-message {
+      width: 90%;
+      padding: 0 5px;
+    }
+  }
+  .l-row--main {
+
+    .l-messages {
+      padding: 0;
+
+      .alert-box {
+        padding: 30px;
+      }
+      .close {
+        right: 10px;
+      }
+    }
+  }
+}
+
+.page-home .l-messages {
+  position: relative;
+  width: 100%;
+  z-index: 24;
+  top: 60px;
+
+  @media #{$tablet} {
+    top: 160px;
+  }
+  .large-12{
+    padding: 0;
+  }
+}
+.homepage-hero-content-type-session {
+
+  &.page-home .l-messages {
+    top: 120px;
+
+    @media #{$tablet} {
+      top: 260px;
+    }
+  }
+}
+.form-item input.error,
+.form-item textarea.error,
+.form-item select.error {
+  border: 1px solid red;
+}
+
+.alert-box{
+  letter-spacing: 0em;
+  line-height: 26px;
+  color: $grey02;
+  background-color: transparent;
+  border:none;
+  padding: 30px;
+  text-transform: none;
+  color: $grey02;
+  font-size: 16px;
+  font-family: "Adelle Light";
+  margin: 20px 0 20px 0;
+
+  &.alert{
+    color: $grey02;
+    background-color: $grey06;
+    @extend .icon-before__error;
+  }
+  &.success{
+    color: $grey02;
+    background-color: $grey06;
+    @extend .icon-before__circle-check;
+  }
+  &:before {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0;
+    font-size: 24px;
+    color: $blue01;
+    background-color: $grey06;
+
+
+    @media #{$desktop} {
+      font-size: 46px;
+    }
+  }
+
+  ul{
+    display: inline-block;
+  }
+}
+&.l-messages-thanks{
+  margin-bottom: 60px;
+  margin: -20px auto 0;
+.alert-box{
+  letter-spacing: 0em;
+  line-height: 26px;
+  color: $grey02;
+  background-color: transparent;
+  border:none;
+  padding: 30px;
+  text-transform: none;
+  color: $grey02;
+  font-size: 24px;
+  font-family: "Adelle Bold";
+  margin: 20px 0 20px 0;
+
+  &.alert{
+    color: $grey02;
+    background-color: $grey06;
+    @extend .icon-before__error;
+  }
+  &.success{
+    color: $grey02;
+    background-color: $grey06;
+    @extend .icon-before__circle-check;
+  }
+  &:before {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0;
+    font-size: 24px;
+    color: $blue01;
+    background-color: $grey06;
+
+
+    @media #{$desktop} {
+      font-size: 46px;
+    }
+  }
+
+  ul{
+    display: inline-block;
+  }
+}
+}
+.node-type-senator {
+  .l-messages {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 0px;
+    margin: auto;
+    z-index: 30;
+    overflow: hidden;
+    @include transition(height, 0.25s, ease-in);
+
+    &.messages-open {
+      height: 100%;
+    }
+  }
+  .alert-box {
+    margin-top: 0px;
+  }
+}
+
+@media #{$tablet} {
+  .node-type-senator {
+    .alert-box {
+      margin-top: 0px;
+    }
+  }
+}
+
+.ui-tabs .ui-tabs-panel.ui-tabs-hide {
+  display: none;
+}
+.page-home{
+  .alert-box{
+    margin: 0;
+  }
+}
+
+//WEBFORM MODULE
+// fix for table head sort icons.
+th.active img{
+  width: auto;
+}
+
+.view-webform-submissions {
+  .webform-results-per-page{
+    text-transform: none;
+    color: $grey02;
+    font-size: 18px;
+    font-family: "Adelle Bold";
+    padding: 60px 0 20px 0;
+  }
+  table {
+  width: 100%;
+  margin: 0 0 60px 0;
+  }
+}
+
+.webform-client-form{
+  .l-row &{
+    .columns {
+      padding-left: 0;
+      padding-right: 15px;
+    }
+  }
+  .webform-submit{
+    float: left;
+    margin: 40px 0 60px 0;
+  }
+  .webform-component-fieldset{
+    clear:both;
+  }
+}

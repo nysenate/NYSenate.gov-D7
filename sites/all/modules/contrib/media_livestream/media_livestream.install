@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Media: Livestream module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function media_livestream_install() {
+  return array();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function media_livestream_uninstall() {
+  drupal_load('module', 'media_livestream');
+
+  foreach (media_livestream_variable_default() as $variable => $value) {
+    media_livestream_variable_del($variable);
+  }
+  return array(array('success' => TRUE, 'query' => "Deleted all variables in the Media: Livestream namespace."));
+}

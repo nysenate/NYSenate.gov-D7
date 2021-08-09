@@ -1,0 +1,1477 @@
+/*--------------------------------
+/	DETAIL PAGES
+/ 	Bills
+/	Resolutions
+/	Issues
+/----------------------------------------------*/
+
+.c-detail--header {
+  margin-bottom: 20px;
+
+  > .nys-title {
+    margin-bottom: 0;
+  }
+}
+
+.c-detail--subhead {
+  margin: 0 0 10px;
+  color: $grey02;
+  font-family: "Proxima Nova Regular";
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  span {
+    text-transform: capitalize;
+    clear: both;
+    line-height: 1.4em;
+    letter-spacing: .01em;
+    display: block;
+  }
+}
+
+.c-detail--descript {
+  margin-bottom: 10px;
+}
+
+.c-bill--amended {
+  .c-bill--flag {
+    display: none;
+    &:last-child {
+      display: inline-block;
+    }
+    a {
+      color: white;
+    }
+  }
+}
+
+.c-detail--section-title {
+  overflow: hidden;
+  padding-bottom: 10px;
+  border-bottom: 1px solid $grey05;
+  margin-bottom: 20px;
+  line-height: 1;
+
+  .c-detail--subhead {
+    display: inline-block;
+    margin-bottom: 0;
+  }
+}
+
+.c-detail--related {
+  list-style: none;
+  line-height: 1.3em;
+
+  .field-name-field-issues {
+    padding-bottom: 10px;
+  }
+}
+
+.c-detail--related-item {
+  display: inline-block;
+  margin-right: 5px;
+
+  a {
+    color: $orange01;
+    text-transform: uppercase;
+    font-size: 12px;
+  }
+}
+
+.c-detail--download {
+  display: block;
+  margin-bottom: 20px;
+  color: $blue01;
+  font-family: "Proxima Nova Regular";
+  text-transform: uppercase;
+  font-size: 12px;
+  @extend .icon-before__bill;
+
+  &:before {
+    font-size: 1.5em;
+    line-height: 1em;
+  }
+}
+
+.c-detail--social {
+  margin-bottom: 40px;
+
+  > ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+  }
+
+  li {
+    display: block;
+    float: left;
+
+    & + li {
+      margin: 0 0 0 20px;
+    }
+  }
+}
+
+.c-detail--social-item {
+  position: relative;
+  display: block;
+  width: 60px;
+  height: 40px;
+  background: $blue01;
+
+  &:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    font-size: 28px;
+    line-height: 40px;
+    color: #fff;
+  }
+
+  &.facebook {
+    @extend .icon-replace__facebook;
+  }
+  &.twitter {
+    @extend .icon-replace__twitter;
+  }
+  &.email {
+    @extend .icon-replace__mail;
+  }
+}
+
+.c-co-sponsors {
+  margin-top: 40px;
+
+  .c-sponsor + .c-sponsor {
+    margin-top: 20px;
+  }
+}
+
+.c-sponsor-quote {
+  padding: 30px 20px;
+  background: $grey06;
+
+  .nys-senator--thumb {
+    height: 65px;
+    width: 65px;
+    margin-right: 20px;
+  }
+  // social toggle
+  .c-block--btn-toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: auto;
+    @extend .icon-replace__share;
+    z-index: 11;
+    background: transparent;
+
+    &:after {
+      font-size: 26px;
+      line-height: 42px;
+      color: $grey05;
+    }
+  }
+  // social starts hidden;
+  .c-social {
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    height: 50px;
+    width: 50%;
+    top: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9);
+    z-index: 10;
+    // delay visibility transition for smoother fade
+    -webkit-transition: visibility 0s 0.3s, opacity 0.3s;
+    -moz-transition: visibility 0s 0.3s, opacity 0.3s;
+    -ms-transition: visibility 0s 0.3s, opacity 0.3s;
+    -o-transition: visibility 0s 0.3s, opacity 0.3s;
+    transition: visibility 0s 0.3s, opacity 0.3s;
+
+    .c-social--list {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 50px;
+      padding: 0;
+      text-align: left;
+      width: 83%;
+
+      li {
+        display: inline-block;
+        height: 100%;
+        width: 28%;
+        margin: 0 10px;
+        margin-top: 0;
+        line-height: 50px;
+      }
+
+      a {
+        display: block;
+        width: 100%;
+        height: 100%;
+
+        &:after {
+          width: 100%;
+          height: 100%;
+          color: $gen_blue_med;
+          font-size: 36px;
+          @extend .med-text;
+        }
+      }
+    }
+  }
+
+  // social visible
+  &.c-social-visible {
+
+    .c-social {
+      opacity: 1;
+      visibility: visible;
+      @include transition(opacity, 0.3s, ease);
+    }
+  }
+}
+
+.c-sponsor-quote--title {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 15px;
+  color: $grey01;
+  text-transform: uppercase;
+  font-family: "Proxima Nova Regular";
+  font-size: 12px;
+  letter-spacing: 0.05em;
+
+  @extend .icon-before__quotes;
+
+  &:before {
+    position: absolute;
+    z-index: -1;
+    top: -0.65em;
+    left: -0.2em;
+    color: #fff;
+    font-size: 5em;
+  }
+}
+
+.c-sponsor-quote--text {
+  margin-bottom: 30px;
+  color: $grey03;
+  font-family: "Adelle Light";
+  font-size: 18px;
+  line-height: 1.4em;
+}
+
+/*---------------------------
+/	BILL & RESOLUTION
+/---------------------------*/
+
+// ACTIONS
+
+.c-action--items {
+  list-style: none;
+  width: 100%;
+  margin: 0 0 15px 0;
+  overflow: hidden;
+
+  > li {
+    clear: left;
+    overflow: hidden;
+
+    & + li {
+      margin-top: 15px;
+      border-top: 1px solid $grey05;
+    }
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    float: left;
+    clear: none;
+  }
+}
+
+.c-actions--key {
+  list-style: none;
+  margin-top: 10px;
+
+  .c-action--item + .c-action--item {
+    margin: 0;
+  }
+}
+
+.c-action--date,
+.c-action--item {
+  font-family: "Proxima Nova Regular";
+  font-size: 14px;
+}
+
+.c-action--item__senate {
+  text-transform: uppercase;
+}
+
+.c-action--date {
+  display: block;
+  margin: 0;
+  padding: 15px 0 10px;
+  color: $grey04;
+}
+
+.c-action--item {
+  margin: 0;
+  color: $grey03;
+  line-height: 1.4em;
+
+  & + .c-action--item {
+    margin-top: 7px;
+  }
+}
+
+.c-detail--writeup {
+  padding: 30px 20px 20px;
+  background: $grey06;
+  font-size: 12px;
+
+  h4 {
+    margin-bottom: 30px;
+    font-family: "Adelle Bold";
+    font-size: 18px;
+  }
+
+  .c-detail--subhead {
+    margin-bottom: 0px;
+    font-size: 12px;
+  }
+
+  p {
+    margin-bottom: 20px;
+    font-family: "Proxima Nova Regular";
+    font-size: 12px;
+  }
+}
+
+@media #{$tablet} {
+  .c-actions--key {
+    float: right;
+    margin-top: 0;
+  }
+  .c-detail--writeup {
+    font-size: 16px;
+  }
+}
+
+/*---------------------------
+/	BILL SPECIFIC
+/---------------------------*/
+.c-bill--flags {
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.c-bill--flag {
+  display: block;
+  float: left;
+  padding: 7px 13px 5px;
+  background: $yellow01;
+  font-family: "Proxima Nova SemiBold";
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-right: 20px;
+}
+
+.c-bill--amended {
+  .c-bill--flag {
+    background: $grey05;
+  }
+}
+
+.c-bill-widget--cta {
+  max-width: 230px;
+  margin: 20px auto 15px;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: "Proxima Nova Regular";
+  font-size: 14px;
+}
+
+.c-bill--details {
+  dt,
+  dd {
+    margin: 0;
+    font-family: "Proxima Nova SemiBold";
+    font-size: 14px;
+  }
+  dt {
+    color: $grey02;
+    line-height: 1.5em;
+  }
+  dd + dt {
+    margin-top: 10px;
+  }
+  dd {
+    color: $grey03;
+    line-height: 1.4em;
+    display: inline-block;
+
+    @media #{$tablet} {
+      float: left;
+    }
+
+    a {
+      color: $orange01;
+      text-transform: capitalize;
+    }
+    &.comma {
+      margin-right: 3px;
+    }
+  }
+}
+
+.c-bill--calendars {
+  ul {
+    list-style: none;
+    font-family: "Proxima Nova SemiBold";
+    font-size: 14px;
+  }
+  li {
+    a {
+      display: block;
+      padding: 5px 0;
+      color: $orange01;
+    }
+  }
+}
+
+.c-bill--votes {
+  overflow: hidden;
+}
+
+.c-bill-vote--graph,
+.c-bill-vote--stats {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.c-bill-vote--graph {
+  width: 43%;
+  max-width: 180px;
+  margin-right: 7%;
+
+  > img {
+    @include border-radius(50%);
+  }
+}
+
+.c-bill--vote--stats {
+  width: 50%;
+}
+
+.c-bill-vote--cnt {
+  display: inline-block;
+  padding: 5px 17px;
+  background: $grey06;
+  text-align: center;
+
+  & + .c-bill-vote--cnt {
+    margin-left: 20px;
+  }
+}
+
+.c-bill-vote-cnt--value {
+  display: block;
+  color: $blue01;
+  font-family: "Adelle Bold";
+  font-size: 24px;
+  line-height: 1em;
+}
+
+.c-bill-vote-cnt--type {
+  display: block;
+  color: $grey04;
+  text-transform: uppercase;
+  font-family: "Proxima Nova SemiBold";
+  font-size: 15px;
+  line-height: 1em;
+}
+
+.c-bill-vote--cnt-secondary {
+  list-style: none;
+  clear: both;
+  margin-top: 20px;
+
+  li {
+    color: $grey04;
+    text-transform: uppercase;
+    font-family: "Proxima Nova Regular";
+    font-size: 12px;
+    letter-spacing: 0.01em;
+  }
+  .c-bill-vote-cnt--value {
+    display: inline-block;
+    margin-right: 10px;
+    color: $grey03;
+    font-family: "Proxima Nova SemiBold";
+    font-size: 12px;
+  }
+}
+
+.nys-senator.sponsor-list {
+  margin-top: 30px;
+
+  .nys-senator--info {
+    max-width: 80%;
+  }
+
+  .nys-senator--party {
+    span {
+      text-transform: uppercase;
+      color: $grey03;
+      font-family: "Proxima Nova Regular";
+    }
+  }
+}
+
+.initial_co-sponsors {
+  @include clearfix;
+}
+
+.other_co-sponsors {
+  margin-top: 20px;
+  clear: both;
+}
+
+.c-quote--content.bill-sponsor-quote {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 20px 0;
+  background: $grey06;
+
+  .c-quote--title {
+    position: relative;
+    z-index: 3;
+  }
+
+  .c-pullquote {
+    display: block;
+    position: relative;
+    margin-top: 25px;
+    padding: 0;
+    z-index: 2;
+
+    &:before {
+      top: -40px;
+    }
+  }
+  .nys-senator.sponsor-list {
+    float: none;
+  }
+  .nys-senator.sponsor-list .nys-senator--party span {
+    color: $grey04;
+  }
+  // social toggle
+  .c-block--btn-toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: auto;
+    @extend .icon-replace__share;
+    z-index: 11;
+    background: transparent;
+
+    &:after {
+      font-size: 26px;
+      line-height: 42px;
+      color: $grey05;
+    }
+  }
+  // social starts hidden;
+  .c-social {
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    height: 50px;
+    width: 50%;
+    top: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9);
+    z-index: 10;
+    // delay visibility transition for smoother fade
+    -webkit-transition: visibility 0s 0.3s, opacity 0.3s;
+    -moz-transition: visibility 0s 0.3s, opacity 0.3s;
+    -ms-transition: visibility 0s 0.3s, opacity 0.3s;
+    -o-transition: visibility 0s 0.3s, opacity 0.3s;
+    transition: visibility 0s 0.3s, opacity 0.3s;
+
+    .c-social--list {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 50px;
+      padding: 0;
+      text-align: left;
+      width: 83%;
+
+      li {
+        display: inline-block;
+        height: 100%;
+        width: 28%;
+        margin: 0 10px;
+        margin-top: 0;
+        line-height: 50px;
+      }
+
+      a {
+        display: block;
+        width: 100%;
+        height: 100%;
+
+        &:after {
+          width: 100%;
+          height: 100%;
+          color: $gen_blue_med;
+          font-size: 36px;
+          @extend .med-text;
+        }
+      }
+    }
+  }
+
+  // social visible
+  &.c-social-visible {
+
+    .c-social {
+      opacity: 1;
+      visibility: visible;
+      @include transition(opacity, 0.3s, ease);
+    }
+  }
+}
+
+@media #{$tablet} {
+  .c-quote--content.bill-sponsor-quote {
+    margin: 40px 0;
+
+    .c-pullquote {
+      padding: 60px 0 0 40px;
+
+      &:before {
+        top: 10px;
+      }
+    }
+    .nys-senator {
+      margin: 40px 0 0 0;
+    }
+
+    // social starts hidden;
+    .c-social {
+      position: absolute;
+      display: block;
+      visibility: visible;
+      opacity: 1;
+      height: 100%;
+      width: 40px;
+      top: 0;
+      left: auto;
+      right: 0;
+      background: transparent;
+      z-index: -1;
+      @include transition(right, 0.3s, ease);
+
+      .c-social--list {
+        top: 0;
+        left: auto;
+        right: auto;
+        height: auto;
+
+        li {
+          display: block;
+          width: 40px;
+          height: 40px;
+          margin: 0 0 5px 0;
+        }
+        a {
+
+          &:after {
+            width: 40px;
+            text-align: center;
+            font-size: 26px;
+            color: $blue01;
+          }
+        }
+      }
+    }
+
+    // social visible
+    &.c-social-visible {
+
+      .c-social {
+        right: -40px;
+        @include transition(right, 0.3s, ease);
+      }
+    }
+  }
+}
+
+.c-bill-vote--accordion {
+  display: block;
+  clear: both;
+}
+
+.pieContainer {
+  width: 180px;
+  margin: 0 auto;
+}
+
+.c-bill--vote-details {
+  width: 180px;
+  margin: 0 auto 40px;
+
+  h3,
+  h4 {
+    color: $grey02;
+    font-family: "Adelle Regular";
+  }
+  h3 {
+    margin: 10px 0 20px;
+    font-size: 16px;
+  }
+  h4 {
+    clear: both;
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+  ul {
+    list-style: none;
+    overflow: hidden;
+  }
+  li {
+    display: block;
+    float: left;
+    width: 50%;
+  }
+
+  .vote-container {
+    margin-bottom: 18px;
+
+    .aye,
+    .nay {
+      width: auto;
+      float: left;
+      margin-bottom: 20px;
+      padding: 6px 10px;
+      background-color: $grey06;
+      text-align: center;
+
+      &:nth-child(1) {
+        margin-right: 15px;
+      }
+
+      .vote-count {
+        display: inline-block;
+        font: 18px/18px "Adelle Bold";
+        color: $grey03;
+      }
+      .vote-label {
+        display: inline-block;
+        font: 13px/16px "Proxima Nova SemiBold";
+        color: $grey04;
+        text-transform: uppercase;
+      }
+    }
+
+    .aye {
+      float:left;
+      border-bottom: 4px solid $cont_blue_lgt;
+      &.committee_vote {
+        border-bottom: 4px solid $yellow01;
+      }
+    }
+
+    .nay {
+      float:right;
+      border-bottom: 4px solid $cont_blue_drk;
+      &.committee_vote {
+        border-bottom: 4px solid $yellow03;
+      }
+    }
+
+  }
+  .vote-meta {
+    clear: both;
+    .meta-row {
+      position: relative;
+      font: 10px/16px "Proxima Nova Regular";
+      color: $grey04;
+      text-transform: uppercase;
+      div {
+        display: inline-block;
+        &:nth-child(1) {
+          color: $grey03;
+        }
+        &:nth-child(2) {
+          position: absolute;
+          left: 25%;
+        }
+      }
+      .meta-count {
+        font-family: "Proxima Nova SemiBold";
+      }
+    }
+    .meta-comm-referral {
+      margin-top: 20px;
+      label {
+        margin: 0;
+        font: 11px/14px "Proxima Nova Regular";
+        color: $grey05;
+      }
+      .committee-link {
+        font: 12px/14px "Proxima Nova SemiBold";
+        color: $yellow03;
+        text-transform: uppercase;
+      }
+    }
+  }
+}
+
+.c-vote-detail--date {
+  margin: 20px 0 20px;
+  color: $grey02;
+  font-family: "Adelle Regular";
+  font-size: 16px;
+  line-height: 1;
+}
+
+.c-detail--vote-grp + .c-detail--vote-grp {
+  margin-top: 15px;
+}
+
+.c-detail--vote-grp {
+  .c-detail--section-title {
+    margin-bottom: 15px;
+    color: $grey02;
+    font-family: "Adelle SemiBold";
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+  .c-votes--items {
+    list-style: none;
+    overflow: hidden;
+
+    li {
+      display: block;
+      float: left;
+      width: 50%;
+      margin: 4px 0;
+      text-transform: capitalize;
+      font-size: 14px;
+    }
+  }
+}
+
+@media #{$tablet} {
+  .c-detail--header {
+    margin-bottom: 30px;
+  }
+  .nys-senator.sponsor-list {
+    width: 50%;
+    float: left;
+    padding-right: 2%;
+
+    &:nth-child(odd) {
+      clear: left;
+    }
+  }
+  .other_co-sponsors {
+    margin-top: 30px;
+  }
+  .pieContainer {
+    float: left;
+  }
+  .c-bill--vote-details {
+    width: auto;
+    float: left;
+    margin: 0 0 40px 0;
+  }
+
+  .c-vote-detail--date {
+    font-size: 20px;
+    margin: 40px 0 0;
+
+    .vote-container {
+      margin-bottom: 20px;
+
+      .aye,
+      .nay {
+        width: 100px;
+        background-color: $grey06;
+        text-align: center;
+        float: left;
+        margin-bottom: 20px;
+        padding: 0;
+
+        &:nth-child(1) {
+          margin-right: 20px;
+        }
+        .vote-count {
+          display: block;
+          font: 24px/30px "Adelle Bold";
+          color: $grey03;
+        }
+        .vote-label {
+          display: block;
+          font: 15px/16px "Proxima Nova SemiBold";
+          padding-bottom: 5px;
+          color: $grey04;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+
+  .c-detail--vote-grp + .c-detail--vote-grp {
+    margin-top: 40px;
+  }
+
+  .c-detail--vote-grp {
+    width: 50%;
+    float: left;
+    margin-top: 40px;
+
+    &.odd {
+      padding-right: 5%;
+      clear: left;
+    }
+    &.even {
+      padding-left: 5%;
+    }
+
+    .c-detail--section-title {
+      font-size: 16px;
+    }
+
+    .c-votes--items {
+      li {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+/*---------------------------
+/	RESOLUTION SPECIFIC
+/---------------------------*/
+.bill-resolution {
+  .c-detail--sponsors {
+    margin-bottom: 60px;
+
+    & > .c-sponsor {
+      width: 100%;
+      margin-bottom: 60px;
+    }
+  }
+}
+
+@media #{$tablet} {
+  .bill-resolution {
+    .c-detail--sponsors {
+      margin-bottom: 80px;
+
+      & > .c-sponsor {
+        margin-bottom: 80px;
+      }
+    }
+  }
+}
+
+/*---------------------------
+/	ISSUES SPECIFIC
+/---------------------------*/
+.c-issue--followers {
+  color: $grey04;
+  text-transform: uppercase;
+  font-family: "Proxima Nova Regular";
+  font-size: 14px;
+
+  > span {
+    color: $grey02;
+    margin-right: 5px;
+  }
+}
+
+.c-issue--contact-btn {
+  position: relative;
+  display: inline-block;
+  height: 55px;
+  width: 100%;
+  padding: 0;
+  margin: 15px 0 30px;
+  background: $blue01;
+  color: #fff;
+  text-transform: uppercase;
+  text-align: center;
+  font-family: "Proxima Nova SemiBold";
+  font-size: 14px;
+  letter-spacing: 0.1em;
+
+  &:before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+  }
+
+  &:hover,
+  &:focus {
+    color:#fff;
+  }
+
+  .nys-senator--thumb {
+    display: none;
+  }
+
+  a {
+    color: #fff;
+  }
+
+  &.no-senator {
+    @extend .icon-before__find-senator;
+
+    &:before {
+      font-size: 1.8em;
+      margin-top: -5px;
+    }
+  }
+}
+
+.c-issue--mentions {
+  padding-bottom: 20px;
+
+  .nys-btn-more {
+    margin-top: 30px;
+  }
+
+  .nys-senator {
+    margin: 0;
+    width: 100%;
+
+    & + .nys-senator {
+      margin-top: 20px;
+    }
+  }
+  .nys-senator--info > span {
+    display: none;
+  }
+  .nys-senator--party {
+    color: $grey04;
+  }
+}
+
+//
+.pane-news-by-issue {
+
+}
+
+/*---------------------------
+/	ISSUES SPECIFIC -
+/	tablet and above
+/---------------------------*/
+@media #{$tablet} {
+
+  .c-issue--contact-btn {
+    height: 80px;
+    width: auto;
+    padding: 0 80px 0 30px;
+    margin: 20px 0 0;
+    text-align: left;
+
+    .nys-senator--thumb {
+      display: inline-block;
+    }
+
+    &.no-senator {
+      padding-right: 40px;
+
+      &:before {
+        margin-top: 0;
+      }
+    }
+  }
+  .c-issue--mentions {
+    padding-bottom: 0;
+    margin-bottom: 30px;
+
+    .c-detail--subhead {
+      margin-bottom: 30px;
+    }
+    .nys-senator {
+      float: left;
+      width: 33.3%;
+      margin-bottom: 30px;
+
+      & + .nys-senator {
+        margin-top: 0;
+      }
+    }
+  }
+}
+
+// tablet and above styles
+@media #{$tablet} {
+  .c-detail--subhead {
+    font-size: 16px;
+  }
+  // header section
+  .c-detail--header__bill {
+    .nys-title {
+      float: left;
+    }
+  }
+  .c-bill--flags {
+    display: block;
+    float: left;
+    margin-top: 0;
+    padding: 5px 0 0 20px;
+  }
+  .c-bill--flag {
+    padding: 10px 13px;
+  }
+  .c-detail--descript {
+    clear: left;
+  }
+
+  // header meta
+  .c-detail--header-meta {
+    position: relative;
+    width: 71%;
+    float: left;
+    margin-bottom: 60px;
+    padding-right: 40px;
+  }
+  .c-detail--descript {
+    font-size: 20px;
+  }
+  .c-detail--related {
+    .field-name-field-issues {
+      padding-bottom: 15px;
+    }
+  }
+  .c-detail--related-item {
+    margin-right: 10px;
+  }
+  .c-detail--download {
+    margin-bottom: 0;
+  }
+
+  // social
+  .c-detail--social {
+    width: 28%;
+    float: left;
+    margin-bottom: 0;
+    padding-bottom: 40px;
+    border-left: 1px solid $grey05;
+
+    .c-detail--subhead {
+      float: right;
+      text-align: right;
+    }
+
+    ul {
+      display: block;
+      float: right;
+      clear: both;
+
+      li {
+
+        & + li {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+  .c-detail--social-item {
+    background: #fff;
+
+    &:after {
+      color: $blue01;
+      text-align: right;
+    }
+
+    &.twitter {
+      &:after {
+        left: auto;
+        right: 0.2em;
+      }
+    }
+  }
+  // sponsors
+  .c-detail--sponsors {
+    overflow: visible;
+
+    > .c-sponsor,
+    > .c-co-sponsors {
+      width: 100%;
+      overflow: hidden;
+      float: none;
+      margin-top: 0;
+    }
+
+    > .c-sponsor {
+      margin-right: 0;
+      @include clearfix;
+    }
+
+    > .c-sponsors-detail {
+      margin-top: 40px;
+    }
+  }
+
+  // quotes
+  .c-sponsor-quote {
+    padding: 30px 40px;
+
+    // social starts hidden;
+    .c-social {
+      position: absolute;
+      display: block;
+      visibility: visible;
+      opacity: 1;
+      height: 100%;
+      width: 40px;
+      top: 0;
+      left: auto;
+      right: 0;
+      background: transparent;
+      z-index: -1;
+      @include transition(right, 0.3s, ease);
+
+      .c-social--list {
+        top: 0;
+        left: auto;
+        right: auto;
+        height: auto;
+
+        li {
+          display: block;
+          width: 40px;
+          height: 40px;
+          margin: 0 0 5px 0;
+        }
+        a {
+
+          &:after {
+            width: 40px;
+            text-align: center;
+            font-size: 26px;
+            color: $blue01;
+          }
+        }
+      }
+    }
+
+    // social visible
+    &.c-social-visible {
+
+      .c-social {
+        right: -40px;
+        @include transition(right, 0.3s, ease);
+      }
+    }
+  }
+  .c-sponsor-quote--title {
+    margin-bottom: 60px;
+    font-size: 14px;
+
+    &:before {
+      top: -0.25em;
+      font-size: 7em;
+    }
+  }
+  .c-sponsor-quote--text {
+    padding: 0 30px;
+    font-size: 26px;
+  }
+
+  // actions
+  .c-action--items > li + li {
+    padding-top: 20px;
+  }
+  .c-action--date {
+    padding-top: 0;
+  }
+  .c-action--date {
+    float: left;
+    width: 200px;
+  }
+  .c-action--item + .c-action--item {
+    margin-top: 15px;
+  }
+
+  // vote widget
+  .c-bill-widget--cta {
+    max-width: 100%;
+  }
+
+  // bill details
+  .c-bill--details,
+  .c-bill--calendars {
+    float: left;
+    clear: none;
+    width: 48%;
+  }
+  .c-bill--details {
+    width: 100%;
+    margin-right: 4%;
+
+    dt,
+    dd {
+      margin-bottom: 12px;
+      line-height: 1.5em;
+    }
+    dt {
+      float: left;
+      clear: left;
+      margin-right: 0.3em;
+    }
+    dd {
+
+      & + dt {
+        margin-top: 0;
+      }
+    }
+
+  }
+  .c-bill--calendars {
+    ul {
+      line-height: 1.5em;
+    }
+    li {
+      margin-bottom: 12px;
+      a {
+        padding: 0;
+      }
+    }
+  }
+  .c-bill-vote--graph {
+    margin-right: 60px;
+  }
+  .c-bill--vote-details {
+
+    .c-bill--vote-details-wrapper {
+      margin: 0 0 20px 40px;
+
+      .vote-container {
+        margin: 38px 0 0px 0;
+        .aye,
+        .nay {
+          width: 100px;
+          float: left;
+          background-color: $grey06;
+          text-align: center;
+          padding: 0;
+          &:nth-child(1) {
+            margin-right: 20px;
+          }
+          .vote-count {
+            display: block;
+            font: 24px/30px "Adelle Bold";
+            color: $grey03;
+          }
+          .vote-label {
+            display: block;
+            font: 15px/16px "Proxima Nova SemiBold";
+            padding-bottom: 5px;
+            color: $grey04;
+            text-transform: uppercase;
+          }
+        }
+      }
+      .vote-meta {
+        .meta-row {
+          position: relative;
+          font: 10px/16px "Proxima Nova Regular";
+          color: $grey04;
+          text-transform: uppercase;
+          div {
+            display: inline-block;
+            &:nth-child(1) {
+              color: $grey03;
+            }
+            &:nth-child(2) {
+              position: absolute;
+              left: 25%;
+            }
+          }
+        }
+        .meta-comm-referral {
+          margin-top: 20px;
+          label {
+            margin: 0;
+            font: 11px/14px "Proxima Nova Regular";
+            color: $grey05;
+          }
+          .committee-link {
+            font: 12px/14px "Proxima Nova SemiBold";
+            color: $yellow03;
+            text-transform: uppercase;
+          }
+        }
+      }
+      h3 {
+        margin-bottom: 30px;
+        font-size: 20px;
+      }
+      h4 {
+        padding-bottom: 20px;
+        font-size: 16px;
+      }
+      .c-detail--vote-grp {
+        display: block;
+        float: left;
+        width: 47%;
+        margin: 0 6% 30px 0;
+
+        & + .c-detail--vote-grp {
+          margin-top: 0;
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}
+
+/*---------------------------
+/	SENATOR DETAIL
+/---------------------------*/
+.nys-title--events {
+  border-bottom: 1px solid $grey05;
+  margin-bottom: 0;
+  padding-bottom: 20px;
+}
+
+.c-news-container {
+  .c-container--header.link {
+    position: relative;
+    clear: both;
+    float: right;
+    width: 100%;
+  }
+}
+

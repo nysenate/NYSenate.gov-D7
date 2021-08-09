@@ -1,0 +1,302 @@
+<?php
+
+/**
+ * @file
+ * Main module file for SendGrid Integration.
+ *
+ * Provides module configuration and help functionality.
+ */
+
+define('SENDGRID_INTEGRATION_EMAIL_REGEX', '/^\s*(.+?)\s*<\s*([^>]+)\s*>$/');
+
+/**
+ * Implements hook_menu().
+ */
+function sendgrid_integration_menu() {
+  $items = [];
+  $items['admin/config/services/sendgrid'] = [
+    'title' => 'SendGrid Settings',
+    'description' => 'SendGrid Integration Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['sendgrid_integration_admin'],
+    'access callback' => 'user_access',
+    'access arguments' => ['administer sendgrid settings'],
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => 1,
+  ];
+  $items['admin/config/services/sendgrid/default'] = [
+    'title' => 'Administer SendGrid Integration',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 0,
+  ];
+  $items['admin/config/services/sendgrid/test'] = [
+    'title' => 'SendGrid Test Email Send',
+    'description' => 'Send a test email through sendgrid.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['sendgrid_integration_test'],
+    'access callback' => 'user_access',
+    'access arguments' => ['administer sendgrid settings'],
+    'file' => 'sendgrid_integration.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 50,
+  ];
+  return $items;
+}
+
+/**
+ * Implements hook_permissions().
+ */
+function sendgrid_integration_permission() {
+  return [
+    'administer sendgrid settings' => [
+      'title' => t('Administer SendGrid settings'),
+      'description' => t('Configure SendGrid options like username and password'),
+    ],
+  ];
+}
+
+/**
+ * Provides Settings Form.
+ */
+function sendgrid_integration_admin() {
+  $form = [];
+
+  $form['authentication'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Authentication'),
+  ];
+
+  $requirenewkey = TRUE;
+  if (!empty(variable_get('sendgrid_integration_apikey', FALSE))) {
+    $form['authentication']['secretkeynotice'] = [
+      '#markup' => t('You have saved a secret key. You may change the key by inputing a new one in the field directly below.'),
+    ];
+    $requirenewkey = FALSE;
+  }
+
+  $form['authentication']['sendgrid_integration_apikey'] = [
+    '#type' => 'password',
+    '#required' => $requirenewkey,
+    '#title' => t('API Secret Key'),
+    '#description' => t('The secret key of your key pair. These are only generated once by Sendgrid. Your existing key is hidden. If you need to change this, provide a new key here.'),
+  ];
+
+  $form['debugging']['maillog'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Maillog integration'),
+  ];
+  $form['actions'] = ['#type' => 'actions'];
+  $form['actions']['submit'] = [
+    '#type' => 'submit',
+    '#value' => t('Save Settings'),
+    '#submit' => ['sendgrid_integration_admin_submit'],
+    '#validate' => [
+      'sendgrid_integration_admin_validate',
+    ],
+  ];
+
+  if (!module_exists('maillog')) {
+    $form['debugging']['maillog']['#description'] = t('Installing the <a href="@url">Maillog module</a> also allows keeping copies of all emails sent through the site.', ['@url' => 'https://www.drupal.org/project/maillog']);
+  }
+  else {
+    $form['debugging']['maillog']['#description'] = t('The <a href="@url">Maillog module</a> is installed, it can also be used to keep copies of all emails sent through the site.', ['@url' => url('admin/config/development/maillog')]);
+
+    $form['debugging']['maillog']['sendgrid_integration_maillog_log'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Create table entries in maillog table for each e-mail.'),
+      '#default_value' => variable_get('sendgrid_integration_maillog_log', TRUE),
+    ];
+
+    $form['debugging']['maillog']['sendgrid_integration_maillog_devel'] = [
+      '#type' => 'checkbox',
+      '#title' => t("Display the e-mails on page using devel module (if enabled)."),
+      '#default_value' => variable_get('sendgrid_integration_maillog_devel', TRUE),
+      '#disabled' => !module_exists('devel'),
+    ];
+  }
+
+  return $form;
+}
+
+/**
+ * Validation function for admin settings.
+ * @param $form
+ * @param $form_state
+ */
+function sendgrid_integration_admin_validate($form, &$form_state) {
+  // Check for API secret key. If missing throw error.
+  if (empty(variable_get('sendgrid_integration_apikey', '')) && empty($form_state['values']['sendgrid_integration_apikey'])) {
+    form_set_error('authentication][sendgrid_integration_apikey', t('You have not stored an API Secret Key.'));
+  }
+}
+
+/**
+ * Submit handler for admin settings.
+ *
+ * We use a custom submit handler to only set variables if values are supplied
+ * in the UI.
+ * @param $form
+ * @param $form_state
+ * @return bool
+ */
+function sendgrid_integration_admin_submit($form, $form_state) {
+  if (isset($form_state['values']['sendgrid_integration_maillog_log'])) {
+    variable_set('sendgrid_integration_maillog_log', check_plain($form_state['values']['sendgrid_integration_maillog_log']));
+  }
+  if (isset($form_state['values']['sendgrid_integration_maillog_devel'])) {
+    variable_set('sendgrid_integration_maillog_devel', check_plain($form_state['values']['sendgrid_integration_maillog_devel']));
+  }
+  $existingkey = variable_get('sendgrid_integration_apikey', '');
+  if (empty($form_state['values']['sendgrid_integration_apikey']) && !empty($existingkey)) {
+    return TRUE;
+  }
+  if (isset($form_state['values']['sendgrid_integration_apikey']) && !empty($form_state['values']['sendgrid_integration_apikey'])) {
+    variable_set('sendgrid_integration_apikey', check_plain($form_state['values']['sendgrid_integration_apikey']));
+    drupal_set_message(t('SendGrid Settings Saved'), 'status', FALSE);
+    return TRUE;
+  }
+
+}
+
+/**
+ * Implements hook_help().
+ */
+function sendgrid_integration_help($path, $arg) {
+  $output = '';
+  switch ($path) {
+    case 'admin/help#sendgrid_integration':
+      $output .= '<h3>' . t('SendGrid Integration') . '</h3>';
+      $output .= '<p>' . t('Module provides own implementation of MailSystemIntegration, replacing the default implementation and uses SendGrid Web API instead.') . '</p>';
+  }
+  return $output;
+}
+
+/**
+ * Implements hook_cron_queue_info().
+ */
+function sendgrid_integration_cron_queue_info() {
+  $queues = [];
+  $queues['SendGridResendQueue'] = [
+    'worker callback' => 'sendgrid_integration_email_resend',
+    'time' => 60,
+  ];
+
+  return $queues;
+}
+
+/**
+ * Cron queue worker callback function.
+ * Tries to send email again, if it previously failed with good reason.
+ */
+function sendgrid_integration_email_resend($message) {
+  // Defining parameters first to improve code readability.
+  $module = $message['module'];
+  $key = $message['key'];
+  $to = $message['to'];
+  $language = $message['language'];
+  $params = $message['params'];
+  $from = $message['from'];
+  $send = $message['send'];
+
+  drupal_mail($module, $key, $to, $language, $params, $from, $send);
+}
+
+/**
+ * Get list of bounced emails. This is unused and may be come deprecated.
+ *
+ * @param string $start_date
+ * Start date in format of YYYY-MM-DD.
+ *
+ * @param string $end_date
+ * End date in format of YYYY-MM-DD.
+ *
+ * @param string $type
+ * Optional type, either 'hard' or 'soft'.
+ *
+ * @param string $email
+ * Optional email address used to searching for.
+ *
+ * @return array
+ * List of bounces.
+ */
+function sendgrid_integration_get_bounces($start_date, $end_date, $type = NULL, $email = NULL) {
+  // Connection url for bounces.
+  // @TODO update to V3.
+  $server = "https://sendgrid.com/api/bounces.get.json";
+  $user = variable_get('sendgrid_integration_username', '');
+  $key = variable_get('sendgrid_integration_apikey', '');
+
+  if (isset($start_date) == FALSE || isset($end_date) == FALSE) {
+    watchdog('SendGrid Integration', 'Error on calling get_bounches: Missing date parameter', NULL, WATCHDOG_NOTICE, $link = NULL);
+
+    return [];
+  }
+
+  $data = [
+    'date' => 1,
+    'start_date' => $start_date,
+    'end_date' => $end_date,
+    'api_user' => $user,
+    'api_key' => $key,
+  ];
+
+  if (isset($type)) {
+    $data['type'] = $type;
+  }
+
+  if (isset($email)) {
+    $data['email'] = $email;
+  }
+
+  // Options for drupal_http_request.
+  $options = [
+    'method' => 'GET',
+    'data' => http_build_query($data),
+    'timeout' => 30,
+    'headers' => [
+      'Content-Type' => 'application/x-www-form-urlencoded',
+    ],
+  ];
+
+  $response = drupal_http_request($server, $options);
+
+  $list = drupal_json_decode($response->data);
+
+  // Check if server returned error messages
+  if (isset($list['error'])) {
+    watchdog('SendGrid Integration', 'Error while retrieving bounces list: %error', ['%error' => $list['error']], WATCHDOG_NOTICE, $link = NULL);
+  }
+
+  return $list;
+}
+
+/**
+ * Split an email address into it's name and address components.
+ */
+function sendgrid_integration_parse_address($email) {
+  if (preg_match(SENDGRID_INTEGRATION_EMAIL_REGEX, $email, $matches)) {
+    return [$matches[2], $matches[1]];
+  }
+  else {
+    return [$email, ' '];
+  }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function sendgrid_integration_mail($key, &$message, $params) {
+  $message['module'] = 'sendgrid_integration';
+  $message['key'] = $key;
+  $message['subject'] = $params['subject'];
+  $message['body'] = explode(
+    MAIL_LINE_ENDINGS . MAIL_LINE_ENDINGS,
+    $params['body']
+  );
+  if ($params['include_test_attachment']) {
+    $message['attachments'][] = drupal_realpath('misc/druplicon.png');
+  }
+  if (isset($params['Reply-To']) && !empty($params['Reply-To'])) {
+    $message['headers']['Reply-To'] = $params['Reply-To'];
+  }
+}

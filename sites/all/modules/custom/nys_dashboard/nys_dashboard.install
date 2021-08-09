@@ -1,0 +1,108 @@
+<?php
+
+
+/**
+ * Implements hook_enable().
+ */
+function nys_dashboard_enable() {
+
+ $items = array(
+   array(
+     'link_path' => 'user/dashboard/inbox',
+     'link_title' => 'Inbox',
+     'menu_name' => 'menu-dashboard-menu',
+     'weight' => -49,
+     'plid' => 0,
+     'module' => 'menu',
+   ),
+   array(
+     'link_path' => 'user/dashboard/bills',
+     'link_title' => 'Bills',
+     'menu_name' => 'menu-dashboard-menu',
+     'weight' => -48,
+     'plid' => 0,
+     'module' => 'menu',
+   ),
+   array(
+     'link_path' => 'user/dashboard/constituents',
+     'link_title' => 'Constituents',
+     'menu_name' => 'menu-dashboard-menu',
+     'weight' => -47,
+     'plid' => 0,
+     'module' => 'menu',
+   ),
+    array(
+     'link_path' => 'user/dashboard/issues',
+     'link_title' => 'Issues',
+     'menu_name' => 'menu-dashboard-menu',
+     'weight' => -46,
+     'plid' => 0,
+     'module' => 'menu',
+   ),
+     array(
+     'link_path' => 'user/dashboard/petitions',
+     'link_title' => 'Petitions & Questionnaires',
+     'menu_name' => 'menu-dashboard-menu',
+     'weight' => -45,
+     'plid' => 0,
+     'module' => 'menu',
+   ),
+ );
+
+
+  foreach($items as $item) {
+    menu_link_save($item);
+  }
+
+}
+
+function nys_dashboard_uninstall() {
+  db_query("delete from menu_links where menu_name = 'menu-dashboard-menu' and module = 'menu';");
+}
+
+/**
+ * Populate Constituent menu with links
+ */
+function nys_updates_update_7028() {
+
+	$items = array(
+	 array(
+	   'link_path' => 'user/dashboard/inbox',
+	   'link_title' => 'Inbox',
+	   'menu_name' => 'menu-constituent-dashboard-menu',
+	   'weight' => -49,
+	   'plid' => 0,
+	   'module' => 'menu',
+	 ),
+	 array(
+	   'link_path' => 'user/dashboard/bills',
+	   'link_title' => 'Bills',
+	   'menu_name' => 'menu-constituent-dashboard-menu',
+	   'weight' => -48,
+	   'plid' => 0,
+	   'module' => 'menu',
+	 ),
+	 array(
+	   'link_path' => 'user/dashboard/issues',
+	   'link_title' => 'Issues',
+	   'menu_name' => 'menu-constituent-dashboard-menu',
+	   'weight' => -46,
+	   'plid' => 0,
+	   'module' => 'menu',
+	 ),
+	   array(
+	   'link_path' => 'user/dashboard/petitions',
+	   'link_title' => 'Petitions & Questionnaires',
+	   'menu_name' => 'menu-constituent-dashboard-menu',
+	   'weight' => -45,
+	   'plid' => 0,
+	   'module' => 'menu',
+	 ),
+	);
+
+
+  foreach($items as $item) {
+    menu_link_save($item);
+  }
+
+}

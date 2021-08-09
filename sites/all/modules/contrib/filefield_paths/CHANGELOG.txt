@@ -1,0 +1,139 @@
+File (Field) Paths 7.x-1.1, 2018-08-14
+--------------------------------------------------------------------------------
+
+- Fixed security issue
+- #2643026: Fixed issue when anonymous function not created.
+
+
+
+File (Field) Paths 7.x-1.0, 2015-11-17
+--------------------------------------------------------------------------------
+
+- #2615704 by morenstrat: Fixed issue with temporary path and schemes.
+- Added variable module integration.
+
+
+
+File (Field) Paths 7.x-1.0-rc3, 2015-11-11
+--------------------------------------------------------------------------------
+
+- #2612396: Added watchdog message for unmoved files.
+- #2607302: Added configurable temporary file location.
+
+
+
+File (Field) Paths 7.x-1.0-rc2, 2015-10-28
+--------------------------------------------------------------------------------
+
+- #2592519: Fixed issue with temporary upload location and field collections.
+- #2576547: Fixed issue with Media Youtube files being processed.
+- #2570127: Added stricter checks for filefield_paths_form_alter().
+- #2569589: Fixed issue with unicode characters in pathauto processing.
+
+
+
+File (Field) Paths 7.x-1.0-rc1, 2015-09-15
+--------------------------------------------------------------------------------
+
+- #2551187: Changed token tree to dialog.
+- #2514874 by Deciphered, smithmilner: Fixed issue with Drush command and
+    permissions.
+- #2468547 by Deciphered, smithmilner: Added Redirect module integration.
+- #2398411: Added default value of file_directory to file path.
+- #2395903: Added truncating of long file paths.
+- #2383527: Changed unprocessed destination to temporary://.
+- #2276435 by Deciphered, david_garcia, rajmataj: Fixed issue with retroactive
+    updates and instance settings.
+- #2271595 by Deciphered, tstoeckler, Reg: Fixed issue with empty batch.
+- #2214409: Updated field form layout.
+- #2211665: Added File path validation to remove unnecessary slashes.
+- #2103151 by Deciphered, david_garcia, Sumeet.Pareek, kitikonti, kolier:
+    Fixed deprecated /e modifier in preg_replace().
+- #2185755 by treksler: Fixed issue with regex, backreferences and numbers.
+- #2119789: Fixed issue with complex characters in regex functionality.
+- #2068365 by Deciphered, vinmassaro: Fixed issue when no instance in update.
+- #2047835: Fixed issue with pathauto replacemenets and periods (.).
+- #2019723 by Deciphered, szantog, jcandan, justafish: Fixed issue with remote
+    file stream wrappers.
+- #1985650: Fixed issue with moved Drush file in .info.
+- #1985280 by Deciphered, drasgardian: Fixed issue with hook_entity_update()
+    foreach loop.
+- #1942720 by Deciphered, kaare, alex.designworks, pp, BWPanda: Added slash
+    cleanup functionality.
+- #1854450: Updated file processing logic.
+- #1495716/#1986472: Fixed issue with D6 -> D7 upgrade path.
+- #1292436 by maximpodorov, InternetDevels: Fixed issue pathinfo and UTF files.
+- Added tests.
+- Removed dependency on the Token module.
+
+
+
+File (Field) Paths 7.x-1.0-beta4, 2013-04-25
+--------------------------------------------------------------------------------
+
+- #1945148: Fixed issue with File path cleanup process.
+- #1942720 by pp: Fixed issue with cleanup wehn token contains a '/' character.
+- #1925298 by David_Rothstein: Fixed issue with Image derivatives.
+- #1866450: Fixed issue with foreign characters in Regex.
+- #1714596: Fixed issue with file_attach_update() introduced in Drupal 7.15.
+- #1705298: Fixed extra beggining slash.
+- #1601104 by tseven: Fixed notice when no extension present.
+- #1572206: Add ability to disable for certain fields.
+- #1549474: Fixed path replacement in summary text.
+- #1512466 by maximpodorov, perarnet: Fixed issue with multi-value updates.
+- #1499442 by hass: Improved translatable strings.
+- #1464404: Fixed issue with field_attach_update().
+- #1438290 by xtfer: Fixed D6 to D7 upgrade path.
+- #1432200: Fixed issue with missing langcode variable.
+- #1420700: Fixed issue with pass-by-reference issue.
+- #1364492 by j0rd, Deciphered: Improved require_once routine.
+- #1361884 by burningdog, dwkitchen, Deciphered: Fixed processing remote files.
+- #1262828 by Pablo Gosse: Fixed issue with regex.
+- #860848 by mostou: Fixed File name field length.
+- Fixed issue with malformed URIs.
+
+
+
+File (Field) Paths 7.x-1.0-beta3, 2012-02-08
+--------------------------------------------------------------------------------
+
+- #1429238 by ocanzillon: Fixed Drush command syntax error.
+- #1334448 by pianodavid, Deciphered: Fixed issue with revision flag.
+- Changed a large chunk of core functionality to simplify.
+
+
+
+File (Field) Paths 7.x-1.0-beta2, 2012-02-05
+--------------------------------------------------------------------------------
+
+- #1414090: Added Drush command for Retroactive updates.
+- #1335984: Removed debug code.
+- #1051736: Fixed issue with dirname().
+- Added support for URI Scheme changes via Updating.
+- Added support for Video module.
+
+
+
+File (Field) Paths 7.x-1.0-beta1, 2011-11-08
+--------------------------------------------------------------------------------
+
+- #1328064: Fixed/Re-enabled Retroactive updates.
+- #1326094: Fixed coder issues.
+- #1308532: Fixed issue with empty tokens not being cleared.
+- #1278004: Fixed issue with New flag.
+- #1253168: Added more space for 'type' and 'field' columns.
+- #1233004 by maximpodorov: Fixed Pathauto integration.
+- #1225764 by joelstein, h0tw1r3: Fixed references in text fields not being
+    updated.
+- #1225752 by joelstein: Removed packaging script information.
+- #1211038 by pillarsdotnet: Fixed issue with 'active_updating' field.
+- #1188074 by h0tw1r3: Fixed issue with schema change.
+- #1017830: Fixed issue with Transliteration support.
+- #578442 by szantog, mfb, deciphered: Added features support.
+- Added relevant tokens for Entity support.
+- Added Entity support.
+
+
+
+File (Field) Paths 7.x-1.0-alpha1, 2011-06-12
+--------------------------------------------------------------------------------

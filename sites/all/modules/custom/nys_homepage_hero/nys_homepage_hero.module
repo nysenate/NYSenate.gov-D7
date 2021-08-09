@@ -1,0 +1,91 @@
+<?php
+
+/**
+ * Implements hook_menu()
+ */
+function nys_homepage_hero_menu() {
+  $items = [];
+  $items['ajax/homepage_hero.json'] = [
+    'page callback' => 'get_last_homepage_hero_update',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  ];
+  return $items;
+}
+
+/**
+ * Behavior when menu item is accessed by client.
+ */
+function get_last_homepage_hero_update() {
+  drupal_page_is_cacheable(FALSE);
+  $data = variable_get("homepage_hero_session_in_progress");
+  return drupal_json_output($data);
+}
+
+/**
+ * Implements hook_page_build()
+ *
+ * Only inserts the client JS on the front page.
+ */
+function nys_homepage_hero_page_build(&$page) {
+  if (drupal_is_front_page() && variable_get('homepage_hero_add_polling_js')) {
+    // Add session active status to the polling JS to decide polling interval
+    // length, and identify transitions (i.e. session start/end).
+    $active = variable_get("homepage_hero_session_in_progress");
+    $poll_int = $active ? variable_get('homepage_hero_active_session_poll_interval') : variable_get('homepage_hero_pre_session_poll_interval');
+    drupal_add_js(['nys_homepage_hero' => [
+      'session_active' => $active,
+      'poll_int' => $poll_int,
+      ]], 'setting');
+    drupal_add_js(drupal_get_path('module', 'nys_homepage_hero') . '/misc/nys_homepage_hero.js', 'file');
+  }
+}
+
+/**
+ * Implements hook_nodequeue_add()
+ */
+function nys_homepage_hero_nodequeue_add($qid, $nid) {
+  if ($qid == 1) {
+    // Session has begun. Signal to polling clients to reload the page.
+    variable_set('homepage_hero_session_in_progress', 1);
+    drupal_invalidate_cache_tags(['views:homepage_hero']);
+  }
+}
+
+/**
+ * Implements hook_nodequeue_remove()
+ */
+function nys_homepage_hero_nodequeue_remove($qid, $nid) {
+  if ($qid == 1) {
+    // Session has ended. Signal to polling clients to reload the page causing
+    // the polling JS to be removed.
+    variable_set('homepage_hero_add_polling_js', 0);
+    variable_set('homepage_hero_session_in_progress', 0);
+    drupal_invalidate_cache_tags(['views:homepage_hero']);
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function nys_homepage_hero_cron() {
+  // Only add the polling JS if a session is scheduled to begin within a
+  // specified time period.
+  if (!variable_get('homepage_hero_add_polling_js')) {
+    $current_time = time();
+    $interval_time = $current_time + variable_get('homepage_hero_scheduled_interval');
+    $query = new EntityFieldQuery();
+    $result = $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'session')
+      ->fieldCondition('field_date', 'value', $current_time, '>')
+      ->fieldCondition('field_date', 'value', $interval_time, '<=')
+      ->execute();
+
+    if (isset($result['node'])) {
+      // Turn on the flag to start adding the polling JS to the front page.
+      variable_set('homepage_hero_add_polling_js', 1);
+      variable_set('homepage_hero_session_in_progress', 0);
+      drupal_invalidate_cache_tags(['views:homepage_hero']);
+    }
+  }
+}

@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Image Allow Insecure Derivatives Drupal module.
+ */
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Add the configuration toggle to the Image Toolkit settings.
+ */
+function image_allow_insecure_derivatives_form_system_image_toolkit_settings_alter(&$form, &$form_state, $form_id) {
+  // The Image Allow Insecure Derivatives checkbox.
+  $form['image_allow_insecure_derivatives'] = array(
+    '#title' => t('Image Allow Insecure Derivatives'),
+    '#type' => 'checkbox',
+    '#description' => t('When enabled, will allow bypassing the token check when outputing image derivatives. Use this only if you are experiencing image display issues and understand the security risks.'),
+    '#default_value' => variable_get('image_allow_insecure_derivatives', FALSE),
+  );
+}

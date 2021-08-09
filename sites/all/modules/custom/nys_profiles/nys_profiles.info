@@ -1,0 +1,5 @@
+name = NYS Profiles
+description = Custom settings for Honoree Profiles (machine name 'initiatives') content type
+core = 7.x
+package = NY STATE SENATE
+version = "7.x-1.0"

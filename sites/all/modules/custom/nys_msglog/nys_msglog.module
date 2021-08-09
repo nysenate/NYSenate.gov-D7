@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file nys_msglog.module.
+ * Log all contact form submissions.
+ */
+
+/**
+ * Implements hook_nys_messaging_contact_message_sent().
+ */
+function nys_msglog_nys_messaging_contact_message_sent($form_values, $mail) {
+  global $user;
+  $values = array(
+    'sender_ip' => $user->hostname,
+    'sender_uid' => $user->uid,
+    'sender_email' => $form_values['from_email'],
+    'inquiry_type' => $form_values['inquiry_type'],
+    'first_name' => $form_values['first_name'],
+    'last_name' => $form_values['last_name'],
+    'phone' => $form_values['phone'],
+    'street_addr' => $form_values['address'],
+    'city' => $form_values['city'],
+    'zip' => $form_values['zip'],
+    'subject' => $form_values['subject'],
+    'body' => $form_values['email_body'],
+    'senator_uid' => $form_values['senator_uid'],
+    'mail_sent_to' => $mail['to'],
+  );
+  $insert = db_insert('message_log');
+  $insert = $insert->fields($values);
+  $insert = $insert->execute();
+}

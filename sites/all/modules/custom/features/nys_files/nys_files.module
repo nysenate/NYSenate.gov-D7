@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the NYS Files feature.
+ */
+
+include_once 'nys_files.features.inc';
