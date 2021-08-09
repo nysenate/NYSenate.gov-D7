@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @file
+ * Tests for the Fieldable Panels Panes module with Panelizer.
+ */
+
+/**
+ * Tests for the Fieldable Panels Panes module with Panelizer.
+ */
+class FppWithPanelizerTest extends FppTestHelper {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'FPP tests for Panelizer',
+      'description' => 'Confirm that FPP works with Panelizer.',
+      'group' => 'FPP',
+      'dependencies' => array('ctools', 'panels', 'views', 'panelizer'),
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp(array $modules = array()) {
+    // Needed for node display.
+    $modules[] = 'panelizer';
+
+    parent::setUp($modules);
+  }
+
+  /**
+   * Test Panelizer integration.
+   *
+   * @todo Do this.
+   */
+  public function toDoTestPanelizer() {
+    // Enable Revisioning.
+    // Enable Panelizer.
+    // Customize a node.
+    // Add an FPP.
+    // Revision the display.
+    // Confirm the new revision is ok.
+  }
+
+}

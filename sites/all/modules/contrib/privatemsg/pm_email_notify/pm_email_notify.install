@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * @file
+ *
+ * This file contains installation and update hooks for pm_email_notify.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function pm_email_notify_uninstall() {
+  variable_del('pm_email_notify_body');
+  variable_del('pm_email_notify_default');
+  variable_del('pm_email_notify_subject');
+  variable_del('pm_email_notify_from');
+  variable_del('privatemsg_setting_email_notify_level');
+  variable_del('privatemsg_setting_email_notify_only_user');
+}
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function pm_email_notify_update_dependencies() {
+  $dependencies['pm_email_notify']['7200']['privatemsg'] = '7201';
+  return $dependencies;
+}
+
+/**
+ * Replace old placeholders with new tokens.
+ */
+function pm_email_notify_update_7000() {
+  $replacements = array(
+    '!author' => '[privatemsg_message:author]',
+    '!username' => '[privatemsg_message:recipient]',
+    '!author_uid' => '[privatemsg_message:author:uid]',
+    '!pm_subject' => '[privatemsg_message:subject]',
+    '!pm_body' => '[privatemsg_message:body]',
+    '!thread' => '[privatemsg_message:thread_id]',
+    '!site' => '[site:name]',
+    '!login-url' => '[site:login-url]',
+    '!uri' => '	[site:url]',
+    '!uri_brief' => '[site:url-brief]',
+    '!message' => '[privatemsg_message:url]',
+    '!settings' => '[privatemsg_message:recipient:edit-url]',
+  );
+  // Only update if there was actually something saved.
+  if ($subject = variable_get('pm_email_notify_subject', FALSE)) {
+    variable_set('pm_email_notify_subject', str_replace(array_keys($replacements), array_values($replacements), $subject));
+  }
+  if ($body = variable_get('pm_email_notify_body', FALSE)) {
+    variable_set('pm_email_notify_body', str_replace(array_keys($replacements), array_values($replacements), $body));
+  }
+}
+
+/**
+ * Convert the old table to privatemsg settings API.
+ */
+function pm_email_notify_update_7200() {
+  // If the table was already deleted, this is a upgrade from 6-x.2.x. Nothing to do, then.
+  if (!db_table_exists('pm_email_notify')) {
+    return;
+  }
+
+  // Update the site-wide default setting.
+  if (variable_get('pm_email_notify_default', TRUE)) {
+    variable_set('privatemsg_setting_email_notify_level', PM_EMAIL_NOTIFY_LEVEL_ALL);
+  }
+  else {
+    variable_set('privatemsg_setting_email_notify_level', PM_EMAIL_NOTIFY_LEVEL_DISABLED);
+  }
+  variable_del('pm_email_notify_default');
+
+  // Convert user saved settings.
+  $result = db_query('SELECT * FROM {pm_email_notify}');
+  foreach ($result as $row) {
+    privatemsg_set_setting('user', $row->user_id, 'email_notify_level', $row->email_notify_is_enabled ? PM_EMAIL_NOTIFY_LEVEL_DEFAULT : PM_EMAIL_NOTIFY_LEVEL_DISABLED);
+  }
+
+  db_drop_table('pm_email_notify');
+}
+

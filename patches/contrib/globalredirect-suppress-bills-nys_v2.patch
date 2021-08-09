@@ -1,0 +1,17 @@
+diff --git b/sites/all/modules/contrib/globalredirect/globalredirect.module a/sites/all/modules/contrib/globalredirect/globalredirect.module
+index 961c1ce9a7..a2fffce257 100644
+--- b/sites/all/modules/contrib/globalredirect/globalredirect.module
++++ a/sites/all/modules/contrib/globalredirect/globalredirect.module
+@@ -43,6 +43,12 @@ function globalredirect_init() {
+     }
+   }
+ 
++  // Check if path leads to a bill node. If so, we don't want automatic redirects.
++  $node = menu_get_object();
++  if (!empty($node) && $node->type == 'bill') {
++    return FALSE;
++  }
++
+   // Store the destination from the $_GET as, if we leave it in, drupal_goto()
+   // will go to that instead.
+   if (isset($_GET['destination'])) {

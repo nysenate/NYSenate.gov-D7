@@ -1,0 +1,42 @@
+<p>This tutorial will guide you through specifying the elements for your views output using <em>Semantic Views : Fields</em> settings. This tutorial assumes you have Views installed.</p>
+<ul>
+  <li><strong>Create a view</strong>
+    <ol>
+      <li>Visit the <a href="base_url:admin/build/views">Views administration page</a></li>
+      <li>Click Add new view. Type in the name test_semantic view, select type 'Node', click <strong>Next</strong>.</li>
+    </ol>
+  </li>
+  <li><strong>Modify the view to use Semantic Views options</strong>
+    <ol>
+      <li>Locate the Basic settings column, click the <strong>Style:</strong> settings. </li>
+      <li> At the bottom section of this area, you will see a list of options under <em>How should this view be styled</em>. Select <em>Semantic Views</em>, and click <strong>Update</strong>. </li>
+      <li>Click options next to <strong>Row style. </strong>Select <em>Semantic Views : Fields</em>.</li>
+    </ol>
+  </li>
+  <li><strong>Select which fields to style</strong>
+    <ul>
+      <li>Click the <strong>+</strong> icon next to <strong>Fields</strong>.</li>
+      <li>In the <strong>Groups</strong> drop-down menu select 'Node', then check <em>Node: Body</em>, <em>Node: Post Date</em> and <em>Node: Title</em>. Click <strong>Add</strong>.</li>
+      <li>Under the next three options for Body, Post Date and Title, click <strong>Update</strong>, staying with the default settings for this tutorial.</li>
+      <li>Scroll back up to <strong>Fields</strong> and click the <strong>&uarr;&darr;</strong> icon to rearrange fields, so it is Title first.</li>
+    </ul>
+  </li>
+  <li><strong>Preview the default </strong></li>
+  <ol>
+    <li>At this stage you can preview the default settings. Click <strong>Save</strong>.</li>
+    <li>View the unstyled fields previewed at the bottom of the Views User Interface.</li>
+  </ol>
+  <li><strong>Modify the output for these fields</strong> </li>
+  <ol>
+    <li>Click the settings gear icon next to Row style: Semantic Views : Fields.</li>
+    <li>Scroll down to the <em>Row style options</em>, you can see the menu built for the fields you have chosen Title, Body and Post date.</li>
+    <li>Do not capitalize the elements and do not use &lt;&gt; symboles to specify the elements in the form.</li>
+    <li>Under <em>Ttitle</em> specify the element: <strong>h3</strong>. Optional: You can also edit your settings and specify custom Class attributes. put spaces in between each class attibute, and do not wrap class attributes in &quot;double quotes&quot;.</li>
+    <li>Under <em>Body</em> specify the element <strong>div</strong>. You are likely to have other block level elements such as a paragraph or blockquote. </li>
+    <li>Under <em>Post date</em> specify the element <strong>p.</strong></li>
+    <li>Select Skip empty fields</li>
+    <li>Click <strong>Update</strong>.</li>
+    <li>Click <strong>Save</strong> to save your settings.</li>
+  </ol>
+  <li><strong>You're done!</strong> You should see the modifications to your view when you preview it. </li>
+</ul>

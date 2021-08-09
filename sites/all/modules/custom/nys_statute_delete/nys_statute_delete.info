@@ -1,0 +1,7 @@
+name = Statute Delete
+description = Deletes statutes in Drupal.
+core = 7.x
+
+package = NY STATE SENATE
+
+dependencies[] = nys_statute_import

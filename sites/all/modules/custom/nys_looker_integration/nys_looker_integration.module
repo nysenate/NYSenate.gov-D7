@@ -1,0 +1,436 @@
+<?php
+
+/**
+ * @file
+ * This module integrates with Looker to:
+ *  - create iframe embeds
+ *  - manage recipients for scheduled plans
+ */
+
+define('NYS_LOOKER_INTEGRATION_DEFAULT_API_VERSION', '3.1');
+
+require_once 'inc/nys_looker_integration.lookerapi.class.inc';
+require_once 'inc/nys_looker_integration.scheduledplan.class.inc';
+require_once 'inc/nys_looker_integration.eck_helper.php';
+require_once 'inc/nys_looker_integration.looker_helper.php';
+
+/**
+ * Implements hook_menu().
+ */
+function nys_looker_integration_menu() {
+  $items = [];
+
+  // Configuration page.
+  $items['admin/config/services/looker'] = [
+    'title' => 'NYS Looker Integration',
+    'description' => 'Settings and configurations for Looker.com embeds',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['nys_looker_integration_admin'],
+    'access arguments' => ['administer nys looker integration settings'],
+    'type' => MENU_NORMAL_ITEM,
+  ];
+  // For embed and integration data points.
+  $items['admin/config/services/looker/settings'] = [
+    'title' => 'Configuration',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 1,
+  ];
+  // For resetting the custom field.
+  $items['admin/config/services/looker/reset'] = [
+    'title' => 'Custom Field Reset',
+    'description' => 'Reset Custom Recipient Field for Looker Integration',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['nys_looker_integration_admin_reset'],
+    'access arguments' => ['administer nys looker integration settings'],
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 2,
+  ];
+
+  // Plan entity management pages
+  $items['admin/structure/looker_plans'] = [
+    'title' => 'Looker Scheduled Plans',
+    'description' => 'Manage plans and recipients for Looker reporting',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['nys_looker_integration_plan_list'],
+    'access arguments' => ['administer looker recipients'],
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'inc/nys_looker_integration.eck_helper.php',
+  ];
+  $items['admin/structure/looker_plans/list'] = [
+    'title' => 'List Plans',
+    'weight' => 1,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  ];
+  $items['admin/structure/looker_plans/add'] = [
+    'title' => 'Add New Plan',
+    'weight' => 2,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['nys_looker_integration_plan_add'],
+    'access arguments' => ['administer looker scheduled plans'],
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'inc/nys_looker_integration.eck_helper.php',
+  ];
+
+  // Add bundle-specific menu items and return.
+  return nys_looker_integration_build_eck_menu($items);
+}
+
+/**
+ * Implements hook_permission().
+ */
+function nys_looker_integration_permission() {
+  return [
+    'administer nys looker integration settings' => [
+      'title' => t('Administer Looker Settings'),
+      'description' => t('Administer Looker.com settings for NY State Senate'),
+    ],
+    'administer looker scheduled plans' => [
+      'title' => t('Administer Looker Plans'),
+      'description' => t('Administer Looker Scheduled Plans and recipients'),
+    ],
+    'administer looker recipients' => [
+      'title' => t('Administer Looker Plan Recipients'),
+      'description' => t('List Looker plans for a district and modify recipients'),
+    ],
+  ];
+}
+
+/**
+ * Callback for drupal_get_form().  Reset the custom field.
+ *
+ * @param $form
+ * @param $form_state
+ *
+ * @return mixed
+ */
+function nys_looker_integration_admin_reset($form, &$form_state) {
+  // add the CSS
+  drupal_add_css(drupal_get_path('module', 'nys_looker_integration') . '/nys_looker_integration.reset_field.css');
+
+  // Safety checks
+  $field_exist = (boolean) field_info_field('looker_recipient_list');
+  $instances_exist = (boolean) field_read_instances(['field_name' => 'looker_recipient_list']);
+
+  // The preamble/warning
+  $msg = "This feature will recreate the looker_recipient_list custom field and " .
+    "assign it to any bundle under the 'looker_plans' entity.  It should only be " .
+    "used in the event of field data corruption, usually caused by deleting the " .
+    "last bundle.  This may be destructive to any bundles currently in the system." .
+    "<br /><br />If any of this does not sound familiar, you do not belong on " .
+    "this page.<br /><br /><br />Are you SURE you want to do this?";
+
+  // Build the form
+  $form['looker_reset'] = [
+    'looker_reset_warning' => [
+      '#prefix' => '<p style="font-size: 1.5em;max-width: 900px;line-height: 1.5em;">',
+      '#markup' => $msg,
+      '#suffix' => '</p>',
+    ],
+    'looker_reset_precheck' => [
+      '#type' => 'fieldset',
+      '#title' => 'Status Pre-check',
+      '#description' => 'This displays the current state of the database as detected by the Fields API.  Items in red are failures and will likely cause this process to fail.',
+      'field_exists' => [
+        '#markup' => $field_exist
+          ? 'Custom field looker_recipient_list exists and is not deleted'
+          : 'Custom field looker_recipient_list could not be found',
+        '#prefix' => $field_exist
+          ? '<p class="nys_looker_integration_fail nys_looker_integration_status">'
+          : '<p class="nys_looker_integration_ok nys_looker_integration_status">',
+        '#suffix' => '</p>',
+      ],
+      'instance_exists' => [
+        '#markup' => $instances_exist
+          ? 'The custom field looker_recipient_list was found attached to bundles'
+          : 'No field instances could be found',
+        '#prefix' => $instances_exist
+          ? '<p class="nys_looker_integration_fail nys_looker_integration_status">'
+          : '<p class="nys_looker_integration_ok nys_looker_integration_status">',
+        '#suffix' => '</p>',
+      ],
+    ],
+    'looker_reset_submit' => [
+      '#type' => 'submit',
+      '#value' => 'TOTALLY SURE - RESET CUSTOM FIELD',
+    ],
+  ];
+
+  return $form;
+}
+
+/**
+ * Submit handler for resetting the custom field.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function nys_looker_integration_admin_reset_submit($form, &$form_state) {
+  $ok = TRUE;
+  try {
+    _nys_looker_integration_create_recipient_field();
+  } catch (FieldException $e) {
+    $ok = FALSE;
+    drupal_set_message("Could not recreate custom field looker_recipient_list", "error");
+  }
+
+  if ($ok) {
+    $type = EntityType::loadByName('looker_plans');
+    foreach (Bundle::loadByEntityType($type) as $obj) {
+      try {
+        _nys_looker_integration_attach_recipient_field($obj->name);
+      } catch (FieldException $e) {
+        drupal_set_message("Could not add custom field to bundle '" . $obj->name . "'", 'error');
+        $ok = FALSE;
+      }
+    }
+  }
+
+  if ($ok) {
+    drupal_set_message("Looker integration custom field has been reset", 'status');
+  }
+
+  // Force ECK's cache to be rebuilt.
+  cache_clear_all('*', 'cache_eck', true);
+
+  // Redirect back to the main settings page
+  $form_state['redirect'] = 'admin/config/services/looker';
+}
+
+/**
+ * Callback for drupal_get_form().  Form for module configuration.
+ *
+ * @see https://www.drupal.org/node/206761
+ *
+ * @param $form
+ * @param $form_state
+ *
+ * @return mixed
+ */
+function nys_looker_integration_admin($form, &$form_state) {
+  $api_secret = variable_get('nys_looker_integration_api_client_secret', FALSE);
+  $apikey_required = !((boolean) $api_secret);
+  $sso_secret = variable_get('nys_looker_integration_secret_key', FALSE);
+  $sso_required = !((boolean) $sso_secret);
+  $secret_text = $api_secret
+    ? "A secret is already saved.  Leave the box blank to keep it, or input a new one to change it."
+    : "<h2><b>No secret is saved.  The secret is required before attempting to use this functionality.</b></h2>";
+
+  $form['looker_settings'] = [
+    'nys_looker_integration_host' => [
+      '#type' => 'textfield',
+      '#title' => t('Looker Instance URL'),
+      '#default_value' => variable_get('nys_looker_integration_host', NULL),
+      '#size' => 64,
+      '#maxlength' => 64,
+      '#description' => t("The URL for the Looker instance. (e.g. \"nysenate.looker.com\").  This should not contain a protocol, such as 'http' or 'https'."),
+      '#required' => TRUE,
+    ],
+    'embed_integration' => [
+      '#type' => 'fieldset',
+      '#title' => t('Embed Configuration'),
+      '#description' => t("Settings relevant to rendering embedded Looker objects."),
+      'nys_looker_integration_default_models' => [
+        '#type' => 'textfield',
+        '#title' => t('Default Models'),
+        '#default_value' => variable_get('nys_looker_integration_default_models', NULL),
+        '#size' => 64,
+        '#maxlength' => 255,
+        '#description' => t("A comma-delimited list of models to be used by default for embed requests."),
+        '#required' => FALSE,
+      ],
+      'nys_looker_integration_secret_key' => [
+        '#type' => 'password',
+        '#title' => t('Looker SSO Key'),
+        '#default_value' => variable_get('nys_looker_integration_secret_key', NULL),
+        '#size' => 64,
+        '#maxlength' => 64,
+        '#description' => $secret_text,
+        '#required' => $sso_required,
+      ],
+    ],
+    'api_config' => [
+      '#type' => 'fieldset',
+      '#title' => t('API Configuration'),
+      '#description' => t("Settings relevant to calls to a Looker API instance."),
+      'nys_looker_integration_api_client_key' => [
+        '#type' => 'textfield',
+        '#title' => t('Client Key'),
+        '#default_value' => variable_get('nys_looker_integration_api_client_key', ''),
+        '#size' => 30,
+        '#maxlength' => 30,
+        '#description' => t("The public client key for the API user's account."),
+        '#required' => TRUE,
+      ],
+      'nys_looker_integration_api_client_secret' => [
+        '#type' => 'password',
+        '#title' => t('Client Secret'),
+        '#default_value' => variable_get('nys_looker_integration_api_client_secret', ''),
+        '#size' => 30,
+        '#maxlength' => 30,
+        '#description' => $secret_text,
+        '#required' => $apikey_required,
+      ],
+      'nys_looker_integration_api_port' => [
+        '#type' => 'textfield',
+        '#title' => t('Instance Port'),
+        '#default_value' => variable_get('nys_looker_integration_api_port', '19999'),
+        '#size' => 10,
+        '#maxlength' => 5,
+        '#description' => t("The port for the Looker instance being called. (default: 19999)"),
+        '#required' => TRUE,
+      ],
+      'nys_looker_integration_api_version' => [
+        '#type' => 'textfield',
+        '#title' => t('API Version'),
+        '#default_value' => variable_get('nys_looker_integration_api_version', NYS_LOOKER_INTEGRATION_DEFAULT_API_VERSION),
+        '#size' => 10,
+        '#maxlength' => 5,
+        '#description' => t("The API version being targeted. (default: !ver)",
+          ['!ver' => NYS_LOOKER_INTEGRATION_DEFAULT_API_VERSION]),
+        '#required' => TRUE,
+      ],
+      'nys_looker_integration_api_debug' => [
+        '#type' => 'checkbox',
+        '#title' => t('API Debugging'),
+        '#default_value' => variable_get('nys_looker_integration_api_debug', 0),
+        '#description' => t("Turns on debugging for Looker API calls.  For every call, a watchdog entry will be created, which will include the path/type, method, POST body data, and the full response object."),
+      ],
+    ],
+  ];
+  return system_settings_form($form);
+}
+
+/**
+ * Implements hook_admin_validate().
+ *
+ * @param $form
+ * @param $form_state
+ */
+function nys_looker_integration_admin_validate($form, &$form_state) {
+  // These checks are necessary to avoid exposing the secrets in the form.
+  // If a value is not in the form, try to populate it from the saved variables.
+  // Once for the integration secret ...
+  $key = $form_state['values']['nys_looker_integration_secret_key']
+    ?: variable_get('nys_looker_integration_secret_key', '');
+  if (!$key) {
+    form_set_error('nys_looker_integration_secret_key', t('You must supply a valid SSO secret key.'));
+  }
+  else {
+    $form_state['values']['nys_looker_integration_secret_key'] = $key;
+  }
+
+  // ... and once for the API secret.
+  $key = $form_state['values']['nys_looker_integration_api_client_secret']
+    ?: variable_get('nys_looker_integration_api_client_secret', '');
+  if (!$key) {
+    form_set_error('nys_looker_integration_api_client_secret', t('You must supply a valid API secret key.' . $key));
+  }
+  else {
+    $form_state['values']['nys_looker_integration_api_client_secret'] = $key;
+  }
+
+  // Generate a warning if no models are provided.
+  if (!($form_state['values']['nys_looker_integration_default_models'] ?? '')) {
+    drupal_set_message(t('No defaults models have been set.  Embeds without models specified will fail.'), 'warning');
+  }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ *
+ * @param $variables
+ *
+ * @return mixed
+ */
+function nys_looker_integration_preprocess_node(&$variables) {
+  if ($variables['type'] === 'bill') {
+    if (NYSLookerEmbed::verifyAccess()) {
+      // Get the user info, and bill identifiers.
+      $info = NYSLookerEmbed::fetchUserDetails();
+      $bill_nid = $variables['node']->nid;
+
+      try {
+        // load the bill
+        $bill_wrapper = entity_metadata_wrapper('node', $bill_nid);
+
+        // Set the filters for the Looker dashboards.
+        $filters = [
+          'Bill Print Number' => $bill_wrapper->field_ol_base_print_no->value(),
+          'Session Year' => $bill_wrapper->field_ol_session->value(),
+          'District Number' => $info['senator_district'],
+        ];
+      } catch (Exception $e) {
+        $filters = NULL;
+      }
+
+      if ($filters) {
+        // Create the options array for the first embed.
+        $frame_options = [
+          'width' => '100%',
+          'height' => '200',
+          'frameborder' => '0',
+        ];
+        $options = ['embed' => $filters, 'frame' => $frame_options];
+
+        // Create the embed object and generate the HTML.
+        $embed = new NYSLookerEmbed($options);
+        $variables['looker_preview_iframe'] = $embed->generate('/dashboards/4');
+
+        // Update the frame options for the second embed.
+        $frame_options['height'] = '1000';
+        $embed->setFrameOptions($frame_options);
+        // Generate the HTML for the second embed.
+        $variables['looker_extended_iframe'] = $embed->generate('/dashboards/5');
+
+        // The template also needs the district.
+        $variables['lc_district'] = $info['senator_district'];
+      }
+    }
+  }
+
+  return $variables;
+}
+
+/**
+ * Implements hook_senator_dashboard_bill_overview_alter().
+ *
+ * @param $vars
+ *
+ * @return mixed
+ */
+function nys_looker_integration_senator_dashboard_bill_overview_alter(&$vars) {
+  if (NYSLookerEmbed::verifyAccess()) {
+    // Get the user details.
+    $info = NYSLookerEmbed::fetchUserDetails();
+
+    // Set the options for the embed.
+    $filters = [
+      'District Number' => $info['senator_district'],
+      'Bill Print Number' => '%',
+    ];
+    $frame = ['width' => '100%', 'height' => '800', 'frameborder' => '0'];
+    $options = ['embed' => $filters, 'frame' => $frame];
+
+    // Create the embed object and generate the HTML.
+    $embed = new NYSLookerEmbed($options);
+    $vars['bills_overview_looker_iframe'] = $embed->generate('/dashboards/6');
+  }
+
+  return $vars;
+}
+
+/**
+ * Ensures the new permissions are added to the appropriate roles.
+ */
+function _nys_looker_integration_set_looker_permissions() {
+  // Add permissions to the LC and admin roles.
+  $admin_perms = [
+    'administer nys looker integration settings',
+    'administer looker scheduled plans',
+    'administer looker recipients',
+  ];
+  $role = user_role_load_by_name('administrator');
+  user_role_grant_permissions($role->rid, $admin_perms);
+  $role = user_role_load_by_name('Legislative Correspondent');
+  user_role_grant_permissions($role->rid, ['administer looker recipients']);
+}

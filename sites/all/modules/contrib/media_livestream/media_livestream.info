@@ -1,0 +1,18 @@
+name = Media: Livestream
+description = Provides Livestream support to the Media module.
+package = Media
+core = 7.x
+files[] = media_livestream.module
+files[] = includes/MediaInternetLivestreamHandler.inc
+files[] = includes/MediaLivestreamStreamWrapper.inc
+files[] = includes/media_livestream.formatters.inc
+files[] = includes/media_livestream.variables.inc
+dependencies[] = media
+dependencies[] = media_internet
+
+; Information added by drupal.org packaging script on 2013-10-01
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "media_livestream"
+datestamp = "1380586500"
+

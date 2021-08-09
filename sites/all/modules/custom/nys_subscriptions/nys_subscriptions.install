@@ -1,0 +1,215 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the nys_subscriptions module.
+ */
+
+/**
+ * An implementation of hook_schema().
+ */
+function nys_subscriptions_schema() {
+  $schema = array();
+  $schema['nys_subscriptions'] = array(
+    'description' => 'Bill Status Subscriptions nys_subscriptions.module.',
+    'fields' => array(
+      'bwid' => array(
+        'description' => 'Primary Key: Unique Subscriptions item.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'email' => array(
+        'description' => 'Email Address of Subscriber.',
+        'type' => 'varchar',
+        'length' => 254,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'NYS User ID of Subscriber 0 if anonymous.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'tid' => array(
+        'description' => 'Taxonomy term ID of the Bill Parent.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'nid' => array(
+        'description' => 'Node id of the bill page subscribed.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'subscription_timestamp' => array(
+        'description' => 'When you subscribed',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'confirmation_timestamp' => array(
+        'description' => 'When You confirmed your subscription',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'unsubscribe_timestamp' => array(
+        'description' => 'When and if you unsubscribed',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'option' => array(
+        'description' => 'Option like digest.',
+        'type' => 'varchar',
+        'length' => 128,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'Content / Entity Type.',
+        'type' => 'varchar',
+        'length' => 32,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+      'data' => array(
+        'description' => 'Type Specific Data.',
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+      'subscription_key' => array(
+        'description' => 'Hash generated from uid+nid+sub_timestamp+secret.',
+        'type' => 'varchar',
+        'length' => 128,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+      'email_address_key' => array(
+        'description' => 'Hash generated from email+secret.',
+        'type' => 'varchar',
+        'length' => 128,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+    ),
+    'indexes' => array(
+      'uid' => array('uid'),
+      'tid' => array('tid'),
+      'nid' => array('nid'),
+      'subscription_key' => array('subscription_key'),
+      'email_address_key' => array('email_address_key'),
+    ),
+    'unique keys' => array(
+      'vid' => array('bwid'),
+    ),
+    'primary key' => array('bwid'),
+  );
+
+  $schema['nys_subscription_log'] = array(
+    'description' => 'Bill Status Subscriptions nys_subscriptions.module.',
+    'fields' => array(
+      'log_id' => array(
+        'description' => 'Subscription log item identifier',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'email' => array(
+        'description' => 'Email address of recipient',
+        'type' => 'varchar',
+        'length' => 254,
+        'not null' => TRUE,
+      ),
+      'alert_node' => array(
+        'description' => 'The node id which triggered this alert',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'lineage_node' => array(
+        'description' => 'The taxonomy id to which the alert_node/subscribed_node belongs',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'alert_type' => array(
+        'description' => 'The name of the test triggering this alert',
+        'type' => 'varchar',
+        'length' => 50,
+        'not_null' => TRUE,
+      ),
+      'send_ts' => array(
+        'description' => 'When the alert was transmitted to SendGrid',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+        'disp-size' => 11,
+      ),
+    ),
+    'primary key' => array('log_id'),
+    'indexes' => array(
+      'alert_node' => array('alert_node'),
+      'lineage_node' => array('lineage_node'),
+      'send_ts' => array('send_ts'),
+    ),
+  );
+
+  return $schema;
+}
+
+function nys_subscriptions_install() {
+  variable_set('nys_subscriptions_inject_email', 'hypothetical-alerts@rtblair.com');
+}
+
+/**
+ * Add index to nys_subscriptions tables.
+ */
+function nys_subscriptions_update_7101() {
+  db_query('ALTER TABLE nys_subscriptions ADD INDEX nid (nid)');
+  db_query('ALTER TABLE nys_subscription_log ADD INDEX alert_node (alert_node)');
+  db_query('ALTER TABLE nys_subscription_log ADD INDEX lineage_node (lineage_node)');
+}
+
+/**
+ * Remove unused columns to track last-sent emails
+ */
+function nys_subscriptions_update_7102() {
+  try {
+    $query = 'ALTER TABLE nys_subscriptions_copy ' .
+      'DROP last_begin_source_datetime_timestamp, ' .
+      'DROP last_end_source_datetime_timestamp';
+    db_query($query);
+    $ret = '2 fields dropped from nys_subscriptions.';
+  } catch (PDOException $e) {
+    $ret = 'Failed to remove 2 fields from nys_subscriptions.  Please verify schema.';
+  }
+  return $ret;
+}
+
+/**
+ * Add index to nys_subscription_log.send_ts.
+ */
+function nys_subscriptions_update_7103() {
+  try {
+    db_query('ALTER TABLE nys_subscription_log ADD INDEX send_ts (send_ts)');
+    $ret = 'Index added to nys_subscription_log.send_ts';
+  } catch (PDOException $e) {
+    $ret = 'Could not add index to nys_subscription_log.send_ts.';
+  }
+  return $ret;
+}

@@ -1,0 +1,5 @@
+name = Twitter Import
+description = Imports new tweets from Twitter via drush.
+core = 7.x
+
+dependencies[] = twitter

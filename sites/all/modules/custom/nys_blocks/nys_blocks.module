@@ -1,0 +1,2051 @@
+<?php
+
+/**
+ * Implements hook_theme().
+ */
+function nys_blocks_theme() {
+  return [
+    'nys_blocks_issue_quick_facts' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-issue-quick-facts--block',
+    ],
+    'nys_blocks_sitewide_header_bar' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-sitewide-header-bar--block',
+    ],
+    'nys_blocks_micro_header_bar' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-senator-microsite-header-bar--block',
+    ],
+    'nys_sitewide_actionbar' => [
+      'variables' => [
+        'content' => NULL,
+        'type' => NULL,
+        'district' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-sitewide-actionbar--block',
+    ],
+    'nys_micro_actionbar' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-sitewide-actionbar--block',
+    ],
+    'nys_microsite_nav' => [
+      'variables' => [
+        'title' => NULL,
+        'links' => NULL,
+        'search' => NULL,
+        'user_avatar' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-senator-microsite-menu-nav--block',
+    ],
+    'nys_blocks_how_senate_works' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-how-senate-works--block',
+    ],
+    'nys_blocks_how_create_budget' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-how-create-budget--block',
+    ],
+    'nys_blocks_news_issue_hdr' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-news-issues-header--block',
+    ],
+    'nys_blocks_wasteland_head' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-wasteland-head--block',
+    ],
+    'nys_blocks_gov_ops_letters_head' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-gov-ops-letters-head--block',
+    ],
+    'nys_blocks_calendar_downloads' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-calendar-downloads--block',
+    ],
+    'senators_talking_about_issue' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-senators-talking-about-issue-block',
+    ],
+    'nys_blocks_home_default_hero' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-home-default-hero--block',
+    ],
+    'nys_blocks_calendar_nav' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-calendar-nav--block',
+    ],
+    'nys_blocks_micro_footer' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-senator-microsite-footer--block',
+    ],
+    'nys_blocks_investigations_teaser' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-investigations-teaser--block',
+    ],
+    'nys_blocks_up_to' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-up-to--block',
+    ],
+    'nys_blocks_want_to' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-want-to--block',
+    ],
+    'nys_blocks_calendar_picker' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-calendar-picker--block',
+    ],
+    'nys_blocks_user_dashboard_header' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-user-dashboard-header-bar--block',
+    ],
+    'nys_blocks_about_hero' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-about-hero--block',
+    ],
+    'nys_blocks_about_quick_facts' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-about-quick-facts--block',
+    ],
+    'nys_blocks_about_how_works' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-about-how-works--block',
+    ],
+    'nys_blocks_about_map' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-about-map--block',
+    ],
+    'nys_blocks_about_timeline' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-about-timeline--block',
+    ],
+    'nys_blocks_about_seal' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-about-seal--block',
+    ],
+    'nys_blocks_about_tour' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-about-tour--block',
+    ],
+    'nys_blocks_about_access' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-about-access--block',
+    ],
+    'nys_blocks_stdnt_prog_are_you' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-stdnt-prog-are-you--block',
+    ],
+    'nys_blocks_stdnt_contact' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-stdnt-prog-contact--block',
+    ],
+    'nys_blocks_node_related_issues' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-node-related-issues--block',
+    ],
+    'nys_blocks_sitewide_footer' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-sitewide-footer--block',
+    ],
+    'nys_blocks_senate_directories' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-senate-directories--block',
+    ],
+    'nys_blocks_legislation_search' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-legislation-search--block',
+    ],
+    'nys_blocks_legislation_bills_and_laws_intro' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-legislation-bills-and-laws-intro--block',
+    ],
+    'nys_blocks_senator_committees' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-senator-committees--block',
+    ],
+    'nys_blocks_sntor_inactive_banner' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-sntor-inactive-banner--block',
+    ],
+    'nys_blocks_bill_detail_votes' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-bill_detail_votes--block',
+    ],
+    'nys_blocks_home_leg_accordion' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-home-leg-accordion--block',
+    ],
+    'nys_blocks_leg_leg_accordion' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-leg-leg-accordion--block',
+    ],
+    'nys_blocks_bill_detail_quote' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-detail-quote--block',
+    ],
+    'nys_blocks_bill_status' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-bill_status--block',
+    ],
+    'nys_blocks_sen_comm_header' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-sen-comm-header--block',
+    ],
+    'nys_blocks_looker_dashboard' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-looker-dashboard--block',
+    ],
+    'nys_blocks_earthday_form' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-earthday-form--block',
+    ],
+    'nys_blocks_earthday_results' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-earthday-results--block',
+    ],
+    'nys_blocks_tday_form' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-tday-form--block',
+    ],
+    'nys_blocks_tday_results' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-tday-results--block',
+    ],
+    'nys_blocks_youth_leadership_form' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-youth-leadership-form--block',
+    ],
+    'nys_blocks_summer_reading' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-summer-reading--block',
+    ],
+    'nys_blocks_veterans' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-veterans--block',
+    ],
+    'nys_blocks_women' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-women--block',
+    ],
+    'nys_blocks_lyme_prevention' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-lyme-prevention--block',
+    ],
+    'nys_blocks_coronavirus_response' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-coronavirus-response--block',
+    ],
+    'nys_blocks_pathways_funding' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-pathways-funding--block',
+    ],
+    'nys_blocks_unclaimed_funds' => [
+      'variables' => [
+        'title' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'templates/blocks/nys_blocks-unclaimed-funds--block',
+    ],
+  ];
+}
+
+
+/**
+ * Declare what blocks are provided by this module.
+ * Implements hook_block_info().
+ */
+function nys_blocks_block_info() {
+  $blocks['issue_quick_facts'] = [
+    'info' => t('NYS Issue Quick Facts'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['earthday_form'] = [
+    'info' => t('Earth Day Entry Form Banner'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['earthday_results'] = [
+    'info' => t('Earth Day Results Banner'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['tday_form'] = [
+    'info' => t('Thanksgiving Entry Form Banner'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['tday_results'] = [
+    'info' => t('Thanksgiving Results Banner'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['youth_leadership_form'] = [
+    'info' => t('Youth Leadership Form Banner'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['summer_reading'] = [
+    'info' => t('Summer Reading Program'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['veterans'] = [
+    'info' => t('Honoring Veterans Program'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['women'] = [
+    'info' => t('Distinguished Women Program'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['lyme_prevention'] = [
+    'info' => t('Lyme Disease Prevention Program'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['coronavirus_response'] = [
+    'info' => t('Coronavirus Response and Prevention'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['pathways_funding'] = [
+    'info' => t('Pathways to Funding'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['unclaimed_funds'] = [
+    'info' => t('Unclaimed Funds Search'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['sitewide_header_bar_block'] = [
+    'info' => t('NYS Sitewide Blocks Header Bar'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['micro_header_bar_block'] = [
+    'info' => t('NYS Senator Microsite Blocks Header Bar'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['sitewide_actionbar_block'] = [
+    'info' => t('NYS Sitewide Actionbar Blocks Header Section'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['micro_actionbar_block'] = [
+    'info' => t('NYS Senator Micro Actionbar Blocks Header Section'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['microsite_nav_block'] = [
+    'info' => t('NYS Senator Microsite Nav'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['how_senate_works_block'] = [
+    'info' => t('NYS How Senate Works'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['how_create_budget_block'] = [
+    'info' => t('NYS How We Create a State Budget'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['news_issues_hdr_block'] = [
+    'info' => t('NYS News and Issues Header'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['wasteland_head'] = [
+    'info' => t('NYS Wasteland Header'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['gov_ops_letters_head'] = [
+    'info' => t('NYS Gov Ops Letters Header'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['calendar_downloads'] = [
+    'info' => t('NYS Calendar Downloads'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['home_default_hero'] = [
+    'info' => t('NYS Homepage Default Hero'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['calendar_nav'] = [
+    'info' => t('NYS Global Calendar Nav'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['micro_footer'] = [
+    'info' => t('NYS Senator Micro Footer'),
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  ];
+  $blocks['investigations_teaser'] = [
+    'info' => t('NYS Investigations Teaser'),
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  ];
+  $blocks['up_to'] = [
+    'info' => t('NYS What Been Up To'),
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  ];
+  $blocks['want_to'] = [
+    'info' => t('NYS I want to...'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['calendar_picker'] = [
+    'info' => t('NYS Calendar Picker'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['user_dashboard_hdr'] = [
+    'info' => t('NYS User Dashboard Header'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['about_hero'] = [
+    'info' => t('NYS About Hero'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['about_quick_facts'] = [
+    'info' => t('NYS About Senate Quick Facts'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['about_how_works'] = [
+    'info' => t('NYS About How the Senate Works'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['about_map'] = [
+    'info' => t('NYS About District Map'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['about_timeline'] = [
+    'info' => t('NYS About Senate Timeline'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['about_seal'] = [
+    'info' => t('NYS About Senate Seal'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['about_tour'] = [
+    'info' => t('NYS About Tour the Capitol'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['about_access'] = [
+    'info' => t('NYS About Access to Information'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['stdnt_prog_are_you'] = [
+    'info' => t('NYS Student Prog Are You Block'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['stdnt_prog_contact'] = [
+    'info' => t('NYS Student Prog Contact Block'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['node_related_issues'] = [
+    'info' => t('Node Related Issues'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['sitewide_footer'] = [
+    'info' => t('Large sitewide footer'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['senate_directories'] = [
+    'info' => t('Senate Directories'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['legislation_search'] = [
+    'info' => t('Legislation Search Block'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['legislation_bills_and_laws_intro'] = [
+    'info' => t('Legislation - Bills and Laws Intro'),
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  ];
+  $blocks['senator_committees'] = [
+    'info' => t('Senator Committees'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['senators_talking_about_issue'] = [
+    'info' => t('Senators Talking About this Issue'),
+  ];
+  $blocks['simple_social_bar'] = [
+    'info' => t('NYS Article Simple Social Bar'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['sntor_inactive_banner'] = [
+    'info' => t('NYS Senator Inactive Banner'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['bill_detail_votes'] = [
+    'info' => t('Bill Detail Votes'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  ];
+  $blocks['home_leg_accordion'] = [
+    'info' => t('Home Legislation Accordion'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['leg_leg_accordion'] = [
+    'info' => t('Legislation Page Legislation Accordion'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['bill_detail_quote'] = [
+    'info' => t('Bill Detail Quote of Sponsor'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['sen_comm_header'] = [
+    'info' => t('Senators and Committees Header'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['active_senator_count'] = [
+    'info' => t('Active Senator Count'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  $blocks['bill_status'] = [
+    'info' => t('Bill Status'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function nys_blocks_block_view($delta = '') {
+  $block = [];
+  switch ($delta) {
+    case 'sitewide_header_bar_block':
+      $block['content'] = _nys_blocks_sitewide_header_bar_block_content();
+      break;
+    case 'micro_header_bar_block':
+      $block['content'] = _nys_blocks_micro_header_bar_block_content();
+      break;
+    case 'sitewide_actionbar_block':
+      $block['content'] = _nys_blocks_sitewide_actionbar_block_content();
+      break;
+    case 'micro_actionbar_block':
+      $block['content'] = _nys_blocks_sitewide_actionbar_block_content();
+      break;
+    case 'microsite_nav_block':
+      $block['content'] = _nys_blocks_micro_nav_block_content();
+      break;
+    case 'how_senate_works_block':
+      $block['content'] = _nys_blocks_how_senate_works_block_content();
+      break;
+    case 'how_create_budget_block':
+      $block['content'] = _nys_blocks_how_create_budget_block_content();
+      break;
+    case 'news_issues_hdr_block':
+      $block['content'] = _nys_blocks_news_issues_hdr_block_content();
+      break;
+    case 'wasteland_head':
+      $block['content'] = _nys_blocks_wasteland_head_block_content();
+      break;
+    case 'gov_ops_letters_head':
+      $block['content'] = _nys_blocks_gov_ops_letters_head_block_content();
+      break;
+    case 'calendar_downloads':
+      $block['content'] = _nys_blocks_calendar_downloads_block_content();
+      break;
+    case 'home_default_hero':
+      $block['content'] = _nys_blocks_home_default_hero_block_content();
+      break;
+    case 'calendar_nav':
+      $block['content'] = _nys_blocks_calendar_nav_block_content();
+      break;
+    case 'micro_footer':
+      $block['content'] = _nys_blocks_micro_footer_block_content();
+      break;
+    case 'investigations_teaser':
+      $block['content'] = _nys_blocks_investigations_teaser_block_content();
+      break;
+    case 'up_to':
+      $block['content'] = _nys_blocks_up_to_block_content();
+      break;
+    case 'want_to':
+      $block['content'] = _nys_blocks_want_to_block_content();
+      break;
+    case 'calendar_picker':
+      $block['content'] = _nys_blocks_calendar_picker_block_content();
+      break;
+    case 'user_dashboard_hdr':
+      $block['content'] = _nys_blocks_user_dashboard_header_block_content();
+      break;
+    case 'about_hero':
+      $block['content'] = _nys_blocks_about_hero_block_content();
+      break;
+    case 'earthday_form':
+      $block['content'] = _nys_blocks_earthday_form_block_content();
+      break;
+    case 'earthday_results':
+      $block['content'] = _nys_blocks_earthday_results_block_content();
+      break;
+    case 'tday_form':
+      $block['content'] = _nys_blocks_tday_form_block_content();
+      break;
+    case 'tday_results':
+      $block['content'] = _nys_blocks_tday_results_block_content();
+      break;
+    case 'youth_leadership_form':
+      $block['content'] = _nys_blocks_youth_leadership_form_block_content();
+      break;
+    case 'summer_reading':
+      $block['content'] = _nys_blocks_summer_reading_block_content();
+      break;
+    case 'veterans':
+      $block['content'] = _nys_blocks_veterans_block_content();
+      break;
+    case 'women':
+      $block['content'] = _nys_blocks_women_block_content();
+      break;
+    case 'lyme_prevention':
+      $block['content'] = _nys_blocks_lyme_prevention_block_content();
+      break;
+    case 'coronavirus_response':
+      $block['content'] = _nys_blocks_coronavirus_response_block_content();
+      break;
+    case 'pathways_funding':
+      $block['content'] = _nys_blocks_pathways_funding_block_content();
+      break;
+    case 'unclaimed_funds':
+      $block['content'] = _nys_blocks_unclaimed_funds_block_content();
+      break;
+    case 'about_quick_facts':
+      $block['content'] = _nys_blocks_about_quick_facts_block_content();
+      break;
+    case 'about_how_works':
+      $block['content'] = _nys_blocks_about_how_works_block_content();
+      break;
+    case 'about_map':
+      $block['content'] = _nys_blocks_about_map_block_content();
+      break;
+    case 'about_timeline':
+      $block['content'] = _nys_blocks_about_timeline_block_content();
+      break;
+    case 'about_seal':
+      $block['content'] = _nys_blocks_about_seal_block_content();
+      break;
+    case 'about_tour':
+      $block['content'] = _nys_blocks_about_tour_block_content();
+      break;
+    case 'about_access':
+      $block['content'] = _nys_blocks_about_access_block_content();
+      break;
+    case 'stdnt_prog_are_you':
+      $block['content'] = _nys_blocks_stdnt_prog_are_you_block_content();
+      break;
+    case 'stdnt_prog_contact':
+      $block['content'] = _nys_blocks_stdnt_prog_contact_block_content();
+      break;
+    case 'node_related_issues':
+      $block['content'] = _nys_blocks_node_related_issues_block_content();
+      break;
+    case 'sitewide_footer':
+      $block['content'] = _nys_blocks_sitewide_footer_block_content();
+      break;
+    case 'senate_directories':
+      $block['content'] = _nys_blocks_senate_directories_block_content();
+      break;
+    case 'legislation_search':
+      $block['content'] = _nys_blocks_legislation_search_block_content();
+      break;
+    case 'legislation_bills_and_laws_intro':
+      $block['content'] = _nys_blocks_legislation_bills_and_laws_intro_block_content();
+      break;
+    case 'senator_committees':
+      $block['content'] = _nys_blocks_senator_committees_block_content();
+      break;
+    case 'sntor_inactive_banner':
+      $block['content'] = _nys_blocks_sntor_inactive_banner_block_content();
+      break;
+    case 'bill_detail_votes':
+      $block['content'] = _nys_blocks_bill_detail_votes_block_content();
+      break;
+    case 'simple_social_bar':
+      $block['content'] = _nys_blocks_simple_social_bar_block_content();
+      break;
+    case 'home_leg_accordion':
+      $block['content'] = _nys_blocks_home_leg_accordion_block_content();
+      break;
+    case 'leg_leg_accordion':
+      $block['content'] = _nys_blocks_leg_leg_accordion_block_content();
+      break;
+    case 'bill_detail_quote':
+      $block['content'] = _nys_blocks_bill_detail_quote_block_content();
+      break;
+    case 'sen_comm_header':
+      $block['content'] = _nys_blocks_sen_comm_header_block_content();
+      break;
+    case 'active_senator_count':
+      $block['content'] = _nys_blocks_active_sen_count_block_content();
+      break;
+    case 'senators_talking_about_issue':
+      $block['content'] = _nys_blocks_senators_talking_about_issue_block_content();
+      break;
+    case 'issue_quick_facts':
+      $block['content'] = _nys_blocks_issue_quick_facts_content();
+      break;
+    case 'looker_dashboard':
+      $block['content'] = _nys_blocks_looker_dashboard_block_content();
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ * Issue Quick Facts Block
+ */
+function _nys_blocks_issue_quick_facts_content() {
+
+  if (arg(0) == 'taxonomy' && arg(1) == 'term') {
+    $tid = arg(2);
+  }
+  // get Issue Name
+  $query = "SELECT name FROM taxonomy_term_data WHERE tid = :tid";
+  $issue_name = db_query($query, [':tid' => $tid])->fetchField();
+
+  // Get quick fact counts #quick_facts #quickfacts for bills and resolutions
+  $query = " SELECT count(*) from field_data_field_issues fi
+    JOIN node n on n.nid = fi.entity_id
+    WHERE fi.entity_type = 'node' AND n.type IN ('bill', 'resolution')
+    AND n.status = 1 AND fi.field_issues_tid = :tid";
+
+  $bills_facts_count = (int) db_query($query, [':tid' => $tid])->fetchField();
+
+  // Get quick fact counts #quick_facts #quickfacts for news and stories
+  $query = "SELECT count(*)from field_data_field_issues fi
+    JOIN node n on n.nid = fi.entity_id
+    WHERE fi.entity_type = 'node' AND n.type IN ('article','in_the_news','press_release','video')
+    AND n.status = 1 and fi.field_issues_tid = :tid;";
+
+  $news_stories_facts_count = (int) db_query($query, [':tid' => $tid])->fetchField();
+
+  // Get quick fact counts #quick_facts #quickfacts for event types
+  $query = " SELECT count(*)from field_data_field_issues fi
+    JOIN node n on n.nid = fi.entity_id
+    WHERE fi.entity_type = 'node' AND n.type IN ('meeting','public_hearing','events')
+    AND n.status = 1 AND fi.field_issues_tid = :tid";
+
+  $meetings_facts_count = (int) db_query($query, [':tid' => $tid])->fetchField();
+
+  $vars = [
+    'issue_name' => $issue_name,
+    'bills_facts_count' => $bills_facts_count,
+    'news_stories_facts_count' => $news_stories_facts_count,
+    'meetings_facts_count' => $meetings_facts_count,
+  ];
+
+  return theme('nys_blocks_issue_quick_facts', $vars);
+
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_sitewide_header_bar_block_content() {
+  global $user;
+
+  ctools_include('ajax');
+  ctools_include('modal');
+
+  $senator_id = user_get_senator_nid($user);
+  $senator = !empty($senator_id) ? node_load($senator_id) : NULL;
+  $current_user = user_load($user->uid);
+  $user_avatar = isset($current_user->picture) && isset($current_user->picture->uri) ? _nyss_img($current_user->picture->uri, '60x60') : NULL;
+
+  $vars = [
+    'dashboard_link' => url('user/' . $user->uid . '/dashboard'),
+    'user_avatar' => $user_avatar,
+    'senator_nid' => $senator_id,
+    'senator_microsite_link' => url('node/' . $senator_id),
+    'senator_name' => !empty($senator_id) ? $senator->title : '',
+    'senator_image' => !empty($senator_id) ? _nyss_img($senator->field_image_headshot[LANGUAGE_NONE][0]['uri'], '60x60') : '',
+    'unread_messages' => nys_inbox_unread_count($user),
+  ];
+
+  return theme('nys_blocks_sitewide_header_bar', $vars);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_micro_header_bar_block_content() {
+  global $user;
+
+  ctools_include('ajax');
+  ctools_include('modal');
+
+  // theme content
+  $senator_id = user_get_senator_nid($user);
+  $senator = !empty($senator_id) ? node_load($senator_id) : NULL;
+  $current_user = user_load($user->uid);
+  $user_avatar = isset($current_user->picture->uri) ? _nyss_img($current_user->picture->uri, '60x60') : NULL;
+
+  $vars = [
+    'dashboard_link' => url('user/' . $user->uid . '/dashboard'),
+    'user_avatar' => $user_avatar,
+    'senator_nid' => $senator_id,
+    'senator_microsite_link' => url('node/' . $senator_id),
+    'senator_name' => !empty($senator_id) ? $senator->title : '',
+    'senator_image' => !empty($senator_id) ? _nyss_img($senator->field_image_headshot[LANGUAGE_NONE][0]['uri'], '60x60') : '',
+  ];
+
+  return theme('nys_blocks_micro_header_bar', $vars);
+}
+
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_micro_nav_block_content() {
+  if ($node = menu_get_object()) {
+    // Don't display menu on a senator landing page if the senator is inactive.
+    if ($node->type == 'senator' && !$node->field_active[LANGUAGE_NONE][0]['value']) {
+      return;
+    }
+    $wrapper = entity_metadata_wrapper('node', $node->nid);
+    // If the node has a senator reference field ...
+    if (isset($wrapper->field_senator)) {
+      $senator_ref = $wrapper->field_senator->value();
+      // and the senator is inactive, do not show the microsite menu.
+      if (!$senator_ref->field_active[LANGUAGE_NONE][0]['value']) {
+        return;
+      }
+    }
+  }
+
+  global $user;
+  // Set defaults for images to be rendered by _nyss_img.
+  $headshot = variable_get('user_picture_default', '');
+  // Theme content.
+  $senator_id = user_get_senator_nid($user);
+  $senator = !empty($senator_id) ? node_load($senator_id) : NULL;
+  // Check if can access headshot directly, then look for senator reference if not.
+  if (isset($senator->field_image_headshot) && !empty($senator->field_image_headshot[LANGUAGE_NONE][0]['uri'])) {
+    $headshot = $senator->field_image_headshot[LANGUAGE_NONE][0]['uri'];
+  }
+  elseif (isset($senator->field_senator)) {
+    $sen_emw = entity_metadata_wrapper('node', $senator->nid);
+    $ref_senator = $sen_emw->field_senator->value();
+    if (!empty($ref_senator->field_image_headshot)) {
+      $headshot = $ref_senator->field_image_headshot[LANGUAGE_NONE][0]['uri'];
+    }
+  }
+  // If the $senator is empty, then just send empty vars to the rendering
+  // template.
+  // Scenarios where the $senator is empty are:
+  // 1. Anonymous user.
+  // 2. Authenticated user registered out of state.
+  if (empty($senator)) {
+    $dashboard_link = user_is_anonymous() ? '' : url('user/' . $user->uid . '/dashboard');
+    $vars = [
+      'dashboard_link' => $dashboard_link,
+      'senator_nid' => '',
+      'senator_microsite_link' => '',
+      'senator_image' => '',
+    ];
+  }
+  else {
+    $vars = [
+      'dashboard_link' => url('user/' . $user->uid . '/dashboard'),
+      'senator_nid' => $senator->nid,
+      'senator_microsite_link' => url('node/' . $senator->nid),
+      'senator_image' => _nyss_img($headshot, '60x60'),
+    ];
+  }
+  // Search cares about filtering based on content related to the Senator's
+  // whose microsite is being viewed.
+  $microsite_node = menu_get_object();
+  $vars['microsite_senator_nid'] = $microsite_node->nid ?? '';
+  $vars['senator_name'] = $microsite_node->title ?? '';
+
+  return theme('nys_microsite_nav', $vars);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_sitewide_actionbar_block_content() {
+  global $user;
+  $type = '';
+  $content = '';
+  $user = user_load($user->uid);
+
+  nys_registration_add_ctools_login();
+
+  $story_types = [
+    'in_the_news',
+    'press_release',
+    'article',
+    'initiative',
+    'event',
+    'petition',
+    'questionnaire',
+    'video',
+  ];
+
+  $bill_types = ['bill', 'resolution'];
+  $committee_content_types = ['meeting', 'public_hearing'];
+
+  // Set correct action bar for story styles.
+  if (arg(0) == 'node' && is_numeric(arg(1))) {
+    $emw = entity_metadata_wrapper('node', arg(1));
+    $node = $emw->value();
+    if (in_array($node->type, $story_types, TRUE)) {
+      $committee_id = !empty($node->field_committee) ? $node->field_committee[LANGUAGE_NONE][0]['tid'] : NULL;
+      if ($emw->__isset('field_senator') && !empty($emw->field_senator->value())) {
+        $content = $emw->field_senator->value();
+      }
+      // If there is a committee assigned.
+      if (!empty($committee_id)) {
+        $content = nys_blocks_get_term_actionbar_content($committee_id);
+        $type = 'committees';
+      } // Else return default senator actionbar.
+      else {
+        if ($user && $user->uid !== 0) {
+          $senator_id = user_get_senator_nid($user->uid);
+          $content = nys_blocks_get_user_senator_actionbar_content($senator_id);
+        }
+      }
+      // Set follow bills actionbar.
+      if (in_array($node->type, $bill_types, TRUE) && is_object($content)) {
+        $type = $node->type;
+        $content->name = $node->title;
+        $content->bill_id = $node->nid;
+      }
+      elseif (in_array($node->type, $committee_content_types, TRUE)) {
+        $tid = $node->field_committee[LANGUAGE_NONE][0]['tid'];
+        if (!empty($tid)) {
+          $content = nys_blocks_get_term_actionbar_content($tid);
+          $type = 'committees';
+        }
+      }
+    }
+  } // Set actionbar for taxonomy pages (committee, issue, district).
+  else {
+    // Check if this is a sub-path of a url.
+    if (arg(0) === 'taxonomy' && arg(1) === 'term' && !empty(arg(2))) {
+      // Get term id from url.
+      $tid = arg(2);
+      if (!empty($tid)) {
+        $content = nys_blocks_get_term_actionbar_content($tid);
+        $type = $content->vocabulary_machine_name;
+      }
+    }
+    else {
+      $type = 'landing';
+      if (isset($user) && !empty($user->uid)) {
+        $senator_id = user_get_senator_nid($user->uid);
+        $content = nys_blocks_get_user_senator_actionbar_content($senator_id);
+      }
+    }
+  }
+
+  if (drupal_is_front_page()) {
+    $front_status = t(variable_get('nys_senate_status'));
+  }
+  else {
+    $front_status = NULL;
+  }
+
+  // Theme content.
+  return theme('nys_sitewide_actionbar', [
+    'status' => $front_status,
+    'content' => $content,
+    'type' => $type,
+    'district' => NULL,
+  ]);
+
+}
+
+
+/**
+ *  Helper function to return the user's senator for actionbar.
+ */
+function nys_blocks_get_user_senator_actionbar_content($senator_id) {
+  if ($senator_id) {
+    $content = node_load($senator_id);
+    // Generate Action URL for Actionbar
+    $content->action_url = drupal_get_path_alias('node/' . $content->nid);
+  }
+  else {
+    $content = NULL;
+  }
+  return $content;
+}
+
+/**
+ *  Helper function to return the taxonomy term content for actionbar.
+ */
+function nys_blocks_get_term_actionbar_content($tid) {
+  $content = taxonomy_term_load($tid);
+
+  if ($content->vocabulary_machine_name === 'districts') {
+    $senator = node_load($content->field_senator[LANGUAGE_NONE][0]['target_id']);
+    $content->senator_name = '';
+    $content->title = '';
+    $content->senator_is_active = '0';
+
+    if ($senator !== FALSE) {
+      $content->senator_name = drupal_get_path_alias('node/' . $senator->nid);
+      $content->title = $senator->title;
+      $content->senator_is_active = $senator->field_active[LANGUAGE_NONE][0]['value'];
+
+      if ($senator->field_image_headshot[LANGUAGE_NONE][0]['uri']) {
+        $content->senator_headshot = _nyss_img($senator->field_image_headshot[LANGUAGE_NONE][0]['uri'], '160x160', '');
+      }
+    }
+  }
+  return $content;
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_micro_actionbar_block_content() {
+  // theme content
+  return theme('nys_micro_actionbar', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_looker_dashboard_block_content() {
+  // theme content
+  return theme('nys_blocks_looker_dashboard', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_how_senate_works_block_content() {
+
+  global $user;
+
+  $senator_name = '';
+  $senator_img = '';
+  if ($user && $user->uid !== '0') {
+    $senator_nid = user_get_senator_nid($user);
+    $senator = entity_metadata_wrapper('node', $senator_nid);
+    if (!is_null($senator_nid) && !empty($senator)) {
+      $senator_url = drupal_get_path_alias('node/' . $senator_nid);
+      $headhshot = $senator->field_image_headshot->value();
+      $senator_img = _nyss_img($headhshot['uri'], '60x60', '');
+      $senator_name = $senator->field_first_name->value() . ' ' . $senator->field_last_name->value();
+    }
+  }
+  // theme content
+  return theme('nys_blocks_how_senate_works', [
+    'senator_name' => $senator_name,
+    'senator_img' => $senator_img,
+  ]);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_how_create_budget_block_content() {
+  // theme content
+  return theme('nys_blocks_how_create_budget', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_news_issues_hdr_block_content() {
+  // theme content
+  return theme('nys_blocks_news_issue_hdr', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_wasteland_head_block_content() {
+  // theme content
+  return theme('nys_blocks_wasteland_head', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_gov_ops_letters_head_block_content() {
+  // theme content
+  return theme('nys_blocks_gov_ops_letters_head', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_calendar_downloads_block_content() {
+  // theme content
+  $vars = [];
+  $session_calendar_pdf_fid = variable_get('session_calendar_pdf', '');
+  if (!empty($session_calendar_pdf_fid)) {
+    if ($file = file_load($session_calendar_pdf_fid)) {
+      $vars['session_calendar_pdf_href'] = file_create_url($file->uri);
+    }
+  }
+  $public_hearing_schedule_fid = variable_get('public_hearing_schedule', '');
+  if (!empty($public_hearing_schedule_fid)) {
+    if ($file = file_load($public_hearing_schedule_fid)) {
+      $vars['public_hearing_schedule_href'] = file_create_url($file->uri);
+    }
+  }
+  if (!empty($vars['public_hearing_schedule_href']) || !empty($vars['session_calendar_pdf_href'])) {
+    return theme('nys_blocks_calendar_downloads', $vars);
+  }
+  return '';
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_home_default_hero_block_content() {
+  // theme content
+  return theme('nys_blocks_home_default_hero', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_calendar_nav_block_content() {
+  // theme content
+  return theme('nys_blocks_calendar_nav', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_micro_footer_block_content() {
+  // theme content
+  return theme('nys_blocks_micro_footer', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_investigations_teaser_block_content() {
+
+  $whistleblower_view_result = count(views_get_view_result('whistleblower_webform_results', 'master'));
+  $letters_view_result = count(views_get_view_result('newsroom', 'block_2'));
+  $wasteland_view_result = count(views_get_view_result('newsroom', 'block_1'));
+
+  return theme('nys_blocks_investigations_teaser', [
+    'wasteland_article_count' => $wasteland_view_result,
+    'letters_article_count' => $letters_view_result,
+    'whistleblower_submission_count' => $whistleblower_view_result,
+
+  ]);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_up_to_block_content() {
+  // theme content
+  return theme('nys_blocks_up_to', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_want_to_block_content() {
+  global $user;
+  $senator_url = '';
+  $senator_img = '';
+
+  nys_registration_add_ctools_login();
+
+  if ($user && $user->uid !== '0') {
+    $senator_nid = user_get_senator_nid($user);
+    $senator = entity_metadata_wrapper('node', $senator_nid);
+    if (!is_null($senator_nid) && !empty($senator)) {
+      $senator_url = drupal_get_path_alias('node/' . $senator_nid);
+      $headhshot = $senator->field_image_headshot->value();
+      $senator_img = _nyss_img($headhshot['uri'], '60x60', '');
+    }
+  }
+
+  // theme content
+  return theme('nys_blocks_want_to', [
+    'senator_url' => $senator_url,
+    'senator_img' => $senator_img,
+  ]);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_calendar_picker_block_content() {
+  // theme content
+  return theme('nys_blocks_calendar_picker', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_user_dashboard_header_block_content() {
+  // theme content
+  global $user;
+  $dashboard_accessed_user = is_numeric(arg(1)) ? user_load(arg(1)) : user_load_by_name(arg(1));
+
+  if ($user->uid != $dashboard_accessed_user->uid && isset($dashboard_accessed_user->field_first_name[LANGUAGE_NONE][0]['safe_value']) && isset($dashboard_accessed_user->field_last_name[LANGUAGE_NONE][0]['safe_value'])) {
+    $dashboard_display_name = $dashboard_accessed_user->field_first_name[LANGUAGE_NONE][0]['safe_value'] . ' ' . $dashboard_accessed_user->field_last_name[LANGUAGE_NONE][0]['safe_value'] . '&rsquo;s';
+  }
+  else {
+    $dashboard_display_name = "My";
+  }
+  return theme('nys_blocks_user_dashboard_header', ['dashboard_display_name' => $dashboard_display_name]);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_about_hero_block_content() {
+  // theme content
+  return theme('nys_blocks_about_hero', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_about_quick_facts_block_content() {
+  // theme content
+  return theme('nys_blocks_about_quick_facts', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_about_how_works_block_content() {
+  // theme content
+  return theme('nys_blocks_about_how_works', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_about_map_block_content() {
+  // theme content
+  return theme('nys_blocks_about_map', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_about_timeline_block_content() {
+  // Theme content.
+  if (isset($content)) {
+    return theme('nys_blocks_about_timeline', [
+      'test_var' => 'some text',
+      'content' => $content,
+    ]);
+  }
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_about_seal_block_content() {
+  // theme content
+  return theme('nys_blocks_about_seal', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_about_tour_block_content() {
+  // theme content
+  return theme('nys_blocks_about_tour', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_about_access_block_content() {
+  // theme content
+  return theme('nys_blocks_about_access', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_stdnt_prog_are_you_block_content() {
+  // theme content
+  return theme('nys_blocks_stdnt_prog_are_you', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_stdnt_prog_contact_block_content() {
+  // theme content
+  return theme('nys_blocks_stdnt_contact', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_node_related_issues_block_content() {
+  $related_issues = [];
+
+  if ($node = menu_get_object()) {
+    $related_issues = entity_metadata_wrapper('node', $node->nid)->field_issues->value();
+    foreach ($related_issues as $issue) {
+      $issue->path = drupal_get_path_alias('taxonomy/term/' . $issue->tid);
+    }
+  }
+
+  return theme('nys_blocks_node_related_issues', ['related_issues' => $related_issues]);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_sitewide_footer_block_content() {
+  // theme content
+  $vars = [];
+  $vars['message_senator_link'] = nys_blocks_get_message_senator_link();
+  return theme('nys_blocks_sitewide_footer', $vars);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_senate_directories_block_content() {
+  // theme content
+  $vars = [];
+  $member_listing_pdf_fid = variable_get('member_listing_pdf', '');
+  if (!empty($member_listing_pdf_fid)) {
+    if ($file = file_load($member_listing_pdf_fid)) {
+      $vars['member_listing_pdf_href'] = file_create_url($file->uri);
+    }
+  }
+  if (!empty($vars['member_listing_pdf_href'])) {
+    return theme('nys_blocks_senate_directories', $vars);
+  }
+  return '';
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_legislation_search_block_content() {
+  // theme content
+  return theme('nys_blocks_legislation_search', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_legislation_bills_and_laws_intro_block_content() {
+  // theme content
+  return theme('nys_blocks_legislation_bills_and_laws_intro', []);
+}
+
+function _nys_blocks_senators_talking_about_issue_block_content() {
+  if (arg(0) == 'taxonomy' && arg(1) == 'term') {
+    $tid = arg(2);
+  }
+
+  $senators = [];
+
+  if (!isset($my_data)) {
+    if ($cache = cache_get('senators_talking_about_' . $tid)) {
+      $senators = $cache->data;
+    }
+    else {
+      $query = "select COUNT(*) as count, fs.field_senator_target_id AS nid FROM field_data_field_issues fi
+        JOIN field_data_field_senator fs ON fs.entity_id = fi.entity_id
+        AND fs.bundle = fi.bundle
+        JOIN field_data_field_active fa ON fa.entity_id = fs.field_senator_target_id
+        AND fa.bundle = 'senator'
+        WHERE fi.bundle IN ('article', 'in_the_news', 'press_release', 'video') AND fi.field_issues_tid = :tid
+        AND fa.field_active_value = 1
+        GROUP by fs.field_senator_target_id ORDER BY count DESC";
+
+
+      $result = db_query($query, [':tid' => $tid]);
+
+      foreach ($result as $r) {
+        $node = node_load($r->nid);
+
+        if (!empty($node) && $node->field_active[LANGUAGE_NONE][0]['value'] == '1') {
+          $node_view = node_view($node, 'senators_involved');
+          $rendered_node = drupal_render($node_view);
+          $senators[] = [
+            'nid' => $r->nid,
+            'markup' => $rendered_node,
+
+          ];
+        }
+      }
+
+      cache_set('senators_talking_about_' . $tid, $senators, 'cache');
+    }
+  }
+
+  if (count($senators)) {
+    return theme('senators_talking_about_issue', ['senators' => $senators]);
+  }
+  else {
+    return '';
+  }
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+
+function _nys_blocks_senator_committees_block_content() {
+
+  // Get committees of the senator
+  if (arg(0) == 'node') {
+    $senator_nid = arg(1);
+  }
+  $committees_query = "SELECT
+    t.name, fcmr.field_committee_member_role_value AS role, t.tid as entity_id, fomr.field_other_member_role_value as other_role
+    FROM taxonomy_term_data t
+    LEFT JOIN field_data_field_members fm ON fm.entity_id = t.tid
+    LEFT JOIN field_data_field_senator fs ON fs.entity_id = fm.field_members_value and fs.entity_type = 'field_collection_item' AND fs.bundle = 'field_members'
+    LEFT JOIN field_data_field_committee_member_role fcmr ON fcmr.entity_id = fm.field_members_value and fcmr.entity_type = 'field_collection_item' AND fs.bundle = 'field_members'
+    LEFT JOIN field_data_field_other_member_role fomr ON fomr.entity_id = fm.field_members_value and fomr.entity_type = 'field_collection_item' AND fs.bundle = 'field_members'
+    WHERE fs.field_senator_target_id = :nid
+    ORDER BY fcmr.field_committee_member_role_value DESC";
+  $committees = db_query($committees_query, [':nid' => $senator_nid])->fetchAll();
+
+  function _committee_sort($a, $b) {
+    $order = [2, 1, 3, 0];
+    $ret = array_search($a->role, $order) - array_search($b->role, $order);
+    if (!$ret) {
+      $ret = strcmp($a->name, $b->name);
+    }
+    return $ret;
+  }
+
+  usort($committees, '_committee_sort');
+  $vars = [
+    'nid' => $senator_nid,
+    'committees' => $committees,
+  ];
+  // theme content
+  return theme('nys_blocks_senator_committees', $vars);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_simple_social_bar_block_content() {
+  if (arg(0) == 'node' && is_numeric(arg(1)) && !arg(2)) {
+    $node = node_load(arg(1));
+    $full_node_url = $GLOBALS['base_url'] . url('node/' . $node->nid);
+
+    $social_share_vars = [
+      'social_share_title' => 'share this page',
+      'node_url' => $full_node_url,
+      'title' => $node->title,
+      'CTA' => 'Check this out page: ',
+    ];
+
+    return theme('social_buttons', $social_share_vars);
+  }
+  else {
+    return '';
+  }
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_sntor_inactive_banner_block_content() {
+  // theme content
+  return theme('nys_blocks_sntor_inactive_banner', []);
+}
+
+function _nys_blocks_bill_detail_votes_block_content() {
+  // Initialize block output.
+  $output = '';
+
+  // Initialize the bill_node.
+  $bill_node = FALSE;
+
+  // In the current request, arg() should be, e.g., '/node/5396461'.
+  $ent_type = arg(0);
+  $bill_nid = arg(1);
+
+  // Load the current bill.
+  if (($ent_type == 'node') && (is_numeric($bill_nid))) {
+    $bill_node = node_load($bill_nid);
+  }
+
+  // We only need to act on requests for bill nodes.  Make sure we
+  // are supposed to be here.
+  if ($bill_node === FALSE || $bill_node->type != 'bill') {
+    return FALSE;
+  }
+
+  // Get some easy references.
+  $current_base_print = '';
+  if (isset($bill_node->field_ol_base_print_no[LANGUAGE_NONE][0]['value'])) {
+    $current_base_print = $bill_node->field_ol_base_print_no[LANGUAGE_NONE][0]['value'];
+  }
+  $current_session_year = '';
+  if (isset($bill_node->field_ol_session[LANGUAGE_NONE][0]['value'])) {
+    $current_session_year = $bill_node->field_ol_session[LANGUAGE_NONE][0]['value'];
+  }
+  $current_sub_print = '';
+  if (isset($bill_node->field_ol_substituted_by[LANGUAGE_NONE][0]['value'])) {
+    $current_sub_print = $bill_node->field_ol_substituted_by[LANGUAGE_NONE][0]['value'];
+  }
+
+  // If there's not a good base print number and session year, just leave.
+  if (!$current_base_print || !$current_session_year) {
+    return FALSE;
+  }
+
+  // Array to hold all the node IDs to be loaded from {bill_vote_index}.
+  $search_for = [];
+
+  // Get the node IDs of all revisions of the current bill.
+  $current_revisions = nys_bills_get_bill_versions('bill', $current_base_print, $current_session_year);
+  foreach ($current_revisions as $key => $val) {
+    $search_for[] = $val['nid'];
+  }
+
+  // If there is a substitution for this bill, we need to discover the
+  // node IDs for all revisions of the new bill.  Starting with the original
+  // bill's session year and substituted print number, follow the joins.
+  // We must verify against base print number and session year for a good match.
+  if ($current_sub_print) {
+    $query = "SELECT sess2.entity_id AS nid FROM " .
+      "field_data_field_ol_print_no pn " .
+      "INNER JOIN field_data_field_ol_session sess " .
+      "ON pn.entity_id=sess.entity_id " .
+      "INNER JOIN field_data_field_ol_base_print_no bpn " .
+      "ON pn.entity_id=bpn.entity_id " .
+      "INNER JOIN field_data_field_ol_base_print_no bpn2 " .
+      "ON bpn.field_ol_base_print_no_value = bpn2.field_ol_base_print_no_value " .
+      "INNER JOIN field_data_field_ol_session sess2 " .
+      "ON bpn2.entity_id = sess2.entity_id  " .
+      "AND sess2.field_ol_session_value = sess.field_ol_session_value " .
+      "WHERE pn.field_ol_print_no_value = :subd_print_no " .
+      "AND sess.field_ol_session_value = :session_year";
+    $params = [
+      ':subd_print_no' => $current_sub_print,
+      ':session_year' => $current_session_year,
+    ];
+    $subd_revisions = db_query($query, $params);
+
+    // Add the discovered node IDs to the search array.
+    foreach ($subd_revisions as $key => $val) {
+      $search_for[] = $val->nid;
+    }
+  }
+
+  // Now load the bill vote information for the node IDs.
+  $all_votes = db_select('bill_vote_index', 'bvi')
+    ->fields('bvi')
+    ->orderBy('field_publication_date_value', 'DESC')
+    ->orderBy('type', 'DESC')
+    ->condition('bill_nid', $search_for, 'IN')
+    ->condition('type', ['committee', 'floor'], 'IN')
+    ->execute()
+    ->fetchAll();
+
+
+  $vote_ids = [];
+  $votes = [];
+  $vote_print_numbers = [];
+  $vote_nids = [];
+  foreach ($all_votes as $vote_key => $vote) {
+    array_push($vote_ids, $vote->field_ol_votes_value);
+    array_push($vote_print_numbers, $vote->print_no);
+    array_push($vote_nids, $vote->bill_nid);
+    $votes[$vote->field_ol_votes_value] = [
+      'base_print_no' => $vote->base_print_no,
+      'print_no' => $vote->print_no,
+      'bill_nid' => $vote->bill_nid,
+      'committee_tid' => $vote->field_ol_committee_target_id,
+      'type' => $vote->type,
+    ];
+  }
+  $vote_instance = 1;
+  $votes_entities = entity_load('field_collection_item', $vote_ids);
+  foreach ($votes_entities as $votes_entity) {
+    $vote_ref = $votes[$votes_entity->item_id];
+
+    $content = [];
+
+    // Load the committee name separately, entity_load doesn't grab them for votes for other nodes.
+    $committee_name = '';
+    if (isset($vote_ref['committee_tid'])) {
+      $comm = taxonomy_term_load($vote_ref['committee_tid']);
+      if (isset($comm->name)) {
+        $committee_name = $comm->name;
+        $content['committee_name'] = $comm->name;
+      }
+    }
+
+    // Since the print number is not tied to the actual field collection item, we need to do a little
+    // magic to get the print number from our original query.
+    $content['vote_print_number'] = $vote_print_numbers[$vote_instance - 1];
+    $content['vote_bill_nid'] = $vote_nids[$vote_instance - 1];
+
+    $content['vote_date'] = (isset($votes_entity->field_publication_date[LANGUAGE_NONE][0]['value'])) ? date('M j, Y', strtotime($votes_entity->field_publication_date[LANGUAGE_NONE][0]['value'])) : FALSE;
+    $content['aye_count'] = (isset($votes_entity->field_ol_aye_count[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_aye_count[LANGUAGE_NONE][0]['value'] : 0;
+    $content['aye_wr_count'] = (isset($votes_entity->field_ol_aye_wr_count[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_aye_wr_count[LANGUAGE_NONE][0]['value'] : 0;
+    $content['nay_count'] = (isset($votes_entity->field_ol_nay_count[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_nay_count[LANGUAGE_NONE][0]['value'] : 0;
+    $content['excused_count'] = (isset($votes_entity->field_ol_excused_count[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_excused_count[LANGUAGE_NONE][0]['value'] : 0;
+    $content['abstained_count'] = (isset($votes_entity->field_ol_abstained_count[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_abstained_count[LANGUAGE_NONE][0]['value'] : 0;
+    $content['absent_count'] = (isset($votes_entity->field_ol_absent_count[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_absent_count[LANGUAGE_NONE][0]['value'] : 0;
+    $content['vote_type'] = (isset($votes_entity->field_ol_vote_type[LANGUAGE_NONE][0]['value'])) ? $votes_entity->field_ol_vote_type[LANGUAGE_NONE][0]['value'] : '';
+    $content['committee_type'] = (!empty($votes_entity->field_ol_committee[LANGUAGE_NONE][0]['entity']->name)) ? t($votes_entity->field_ol_committee[LANGUAGE_NONE][0]['entity']->name) : '';
+    $content['#vote_instance'] = $vote_instance;
+    $content['#member_content_flag'] = FALSE;
+
+    $member_keys = [
+      'field_ol_aye_members' => 'aye_members',
+      'field_ol_nay_members' => 'nay_members',
+      'field_ol_aye_wr_members' => 'aye_wr_members',
+      'field_ol_absent_members' => 'absent_members',
+      'field_ol_excused_members' => 'excused_members',
+      'field_ol_abstained_members' => 'abstained_members',
+    ];
+
+    foreach ($member_keys as $index => $key) {
+      $members = $votes_entity->$index;
+      if (!empty($members) && count($members[LANGUAGE_NONE]) > 0) {
+        $content['#member_content_flag'] = TRUE;
+        foreach ($members[LANGUAGE_NONE] as $member) {
+          $senator_content = node_load($member['target_id']);
+          $content['all_members'][$key][] = l(field_get_items('node', $senator_content, 'field_last_name')[0]['value'], drupal_get_path_alias('node/' . $member['target_id']));
+        }
+      }
+    }
+
+    $vars = ['content' => $content];
+    $output .= theme('nys_blocks_bill_detail_votes', $vars);
+    $vote_instance++;
+  }
+  drupal_add_js(path_to_theme() . '/js/vendor/highcharts.js');
+  return $output;
+}
+
+function nys_blocks_get_message_senator_link($no_forward_slash = FALSE) {
+  global $user;
+  if (user_is_anonymous()) {
+    $message_location = '/user/login';
+  }
+
+  if (user_is_logged_in()) {
+    $senator_nid = user_get_senator_nid($user);
+    $message_location = url('node/' . $senator_nid . '/message');
+  }
+
+  if ($no_forward_slash) {
+    $message_location = substr($message_location, 1);
+  }
+
+  return $message_location;
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_home_leg_accordion_block_content() {
+  // theme content
+  return theme('nys_blocks_home_leg_accordion', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_leg_leg_accordion_block_content() {
+  // theme content
+  return theme('nys_blocks_leg_leg_accordion', []);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_earthday_form_block_content() {
+  // theme content
+  return theme('nys_blocks_earthday_form', []);
+}
+
+function _nys_blocks_earthday_results_block_content() {
+  // theme content
+  return theme('nys_blocks_earthday_results', []);
+}
+
+function _nys_blocks_tday_form_block_content() {
+  // theme content
+  return theme('nys_blocks_tday_form', []);
+}
+
+function _nys_blocks_tday_results_block_content() {
+  // theme content
+  return theme('nys_blocks_tday_results', []);
+}
+
+function _nys_blocks_youth_leadership_form_block_content() {
+  // theme content
+  return theme('nys_blocks_youth_leadership_form', []);
+}
+
+function _nys_blocks_summer_reading_block_content() {
+  // theme content
+  return theme('nys_blocks_summer_reading', []);
+}
+
+function _nys_blocks_veterans_block_content() {
+  // theme content
+  return theme('nys_blocks_veterans', []);
+}
+
+function _nys_blocks_women_block_content() {
+  // theme content
+  return theme('nys_blocks_women', []);
+}
+
+function _nys_blocks_lyme_prevention_block_content() {
+  // theme content
+  return theme('nys_blocks_lyme_prevention', []);
+}
+
+function _nys_blocks_coronavirus_response_block_content() {
+  // theme content
+  return theme('nys_blocks_coronavirus_response', []);
+}
+
+function _nys_blocks_pathways_funding_block_content() {
+  // theme content
+  return theme('nys_blocks_pathways_funding', []);
+}
+
+function _nys_blocks_unclaimed_funds_block_content() {
+  // theme content
+  return theme('nys_blocks_unclaimed_funds', []);
+}
+
+/**
+ * Implements hook_ctools_block_info().
+ *
+ * @see ctools_block_content_type_content_types().
+ */
+function nys_blocks_ctools_block_info($module, $delta, &$info) {
+  if ($info['title'] == 'Earth Day Entry Form Banner') {
+    $info['icon'] = 'icon_core_block_menu.png';
+    $info['category'] = t('Promotional Banners');
+  }
+  if ($info['title'] == 'Earth Day Results Banner') {
+    $info['icon'] = 'icon_core_block_menu.png';
+    $info['category'] = t('Promotional Banners');
+  }
+  if ($info['title'] == 'Thanksgiving Entry Form Banner') {
+    $info['icon'] = 'icon_core_block_menu.png';
+    $info['category'] = t('Promotional Banners');
+  }
+  if ($info['title'] == 'Thanksgiving Results Banner') {
+    $info['icon'] = 'icon_core_block_menu.png';
+    $info['category'] = t('Promotional Banners');
+  }
+  if ($info['title'] == 'Youth Leadership Form Banner') {
+    $info['icon'] = 'icon_core_block_menu.png';
+    $info['category'] = t('Promotional Banners');
+  }
+  if ($info['title'] == 'Summer Reading Program') {
+    $info['icon'] = 'icon_core_block_menu.png';
+    $info['category'] = t('Promotional Banners');
+  }
+  if ($info['title'] == 'Honoring Veterans Program') {
+    $info['icon'] = 'icon_core_block_menu.png';
+    $info['category'] = t('Promotional Banners');
+  }
+  if ($info['title'] == 'Distinguished Women Program') {
+    $info['icon'] = 'icon_core_block_menu.png';
+    $info['category'] = t('Promotional Banners');
+  }
+  if ($info['title'] == 'Lyme Disease Prevention Program') {
+    $info['icon'] = 'icon_core_block_menu.png';
+    $info['category'] = t('Promotional Banners');
+  }
+  if ($info['title'] == 'Coronavirus Response and Prevention') {
+    $info['icon'] = 'icon_core_block_menu.png';
+    $info['category'] = t('Promotional Banners');
+  }
+  if ($info['title'] == 'Pathways to Funding') {
+    $info['icon'] = 'icon_core_block_menu.png';
+    $info['category'] = t('Promotional Banners');
+  }
+  if ($info['title'] == 'Unclaimed Funds Search') {
+    $info['icon'] = 'icon_core_block_menu.png';
+    $info['category'] = t('Promotional Banners');
+  }
+  if ($info['title'] == 'NYS News and Issues Header') {
+    $info['icon'] = 'icon_core_block_menu.png';
+    $info['category'] = t('Senator Blocks');
+  }
+}
+
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_sen_comm_header_block_content() {
+  //Count senators
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'senator')
+    ->propertyCondition('status', NODE_PUBLISHED)
+    ->fieldCondition('field_active', 'value', '1', '=');
+  $result = $query->execute();
+  $senators_count = count($result['node']);
+
+  //Count committees
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'taxonomy_term')
+    ->entityCondition('bundle', 'committees');
+  $result = $query->execute();
+  $committees_count = count($result['taxonomy_term']);
+
+  // theme content
+  return theme('nys_blocks_sen_comm_header', [
+    'senators_count' => $senators_count,
+    'committees_count' => $committees_count,
+  ]);
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_blocks_bill_detail_quote_block_content($sponsor_id = NULL) {
+  if (arg(0) == 'node' && is_numeric(arg(1))) {
+    $node = menu_get_object();
+    $quote_query = db_select('field_data_field_featured_quote', 'fq');
+    $quote_query->leftJoin('field_collection_item', 'fc', 'fq.entity_id = fc.item_id');
+    $quote_query->leftJoin('field_data_field_featured_legislation', 'fl', 'fc.item_id = fl.field_featured_legislation_value');
+    $quote_query->leftJoin('field_data_field_featured_bill', 'fb', 'fb.entity_id = fl.field_featured_legislation_value');
+    $quote_query->leftJoin('node', 'n', 'n.nid = fl.entity_id');
+    $quote_query->addField('fq', 'field_featured_quote_value', 'quote');
+    $quote_query->condition('fq.entity_type', 'field_collection_item', '=');
+    $quote_query->condition('fq.bundle', 'field_featured_legislation', '=');
+    $quote_query->condition('fb.bundle', 'field_featured_legislation');
+    $quote_query->condition('n.nid', $node->field_ol_sponsor[LANGUAGE_NONE][0]['target_id'], '=');
+    $quote_query->condition('fb.field_featured_bill_target_id', $node->nid, '=');
+    $quote_query->condition('fl.bundle', 'senator', '=');
+    $quote = $quote_query->execute()->fetchField();
+    return $quote;
+  }
+
+}
+
+function _nys_blocks_active_sen_count_block_content() {
+
+  $query = db_select('node', 'node');
+  $query->join('field_data_field_active', 'field_data_field_active', "node.nid = field_data_field_active.entity_id AND (field_data_field_active.entity_type = 'node' AND field_data_field_active.deleted = '0')");
+  $query->addField('node', 'nid');
+  $query->condition('node.status', '1', '=');
+  $query->condition('node.type', ['senator'], 'IN');
+  $query->condition('field_data_field_active.field_active_value', '1', '=');
+  $query->countQuery();
+  $count = $query->execute()->fetchAll();
+  if (count($count) > 0) {
+    $text = "<p>The Senate's 63 members represent districts from across New York State. Senators belong to a single conference and one or more political parties.</p><p>We've made it easy to filter senators by party, committee, and the other legislative groups in which they gather to consider the merits of proposed legislation and to better understand complex legislative issues.</p>";
+    return $text;
+  }
+}
+
+function nys_blocks_node_submit($node, $form, &$form_state) {
+  if (!empty($form_state['values']['field_issues'][LANGUAGE_NONE])) {
+    foreach ($form_state['values']['field_issues'][LANGUAGE_NONE] as $item) {
+      if (!empty($item['tid'])) {
+        cache_clear_all('senators_talking_about_' . $item['tid'], 'cache');
+      }
+    }
+
+  }
+  if ($node->type == 'senator') {
+    cache_clear_all('senators_talking_about_', 'cache', TRUE);
+  }
+}
+
+/**
+ * Implementation of hook_menu_contextual_links_alter().
+ */
+function nys_blocks_menu_contextual_links_alter(&$links, $router_item, $root_path) {
+  if (user_has_role(_nys_utils_get_rid_by_name('Administrator')) && in_array('calendar_downloads', $router_item['map'])) {
+    $links['global_settings'] = [
+      'href' => 'admin/settings/nysenate',
+      'title' => t('Update PDFs'),
+      'localized_options' => [
+        'query' => ['destination' => $_GET['q']],
+        'options' => ['html' => FALSE, 'attributes' => []],
+      ],
+    ];
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function nys_blocks_permission() {
+  return [
+    'Access Admin Link in Dashboard' => [
+      'title' => t('Access Admin Link in Dashboard'),
+      'description' => t('Admin link will display in dashboard dropdown'),
+    ],
+  ];
+}
+
+/**
+ * Implements hook_ctools_content_subtype_alter().
+ */
+function nys_blocks_ctools_content_subtype_alter(&$subtype, &$plugin) {
+  if (($subtype['category'] ?? '') == 'Fielded panes') {
+    $subtype['category'] = 'Promotional Banners';
+  }
+}

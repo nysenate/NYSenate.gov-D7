@@ -1,0 +1,118 @@
+<?php
+
+/**
+ * @file
+ * nys_picture module file.
+ */
+
+ /**
+  * Implements hook_image_style_create_derivative().
+  */
+ function nys_picture_image_style_create_derivative($style, $source, $destination) {
+
+   // Determine if an advanced mimetype is embedded in the style name.
+   $enhanced_image_mimetype = (isset($style['name']) ? nys_picture_optimized_style_format($style['name']) : FALSE);
+   if ($enhanced_image_mimetype === FALSE) {
+     return FALSE;
+   }
+
+   // If the source file doesn't exist, return FALSE without creating folders.
+   if (!$image = image_load($source)) {
+     print "\r\nCOULD NOT LOAD IMAGE $source\r\n";
+     return FALSE;
+   }
+
+   // The style is of interest.
+   $args = array();
+
+   // Parse the style array and add the appropriate options to $args.
+   foreach ($style['effects'] as $effect) {
+
+     if (isset($effect['effect callback'])) {
+
+       switch ($effect['effect callback']) {
+         case 'image_resize_effect':
+           nys_picture_image_resize_effect($effect['data'], $image, $args);
+           break;
+
+         case 'image_rotate_effect':
+           nys_picture_image_rotate_effect($effect['data'], $image, $args);
+           break;
+
+         case 'image_crop_effect':
+           nys_picture_image_crop_effect($effect['data'], $image, $args);
+           break;
+
+         case 'image_desaturate_effect':
+           nys_picture_image_desaturate_effect($effect['data'], $image, $args);
+           break;
+
+         case 'image_scale_effect':
+           nys_picture_image_scale_effect($effect['data'], $image, $args);
+           break;
+
+         case 'image_scale_and_crop_effect':
+           nys_picture_image_scale_and_crop_effect($effect['data'], $image, $args);
+           break;
+
+         default:
+           nys_picture_default_effect($effect['data'], $image, $args);
+       }
+
+     }
+
+   }
+
+   // Add the destination_format to $args in prep for _imagemagick_convert().
+   $args['destination_format'] = substr($enhanced_image_mimetype, strpos($enhanced_image_mimetype, "/") + 1);
+
+   $style_name = $style['name'];
+
+   $file_name = substr($source, strlen(drupal_realpath('public://')) + 1);
+
+   print "$style_name | Processing: $file_name\r\n";
+   print "Destination: $destination\r\n\r\n";
+   if (drush_get_option('show-args', FALSE)) {
+     print "Conversion Arguments: ";
+     print_r($args);
+     print "\r\n\r\n";
+   }
+
+   // Normal operation. The --report only option is not present.
+   if (!drush_get_option('report-only', FALSE)) {
+     // If the $source, $destination files exist.
+     // Call _imagemagick_convert() to do the heavy lifting.
+     if (file_exists($source) && file_exists($destination)) {
+       variable_set('nys_picture_current_image_file', $file_name);
+       variable_set('nys_picture_current_timestamp', time());
+
+       // Finally call imagemagick.
+       _imagemagick_convert($source, $destination, $args);
+
+     }
+   }
+
+   return TRUE;
+
+ }
+
+ /**
+  * Implements hook_imagemagick_arguments_alter().
+  *
+  *  Used to set the destination format of the file irregardless of file type.
+  *  See docs re destination_format.
+  *  The destination_format was been placed in $args.
+  *  Place it in $context so the _imagemagick_convert() func will incorporate it.
+  */
+ function nys_picture_imagemagick_arguments_alter(&$args, &$context) {
+
+   if (array_key_exists('destination_format', $args)) {
+
+     // Add the Destination Format to the context.
+     $context['destination_format'] = $args['destination_format'];
+
+     // Remove destination_format from the $args not welcome after this point.
+     unset($args['destination_format']);
+   }
+
+ }

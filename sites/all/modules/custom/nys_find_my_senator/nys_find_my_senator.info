@@ -1,0 +1,6 @@
+name = NYSS Find My Senator
+description = Senator Search
+core = 7.x
+package = NY STATE SENATE
+dependencies[] = nys_sage
+

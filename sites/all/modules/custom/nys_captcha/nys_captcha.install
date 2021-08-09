@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * nys_captcha module install/schema/update hooks.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function nys_captcha_install() {
+  // Get the weight of the module we want to compare against.
+  $weight = (int)(db_select('system', 's')
+              ->fields('s', array('weight'))
+              ->condition('name', 'captcha', '=')
+              ->execute()
+              ->fetchField());
+
+  // Set our module to a weight 1 heavier, so ours moves lower in execution order.
+  db_update('system')
+    ->fields(array('weight' => $weight + 1))
+    ->condition('name', 'nys_captcha', '=')
+    ->execute();
+}

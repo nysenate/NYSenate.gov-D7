@@ -1,0 +1,367 @@
+
+/*-----------------------------
+/	CUSTOM PALETTE STYLES
+/------------------------------*/
+/*
+/	Colors are set within Pallette Selector (field_pallette)
+/	class is set on body
+/*
+
+
+/*----------------------------------------------
+/
+/ PALETTE VARIABLES
+/ ** certain elements are either black or white
+/ ** based on color palette - defaults to black
+/
+/----------------------------------------------*/
+$contrast_drk: #000;
+$contrast_lgt: #fff;
+
+// GENERAL BLUE : senate wide
+$gen_blue_lgt : #2B6A90;
+$gen_blue_med : #175B81;
+$gen_blue_drk : #004D71;
+$gen_link : $orange01;
+
+// TRADITIONAL BLUE
+$trad_blue_lgt : #1B5187;
+$trad_blue_med : #1D446B;
+$trad_blue_drk : #1C364E;
+$trad_blue_link : $trad_blue_lgt;
+
+// CONTEMPORARY BLUE
+$cont_blue_lgt : #04A9C5;
+$cont_blue_med : #008CA6;
+$cont_blue_drk : #1F798F;
+$cont_blue_link : $cont_blue_lgt;
+
+// INDIVIDUALISTIC PURPLE
+$purple_lgt : #90668F;
+$purple_med : #754775;
+$purple_drk : #543457;
+$purple_link : $purple_lgt;
+
+// TRADITIONAL RED
+$trad_red_lgt : #87002F;
+$trad_red_med : #6E0026;
+$trad_red_drk : #500019;
+$trad_red_link : $trad_red_lgt;
+
+// CONTEMPORARY RED
+$cont_red_lgt : #C62526;
+$cont_red_med : #BB0623;
+$cont_red_drk : #A00101;
+$cont_red_link : $cont_red_lgt;
+
+// ENTHUSIASTIC ORANGE
+$orange_lgt : #F0673D;
+$orange_med : #ED4B1C;
+$orange_drk : #C84123;
+$orange_link : $orange_lgt;
+
+// TRADITIONAL GREEN
+$trad_green_lgt : #60A35F;
+$trad_green_med : #4D894F;
+$trad_green_drk : #416837;
+$trad_green_link : $trad_green_lgt;
+
+// CONTEMPORARY GREEN
+$cont_green_lgt : #65C5B6;
+$cont_green_med : #479E93;
+$cont_green_drk : #378479;
+$cont_green_link : $cont_green_lgt;
+
+// NO LONGER SERVING
+$ns_grey_lgt : #B2B2B2;
+$ns_grey_med : #999999;
+$ns_grey_drk : #808080;
+$ns_accent : #1B5187;
+
+/*----------------------------
+/ PALETTE STYLES
+/-----------------------------*/
+// DEFAULT
+.contrast_text { color: $contrast_drk; }
+.lgt-text { color: $gen_blue_lgt; }
+.lgt-bg { background-color: $gen_blue_lgt; }
+.med-text { color: $gen_blue_med; }
+.med-bg { background-color: $gen_blue_med; }
+.drk-text { color: $gen_blue_drk; }
+.drk-bg { background-color: $gen_blue_drk; }
+.link-text { color: $gen_link; }
+// no other accent defined
+// so it is the 'no longer serving accent'
+.accent-bg { background-color: $ns_accent; }
+.accent-text { color: $ns_accent; }
+
+// nav text changes at breakpoints. so needs some love.
+.nav-text {
+	color: #fff;
+	@include transition(color, 0.2s, ease);
+}
+
+@media #{$tablet} {
+	.nav-text {
+		color: #444;
+
+		&:hover {
+			color: $gen_blue_lgt;
+		}
+		&.active {
+			color: $gen_blue_lgt;
+		}
+	}
+}
+// TRADITIONAL BLUE
+.trad_blue {
+	.contrast_text { color: $contrast_lgt; }
+	.lgt-text { color: $trad_blue_lgt; }
+	.lgt-bg { background-color: $trad_blue_lgt; }
+	.med-text { color: $trad_blue_med; }
+	.med-bg { background-color: $trad_blue_med; }
+	.drk-text { color: $trad_blue_drk; }
+	.drk-bg { background-color: $trad_blue_drk; }
+	.link-text { color: $trad_blue_lgt; }
+
+	.nav-text {
+		color: #fff;
+		@include transition(color, 0.2s, ease);
+	}
+	@media #{$tablet} {
+		.nav-text {
+			color: #444;
+
+			&:hover {
+				color: $trad_blue_lgt;
+			}
+			&.active {
+				color: $trad_blue_lgt;
+			}
+		}
+	}
+}
+// CONTEMPORARY BLUE
+.cont_blue {
+	.contrast_text {color: $contrast_drk; }
+	.lgt-text { color: $cont_blue_lgt; }
+	.lgt-bg { background-color: $cont_blue_lgt; }
+	.med-text { color: $cont_blue_med; }
+	.med-bg { background-color: $cont_blue_med; }
+	.drk-text { color: $cont_blue_drk; }
+	.drk-bg { background-color: $cont_blue_drk; }
+	.link-text { color: $cont_blue_lgt; }
+
+	.nav-text {
+		color: #fff;
+		@include transition(color, 0.2s, ease);
+	}
+	@media #{$tablet} {
+		.nav-text {
+			color: #444;
+
+			&:hover {
+				color: $cont_blue_lgt;
+			}
+			&.active {
+				color: $cont_blue_lgt;
+			}
+		}
+	}
+}
+// INDIVIDUALISTIC PURPLE
+.purple {
+	.contrast_text {color: $contrast_drk; }
+	.lgt-text { color: $purple_lgt; }
+	.lgt-bg { background-color: $purple_lgt; }
+	.med-text { color: $purple_med; }
+	.med-bg { background-color: $purple_med; }
+	.drk-text { color: $purple_drk; }
+	.drk-bg { background-color: $purple_drk; }
+	.link-text { color: $purple_lgt; }
+
+	.nav-text {
+		color: #fff;
+		@include transition(color, 0.2s, ease);
+	}
+	@media #{$tablet} {
+		.nav-text {
+			color: #444;
+
+			&:hover {
+				color: $purple_lgt;
+			}
+			&.active {
+				color: $purple_lgt;
+			}
+		}
+	}
+}
+// TRADITIONAL RED
+.trad_red {
+	.contrast_text { color: $contrast_lgt; }
+	.lgt-text { color: $trad_red_lgt; }
+	.lgt-bg { background-color: $trad_red_lgt; }
+	.med-text { color: $trad_red_med; }
+	.med-bg { background-color: $trad_red_med; }
+	.drk-text { color: $trad_red_drk; }
+	.drk-bg { background-color: $trad_red_drk; }
+	.link-text { color: $trad_red_lgt; }
+
+	.nav-text {
+		color: #fff;
+		@include transition(color, 0.2s, ease);
+	}
+	@media #{$tablet} {
+		.nav-text {
+			color: #444;
+
+			&:hover {
+				color: $trad_red_lgt;
+			}
+			&.active {
+				color: $trad_red_lgt;
+			}
+		}
+	}
+}
+// CONTEMPORARY RED
+.cont_red {
+	.contrast_text { color: $contrast_lgt; }
+	.lgt-text { color: $cont_red_lgt; }
+	.lgt-bg { background-color: $cont_red_lgt; }
+	.med-text { color: $cont_red_med; }
+	.med-bg { background-color: $cont_red_med; }
+	.drk-text { color: $cont_red_drk; }
+	.drk-bg { background-color: $cont_red_drk; }
+	.link-text { color: $cont_red_lgt; }
+
+	.nav-text {
+		color: #fff;
+		@include transition(color, 0.2s, ease);
+	}
+	@media #{$tablet} {
+		.nav-text {
+			color: #444;
+
+			&:hover {
+				color: $cont_red_lgt;
+			}
+			&.active {
+				color: $cont_red_lgt;
+			}
+		}
+	}
+}
+// ENTHUSIASTIC ORANGE
+.orange {
+	.contrast_text {color: $contrast_drk; }
+	.lgt-text { color: $orange_lgt; }
+	.lgt-bg { background-color: $orange_lgt; }
+	.med-text { color: $orange_med; }
+	.med-bg { background-color: $orange_med; }
+	.drk-text { color: $orange_drk; }
+	.drk-bg { background-color: $orange_drk; }
+	.link-text { color: $orange_lgt; }
+
+	.nav-text {
+		color: #fff;
+		@include transition(color, 0.2s, ease);
+	}
+	@media #{$tablet} {
+		.nav-text {
+			color: #444;
+
+			&:hover {
+				color: $orange_lgt;
+			}
+			&.active {
+				color: $orange_lgt;
+			}
+		}
+	}
+}
+// TRADITIONAL GREEN
+.trad_green {
+	.contrast_text {color: $contrast_drk; }
+	.lgt-text { color: $trad_green_lgt; }
+	.lgt-bg { background-color: $trad_green_lgt; }
+	.med-text { color: $trad_green_med; }
+	.med-bg { background-color: $trad_green_med; }
+	.drk-text { color: $trad_green_drk; }
+	.drk-bg { background-color: $trad_green_drk; }
+	.link-text { color: $trad_green_lgt; }
+
+	.nav-text {
+		color: #fff;
+		@include transition(color, 0.2s, ease);
+	}
+	@media #{$tablet} {
+		.nav-text {
+			color: #444;
+
+			&:hover {
+				color: $trad_green_lgt;
+			}
+			&.active {
+				color: $trad_green_lgt;
+			}
+		}
+	}
+}
+// CONTEMPORARY GREEN
+.cont_green {
+	.contrast_text {color: $contrast_drk; }
+	.lgt-text { color: $cont_green_lgt; }
+	.lgt-bg { background-color: $cont_green_lgt; }
+	.med-text { color: $cont_green_med; }
+	.med-bg { background-color: $cont_green_med; }
+	.drk-text { color: $cont_green_drk; }
+	.drk-bg { background-color: $cont_green_drk; }
+	.link-text { color: $cont_green_lgt; }
+
+	.nav-text {
+		color: #fff;
+		@include transition(color, 0.2s, ease);
+	}
+	@media #{$tablet} {
+		.nav-text {
+			color: #444;
+
+			&:hover {
+				color: $cont_green_lgt;
+			}
+			&.active {
+				color: $cont_green_lgt;
+			}
+		}
+	}
+}
+// INACTIVE PALLETTE
+.inactive-pallette {
+	.contrast_text {color: $contrast_drk; }
+	.lgt-text { color: $ns_accent; }
+	.lgt-bg { background-color: $ns_grey_lgt; }
+	.med-text { color: $ns_grey_med; }
+	.med-bg { background-color: $ns_grey_med; }
+	.drk-text { color: $ns_grey_drk; }
+	.drk-bg { background-color: $ns_grey_drk; }
+	.link-text { color: $ns_accent; }
+
+	.nav-text {
+		color: #fff;
+		@include transition(color, 0.2s, ease);
+	}
+	@media #{$tablet} {
+		.nav-text {
+			color: #444;
+
+			&:hover {
+				color: $ns_accent;
+			}
+			&.active {
+				color: $ns_accent;
+			}
+		}
+	}
+}

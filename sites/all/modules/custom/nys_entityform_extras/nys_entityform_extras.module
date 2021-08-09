@@ -1,0 +1,289 @@
+<?php
+
+/**
+ * @file
+ * NYS Entityform Extras Module.
+ *
+ * Provides custom settings for EntityForm module.
+ */
+
+
+/**
+ * Implements hook_form_alter().
+ */
+function nys_entityform_extras_form_alter(&$form, &$form_state, $form_id) {
+  switch ($form_id){
+  case 'summer_reading_entityform_edit_form' :
+
+    $form['address'] = array(
+      '#type' => 'auto_address',
+      '#weight' => 2,
+    );
+
+    $form['actions']['submit']['#attributes'] = array(
+      'class' => 'click-text',
+      'data-text-swap' => 'Please wait ...',
+      'data-text-original' => 'Submit',
+    );
+
+    hide($form['field_address']);
+
+    $form['#validate'][] = 'nys_entityform_extras_reading_validation';
+    array_unshift($form['actions']['submit']['#submit'], 'nys_entityform_extras_reading_submit');
+
+    break;
+
+
+    case 'participatory_budgeting_entityform_edit_form' :
+
+    $form['address'] = array(
+      '#type' => 'auto_address',
+      '#weight' => 6,
+    );
+
+    $zip_options = array(
+
+      '11203' => '11203',
+      '11207' => '11207',
+      '11212' => '11212',
+      '11213' => '11213',
+      '11215' => '11215',
+      '11216' => '11216',
+      '11220' => '11220',
+      '11225' => '11225',
+      '11226' => '11226',
+      '11233' => '11233',
+      '11236' => '11236',
+      '11238' => '11238',
+    );
+    $form['field_pbudg_project_location'][LANGUAGE_NONE][0]['postal_code'] = array(
+      '#type' => 'select',
+      '#title' => t('Zip Code'),
+      '#options' => $zip_options,
+      '#weight' => '11',
+    );
+
+    $form['actions']['submit']['#attributes'] = array(
+      'class' => 'click-text',
+      'data-text-swap' => 'Please wait ...',
+      'data-text-original' => 'Submit',
+    );
+    $form['#validate'][] = 'nys_entityform_extras_budget_validation';
+    array_unshift($form['actions']['submit']['#submit'], 'nys_entityform_extras_budget_submit');
+
+    break;
+
+    case 'earth_day_entityform_edit_form' :
+      $form['field_school_name'][LANGUAGE_NONE]['#options']['_none'] = t('- Start typing school name to narrow list -');
+
+      $form['actions']['submit']['#attributes'] = array(
+        'class' => 'click-text',
+        'data-text-swap' => 'Please wait ...',
+        'data-text-original' => 'Submit',
+      );
+    break;
+
+    case 'school_submissions_entityform_edit_form' :
+      $form['field_school_name'][LANGUAGE_NONE]['#options']['_none'] = t('- Start typing school name to narrow list -');
+
+      $form['actions']['submit']['#attributes'] = array(
+        'class' => 'click-text',
+        'data-text-swap' => 'Please wait ...',
+        'data-text-original' => 'Submit',
+      );
+
+    break;
+
+    case 'new_york_senate_youth_leadership_entityform_edit_form' :
+      $form['field_school'][LANGUAGE_NONE]['#options']['_none'] = t('- Start typing school name to narrow list -');
+
+      $form['actions']['submit']['#attributes'] = array(
+        'class' => 'click-text',
+        'data-text-swap' => 'Please wait ...',
+        'data-text-original' => 'Submit',
+      );
+
+    break;
+
+    case 'hannon_photo_contest_entityform_edit_form' :
+      $form['field_hannon_school_name'][LANGUAGE_NONE]['#options']['_none'] = t('- Select your high school -');
+      $form['field_hannon_category'][LANGUAGE_NONE]['#options']['_none'] = t('- Select a category -');
+
+      $form['actions']['submit']['#attributes'] = array(
+        'class' => 'click-text',
+        'data-text-swap' => 'Please wait ...',
+        'data-text-original' => 'Submit',
+      );
+
+    break;
+  }
+}
+
+/**
+ * Implements hook_form_validate().
+ */
+
+
+function nys_entityform_extras_reading_validation($form, &$form_state){
+  $children = $form_state['values']['field_children'][LANGUAGE_NONE];
+  foreach($children as $key => $child) {
+    $values = $form_state['values']['field_children'][LANGUAGE_NONE][$key]['field_student_books'][LANGUAGE_NONE];
+    $child_name = $form_state['values']['field_children'][LANGUAGE_NONE][$key]['field_student_name'][LANGUAGE_NONE][0]['value'];
+    foreach ($values as $key2 => $value) {
+      if (empty($value['value'])) {
+        form_set_error('field_children][' . LANGUAGE_NONE . '][' . $key .'][field_student_books][' . LANGUAGE_NONE . '', t('You must enter three books for ' . $child_name . '<strong>' . '. Number of books entered so far:  ' .  $key2 . '</strong>'));
+      }
+    }
+  }
+
+}
+
+function nys_entityform_extras_budget_validation($form, &$form_state){
+  $data = array(
+    'street' => $form_state['values']['field_pbudg_project_location'][LANGUAGE_NONE][0]['street'],
+    'additional' => $form_state['values']['field_pbudg_project_location'][LANGUAGE_NONE][0]['additional'],
+    'city' => $form_state['values']['field_pbudg_project_location'][LANGUAGE_NONE][0]['city'],
+    'province' => $form_state['values']['field_pbudg_project_location'][LANGUAGE_NONE][0]['province'],
+    'postal_code' => $form_state['values']['field_pbudg_project_location'][LANGUAGE_NONE][0]['postal_code'],
+  );
+
+  // Call SAGE.
+  $params = nys_sage_prep_params($data);
+  $response = nys_sage_call_api($params);
+
+  // If a district assignment is found, save it with the user.
+  if ($response->acceptableMatch) {
+    // Load the district's taxonomy id.
+    $district_tid = nys_utils_lookup_district_tid($response->districts->senate->district);
+
+    // If there's a district assigned, record it and load the senator.
+    $term = taxonomy_term_load($district_tid);
+    $name = $term->name;
+    if($name !== 'NY Senate District 20'){
+      form_set_error('field_pbudg_project_location', t('The address you entered for the proposed project is not in District 20, and therefore cannot be considered.'));
+    }
+  }
+
+  if($form_state['values']['field_pbudg_submit_project'][LANGUAGE_NONE][0]['value'] == 1) {
+
+    if (empty($form_state['values']['field_pbudg_project_name'][LANGUAGE_NONE][0]['value'])) {
+      form_set_error('field_pbudg_project_name', t('You must submit a Project Name'));
+    }
+
+    if (empty($form_state['values']['field_pbudg_category'][LANGUAGE_NONE][0]['tid'])) {
+      form_set_error('field_pbudg_category', t('You must submit a Project Category'));
+    }
+    if (empty($form_state['values']['field_pbudg_guestimate'][LANGUAGE_NONE][0]['value'])) {
+      form_set_error('field_pbudg_guestimate', t('You must submit a Project Budget'));
+    }
+    if (empty($form_state['values']['field_pbudg_neighborhood'][LANGUAGE_NONE][0]['value'])) {
+      form_set_error('field_pbudg_neighborhood', t('You must submit a Project Neighborhood'));
+    }
+    if (empty($form_state['values']['field_pbudg_project_description'][LANGUAGE_NONE][0]['value'])) {
+      form_set_error('field_pbudg_project_description', t('You must submit a Project Description'));
+    }
+
+    if (empty($form_state['values']['field_pbudg_project_location'][LANGUAGE_NONE][0]['street'])) {
+      form_set_error('field_pbudg_project_location', t('You must submit a street location for project.'));
+    }
+    if (empty($form_state['values']['field_pbudg_project_location'][LANGUAGE_NONE][0]['city'])) {
+      form_set_error('field_pbudg_project_location', t('You must submit a city location for project.'));
+    }
+    if (empty($form_state['values']['field_pbudg_project_location'][LANGUAGE_NONE][0]['province'])) {
+      form_set_error('field_pbudg_project_location', t('You must submit a state location for project.'));
+    }
+    if (empty($form_state['values']['field_pbudg_project_location'][LANGUAGE_NONE][0]['locpick']['user_longitude'])) {
+      form_set_error('field_pbudg_project_location', t('You must click on the "Find Address on Map" button for your proposed project.'));
+
+    }
+    if ($form_state['values']['field_pbudg_guestimate'][LANGUAGE_NONE][0]['value'] > 999999) {
+      form_set_error('field_pbudg_guestimate', t('Your budget must be less than $1 million'));
+    }
+  }
+
+}
+
+/**
+ * Implements hook_form_submit().
+ */
+
+function nys_entityform_extras_reading_submit($form, &$form_state) {
+  module_load_include('inc', 'nys_registration', 'inc/nys_registration.wizard');
+
+  $data = array(
+    'street' => $form_state['values']['addr_street'],
+    'additional' => $form_state['values']['addr_opt'],
+    'city' => $form_state['values']['addr_city'],
+    'province' => $form_state['values']['addr_state'],
+    'postal_code' => $form_state['values']['addr_zip'],
+  );
+
+  // Call SAGE.
+  $params = nys_sage_prep_params($data);
+  $response = nys_sage_call_api($params);
+
+  // If a district assignment is found, save it with the user.
+  if ($response->acceptableMatch) {
+    // Load the district's taxonomy id.
+    $district_tid = nys_utils_lookup_district_tid($response->districts->senate->district);
+
+    // If there's a district assigned, record it and load the senator.
+    if ($district_tid) {
+      $form_state['values']['field_district'][LANGUAGE_NONE][0]['target_id'] = $district_tid;
+    }
+  }
+  $form_state['values']['field_address'][LANGUAGE_NONE][0] = array_merge(
+    $form_state['values']['field_address'][LANGUAGE_NONE][0],
+    [
+      'street' => $form_state['values']['addr_street'],
+      'additional' => $form_state['values']['addr_opt'],
+      'city' => $form_state['values']['addr_city'],
+      'province' => $form_state['values']['addr_state'],
+      'postal_code' => $form_state['values']['addr_zip'],
+    ]
+  );
+}
+
+
+function nys_entityform_extras_budget_submit($form, &$form_state, $entityform_id, $entityform, $entity) {
+  module_load_include('inc', 'nys_registration', 'inc/nys_registration.wizard');
+
+  $data = array(
+    'street' => $form_state['values']['field_pbudg_project_location'][LANGUAGE_NONE][0]['street'],
+    'additional' => $form_state['values']['field_pbudg_project_location'][LANGUAGE_NONE][0]['additional'],
+    'city' => $form_state['values']['field_pbudg_project_location'][LANGUAGE_NONE][0]['city'],
+    'province' => $form_state['values']['field_pbudg_project_location'][LANGUAGE_NONE][0]['province'],
+    'postal_code' => $form_state['values']['field_pbudg_project_location'][LANGUAGE_NONE][0]['postal_code'],
+
+  );
+
+  // Call SAGE.
+  $params = nys_sage_prep_params($data);
+  $response = nys_sage_call_api($params);
+
+  // If a district assignment is found, save it with the user.
+  if ($response->acceptableMatch) {
+    // Load the district's taxonomy id.
+    $district_tid = nys_utils_lookup_district_tid($response->districts->senate->district);
+
+    // If there's a district assigned, record it and load the senator.
+    if ($district_tid) {
+      $form_state['values']['field_district'][LANGUAGE_NONE][0]['target_id'] = $district_tid;
+
+    }
+  }
+
+
+  $form_state['values']['field_pbudg_mailing_address'][LANGUAGE_NONE][0] = array_merge(
+    $form_state['values']['field_pbudg_mailing_address'][LANGUAGE_NONE][0],
+    [
+      'street' => $form_state['values']['addr_street'],
+      'additional' => $form_state['values']['addr_opt'],
+      'city' => $form_state['values']['addr_city'],
+      'province' => $form_state['values']['addr_state'],
+      'postal_code' => $form_state['values']['addr_zip'],
+    ]
+  );
+}
+
+

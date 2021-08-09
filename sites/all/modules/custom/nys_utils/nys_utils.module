@@ -1,0 +1,2320 @@
+<?php
+
+/**
+ * @file
+ * Module file that contains a lot of utility functions.
+ */
+
+/**
+ * Helper function to get a role id by role name.
+ *
+ * @param string $role_name
+ *   The name of the role to check for.
+ *
+ * @return int|null
+ *   Returns the role id if it's found, NULL if not.
+ */
+function _nys_utils_get_rid_by_name($role_name) {
+  $role_name_hash = drupal_hash_base64($role_name);
+  $roles = &drupal_static(__FUNCTION__);
+
+  if (!isset($roles[$role_name_hash])) {
+    $role = user_role_load_by_name($role_name);
+    $roles[$role_name_hash] = isset($role->rid)
+      ? $role->rid
+      : NULL;
+  }
+
+  return $roles[$role_name_hash];
+}
+
+/**
+ * Checks a user account for membership in a role, provided by name.
+ * This is simply a wrapper around user_has_role().  The uid parameter
+ * can be a user object or integer user ID.  If nothing is passed,
+ * the current user is assumed.
+ *
+ * @param string $role_name Name of role
+ * @param ?object|int $uid User object or integer user id
+ *
+ * @return bool
+ */
+function nys_utils_user_has_role_name($role_name, $uid = NULL) {
+  $rid = _nys_utils_get_rid_by_name($role_name);
+  // If a NULL was passed for account, use the global user.
+  if (is_null($uid)) {
+    $account = $GLOBALS['user'];
+  }
+  // If a numeric value was passed, try to load that user.
+  elseif (is_numeric($uid)) {
+    $account = user_load($uid);
+  }
+  return isset($account->roles) ? user_has_role($rid, $account) : FALSE;
+}
+
+/**
+ * Apply Headshot Theme for Image.
+ */
+function _nyss_img($image_path, $style, $classes = NULL) {
+  $config = array(
+    'style_name' => $style,
+    'path' => $image_path,
+    'attributes' => array('class' => $classes),
+    'height' => NULL,
+    'width' => NULL,
+  );
+
+  // Implements theme_image_style.
+  $img = theme_image_style($config);
+
+  return $img;
+}
+
+/**
+ * Returns a string of senator party and conference abbreviations.
+ *
+ * @param object $node
+ *   A node of type senator.
+ *
+ * @return string
+ *   The party and conference abbreviations.
+ */
+function senator_get_abbreviations($node) {
+
+  $arr = array();
+  /** @var object $senator */
+  $senator = entity_metadata_wrapper('node', $node);
+
+  foreach ($senator->field_party as $item) {
+    $value = $item->value();
+    if (!empty($value)) {
+      $arr[] = $value;
+    }
+  }
+
+  foreach ($senator->field_conference as $item) {
+    $value = $item->value();
+    if (!empty($value)) {
+      $arr[] = $value;
+    }
+  }
+
+  $abbreviations = implode(', ', $arr);
+
+  return $abbreviations;
+}
+
+/**
+ * Determines if a passed user id is present as a recipient in a message.
+ */
+function user_is_message_recipient($the_user, $message) {
+
+  $ret = FALSE;
+
+  if (is_object($the_user)) {
+    $the_id = $the_user->uid;
+  }
+  elseif (is_numeric($the_user)) {
+    $the_id = $the_user;
+  }
+  else {
+    global $user;
+    $the_id = $user->uid;
+  }
+
+  // If we have a user id, and a valid message object, check for the recipient.
+  if ((int) $the_id
+       && is_object($message)
+       && isset($message->recipients)
+       && is_array($message->recipients)) {
+
+    $search_for = "user_{$the_id}";
+    if (array_key_exists($search_for, $message->recipients)
+         && $message->recipients[$search_for]->uid == $the_id) {
+      $ret = TRUE;
+    }
+  }
+
+  return $ret;
+}
+
+/**
+ * Implements hook_location_element_alter().
+ *
+ * Hides Re Geocode and Delete on the location element on the
+ * user_profile_form.
+ */
+function nys_utils_location_element_alter(&$element, $form) {
+  unset($element['re_geocode_location']);
+  unset($element['delete_location']);
+  //removes long/lat fields and descriptions to allow use of map without extra fields
+  $element['locpick']['user_longitude']['#access'] = 0;
+  $element['locpick']['user_latitude']['#access'] = 0;
+  $element['locpick']['instructions']['#access'] = 0;
+  $element['locpick']['map_instructions']['#access'] = 0;
+}
+
+/**
+ * Get user's district and senator identifiers.
+ *
+ * Given a $user object or $uid, return that user's district and that district's
+ * senator's identifiers, used by other utility functions in this module,
+ * as not to repeat code.
+ *
+ * TODO: This function is inappropriately named.
+ * It does not actually load the district info from the user, but rather loads
+ * the user's senator, then loads the district from the senator object.  This
+ * causes a failure if the district does not have an assigned senator (e.g., an
+ * empty seat).  We are leaving this in place for now because it is already
+ * in wide usage.  See user_get_district_data() to load the district info
+ * properly from the user information.
+ *
+ * @param object|int $user
+ *   Object or $uid, if $uid will convert to $user object.
+ *
+ * @return array
+ *   An array containing senator_uid, senator_nid and district_tid.
+ */
+function user_get_district_senator_data_array($user) {
+  $user_district_senator_info = &drupal_static(__FUNCTION__);
+  if (is_object($user)) {
+    $uid = $user->uid;
+  }
+  elseif (is_numeric($user)) {
+    $uid = $user;
+  }
+  elseif (empty($user->uid)) {
+    global $user;
+    $uid = $user->uid;
+  }
+
+  if (!isset($user_district_senator_info[$uid])) {
+    if (user_is_senator($uid)) {
+
+      $query = "SELECT ua.field_user_account_target_id AS senator_uid,
+        ua.entity_id AS senator_nid, s.entity_id AS district_tid
+        FROM field_data_field_user_account ua
+        JOIN field_data_field_senator s ON s.field_senator_target_id = ua.entity_id AND s.bundle = 'districts'
+        WHERE ua.field_user_account_target_id = :uid;";
+
+      $user_district_senator_info[$uid] = db_query($query, array(':uid' => $uid))->fetchAssoc();
+    }
+    else {
+
+      $query = "SELECT ua.field_user_account_target_id AS senator_uid,
+        s.field_senator_target_id AS senator_nid,
+        fd.field_district_target_id AS district_tid
+        FROM field_data_field_district fd
+        JOIN field_data_field_senator s ON s.entity_id = fd.field_district_target_id
+        JOIN field_data_field_user_account ua ON ua.entity_id = s.field_senator_target_id
+        WHERE fd.entity_id = :uid and fd.bundle = 'user' and s.bundle = 'districts';";
+
+      $user_district_senator_info[$uid] = db_query($query, array(':uid' => $uid))->fetchAssoc();
+    }
+  }
+  return $user_district_senator_info[$uid];
+}
+
+/**
+ * Get user's district data.
+ *
+ * Given a $user object or $uid, return that user's district information.
+ *
+ * TODO: This function breaks out the district information loading routines
+ * from user_get_district_senator_data_array().  The other function improperly
+ * assumes and depends on a relationship between a senator user and a district.
+ * This function relies solely on the user's district assignment.
+ *
+ * @param object|int $user
+ *   Object or $uid, if $uid will convert to $user object.
+ *
+ * @return array
+ *   An array containing district's tid (taxonomy id), name, and number.
+ */
+function user_get_district_data($user) {
+  $user_district_info = &drupal_static(__FUNCTION__);
+  if (is_object($user)) {
+    $uid = $user->uid;
+  }
+  elseif (is_numeric($user)) {
+    $uid = $user;
+  }
+  elseif (empty($user->uid)) {
+    global $user;
+    $uid = $user->uid;
+  }
+
+  if (!isset($user_district_info[$uid])) {
+    $query = "SELECT td.tid, td.name, dn.field_district_number_value AS number " .
+      "FROM field_data_field_district fd " .
+      "INNER JOIN taxonomy_term_data td " .
+      "ON fd.field_district_target_id=td.tid AND fd.bundle='user' " .
+      "INNER JOIN field_data_field_district_number dn " .
+      "ON td.tid=dn.entity_id AND dn.entity_type='taxonomy_term' AND dn.bundle='districts' " .
+      "WHERE fd.entity_id = :uid";
+    $user_district_info[$uid] = db_query($query, [':uid' => $uid])->fetchAssoc();
+  }
+  return $user_district_info[$uid];
+}
+
+/**
+ * Check if user is a senator.
+ *
+ * @param object|int $user
+ *   User object or user id.
+ *
+ * @return bool
+ *   Whether given user refers to a user who is a Senator.
+ */
+function user_is_senator($user) {
+
+  if (is_object($user)) {
+    $uid = $user->uid;
+  }
+  elseif (is_numeric($user)) {
+    $uid = $user;
+  }
+  elseif (empty($user->uid)) {
+    global $user;
+    $uid = $user->uid;
+  }
+
+  if (!is_object($user)) {
+    $user = user_load($uid);
+  }
+  if (user_has_role(_nys_utils_get_rid_by_name('Senator'), $user)) {
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Check if a user is a constituent.
+ *
+ * @param object|int $user
+ *   User object or user id.
+ *
+ * @return bool
+ *   Whether given user refers to a user who is a Constituent.
+ */
+function user_is_constituent($user) {
+
+  if (is_object($user)) {
+    $uid = $user->uid;
+  }
+  elseif (is_numeric($user)) {
+    $uid = $user;
+  }
+  elseif (empty($user->uid)) {
+    global $user;
+    $uid = $user->uid;
+  }
+
+  if (!is_object($user)) {
+    $user = user_load($uid);
+  }
+  if (
+    user_has_role(_nys_utils_get_rid_by_name('Constituent'), $user) &&
+    !user_has_role(_nys_utils_get_rid_by_name('Senator'), $user)
+  ) {
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Check if a user is out of state.
+ *
+ * @param mixed $user
+ *   User object or user id.
+ *
+ * @return bool
+ *   whether given user is an out of state user.
+ */
+function user_is_out_of_state($user = '') {
+  if (is_object($user)) {
+    $uid = $user->uid;
+  }
+  elseif (is_numeric($user)) {
+    $uid = $user;
+  }
+  elseif (empty($user->uid)) {
+    global $user;
+    $uid = $user->uid;
+  }
+
+  $district_tid = user_get_district_tid($uid);
+
+  if (empty($district_tid)) {
+    return TRUE;
+  }
+  else {
+    // Check if user's address is out of state.
+    $query = "SELECT 1 FROM field_data_field_address fa
+      JOIN location l on l.lid = fa.field_address_lid
+      WHERE fa.entity_id = :uid AND fa.bundle = 'user' AND l.province != 'NY' LIMIT 1";
+    $oos = (int) db_query($query, array(':uid' => $uid))->FetchField();
+    return $oos;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Given a $user object or $uid, return that user's district's senator's uid.
+ *
+ * @param object|int $user
+ *   User object or user id.
+ *
+ * @return int|null
+ *   User id of senator connected to user with the same district.
+ */
+function user_get_senator_uid($user) {
+
+  $data = user_get_district_senator_data_array($user);
+  if (!empty($data['senator_uid'])) {
+    return $data['senator_uid'];
+  }
+  return NULL;
+}
+
+/**
+ * A helper function plugged into the node/%node page manager.
+ *
+ * @param object $node
+ *   Drupal node object.
+ *
+ * @return bool
+ *   Whether or not a node has senator nid.
+ */
+function node_has_senator_nid($node) {
+
+  if ($node->type == 'senator') {
+    return FALSE;
+  }
+  if ($node->type == 'promotional_banner') {
+    return FALSE;
+  }
+
+  if (!empty($node->field_senator[LANGUAGE_NONE][0]['target_id'])) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Given a $user object or $uid, return that user's district's senator's nid.
+ *
+ * @param $user user object or user id
+ *
+ * @return int user id of senator connected to user with the same district
+ */
+function user_get_senator_nid($user) {
+
+  $data = user_get_district_senator_data_array($user);
+
+  if (!empty($data['senator_nid'])) {
+    return $data['senator_nid'];
+  }
+  return NULL;
+}
+
+/**
+ * Validates given user is designated on senator's list of editors and
+ * that that user has the "Microsite Content Producer role (10)".
+ *
+ * @param $senator_nid
+ * @param $uid
+ *
+ * @return Boolean returns 1 if user is microsite producer of given senator nid
+ */
+function user_is_senators_microsite_producer($senator_nid, $uid) {
+
+  $query = "SELECT 1 FROM field_data_field_senator_management sm
+    JOIN users_roles ur ON ur.uid = sm.entity_id
+    WHERE sm.bundle = 'user'
+    AND sm.field_senator_management_target_id = :senator_nid
+    AND sm.entity_id = :uid AND rid = 10";
+  return (int) db_query($query, array(':senator_nid' => $senator_nid, ':uid' => $uid))->FetchField();
+}
+
+/**
+ * Get senator nid for a district.
+ */
+function district_get_senator_nid($tid) {
+  return (int) db_query("SELECT field_senator_target_id FROM field_data_field_senator WHERE entity_id = :tid AND bundle = 'districts'", array(':tid' => $tid))->fetchField();
+}
+
+/**
+ * Given a $user object or $uid, return that user's district's tid.
+ *
+ * @param $user user object or user id
+ *
+ * @return int district taxonomy term id attached to the user object
+ */
+function user_get_district_tid($user) {
+
+  $data = user_get_district_senator_data_array($user);
+
+  if (!empty($data['district_tid'])) {
+    return $data['district_tid'];
+  }
+  return NULL;
+}
+
+/**
+ * Get vote count for a Bill.
+ */
+function bill_get_vote_count($bill_id, $constituents, $sponsor = FALSE) {
+  $votes = array();
+  if ($constituents) {
+    $constituents = implode(',', $constituents);
+    $constituent_vote_result = db_query("SELECT count(vote_id) as count, value FROM `votingapi_vote` WHERE `uid` IN ($constituents) AND entity_id = $bill_id GROUP BY value;")->fetchAll();
+    foreach ($constituent_vote_result as $vote) {
+      if ($vote->value == 0) {
+        $votes['constituent']['nay'] = $vote->count;
+      }
+      if ($vote->value == 1) {
+        $votes['constituent']['aye'] = $vote->count;
+      }
+    }
+    if ($sponsor === TRUE) {
+      $total_vote_result = db_query("SELECT count(vote_id) as count, value FROM `votingapi_vote` WHERE entity_id = $bill_id GROUP BY value;")->fetchAll();
+      foreach ($total_vote_result as $vote) {
+        if ($vote->value == 0) {
+          $votes['total']['nay'] = $vote->count;
+        }
+        if ($vote->value == 1) {
+          $votes['total']['aye'] = $vote->count;
+        }
+      }
+    }
+    if (empty($votes)) {
+      $votes['constituent']['nay'] = 0;
+      $votes['constituent']['aye'] = 0;
+      $votes['total']['nay'] = 0;
+      $votes['total']['aye'] = 0;
+    }
+    if (!isset($votes['constituent']['nay'])) {
+      $votes['constituent']['nay'] = 0;
+    }
+    if (!isset($votes['constituent']['aye'])) {
+      $votes['constituent']['aye'] = 0;
+    }
+    if (!isset($votes['total']['aye'])) {
+      $votes['total']['aye'] = 0;
+    }
+    if (!isset($votes['total']['nay'])) {
+      $votes['total']['nay'] = 0;
+    }
+    return $votes;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * @return boolean as to whether currently logged in user is a senator and is viewing another user's dashboard
+ */
+function senator_viewing_constituent_dashboard() {
+  global $user;
+
+  if (arg(0) != 'user' || arg(2) != 'dashboard') {
+    return FALSE;
+  }
+
+  if (user_is_senator($user->uid) && arg(1) != $user->uid) {
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+/**
+ * @param $senator_nid
+ * @return integer district taxonomy term id
+ */
+function senator_get_district_tid($senator_nid) {
+  return (int) db_query("select s.entity_id FROM field_data_field_senator s WHERE s.field_senator_target_id = :senator_nid AND s.bundle = 'districts'", array(':senator_nid' => $senator_nid))->fetchField();
+}
+
+/**
+ * @param $senator_nid
+ * @return integer district numeric value, for example District 27 would return 27.  This in the title, but also is stored in field_district_number
+ */
+function senator_get_district_number($senator_nid) {
+  return (int) db_query("select dn.field_district_number_value from field_data_field_senator fs LEFT JOIN field_data_field_district_number dn ON dn.entity_id = fs.entity_id where fs.bundle = 'districts' and fs.field_senator_target_id = :senator_nid AND dn.bundle = 'districts'", array(':senator_nid' => $senator_nid))->fetchField();
+}
+
+/**
+ * @param $senator_nid
+ * @return string district number with ordinal suffix
+ */
+function nys_utils_get_senator_district($senator_nid) {
+  if (!$senator_nid) {
+    return FALSE;
+  }
+  $district = senator_get_district_number($senator_nid);
+  return nys_utils_ordinal_suffix($district);
+}
+
+/**
+ * @param $senator_nid
+ * @return an array of user ids based on senator_constituents view
+ */
+function get_constituents($senator_nid) {
+  if (!$senator_nid) {
+    return FALSE;
+  }
+
+  $district_tid = senator_get_district_tid($senator_nid);
+  return get_constituents_by_district($district_tid);
+}
+
+/**
+ * Returns all registered constituents in the provided district.
+ *
+ * @param int $district_id
+ *   The district to return constituents for.
+ *
+ * @return bool|array
+ *   An array of any constituents found.
+ *   Returns FALSE if no district is provided.
+ */
+function get_constituents_by_district($district_id) {
+  if (!$district_id) {
+    return FALSE;
+  }
+
+  $senator_rid = (int) _nys_utils_get_rid_by_name('Senator');
+  $join = 'ur.uid = fd.entity_id AND ur.rid != ' . $senator_rid;
+  $query = db_select('field_data_field_district', 'fd')
+    ->fields('fd', ['entity_id'])
+    ->distinct()
+    ->condition('field_district_target_id', $district_id);
+  $query->join('users_roles', 'ur', $join);
+  return $query->execute()->fetchCol();
+}
+
+/**
+ * @param $senator_nid
+ * @return string title of senator node
+ */
+function get_sponsor_name($senator_nid) {
+  if (!$senator_nid) {
+    return FALSE;
+  }
+
+  $senator = node_load($senator_nid);
+  return $senator->title;
+}
+
+/**
+ * @return number with ordinal suffix
+ * @param int $number
+ * @param int $ss
+ *   Turn super script on/off.
+ * @return string
+ */
+function nys_utils_ordinal_suffix($number, $ss = 0) {
+  // Check for 11, 12, 13.
+  if ($number % 100 > 10 && $number % 100 < 14) {
+    $os = 'th';
+  }
+  // Check if number is zero.
+  elseif ($number == 0) {
+    $os = '';
+  }
+  else {
+    // Get the last digit.
+    $last = substr($number, -1, 1);
+
+    switch ($last) {
+      case "1":
+        $os = 'st';
+        break;
+
+      case "2":
+        $os = 'nd';
+        break;
+
+      case "3":
+        $os = 'rd';
+        break;
+
+      default:
+        $os = 'th';
+    }
+  }
+
+  // Add super script.
+  $os = $ss == 0 ? $os : '<sup>' . $os . '</sup>';
+
+  return $number . $os;
+}
+
+/**
+ * Implements hook_context_plugins().
+ */
+function nys_utils_context_plugins() {
+  $plugins = array();
+  $plugins['context_condition_path_raw'] = array(
+    'handler' => array(
+      'path' => drupal_get_path('module', 'nys_utils') . '/plugins/context',
+      'file' => 'context_condition_path_raw.inc',
+      'class' => 'context_condition_path_raw',
+      'parent' => 'context_condition',
+    ),
+  );
+  return $plugins;
+}
+
+/**
+ * Implements hook_init().
+ */
+function nys_utils_init() {
+  if ($plugin = context_get_plugin('condition', 'path_raw')) {
+    $plugin->execute();
+  }
+}
+
+/**
+ * Implements hook_context_registry().
+ */
+function nys_utils_context_registry() {
+  return array(
+    'conditions' => array(
+      'path_raw' => array(
+        'title' => t('Path (including raw)'),
+        'plugin' => 'context_condition_path_raw',
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ *
+ * Register the summary display for SAGE data formatter.
+ */
+function nys_utils_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $summary = t('format the district SAGE data');
+  return $summary;
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function nys_utils_node_update($node) {
+  if ($node->type == 'senator') {
+    $node_wrapper = entity_metadata_wrapper('node', $node);
+    $original = field_get_items('node', $node->original, 'field_active');
+    if ($original[0]['value'] == TRUE and $node_wrapper->field_active->value() == FALSE) {
+      /*
+       * When a senator becomes inactive unpublish associated
+       * petition & questionnaires.
+       */
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'node')
+        ->fieldCondition('field_senator', 'target_id', $node_wrapper->nid->value(), '=')
+        ->entityCondition('bundle', ['petition', 'questionnaire']);
+      $result = $query->execute();
+      if (isset($result['node'])) {
+        $nids = array_keys($result['node']);
+        $nodes = node_load_multiple($nids);
+        if (!empty($nodes)) {
+          foreach ($nodes as $node) {
+            $node->status = 0;
+            node_save($node);
+          }
+        }
+      }
+    }
+    /*
+     * When a Senator node is updated, views related to the Senator must be
+     * cleared from the cache to immediately reflect any changes that were made.
+     */
+    $views_to_invalidate = array(
+      'senators',
+      'senator_about',
+      'senator_events',
+      'senator_petition',
+      'nys_senator_hero',
+      'senator_news',
+      'featured_legislation',
+      'senator_contact_blocks',
+      'promo_banner_senators_committees',
+      'senator_dashboard_bills_new',
+      'senator_dashboard_issues',
+    );
+
+    foreach ($views_to_invalidate as $view_name) {
+      cache_clear_all('ctools_export:views_view:' . $view_name, 'cache_views', TRUE);
+      cache_clear_all($view_name, 'cache_views_data', TRUE);
+    }
+
+    if (defined('PANTHEON_ENVIRONMENT')) {
+      $pages_to_clear = array('about', 'contact', 'legislation', 'newsroom', 'events');
+      $pages_array = array();
+
+      foreach ($pages_to_clear as $page) {
+        $url_path = $node->path['alias'] . '/' . $page;
+        array_push($pages_array, $url_path);
+      }
+
+      try {
+        pantheon_purge_edge_urls($pages_array, NULL);
+      }
+      catch (Exception $e) {
+        drupal_set_message('Pantheon Cache not cleared, please clear cache manually.');
+      }
+    }
+  }
+
+  if (isset($node->field_video_status)) {
+    if (defined('PANTHEON_ENVIRONMENT')) {
+      if (isset($node->path) && !empty($node->path['alias'])) {
+        $node_path = $node->path['alias'];
+        $paths = array('/', $node_path);
+        $cookies = NULL;
+        try {
+          pantheon_purge_edge_urls($paths, $cookies);
+        }
+        catch (Exception $e) {
+          drupal_set_message('Pantheon Cache not cleared, please clear cache manually.');
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_panels_pane().
+ */
+function nys_utils_preprocess_panels_pane(&$vars) {
+  if (arg(0) == 'taxonomy' && arg(1) == 'term') {
+    $term = taxonomy_term_load(arg(2));
+    if ($term->vid == 11) {
+      if ($vars['pane']->subtype == 'custom') {
+        if (strpos($vars['pane']->configuration['body'], '%term:description') > -1) {
+          $vars['content'] = '<p>' . truncate_utf8(strip_tags($vars['content']), 200, TRUE, TRUE) . '<p>';
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_flag.
+ */
+function nys_utils_preprocess_flag(&$vars) {
+  global $user;
+
+  if (arg(0) == 'user' && arg(3) == 'committees' && $vars['flag']->name == 'follow_committee' && $vars['status'] == 'flagged') {
+    $vars['link_text'] = '<span class="close-message">X</span> Unfollow';
+  }
+
+  if (arg(0) == 'flag' && arg(1) == 'flag' && in_array(arg(2), array('follow_issue', 'follow_committee', 'follow_group', 'follow_this_bill', 'sign_petition')) && $vars['status'] == 'flagged') {
+
+    $CTA = '';
+
+    foreach ($vars['message_classes_array'] as $key => $val) {
+      if ($val == 'flag-auto-remove') {
+        unset($vars['message_classes_array'][$key]);
+      }
+    }
+
+    $vars['message_classes_array'][] = 'message-senator-link';
+
+    if (arg(2) == 'follow_issue') {
+      $issue_id                  = arg(3);
+      $vars['message_text']      = '<div class="message-text"><p><span>Following this issue.</span></p></div> ';
+      $CTA = '<a class="flag-success-btn" href="/user/dashboard/inbox/new?context=issue&issue_id=' . $issue_id . '">message your senator</a>';
+      $vars['show_close_button'] = 1;
+    }
+    elseif (arg(2) == 'follow_committee') {
+      $committee_id              = arg(3);
+      $vars['message_text']      = '<div class="message-text"><p><span>Following this committee.</span></p></div> ';
+      $CTA = '<a class="flag-success-btn" href="/user/dashboard/inbox/new?context=following_committee&committee_id=' . $committee_id . '">message your senator</a>';
+      $vars['show_close_button'] = 1;
+    }
+    elseif (arg(2) == 'follow_group') {
+      $committee_id              = arg(3);
+      $vars['message_text']      = '<div class="message-text"><p><span>Following this group.</span></p></div> ';
+      $CTA = '<a class="flag-success-btn" href="/user/dashboard/inbox/new?context=following_committee&committee_id=' . $committee_id . '">message your senator</a>';
+      $vars['show_close_button'] = 1;
+    }
+    elseif (arg(2) == 'follow_this_bill') {
+      $bill_id                   = arg(3);
+      $vars['message_text']      = '<div class="message-text"><p><span>Following this bill.</span></p></div> ';
+      $CTA = '<a class="flag-success-btn" href="/user/dashboard/inbox/new?context=following_bill&bill_id=' . $bill_id . '">message your senator</a>';
+      $vars['show_close_button'] = 1;
+    }
+    elseif (arg(2) == 'sign_petition') {
+      $vars['message_text']      = '<div class="message-text"><span>Thank you.</span><span>Your submission is being reviewed.</span></div>';
+      $vars['show_close_button'] = 0;
+      $vars['message_classes_array'][] = 'flag-auto-remove';
+    }
+
+    if (!user_is_out_of_state($user)) {
+      $vars['message_text'] .= $CTA;
+    }
+
+  }
+  elseif (arg(0) == 'flag' && arg(1) == 'unflag' && in_array(arg(2), array('follow_issue', 'follow_committee', 'follow_group', 'follow_this_bill', 'sign_petition')) && $vars['status'] == 'unflagged') {
+
+    foreach ($vars['message_classes_array'] as $key => $val) {
+      if ($val == 'flag-auto-remove') {
+        unset($vars['message_classes_array'][$key]);
+      }
+    }
+    if (arg(2) == 'follow_issue') {
+      $vars['message_text']      = '<div class="message-text"><p>No longer following this issue.</p></div>';
+      $vars['show_close_button'] = 1;
+    }
+    elseif (arg(2) == 'follow_committee') {
+      $vars['message_text']      = '<div class="message-text"><p>Not following this committee.</p></div>';
+      $vars['show_close_button'] = 1;
+    }
+    elseif (arg(2) == 'follow_group') {
+      $vars['message_text']      = '<div class="message-text"><p>Not following this group.</p></div>';
+      $vars['show_close_button'] = 1;
+    }
+    elseif (arg(2) == 'follow_this_bill') {
+      $vars['message_text']      = '<div class="message-text"><p>Not following this bill.</p></div>';
+      $vars['show_close_button'] = 1;
+    }
+    elseif (arg(2) == 'sign_petition') {
+      $vars['message_text']      = '<div class="message-text"><span>Name removed from petition.</span></div>';
+      $vars['show_close_button'] = 0;
+      $vars['message_classes_array'][] = 'flag-auto-remove';
+    }
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function nys_utils_theme() {
+  return array(
+    'nys_utils_commchair_output' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_utils-committee-chair--block',
+    ),
+    'nys_utils_commcochair_output' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_utils-committee-co-chair--block',
+    ),
+    'nys_utils_senbyissue_output' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+        'issue' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_utils-senator-news-by-issue--block',
+    ),
+    'nys_utils_commtabs_output' => array(
+      'variables' => array(
+        'title' => NULL,
+        'content' => NULL,
+      ),
+      'template' => 'templates/blocks/nys_utils-committee-tabs--block',
+    ),
+  );
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function nys_utils_block_info() {
+
+  $blocks['committee_chairs_output_block'] = array(
+    'info' => t('Committees Chair Block'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  $blocks['committee_cochairs_output_block'] = array(
+    'info' => t('Committees Co-Chair Block'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  $blocks['committee_tabs_output_block'] = array(
+    'info' => t('Committees Tabs Block'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  $blocks['send_private_message_block'] = array(
+    'info' => t('Send a Private Message'),
+  );
+
+  $blocks['news_by_top_issue_output_block'] = array(
+    'info' => t('Senator News By Issue'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_ctools_block_info().
+ *
+ * @see ctools_block_content_type_content_types().
+ */
+function nys_utils_ctools_block_info($module, $delta, &$info)
+{
+    if ($info['title'] == 'Senator News By Issue') {
+        $info['icon'] = 'icon_core_block_menu.png';
+        $info['category'] = t('Senator Blocks');
+    }
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function nys_utils_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'committee_tabs_output_block':
+      $block['content'] = _nys_utils_committee_tabs_block_content();
+      break;
+
+    case 'committee_chairs_output_block':
+      $block['content'] = _nys_utils_committee_chairs_block_content();
+      break;
+
+    case 'committee_cochairs_output_block':
+      $block['content'] = _nys_utils_committee_cochairs_block_content();
+      // Otherwise empty, since if $block['content'] isn't set, no block will show at all.
+      break;
+
+    case 'news_by_top_issue_output_block':
+      $block['content'] = _nys_utils_news_by_top_issue_block_content();
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_utils_news_by_top_issue_block_content() {
+  // Retrieve senator node.
+  $node = menu_get_object();
+
+  // Init $tid to avoid PHP errors.
+  $tid = 0;
+
+  if (!$node) {
+    // Don't do anything on non node/%node paths.
+    return '';
+  }
+  else {
+    if (isset($node->field_top_issue[LANGUAGE_NONE][0]['target_id'])) {
+      $tid = (int) $node->field_top_issue[LANGUAGE_NONE][0]['target_id'];
+      $issue = taxonomy_term_load($tid);
+      if (isset($issue)) {
+        $issue->path = drupal_lookup_path('alias', 'taxonomy/term/' . $tid);
+      }
+      else {
+        return '';
+      }
+    }
+  }
+  // Entity query for senator news items by issue.
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', array('press_release', 'article', 'in_the_news'))
+    ->propertyCondition('status', 1)
+    ->fieldCondition('field_senator', 'target_id', $node->nid, '=')
+    ->fieldCondition('field_issues', 'tid', $tid)
+    ->fieldOrderBy('field_date', 'value', 'DESC')
+    ->range(0, 4);
+  $result = $query->execute();
+  // Pass entity load news nids.
+  if (isset($result['node'])) {
+    $nids = array_keys($result['node']);
+    $items = entity_load('node', $nids);
+    foreach ($items as $key => $item) {
+      $item->path = drupal_lookup_path('alias', 'node/' . $item->nid);
+      if (isset($item->field_image_main[LANGUAGE_NONE]['0']['uri'])) {
+        $item->thumb = $item->field_image_main[LANGUAGE_NONE]['0']['uri'];
+      }
+      $item->position = array_search($key, array_keys($items));
+      $item->issues_content = "";
+      $foreach_count = 0;
+
+      $item_view = node_view($item, 'Teaser');
+
+      foreach ($item_view['#node']->field_issues[LANGUAGE_NONE] as $single_issue) {
+        $foreach_count++;
+        if (isset($single_issue['taxonomy_term']->path) && isset($single_issue['taxonomy_term']->name)) {
+          $item->issues_content .= '<a class="c-press-release--topic" href="/' . $single_issue['taxonomy_term']->path . '">' . $single_issue['taxonomy_term']->name . '</a>';
+          if (count($item_view['#node']->field_issues[LANGUAGE_NONE]) != $foreach_count) {
+            $item->issues_content .= ', ';
+          }
+        }
+      }
+    }
+  }
+  // Theme content.
+  if (isset($items) && isset($issue)) {
+    return theme('nys_utils_senbyissue_output', array(
+      'content' => $items,
+      'issue' => $issue,
+    ));
+  }
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_utils_committee_chairs_block_content() {
+  if (arg(0) === 'taxonomy') {
+    $term = arg(2);
+    if ($range_vocab = taxonomy_vocabulary_machine_name_load('committees')) {
+      $committee = taxonomy_term_load($term);
+      // TODO: query cleanup.
+      $chair = $committee->field_chair[LANGUAGE_NONE][0]['entity'];
+    }
+  }
+  // Theme content.
+  return theme('nys_utils_commchair_output', array(
+    'content' => $chair,
+  )
+  );
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_utils_committee_cochairs_block_content() {
+  if (arg(0) === 'taxonomy') {
+    $term = arg(2);
+    if ($range_vocab = taxonomy_vocabulary_machine_name_load('committees')) {
+      $committee = taxonomy_term_load($term);
+      // TODO: query cleanup.
+      $chair = $committee->field_co_chair[LANGUAGE_NONE][0]['entity'];
+    }
+  }
+  // Theme content.
+  return theme('nys_utils_commcochair_output', array(
+    'content' => $chair,
+  )
+  );
+}
+
+/**
+ * Callback implemented by hook_block_view().
+ */
+function _nys_utils_committee_tabs_block_content() {
+  if (arg(0) === 'taxonomy') {
+    $term = arg(2);
+  }
+  // Theme content.
+  return theme('nys_utils_commtabs_output', array(
+    'term' => $term,
+  )
+  );
+}
+
+/**
+ * Implements hook_views_pre_view().
+ */
+function nys_utils_views_pre_view(&$view, &$display_id, &$args) {
+  if ($view->name == 'nys_senator_hero' || ($view->name == 'promo_banner_senators_committees' && $display_id == 'senator_microsite_interior_footer')) {
+    if (arg(0) == 'taxonomy' && arg(1) == 'term') {
+      $senator_nid = district_get_senator_nid(arg(2));
+      if ($senator_nid) {
+        $args[0] = $senator_nid;
+      }
+    }
+    elseif (arg(0) == 'node') {
+      $node = node_load(arg(1));
+      if ($node !== FALSE && $node->type != 'senator' && !empty($node->field_senator[LANGUAGE_NONE][0]['target_id'])) {
+        $senator_nid = $node->field_senator[LANGUAGE_NONE][0]['target_id'];
+        $args[0] = $senator_nid;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function nys_utils_views_query_alter(&$view, &$query) {
+  // Query alter recently passed and signed by to only show bills per 2yr session.
+  if (
+    ($view->name == 'upcoming_legislation_calendar' && $view->current_display == 'signed_by_governor') ||
+    ($view->name == 'upcoming_legislation_calendar' && $view->current_display == 'passed_senate')
+    ) {
+    // Get year.
+    $session_year = date('Y', strtotime('now'));
+    // If even, go back 1 yr to session start year.
+    if ($session_year % 2 == 0) {
+      $session_year--;
+    }
+    // Update filter to current session year.
+    if ($query->where[1]['conditions'][3]['field'] == 'field_data_field_ol_session.field_ol_session_value') {
+      $query->where[1]['conditions'][3]['value'] = (string) $session_year;
+    }
+  }
+}
+
+/**
+ * Utility function to get a senator nid from senator uid.
+ * (useful for legislative correspondent lookups)
+ *
+ * @param int $uid
+ *
+ * @return int @senator_nid
+ */
+function nys_utils_get_senator_nid_from_senator_uid($uid) {
+  $query = "SELECT entity_id FROM field_data_field_user_account
+    WHERE entity_type = 'node' AND  bundle = 'senator' AND field_user_account_target_id = :uid LIMIT 1";
+  $senator_nid = db_query($query, array(':uid' => $uid))->fetchField();
+
+  return $senator_nid;
+}
+
+/**
+ * Retrieves the senator node id associated with an OpenLeg member id.
+ *
+ * @param int $member_id
+ *
+ * @return integer node_id
+ */
+function nys_utils_get_senator_nid_from_member_id($member_id) {
+  $preloaded = &drupal_static(__FUNCTION__, array());
+
+  if (!array_key_exists($member_id, $preloaded)) {
+    $query = "SELECT entity_id FROM {field_data_field_ol_member_id} WHERE field_ol_member_id_value = :memberid";
+    $preloaded[$member_id] = db_query($query, array(":memberid" => $member_id))->fetchField();
+  }
+  return $preloaded[$member_id];
+}
+
+/**
+ * Retrieves the OpenLeg member id associated with an senator node id.
+ *
+ * @param int $nid
+ *
+ * @return integer member id
+ */
+function nys_utils_get_member_id_from_senator_nid($nid) {
+  $preloaded = &drupal_static(__FUNCTION__, array());
+
+  if (!array_key_exists($nid, $preloaded)) {
+    $query = "
+      SELECT field_ol_member_id_value
+      FROM {field_data_field_ol_member_id}
+      WHERE entity_id = :nid";
+    $preloaded[$nid] = db_query($query, [':nid' => $nid])->fetchField();
+  }
+  return $preloaded[$nid];
+}
+
+/**
+ * Utility function to get related senator node id from a user id without using user_load.
+ *
+ * @param int $uid
+ *
+ * @return int $senator_nid
+ */
+function nys_utils_user_get_senator_nid($uid) {
+  $query = "SELECT field_senator_target_id FROM {field_data_field_senator}
+    WHERE entity_type = 'user' AND  bundle = 'user' AND entity_id = :uid LIMIT 1";
+
+  $senator_nid = db_query($query, array(':uid' => $uid))->fetchField();
+
+  return $senator_nid;
+}
+
+/**
+ * Utility function to get related user uid from senator node nid without using node_load.
+ *
+ * @param $senator_nid
+ *
+ * @return int $uid
+ */
+function nys_utils_senator_get_uid($senator_nid) {
+  $query = "SELECT field_user_account_target_id FROM field_data_field_user_account
+    WHERE entity_id = :nid and bundle = 'senator';";
+
+  $uid = db_query($query, array(':nid' => $senator_nid))->fetchField();
+
+  return $uid;
+}
+
+/**
+ * Utility function to get related district term ids from district term names.
+ *
+ * @param $district_number
+ *
+ * @return int $district_tid
+ */
+function nys_utils_lookup_district_tid($district_number) {
+  $district_number = 'NY Senate District ' . $district_number;
+
+  $query = "SELECT taxonomy_term_data.tid AS tid FROM taxonomy_term_data
+  LEFT JOIN taxonomy_vocabulary ON taxonomy_term_data.vid = taxonomy_vocabulary.vid
+  WHERE taxonomy_term_data.name = :district_title AND taxonomy_vocabulary.machine_name IN  ('districts');";
+
+  $district_tid = db_query($query, array(':district_title' => $district_number))->fetchField();
+
+  return $district_tid;
+}
+
+/**
+ * Implements hook_date_format_types().
+ */
+function nys_utils_date_format_types() {
+  return array(
+    'month_only'  => t('Month Only'),
+    'day_only'  => t('Day Only'),
+    'year_only'  => t('Year Only'),
+  );
+}
+
+/**
+ * Implements hook_date_formats().
+ */
+function nys_utils_date_formats() {
+  $formats = array();
+  $formats[] = array(
+    'type'    => 'month_only',
+    'format'  => 'M',
+    'locales' => array(),
+  );
+  $formats[] = array(
+    'type'    => 'day_only',
+    'format'  => 'd',
+    'locales' => array(),
+  );
+  $formats[] = array(
+    'type'    => 'year_only',
+    'format'  => 'Y',
+    'locales' => array(),
+  );
+  foreach ($formats as $format) {
+    variable_set('date_format_' . $format['type'], $format['format']);
+  }
+  return $formats;
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function nys_utils_token_info() {
+  $info['tokens']['node']['district_tid'] = array(
+    'name' => t('district tid'),
+    'description' => t('Returns the district tid if the given district\'s field_senator is this node'),
+  );
+  $info['tokens']['node']['senator_microsite'] = array(
+    'name' => t('Senator Microsite Url'),
+    'description' => t('works for both district taxonomy term pages and senator nodes, returns senators microsite base url'),
+  );
+  return $info;
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function nys_utils_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $replacements = array();
+  if ($type == 'node') {
+
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        case 'district_tid':
+          if (arg(0) == 'taxonomy' && arg(1) == 'term') {
+            $district_tid = arg(2);
+            $replacements[$original] = 'taxonomy/term/' . $district_tid;
+          }
+          elseif (arg(0) == 'node') {
+            if (isset($data['node']->type) && $data['node']->type == 'senator') {
+              $district_tid = senator_get_district_tid($data['node']->nid);
+              if (!empty($district_tid)) {
+                $replacements[$original] = 'taxonomy/term/' . $district_tid;
+              }
+            }
+            elseif (!empty($data['node']->field_senator[LANGUAGE_NONE][0]['target_id'])) {
+              $senator_nid = $data['node']->field_senator[LANGUAGE_NONE][0]['target_id'];
+              $district_tid = senator_get_district_tid($senator_nid);
+              if (!empty($district_tid)) {
+                $replacements[$original] = 'taxonomy/term/' . $district_tid;
+              }
+            }
+          }
+          break;
+
+        case 'senator_microsite':
+          if (arg(0) == 'taxonomy' && arg(1) == 'term') {
+            $replacements[$original] = 'node/' . district_get_senator_nid(arg(2));
+          }
+          elseif (arg(0) == 'node') {
+            if (isset($data['node']->type) && $data['node']->type == 'senator') {
+              $senator_nid = $data['node']->nid;
+              $replacements[$original] = 'node/' . $senator_nid;
+            }
+            elseif (!empty($data['node']->field_senator[LANGUAGE_NONE][0]['target_id'])) {
+              $senator_nid = $data['node']->field_senator[LANGUAGE_NONE][0]['target_id'];
+              $replacements[$original] = 'node/' . $senator_nid;
+            }
+          }
+
+          break;
+      }
+    }
+  }
+  return $replacements;
+}
+
+/**
+ * Implements hook_menu_token_plugins().
+ */
+function nys_utils_menu_token_plugins() {
+  $plugins = array();
+  $entity_info = entity_get_info();
+  $entities = variable_get('menu_token_entities', drupal_map_assoc(array('node', 'user')));
+
+  foreach ($entities as $entity => $enabled) {
+    if ($enabled && $entity == 'node') {
+      $plugins["node_senator_context"] = array(
+        'type' => $entity,
+        'label' => t('senator from context'),
+        'description' => t('Picks a node from the senator context.'),
+        'handler' => array(
+          'path' => drupal_get_path('module', 'nys_utils') . '/plugins',
+          'file' => 'menu_token_entity_senator_context.inc',
+          'class' => 'menu_token_entity_senator_context',
+        ),
+      );
+    }
+  }
+  return $plugins;
+}
+
+/**
+ * Implements hook_url_outbound_alter().
+ * will cause subpathauto module to skip processing in subpathauto_url_outbound_alter.
+ */
+function nys_utils_url_outbound_alter(&$path, $options, $original_path) {
+
+  if (user_is_logged_in() && $path == 'messages') {
+    global $user;
+    $path = substr(url('user/' . $user->uid), 1) . '/dashboard/inbox';
+    unset($options['alias']);
+  }
+}
+
+/**
+ * Implements hook_webform_submission_insert().
+ * Used to assign additional info about the questionnaire being submitted when webform associated with that is being submitted.
+ */
+function nys_utils_webform_submission_insert($node, $submission) {
+  if ((arg(0) == 'node') && is_numeric(arg(1))) {
+    $node_loaded = menu_get_object();
+  }
+  if ($node_loaded->type == 'questionnaire') {
+    // Insert a record into a webform_submissions_questionnaires table when a submission is added.
+    db_insert('webform_submissions_questionnaires')
+      ->fields(array(
+        'wid' => $submission->nid,
+        'sid' => $submission->sid,
+        'uid' => $submission->uid,
+        'nid' => $node_loaded->nid,
+        'timestamp' => $submission->submitted,
+      ))
+      ->execute();
+    drupal_set_message(t('Thank you for your submission'), 'status');
+  }
+}
+
+/**
+ * Implements hook_webform_submission_update().
+ * Used to assign additional info about the questionnaire being submitted when webform associated with that is being submitted.
+ */
+function nys_utils_webform_submission_update($node, $submission) {
+  // Update a record into a webform_submissions_questionnaires table when a submission is added.
+  db_update('webform_submissions_questionnaires')
+    ->fields(array(
+      'uid' => $submission->uid,
+      'wid' => $submission->nid,
+      'timestamp' => $submission->submitted,
+    ))
+    ->condition('sid', $submission->sid)
+    ->execute();
+}
+
+/**
+ * Alter image Title for field_top_image instance.
+ */
+function nys_utils_field_widget_form_alter(&$element, &$form_state, $context) {
+  // If this is an image field type.
+  if (!empty($element['#field_name']) && $element['#field_name'] == 'field_promotional_banners' && arg(1) == 'ajax') {
+    $nid = $context['form']['nid']['#value'];
+    $is_senator = (int) db_query("SELECT 1 from node where nid = :nid and type = 'senator'", array(':nid' => $nid))->fetchField();
+    if (!empty($is_senator)) {
+      $element['form']['field_senator'][LANGUAGE_NONE]['#default_value'] = $nid;
+      $element['form']['field_senator'][LANGUAGE_NONE]['#disabled'] = 1;
+    }
+  }
+  // Fixes senator dropdown list in promotional banner ajax edit form.
+  elseif (!empty($element['#field_name']) && $element['#field_name'] == 'field_senator' && arg(1) == 'ajax' && !empty($element['#options'])) {
+    global $user;
+    $element['#options'] = nys_access_permissions_get_allowed_senators_dropdown($user->uid);
+  }
+
+  if ($context['field']['type'] == 'image') {
+
+    // Loop through the element children (there will always be at least one).
+    foreach (element_children($element) as $key => $child) {
+      // Add the new process function to the element
+      $element[$key]['#process'][] = 'nys_utils_image_field_widget_process';
+    }
+  }
+}
+
+/**
+ *
+ */
+function nys_utils_image_field_widget_process($element, &$form_state, $form) {
+  // Change the title field label and description
+  $element['title']['#title'] = t('Caption');
+  $element['title']['#description'] = t('Provide an optional caption for your image.');
+  $element['alt']['#title'] = t('Alternative text') . '<span class="form-required" title="This field is required.">*</span>';
+  if ($element['alt']['#access']) {
+    $element['alt']['#element_validate'] = array('_image_field_validate_alt_text');
+  }
+  $element['alt']['#description'] = t('NOW REQUIRED: This text will be used by screen readers, search engines, or when the image cannot be loaded. The text should provide the equivalent purpose of the image.');
+  // Return the altered element.
+  return $element;
+}
+
+/*
+ * Helper function to validate that alt text is provided for all image fields.
+ */
+
+function _image_field_validate_alt_text($element, &$form_state) {
+  if (!in_array('file_managed_file_submit', $form_state['triggering_element']['#submit'])) {
+    // If the image is not there, we do not check for empty values.
+    $parents = $element['#parents'];
+    $field = array_pop($parents);
+    $image_field = drupal_array_get_nested_value($form_state['input'], $parents);
+    // We check for the array key, so that it can be NULL (like if the user
+    // submits the form without using the "upload" button).
+    if (!array_key_exists($field, $image_field)) {
+      return;
+    }
+    // Check if field is left emtpy.
+    elseif (empty($image_field[$field])) {
+      form_error($element, t('The field !title is required', array('!title' => $element['#title'])));
+      return;
+    }
+  }
+}
+
+/*
+ * Hook to force 'left' as default value for wysiwyg images.
+ */
+
+function nys_utils_media_wysiwyg_format_form_prepare_alter(&$form, $form_id, $form_state){
+    $form['options']['alignment']['#options'] = array(
+    'left' => t('Left'),
+    'right' => t('Right'),
+    'center' => t('Center'),
+    );
+}
+
+
+/**
+ *
+ */
+function nys_utils_ajax_update_committees($form, $form_state) {
+  $senator_nid = $form_state['input']['field_senator'][LANGUAGE_NONE];
+  $new_options = nys_utils_filter_committee_options_by_chair_co_chair($form['field_committee'][LANGUAGE_NONE]['#options_original'], array($senator_nid));
+  $form['field_committee'][LANGUAGE_NONE]['#options'] = $new_options;
+  return $form['field_committee'];
+}
+
+/**
+ * Implements hook_form_alter.
+ */
+function nys_utils_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+
+  $user_has_mcp = user_has_role(_nys_utils_get_rid_by_name('Microsite Content Producer'), $user);
+  $user_is_senator = user_is_senator($user);
+  if (($user_has_mcp || $user_is_senator) && !empty($form['field_senator'])) {
+
+    if ($user_is_senator) {
+      $senator_nid = user_get_senator_nid($user);
+      $form['field_senator'][LANGUAGE_NONE]['#default_value'] = $senator_nid;
+      $senator_options_new = array($senator_nid => $form['field_senator'][LANGUAGE_NONE]['#options'][$senator_nid]);
+      $form['field_senator'][LANGUAGE_NONE]['#options'] = $senator_options_new;
+    }
+    else {
+      $senators_array = microsite_content_producer_get_senator_nids($user);
+      foreach ($form['field_senator'][LANGUAGE_NONE]['#options'] as $key => $value) {
+        if (!in_array($key, $senators_array)) {
+          // Only remove the Events 'None' option for Microsite Content Producers.
+          $can_edit_all_events = user_access('Event: Edit any content', $user);
+          $is_event = ($form_id == 'event_node_form');
+          if (!$can_edit_all_events && $user_has_mcp && $is_event) {
+            unset($form['field_senator'][LANGUAGE_NONE]['#options'][$key]);
+          }
+          elseif ($value != "- None -") {
+            unset($form['field_senator'][LANGUAGE_NONE]['#options'][$key]);
+          }
+        }
+      }
+    }
+
+    if (!empty($form['field_committee'][LANGUAGE_NONE]['#options'])) {
+      if (empty($form['field_committee'][LANGUAGE_NONE]['#options_original'])) {
+        $form['field_committee'][LANGUAGE_NONE]['#options_original'] = $form['field_committee'][LANGUAGE_NONE]['#options'];
+      }
+      $options = $form['field_committee'][LANGUAGE_NONE]['#options_original'];
+      if ($user_is_senator) {
+        $form['field_committee'][LANGUAGE_NONE]['#options'] = nys_utils_filter_committee_options_by_chair_co_chair($options, array($senator_nid));
+      }
+      else {
+        $form['field_committee'][LANGUAGE_NONE]['#options'] = nys_utils_filter_committee_options_by_chair_co_chair($options, $senators_array);
+      }
+
+      $form['field_senator'][LANGUAGE_NONE]['#ajax'] = array(
+        'callback' => 'nys_utils_ajax_update_committees',
+        'wrapper' => 'committees_ajax_wrapper',
+        'method' => 'replace',
+        'effect' => 'fade',
+      );
+      $form['field_committee']['#prefix'] = '<div id="committees_ajax_wrapper">';
+      $form['field_committee']['#suffix'] = '</div>';
+    }
+  }
+
+  if (($form_id == 'event_node_form') || ($form_id == 'session_node_form')) {
+    $form['field_location']['#required'] = 1;
+    $form['#validate'][] = 'nys_utils_check_location';
+  }
+
+  if ($form_id == 'student_program_node_form') {
+    $form['field_featured'][LANGUAGE_NONE]['#title'] = t('Featured');
+  }
+
+  if ($form_id == 'views_exposed_form' && arg(0) == 'user' && arg(2) == 'dashboard' && arg(3) == 'committees') {
+    if (user_is_constituent($user) && !empty($form['field_committee_tid']['#options'])) {
+
+      $result = db_query("SELECT entity_id AS tid from flagging WHERE uid = :uid and fid = 5", array(':uid' => $user->uid));
+
+      $new_options = array('All' => '- Any -');
+      foreach ($result as $r) {
+        $new_options[$r->tid] = $form['field_committee_tid']['#options'][$r->tid];
+      }
+
+      $form['field_committee_tid']['#options'] = $new_options;
+    }
+  }
+
+  if ($form_id === 'senator_node_form') {
+    $form['#after_build'][] = 'nys_advpoll_change_contact';
+  }
+
+  if ($form_id === 'promotional_banner_node_form') {
+    $form['title']['#description'] = t('Please limit the title to no more than 85 characters or 12 words. Long titles will appear trimmed on landing pages.');
+  }
+
+  if ($form_id === 'video_node_form') {
+    $form['field_yt'][LANGUAGE_NONE]['add_more']['#access'] = FALSE;
+  }
+  if (($form_id === 'public_hearing_node_form') || ($form_id === 'session_node_form') || ($form_id === 'event_node_form')) {
+    unset($form['field_event_place'][LANGUAGE_NONE]['#options']['cap']);
+    unset($form['field_event_place'][LANGUAGE_NONE]['#options']['lob']);
+  }
+  if (($form_id === 'public_hearing_node_form') || ($form_id === 'meeting_node_form')) {
+      unset($form['field_event_place'][LANGUAGE_NONE]['#options']['teleconference']);
+  }
+  if ($form_id === 'meeting_node_form') {
+    unset($form['field_event_place'][LANGUAGE_NONE]['#options']['in_district']);
+    unset($form['field_event_place'][LANGUAGE_NONE]['#options']['in_albany']);
+  }
+}
+
+/**
+ * Implements hook_inline_entity_form_entity_form_alter().
+ */
+function nys_utils_inline_entity_form_entity_form_alter(&$entity_form, &$form_state) {
+  if ($entity_form['#entity_type'] == 'node' && $entity_form['#bundle'] == 'promotional_banner') {
+    $entity_form['title']['#description'] = t('Please limit the title to no more than 85 characters or 12 words. Long titles will appear trimmed on landing pages.');
+  }
+}
+
+function nys_advpoll_change_contact($form, &$form_state)
+{
+    if(isset($form['field_offices'][LANGUAGE_NONE])){
+        foreach ($form['field_offices'][LANGUAGE_NONE] as $key=>&$val){
+            if((string)((int)$key) == $key)
+                $val['contact_name']['#title'] = "Office Hours";
+        }
+    }
+    return $form;
+}
+
+/**
+ *
+ */
+function nys_utils_check_location($form, &$form_state) {
+  if (isset($form_state['values']['field_location'][LANGUAGE_NONE])) {
+    $locations = $form_state['values']['field_location'][LANGUAGE_NONE];
+    foreach ($locations as $location) {
+
+      if (empty($location['name']) && empty($location['street']) && empty($location['city']) && empty($location['province']) && empty($location['postal_code']) && empty($location['country'])) {
+        form_set_error('field_location', t('Please enter Location details.'));
+      }
+    }
+  }
+}
+
+/**
+ *
+ */
+function nys_utils_action_info() {
+  return array(
+    'nys_utils_set_accessible_sitewide' => array(
+      'type' => 'node',
+      'label' => t('Set "Accessible Sitewide"'),
+      'behavior' => array('changes_property'),
+      'configurable' => FALSE,
+      'vbo_configurable' => FALSE,
+      'triggers' => array('any'),
+    ),
+    'nys_utils_unset_accessible_sitewide' => array(
+      'type' => 'node',
+      'label' => t('Unset "Accessible Sitewide"'),
+      'behavior' => array('changes_property'),
+      'configurable' => FALSE,
+      'vbo_configurable' => FALSE,
+      'triggers' => array('any'),
+    ),
+  );
+}
+
+/**
+ *
+ */
+function nys_utils_set_accessible_sitewide(&$node, $context) {
+  $node->field_accessible_sitewide[LANGUAGE_NONE][0]['value'] = 1;
+}
+
+/**
+ *
+ */
+function nys_utils_unset_accessible_sitewide(&$node, $context) {
+  $node->field_accessible_sitewide[LANGUAGE_NONE][0]['value'] = 0;
+}
+
+/**
+ * @param $senator_nid node id of a senator node
+ * @return array of term ids for committees for which the given senator is the chairperson
+ */
+function senator_get_chair_tids($senator_nid) {
+
+  $query = "select fc.entity_id as tid from field_data_field_chair fc WHERE fc.field_chair_target_id = :senator_nid";
+
+  $result = db_query($query, array(":senator_nid" => $senator_nid));
+
+  $tids = array();
+
+  foreach ($result as $r) {
+    $tids[$r->tid] = $r->tid;
+  }
+
+  $query = "SELECT fm.entity_id as tid
+    FROM field_data_field_members fm JOIN field_data_field_senator fs
+    ON fs.entity_id = fm.field_members_value AND fs.bundle = 'field_members'
+    JOIN field_data_field_committee_member_role mr
+    ON mr.entity_id = fs.entity_id AND mr.bundle = fs.bundle
+    WHERE mr.field_committee_member_role_value = 2 and fs.field_senator_target_id = :senator_nid";
+
+  $result = db_query($query, array(":senator_nid" => $senator_nid));
+
+  foreach ($result as $r) {
+    $tids[$r->tid] = $r->tid;
+  }
+
+  return $tids;
+}
+
+/**
+ * @param $senator_nid node id of a senator node
+ * @return array of term ids for committees for which the given senator is a co-chair
+ */
+function senator_get_co_chair_tids($senator_nid) {
+  $tids = array();
+
+  $query = "SELECT fm.entity_id as tid
+    FROM field_data_field_members fm JOIN field_data_field_senator fs
+    ON fs.entity_id = fm.field_members_value AND fs.bundle = 'field_members'
+    JOIN field_data_field_committee_member_role mr
+    ON mr.entity_id = fs.entity_id AND mr.bundle = fs.bundle
+    WHERE mr.field_committee_member_role_value = 1 and fs.field_senator_target_id = :senator_nid";
+
+  $result = db_query($query, array(":senator_nid" => $senator_nid));
+
+  foreach ($result as $r) {
+    $tids[$r->tid] = $r->tid;
+  }
+
+  return $tids;
+}
+
+/**
+ *
+ */
+function nys_utils_filter_committee_options_by_chair_co_chair($options, $senator_nids = array()) {
+  global $user;
+
+  $options_new = array('_none' => '- None -');
+  $tids = array();
+
+  foreach ($senator_nids as $senator_nid) {
+    $results = senator_get_chair_tids($senator_nid);
+
+    $tids = array_replace($results, $tids);
+    $results = senator_get_co_chair_tids($senator_nid);
+    $tids = array_replace($results, $tids);
+  }
+
+  foreach ($tids as $tid) {
+    $options_new[$tid] = $options[$tid];
+  }
+
+  return $options_new;
+}
+
+/**
+ *
+ */
+function microsite_content_producer_get_senator_nids($user) {
+  $query = "SELECT field_senator_management_target_id AS nid FROM field_data_field_senator_management
+    WHERE entity_type = 'user' AND entity_id = :uid";
+
+  $result = db_query($query, array(':uid' => $user->uid));
+
+  $nids = array();
+  foreach ($result as $r) {
+    $nids[$r->nid] = $r->nid;
+  }
+
+  return $nids;
+}
+
+/**
+ *
+ */
+function is_bill_page() {
+  if (arg(0) == 'node' && is_numeric(arg(1))) {
+    $node = node_load(arg(1));
+    if ($node->type == 'bill') {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Calculates current legislative session, e.g. 2015.
+ */
+function current_legislative_session() {
+  $year = date('Y');
+  if ($year % 2 == 0) {
+    $year--;
+  }
+  return $year;
+}
+
+/**
+ * Returns a cached mapping of senator names, keyed by the nid.
+ */
+function get_senator_name_mapping() {
+  $cache_key = 'nys_utils_get_senator_name_mapping';
+  if (cache_get($cache_key) == FALSE) {
+    $senators_nodes = node_load_multiple(array(), array('type' => 'senator'));
+    $senator_mappings = array();
+    foreach ($senators_nodes as &$node) {
+      $senator_mappings[$node->nid] = array(
+        'short_name' => $node->field_shortname[LANGUAGE_NONE][0]['safe_value'],
+        'full_name' => $node->title,
+      );
+    }
+    cache_set($cache_key, $senator_mappings);
+  }
+  return cache_get($cache_key)->data;
+}
+
+/**
+ * Implements hook_page_alter().
+ *
+ * We want to provide more detail to New Relic on the transaction and late in
+ * the page build seemed like the simplest place.
+ */
+function nys_utils_page_alter(&$page) {
+  // Detect the user's logged in state, and auto-subscribe preferences.
+  $setting = array(
+    'is_logged_in' => user_is_logged_in(),
+    'auto_subscribe' => nys_utils_check_autosubscribe($GLOBALS['user']->uid),
+  );
+  drupal_add_js($setting, array('type' => 'setting'));
+
+  if (!extension_loaded('newrelic')) {
+    return;
+  }
+
+  $name = NULL;
+
+  // Look for a panel page...
+  $panel_page = page_manager_get_current_page();
+  if (isset($panel_page['name'])) {
+    // If it's a node page put the argument's node type into the transaction
+    // name.
+    if ($panel_page['name'] == 'node_view') {
+      if (isset($panel_page['contexts']['argument_entity_id:node_1']->data)) {
+        $node = $panel_page['contexts']['argument_entity_id:node_1']->data;
+        $name = 'page_manager_node_view_page/' . $node->type;
+      }
+    }
+    // If it's a page_manager page use the panel name.
+    elseif ($panel_page['task']['task type'] == 'page') {
+      $name = 'page_manager_page_execute/' . $panel_page['name'];
+    }
+  }
+  else {
+    $menu_item = menu_get_item();
+    if ($menu_item['path'] == 'node/%') {
+      // Looks like panels didn't have a variant and it's falling back to
+      // node_page_view.
+      $name = 'node_page_view/' . $menu_item['page_arguments'][0]->type;
+    }
+  }
+
+  if ($name) {
+    newrelic_name_transaction($name);
+  }
+}
+
+/**
+ * Utility function destroys session variables.
+ *
+ * To be used generally between anonymous votes.
+ */
+function nys_utils_regenerate_session() {
+  $session_name = session_name();
+  $session_api_sess = variable_get('session_api_cookie_name', 'session_api_session');
+  setcookie($session_name, '', NULL, '/', ini_get('session.cookie_domain'));
+  $_COOKIE[$session_name] = '';
+  setcookie($session_api_sess, '', NULL, '/', ini_get('session.cookie_domain'));
+  $_COOKIE[$session_api_sess] = '';
+  drupal_static_reset('session_api_get_sid');
+  drupal_static_reset('flag_set_sid');
+  session_destroy();
+  $sid = flag_get_sid(0, TRUE);
+  return $sid;
+}
+
+/**
+ * Loads a senator entity based on the passed senate district number.  The
+ * district_id parameter is *not* the taxonomy id (e.g., NY Senate District 5,
+ * $district_id=5).  Loaded entities are cached by district number.
+ *
+ * @param $district_id
+ *
+ * @return bool|mixed Either the senator entity array or FALSE/NULL.
+ */
+function nys_utils_get_senator_from_district_id($district_id) {
+  $loaded_senators = &drupal_static(__FUNCTION__);
+
+  // If the entry exists in cache, use that.
+  if (!isset($loaded_senators[$district_id])) {
+    // First, load the district.
+    $district = taxonomy_term_load($district_id);
+
+    if ($district !== FALSE) {
+      // Now load that district's senator.
+      $loaded_senators[$district_id] = node_load($district->field_senator[LANGUAGE_NONE][0]['target_id']);
+    }
+  }
+
+  return $loaded_senators[$district_id];
+}
+
+/**
+ * Utility function that allows the sending of notifications to slack.
+ *
+ * @param string $message
+ *   The message body to send into slack.
+ * @param array $fields
+ *   Array of fields that represent 'fields' on a slack message.
+ * @param string $channel
+ *   The channel or user to be alerted.
+ * @param string $title
+ *   The title of the slack message.
+ * @param string $attachment_color
+ *   The color of the attachment message. Can be 'good', 'warning', or 'danger'.
+ */
+function nys_utils_send_slack_notification($message, $fields = array(), $channel = NULL, $title = NULL, $attachment_color = 'danger') {
+  $slack_url = variable_get('nys_access_permissions_slack_url');
+
+  // Proceed only if the slack URL is set.
+  if (!empty($slack_url)) {
+    // Get default channel if none is passed in.
+    if ($channel == NULL) {
+      $channel = variable_get('nys_access_permissions_slack_channel');
+    }
+
+    // Get default title if none is passed in.
+    if ($title == NULL) {
+      if (defined('PANTHEON_ENVIRONMENT')) {
+        $title = "Report from " . PANTHEON_ENVIRONMENT . ' environment.';
+      }
+      else {
+        $title = variable_get('nys_access_permissions_slack_title');
+      }
+    }
+
+    // Set a default for attachment color, which can be any of the following:
+    // - good (green)
+    // - warning (yellow)
+    // - danger (red)
+    $slack_attachment_colors = array('good', 'warning', 'danger');
+    if (!in_array($attachment_color, $slack_attachment_colors)) {
+      $attachment_color = 'danger';
+    }
+
+    $payload = array(
+      'text' => $title,
+      'channel' => $channel,
+      'attachments' => array([
+        'color' => $attachment_color,
+        'text' => $message,
+        'fallback' => $message,
+        'pretext' => '',
+      ],
+      ),
+    );
+
+    // Merge in fields if the $fields array is not empty.
+    if (is_array($fields) && count($fields)) {
+      $payload['attachments'][0]['fields'] = $fields;
+    }
+
+    // Convert $payload array to recommended json string.
+    $data_string = array('payload' => json_encode($payload));
+
+    $ch = curl_init($slack_url);
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    if ($response != 'ok') {
+      watchdog('nys_utils_slack', 'Slack call failed with response: %response', ['%response'=>$response], WATCHDOG_ERROR);
+    }
+  }
+  else {
+    watchdog('nys_utils_slack', 'Slack URL is not set!', array(), WATCHDOG_WARNING);
+  }
+}
+
+/**
+ * Alters the description text on the Web tab for Media Browser upload.
+ */
+function nys_utils_form_file_entity_add_upload_alter(&$form, &$form_state, $form_id) {
+  $step = isset($form['#step']) ? $form['#step'] : 0;
+  // Swap the upload field for an embed field when on the first step of the web
+  // tab.
+  if ($form_id == 'media_internet_add_upload' && $step == 1) {
+
+
+    $form['embed_code'] = array(
+      '#type' => 'textfield',
+      '#title' => t('URL for internet media resource'),
+      '#description' => t('To embed a Twitter or Facebook post, enter the URL to the post.<br><br> <strong>Examples:</strong><br><strong>Twitter:</strong> https://twitter.com/NYSenate/status/877737578484699137<br> <strong>Facebook:</strong> https://www.facebook.com/NYsenate/posts/10155333531260883'),
+      '#attributes' => array('class' => array('media-add-from-url')),
+      // There is no standard specifying a maximum length for a URL. Internet
+      // Explorer supports up to 2083 (http://support.microsoft.com/kb/208427)
+      // so we assume publicly available media URLs are within this limit.
+      '#maxlength' => 2083,
+      '#required' => TRUE,
+      '#default_value' => isset($form_state['storage']['embed_code']) ? $form_state['storage']['embed_code'] : NULL,
+    );
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function nys_utils_module_implements_alter(&$implementations, $hook) {
+  switch($hook) {
+    case 'form_file_entity_add_upload_alter':
+      // Move user_login hook to the top to circumvent default flag module behavior.
+      $group = array('nys_utils' => $implementations['nys_utils']);
+      unset($implementations['nys_utils']);
+      $implementations = $group + $implementations;
+      break;
+  }
+}
+
+/**
+ * Checks for safe use of array and key.
+ *
+ * The nys_av() function tests arrays before use returns a default value if not.
+ *
+ * param scaler $key
+ *   The array key to test.
+ * param array $list
+ *   The array to test.
+ * param scaler $default
+ *   The value to return if $key is not set.
+ *
+ *   Returns the array data if set or the default if not.
+ */
+function nys_av($key, $list, $default = NULL) {
+  if (is_array($list)) {
+    return isset($list[$key]) ? $list[$key] : $default;
+  }
+  return $default;
+}
+
+function nys_utils_make_name_safe($name) {
+  $pattern = '/(^[^a-z]|[^a-z0-9_])/i';
+  return preg_replace($pattern, '_', strtolower($name));
+}
+
+/**
+ * Helper function to read the current state of a user's autosubscribe setting.
+ * It is possible that this value has not been set, and we need to know the
+ * difference between unset and a "no" value (which is zero).
+ *
+ * @param $user object|integer a user object or user ID to load.
+ *
+ * @return bool|int FALSE on failure, otherwise the value of the option.
+ */
+function nys_utils_check_autosubscribe($user) {
+  $ret = false;
+
+  $uid = 0;
+  if (isset($user->uid)) {
+    $uid = $user->uid;
+  }
+  elseif ((int) $user) {
+    $uid = (int) $user;
+  }
+
+  if ($uid) {
+    $account = user_load($uid);
+    if (isset($account->field_voting_auto_subscribe) && count($account->field_voting_auto_subscribe)) {
+      $ret = (int) $account->field_voting_auto_subscribe[LANGUAGE_NONE][0]['value'];
+    }
+  }
+  return $ret;
+}
+
+/**
+ * Implements hook_node_submit().
+ */
+function nys_utils_node_submit($node, $form, &$form_state) {
+  // Validate length of node title and show message if too long for teaser.
+  if ($node->type === 'promotional_banner') {
+    $title = $form_state['values']['title'];
+    if (strlen($title) > 85) {
+      drupal_set_message("The title entered is longer than 85 characters or 12 words, and it may appear trimmed on landing pages. Please consider shortening it.");
+    }
+  }
+}
+
+function nys_utils_get_cron_var_name($type) {
+  $type = (string) $type;
+  return $type
+    ? 'nys_last_cron_run_' . preg_replace('/[^a-z_]/', '_', $type)
+    : FALSE;
+}
+
+function nys_utils_get_cron_lastrun($type, $default = NULL) {
+  return variable_get(nys_utils_get_cron_var_name($type), $default);
+}
+
+function nys_utils_set_cron_lastrun($type) {
+  if ((string) $type) {
+    $date = date("Y-m-d H:i:s");
+    variable_set(nys_utils_get_cron_var_name($type), $date);
+  }
+}
+
+function nys_utils_get_base_url() {
+  global $base_url;
+  return (($_ENV['PANTHEON_ENVIRONMENT'] ?? FALSE) === "live") ? 'https://www.nysenate.gov' : $base_url;
+}
+
+/**
+ * Sandbox mode for SendGrid requests is desired if:
+ * - a Pantheon environment is not found,
+ * - OR the Pantheon environment is not "live",
+ * - OR rerouting is not enabled.
+ *
+ * @return bool
+ */
+function nys_utils_detect_sendgrid_sandbox() {
+  $is_live    = defined('PANTHEON_ENVIRONMENT') && PANTHEON_ENVIRONMENT == 'live';
+  $is_reroute = nys_utils_detect_mail_rerouting();
+
+  return (!($is_live || $is_reroute));
+}
+
+/**
+ * Detect if mail rerouting has been enabled.
+ *
+ * @return bool
+ */
+function nys_utils_detect_mail_rerouting() {
+  return variable_get('reroute_email_enable', 0)
+    && valid_email_address(variable_get('reroute_email_address', ''));
+}
+
+/**
+ * Implements hook_nys_sendgrid_format_alter().
+ *
+ * This is only needed for nys_sendgrid mail objects.
+ * 1. Adds subject and body substitutions to support dynamic templates,
+ * 2. Adds global substitutions for site URLs,
+ * 3. Configures global tracking settings,
+ * 4. Enables sandbox mode in non-prod environments.
+ *
+ * Sets up default-on tracking for SendGrid outbound.  This behavior can be
+ * suppressed by setting the "suppress_tracking" key to TRUE in the message
+ * params.  For GA, the keys "GA_CampaignName" and "GA_CampaignContent" are
+ * used to customize those respective properties.
+ *
+ * @param $message array Drupal message array.
+ */
+function nys_utils_nys_sendgrid_format_alter(&$message) {
+  // Easy reference.
+  /* @var $sgm \SendGrid\Mail\Mail */
+  $sgm = &$message['params']['sendgrid_mail'];
+
+  // Get the assigned template ID.  If one is not assigned, the property
+  // will be NULL.  If it is assigned, the property will yield *another*
+  // object, which must also be called.  This lib is a little screwy...
+  $template_id = $sgm->getTemplateId();
+  $template_id = ($template_id instanceof SendGrid\Mail\TemplateId)
+    ? $template_id->getTemplateId()
+    : NULL;
+
+  // Detect if the template is dynamic, and if substitutions are needed.
+  $autopop = variable_get('nys_sendgrid_content_substitution', FALSE)
+    && nys_sendgrid_is_template_dynamic($template_id);
+
+  // If body/subject substitutions are needed, find the "proper" content.
+  // We prefer the first HTML content, falling back to the first TEXT content.
+  $subj_token = variable_get('nys_sendgrid_content_token_subject', 'subject');
+  $body_token = variable_get('nys_sendgrid_content_token_body', 'body');
+  $body_content = FALSE;
+  if ($autopop) {
+    $text_content = FALSE;
+    foreach ($sgm->getContents() as $val) {
+      if ($val->getType() == Sendgrid\Mail\MimeType::HTML && !$body_content) {
+        $body_content = $val->getValue();
+      }
+      if ($val->getType() == Sendgrid\Mail\MimeType::TEXT && !$text_content) {
+        $text_content = $val->getValue();
+      }
+    }
+    if (!$body_content && $text_content) {
+      $body_content = $text_content;
+    }
+  }
+
+  // Add the legacy and handlebar versions of the home URL, and the
+  // body/subject substitutions, if necessary.
+  foreach (($sgm->getPersonalizations() ?? []) as $key=>$val) {
+    $val->addSubstitution('%instance_url%', nys_utils_get_base_url());
+    $val->addSubstitution('instanceUrl', nys_utils_get_base_url());
+    if ($autopop) {
+      $subj_content = $val->getSubject() ?: $sgm->getGlobalSubject();
+      $subj_content = ($subj_content instanceof SendGrid\Mail\Subject)
+        ? $subj_content->getSubject()
+        : '';
+      $val->addSubstitution($body_token, (string) $body_content);
+      $val->addSubstitution($subj_token, (string) $subj_content);
+    }
+  }
+
+  // Set up tracking, if not suppressed.
+  if (!($message['params']['suppress_tracking'] ?? FALSE)) {
+    try {
+      // Google Analytics Tracking
+      $g_analytics = new SendGrid\Mail\Ganalytics();
+      $g_analytics->setEnable(TRUE);
+      $g_analytics->setCampaignMedium('email');
+      $g_analytics->setCampaignSource('ny_state_senate');
+      if ($t_name = ($message['params']['GA_CampaignName'] ?? FALSE)) {
+        $g_analytics->setCampaignName($t_name);
+      }
+      if ($t_event = ($message['params']['GA_CampaignContent'] ?? FALSE)) {
+        $g_analytics->setCampaignContent($t_event);
+      }
+
+      // Enable Email Open Tracking
+      $open_tracking = new SendGrid\Mail\OpenTracking();
+      $open_tracking->setEnable(TRUE);
+
+      // Enable Email Click Tracking
+      $click_tracking = new SendGrid\Mail\ClickTracking();
+      $click_tracking->setEnable(TRUE);
+      $click_tracking->setEnableText(TRUE);
+
+      // Prepare Track Settings Object
+      $alert_tracking = new SendGrid\Mail\TrackingSettings(
+        $click_tracking,
+        $open_tracking,
+        NULL,
+        $g_analytics
+      );
+
+      $sgm->setTrackingSettings($alert_tracking);
+    }
+    catch (Exception $e) {
+      watchdog(
+        'nys_utils',
+        'Could not set tracking options on an email! (id=%id, excp=%excp)',
+        ['%id' => $message['id'], '%excp' => $e->getMessage()],
+        WATCHDOG_WARNING
+      );
+    }
+  }
+
+  // Set sandbox mode if not on prod, and no rerouting is detected.
+  if (nys_utils_detect_sendgrid_sandbox()) {
+    watchdog('nys_utils', 'SendGrid sandboxing engaged');
+    drupal_set_message('Email Sandboxing through SendGrid is engaged.  Configure mail rerouting to disengage sandbox.', 'warning');
+    $sgm->enableSandBoxMode();
+  }
+}
+
+/**
+ * Implementation of hook_menu_alter().
+ *
+ * Removes /node page
+ */
+function nys_utils_menu_alter(&$items) {
+  unset($items['node']);
+}

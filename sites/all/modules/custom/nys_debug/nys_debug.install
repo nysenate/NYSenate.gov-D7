@@ -1,0 +1,10 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the NYS Debug module.
+ */
+
+function nys_debug_install() {
+
+}

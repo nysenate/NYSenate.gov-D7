@@ -1,0 +1,118 @@
+// Simple calendar downloads block
+.view-nodequeue-2 {
+	max-width: 100%;
+	margin: 0 auto;
+	.view-content {
+		ul {
+			margin: 0;
+			li {
+				margin: 0;
+				list-style: none;
+				overflow: hidden;
+				&.views-row {
+					.c-block--initiative__has-img {
+						h4 {
+							font-family: "Adelle Light";
+							font-size: 32px;
+							line-height: 35px;
+							color: white;
+							padding: 30px;
+						}
+					}
+				}
+				&.views-row-1 {
+					.c-block--initiative__has-img {
+						height: 190px;
+						.c-initiative--content {
+							padding: 0;
+						}
+					}
+				}
+				&.views-row-2,
+				&.views-row-3 {
+					position: relative;
+					display: inline-block;
+					width: 100%;
+					margin: 0 35px 20px 0;
+					height: 190px;
+					.c-initiative-block,
+					.c-block--initiative__has-img {
+						height: 190px;		
+						img {
+							display: none;
+						}
+						.c-initiative--content {
+							padding: 0;
+						}
+						.c-block--btn {
+							left: 0;
+							padding-left: 30px;
+						}
+					}
+				}
+				&.views-row-3 {
+					margin-right: 0;
+				}
+			}
+		}
+	}
+}
+
+.page-calendar {
+	.view-nodequeue-2,
+	.block-nys-blocks-calendar-downloads {
+		padding:0 20px;
+	}
+}
+
+@media #{$tablet} {
+	.view-nodequeue-2 {
+		max-width: 760px;
+		.view-content {
+			ul {
+				li {
+					&.views-row-1 {
+						.c-block--initiative__has-img {
+							margin-bottom: 40px;
+							height: auto;
+						}
+						.c-initiative--content {
+							vertical-align: top;
+						}
+					}
+					&.views-row-2,
+					&.views-row-3 {
+						width: 50%;
+						height: 345px;
+						margin: 0 0 20px;
+						float: left;
+						.c-initiative-block,
+						.c-block--initiative__has-img {
+							height: 345px;
+							img {
+								display: none;
+							}
+							.c-initiative--content {
+								width: 85%;
+								vertical-align: top;
+								h4 {
+								  padding: 30px;
+								}
+							}
+							.c-block--btn {
+								left: 0;
+								padding-left: 30px;
+							}
+						}
+					}
+					&.views-row-2 {
+						padding-right: 20px;
+					}
+					&.views-row-3 {
+						padding-left: 20px;
+					}
+				}
+			}
+		}
+	}
+}

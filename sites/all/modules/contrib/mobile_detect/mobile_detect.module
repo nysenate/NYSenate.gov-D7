@@ -1,0 +1,260 @@
+<?php
+
+/**
+ * @file
+ * Lightweight mobile detection based on the Mobile_Detect.php library.
+ */
+
+/**
+ * Implements hook_help(). 
+ */
+function mobile_detect_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#mobile_detect':
+      return _mobile_detect_get_readme();
+  }
+}
+
+function _mobile_detect_get_readme() {
+  $readme = file_get_contents(dirname(__FILE__) . '/README.txt');
+  
+  if (module_exists('markdown')) {
+    $filters = module_invoke('markdown', 'filter_info');
+    $info = $filters['filter_markdown'];
+    
+    if (function_exists($info['process callback'])) {
+      $function = $info['process callback'];
+      $output = filter_xss_admin($function($readme, NULL));
+    }
+    else {
+      $output = '<pre>'. check_plain($readme) .'</pre>';
+    }
+  }
+  else {
+    $output = '<pre>'. check_plain($readme) .'</pre>';
+  }
+  
+  return $output;
+}
+
+/**
+ * Implements hook_registry_files_alter().
+ * 
+ * Adds the Mobile_Detect() class to the registry so that autoloading works.
+ * See http://drupal.stackexchange.com/questions/42266 for a discussion.
+ */
+function mobile_detect_registry_files_alter(&$files, $modules) {
+  $library_path = _mobile_detect_get_library_path();
+
+  $files[$library_path . '/Mobile_Detect.php'] = array(
+    'module' => 'mobile_detect',
+    'weight' => 0,
+  );
+}
+
+/**
+ * Getter function to retrieve a Mobile_Detect() singleton.
+ * 
+ * @return object
+ * Instance of Mobile_Detect(), NULL if failure.
+ */
+function mobile_detect_get_object() {
+  $detect = &drupal_static(__FUNCTION__);
+
+  if (!isset($detect)) {
+    if (class_exists('Mobile_Detect')) {
+      try {
+        $detect = new Mobile_Detect();
+      } catch (Exception $e) {
+        $detect = NULL;
+        watchdog('mobile_detect', 'Could not instantiate Mobile_Detect(): %message',
+          array('%message' => $e->getMessage()), WATCHDOG_ALERT);
+      }
+    } else {
+      $detect = NULL;
+      watchdog('mobile_detect', 'Mobile_Detect() class does not exist', array(), WATCHDOG_ALERT);
+    }
+  }
+
+  return $detect;
+}
+
+/**
+ * Predicate function to test a device type.
+ * 
+ * This is intended to be used when the check could be based on user input.
+ * The $type argument is checked against the list of valid types.  If the $type
+ * is not a valid choice, an error is logged and FALSE is returned.  Otherwise
+ * the test is run and returned.
+ * 
+ * @param string $type
+ * The type to check.
+ *
+ * @return boolean
+ * The result of the test; FALSE if the test name was invalid.
+ */
+
+function mobile_detect_check_type($type) {
+  $detect = mobile_detect_get_object();
+  $rules = array('Mobile', 'Tablet', 'Handheld') + $detect->getRules();
+  $name = preg_replace('/^is/', '', $type);
+
+  if (!in_array($name, $rules)) {
+    watchdog('mobile_detect', 'Illegal access rule: %type',
+      array('%type' => $type), WATCHDOG_ERROR);
+    return FALSE;   
+  }
+
+  if ($type == 'isHandheld') {
+    return $detect->isMobile() && !$detect->isTablet();
+  }
+  else {
+    return $detect->{$type}();
+  }
+}
+
+/**
+ * Retrieve the path to the Mobile_Detect library.
+ * 
+ * @return string
+ * Candidate path to the Mobile_Detect library, relative
+ * to Drupal root.
+ *
+ * @access private
+ */
+function _mobile_detect_get_library_path() {
+  if (function_exists('libraries_get_path')) {
+    $library_path = libraries_get_path('Mobile_Detect');
+    if (!$library_path) {
+      $library_path = 'sites/all/libraries/Mobile_Detect';
+    }
+  }
+  else {
+    $library_path = 'sites/all/libraries/Mobile_Detect';
+  }
+
+  return $library_path;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function mobile_detect_permission() {
+  return array(
+    'view mobile detect debug' => array(
+      'title' => t('View Mobile Detect Debug'),
+      'description' => t('Allows users to view the Mobile Detect debug blocks, etc.'),
+    ),
+  );
+}
+
+/**
+ * Implements function hook_block_info().
+ */
+function mobile_detect_block_info() {
+  $blocks = array();
+
+  $blocks['mobile_detect_simple_debug'] = array(
+    'info' => t('Mobile Detect Simple Debug'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  $blocks['mobile_detect_full_debug'] = array(
+    'info' => t('Mobile Detect Full Debug'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+   return $blocks;
+}
+
+/**
+ * Implements function hook_block_view().
+ */
+function mobile_detect_block_view ($delta) {
+  $block = array();
+
+  if (user_access('view mobile detect debug')) {
+    switch ($delta) {
+      case 'mobile_detect_simple_debug':
+        $block['subject'] = t('Mobile Detect: Simple debug');
+        $block['content'] = array(
+          '#markup' => _mobile_detect_simple_debug(),
+        );
+        break;
+  
+      case 'mobile_detect_full_debug':
+        $block['subject'] = t('Mobile Detect: Full debug');
+        $block['content'] = array(
+          '#markup' => _mobile_detect_full_debug(),
+        );
+        break;
+    }
+  }
+  
+  return $block;
+}
+
+/**
+ * Content generator for hook_block_view('mobile_detect_simple_debug')
+ */
+function _mobile_detect_simple_debug() {
+  $true = t('true');
+  $false = t('false');
+  
+  $output = array();
+  
+  $output[] = '<dl>';
+  
+  $output[] = '<dt>' . t('isMobile') . '</dt>';
+  $output[] = '<dd>' . (mobile_detect_check_type('isMobile') ? $true : $false) . '</dd>';
+  
+  $output[] = '<dt>' . t('isTablet') . '</dt>';
+  $output[] = '<dd>' . (mobile_detect_check_type('isTablet') ? $true : $false) . '</dd>';
+
+  $output[] = '<dt>' . t('isHandheld') . '</dt>';
+  $output[] = '<dd>' . (mobile_detect_check_type('isHandheld') ? $true : $false) . '</dd>';
+
+  $output[] = '<dt>' . t('Request Time') . '</dt>';
+  $output[] = '<dd>' . REQUEST_TIME . '</dd>';
+
+  $output[] = '</dl>';
+  
+  return join('', $output);
+}
+
+/**
+ * Content generator for hook_block_view('mobile_detect_full_debug')
+ */
+function _mobile_detect_full_debug() {
+  $true = t('true');
+  $false = t('false');
+  
+  $detect = mobile_detect_get_object();
+  
+  $output = array();
+  
+  $output[] = '<dl>';
+
+  $output[] = '<dt>' . t('isMobile') . '</dt>';
+  $output[] = '<dd>' . (mobile_detect_check_type('isMobile') ? $true : $false) . '</dd>';
+
+  $output[] = '<dt>' . t('isTablet') . '</dt>';
+  $output[] = '<dd>' . (mobile_detect_check_type('isTablet') ? $true : $false) . '</dd>';
+
+  $output[] = '<dt>' . t('isHandheld') . '</dt>';
+  $output[] = '<dd>' . (mobile_detect_check_type('isHandheld') ? $true : $false) . '</dd>';
+  
+  foreach ($detect->getRules() as $name => $unused) {
+    $predicate = 'is' . $name;
+    
+    $output[] = '<dt>' . t('is@name', array('@name' => $name)) . '</dt>';
+    $output[] = '<dd>' . (mobile_detect_check_type($predicate) ? $true : $false) . '</dd>';
+  }
+
+  $output[] = '<dt>' . t('Request Time') . '</dt>';
+  $output[] = '<dd>' . REQUEST_TIME . '</dd>';
+
+  $output[] = '</dl>';
+  
+  return join('', $output);
+}

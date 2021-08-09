@@ -1,0 +1,105 @@
+// @file
+// Place your mixins here. Feel free to roll your own mixins.
+
+@mixin transition($transition-property, $transition-time, $method, $delay: 0s) {
+    -webkit-transition: $transition-property $transition-time $method $delay;
+    -moz-transition: $transition-property $transition-time $method $delay;
+    -ms-transition: $transition-property $transition-time $method $delay;
+    -o-transition: $transition-property $transition-time $method $delay;
+    transition: $transition-property $transition-time $method $delay;
+}
+
+@mixin border-radius($radius) {
+  overflow: hidden;
+  -webkit-border-radius: $radius;
+  border-radius: $radius;
+  background-clip: padding-box;  // stops bg color from leaking outside the border
+}
+
+@mixin box-shadow($left, $top, $blur, $color, $inset: false) {
+  @if $inset {
+    -webkit-box-shadow:inset $left $top $blur $color;
+    -moz-box-shadow:inset $left $top $blur $color;
+    box-shadow:inset $left $top $blur $color;
+  } @else {
+    -webkit-box-shadow: $left $top $blur $color;
+    -moz-box-shadow: $left $top $blur $color;
+    box-shadow: $left $top $blur $color;
+  }
+}
+@mixin box-sizing($box-model) {
+  -webkit-box-sizing: $box-model; // Safari <= 5
+     -moz-box-sizing: $box-model; // Firefox <= 19
+          box-sizing: $box-model;
+}
+
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+// this is Foundation's mixin for flex-video
+// stored here so if we update it will remain the same
+
+//
+// @variables
+//
+
+$include-html-classes: true !default;
+$default-float: left !default;
+
+// IMPORT ONCE
+// We use this to prevent styles from being loaded multiple times for compenents that rely on other components.
+$modules: () !default;
+@mixin exports($name) {
+  @if(not index($modules, $name)) {
+    $modules: append($modules, $name);
+    @content;
+  }
+}
+
+$include-html-media-classes: $include-html-classes !default;
+
+// We use these to control video container padding and margins
+$flex-video-padding-top: rem-calc(25) !default;
+$flex-video-padding-bottom: 67.5% !default;
+$flex-video-margin-bottom: rem-calc(16) !default;
+
+// We use this to control widescreen bottom padding
+$flex-video-widescreen-padding-bottom: 56.34% !default;
+
+//
+// @mixins
+//
+
+@mixin flex-video-container {
+  position: relative;
+  padding-top: $flex-video-padding-top;
+  padding-bottom: $flex-video-padding-bottom;
+  height: 0;
+  margin-bottom: $flex-video-margin-bottom;
+  overflow: hidden;
+
+  &.widescreen { padding-bottom: $flex-video-widescreen-padding-bottom; }
+  &.vimeo { padding-top: 0; }
+
+  iframe,
+  object,
+  embed,
+  video {
+    position: absolute;
+    top: 0;
+    #{$default-float}: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@include exports("flex-video") {
+  @if $include-html-media-classes {
+    .flex-video { @include flex-video-container; }
+  }
+}

@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Permissions per Webform module install/schema hooks.
+ *
+ * @author Daniel Imhoff
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function permissions_per_webform_schema() {
+  $schema = array();
+
+  $schema['permissions_per_webform'] = array(
+    'description' => 'Table for storing webform permissions per webform.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The node identifier of a webform.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'oid' => array(
+        'description' => 'The operation identifier of the operation the user is performing.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'rid' => array(
+        'description' => 'The role identifier.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('nid', 'oid', 'rid'),
+  );
+
+  return $schema;
+}

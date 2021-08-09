@@ -1,0 +1,18 @@
+<?php
+
+class Redis_Tests_Cache_PredisFixesUnitTestCase extends Redis_Tests_Cache_FixesUnitTestCase
+{
+    public static function getInfo()
+    {
+        return array(
+            'name'         => 'Predis cache fixes',
+            'description'  => 'Tests Redis module cache fixes feature.',
+            'group'        => 'Redis',
+        );
+    }
+
+    protected function getClientInterface()
+    {
+        return 'Predis';
+    }
+}

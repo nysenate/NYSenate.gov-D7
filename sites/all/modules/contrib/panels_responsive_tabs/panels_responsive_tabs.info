@@ -1,0 +1,13 @@
+name = Panels responsive tabs
+description = Show panel panes in a region as responsive tabs.
+core = 7.x
+package = Panels
+dependencies[] = panels
+dependencies[] = libraries
+
+; Information added by Drupal.org packaging script on 2017-10-26
+version = "7.x-1.1"
+core = "7.x"
+project = "panels_responsive_tabs"
+datestamp = "1509002949"
+

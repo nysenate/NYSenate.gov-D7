@@ -1,0 +1,139 @@
+<?php
+
+/**
+ * @file
+ * Show panel panes in a region as responsive tabs.
+ */
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function panels_responsive_tabs_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'panels' && $plugin == 'styles') {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
+ * Implements hook_libraries_info().
+ */
+function panels_responsive_tabs_libraries_info() {
+  $libraries['easy-responsive-tabs'] = array(
+    'name'              => 'Easy Responsive Tabs to Accordion',
+    'vendor url'        => 'https://github.com/samsono/Easy-Responsive-Tabs-to-Accordion',
+    'download url'      => 'https://github.com/samsono/Easy-Responsive-Tabs-to-Accordion/releases/tag/1.2.2',
+    'download file url' => 'https://github.com/samsono/Easy-Responsive-Tabs-to-Accordion/archive/1.2.2.tar.gz',
+    'version arguments' => array(
+      'file' => 'Easy-Responsive-Tabs-to-Accordion.jquery.json',
+      // "version": "1.2.1",.
+      'pattern' => '/version": "(\d+\.+\d+\.+\d+)"/',
+      'lines' => 5,
+    ),
+    'files'            => array(
+      'js'  => array(
+        'js/easyResponsiveTabs.js',
+      ),
+      'css' => array(
+        'css/easy-responsive-tabs.css',
+      ),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
+ * Implements hook_panels_pane_content_alter().
+ *
+ * Hold the title of the pane for later use (i.e. show it as the tab's title),
+ * and remove it form the pane itself.
+ */
+function panels_responsive_tabs_panels_pane_content_alter(&$content, $pane, $args, $context, $renderer, $display) {
+  // Get the regions that should be themed as tabs.
+  foreach ($display->panel_settings as $key => $values) {
+    if ($key == 'style_settings') {
+      continue;
+    }
+    if (!empty($values['style']) && $values['style'] == 'panels_responsive_tabs' && $pane->panel == $key && !empty($content->title)) {
+      // Capture the title.
+      panels_responsive_tabs_pane_titles($display->did, $pane->pid, $content->title);
+      // Remove it form the pane.
+      $content->title = '';
+
+      // Generate and store the tab identifier.
+      panels_responsive_tabs_pane_tabidentifiers($display->did, $key, $display->panel_settings['style_settings'][$key]['tabidentify'], $context);
+    }
+  }
+}
+
+/**
+ * Get or set pane title.
+ *
+ * @param string $did
+ *   Panels display ID.
+ * @param string $pid
+ *   Panels pane ID.
+ * @param string $title
+ *   Optional; Panels pane title to set, or if empty then the function will
+ *   return the captured title based on the display ID and pane ID properties.
+ *
+ * @return string|null
+ *   Unsanitized pane title, or NULL if doesn't exist.
+ */
+function panels_responsive_tabs_pane_titles($did = NULL, $pid = NULL, $title = NULL) {
+  $cache = &drupal_static(__FUNCTION__, array());
+  if (!isset($title)) {
+    return isset($cache[$did][$pid]) ? $cache[$did][$pid] : NULL;
+  }
+  $cache[$did][$pid] = $title;
+}
+
+/**
+ * Get or set tabidentifier.
+ *
+ * @param string $did
+ *   Panels display ID.
+ * @param string $region
+ *   Panels pane ID.
+ * @param string $identifier
+ *   Optional; Panels pane title to set, or if empty then the function will
+ *   return the captured title based on the display ID and pane ID properties.
+ * @param array $context
+ *   Optional: Panels context to generate the token replaced tab identifier.
+ *
+ * @return string|null
+ *   Unsanitized pane title, or NULL if doesn't exist.
+ */
+function panels_responsive_tabs_pane_tabidentifiers($did = NULL, $region = NULL, $identifier = NULL, $context = NULL) {
+  $cache = &drupal_static(__FUNCTION__, array());
+  if (!isset($identifier)) {
+    return isset($cache[$did][$region]) ? $cache[$did][$region] : NULL;
+  }
+  if (!isset($cache[$did][$region])) {
+    $identifier = ctools_context_keyword_substitute($identifier, array(), $context);
+    // Sterilize the title.
+    $identifier = filter_xss_admin($identifier);
+
+    $cache[$did][$region] = $identifier;
+  }
+}
+
+/**
+ * Form element validation handler for responsive tabs width.
+ */
+function _panels_responsive_tabs_validate_width($element, &$form_state) {
+  $value = $element['#value'];
+  if (!preg_match('/^((\d*)(px|%|em)|auto)$/', $value)) {
+    form_error($element, t("%name must be a valid width value or 'auto'.", array('%name' => $element['#title'])));
+  }
+}
+
+/**
+ * Form element validation handler for hex color values.
+ */
+function _panels_responsive_tabs_validate_color($element, &$form_state) {
+  $value = $element['#value'];
+  if (!preg_match('/^#(?:(?:[a-f\d]{3}){1,2})$/i', $value)) {
+    form_error($element, t('%name must be a valid hex color value.', array('%name' => $element['#title'])));
+  }
+}

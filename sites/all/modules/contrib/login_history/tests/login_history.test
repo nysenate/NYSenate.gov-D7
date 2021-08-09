@@ -1,0 +1,157 @@
+<?php
+
+/**
+ * @file
+ * Tests for Login History module.
+ */
+
+class LoginHistoryTestCase extends DrupalWebTestCase {
+
+  /**
+   * A user able to login.
+   *
+   * @var object
+   */
+  protected $web_user;
+
+  /**
+   * A user with permission to view all login histories.
+   *
+   * @var object
+   */
+  protected $admin_user;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Login History',
+      'description' => 'Test Login History module functionality.',
+      'group' => 'Login History',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('login_history', 'lhtest');
+    $this->web_user = $this->drupalCreateUser(array(
+      'view own login history',
+    ));
+    $this->admin_user = $this->drupalCreateUser(array(
+      'administer site configuration',
+      'administer users',
+      'administer blocks',
+      'view all login histories',
+    ));
+  }
+
+  /**
+   * Tests basic login history features.
+   */
+  function testLoginHistory() {
+    // Save uid 1 so it doesn't have an empty password so one-time links work.
+    $account = user_load(1);
+    user_save($account, array('pass' => user_password()));
+    // Confirm no emails sent yet.
+    $this->assertEqual(array(), $this->drupalGetMails());
+
+    // Enable the email on new login per device feature.
+    variable_set('login_history_mail_on_new_login_device', TRUE);
+
+    // Go as an admin. See admin's username. Don't see web_user username.
+    $this->drupalLogin($this->admin_user);
+    $this->drupalGet('admin/reports/login-history');
+    $this->assertRaw('<td>' . $this->admin_user->name . '</td>', t("Find admin's username in a cell of the report."));
+    $this->assertNoRaw('<td>' . $this->web_user->name . '</td>', t("Don't yet find web user's username in a cell of the report."));
+
+    $this->assertRaw('<td>Regular login</td>');
+    $this->assertNoRaw('<td>One-time login</td>');
+
+    // First login on a device doesn't get an email.
+    $this->assertEqual(array(), $this->drupalGetMails());
+
+    // Enable the login history block.
+    $edit['blocks[login_history_login_history_last][region]'] = 'content';
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+
+    // Do a one-time link as web user and see it recorded.
+    $this->drupalLogout();
+    $timestamp = REQUEST_TIME;
+    $reset_url_token = user_pass_rehash($this->web_user->pass, $timestamp, $this->web_user->login, NULL);
+    $uid = $this->web_user->uid;
+    $reset_url = url("user/reset/$uid/$timestamp/$reset_url_token", array('absolute' => TRUE));
+    $drupal_hash_salt = drupal_get_hash_salt();
+    $this->pass($drupal_hash_salt);
+    // This one simple trick does a quick login.
+    $this->drupalGet($reset_url . '/login');
+
+    // First login on a device doesn't get an email.
+    $this->assertEqual(array(), $this->drupalGetMails());
+
+    $this->drupalLogout();
+    $this->drupalLogin($this->admin_user);
+
+    // Subsequent login on same device doesn't get an email.
+    $this->assertEqual(array(), $this->drupalGetMails());
+
+    $this->drupalGet('admin/reports/login-history');
+    $this->assertRaw('<td>One-time login</td>');
+
+    // Data is recorded about the web user too.
+    $this->drupalLogout();
+    $this->drupalLogin($this->web_user);
+
+    $this->drupalGet('user');
+    $this->drupalGet('user/' . $this->web_user->uid . '/login-history');
+    $this->assertText('One-time login?');
+    $this->assertRaw('<td>' . $this->web_user->name . '</td>', t("Find web user's username in a cell of the report."));
+    $this->assertNoRaw('<td>' . $this->admin_user->name . '</td>', t("Don't tind admin's username in a cell of the user-specific report."));
+
+    $this->drupalLogout();
+
+    $this->drupalLogin($this->admin_user);
+    $this->drupalGet('admin/reports/login-history');
+    $this->assertRaw('<td>' . $this->web_user->name . '</td>', t("Find web user's username in a cell of the report."));
+
+    // Subsequent login on a device doesn't get an email.
+    $this->assertEqual(array(), $this->drupalGetMails());
+
+    // Ruin the device ID history.
+    $this->loginHistoryRuinDeviceIdHistory();
+
+
+    // Try one more login to get an email.
+    $this->drupalLogout();
+
+    // Unset the device id cookie.
+    $this->drupalGet('lhtest/delete-cookies');
+
+    $this->drupalLogin($this->web_user);
+
+    // Subsequent login with mismatched device ID should get an email.
+    $subject = 'New device login for ' . $this->web_user->name . ' at Drupal';
+    $this->assertMail('subject', $subject, "Found subject $subject");
+
+    // Disable the feature, no emails.
+    variable_set('login_history_mail_on_new_login_device', FALSE);
+    $this->drupalLogout();
+    $this->drupalGet('lhtest/delete-cookies');
+
+    $this->drupalLogin($this->web_user);
+
+    // Subsequent login with mismatched device ID should not get an email
+    // when the feature is disabled.
+    $mails = $this->drupalGetMails();
+    $this->assertEqual(1, count($mails));
+
+  }
+
+  /**
+   * Screws up stored device ID values so new logins will trigger an email.
+   */
+  private function loginHistoryRuinDeviceIdHistory() {
+    db_update('login_history')
+      ->fields(array(
+        'device_id' => 'peanut butter',
+      ))
+      ->execute();
+  }
+
+}

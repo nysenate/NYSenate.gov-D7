@@ -1,0 +1,329 @@
+.c-senators-committees-header{
+	overflow: hidden;
+	position: relative;
+	padding-bottom: 60px;
+	
+	p {
+		margin-bottom: 20px;
+	}
+
+	.c-container--link {
+		top: auto;
+		bottom: 0;
+		width: 50%;
+		padding-right: 20px;
+		text-align: right;
+		@extend .icon-after__down-arrow;
+
+		&:after {
+			position: absolute;
+			bottom: 3px;
+			right: 0;
+		}
+	}
+}
+.views-exposed-form .views-exposed-widget {
+	padding: 0;
+}
+
+@media #{$tablet} {
+	.c-senators-committees-header {
+		padding-bottom: 40px;
+		
+		p {
+			margin-bottom: 40px;
+			line-height: 32px;
+		}
+
+		.c-container--link {
+			width: auto;
+			text-align: left;
+			padding-right: 0;
+
+			&:after {
+				position: relative;
+				bottom: auto;
+				font-size: 17px;
+				line-height: 17px;
+			}
+		}
+	}
+}
+
+
+/*-------------------------------------------------------
+/
+/ 	SENATORS LIST
+/ 	Exists on : Senators Listing Page
+/
+/-------------------------------------------------------*/
+
+.c-senators-container {
+	overflow: hidden;
+
+	.views-exposed-widget{
+		position: relative;
+		width: 100%;
+
+		.views-widget {
+			&:after{
+				@extend .icon-after__see-more;
+				position: absolute;
+				right: 10px;
+				top: 5px;
+				font-size: 25px;
+				color: $blue01;
+				pointer-events: none;
+				cursor: pointer;
+			}
+		}
+	}
+}
+
+.c-senator-block {
+	background-color: $greyLight;
+	overflow: hidden;
+	margin-bottom: 20px;
+	position: relative;
+	min-height: 80px;
+	@include transition(background-color, 0.2s, ease);
+
+	.nys-senator--thumb {
+		@include border-radius(0);
+		height: 80px;
+		width: 80px;
+		margin: 0 15px 0 0;
+	}
+	.nys-senator--position {
+		text-transform: uppercase;
+		font-family: "Proxima Nova Regular";
+		font-size: 10px;
+		line-height: 18px;
+	}
+	.nys-senator--name {
+		font-size: 14px;
+		margin: 0 0 10px 0;
+	}
+	.nys-senator--district {
+		color: $grey04;
+		font-size: 10px;
+	}
+	.nys-senator--party {
+		color: $grey03;
+		margin-right: 0.5em;
+		text-transform: uppercase;
+	}
+
+	.c-position{
+		margin: 15px 0 0 15px;
+		font-family: "Proxima Nova Regular";
+		text-transform: uppercase;
+		color: #fff;
+		font-size: 11px;
+		line-height: 1.3em;		
+	}
+	.c-name {
+		font-family: "Adelle Light";
+		font-size: 17px;
+		line-height: 120%;
+		color: $grey02;
+		margin: 20px 0 0 100px;
+		a{
+			color: $grey02;
+		}
+	}
+	.c-party-conf{
+		margin: 15px 0 0 15px;
+		font-family: "Proxima Nova Regular";
+		text-transform: uppercase;
+		font-size: 12px;
+		line-height: 1.3em;		
+	}
+
+	.c-district {
+		text-transform: uppercase;
+		display: block;
+		font-size: 11px;
+		margin: 10px 0 0 100px;
+		
+		a {
+			color: $grey05;
+		}
+	}
+
+	&:hover {
+		@extend .drk-bg;
+
+		.nys-senator--name,
+		.nys-senator--district,
+		.nys-senator--party {
+			color: #fff;
+		}
+	}
+
+	// co-chair variation
+	&.co-chair {
+		@extend .lgt-bg;
+
+		.nys-senator--position,
+		.nys-senator--name,
+		.nys-senator--party,
+		.nys-senator--district {
+			color: #fff;
+		}
+
+		.nys-senator--name {
+			margin-bottom: 5px;
+		}
+	}
+}
+
+@media #{$tablet} {
+	.c-senators-container {
+		margin: 0 -2.5% 40px;
+
+		.view-filters {
+			margin: 0 2.5%;	
+		}
+		.views-exposed-widget{
+			float: left;
+			width: 47.5%;
+			margin-right: 2.5%;
+
+			& + .views-exposed-widget {
+				margin-right: 0;
+				margin-left: 2.5%;
+			}
+
+			select {
+				margin-bottom: 40px;
+			}
+		}
+	}
+	.c-senator-block {
+		float: left;
+		width: 20%;
+		margin: 0 2.5% 40px 2.5%;
+		height: 300px;
+
+		.nys-senator--thumb {
+			width: 160px;
+			height: 160px;
+		}
+		.nys-senator--info {
+			padding: 30px 20px 0;
+		}
+		.nys-senator--name {
+			font-size: 16px;
+			line-height: 20px;
+		}
+		.nys-senator--district {
+			font-size: 12px;
+		}
+		.nys-senator--party {
+			display: block;
+			margin-bottom: 0.4em;
+		}
+
+		.c-name {
+			margin: 20px 15px 20px 15px;
+		}
+
+		.c-district {
+			margin: 0 15px 20px 15px;	
+		}
+
+		&.c-senator-block--committee {
+			.nys-senator--info {
+				padding: 15px 20px 0;
+			}
+			.nys-senator--name {
+				font-size: 14px;
+				line-height: 18px;
+			}
+		}
+	}
+}
+
+/*-------------------------------------------------------
+/
+/ 	SENATE DIRECTORIES
+/	right below the senator list
+/
+/-------------------------------------------------------*/
+
+.c-senate-directory--container {
+	margin-bottom: 50px;
+
+	.c-container--title {
+		font-size: 14px;
+		margin-bottom: 20px;
+	}	
+}
+.c-senate-directory {
+	max-width: 560px;
+	padding: 30px 20px;
+	background: $greyLight;
+	overflow: hidden;
+}
+.c-directory--section {
+	padding: 0 10px 20px;
+
+	& + .c-directory--section {
+		padding-top: 30px;
+		padding-bottom: 0;
+		border-top: 1px solid $grey05;
+	}
+}
+.c-directory--title {
+	color: $grey02;
+	font-family: "Adelle Bold";
+	font-size: 18px;
+}
+.c-directory--link {
+	display: block;
+	padding-top: 10px;
+	margin: 0;
+
+	&:before {
+		font-size: 25px;
+		margin-right: 10px;
+	}
+}
+
+@media #{$tablet} {
+	.c-senate-directory--container {
+		margin-top: 40px;
+		margin-bottom: 70px;
+
+		.c-container--title {
+			font-size: 16px;
+		}
+	}
+	.c-senate-directory {
+		padding: 30px;
+	}
+	.c-directory--section {
+		padding: 0;
+
+		& + .c-directory--section {
+			padding-top: 0;
+			padding-left: 50px;
+			border-top: 0;
+			border-left: 1px solid $grey05;
+		}	
+	}
+	.c-directory--title {
+		font-size: 18px;
+		margin-bottom: 20px;
+	}
+	.c-directory--link {
+		padding-top: 0;
+	}
+}
+
+@media #{$mobile} {
+  #senator-committee-link {
+    padding-bottom:32px;
+  }
+}

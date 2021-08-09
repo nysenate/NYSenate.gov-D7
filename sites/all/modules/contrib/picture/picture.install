@@ -1,0 +1,243 @@
+<?php
+/**
+ * @file
+ * Install/schema hooks for the picture module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function picture_schema() {
+  $schema = array();
+  $schema['picture_mapping'] = array(
+    'description' => 'Responsible images and styles mappings to breakpoints',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'The internal identifier for this mapping',
+        'no export' => TRUE,
+      ),
+      'label' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The machine name of the mapping',
+      ),
+      'machine_name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The machine name of the mapping',
+      ),
+      'breakpoint_group' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The group this mapping belongs to',
+      ),
+      'mapping' => array(
+        'type' => 'blob',
+        'not null' => TRUE,
+        'description' => 'The mappings linked to the breakpoints group',
+        'serialize' => TRUE,
+      ),
+    ),
+    'primary key' => array('id'),
+    'export' => array(
+      'key' => 'machine_name',
+      'key name' => 'machine_name',
+      'primary key' => 'id',
+      'identifier' => 'picture_mapping',
+      'admin_title' => 'label',
+      'default hook' => 'default_picture_mapping',
+      'object factory' => 'picture_mapping_object_factory',
+      'create callback' => 'picture_mapping_create',
+      'save callback' => 'picture_mapping_save',
+      'export callback' => 'picture_mapping_export',
+      'api' => array(
+        'owner' => 'picture',
+        'api' => 'default_picture_mapping',
+        'minimum_version' => 2,
+        'current_version' => 2,
+      ),
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function picture_install() {
+  module_load_include('admin.inc', 'picture');
+  variable_set('picture_updated_to_file_entity_2', _picture_update_to_file_entity_2());
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function picture_uninstall() {
+  variable_del('picture_ckeditor_mappings');
+  variable_del('picture_ckeditor_label');
+  variable_del('picture_updated_to_file_entity_2');
+  variable_del('picture_js_scope');
+  variable_del('picture_polyfill_version');
+  variable_del('picture_fallback_method');
+  // Delete field formatter settings.
+  ctools_include('export');
+  $entity_info = entity_get_info('file');
+  $file_types = file_type_load_all();
+  $view_modes = array_keys($entity_info['view modes']);
+  $view_modes[] = 'default';
+  $formatters = array(
+    'file_picture',
+    'file_field_picture',
+    'file_picture_sizes_formatter',
+    'file_field_picture_sizes_formatter'
+  );
+  foreach ($file_types as $file_type) {
+    foreach ($view_modes as $view_mode) {
+      foreach ($formatters as $formatter) {
+        ctools_export_crud_delete('file_display', $file_type->type . '__' . $view_mode . '__' . $formatter);
+      }
+    }
+  }
+  file_info_cache_clear();
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function picture_requirements($phase) {
+  $requirements = array();
+  if (module_exists('colorbox')) {
+    $t = get_t();
+    $info = system_get_info('module', 'colorbox');
+    $requirements['picture_colorbox'] = array(
+      'title' => $t('Picture: Colorbox module version.'),
+      'value' => $info['version'],
+      'severity' => REQUIREMENT_OK,
+    );
+    if (version_compare($info['version'], '7.x-2.5') < 0) {
+      $requirements['picture_colorbox']['description'] = $t('The Colorbox module must be version 7.x-2.5 or higher in order to work with the Picture module.');
+      $requirements['picture_colorbox']['severity'] = REQUIREMENT_ERROR;
+    }
+  }
+  return $requirements;
+}
+
+/**
+ * Update from 7.x-1.x.
+ */
+function picture_update_7200() {
+  module_load_include('php', 'picture', 'includes/PictureMapping');
+  db_add_field('picture_mapping', 'label', array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'The machine name of the mapping',
+  ));
+  variable_set('picture_ckeditor_mappings', variable_get('picture_ckeditor_groups', array()));
+  variable_del('picture_ckeditor_groups');
+  // Force a schema reset.
+  drupal_get_schema('picture_mapping', TRUE);
+
+  // Get old picture mappings from code.
+  ctools_include('export');
+  $schema = ctools_export_get_schema('picture_mapping');
+  $export = $schema['export'];
+  $export['api'] = array(
+    'owner' => 'picture',
+    'api' => 'default_picture_mapping',
+    'minimum_version' => 1,
+    'current_version' => 1,
+  );
+  $code_mappings = _ctools_export_get_defaults('picture_mapping', $export);
+  // Get old picture mappings from database.
+  $db_mappings = ctools_export_crud_load_all('picture_mapping');
+
+  $all_mappings = array_merge($db_mappings, $code_mappings);
+  // Update mappings.
+  foreach ($all_mappings as $picture_mapping) {
+    if (!($picture_mapping instanceof PictureMapping)) {
+      $old_mapping = $picture_mapping;
+      $picture_mapping = new PictureMapping();
+      $picture_mapping->setValues($schema, $old_mapping);
+    }
+    $mapping = $picture_mapping->getMappings();
+    $picture_mapping->setLabel($picture_mapping->getMachineName());
+    if (isset($picture_mapping->api_version)) {
+      $picture_mapping->api_version = 2;
+    }
+    $new_mapping = array();
+    foreach ($mapping as $breakpoint => $multipliers) {
+      foreach ($multipliers as $multiplier => $image_style) {
+        $new_mapping[$breakpoint][$multiplier] = array(
+          'mapping_type' => 'image_style',
+          'image_style' => $image_style,
+          'sizes' => '',
+          'sizes_image_styles' => array(),
+        );
+      }
+    }
+    $picture_mapping->setMappings($new_mapping);
+    $picture_mapping->save();
+  }
+}
+
+/**
+ * Update to the new file display formatter provided by file_entity.module.
+ */
+function picture_update_7201() {
+  module_load_include('admin.inc', 'picture');
+  variable_set('picture_updated_to_file_entity_2', _picture_update_to_file_entity_2());
+}
+
+/**
+ * Update field formatters to the new colorbox settings.
+ */
+function picture_update_7202() {
+  $fields = field_read_fields(array('type' => 'image'));
+  foreach ($fields as $field) {
+    $instances = field_read_instances(array('field_id' => $field['id']));
+    foreach ($instances as $instance) {
+      foreach ($instance['display'] as $view_mode => $view_mode_settings) {
+        if ($view_mode_settings['type'] == 'picture' && isset($instance['display'][$view_mode]['settings']['colorbox'])) {
+          $colorbox_group = $instance['display'][$view_mode]['settings']['colorbox'];
+          $instance['display'][$view_mode]['settings']['colorbox_settings'] = array(
+            'colorbox_group' => $colorbox_group,
+            'colorbox_gallery' => 'none',
+            'colorbox_gallery_custom' => '',
+            'colorbox_caption' => 'none',
+            'colorbox_caption_custom' => '',
+            'colorbox_multivalue_index' => NULL,
+          );
+        }
+      }
+      field_update_instance($instance);
+    }
+  }
+}
+
+/**
+ * Update ckeditor settings to the new plugin path.
+ */
+function picture_update_7203() {
+  if (module_exists('ckeditor')) {
+    module_load_include('inc', 'ckeditor', 'includes/ckeditor.admin');
+    $result = db_select('ckeditor_settings', 'ck')
+      ->fields('ck')
+      ->execute()
+      ->fetchAll();
+    foreach ($result as $res) {
+      $res->settings = ckeditor_admin_values_to_settings(unserialize($res->settings));
+      db_update('ckeditor_settings')
+        ->fields(array('settings' => $res->settings))
+        ->condition('name', $res->name)
+        ->execute();
+    }
+  }
+}

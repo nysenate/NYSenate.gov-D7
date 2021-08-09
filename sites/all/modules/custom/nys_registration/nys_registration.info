@@ -1,0 +1,7 @@
+name = NYS Registration
+package = NY STATE SENATE
+description = "NYS Registration Multistep Workflow"
+core = 7.x
+dependencies[] = nys_utils
+dependencies[] = ctools
+dependencies[] = nys_sage

@@ -1,0 +1,90 @@
+<?php
+
+/**
+ * @file
+ * Installation file for NYS Looker Integration Module.
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * @throws \FieldException
+ */
+function nys_looker_integration_install() {
+  // Want to set these items only if they are not set yet.
+  $vars = [
+    'nys_looker_integration_default_models' => '',
+    'nys_looker_integration_api_client_key' => '',
+    'nys_looker_integration_api_client_secret' => '',
+    'nys_looker_integration_api_port' => '19999',
+    'nys_looker_integration_api_version' => NYS_LOOKER_INTEGRATION_DEFAULT_API_VERSION,
+    'nys_looker_integration_secret_key' => '',
+  ];
+  foreach ($vars as $key => $val) {
+    variable_set($key, variable_get($key, $val));
+  }
+
+  // Create the entity type and recipient's field.
+  _nys_looker_integration_create_entity_type();
+  _nys_looker_integration_create_recipient_field();
+
+  // Ensure the permissions are added.
+  _nys_looker_integration_set_looker_permissions();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function nys_looker_integration_uninstall() {
+  variable_del('nys_looker_integration_default_models');
+  variable_del('nys_looker_integration_api_client_key');
+  variable_del('nys_looker_integration_api_client_secret');
+  variable_del('nys_looker_integration_api_port');
+  variable_del('nys_looker_integration_api_version');
+  variable_del('nys_looker_integration_secret_key');
+}
+
+/**
+ * Implements hook_requirements().
+ *
+ * @param $phase
+ *
+ * @return array
+ */
+function nys_looker_integration_requirements($phase) {
+  $requirements = [];
+  $t = get_t();
+
+  if ($phase == 'runtime') {
+    $url = $t(
+      '<a href="!url">Configure Module</a>.',
+      ['!url' => url('admin/config/services/looker')]
+    );
+
+    // Check for runtime requirements.
+    $key = variable_get('nys_looker_integration_secret_key');
+    $host = variable_get('nys_looker_integration_host');
+    $api_key = variable_get('nys_looker_integration_api_client_key');
+    $api_secret = variable_get('nys_looker_integration_api_client_secret');
+
+    // Raise warning if host or secret key is not populated.
+    if (!($key && $host)) {
+      $requirements['nys_looker_integration_embed'] = [
+        'title' => 'NYS Looker Integration',
+        'description' => $t('Missing config for embedded visualizations. @url', ['@url' => $url]),
+        'severity' => REQUIREMENT_WARNING,
+        'value' => 'Not configured',
+      ];
+    }
+    if (!($api_secret && $api_key)) {
+      $requirements['nys_looker_integration_plans'] = [
+        'title' => 'NYS Looker Integration',
+        'description' => $t('Missing config for scheduled plan management. @url', ['@url' => $url]),
+        'severity' => REQUIREMENT_WARNING,
+        'value' => 'Not configured',
+      ];
+    }
+  }
+
+  return $requirements;
+}

@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * Implements hook_charts_info().
+ */
+function charts_google_charts_info() {
+  $info['google'] = array(
+    'label' => t('Google Charts'),
+    'render' => '_charts_google_render',
+    'types' => array('area', 'bar', 'column', 'line', 'pie', 'scatter'),
+    'file' => 'charts_google.inc',
+  );
+  return $info;
+}
+
+/**
+ * Implements hook_library().
+ */
+function charts_google_library() {
+  $library['visualization'] = array(
+    'title' => t('Google Visualization library'),
+    'website' => 'https://google-developers.appspot.com/chart/',
+    'version' => '1.0',
+    'js' => array(
+      array('data' => '//www.google.com/jsapi', 'type' => 'external'),
+    ),
+  );
+  $library['charts_google'] = array(
+    'title' => t('Google Charts integration'),
+    'version' => '1.0',
+    'js' => array(
+      array('data' => drupal_get_path('module', 'charts_google') . '/charts_google.js', 'type' => 'file'),
+    ),
+    'dependencies' => array(
+      array('charts_google', 'visualization'),
+    ),
+  );
+
+  return $library;
+}

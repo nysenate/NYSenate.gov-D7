@@ -1,0 +1,266 @@
+/*---------------------------------------
+/	ACCORDION LISTS:
+/	collapsible lists with abstracts on 
+/	various topics. 
+/ 	overwrites some foundation
+/---------------------------------------*/
+.nys-accordion--header {
+	display: block;
+	clear: both;
+	margin-bottom: 20px;
+}
+.nys-accordion--title {
+	display: none;
+
+	&.c-legis--accord-title {
+		display: block;
+		padding: 20px 0 0 0;				
+		border-top: 1px solid $grey05;
+		text-transform: uppercase;
+		font-size: 14px;
+		font-family: "Proxima Nova Regular";
+		color: $grey02;
+	}
+}
+.nys-accordion--date {
+	text-transform: uppercase;
+	font-family: "Proxima Nova Regular";
+	font-size: 16px;
+	letter-spacing: 0.1em;
+}
+.nys-accordion--date-num {
+	font-family: "Adelle Bold";
+	font-size: 20px;
+	letter-spacing: 0;
+
+	&:after {
+		content: "/";
+		padding: 0 5px;
+		font-family: "Proxima Nova Regular";
+		font-size: 16px;
+	}
+}
+
+
+// toggle btn styles
+.accordion .accordion-navigation > a, 
+.accordion dd > a {
+	position: relative;
+	display: block;
+	margin-bottom: 3px;
+	padding: 15px 10%  15px 20px;
+	background: $grey06;
+
+	text-align: left;
+	color: $blue01;
+	text-transform: uppercase;
+	font-family: "Proxima Nova SemiBold";
+	font-size: 16px;
+	letter-spacing: 0.1em;
+	line-height: 25px;
+
+	@extend .icon-after__see-more;
+
+	&:after {
+		position: absolute;
+		right: 20px;
+		height: 24px;
+		font-size: 24px;
+		line-height: 25px;
+	}
+}
+
+.accordion .accordion-navigation > .content.active, 
+.accordion dd > .content.active {
+	display: block;
+	background: #FFFFFF;
+	margin: 20px 0 0 0;
+}
+
+.accordion .accordion-navigation.active > a {
+	&:after {
+		content: "\5e";
+	}
+}
+// content style;
+.accordion .accordion-navigation > .content, 
+.accordion dd > .content {
+	padding: 0;
+}
+
+.c-panel--header {
+	display: none;
+	overflow: hidden;
+}
+
+.c-update-block {
+	overflow: hidden;
+	margin: 0;
+	padding: 20px 15px 35px 0;
+
+	.nys-senator {
+		margin: 20px 0 28px;
+	}
+	.nys-senator--name {
+		color: $grey03;
+		font-family: "Proxima Nova Regular";
+	}
+	.nys-senator--district {
+		color: $grey04;
+	}
+	.c-listing--related-issues {
+		line-height: 1.2em;
+		margin-top: .6em;
+		a {
+			text-transform: uppercase;
+			font-family: "Proxima Nova Semibold";
+			font-size: 12px;
+			line-height: 1em;
+			color: #CB8D37;
+		}
+	}
+}
+.first > .c-update-block {
+	border-top: none;
+}
+.c-listing--bill-num {
+	color: $grey02;
+	font-family: "Adelle Bold";
+	font-size: 18px;
+	line-height: 1;
+	a{
+		color: $grey02;	
+	}
+}
+.c-committee-link {
+	color: $orange01;
+	text-transform: uppercase;
+	font-family: "Proxima Nova SemiBold";
+	font-size: 10px;
+	line-height: 1;
+}
+.c-calendar--num {
+	color: $grey02;
+	font-family: "Adelle Bold";
+	text-align: left;
+	padding-right: 20px;
+}
+.c-calendar--num-mark {
+	display: inline-block;
+	margin-right: 5px;
+	text-transform: uppercase;
+	font-family: "Proxima Nova Regular";
+	font-size: 12px;
+}
+
+// panel columns
+.l-panel-col{
+	display: block;
+
+	& + .l-panel-col {
+		margin-top: 20px;
+	}
+}
+.l-panel-col--ctr {
+	.nys-senator--info {
+		> span {
+			color: $grey02;
+			text-transform: uppercase;
+			font-family: "Proxima Nova Regular";
+			font-size: 10px;
+		}
+		.nys-senator--name {
+			color: $grey03;
+			font-size: 14px;
+
+			a { color: $grey03; }
+		}
+		.nys-senator--district,
+		.nys-senator--party {
+			color: $grey04;
+			text-transform: uppercase;
+			font-size: 10px;
+		}
+	}
+}
+
+@media #{$tablet} {
+	.nys-accordion--title,
+	.nys-accordion--title.c-legis--accord-title {
+		display: block;
+		padding: 30px 0;
+		border-top: 1px solid $grey05;
+		text-transform: capitalize;
+		font-family: "Adelle SemiBold";
+		font-size: 26px;
+	}
+	.c-panel--header {
+		display: block;
+		padding: 40px 0 10px;
+
+		.l-panel-col {
+			margin: 0;
+			color: $grey02;
+			text-transform: uppercase;
+			font-family: "Proxima Nova Regular";
+			font-size: 16px;
+			line-height: 1;
+		}
+	}
+	.c-update-block {
+		.nys-senator {
+			margin: 20px 0 0;
+		}
+	}
+	.first > .c-update-block {
+		border-top: 1px solid $grey05;
+	}
+	// toggle btn styles
+	.accordion .accordion-navigation > a, 
+	.accordion dd > a {
+		padding: 15px 20px;
+	}
+	.l-panel-col {
+		display: block; 
+		float: left;
+
+		& + .l-panel-col {
+			margin: 0;
+		}
+	}
+	.l-panel-col--lft {
+		width: 24%;
+		max-width: 180px
+	}
+
+	.l-panel-col--ctr {
+		width: 56%;
+		padding-right: 2%;
+		max-width: 440px;
+
+		.c-press-release--descript {
+			font-size: 18px;
+			line-height: 22px;
+			color: $grey02;
+		}
+	}
+
+	.l-panel-col--rgt {
+		width: 20%;
+		max-width: 140px;
+
+		&.l-panel-padded {
+			padding-left: 10%;
+		}
+	}
+	.c-listing--bill-num {
+		font-size: 20px;
+	}
+	.c-committee-link {
+		font-size: 12px;
+	}
+	.calendar--num {
+		font-size: 24px;
+	}
+
+}

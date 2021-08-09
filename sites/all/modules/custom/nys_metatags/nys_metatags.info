@@ -1,0 +1,4 @@
+name = NYS Custom Metatags
+description = Custom meta tags for Facebook, Twitter, Google
+package = NY STATE SENATE
+core = 7.x

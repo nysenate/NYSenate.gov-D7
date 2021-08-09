@@ -1,0 +1,7 @@
+name = NYS Statute Explorer
+description = Theming and helpers for the statute content type.
+package = NY STATE SENATE
+core = 7.x
+
+; Add a style sheet for all media
+stylesheets[all][] = nys_statute.css

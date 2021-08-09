@@ -1,0 +1,16 @@
+<?php
+/**
+ * @file
+ * Semantic Views module file.
+ *
+ * Not so much here, only declare which Views API.
+ */
+
+/**
+ * Implements hook_views_api().
+ */
+function semanticviews_views_api() {
+  return array(
+    'api' => 3.0,
+  );
+}

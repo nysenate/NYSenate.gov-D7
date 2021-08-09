@@ -1,0 +1,12 @@
+name = Text formatter contrib
+description = "Textformatter support for contributed modules."
+core = 7.x
+package = Fields
+
+dependencies[] = textformatter
+; Information added by Drupal.org packaging script on 2015-12-10
+version = "7.x-1.4"
+core = "7.x"
+project = "textformatter"
+datestamp = "1449768240"
+

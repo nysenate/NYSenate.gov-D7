@@ -1,0 +1,385 @@
+/*-------------------------------------------------
+/
+/	INITIATIVE BLOCK
+/	half lives on almost every page
+/ full size is on most pages
+/ class will have to updated
+/
+/-------------------------------------------------*/
+.c-block--initiative {
+	position: relative;
+	padding: 0;
+	@extend .lgt-bg;
+
+	.c-block--btn {
+		padding-left: 20px;
+	}
+	img {
+		display: none;
+	}
+}
+.c-initiative--content {
+	padding: 30px 20px 90px;
+
+	.c-initiative-block--position{
+		margin-bottom: 5px;
+		font-family: "Proxima Nova Regular";
+		text-transform: uppercase;
+		color: #fff;
+		font-size: 12px;
+		line-height: 1.3em;
+	}
+	.c-party-conf{
+		margin-top: 20px;
+		font-family: "Proxima Nova Regular";
+		text-transform: uppercase;
+		color: #fff;
+		font-size: 12px;
+		line-height: 1.3em;
+	}
+}
+.c-initiative--descript {
+	margin-bottom: 5px;
+	font-family: "Proxima Nova Regular";
+	text-transform: uppercase;
+	color: $grey01;
+	font-size: 12px;
+	line-height: 1.3em;
+}
+.c-initiative--title {
+	font-family: "Adelle Regular";
+	color: #fff;
+	font-size: 22px;
+	line-height: 1.175em;
+}
+.c-initiative--meta {
+	list-style: none;
+
+	li {
+		display: inline-block;
+		padding-right: 7px;
+		color: #fff;
+		font-family: "Adelle Regular";
+		font-size: 14px;
+		line-height: 1.2em;
+
+		& + li {
+			border-left: 2px solid #fff;
+			padding-left: 7px;
+		}
+	}
+}
+
+@media #{$tablet} {
+	.sitewide-promo-banners{
+		max-width: 760px;
+		margin: 0 auto;
+	}
+	.c-block--initiative {
+		clear: both;
+		padding: 0;
+
+		.c-block--btn {
+			padding-left: 25px;
+		}
+		&.c-block-position--1{
+			margin-bottom: 40px;
+		}
+	}
+
+	.c-initiative--content {
+		padding: 35px 35px 120px;
+	}
+
+	.c-initiative--descript {
+		margin-bottom: 7px;
+		font-size: 15px;
+	}
+	.c-initiative--title {
+		font-family: "Adelle Light";
+		font-size: 36px;
+
+		a{
+			color:#fff;
+		}
+	}
+	.c-initiative--meta {
+		margin-top: 10px;
+	}
+	// has img modifications
+	.c-block--initiative__has-img {
+		overflow: hidden;
+
+		&:before {
+			content: "";
+			display: inline-block;
+			vertical-align: middle;
+			height: 100%;
+			width: 0;
+			margin-left: -4px;
+		}
+		&:after {
+			content: "";
+			display: table;
+			clear: both;
+			zoom: 1;
+		}
+		img {
+			display: inline-block;
+			height: 280px;
+			width: 280px;
+		}
+
+		.c-initiative--content {
+			position: relative;
+			display: inline-block;
+			vertical-align: middle;
+			width: 58%;
+			max-width: 475px;
+			padding-top: 0;
+			padding-bottom: 80px;
+
+		}
+		.c-block--btn {
+			left: 280px;
+		}
+	}
+	// half size modifications
+	.c-initiative-block__half-wrap {
+		width: 100%;
+		margin-left: 0;
+    	float: left;
+	}
+	.c-block--initiative__half {
+		width: 47%;
+		.view-display-id-senator_home_promo_1 .first &,
+		.view-display-id-senator_home_promo_2 .first &,
+		.view-display-id-senator_home_promo_3 .first &{
+			width: 100%;
+			margin-left: 0;
+			margin-right: 0;
+			height: 280px;
+		}
+		margin-left: 0;
+		margin-right: 0;
+    	margin-bottom: 40px;
+		height: 345px;
+		float: left;
+		clear: none;
+
+		&.c-block--even {
+			margin-right: 6%;
+		}
+
+		.c-initiative--title {
+			font-size: 32px;
+		}
+	}
+}
+
+//Senator Display 2
+
+.senator-display2, .senator-display3 {
+	.pane-senator-polls.vertical {
+		.c-block {
+			margin-bottom: 0;
+		}
+	}
+	.c-block--top {
+		margin-top: 40px;
+	}
+	.vertical {
+		.sitewide-promo-banners {
+			max-width: 760px;
+			margin: 0 auto;
+		}
+		.c-block--initiative {
+			clear: both;
+			padding: 0;
+
+			.c-block--btn {
+				left: 0;
+				height: 60px;
+				line-height: 60px;
+				span {
+					display: inline;
+				}
+			}
+			&.c-block-position--1 {
+				margin-bottom: 40px;
+			}
+		}
+
+		.c-initiative--content {
+			padding: 40px 10px 120px;
+		}
+
+		.c-initiative--descript {
+			margin-bottom: 7px;
+			font-size: 15px;
+		}
+		.c-initiative--title {
+			font-family: "Adelle Light";
+			font-size: 30px;
+			line-height: 36px;
+			text-align: center;
+			a {
+				color: #fff;
+			}
+		}
+		.c-initiative--meta {
+			margin-top: 10px;
+		}
+		.c-block--initiative__has-img {
+			overflow: hidden;
+
+			&:before {
+				content: "";
+				display: inline-block;
+				vertical-align: middle;
+				height: 100%;
+				width: 0;
+				margin-left: -4px;
+			}
+			&:after {
+				content: "";
+				display: table;
+				clear: both;
+				zoom: 1;
+			}
+			img {
+				display: inline-block;
+				height: 180px;
+				width: 100%;
+			}
+
+			.c-initiative--content {
+				position: relative;
+				display: inline-block;
+				vertical-align: middle;
+				width: 100%;
+				max-width: 475px;
+				padding-top: 10px;
+
+			}
+		}
+	}
+}
+
+//POLLS
+
+.pane-senator-polls, .c-block--pg-poll, .node-advpoll {
+  .c-block--initiative {
+    margin: 0 0 40px 0!important;
+  }
+  .c-block-btn {
+    height: 50px;
+    line-height: 50px;
+  }
+  h3.c-initiative--title {
+    font-family: "Adelle Light";
+    font-size: 30px;
+    color: #fff;
+    margin-top: 0;
+  }
+  .c-block--initiative__has-img {
+    img {
+      //margin-top: -15px;
+    }
+    .c-block ul {
+      display: none;
+    }
+    .c-initiative--content {
+    padding: 0 10px 80px 25px;
+    width: 100%;
+    position: static;
+      .poll {
+        width: 90%;
+        margin-top: 1.5em;
+        margin-bottom: -80px;
+        .vote-form .choices {
+        margin: 0;
+        }
+        .text {
+          color: #fff;
+          font-size: 18px;
+          }
+        .voted .bar {
+          border: none;
+        }
+        .bar {
+          height: 2em;
+          .foreground {
+            height: 2em;
+          }
+        }
+        .percent, .total, .poll-message, #message, .poll-closed p {
+          color: #fff;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
+
+
+form#poll-view-voting, form[id*="advpoll-form"] {
+  .form-item {
+    padding-left: 20px;
+    margin-bottom: 0;
+  }
+  input[type="radio"] {
+    font-size: 110%;
+    margin: 0.5rem 0 1rem 0;
+  }
+  label {
+    color: #fff;
+    font-size: 20px;
+    line-height: 1.25em;
+    text-transform: none;
+    font-family: "Adelle SemiBold";
+    letter-spacing: 0.02em;
+  }
+  button {
+    color: #fff;
+    display: block;
+    margin: 0 auto;
+  }
+  #message {
+    color: #fff;
+    font-size: 12px;
+  }
+}
+.node-advpoll.view-mode-full {
+    .c-block--initiative__has-img .c-initiative--content {
+      padding-right: 10px;
+    }
+}
+.c-advpoll--date {
+  display: block;
+  margin: 30px 0 36px;
+}
+
+.poll {
+
+}
+button[id*="edit-submit-advpoll"] {
+  .trad_blue & { background-color: $trad_blue_med; }
+  .cont_blue & { background-color: $cont_blue_med; }
+  .purple & { background-color: $purple_med; }
+  .trad_red & { background-color: $trad_red_med; }
+  .cont_red & { background-color: $cont_red_med; }
+  .orange & { background-color: $orange_med; }
+  .trad_green & { background-color: $trad_green_med; }
+  .cont_green & { background-color: $cont_green_med; }
+}
+.poll .bar .foreground {
+  .trad_blue & { background-color: $trad_blue_drk; }
+  .cont_blue & { background-color: $cont_blue_drk; }
+  .purple & { background-color: $purple_drk; }
+  .trad_red & { background-color: $trad_red_drk; }
+  .cont_red & { background-color: $cont_red_drk; }
+  .orange & { background-color: $orange_drk; }
+  .trad_green & { background-color: $trad_green_drk; }
+  .cont_green & { background-color: $cont_green_drk; }
+}

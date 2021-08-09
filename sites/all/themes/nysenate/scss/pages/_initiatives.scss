@@ -1,0 +1,268 @@
+/*------------------------------------
+/	INITIATIVES PAGE
+/-------------------------------------*/
+.c-initiative--header {
+	margin-bottom: 20px;
+
+	.c-initiative--section-title {
+		margin-top: 10px;
+	}
+}
+
+.c-initiative--subtitle {
+	text-transform: uppercase;
+	font-family: "Proxima Nova Regular";
+	font-size: 14px;
+	line-height: 1;
+	margin-bottom: 24px;
+}
+
+.c-initiative--section-title {
+	color: $grey02;
+	text-transform: capitalize;
+	font-family: "Proxima Nova Semibold";
+	font-size: 18px
+
+}
+
+.c-initiative--featured-image {
+	margin: 30px 0;
+}
+
+.c-initiative.c-container--header__top-border {
+	margin-top: 36px;
+}
+
+.c-block--honorees {
+	margin-bottom: 60px;
+}
+
+// ASSOCIATED SENATORS
+.c-block--associated-senators {
+	.nys-senator {
+		margin-bottom: 20px;
+
+		@extend .l-col;
+		@extend .l-col-3;
+	}
+
+	.nys-senator--name {
+		font-family: "Proxima Nova Regular";
+		font-size: 14px;
+
+		a {
+			color: $grey02;
+		}
+	}
+
+	.nys-senator--district {
+		color: $grey04;
+		font-size: 10px;
+	}
+}
+
+// HONOREES
+.c-block--initiative-honorees {
+	.c-initiative--section-title {
+		padding-bottom: 20px;
+		border-bottom: 1px solid $grey09;
+	}
+}
+
+.field-collection-view,
+.field-collection-container {
+	position: relative;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border: none;
+	display: block;
+}
+
+// This fixes FF bug //
+.field-collection-view {
+  display: inline-block;
+}
+
+.c-honoree--year {
+	margin: 20px 0;
+	color: $grey02;
+	font-family: "Proxima Nova Regular";
+	font-size: 16px;
+	line-height: 1;
+}
+
+.c-initiative-honorees {
+	padding: 40px 40px 20px;
+	background: $grey06;
+
+	.field-item {
+		padding: 0 10px 20px 0;
+		@extend .l-col;
+		@extend .l-col-3;
+	}
+}
+
+.c-honoree--name {
+	display: block;
+	color: $grey01;
+	text-transform: capitalize;
+	font-family: "Proxima Nova Regular";
+	font-size: 18px;
+	line-height: 1;
+
+	a {
+  	color: $grey01;
+	}
+}
+
+.c-honoree--meta {
+	display: block;
+	color: $grey01;
+	text-transform: uppercase;
+	font-family: "Proxima Nova Regular";
+	font-size: 12px;
+	margin-top: -2px;
+
+  a {
+  	color: $grey01;
+	}
+}
+
+// DOWNLOAD
+.c-download-file {
+	.c-initiative--subtitle {
+		margin-bottom: 5px;
+	}
+}
+
+
+@media #{$tablet} {
+	.c-initiative--header {
+		margin-bottom: 40px;
+
+		.c-initiative--section-title {
+			margin-top: 20px;
+		}
+	}
+
+	.c-initiative--section-title {
+		font-size: 18px;
+	}
+
+	.c-initiative--featured-image {
+		margin: 60px 0 80px;
+	}
+
+	.c-download-file {
+		.c-initiative--subtitle {
+			margin-bottom: 10px;
+		}
+	}
+
+}
+
+// NYSENATE-44
+.c-block--initiative-honorees {
+
+  .field-collection-item-field-honorees .content {
+    font-size: 1rem;
+    margin: 15px 0;
+
+    .field-collection-container {
+      background-color: $grey06;
+      padding: 32px 35px;
+      margin: 15px 0;
+      -moz-column-count: 3;
+      -moz-column-gap: 20px;
+      -webkit-column-count: 3;
+      -webkit-column-gap: 20px;
+      column-count: 3;
+      column-gap: 20px;
+    }
+
+    .view-mode-full {
+      margin-bottom: 18px;
+    }
+  }
+}
+
+//Veterans Temp Panel PAGE
+#veterans1 {
+	h2.pane-title {
+		display: none;
+	}
+}
+
+#veterans2 {
+	h2.pane-title, .c-initiative--subtitle, .c-initiative--featured-image, .c-block--initiative-honorees .c-initiative--section-title {
+		display: none;
+	}
+}
+
+//Profile page
+.flex-container {
+	display: -ms-flex;
+	display: -webkit-flex;
+	display: flex;
+	justify-content: space-around;
+	align-items: stretch;
+	align-content: space-between;
+	flex-grow: 1;
+	flex-wrap: wrap;
+	background-color: #EEEEEE;
+	padding: 32px 35px;
+	margin: 15px 0;
+}
+
+.flex-container > .flex-item {
+	width: 33%;
+	padding: 12px;
+
+	flex: 1 1 auto; // flex an equal space for the entire container sire.
+	align-items: stretch; // make my junk stretch the complete height sir mixalot.
+	flex-direction: column;
+}
+
+
+
+.pane-manage-profiles {
+	h2 {
+		font-family: "Proxima Nova Regular";
+		text-transform: uppercase;
+		border-top: 1px solid #AAAAAA;
+		padding: 20px 0;
+		position: relative;
+		margin-top: 36px;
+		font-size: 24px;
+	}
+	h3.title {
+		font-size: 1rem;
+		margin: 15px 0;
+	}
+
+	.form-item-field-honoree-name-value {
+		input[type="text"] {
+			height: 2.8125rem;
+		}
+		padding-right: 24px;
+	}
+	.view-filters select {
+		min-height: 35px;
+	}
+	.container-inline-date > .form-item, #edit-name-wrapper {
+		margin-right: 12px;
+	}
+}
+#veterans1 {
+	h2.pane-title {
+		margin: 0 0 30px;
+		font-size: 48px;
+		color: #444444;
+		font-family: "Adelle Light";
+		line-height: 1.2em;
+	}
+	.c-initiative--subtitle {
+		display: none;
+	}
+}

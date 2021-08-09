@@ -1,0 +1,160 @@
+diff --git b/sites/all/modules/contrib/advpoll/advpoll.module a/sites/all/modules/contrib/advpoll/advpoll.module
+index b43fee139..12f45661e 100644
+--- b/sites/all/modules/contrib/advpoll/advpoll.module
++++ a/sites/all/modules/contrib/advpoll/advpoll.module
+@@ -539,7 +539,7 @@ function advpoll_update_choices($choices, $results) {
+   $write_in = array();
+   foreach ($choices as $choice) {
+     $choice_set[$choice['choice_id']] = $choice['choice'];
+-    $write_in[$choice['choice_id']] = $choice['write_in'];
++    //$write_in[$choice['choice_id']] = $choice['write_in'];
+   }
+ 
+   $final = array();
+@@ -550,7 +550,7 @@ function advpoll_update_choices($choices, $results) {
+       'percentage' => $result['percentage'],
+       'votes' => $result['votes'],
+       'tag' => $result['index'],
+-      'write_in' => $write_in[$result['index']],
++      //'write_in' => $write_in[$result['index']],
+     );
+     // Choice has been accounted for.  Remove it.
+     unset($choice_set[$result['index']]);
+@@ -566,7 +566,7 @@ function advpoll_update_choices($choices, $results) {
+         'percentage' => 0,
+         'votes' => 0,
+         'tag' => $key,
+-        'write_in' => $write_in[$key],
++        //'write_in' => $write_in[$key],
+       );
+     }
+   }
+@@ -792,7 +792,7 @@ function advpoll_form_submit($form, &$form_state) {
+  * cast more votes.
+  */
+ function advpoll_form_submit_check($data, $nid) {
+-  if ($data->mode === 'cookie' && isset($_COOKIE['advpoll' . $nid])) {
++  if ($data->mode === 'cookie' && isset($_COOKIE['SESSadvpoll' . $nid])) {
+     return t('You have already voted on this poll.');
+   }
+ 
+diff --git b/sites/all/modules/contrib/advpoll/includes/advpoll_helper.inc a/sites/all/modules/contrib/advpoll/includes/advpoll_helper.inc
+index 3d95dfea5..072c80ae5 100644
+--- b/sites/all/modules/contrib/advpoll/includes/advpoll_helper.inc
++++ a/sites/all/modules/contrib/advpoll/includes/advpoll_helper.inc
+@@ -58,14 +58,15 @@ function advpoll_get_data($node) {
+       (isset($node->advpoll_choice[$lang])) ? $data['choices'] = $node->advpoll_choice[$lang] : $data['choices'] = $node->advpoll_choice[LANGUAGE_NONE];
+     }
+ 
+-    if ($node->advpoll_dates) {
++   /* if ($node->advpoll_dates) {
+       $data['start_date'] = (isset($node->advpoll_dates[$lang])) ? strtotime($node->advpoll_dates[$lang][0]['value'] . ' UTC') : strtotime($node->advpoll_dates[LANGUAGE_NONE][0]['value'] . ' UTC');
+       $data['end_date'] = (isset($node->advpoll_dates[$lang])) ? strtotime($node->advpoll_dates[$lang][0]['value2'] . ' UTC') : strtotime($node->advpoll_dates[LANGUAGE_NONE][0]['value2'] . 'UTC');
+     }
+     else {
+       $data['start_date'] = 0;
+       $data['end_date'] = 0;
+-    }
++    }*/
++   $data += _advpoll_get_date($node);
+ 
+     (isset($node->advpoll_mode[$lang])) ? $data['mode'] = $node->advpoll_mode[$lang][0]['value'] : $data['mode'] = $node->advpoll_mode[LANGUAGE_NONE][0]['value'];
+     if (isset($node->advpoll_cookie_duration[$lang])) {
+@@ -146,14 +147,15 @@ function advpoll_get_form_data($form_state, $index = 0) {
+       (isset($node->advpoll_options[$lang])) ? $options = $node->advpoll_options[$lang] : $options = $node->advpoll_options[LANGUAGE_NONE];
+     }
+     (isset($node->advpoll_choice[$lang])) ? $data['choices'] = $node->advpoll_choice[$lang] : $data['choices'] = $node->advpoll_choice[LANGUAGE_NONE];
+-    if ($node->advpoll_dates) {
++   /* if ($node->advpoll_dates) {
+       (isset($node->advpoll_dates[$lang])) ? $data['start_date'] = strtotime($node->advpoll_dates[$lang][0]['value']) : $data['start_date'] = strtotime($node->advpoll_dates[LANGUAGE_NONE][0]['value']);
+       (isset($node->advpoll_dates[$lang])) ? $data['end_date'] = strtotime($node->advpoll_dates[$lang][0]['value2']) : $data['end_date'] = strtotime($node->advpoll_dates[LANGUAGE_NONE][0]['value2']);
+     }
+     else {
+       $data['start_date'] = 0;
+       $data['end_date'] = 0;
+-    }
++    }*/
++    $data += _advpoll_get_date($node);
+     (isset($node->advpoll_mode[$lang])) ? $data['mode'] = $node->advpoll_mode[$lang][0]['value'] : $data['mode'] = $node->advpoll_mode[LANGUAGE_NONE][0]['value'];
+     (isset($node->advpoll_cookie_duration[$lang])) ? $data['cookie_duration'] = $node->advpoll_cookie_duration[$lang][0]['value'] : $data['cookie_duration'] = $node->advpoll_cookie_duration[LANGUAGE_NONE][0]['value'];
+     (isset($node->advpoll_closed[$lang])) ? $data['state'] = $node->advpoll_closed[$lang][0]['value'] : $data['state'] = $node->advpoll_closed[LANGUAGE_NONE][0]['value'];
+@@ -167,3 +169,31 @@ function advpoll_get_form_data($form_state, $index = 0) {
+ 
+   return (object) $data;
+ }
++
++/**
++ * Helper to pull dates from the advpoll_dates field.
++ *
++ * @param object $node
++ *   An advpoll node.
++ *
++ * @return array
++ *   An array of start_date and end_date: both default to 0.
++ */
++function _advpoll_get_date($node) {
++  $return = array(
++    'start_date' => 0,
++    'end_date' => 0,
++  );
++
++  if ($node->advpoll_dates) {
++    $wrapper = entity_metadata_wrapper('node', $node);
++
++    if ($dates = $wrapper->advpoll_dates->value()) {
++      $timezone = ($dates['timezone']) ?: 'UTC';
++      $return['start_date'] = ($dates['value']) ? strtotime($dates['value'] . ' ' . $timezone) : 0;
++      $return['end_date'] = ($dates['value2']) ? strtotime($dates['value2'] . ' ' . $timezone) : 0;
++    }
++  }
++
++  return $return;
++}
+diff --git b/sites/all/modules/contrib/advpoll/includes/advpoll_voteapi.inc a/sites/all/modules/contrib/advpoll/includes/advpoll_voteapi.inc
+index 75d031a11..61bd4c41c 100755
+--- b/sites/all/modules/contrib/advpoll/includes/advpoll_voteapi.inc
++++ a/sites/all/modules/contrib/advpoll/includes/advpoll_voteapi.inc
+@@ -248,7 +248,7 @@ function advpoll_user_eligibility($node) {
+     }
+   }
+ 
+-  if ($data->mode === 'cookie' && isset($_COOKIE[$node->type . $node->nid])) {
++  if ($data->mode === 'cookie' && isset($_COOKIE['SESS' . $node->type . $node->nid])) {
+     return FALSE;
+   }
+ 
+@@ -333,7 +333,7 @@ function advpoll_add_votes($vote) {
+        */
+       global $cookie_domain;
+ 
+-      setrawcookie($vote['nodetype'] . $vote['nid'], 'vote', time() + (60 * $vote['duration']), '/', $cookie_domain);
++      setrawcookie('SESS' . $vote['nodetype'] . $vote['nid'], 'vote', time() + (86400 * $vote['duration']), '/', $cookie_domain);
+     }
+ 
+     $votes = array(
+diff --git b/sites/all/modules/contrib/advpoll/tests/AdvPollTestBase.test a/sites/all/modules/contrib/advpoll/tests/AdvPollTestBase.test
+index 9faef685b..20765ba7c 100644
+--- b/sites/all/modules/contrib/advpoll/tests/AdvPollTestBase.test
++++ a/sites/all/modules/contrib/advpoll/tests/AdvPollTestBase.test
+@@ -31,12 +31,15 @@ var $poll_admin;
+    */
+   public function setUp() {
+     // Enable required modules.
+-    parent::setUp('field', 'field_sql_storage', 'number',
+-                  'options', 'list',
+-                  'votingapi',
+-                  'date_api', 'date', 'date_popup',
+-                  'advpoll_field', 'advpoll');
+-
++   // parent::setUp('field', 'field_sql_storage', 'number',
++     //             'options', 'list',
++       //           'votingapi',
++         //         'date_api', 'date', 'date_popup',
++           //       'advpoll_field', 'advpoll');
++parent::setUp(array(
++        'advpoll',
++    ));
++    
+     // Create some users.
+     $this->createUsers();
+   }

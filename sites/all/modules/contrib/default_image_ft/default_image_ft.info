@@ -1,0 +1,13 @@
+name = Default image FT
+description = Feature support (sort of) for default image in image fields
+core = 7.x
+package = Fields
+
+php = 5.3
+
+; Information added by Drupal.org packaging script on 2016-06-10
+version = "7.x-1.6"
+core = "7.x"
+project = "default_image_ft"
+datestamp = "1465569248"
+

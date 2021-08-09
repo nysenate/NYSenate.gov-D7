@@ -1,0 +1,609 @@
+/*------------------------------------
+/	GLOBAL CALENDAR
+/-------------------------------------*/
+.page-events {
+	#footer-last {
+		clear: both;
+	}
+}
+
+.view-calendar-page.view-display-id-week {
+	.Zebra_DatePicker {
+		.dp_daypicker {
+			tr:hover {
+				td {
+					background: $yellow02 !important;
+				}
+			}		
+		}
+	}
+	
+}
+
+.view-calendar-page.view-display-id-page {
+	.c-event-date {
+		span {
+			font-family: 'Adelle SemiBold';
+			font-size: 16px;
+		}
+	}
+	.c-event--list-by-group {
+		padding: 0px !important;
+	}
+}
+
+// STYLES FOR CALENDAR
+#datepicker {
+	input {
+		display: none;
+	}
+	#container {
+		width: 100%;
+		max-width: 460px;
+	}
+	.mobile-calendar-toggle {
+		display: block;
+		background: $yellow01;
+		font-family: "Proxima Nova SemiBold";
+	  	width: 100%;
+	  	padding: 15px 20px;
+	  	text-transform: uppercase;
+	  	text-align: left;
+	  	color: #fff;
+	  	font-size: 14px;
+	  	cursor: pointer;
+	  	
+	  	&:after {
+	  		float:right;
+			font-size: 28px;
+			position: relative;
+			top: -10px;
+			color: #fff;
+	  	}
+	}
+
+	.Zebra_DatePicker {
+		position: relative;
+		display: none;
+		width: 100%;
+		padding: 0 20px 5px;
+		border: 0;
+		@include border-radius(0);
+		background: $yellow01;
+
+		.dp_header {
+			position: absolute;
+			top: 0;
+			right: 0;
+			left: 0;
+			margin: auto;
+			background: $yellow01;
+			width: 100% !important;
+			width: calc(100% + 40px) !important;
+			max-width: 400px;
+			table-layout: fixed;
+
+			.dp_caption {
+				width: 85%;
+				padding: 10px 0;
+				font-family: "Adelle SemiBold";
+				color: #fff;
+				font-size: 23px;
+				letter-spacing: 0.05em;
+				@include transition(background, 0.2s, ease);
+
+				&.dp_hover {
+					background: $yellow02;
+					@include border-radius(0);
+				}
+			}
+
+			.dp_previous,
+			.dp_next {
+				position: relative;
+				background: $yellow02;
+				font-size: 21px;
+				width: 7.5%;
+
+				&.dp_hover {
+					background: $yellow01;
+					@include border-radius(0);
+				}
+			}
+		}
+		.dp_daypicker,
+		.dp_monthpicker {
+			margin-top: 40px;
+
+			> tbody {
+				width: 100%;
+			}
+		}
+		.dp_daypicker {
+			width: 100%;
+
+			th, td,	
+			tr:nth-of-type(even) {
+				background: transparent;
+			}
+			th, 
+			td {
+				width: 14.2%;
+				border: 0;
+				background: transparent;
+				font-size: 14px;
+				line-height: 2em;
+				font-family: "Proxima Nova Regular";
+			}
+			// days 'o the week
+			th {	
+				padding-top: 20px;
+				color: #fff;
+				text-transform: uppercase;
+			}
+			// dates
+			td {
+				color: #000;
+			}
+
+			.dp_selected {
+				position: relative;
+				color: #fff !important;
+				z-index: 3;
+			}
+			.dp_current {
+				background: $grey-line;
+				&.dp_selected {
+					background: none;
+				}
+			}
+
+			.currentweek {
+				position: relative;
+				td {
+					background: $yellow03;
+				}
+			}
+
+			.dp_not_in_month {
+				visibility: hidden;
+				height: 1px;
+				padding: 0;
+			}
+		}
+		.dp_monthpicker {
+			width: 100% !important;
+			tr:nth-of-type(even) {
+				background: transparent;
+
+				&.currentweek {
+					background: $yellow02;
+				}
+			}
+			td {
+				border: none;
+				background: transparent;
+				@include transition(background, 0.2s, ease);
+
+				&.dp_hover {
+					background: $yellow02;
+				}
+			}
+		}
+	}
+}
+.no-flexboxlegacy {
+	#datepicker {
+		.Zebra_DatePicker {
+			.dp_header {
+				width: 100% !important;
+			}
+		}
+	}
+}
+.cal-nav-wrapper {
+	span.title {
+		vertical-align: text-bottom;
+		position: relative;
+		font-size: 20px;
+		margin-top: 25px;
+		display: none;
+		font-family: "Adelle SemiBold";
+	}
+	.cal-nav-list {
+		margin: 0;
+		padding: 0;
+		li{
+			background-color: #EEEEEE;
+			list-style: none;
+			display: inline-block;
+			text-align: left;
+			color: #004C71;
+			margin: 10px 0;
+			width: 49%;
+			position: relative;
+
+			a {
+				display: inline-block;
+				width: 100%;
+				height: 42px;
+				line-height: 42px;
+				padding: 0 0 0 14px;
+				font-family: "Proxima Nova Semibold";
+				font-size: 12px;
+				text-transform: uppercase;
+				color: #004C71;
+				@include transition(background, 0.2s, ease);
+
+				&:after {
+					position: absolute;
+					right: 6%;
+					top: 0px;
+					font-size: 20px;
+				}
+
+				&:hover {
+					color: white;
+					@extend .med-bg;
+				}
+			}
+		} 
+	}
+}
+// IMPORTANT
+.page-events {
+	.view-calendar-page {
+		.views-exposed-form {
+			.views-exposed-widget{
+				width: 100%;
+			}
+		}
+		.view-header {
+			position: relative;
+		}
+		.view-filters {
+			float: left;
+			width: 100%;
+			margin: 20px 0 0 0;
+			.views-exposed-form {
+				position: relative;
+				.views-exposed-widget {
+					position: relative;
+					
+					&:after {
+						@extend .icon-after__see-more;
+						position: absolute;
+						right: 20px;
+						top: 5px;
+						font-size: 25px;
+						color: $blue01;
+						pointer-events: none;
+						cursor: pointer;
+					}
+				}
+				.views-exposed-widget.views-submit-button:after{
+					display:none;
+				}
+			}
+			#edit-field-date-value-wrapper {
+				display: none;
+			}
+			select{
+				width: 100%;
+				float: left;
+			}
+		}
+	}
+	.calendar-nav{
+		padding: 0px 0 20px 0;
+		margin: 0;
+	}
+	.c-event-block--list {
+		padding-bottom: 0px;
+		.c-event--list-by-group{
+			float:left;
+			width: 100%;
+			padding: 0px 0 0px 0;
+			.c-event-name{
+				a{
+					color: $grey02;
+				}
+			}
+			.c-event-location{
+				margin-top: 0;
+				margin-bottom: 0;
+				span {
+					font-size: 20px;
+					font-family: "Proxima Nova SemiBold";
+				}
+			}
+			&.last {
+				.c-event-time {
+					border-bottom: none;
+				}
+			}
+		}
+		.c-event-time {
+			display: block;
+			//margin-left: 60px;
+  			float: left;
+  			margin-bottom: 20px;
+  			padding-bottom: 20px;
+  			border-bottom: 1px solid $grey05;
+  			margin-top: 0;
+  			margin-right: 0px;
+  			width: 280px;
+  			> div {
+  				display: inline-block;
+  				&.c-location {
+  					display: block;
+  				}
+  			}
+  			.c-location {
+  				color: $grey05;
+  			}
+		}
+		.c-senator {
+			//float: left;
+  			//margin-left: 60px;
+  			a {
+  				color: $yellow01;
+  				font-size: 18px;
+  				font-family: "Proxima Nova SemiBold";
+  				text-transform: uppercase;
+  			}
+		}
+		.c-video-status {
+			text-transform: uppercase;
+  			font-size: 18px;
+  			&:before {
+  				color: $yellow03;
+				font-size: 23px;
+				vertical-align: middle;
+				top: -2px;
+				position: relative;
+			}
+		}
+	}
+}
+
+@media #{$tablet} {
+	#datepicker {
+		position: relative;
+		float: left;
+		width:400px;
+		
+
+		.mobile-calendar-toggle {
+			display: none;
+		}
+		.Zebra_DatePicker {
+			display: inline-block;
+			overflow: visible;
+
+			.dp_header {
+				background: $yellow02;
+				height: 48px;
+
+				.dp_caption {
+					padding: 15px 0;
+					font-size: 25px;
+
+					&.dp_hover {
+						background: $yellow01;
+					}
+				}
+
+				.dp_previous,
+				.dp_next {
+					font-size: 28px;
+
+					&.dp_hover {
+						background: $yellow01;
+					}
+				}
+			}
+			.dp_monthpicker,
+			.dp_daypicker {
+				margin-top: 50px;
+				th { font-size: 12px; }
+				td {
+					font-size: 16px;
+					line-height: 2em;
+
+					&.dp_not_in_month {
+						line-height: 1;
+					}
+				}
+			}
+			.dp_monthpicker {
+				margin-bottom: 18px;
+			}
+			&:after {
+				content: "";
+				display: block;
+				position: absolute;
+				left: 30px;
+				bottom: -10px;
+				margin: auto;
+				height: 20px;
+				width: 20px;
+				background: $yellow01;
+				-moz-transform: rotate(45deg);
+				-ms-transform: rotate(45deg); /* IE 9 */
+				-webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+				transform: rotate(45deg);
+			}
+		}
+	}
+	.cal-nav-wrapper {
+		margin-top: 50px;
+
+		span.title {
+			margin: 0;
+			color: $grey02;
+			font-family: "Adelle SemiBold";
+			font-size: 20px;
+			line-height: 42px;
+		}
+		.cal-nav-list {
+			text-align: right;
+			display: inline-block;
+  			float: right;
+			
+			li {
+				margin: 0;
+				display: inline-block;
+				width: 182px;
+			}
+		}
+	}
+
+
+	// STYLES FOR EVENT LISTS
+	.cal-event {
+		padding: 15px 0 20px;
+		border-top: 1px solid $grey05;
+		@include clearfix;
+	}
+
+	.cal-col-1 {
+		float: left;
+		width: 20%;
+		clear: both;
+	}
+
+	.cal-event-title {
+		color: $grey02;
+		font-family: "Adelle Light";
+		font-size: 18px;
+
+		a {
+			color: $grey02;
+		}
+	}
+	.cal-event-senator {
+		text-transform: uppercase;
+		color: $yellow02;
+		font-family: "Proxima Nova SemiBold";
+		font-size: 12px;
+
+		a {
+			color: $yellow02;
+		}
+	}
+	.cal-event-loc-1 {
+		color: $grey02;
+		font-family: "Proxima Nova Regular";
+		font-size: 12px;
+		@extend .icon-before__circle-pin;
+
+		&:before {
+			font-size: 17px;
+			@extend .med-text;
+		}
+
+	}
+	.cal-event-loc-2 {
+		margin: 0;
+		color: $grey04;
+		font-family: "Proxima Nova Regular";
+		font-size: 12px;	
+	}
+	.cal-event-time {
+		margin: 5px 0 0 0;
+		color: $grey02;
+		font-family: "Proxima Nova SemiBold";
+		font-size: 12px;
+	}
+
+	.cal-event-date {
+		display: block;
+		color: $grey02;
+		font-family: "Adelle Bold";
+		font-size: 24px;
+		line-height: 1;
+	}
+	.cal-event-month {
+		display: block;
+		text-transform: uppercase;
+		color: $grey02;
+		font-family: "Proxima Nova Regular";
+		font-size: 12px;
+		letter-spacing: 0.05em;
+		line-height: 1;
+	}
+
+
+	// IMPORTANT
+	.page-events {
+		.view-calendar-page {
+			.view-filters {
+				float: right;
+				width: 280px;
+				margin: 0;
+				#edit-field-date-value-wrapper {
+					display: none;
+				}
+				select{
+					width: 280px;
+					float: left;
+				}
+			}
+		}
+		.calendar-nav{
+			padding: 10px 0 20px 0;
+			margin: 0;
+		}
+		.c-event-block--list {
+			.c-event--list-by-group{
+				float:none;
+				padding: 10px 0;
+				.c-event-name{
+					margin-top: 0;
+					a{
+						color: $grey02;
+					}
+				}
+				.c-event-location{
+					margin-top: 0;
+					margin-bottom: 0;
+				}
+				.icon-before__circle-pin:before {
+					vertical-align: top;
+				}
+			}
+			.c-event-time {
+				float: right;
+				width: 580px;
+			}
+			.c-senator {
+				float: right;
+				margin-right: 120px;
+				width: 460px;
+			}
+			.c-video-status {
+
+			}
+		}
+	}
+	.cal-event {
+	}
+	.cal-col-1 { }
+	.cal-col-2 { 
+		width: 80%;
+		float: right;
+	}
+
+	.cal-event-title { 
+		font-size: 24px;
+		margin-bottom: 10px;
+	}
+	.cal-event-senator { font-size: 14px; }
+	.cal-event-loc-1 { font-size: 14px; }
+	.cal-event-loc-2 { font-size: 14px; }
+	.cal-event-time { font-size: 14px; }
+	.cal-event-date { font-size: 40px; }
+	.cal-event-month { font-size: 16px; }
+
+}

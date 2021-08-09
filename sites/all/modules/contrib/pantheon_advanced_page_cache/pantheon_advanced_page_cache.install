@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Contains install function for Pantheon Advanced Page Cache.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function pantheon_advanced_page_cache_install() {
+  variable_set('pantheon_advanced_page_cache_override_list_tags', FALSE);
+}

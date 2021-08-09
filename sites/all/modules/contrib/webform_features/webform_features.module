@@ -1,0 +1,166 @@
+<?php
+
+/**
+ * @file
+ * This module allows to export Webforms into Features.
+ */
+
+/**
+ * Implements hook_form_alter().
+ */
+function webform_features_form_alter(&$form, &$form_state, $form_id) {
+  if (isset($form['#node']->type) && $form_id == $form['#node']->type . '_node_form' && in_array($form['#node']->type, webform_variable_get('webform_node_types'))) {
+    $node = $form['#node'];
+
+    $form['machine_name'] = array(
+      '#type' => 'machine_name',
+      '#default_value' => !empty($node->webform['machine_name']) ? $node->webform['machine_name'] : '',
+      '#maxlength' => 32,
+      '#required' => TRUE,
+      '#disabled' => empty($node->is_new) && !empty($node->nid),
+      '#machine_name' => array(
+        'exists' => 'webform_features_machine_name_load',
+        'source' => array('title'),
+      ),
+      '#description' => t('A unique machine-readable name for this webform. It must only contain lowercase letters, numbers, and underscores.'),
+      '#weight' => -5,
+    );
+
+    array_unshift($form['#submit'], 'webform_features_node_form_submit');
+  }
+  elseif ($form_id == 'webform_component_edit_form') {
+    $component = webform_menu_component_load($form['cid']['#value'], $form['nid']['#value'], FALSE);
+    $node = node_load($form['nid']['#value']);
+
+    $form['machine_name'] = array(
+      '#type' => 'machine_name',
+      '#default_value' => !empty($component) ? substr($component['machine_name'], strrpos($component['machine_name'], '__') + 2) : $form['form_key']['#default_value'],
+      '#maxlength' => 32,
+      '#required' => TRUE,
+      '#disabled' => !empty($form['cid']['#value']),
+      '#element_validate' => array('webform_features_component_machine_name_validate'),
+      '#machine_name' => array(
+        'exists' => 'webform_features_component_machine_name_load',
+        'source' => array('form_key'),
+      ),
+      '#description' => t('A unique machine-readable name for this webform component. It must only contain lowercase letters, numbers, and underscores.'),
+      '#weight' => -8,
+    );
+  }
+}
+
+/**
+ * Custom node form submitter.
+ *
+ * Put the machine_name value into the webform settings to be saved by the
+ * webform module.
+ *
+ * @param $form
+ *   The form
+ * @param $form_state
+ *   The form state
+ */
+function webform_features_node_form_submit(&$form, &$form_state) {
+  $form_state['values']['webform']['machine_name'] = $form_state['values']['machine_name'];
+  unset($form_state['values']['machine_name']);
+}
+
+/**
+ * Menu argument loader: loads a webform by string.
+ *
+ * @param $name
+ *   The machine-readable name of a webform to load, where '_' is replaced
+ *   with '-'.
+ * @param $reset
+ *   Whether to reset the node_load_multiple cache.
+ *
+ * @return
+ *   A webform object or FALSE if $name does not exist.
+ */
+function webform_features_machine_name_load($name, $reset = FALSE) {
+  $name = strtr($name, array('-' => '_'));
+  $nid = db_select('webform', 'w')
+    ->fields('w', array('nid'))
+    ->condition('machine_name', $name)
+    ->execute()
+    ->fetchField();
+  if (empty($nid)) {
+    return FALSE;
+  }
+  return node_load($nid, NULL, $reset);
+}
+
+/**
+ * Webform component machine name validator.
+ *
+ * Disallow double underscore in the component machine name and prepend the
+ * webform's machine name to the component's one before checking its unicity.
+ */
+function webform_features_component_machine_name_validate($element, &$form_state, $form) {
+  if (strpos($form_state['values']['machine_name'], '__') !== FALSE) {
+    form_error($element, t("You cannot use a double underscore to avoid confusion with the prepended webform's machine name"));
+  }
+  elseif (empty($form['machine_name']['#disabled'])) {
+    $node = node_load($form_state['values']['nid']);
+    $form_state['values']['machine_name'] = $node->webform['machine_name'] . '__' . $form_state['values']['machine_name'];
+    $element['#value'] = $form_state['values']['machine_name'];
+    form_validate_machine_name($element, $form_state, $form);
+  }
+
+  $errors = form_get_error($element);
+  if (!empty($errors)) {
+    $form_state['values']['machine_name'] = substr($form_state['values']['machine_name'], strrpos($form_state['values']['machine_name'], '__') + 2);
+  }
+}
+
+/**
+ * Menu argument loader: loads a webform_component by string.
+ *
+ * @param $name
+ *   The machine-readable name of a webform to load, where '_' is replaced
+ *   with '-'.
+ * @param $reset
+ *   Whether to reset the node_load_multiple cache.
+ *
+ * @return
+ *   A webform object or FALSE if $name does not exist.
+ */
+function webform_features_component_machine_name_load($name, $reset = FALSE) {
+  $name = strtr($name, array('-' => '_'));
+  $row = db_select('webform_component', 'wc')
+    ->fields('wc', array('nid', 'cid'))
+    ->condition('machine_name', $name)
+    ->execute()
+    ->fetch();
+  if (empty($row)) {
+    return FALSE;
+  }
+  return webform_menu_component_load($row->cid, $row->nid, FALSE);
+}
+
+/**
+ * Implements hook_webform_component_insert().
+ *
+ * Adds the machine name in the webform_component table.
+ */
+function webform_features_webform_component_insert($component) {
+  db_update('webform_component')
+    ->fields(array('machine_name' => $component['machine_name']))
+    ->condition('cid', $component['cid'])
+    ->execute();
+}
+
+/**
+ * Implements hook_features_api().
+ */
+function webform_features_features_api() {
+  return array(
+    'webform' => array(
+      'name' => 'Webforms',
+      'default_hook' => 'webform_defaults',
+      'default_file' => FEATURES_DEFAULTS_INCLUDED,
+      'feature_source' => TRUE,
+      'file' => drupal_get_path('module', 'webform_features') . '/webform_features.features.inc',
+    ),
+  );
+}

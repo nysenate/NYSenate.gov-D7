@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * Contains tests for the Sendgrid Integration Reports module.
+ */
+
+/**
+ * Test case.
+ */
+class SendgridIntegrationReportsTestCase extends SendgridIntegrationTestCase {
+
+  /**
+   * Implements getInfo().
+   */
+  public static function getInfo() {
+    return [
+      'name' => t('Sendgrid Integration Reports Tests'),
+      'description' => t('Test the function of the generated reports and web services.'),
+      'group' => t('Sendgrid Integration'),
+    ];
+  }
+
+  /**
+   * Implements setUp().
+   */
+  function setUp() {
+    // Call the parent with an array of modules to enable for the test.
+    $modules = [
+      'sendgrid_integration',
+      'sendgrid_integration_reports'
+    ];
+    parent::setUp($modules);
+
+    // TODO: perform additional setup tasks here if required.
+    // Create a generic authenticated user.
+    $this->web_user = $this->drupalCreateUser();
+
+    // Create an admin user and log them in.
+    $this->admin_user = $this->drupalCreateUser([
+      'access content',
+      'create page content',
+      'edit own page content',
+      'administer users',
+      'administer permissions',
+    ]);
+    $this->drupalLogin($this->admin_user);
+    // Set the role as admin for the admin user just created.
+    $this->drupalPost('user/' . $this->admin_user->uid . '/edit', ['roles[3]' => TRUE], t('Save'));
+
+  }
+
+  /**
+   * Test the module's functionality.
+   */
+  function testTodoChangeThisName() {
+    // TODO: write test!
+  }
+
+}

@@ -1,0 +1,5 @@
+name = NYS Dashboard
+package = NY STATE SENATE
+description = "NYS Inbox functionality"
+core = 7.x
+dependencies[] = privatemsg

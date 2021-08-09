@@ -1,0 +1,80 @@
+<?php
+
+/**
+ * @file
+ * Install/Uninstall hooks for apachesolr_search_blocks.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function apachesolr_search_blocks_install() {
+  
+}
+
+/**
+ * Implements hook_schema().
+ */
+function apachesolr_search_blocks_schema() {
+  $schema = array();
+
+  $schema['apachesolr_search_blocks'] = array(
+    'description' => 'Apache Solr Search Blocks settings',
+    'export' => array(
+      'key' => 'search_page_id',
+      'key name' => 'Apache Solr PageId',
+      'primary key' => 'search_page_id',
+      'identifier' => 'apachesolr_search_block', // Exports will be as $rule
+      'default hook' => 'default_apachesolr_search_blocks',  // Function hook name.
+      'api' => array(
+        'owner' => 'apachesolr_search_blocks',
+        'api' => 'apachesolr_search_blocks',  // Base name for api include files.
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+    ),
+    'fields' => array(
+      'search_page_id' => array(
+        'description' => 'The machine readable name of the search page.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'block_enabled' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'small',
+        'description' => 'Whether or not a block is enabled for the search page.',
+      ),
+      'block_title' => array(
+        'description' => 'The title of the search page block.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'join' => array(
+      'exportables' => array(
+        'table' => 'apachesolr_search_page',
+        'left_key' => 'search_page_id',
+        'right_key' => 'page_id',
+        'load' => array(
+          'page_title',
+        )
+      ),
+    ),
+    'primary key' => array('search_page_id'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function apachesolr_search_blocks_uninstall() {
+  
+}

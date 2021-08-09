@@ -1,0 +1,513 @@
+<?php
+/**
+ * @file
+ * Module file for NYS OpenLeg.
+ */
+
+// We depend on the composer_manager module.  Use it to force
+// PSR-4 autoload of the src directory.
+$loader = require composer_manager_vendor_dir() . '/autoload.php';
+$loader->addPsr4('Nys_Openleg\\', __DIR__ . '/src');
+
+use Nys_Openleg\ApiRequest;
+use Nys_Openleg\Request\Statute;
+use Nys_Openleg\Search\Statute as StatuteSearch;
+
+// Helper/library functions
+require_once 'nys_openleg.inc';
+
+/**
+ * Implements hook_menu()
+ */
+function nys_openleg_menu() {
+  return [
+    'admin/config/services/nys_openleg' => [
+      'title' => 'NYS OpenLeg Settings',
+      'description' => 'OpenLeg API Integration Settings',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => ['nys_openleg_config'],
+      'access callback' => 'user_access',
+      'access arguments' => ['administer openleg settings'],
+      'type' => MENU_NORMAL_ITEM,
+      'weight' => 1,
+    ],
+    'admin/config/services/nys_openleg/default' => [
+      'title' => 'NYS OpenLeg Settings',
+      'type' => MENU_DEFAULT_LOCAL_TASK,
+      'weight' => 0,
+    ],
+    'admin/config/services/nys_openleg/call' => [
+      'title' => 'Call OpenLeg',
+      'description' => 'Generate a call to OpenLeg and view the response',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => ['nys_openleg_config_call'],
+      'access callback' => 'user_access',
+      'access arguments' => ['administer openleg settings'],
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 50,
+    ],
+    NYS_OPENLEG_MENU_PATH => [
+      'title' => 'Statutes',
+      'description' => 'Displays a statute',
+      'page callback' => 'nys_openleg_render_statute',
+      'access callback' => TRUE,
+      'type' => MENU_CALLBACK,
+    ],
+    'legislation/statutes' => [
+      'title' => 'Statutes',
+      'description' => 'Displays a statute',
+      'page callback' => 'nys_openleg_render_statute',
+      'access callback' => TRUE,
+      'type' => MENU_CALLBACK,
+    ],
+    NYS_OPENLEG_MENU_PATH . '/search' => [
+      'title' => 'Search Statutes',
+      'description' => 'Search All Statutes',
+      'page callback' => 'nys_openleg_render_search',
+      'access callback' => TRUE,
+      'type' => MENU_CALLBACK,
+    ],
+  ];
+}
+
+/**
+ * Implements hook_permission().
+ */
+function nys_openleg_permission() {
+  return [
+    'administer openleg settings' => [
+      'title' => t('Administer OpenLeg Settings'),
+      'description' => t('Administer settings for OpenLeg API calls'),
+    ],
+  ];
+}
+
+/**
+ * Implements hook_flush_caches().
+ */
+function nys_openleg_flush_caches() {
+  return ['cache_openleg'];
+}
+
+/**
+ * Implements hook_theme()
+ */
+function nys_openleg_theme($existing, $type, $theme, $path) {
+  $template_path = "$path/templates";
+  return [
+    'nys_openleg_result_head_breadcrumbs' => [
+      'variables' => ['breadcrumbs' => []],
+      'path' => $template_path,
+      'template' => 'nys-openleg-result-head-breadcrumbs',
+    ],
+    'nys_openleg_result_head_nav' => [
+      'variables' => ['nav' => []],
+      'path' => $template_path,
+      'template' => 'nys-openleg-result-head-nav',
+    ],
+    'nys_openleg_result_head_title' => [
+      'variables' => ['title' => NULL],
+      'path' => $template_path,
+      'template' => 'nys-openleg-result-head-title',
+    ],
+    'nys_openleg_result_item' => [
+      'variables' => [
+        'url' => NULL,
+        'name' => NULL,
+        'description' => NULL,
+        'item_type' => 'item',
+      ],
+      'path' => $template_path,
+      'template' => 'nys-openleg-result-item',
+    ],
+    'nys_openleg_result' => [
+      'variables' => [
+        'title' => NULL,
+        'share_path' => NULL,
+        'list_items' => NULL,
+        'entry_text' => NULL,
+        'breadcrumbs' => NULL,
+        'nav' => NULL,
+        'history' => NULL,
+        'search' => NULL,
+        'deprecation_warning' => NULL,
+        'debug' => NULL,
+      ],
+      'path' => $template_path,
+      'template' => 'nys-openleg-result',
+    ],
+    'nys_openleg_search_results' => [
+      'variables' => ['term' => NULL, 'results' => [], 'pager' => NULL],
+      'path' => $template_path,
+      'template' => 'nys-openleg-search-results',
+    ],
+    'nys_openleg_search_result' => [
+      'variables' => [
+        'name' => NULL,
+        'title' => NULL,
+        'url' => NULL,
+        'snippets' => [],
+      ],
+      'path' => $template_path,
+      'template' => 'nys-openleg-search-result',
+    ],
+    'nys_openleg_not_found' => [
+      'variables' => ['additional' => NULL],
+      'path' => $template_path,
+      'template' => 'nys-openleg-not-found',
+    ],
+  ];
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ *
+ * @return array
+ */
+function nys_openleg_config($form, &$form_state) {
+  $api_key = variable_get('nys_openleg_api_key', FALSE);
+  $key_required = !((boolean) $api_key);
+  $key_text = $api_key
+    ? "An API key is already saved.  Leave the box blank to keep it, or input a new one to change it."
+    : "<h2><b>No API key is saved.  A key is required before calling OpenLeg.</b></h2>";
+
+  return system_settings_form([
+    'nys_openleg_use_ssl' => [
+      '#title' => t('Use SSL'),
+      '#type' => 'checkbox',
+      '#default_value' => variable_get('nys_openleg_use_ssl', 1),
+    ],
+    'nys_openleg_api_host' => [
+      '#title' => t('API Host'),
+      '#description' => t('The hostname of the API server (e.g. legislation.nysenate.gov)'),
+      '#type' => 'textfield',
+      '#size' => 35,
+      '#default_value' => variable_get('nys_openleg_api_host', NYS_OPENLEG_DEFAULT_HOST),
+    ],
+    'nys_openleg_api_version' => [
+      '#title' => t('API Version'),
+      '#description' => t('Used in creating the URL for API calls'),
+      '#type' => 'textfield',
+      '#size' => 5,
+      '#default_value' => variable_get('nys_openleg_api_version', NYS_OPENLEG_DEFAULT_VERSION),
+    ],
+    'nys_openleg_api_key' => [
+      '#title' => t('API Key'),
+      '#type' => 'password',
+      '#size' => 35,
+      '#default_value' => variable_get('nys_openleg_api_key', ''),
+      '#description' => $key_text,
+      '#required' => $key_required,
+    ],
+  ]);
+}
+
+/**
+ * Implements hook_admin_validate().
+ *
+ * @param $form
+ * @param $form_state
+ */
+function nys_openleg_config_validate($form, &$form_state) {
+  // These checks are necessary to avoid exposing keys in the form.
+  // If a value is not in the form, try to populate it from the saved variables.
+  $key = $form_state['values']['nys_openleg_api_key']
+    ?: variable_get('nys_openleg_api_key', '');
+  if (!$key) {
+    form_set_error('nys_openleg_api_key', t('You must supply a valid API key.'));
+  }
+  else {
+    $form_state['values']['nys_openleg_api_key'] = $key;
+  }
+}
+
+/**
+ * Renders a page capable of taking a request and returning the OL API response.
+ *
+ * Not Implemented yet.
+ *
+ * @return \string[][]
+ */
+function nys_openleg_config_call() {
+  return [
+    'not_implemented' => [
+      '#markup' => '<div> Not Implemented </div>',
+    ],
+  ];
+}
+
+/**
+ * Page callback for all statute requests.
+ *
+ * @return string
+ */
+function nys_openleg_render_statute() {
+  // Configure the OL API service with the API key in Drupal's variables
+  ApiRequest::useKey(variable_get('nys_openleg_api_key'));
+
+  // Ensure the stylesheet has been added.
+  drupal_add_css(drupal_get_path('module', 'nys_openleg') . '/nys_openleg.css');
+
+  // Fetch all the types, initialize the search
+  $law_types = _nys_openleg_get_law_types();
+  $suppress_search = FALSE;
+  $search_term = $GLOBALS['_POST']['search_term'] ?? '';
+
+  // parse book/law id from URL
+  $args = func_get_args();
+  $info = _nys_openleg_resolve_path_info($args);
+
+  // Initialize the template variables
+  $template_vars = [
+    'share_path' => $info['share_path'],
+    'deprecation_warning' => arg(1) !== 'laws',
+  ];
+
+  // Initialize the breadcrumb sources
+  $law_type = '';
+  $parents = NULL;
+
+  /**
+   * Every request will conform to one of three conditions:
+   *   - No book or location, or book == 'all'
+   *     At the top level, requires rendering all book types.
+   *   - A book name matching a law type identifier
+   *     At the type level, requires rendering all books within that type.
+   *   - Any other book name, and optional location
+   *     At the book/location level, requires rendering that location.
+   *
+   * Note that book entries do have a location specified in OL.  If a
+   * valid book is detected, but no location is provided, the location
+   * for the book will be used instead.
+   */
+  // CONDITION ONE: all, or no book type
+  if ($info['book'] == 'all') {
+    // Just need title and a list of book types
+    $template_vars['title'] = 'The Laws of New York';
+    $list_items = array_map(
+      '_nys_openleg_list_item_callback_book_type',
+      $law_types
+    );
+  }
+  // CONDITION TWO: a list of book types
+  elseif (in_array($info['book'], $law_types)) {
+    // Minimal breadcrumb.  Also, title and a list of books.
+    $law_type = $info['book'];
+    $template_vars['title'] = _nys_openleg_get_law_type_name($info['book']);
+    $list_items = array_map(
+      '_nys_openleg_list_item_callback_book',
+      _nys_openleg_get_books_by_type($info['book'])
+    );
+  }
+  // CONDITION THREE: not either of the other two conditions.
+  // If a valid book (with optional location) is not found, render an error response.
+  else {
+    // Get the statute.  Consider any historical milestone being requested.
+    $history = $GLOBALS['_POST']['history'] ?? '';
+    $statute = new Statute($info['book'], $info['location'], $history);
+
+    // If the entry is not found (or other OL error), render the error page.
+    if (!$statute->tree->success) {
+      return _nys_openleg_theme_wrapper('nys_openleg_not_found');
+    }
+
+    // Set up some template variables.
+    $template_vars['title'] = $statute->fullTitle();
+    $template_vars['entry_text'] = $statute->text();
+
+    // Set up the breadcrumb sources
+    $law_type = $statute->tree->result->info->lawType;
+    $parents = $statute->parents();
+
+    // Get the navigation references and render them
+    $nav = $statute->siblings();
+    $nav['up'] = end($parents);
+    $template_vars['nav'] = _nys_openleg_theme_wrapper(
+      'nys_openleg_result_head_nav',
+      ['nav' => array_map('_nys_openleg_list_item_callback_location', $nav)]
+    );
+
+    // Render the milestone selection form
+    $history_form = drupal_get_form('nys_openleg_history_form', $statute);
+    $template_vars['history'] = drupal_render($history_form);
+
+    // Generate the list_items from the statute children
+    $list_items = array_map(
+      '_nys_openleg_list_item_callback_location',
+      $statute->children()
+    );
+  }
+
+  // Render the list items
+  $template_vars['list_items'] = implode('', array_map(
+    function ($v) {
+      return _nys_openleg_theme_wrapper('nys_openleg_result_item', $v);
+    },
+    $list_items
+  ));
+
+  // Get and render the breadcrumbs
+  $template_vars['breadcrumbs'] = _nys_openleg_theme_wrapper(
+    'nys_openleg_result_head_breadcrumbs',
+    ['breadcrumbs' => _nys_openleg_generate_breadcrumbs($law_type, $parents)]
+  );
+
+  // Only render the search box if it has not been suppressed.
+  if (!$suppress_search) {
+    // Render the form.  Make sure the action URL points to the search page.
+    $form = drupal_get_form('nys_openleg_statute_search_form', $search_term);
+    $template_vars['search'] = drupal_render($form);
+  }
+
+  return _nys_openleg_theme_wrapper('nys_openleg_result', $template_vars);
+}
+
+/**
+ * Implements hook_form().
+ *
+ * @param array $form A Drupal Forms API array
+ * @param array $form_state A Drupal Forms API state array
+ * @param Statute $statute
+ *
+ * @return array
+ */
+function nys_openleg_history_form($form, &$form_state, $statute) {
+  $form_state['no_cache'] = TRUE;
+  $current = $statute->detail->result->activeDate ?? '--ERROR--';
+  return [
+    'milestone' => [
+      '#markup' => '<div class="nys-openleg-history-published">This entry was published on ' . $current . '<div class="nys-openleg-history-note"><div class="nys-openleg-history-note-text">The selection dates indicate all change milestones for the entire volume, not just the location being viewed.  Specifying a milestone date will retrieve the most recent version of the location before that date.</div></div></div>',
+    ],
+    'history' => [
+      '#type' => 'select',
+      '#options' => array_combine($statute->publishDates(), $statute->publishDates()),
+      '#default_value' => $current,
+      '#title' => 'See most recent version before or on: ',
+      '#attributes' => [
+        'onChange' => 'this.form.submit();',
+      ],
+    ],
+  ];
+}
+
+function nys_openleg_render_search() {
+  // Configure the OL API service with the API key in Drupal's variables
+  ApiRequest::useKey(variable_get('nys_openleg_api_key'));
+
+  // Get the search term and the search form.  The term could come from
+  // a form POST or query string.  Form POST takes precedence.
+  $search_term = $_POST['search_term'] ?? ($_GET['search_term'] ?? '');
+  $form = drupal_get_form('nys_openleg_statute_search_form', $search_term);
+
+  // Initialize the pager values.  Pager is zero-based, search is not.
+  $page = pager_find_page() + 1;
+  $per_page = (int) ($_GET['per_page'] ?? 10);
+
+  // Execute the search and initialize the pager with the total.
+  $params = ['page' => $page, 'per_page' => $per_page];
+  $search = new StatuteSearch($search_term, $params);
+  $counts = $search->getCount();
+  pager_default_initialize($counts['total'], $per_page);
+
+  // Only use the pager theme if the results make sense.
+  $use_pager = ($counts['total'] > 0) && ($counts['start'] < $counts['end']);
+  $pager = $use_pager ? _nys_openleg_theme_wrapper('pager', ['parameters' => ['search_term' => $search_term]]) : '';
+
+  // Build the results.
+  $ret = [
+    '<div class="nys-openleg-statute-search-container">',
+    drupal_render($form),
+    _nys_openleg_theme_wrapper('nys_openleg_search_results', [
+      'term' => $search_term,
+      'results' => $search->getResults(),
+      'pager' => $pager,
+    ]),
+    '</div>',
+  ];
+
+  // add the stylesheet
+  drupal_add_css(drupal_get_path('module', 'nys_openleg') . '/nys_openleg.css');
+
+  return implode('', $ret);
+}
+
+function nys_openleg_statute_search_form($form, &$form_state, $search_term = '') {
+  if (!$search_term) {
+    $search_term = $GLOBALS['_POST']['search_term'] ?? '';
+  }
+  $onclick = "jQuery('.search-title').closest('form').toggleClass('open')";
+  return [
+    'title' => ['#markup' => '<div class="search-title" onclick="' . $onclick . '">Search OpenLegislation Statutes</div>'],
+    'search_term' => [
+      '#type' => 'textfield',
+      '#title' => 'Search Term',
+      '#default_value' => (string) $search_term,
+    ],
+    'go' => [
+      '#type' => 'submit',
+      '#value' => 'Search',
+    ],
+    '#action' => '/' . NYS_OPENLEG_MENU_PATH . '/search',
+  ];
+}
+
+function nys_openleg_statute_search_form_submit($form, &$form_state) {
+  // Prevent redirection.
+  $form_state['no_redirect'] = TRUE;
+}
+
+function template_preprocess_nys_openleg_search_results(&$variables) {
+  /**
+     Example of an individual search result item returned from OpenLeg
+     {
+        "result" : {
+          "lawId" : "PML",
+          "lawName" : "Racing, Pari-Mutuel Wagering and Breeding Law",
+          "locationId" : "A4",
+          "title" : "Quarter Horse Racing and Breeding",
+          "docType" : "ARTICLE",
+          "docLevelId" : "4",
+          "activeDate" : "2020-10-16"
+        },
+        "rank" : 11.482597351074219,
+        "highlights" : {
+          "text" : [ "Right to hold quarter <em>horse</em> race meetings and races.\\n        405.", "Licenses for quarter <em>horse</em> race meetings.\\n        408. Officials at quarter <em>horse</em> race meetings.", "Licenses for participants and employees at quarter <em>horse</em>\\n               race meetings.", "Employees at quarter <em>horse</em> race meetings.\\n        425.", "Quarter <em>horse</em> racing defined.\\n        430. Definitions.\\n        431." ],
+          "title" : [ "Quarter <em>Horse</em> Racing and Breeding" ]
+        }
+      }
+   */
+  $result = '';
+  $list = $variables['results'] ?? [];
+  if (count($list)) {
+    foreach ($list as $item) {
+      // Find the important data points.
+      $lawId = $item->result->lawId ?? '';
+      $docType = $item->result->docType ?? '';
+      $docLevelId = $item->result->docLevelId ?? '';
+      $locationId = $item->result->locationId ?? '';
+      $title = current($item->highlights->title ?? []) ?: ($item->result->title ?? '');
+
+      // To ensure presentation, these four data points must be populated.
+      // Location could be empty.
+      if ($lawId && $docType && $docLevelId && $title) {
+        // Theme this individual result and add it to the pile.
+        $name = implode(' ', [$lawId, $docType, $docLevelId]);
+        $link = '/' . NYS_OPENLEG_MENU_PATH . '/' . $lawId . '/' . $locationId;
+        $snippets = $item->highlights->text ?? [];
+        $params = [
+          'name' => $name,
+          'title' => $title,
+          'url' => $link,
+          'snippets' => $snippets,
+        ];
+        $result .= _nys_openleg_theme_wrapper('nys_openleg_search_result', $params);
+      }
+    }
+  }
+  elseif ($variables['term'] ?? '') {
+    $result = '<div class="nys-openleg-search-no-results">We could not find any entries matching your search term.  Please check your spelling, or simplify your search.</div>';
+  }
+
+  $variables['search_results'] = $result;
+}

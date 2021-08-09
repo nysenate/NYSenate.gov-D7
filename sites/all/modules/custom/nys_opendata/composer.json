@@ -1,0 +1,8 @@
+{
+  "name": "nysenate/nys_opendata",
+  "description": "Custom Drupal module to display NYS Open Data records",
+  "require": {
+    "datatables/datatables": "~1.10.20"
+  },
+  "license": "MIT"
+}

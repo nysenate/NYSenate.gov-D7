@@ -1,0 +1,4 @@
+name = Calendar and Events, custom code
+description = custom code for event content type and calendar functionality
+package = NY STATE SENATE
+core = 7.x

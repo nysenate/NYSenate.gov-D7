@@ -1,0 +1,23 @@
+{
+  "repositories": {
+    "drupal": {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
+    }
+  },
+  "require": {
+    "drupal/drupal-extension": "~3.0",
+    "drupal/coder": "^8.3"
+  },
+  "scripts": {
+    "codesniff": [
+      "phpcs --report=full --extensions=php,module,inc,theme,info,install --standard=vendor/drupal/coder/coder_sniffer/Drupal --ignore=vendor,behat .."
+    ]
+  },
+  "config": {
+    "platform": {
+      "php": "7.0.20"
+    }
+  }
+
+}

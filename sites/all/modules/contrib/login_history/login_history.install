@@ -1,0 +1,172 @@
+<?php
+/**
+ * @file
+ * The login history install/uninstall code.
+ */
+
+/**
+ * Add some more data to the login_history table to provide for more features.
+ */
+function login_history_update_1() {
+  db_add_field('login_history', 'hostname', array(
+    'type' => 'varchar',
+    'length' => 128,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => "The user's host name.",
+  ));
+  db_add_field('login_history', 'one_time', array(
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+    'size' => 'tiny',
+    'description' => 'Indicates whether the login was from a one-time login link (e.g. password reset).',
+  ));
+  db_add_field('login_history', 'user_agent', array(
+    'type' => 'varchar',
+    'length' => 256,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'User agent (i.e. browser) of the device used during the login.',
+  ));
+  db_add_index('login_history', 'login_history_uid', array('uid'));
+  db_add_index('login_history', 'login_history_onetime', array('one_time'));
+  db_add_index('login_history', 'login_history_uid_host_ua', array('uid', 'hostname', 'user_agent'));
+}
+
+/**
+ * Remove this field.
+ */
+function login_history_update_2() {
+  db_drop_field('users', 'last_login');
+}
+
+/**
+ * Remove the index on the user agent column.
+ */
+function login_history_update_7100() {
+  db_drop_index('login_history', 'login_history_uid_host_ua');
+  db_add_index('login_history', 'login_history_uid_host', array('uid', 'hostname'));
+}
+
+/**
+ * Implements hook_schema().
+ */
+function login_history_schema() {
+  $schema['login_history'] = array(
+    'description' => 'Base table to record data about login events.',
+    'fields' => array(
+      'login_id' => array(
+        'description' => 'The primary identifier for a login.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'uid of user.',
+      ),
+      'login' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => "Timestamp for user's login.",
+      ),
+      'device_id' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'A hash of the login data to quickly identify this device.',
+      ),
+      'hostname' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => "The user's host name.",
+      ),
+      'one_time' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => 'Indicates whether the login was from a one-time login link (e.g. password reset).',
+      ),
+      'user_agent' => array(
+        'type' => 'varchar',
+        'length' => 256,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'User agent (i.e. browser) of the device used during the login.',
+      ),
+      'old_device_id' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Any device id from the client cookie.',
+      ),
+    ),
+    'indexes' => array(
+      'login_history_uid' => array('uid'),
+      'login_history_onetime' => array('one_time'),
+      'login_history_uid_host' => array('uid', 'hostname'),
+      'login_history_uid_device_id' => array('uid', 'device_id'),
+    ),
+    'primary key' => array('login_id'),
+  );
+  return $schema;
+}
+
+/**
+ * Clear the menu cache.
+ */
+function login_history_update_7101() {
+  menu_rebuild();
+}
+
+/**
+ * Add device_id and login_id columns.
+ */
+function login_history_update_7102() {
+  if (!db_field_exists('login_history', 'device_id')) {
+    db_add_field('login_history', 'device_id', array(
+      'type' => 'varchar',
+      'length' => 64,
+      'not null' => TRUE,
+      'default' => '',
+      'description' => 'A hash of the login data to quickly identify this device.',
+    ));
+    db_add_index('login_history', 'login_history_uid_device_id', array('uid', 'device_id'));
+    db_query('UPDATE {login_history} SET device_id = SHA2(CONCAT(user_agent), 256)')->execute();
+  }
+
+  if (!db_field_exists('login_history', 'login_id')) {
+    db_add_field(
+      'login_history',
+      'login_id',
+      array(
+        'description' => 'The primary identifier for a login.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      array('primary key' => array('login_id')));
+  }
+  if (!db_field_exists('login_history', 'old_device_id')) {
+    db_add_field(
+      'login_history',
+      'old_device_id',
+      array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The device id from the client cookie.',
+      )
+    );
+  }
+}

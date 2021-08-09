@@ -1,0 +1,8 @@
+name = NYS Subscriptions
+description = Handles Subscriptions to Bill Status Changes.
+core = 7.x
+package = NY STATE SENATE
+
+stylesheets[all][] = nys_subscriptions.css
+
+dependencies[] = nys_sendgrid

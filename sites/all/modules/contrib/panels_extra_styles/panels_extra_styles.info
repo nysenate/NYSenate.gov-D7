@@ -1,0 +1,14 @@
+name = Panels Extra Styles
+description = Additional styles for the Panels module.
+package = Panels
+dependencies[] = ctools
+dependencies[] = panels
+dependencies[] = page_manager
+core = 7.x
+
+; Information added by drupal.org packaging script on 2012-08-12
+version = "7.x-1.1"
+core = "7.x"
+project = "panels_extra_styles"
+datestamp = "1344807139"
+

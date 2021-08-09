@@ -1,0 +1,61 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for module nys_sendgrid.
+ */
+
+/**
+ * Implements hook_enable().
+ */
+function nys_sendgrid_enable() {
+  variable_set('mail_system', ['default-system' => 'NYSSendGridMailSystem']);
+  mailsystem_set(['nys_sendgrid' => 'NYSSendGridMailSystem']);
+}
+
+/**
+ * Implements hook_disable().
+ */
+function nys_sendgrid_disable() {
+  variable_set('mail_system', ['default-system' => 'DefaultMailSystem']);
+  mailsystem_clear(['nys_sendgrid' => 'NYSSendGridMailSystem']);
+}
+
+/**
+ * Implements hook_install().
+ */
+function nys_sendgrid_install() {
+  $t = get_t();
+  drupal_set_message($t('You can configure SendGrid settings under Administer > Configuration > !link',
+    [
+      '!link' => l($t('NYS SendGrid settings'), 'admin/config/services/nys_sendgrid'),
+    ]
+  ));
+
+  // Check for existing key and replicate it.
+  $key = variable_get('sendgrid_integration_apikey', '');
+  if ($key) {
+    variable_set('nys_sendgrid_apikey', $key);
+    drupal_set_message($t('SendGrid API key successfully retrieved from module sendgrid_integration'));
+  }
+  else {
+    drupal_set_message($t('A SendGrid API key must be configured before attemping to send mail!'), 'warning');
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function nys_sendgrid_uninstall() {
+  $all_vars = [
+    'nys_sendgrid_apikey',
+    'nys_sendgrid_suppress_categories',
+    'nys_sendgrid_default_template',
+    'nys_sendgrid_suppress_template',
+    'nys_sendgrid_test_defaults',
+    'nys_sendgrid_template_assignments',
+  ];
+  foreach ($all_vars as $val) {
+    variable_del($val);
+  }
+}

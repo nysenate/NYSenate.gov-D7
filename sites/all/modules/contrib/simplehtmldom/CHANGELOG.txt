@@ -1,0 +1,12 @@
+
+simplehtmldom 7.x-2.x, xxxx-xx-xx
+
+
+simplehtmldom 7.x-2.1, 2014-03-18
+#2199489 by amool, konstantin.komelin: Implemented hook_requirements for simplehtmldom library.
+#2215991 by cafuego, konstantin.komelin: Provided makefile that downloads simplehtmldom library.
+
+
+simplehtmldom 7.x-2.0, 2014-02-16
+Removed simplehtmldom library from the module package
+Added support of the Libraries API module.

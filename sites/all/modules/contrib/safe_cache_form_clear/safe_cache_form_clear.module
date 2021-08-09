@@ -1,0 +1,52 @@
+<?php
+/**
+ * @file
+ * Module hooks for the Safe cache_form Clear module.
+ */
+
+/**
+ * Remove a limited number of objects from the cache_form table.
+ *
+ * @return int
+ *   The number of rows deleted from the cache_form table.
+ */
+function safe_cache_form_clear($limit = NULL) {
+
+  if ($limit == NULL) {
+    $limit = variable_get('safe_cache_form_clear_limit', 1000);
+  }
+
+  if (drupal_is_cli()) {
+    drush_log(dt('Selecting up to !limit removable items...', array('!limit' => $limit)));
+  }
+
+  // Can't use a subquery on db_delete() directly: Syntax error or access
+  // violation: 1235 This version of MySQL doesn't yet support 'LIMIT &
+  // IN/ALL/ANY/SOME subquery'
+  $results = db_select('cache_form')
+    ->fields('cache_form', array('cid'))
+    ->condition('expire', CACHE_PERMANENT, '<>')
+    ->condition('expire', REQUEST_TIME, '<')
+    ->range(0, $limit)
+    ->execute();
+
+  $cids = $results->fetchCol('cid');
+
+  if (empty($cids)) {
+    return 0;
+  }
+
+  if (drupal_is_cli()) {
+    drush_log(dt('Deleting !count items...', array('!count' => count($cids))));
+  }
+
+  $deleted = db_delete('cache_form')
+    ->condition('cid', $cids, 'IN')
+    ->execute();
+
+  if (drupal_is_cli()) {
+    drush_log(dt('!count items deleted', array('!count' => $deleted)), 'ok');
+  }
+
+  return $deleted;
+}

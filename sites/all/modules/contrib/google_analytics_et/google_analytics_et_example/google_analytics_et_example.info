@@ -1,0 +1,13 @@
+name = Google Analytics Event Tracking Example
+description = "An extremely simple example to demonstraight how to integrate into the Google Analytics Event Tranking Module's API'."
+core = 7.x
+package = Statistics
+dependencies[] = googleanalytics
+dependencies[] = google_analytics_et
+
+; Information added by Drupal.org packaging script on 2015-06-18
+version = "7.x-1.3"
+core = "7.x"
+project = "google_analytics_et"
+datestamp = "1434650281"
+

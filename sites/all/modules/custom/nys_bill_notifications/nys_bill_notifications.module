@@ -1,0 +1,1073 @@
+<?php
+/**
+ * @file
+ * Drush bill_notifications module.
+ */
+
+use \SendGrid\Mail as SG;
+
+// Defines the name of the queue leveraged by this module.
+define("NYS_BILL_NOTIFICATIONS_QUEUE", "nys_bill_notifications_queue");
+
+// Define format of variable tracking the last detected change
+define("NYS_BILL_CHANGE_DETECTION_DATETIME_FORMAT", "Y-m-d\TH:i:s");
+
+// Default maximum recipient count.
+define("NYS_BILL_NOTIFICATIONS_MAX_RECIP_COUNT", 1000);
+
+// Include the templating file.  This handles translation of individual events
+// into one-line blurbs via formatting functions.
+module_load_include('inc', 'nys_bill_notifications', 'nys_bill_notifications.tpl');
+
+/**
+ * Helper function to get all bill changes detected during a single run session.
+ *
+ * The structure of the changes array is:
+ * [ <bill_key> =>
+ *    [ '#root' => <multi_session_root>,
+ *      '#changes' =>
+ *        [
+ *            [ 'name' => <safe_test_name>
+ *              'timestamp' => <change_timestamp>,
+ *              'text' => <text_summary_of_change>,
+ *            ],
+ *        ],
+ *    ],
+ * ]
+ *
+ * <bill_key> = the session, hyphen, print number.
+ * <multi_session_root> = the taxonomy term id for the earliest bill version.
+ * <safe_test_name> = the test name, run through nys_utils_make_name_safe().
+ * <change_timestamp> = epoch timestamp, translated from an OL update block.
+ * <text_summary_of_change> = the result of a test's formatter function.
+ *
+ * @return array Drupal static array of all detected changes so far.
+ */
+function &_nys_bill_notifications_session_changes() {
+  return drupal_static('nys_bill_notifications_change_detection', []);
+}
+
+/**
+ * Populates the taxonomy roots for any bill changes detected.
+ * TODO: maybe this should be a hook?
+ */
+function _nys_bill_notifications_find_taxonomy_roots() {
+  // Get the compiled changes.
+  $changes = &_nys_bill_notifications_session_changes();
+
+  $roots = nys_bill_notifications_find_root_from_print(array_keys($changes));
+
+  // Correlate the query results with the changes being processed.
+  foreach ($roots as $key => $val) {
+    if (array_key_exists($val['key'], $changes)) {
+      $changes[$key]['#info'] = $val;
+    }
+  }
+}
+
+/**
+ * Crawl an OpenLeg update block and test for conditions based on the test
+ * array. See nys_bill_notifications_generate_test_array() for test item
+ * structure.
+ *
+ * @param $item object A JSON-decoded item from OpenLeg /api/3/bills/updates.
+ * @param $test_array array An individual test item.
+ *
+ * @return bool True if the item was matched by the test.
+ */
+function _test_openleg_update_block($item, $test_array) {
+  // Just a simple reference cuz PHP don't like __FUNCTION__().
+  $func = __FUNCTION__;
+
+  // Initialize test result.
+  $final_test_result = TRUE;
+
+  // Run through the test array.
+  foreach ($test_array as $key => $val) {
+    // Exempt any key which begins with '#' - our metadata indicator.
+    if (substr($key, 0, 1) != '#') {
+      // Every $key is a property which must exist, or the test fails.
+      if (!property_exists($item, $key)) {
+        $final_test_result = FALSE;
+      }
+      else {
+        // Get this property's value.
+        $test_item = $item->$key;
+        // If it is an array, recursive testing is necessary.
+        if (is_array($val)) {
+          $final_test_result = $func($test_item, $val);
+        }
+        // If the value is not an array, and is anything other than boolean TRUE,
+        // an explicit value match is required.  Use basic pattern matching
+        // with fnmatch().
+        elseif ($val !== TRUE) {
+          $final_test_result = fnmatch($val, $test_item);
+        }
+      }
+    }
+
+    // Short-circuit the tests if any of them fail.
+    if (!$final_test_result) {
+      break;
+    }
+  }
+  return $final_test_result;
+}
+
+/**
+ * Generate the array of tests used to identify what type of update is being
+ * reported from OpenLeg.
+ *
+ * @return array $all_tests The array of tests, keyed by the test name.
+ */
+function nys_bill_notifications_generate_test_array() {
+  // Initialize the tests array.
+  $all_tests = &drupal_static(__FUNCTION__, []);
+
+  if (!is_array($all_tests) || !count($all_tests)) {
+    // The hook we will call to allow for other modules to construct tests.
+    $hook = 'ol_update_test';
+
+    // Find every module implementing our hook.
+    foreach (module_implements($hook) as $module) {
+      // Call each module's hook implementation.
+      $test_items = call_user_func($module . '_' . $hook);
+
+      // If we get an array back, merge it into $all_tests.
+      if (isset($test_items) && is_array($test_items)) {
+        $all_tests = array_merge($all_tests, $test_items);
+      }
+    }
+
+    // Finally, allow for alterations after all tests have been constructed.
+    drupal_alter($hook, $all_tests);
+
+    // If any definitions have not included a requirement for basePrintNo
+    // and session year, inject a simple existence test.  These data points
+    // are required to identify the bill reporting a change.
+    foreach (array_keys($all_tests) as $one_test) {
+      if (!isset($all_tests[$one_test]['id']['basePrintNo'])) {
+        $all_tests[$one_test]['id']['basePrintNo'] = TRUE;
+      }
+      if (!isset($all_tests[$one_test]['id']['session'])) {
+        $all_tests[$one_test]['id']['session'] = TRUE;
+      }
+    }
+  }
+
+  return $all_tests;
+}
+
+/**
+ * Implements hook_ol_update_test().
+ *
+ * @return array
+ */
+function nys_bill_notifications_ol_update_test() {
+  return [
+    // Bill has been referred to Senate committee.
+    'IN_SENATE_COMM' => [
+      'scope' => "Bill",
+      'action' => "Insert",
+      'fields' => [
+        'Status' => "IN_SENATE_COMM",
+        'Committee Name' => TRUE,
+      ],
+      '#priority' => 2,
+    ],
+
+    // Bill has been referred to Assembly committee.
+    'IN_ASSEMBLY_COMM' => [
+      'scope' => "Bill",
+      'action' => "Update",
+      'fields' => [
+        'Status' => "IN_ASSEMBLY_COMM",
+        'Committee Name' => TRUE,
+      ],
+      '#priority' => 1,
+    ],
+
+    // Bill has been assigned a new "Same As" reference.
+    'NEW_SAME_AS' => [
+      'scope' => 'Bill Amendment Same As',
+      'action' => 'Insert',
+      'fields' => [
+        'Same As Session Year' => TRUE,
+        'Same As Bill Print No' => TRUE,
+      ],
+      '#priority' => 10,
+    ],
+
+    // Bill has new previous version reference.
+    'NEW_PREV_VER' => [
+      'scope' => 'Bill Previous Version',
+      'action' => "Insert",
+      'fields' => [
+        'Prev Bill Session Year' => TRUE,
+        'Prev Bill Print No' => TRUE,
+      ],
+      '#priority' => 6,
+    ],
+
+    // Bill has previous version reference removed.
+    'REMOVE_PREV_VER' => [
+      'scope' => 'Bill Previous Version',
+      'action' => "Delete",
+      'fields' => [
+        'Prev Bill Session Year' => TRUE,
+        'Prev Bill Print No' => TRUE,
+      ],
+      '#priority' => 7,
+    ],
+
+    // Bill has a new active version.
+    'NEW_ACTIVE_VER' => [
+      'scope' => 'Bill',
+      'action' => 'Update',
+      'fields' => ['Active Version' => TRUE],
+      '#priority' => 8,
+    ],
+
+    // Bill has a new amendment.
+    'NEW_AMENDMENT' => [
+      'action' => 'Insert',
+      'scope' => 'Bill Amendment Publish Status',
+      'fields' => [
+        'Bill Amend Version' => TRUE,
+        'Published' => 't',
+      ],
+      '#priority' => 9,
+    ],
+
+    // Bill has passed assembly.
+    'PASSED_ASSEMBLY' => [
+      'scope' => 'Bill',
+      'action' => 'Update',
+      'fields' => ['Status' => 'PASSED_ASSEMBLY',],
+      '#priority' => 11,
+    ],
+
+    // Bill has passed Senate.
+    'PASSED_SENATE' => [
+      'scope' => 'Bill',
+      'action' => 'Update',
+      'fields' => ['Status' => 'PASSED_SENATE',],
+      '#priority' => 13,
+    ],
+
+    // Bill on Senate floor.
+    'SENATE_FLOOR' => [
+      'scope' => 'Bill',
+      'action' => 'Update',
+      'fields' => ['Status' => 'SENATE_FLOOR',],
+      '#priority' => 3,
+    ],
+
+    // Bill on Assembly floor.
+    'ASSEMBLY_FLOOR' => [
+      'scope' => 'Bill',
+      'action' => 'Update',
+      'fields' => ['Status' => 'ASSEMBLY_FLOOR',],
+      '#priority' => 4,
+    ],
+
+    // Delivered to Governor.
+    'DELIVERED_TO_GOV' => [
+      'scope' => 'Bill',
+      'action' => 'Update',
+      'fields' => ["Status" => "DELIVERED_TO_GOV",],
+      '#priority' => 15,
+    ],
+
+    // Delivered to Governor.
+    'SIGNED_BY_GOV' => [
+      'scope' => 'Bill',
+      'action' => 'Update',
+      'fields' => ["Status" => "SIGNED_BY_GOV",],
+      '#priority' => 17,
+    ],
+
+    // Vetoed.
+    'VETOED' => [
+      'scope' => 'Bill',
+      'action' => 'Update',
+      'fields' => ["Status" => "VETOED",],
+      '#priority' => 16,
+    ],
+
+    // Adopted.
+    'ADOPTED' => [
+      'scope' => 'Bill',
+      'action' => 'Update',
+      'fields' => ["Status" => "ADOPTED",],
+      '#priority' => 0,
+    ],
+
+    // Substitution for.
+    'SUBSTITUTE_FOR' => [
+      'scope' => 'Bill Amendment Action',
+      'action' => 'Insert',
+      'fields' => ['Text' => 'SUBSTITUTED FOR *',],
+      '#priority' => 14,
+    ],
+
+    // Substituted by.
+    'SUBSTITUTE_BY' => [
+      'scope' => 'Bill Amendment Action',
+      'action' => 'Insert',
+      'fields' => ['Text' => 'SUBSTITUTED BY *',],
+      '#priority' => 14,
+    ],
+
+    // Floor Vote.
+    'FLOOR_VOTE' => [
+      'scope' => 'Bill Amendment Vote Info',
+      'action' => 'Insert',
+      'fields' => ['Vote Type' => 'floor',],
+      '#priority' => 12,
+    ],
+
+  ];
+}
+
+/**
+ * Implements hook_nys_subscriptions_queue_list().
+ *
+ * Define the queue for bill notifications.
+ *
+ * @return array
+ */
+function nys_bill_notifications_nys_subscriptions_queue_list() {
+  return [
+    NYS_BILL_NOTIFICATIONS_QUEUE => [
+      '#subject' => "Changes registered on a subscribed bill",
+    ],
+  ];
+}
+
+/**
+ * TODO: Establish an actual priority system.
+ *
+ * @param $event_name
+ *
+ * @return int
+ */
+function _nys_bill_notifications_get_event_priority($event_name) {
+  // Get all the tests.
+  $tests = nys_bill_notifications_generate_test_array();
+
+  // If the event name is found in the array, use its assigned priority.
+  $ret = (int) ($tests[$event_name]['#priority'] ?? 0);
+
+  // Allow for hard-coded customizations.
+  // TODO: this should be a hook to allow for dynamic customization.
+  if (!$ret) {
+    switch ($event_name) {
+      default:
+        $ret = 0;
+        break;
+    }
+  }
+
+  return $ret;
+}
+
+/**
+ * Need to find the most recent, highest priority event.  This will inform
+ * which SendGrid template is required.  A new reference, 'primary_event',
+ * will be created.
+ *
+ * @param \NYSSubscriptionQueueItem $item
+ */
+function _nys_bill_notifications_find_primary_event(&$item) {
+  $found = NULL;
+
+  // Only do work if it isn't already set.
+  if (!isset($item->references['primary_event'])) {
+    foreach ($item->data['events'] as $key => $event_info) {
+      // Any event will do to start
+      if (is_null($found)) {
+        $found = $key;
+      }
+      else {
+        // If this event has higher priority, use it instead.
+        if ($event_info['priority'] > $item->data['events'][$found]['priority']) {
+          $found = $key;
+        }
+        // If the priority is the same, but this is more recent, use it.
+        elseif (
+          ($event_info['priority'] = $item->data['events'][$found]['priority'])
+          && ($event_info['timestamp'] <= $item->data['events'][$found]['timestamp'])
+        ) {
+          $found = $key;
+        }
+      }
+    }
+  }
+
+  // If an event has been found, move the entire definition into references.
+  if (!is_null($found) && array_key_exists($found, $item->data['events'])) {
+    $item->references['primary_event'] = $item->data['events'][$found];
+    unset($item->data['events'][$found]);
+  }
+}
+
+/**
+ * Tries to match an event name to a SendGrid template ID.  This will
+ * query SendGrid's API for a list of templates.  Each template must
+ * have a name beginning with 'BILL_ALERT__'.
+ *
+ * @param $event_name
+ *
+ * @return string
+ */
+function _nys_bill_notifications_get_template_id($event_name) {
+  static $bill_notification_templates = [];
+
+  // If templates is not populated yet, get the full list from
+  // nys_sendgrid and mangle it for usage within notifications.
+  if (!count($bill_notification_templates)) {
+    $templates = nys_sendgrid_get_templates();
+    foreach ($templates as $key => $val) {
+      $name = preg_replace('/^BILL_ALERT__/', '', $val['name']);
+      $bill_notification_templates[strtoupper($name)] = $key;
+    }
+  }
+
+  // Standardize to all upper-case.
+  $event_name = strtoupper($event_name);
+
+  // Return either the template ID (if found), or a blank string.
+  return ($bill_notification_templates[$event_name] ?? '');
+}
+
+/**
+ * Implements hook_queueitem_item_tokens_<queue_name>_alter().
+ *
+ * Prepares all per-bill tokens for a notifications.  E.g., the bill's print
+ * number, session year, etc.
+ *
+ * @param \NYSSubscriptionQueueItem $item The queue item
+ *
+ * @throws \Exception
+ */
+function nys_bill_notifications_queueitem_item_tokens_nys_bill_notifications_queue_alter($item) {
+  // Try to get a template ID based on the primary event.  If not, fail and report.
+  $primary_name = $item->references['primary_event']['name'] ?? '';
+  $item->substitutions['template_id'] = _nys_bill_notifications_get_template_id($primary_name);
+
+  // If a valid template could not be found, alert Slack, and fail this item.
+  if (!$item->substitutions['template_id']) {
+    $fields = [
+      'tid' => $item->data['tid'],
+      'tax_name' => $item->data['print_num'],
+      'primary_event' => $item->references['primary_event'] ?? [],
+      'other_events' => $item->data['events'],
+    ];
+    nys_sendgrid_report_to_slack(
+      $fields,
+      'Blank Template ID Detected',
+      "A queued event (id:{$item->item_id}) could not be matched to a SendGrid template."
+    );
+    throw new Exception('A queued event could not be matched to a template');
+  }
+
+  // Get an EMW for each relevant node.
+  $node = entity_metadata_wrapper('node', $item->references['node']);
+
+  // Populate the node field references for 'node'.
+  $objs = ['bill' => $node,];
+  $refs = [
+    'session' => 'field_ol_session',
+    'print_number' => 'field_ol_print_no',
+    'base_print' => 'field_ol_base_print_no',
+    'active_version' => 'field_ol_active_version',
+    'chamber' => 'field_ol_chamber',
+    'summary' => 'field_ol_name',
+    'sponsor' => 'field_ol_sponsor_name',
+    'latest_committee' => 'field_ol_latest_status_committee',
+    'same_as' => 'field_ol_same_as',
+    'substituted_by' => 'field_ol_substituted_by',
+  ];
+  foreach ($objs as $sect => $obj) {
+    foreach ($refs as $key => $val) {
+      $sub_name = '%' . $sect . '.' . $key . '%';
+      try {
+        $sub_value = $obj->{$val}->value();
+      } catch (EntityMetadataWrapperException $e) {
+        $sub_value = '';
+      }
+      // Special for "chamber".
+      if ($key == 'chamber') {
+        $sub_value = ucwords($sub_value);
+      }
+      $item->substitutions['common'][$sub_name] = $sub_value;
+    }
+
+    // Add the full session reference (2015-2016 vs 2015)
+    $target = '%' . $sect . '.session%';
+    if (isset($item->substitutions['common'][$target])) {
+      $test_val = $item->substitutions['common'][$target];
+      $full_val = $test_val % 2
+        ? $test_val . '-' . ((++$test_val) % 100)
+        : $test_val++ . '-' . ((--$test_val) % 100);
+      $full_target = '%' . $sect . '.full_session%';
+      $item->substitutions['common'][$full_target] = $full_val;
+    }
+
+    // Make sure "original" version is not a blank version
+    $target = '%' . $sect . '.active_version%';
+    $item->substitutions['common'][$target] = $item->substitutions['common'][$target] ?: 'Original';
+  }
+  // Set the alternate chamber
+  if ($item->substitutions['common']['%bill.chamber%'] == "Senate") {
+    $item->substitutions['common']['%bill.alternate_chamber%'] = "Assembly";
+  }
+  elseif ($item->substitutions['common']['%bill.chamber%'] == "Assembly") {
+    $item->substitutions['common']['%bill.alternate_chamber%'] = "Senate";
+  }
+
+  // Get the same_as variable we need for rendering.
+  $same_as_array = json_decode($item->substitutions['common']['%bill.same_as%']);
+  $item->substitutions['common']['%bill.same_as%'] = $same_as_array[0]->printNo;
+
+  // Values for committee emails.
+  try {
+    $last_committee = $node->field_ol_latest_status_committee->value();
+  } catch (Throwable $e) {
+    $last_committee = '';
+  }
+  $url_formatted_committee_string = strtolower(str_replace(
+    [',', ' '],
+    ['', '-',],
+    $last_committee
+  ));
+  $item->substitutions['common']['%bill.committee_path%'] =
+    $url_formatted_committee_string
+      ? '/committees/' . $url_formatted_committee_string . '/'
+      : '';
+
+  // Get most recent actions from subscribed node.
+  $events = '';
+  try {
+    $all_events = json_decode($node->field_ol_all_actions->value());
+    $recent_events = array_slice($all_events->items, -3, 3);
+    foreach ($recent_events as $key => $val) {
+      $events .= '<li>' . date("M j, Y", strtotime($val->date)) .
+        ' - ' . $val->text . '</li>';
+    }
+  } catch (EntityMetadataWrapperException $e) {
+    $events = '';
+  }
+  $item->substitutions['common']['%bill.actions%'] = $events;
+
+  // Populate the "other events" HTML.
+  $extra = '';
+  foreach ($item->data['events'] as $val) {
+    $extra .= '<li>' . $val['text'] . '</li>';
+  }
+  $item->substitutions['common']['%governor.full_name%'] = variable_get('governor_full_name');
+  $item->substitutions['common']['%other_events%'] = $extra;
+}
+
+/**
+ * Implements hook_queueitem_user_tokens_<queue_name>_alter()
+ *
+ * Prepares all subscriber-specific tokens for a queue item.  E.g., the
+ * bill to which the user subscribed, the user's name and email, etc.
+ *
+ * @param \NYSSubscriptionQueueItem $item
+ *
+ */
+function nys_bill_notifications_queueitem_user_tokens_nys_bill_notifications_queue_alter(&$item) {
+
+  // Get the recipients.  If there aren't any, leave.
+  $subs = $item->data['recipients'] ?? [];
+  if (!is_array($subs) || !count($subs)) {
+    return;
+  }
+
+  // Initialize the senator name map for subscriber's senator tokens.
+  $name_map = get_senator_name_mapping();
+
+  foreach ($subs as $sub_key => $one_sub) {
+    // Create a personalization for this subscriber.
+    $person = new SG\Personalization();
+
+    // Process user record tokens for recipient information.  If not available,
+    // just use the email from the subscriber row.  Also, set the token for
+    // authenticated state.
+    if ($one_sub['uid'] ?? 0) {
+      $user = user_load($one_sub['uid']);
+      try {
+        $user_meta = entity_metadata_wrapper('user', $user);
+        $un = $user_meta->field_first_name->value() . ' ' . $user_meta->field_last_name->value();
+        $um = $user_meta->mail->value();
+      } catch (\Throwable $e) {
+        // There should be no exceptions here, but always good to have a fallback.
+        $first_name = $user->field_first_name[LANGUAGE_NONE][0]['value'] ?? '';
+        $last_name = $user->field_last_name[LANGUAGE_NONE][0]['value'] ?? '';
+        $un = ($first_name && $last_name)
+          ? "{$first_name} {$last_name}"
+          : NULL;
+        $um = $user->mail;
+      }
+      $auth = "%user.authenticated%";
+    }
+    else {
+      $un = $one_sub['email'];
+      $um = $one_sub['email'];
+      $auth = "%user.unauthenticated%";
+    }
+
+    try {
+      $person->addTo(new SG\To($um, $un));
+    } catch (\Throwable $e) {
+      // An exception here would be because $um/$un is not a string.
+      // In that case, just skip the subscriber and continue.
+      continue;
+    }
+
+    // Process subscriber row tokens.
+    $person->addSubstitution("%subscriber.account%", $auth);
+    $person->addSubstitution("%subscriber.email%", $one_sub['email']);
+    $person->addSubstitution("%subscriber.type%", $one_sub['type']);
+    $person->addSubstitution(
+      "%subscriber.why%",
+      _nys_subscriptions_resolve_why_data(json_decode($one_sub['data'])->why)
+    );
+
+    // Process tokens for the node which generated the subscription.
+    // For injected subscribers, or if node is not populated, use the
+    // node id from references.  Injected subscribers will have bwid=-1.
+    $subscribed_nid = $one_sub['nid'] ?? 0;
+    if ($subscribed_nid && (($one_sub['bwid'] ?? -1) != -1)) {
+      $subscribed_node = node_load($subscribed_nid);
+    }
+    else {
+      $subscribed_node = $item->references['node'];
+    }
+    try {
+      $node = entity_metadata_wrapper('node', $subscribed_node);
+      $sess = $node->field_ol_session->value();
+      $pn = $node->field_ol_base_print_no->value();
+      $chmbr = $node->field_ol_chamber->value();
+      $sub_date_time = date_create_from_format('U', $one_sub['subscription_timestamp']);
+      $sub_long = $sub_date_time->format('l F jS, Y');
+    } catch (EntityMetadataWrapperException $e) {
+      $sess = '';
+      $pn = '';
+      $chmbr = '';
+      $sub_long = '[No date given]';
+    }
+    $person->addSubstitution("%subscribe_node.session%", $sess);
+    $person->addSubstitution("%subscribe_node.print_number%", $pn);
+    $person->addSubstitution("%subscribe_node.chamber%", $chmbr);
+    $person->addSubstitution("%subscribe.date_long_form%", $sub_long);
+
+    // Add the common tokens.
+    foreach ($item->substitutions['common'] as $key => $val) {
+      $person->addSubstitution($key, $val);
+    }
+
+    // Add keys for sub/unsub.
+    $person->addSubstitution("%subscriber.bill_unsub_token%", $one_sub['subscription_key']);
+    $person->addSubstitution("%subscriber.global_token%", $one_sub['email_address_key']);
+
+    // Add some basic information about the user's senator, if available.
+    // Also create a token for "has_senator", to simplify template logic.
+    $senator_subs = [
+      'full_name' => '',
+      'district_number' => '',
+      'page_url' => '',
+      'message_url' => '',
+      'has_senator' => '0',
+    ];
+    if ($one_sub['uid'] ?? 0) {
+      $senator_nid = (int) user_get_senator_nid($one_sub['uid']);
+      if ($senator_nid) {
+        $senator_subs['has_senator'] = '1';
+        $page_url = url('node/' . $senator_nid, ['absolute' => TRUE]);
+        $senator_subs['page_url'] = $page_url;
+        $senator_subs['message_url'] = $page_url . '/message';
+        $senator_subs['district_number'] = senator_get_district_number($senator_nid);
+        $senator_subs['full_name'] = $name_map[$senator_nid]['full_name'];
+      }
+    }
+
+    // Add the senator token to the personalization.
+    foreach ($senator_subs as $key => $val) {
+      $person->addSubstitution("%senator.{$key}%", (string) $val);
+    }
+
+    // Add the personalization to our item's collection.
+    $item->substitutions['subscribers'][] = $person;
+  }
+
+}
+
+/**
+ * Implements hook_queueitem_reference_<queue_name>_alter()
+ *
+ * Populates references necessary for bill notifications:
+ *   primary_event: the event record considered "first" for this item
+ *
+ * @param \NYSSubscriptionQueueItem $item A queue item.
+ */
+function nys_bill_notifications_queueitem_reference_nys_bill_notifications_queue_alter($item) {
+  // Find and mark the primary event.
+  _nys_bill_notifications_find_primary_event($item);
+  $item->mail_key = $item->references['primary_event']['name'];
+}
+
+/**
+ * If "injected" subscribers are defined for bill alerts, create the
+ * necessary record structures and add them to the results.
+ *
+ * @return array
+ * @see _nys_bill_notifications_fetch_bill_subscribers()
+ *
+ */
+function _nys_bill_notifications_find_injected_subscribers() {
+  $ret = [];
+
+  // Each subscriber is an associative array of the database row.
+  $template = [
+    'bwid' => -1,
+    'tid' => 0,
+    'nid' => 0,
+    'subscription_timestamp' => '1520000032',
+    'confirmation_timestamp' => '1520000051',
+    'unsubscribe_timestamp' => '0',
+    'option' => '',
+    'type' => 'bill',
+    'data' => '{"why":1}',
+    'subscription_key' => 'NO_SUBSCRIBE_KEY',
+    'email_address_key' => 'NO_EMAIL_KEY',
+  ];
+
+  // Discover if we need to inject a specific user ID.
+  $inject_uid = variable_get('nys_bill_notifications_inject_userid', 0);
+  if ($inject_uid) {
+    $the_user = user_load($inject_uid);
+    $ret[] = [
+        'email' => $the_user->mail,
+        'uid' => $the_user->uid,
+      ] + $template;
+  }
+
+  // Discover if we need to inject an arbitrary email recipient
+  $inject_mail = variable_get('nys_bill_notifications_inject_email', '');
+  if (valid_email_address($inject_mail)) {
+    $ret[] = [
+        'email' => $inject_mail,
+        'uid' => 0,
+      ] + $template;
+  }
+
+  return $ret;
+}
+
+/**
+ * Implements hook_nys_bill_notifications_subscribers_alter()
+ *
+ * Modify the list of subscribers for a bill alert.  If sandbox mode is off,
+ * and mail rerouting is not active, add the "injected users".
+ * Otherwise, if mail rerouting is enabled, alter each subscriber to reflect
+ * the desired email address.
+ *
+ * @param string $print_number In the form '<print>-<session>'
+ * @param int $tid The taxonomy ID of the lineage root
+ * @param $subs array Subscriber records.
+ *
+ * @see _nys_bill_notifications_fetch_bill_subscribers()
+ */
+function nys_bill_notifications_nys_bill_notifications_subscribers_alter($print_number, $tid, array &$subs) {
+  // Injections only happen on live, i.e., no sandbox detected.
+  if (!nys_utils_detect_sendgrid_sandbox()) {
+    // Get the injected subscribers.
+    $subs = array_merge($subs, _nys_bill_notifications_find_injected_subscribers());
+  }
+}
+
+/**
+ * Implements hook_form_<FORM>_alter() for nys_subscriptions_config.
+ *
+ * @param array $form
+ * @param array $form_state
+ * @param string $form_id
+ */
+function nys_bill_notifications_form_nys_subscriptions_config_alter(&$form, &$form_state, $form_id) {
+  // Top level
+  $form['bill-alerts'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Bill Alerts'),
+    '#description' => t('Options related to recipient manipulation for bill alert subscriptions.'),
+  ];
+
+  // Recipients
+  $form['bill-alerts']['recipients'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Add Recipients'),
+    '#description' => t('Add recipients to bill notifications by user ID or arbitrary email'),
+  ];
+  $form['bill-alerts']['recipients']['nys_bill_notifications_inject_userid'] = [
+    '#type' => 'textfield',
+    '#title' => t('Inject User ID'),
+    '#default_value' => variable_get('nys_bill_notifications_inject_userid', ''),
+    '#description' => t('A user ID to inject as an authenticated subscriber.'),
+  ];
+  $form['bill-alerts']['recipients']['nys_bill_notifications_inject_email'] = [
+    '#type' => 'textfield',
+    '#title' => t('Inject User Email'),
+    '#default_value' => variable_get('nys_bill_notifications_inject_email', ''),
+    '#description' => t('An email to inject as an unauthenticated subscriber.'),
+  ];
+
+  // Run-time behaviors
+  $form['bill-alerts']['runtime'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Runtime Configuration'),
+    '#description' => t('Configures run-time behaviors affecting bill change detection and queue processing.'),
+  ];
+  $form['bill-alerts']['runtime']['nys_bill_notifications_max_recip_count'] = [
+    '#type' => 'textfield',
+    '#title' => t('Maximum Recipient Count'),
+    '#default_value' => variable_get('nys_bill_notifications_max_recip_count', NYS_BILL_NOTIFICATIONS_MAX_RECIP_COUNT),
+    '#description' => t('This dictates the maximum number of recipients for any individual queue item.  E.g., if a bill alert has 30k subscribers, and this is 1000, 30 queue items will be created with 1000 subscribers each.'),
+  ];
+}
+
+/**
+ * Implements hook_form_<FORM>_alter() for nys_bill_vote_vote_widget.
+ *
+ * @param array $form A Drupal Forms API array
+ * @param array $form_state A Drupal form state array
+ * @param string $form_id The form's ID
+ */
+function nys_bill_notifications_form_nys_bill_vote_vote_widget_alter(&$form, &$form_state, $form_id) {
+  // Get the node id from form_state, if it is populated.
+  $settings = _nys_bill_vote_widget_build_settings($form_state);
+  $nid = $settings['entity_id'] ?? 0;
+
+  // Get the current node, for reference.
+  $current_node = menu_get_object();
+
+  // If we have a node id, load that node.  Otherwise, use the current.
+  $ref_node = $nid ? node_load($nid) : $current_node;
+
+  // Make sure a valid node was loaded, and we have a node id.
+  // If not, nothing to do.
+  if (!(($ref_node instanceof stdClass) && ($ref_node->nid ?? 0))) {
+    return;
+  }
+
+  // Now we have the canonical node id.
+  $nid = $ref_node->nid;
+
+  // If the nid matches the current node's id, then this is not an embed.
+  $is_embed = !(($current_node->nid ?? 0) == $nid);
+  $form_state['settings']['is_embed'] = (int) $is_embed;
+
+  // Get the tid
+  $tid = $form_state['settings']['tid'] ?? 0;
+
+  // If nid is set, but tid is not, look up the term reference.
+  if (!$tid && $nid) {
+    $node_wrapper = entity_metadata_wrapper('node', $ref_node);
+    try {
+      $tid = $node_wrapper->field_bill_multi_session_root->value()->tid;
+    } catch (EntityMetadataWrapperException $e) {
+      $tid = 0;
+    }
+  }
+
+  // Act only if there's a node id and a taxonomy term id.
+  if ($nid && $tid) {
+    // Make sure the tid is set so we don't have to look it up each time.
+    $form_state['settings']['tid'] = $tid;
+
+    // Construct the new form controls.
+    $nys_subscribe_form = [
+      'nys_bill_subscribe' => [
+        '#type' => 'button',
+        '#attributes' => [
+          'class' => ['c-block--btn', 'nys-subscribe-button'],
+          'value' => 'subscribe',
+          'type' => 'submit',
+        ],
+        '#id' => 'edit-nys-bill-subscribe-' . $nid,
+        '#value' => 'Subscribe',
+        '#submit' => [
+          'callback' => 'nys_subscriptions_subscribe_callback',
+        ],
+        '#ajax' => [
+          'callback' => 'nys_subscriptions_subscribe_ajax_callback',
+        ],
+        '#weight' => $is_embed ? 2 : 5,
+      ],
+      'nid' => [
+        '#type' => 'hidden',
+        '#value' => $nid,
+      ],
+      'tid' => [
+        '#type' => 'hidden',
+        '#value' => $tid,
+      ],
+    ];
+
+    // For embedded forms, modify the form style to support
+    // the additional button.
+    if ($is_embed) {
+      $form['#attributes']['class'][] = 'nys-bill-vote-form-embedded';
+      $form['nys_bill_vote_container']['nys_bill_vote_label']['#weight'] = 1;
+      $form['nys_bill_vote_container']['nys_bill_vote_yes']['#weight'] = 3;
+      $form['nys_bill_vote_container']['nys_bill_vote_no']['#weight'] = 4;
+      $form['nys_bill_vote_container'] += $nys_subscribe_form;
+    }
+    // For bill pages, set a new container to hold the subscribe controls.
+    else {
+      $newform = [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['nys-bill-subscribe']],
+        '#id' => 'edit-nys-bill-subscribe-container-' . $nid,
+        'nys_bill_subscribe_title' => [
+          '#markup' => '<div class="nys-bill-subscribe-beta"><a href="/citizen-guide/bill-alerts" style="color: #ffffff; font-weight: bold">BETA &#9432</a></div><div class="nys-bill-subscribe-title">' .
+            'Get Status Alerts for ' . $ref_node->title . '</div>',
+        ],
+      ];
+      if (!user_is_logged_in()) {
+        $newform['email_form'] = [
+          '#type' => 'container',
+          '#attributes' => ['class' => ['subscribe_email_container']],
+          'email_address_entry' => [
+            '#type' => 'textfield',
+            '#title' => t('Email Address'),
+            '#name' => 'email',
+            '#size' => 20,
+            '#id' => 'edit-email-address-entry-' . $nid,
+          ],
+        ];
+      }
+      $form['nys_bill_subscribe_container'] = $newform + $nys_subscribe_form;
+    }
+  }
+}
+
+/**
+ * Given a bill print number, returns all records from nys_subscriptions.
+ * The print number must be in the format '<session year>-<base print>'.
+ * The second parameter may be used to add arbitrary taxonomy IDs for which
+ * subscribers are included.
+ *
+ * @param string $print_number A bill print number
+ * @param int[] $tid An optional taxonomy ID or array of IDs to include
+ *
+ * @return array Subscriber records, as an array of associative arrays.
+ *
+ * @see table nys_subscriptions for available fields.
+ */
+function _nys_bill_notifications_fetch_bill_subscribers($print_number, $tid = []) {
+  // Make sure this is an array.
+  if (!is_array($tid)) {
+    $tid = [$tid];
+  }
+
+  // Get the session and base print from the print number.
+  [$session, $base] = explode('-', $print_number);
+
+  // Find the root tid for this bill.
+  $query = db_select('field_data_field_bill_multi_session_root', 'msr');
+  $query->join('field_data_field_ol_print_no', 'pn', 'msr.entity_id=pn.entity_id');
+  $query->join('field_data_field_ol_session', 's', 'msr.entity_id=s.entity_id');
+  $tid[] = $query->fields('msr', ['field_bill_multi_session_root_tid'])
+    ->condition('pn.field_ol_print_no_value', $base)
+    ->condition('s.field_ol_session_value', $session)
+    ->execute()
+    ->fetchField();
+
+  // If this bill has substituted for another bill, include the taxonomy
+  // term for the old version's root, as well.
+  $query = "SELECT msr.field_bill_multi_session_root_tid AS tid FROM " .
+    "{field_data_field_ol_substituted_by} subby INNER JOIN " .
+    "{field_data_field_ol_session} sess ON subby.entity_id=sess.entity_id INNER JOIN " .
+    "{field_data_field_bill_multi_session_root} msr ON subby.entity_id=msr.entity_id " .
+    "WHERE subby.field_ol_substituted_by_value=:pn AND " .
+    "sess.field_ol_session_value=:sess";
+  $args = [':pn' => $base, ':sess' => $session];
+  $msr_list = db_query($query, $args)->fetchCol(0);
+
+  // Add them together, and force list to unique, no blanks
+  $msr_list = array_unique(array_filter(array_merge($msr_list, $tid)));
+
+  // Get the list of subscribers for the targeted taxonomy terms.
+  $ret = [];
+  if (count($msr_list)) {
+    $query = "SELECT * FROM {nys_subscriptions} " .
+      "WHERE `tid` IN (:tid) AND " .
+      "`confirmation_timestamp` > 0 AND " .
+      "(`unsubscribe_timestamp` = 0 OR `unsubscribe_timestamp` > :now)";
+    $args = [':tid' => $msr_list, ':now' => time()];
+    $ret = db_query($query, $args)->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  // Allow other modules to modify the subscribers
+  drupal_alter('nys_bill_notifications_subscribers', $print_number, $tid, $ret);
+
+  return $ret;
+}
+
+/**
+ * Loads information about a series of print numbers.  The parameter can be
+ * a single print number or an array.  All print numbers must be formatted as
+ * '<session year>-<print num>'.  The return will be an array, within which
+ * every key is the print number and the value is an array with 'key' (the
+ * print number), 'tid' (the taxonomy ID of the bill's root), and 'nid'
+ * (the node ID of the bill).
+ *
+ * @param $print_num
+ *
+ * @return array
+ */
+function nys_bill_notifications_find_root_from_print($print_num) {
+  if (!is_array($print_num)) {
+    $print_num = [$print_num];
+  }
+  $print_num = array_unique(array_filter($print_num));
+
+  $ret = [];
+  if (count($print_num)) {
+    $bases = $sessions = [];
+    foreach ($print_num as $val) {
+      [$t_year, $t_print] = explode('-', $val);
+      $bases[$t_print] = 1;
+      $sessions[$t_year] = 1;
+    }
+
+    // Generate the query used to look up the taxonomy ID.
+    $query = "SELECT " .
+      "CONCAT(sess.field_ol_session_value, '-', bpn.field_ol_base_print_no_value) AS `key`, " .
+      "root.field_bill_multi_session_root_tid AS `tid`, " .
+      "bpn.entity_id AS `nid` " .
+      "FROM {field_data_field_ol_session} sess " .
+      "INNER JOIN {field_data_field_ol_base_print_no} bpn " .
+      "ON sess.entity_id = bpn.entity_id " .
+      "INNER JOIN {field_data_field_bill_multi_session_root} root " .
+      "ON bpn.entity_id=root.entity_id " .
+      "WHERE sess.entity_type='node' AND sess.bundle='bill' " .
+      "AND bpn.entity_type='node' AND bpn.bundle='bill' " .
+      "AND root.entity_type='node' AND root.bundle='bill' " .
+      // These three lines have the parameters we'll need.
+      "AND sess.field_ol_session_value IN (:session_year) " .
+      "AND bpn.field_ol_base_print_no_value IN (:print_no) " .
+      "HAVING `key` in (:keys)";
+    $result = db_query($query, [
+      ':session_year' => array_keys($sessions),
+      ':print_no' => array_keys($bases),
+      ':keys' => $print_num,
+    ]);
+
+    $ret = $result->fetchAllAssoc('key', PDO::FETCH_ASSOC);
+  }
+  return $ret;
+}

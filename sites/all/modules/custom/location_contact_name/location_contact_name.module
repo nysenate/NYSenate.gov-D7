@@ -1,0 +1,91 @@
+<?php
+
+/**
+ * @file
+ * Add contact_name number fields to Location address.
+ */
+
+/**
+ * Implements hook_locationapi().
+ */
+function location_contact_name_locationapi(&$location, $op, $a3 = NULL, $a4 = NULL) {
+  switch ($op) {
+    case 'fields':
+      return array('contact_name' => t('Contact Name'));
+
+    // @codingStandardsIgnoreStart
+    case 'defaults':
+      return array(
+        'contact_name' => array('default' => '', 'collect' => 0, 'weight' => 25),
+      );
+    // @codingStandardsIgnoreEnd
+
+    case 'field_expand':
+      if ($a3 == 'contact_name') {
+        return array(
+          '#type' => 'textfield',
+          '#title' => t('Contact Name'),
+          '#size' => 31,
+          '#maxlength' => 31,
+          '#description' => NULL,
+          '#required' => ($a4['collect'] == 2),
+          '#default_value' => $location,
+        );
+      }
+      break;
+
+    case 'save':
+      db_delete('location_contact_name')
+        ->condition('lid', $location['lid'])
+        ->execute();
+      if (!empty($location['contact_name'])) {
+        db_insert('location_contact_name')
+          ->fields(
+            array(
+              'lid' => $location['lid'],
+              'contact_name' => $location['contact_name'],
+            )
+          )
+          ->execute();
+      }
+      break;
+
+    case 'load':
+      $fields = array();
+      $contact_name = db_query(
+        'SELECT contact_name FROM {location_contact_name} WHERE lid = :lid',
+        array(':lid' => $location['lid'])
+      )->fetchField();
+      $fields['contact_name'] = $contact_name ? $contact_name : '';
+
+      return $fields;
+
+    case 'delete':
+      db_delete('location_contact_name')
+        ->condition('lid', $location['lid'])
+        ->execute();
+      break;
+  }
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function location_contact_name_views_api() {
+  return array(
+    'api' => 3,
+  );
+}
+
+/**
+ * Implements hook_token_list().
+ */
+function location_contact_name_token_list($type = 'all') {
+  if ($type == 'node' || $type == 'user' || $type == 'all') {
+    $tokens['location']['location-contact_name_N'] = t(
+      'Location contact_name number (If there are multiple locations per node, N is the iteration, starting with 0)'
+    );
+
+    return $tokens;
+  }
+}

@@ -1,0 +1,23 @@
+<?php
+
+class Redis_Tests_Lock_PredisLockingUnitTestCase extends Redis_Tests_Lock_LockingUnitTestCase
+{
+    public static function getInfo()
+    {
+        return array(
+            'name'        => 'Predis Redis locking',
+            'description' => 'Ensure that Redis locking feature is working OK.',
+            'group'       => 'Redis',
+        );
+    }
+
+    protected function getLockBackendClass()
+    {
+        return 'Redis_Lock_Predis';
+    }
+
+    protected function getClientInterface()
+    {
+        return 'Predis';
+    }
+}

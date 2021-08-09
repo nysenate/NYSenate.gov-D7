@@ -1,0 +1,6 @@
+name = Legislation Spotcheck
+description = Posts legislative data from NYSenate.gov back to the Open Legislation service where it is checked in a Spotcheck report.
+core = 7.x
+
+dependencies[] = nys_utils
+dependencies[] = nys_openleg

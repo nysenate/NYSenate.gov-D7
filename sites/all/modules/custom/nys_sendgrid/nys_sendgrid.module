@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * @file
+ * Main module file for NYS SendGrid.
+ *
+ * Provides module configuration and help functionality.
+ */
+
+// Force the include file to load.  Other modules using those functions
+// can't reach them normally in, e.g., drush environments.
+module_load_include('inc', 'nys_sendgrid', 'nys_sendgrid');
+
+/**
+ * Implements hook_menu().
+ */
+function nys_sendgrid_menu() {
+  $items = [];
+  $items['admin/config/services/nys_sendgrid'] = [
+    'title' => 'NYS SendGrid Settings',
+    'description' => 'SendGrid Integration Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['nys_sendgrid_admin'],
+    'access callback' => 'user_access',
+    'access arguments' => ['administer sendgrid settings'],
+    'file' => 'nys_sendgrid.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => 1,
+  ];
+  $items['admin/config/services/nys_sendgrid/default'] = [
+    'title' => 'SendGrid Settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 0,
+  ];
+  $items['admin/config/services/nys_sendgrid/test'] = [
+    'title' => 'Test Email',
+    'description' => 'Send a test email through nys_sendgrid.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['nys_sendgrid_test_email'],
+    'access callback' => 'user_access',
+    'access arguments' => ['administer sendgrid settings'],
+    'file' => 'nys_sendgrid.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 50,
+  ];
+  return $items;
+}
+
+/**
+ * Implements hook_permissions().
+ */
+function nys_sendgrid_permission() {
+  return [
+    'administer sendgrid settings' => [
+      'title' => t('Administer SendGrid settings'),
+      'description' => t('Configure SendGrid options like username and password'),
+    ],
+  ];
+}

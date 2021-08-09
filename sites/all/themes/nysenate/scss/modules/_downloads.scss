@@ -1,0 +1,117 @@
+/*----------------------------
+/ DOWNLOAD MODULES
+/ - press inquiries
+/ - report downloads
+/----------------------------*/
+.c-block-full{
+	width:100%;
+}
+.c-block-download {
+	width: 100%;
+	padding: 40px 20px 80px;
+	background: $grey06;
+
+	hr{
+		position: absolute;
+		top: 0;
+		left: 0;
+		margin: 0;
+		height: 3px;
+		width: 100%;
+		border: none;
+	}
+
+	.c-block--btn {
+		padding-left: 20px;
+		@extend .lgt-bg;
+		@extend .icon-before__presskit;
+		@include transition(background-color, 0.25s, ease);
+
+		&:hover {
+			@extend .drk-bg;
+		}
+	}
+}
+// half block
+.c-block-download__half {
+	padding: 40px 40px 100px;
+
+	.c-block--btn {
+		padding-left: 40px;
+	}
+}
+.c-download--title {
+	margin-bottom: 15px;
+	text-transform: uppercase;
+	font-family: "Proxima Nova Semibold";
+	font-size: 14px;
+	line-height: 1em;
+}
+.c-download-descript {
+	margin: 0;
+	font-size: 24px;
+	line-height: 1.2em;
+}
+.c-download-contact-block {
+	margin-bottom: 15px;
+
+	p {
+		margin: 0;
+		font-family: "Proxima Nova Regular";
+		font-size: 16px;
+		line-height: 1.4em;
+
+		&.c-download-contact--email {
+			word-wrap: break-word;
+		}
+	}
+	span {
+		color: #000;
+		font-family: "Proxima Nova SemiBold";
+		font-size: 14px;
+		font-weight: normal;
+	}
+	a {
+		font-size: 16px;
+		@extend .lgt-text;
+	}
+}
+.c-download-contact--name {
+	font-family: "Adelle Regular";
+	font-size: 16px;
+	color: $grey02;
+}
+
+@media #{$tablet} {
+
+	.c-block-download {
+		padding: 40px 40px 120px;
+
+		.c-block--btn {
+			padding-left: 40px;
+		}
+	}
+	.c-block-download__half {
+		width: 47%;
+		float: left;
+		margin-right: 20px;
+		clear: none;
+	}
+	.c-block-download__half .c-block-download__half--right{
+		margin-right: 0px;
+	}
+	.c-download-descript {
+		font-size: 30px;
+	}
+	.c-download-contact-block {
+		// width: 33.3%;
+		padding-right: 25px;
+		margin: 0;
+		float: left;
+
+		&.c-download-contact-block-1 { width: 26%; }
+		&.c-download-contact-block-2 { width: 40%; }
+		&.c-download-contact-block-3 { width: 34%; }
+	}
+
+}

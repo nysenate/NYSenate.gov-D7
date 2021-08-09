@@ -1,0 +1,191 @@
+.c-twitter-block-container {
+	margin-bottom: 40px;
+	
+	.c-container--title {
+		padding: 20px 0 30px;
+		border-top: 1px solid $grey05;
+		letter-spacing: 0.05em;
+	}
+	.l-tweets {
+		position: relative;
+		overflow: hidden;
+		padding: 20px;
+		background-color: $grey06;
+	}
+	// header area
+	.l-twitter-user {
+		padding-bottom: 20px;
+	}
+	.c-twitter--logo {
+		display: inline-block;
+		vertical-align: middle;
+		width: 60px;
+		height: 60px;
+		> img {
+			background-color: transparent;
+		}
+	}
+	.c-twitter-user--info {
+		display: inline-block;
+		vertical-align: middle;
+		margin-left: 20px;
+
+		p {
+			font-size: 12px;
+			line-height: 1;
+		}
+	}
+	.c-twitter-user--name {
+		font-family: 'Proxima Nova Regular';
+		font-size: 19px;
+		color: $grey03;
+	}
+	.c-twitter-user--link {
+		font-family: 'Proxima Nova SemiBold';
+		font-size: 12px;
+		text-transform: uppercase;
+		color: $orange01;
+	}
+	.c-twitter-user--follow {
+		display: block;
+		margin: 20px 0 0 0;
+		padding: 7px 0;
+		border: 1px solid $grey05;
+		width: 75px;
+		background-color: #fff;
+		
+		text-align: center;
+		color: $orange01;
+		font-size: 12px;
+		line-height: 1;
+		font-family: 'Proxima Nova SemiBold';
+		text-transform: uppercase;
+	}
+	// individual block styling
+	.c-twitter-block {
+		overflow: hidden;
+		padding: 20px 0 20px;
+		border-top: 1px solid $grey05;
+
+		.c-tweet {
+			font-family: 'Adelle Light';
+			font-size: 18px;
+			color: $grey04;
+			margin-bottom: 30px;
+
+			a {
+				color: $grey02;
+			}
+		}
+		.c-timestamp {
+			display: block;
+			float: left;
+			font-family: 'Proxima Nova Regular';
+			font-size: 12px;
+			color: $grey04;
+
+			em {
+				font-style: normal;
+			}
+		}
+		.c-web_intents {
+			position: relative;
+			display: block;
+			float: right;
+			margin-top: -6px;
+
+			span {
+				display: inline-block;
+			}
+			a {
+				display: block;
+				position: relative;
+				padding: 0;
+				height: 28px;
+				width: 35px;				
+				color: $grey04;
+
+				&:after {
+					padding: 0;
+					font-size: 28px;
+				}
+
+				&[href*="intent/tweet"] {
+					@extend .icon-replace__twitter-reply;
+				}
+				&[href*="intent/retweet"] {
+					@extend .icon-replace__twitter-retweet;
+				}
+				&[href*="intent/favorite"] {
+					@extend .icon-replace__twitter-fav;
+				}
+
+				&[href*="intent/favorite"],
+				&[href*="intent/retweet"],
+				&[href*="intent/tweet"] {
+					padding: 0 5px;
+
+					&:after {
+						top: -6px;
+						left: 5px;
+					}
+				}
+
+			}
+		}
+	}
+
+	.last .c-twitter-block {
+		padding-bottom: 0;
+	}
+
+}
+
+@media #{$tablet} {
+	.c-twitter-block-container {
+		.c-container--title {
+			border: none;
+			padding: 0 0 15px 0;
+		}
+		.l-tweets {
+			padding: 35px 40px 5px;
+		}
+		// header area
+		.l-twitter-user {
+			position: relative;
+			margin-bottom: -1px;
+			border-bottom: 1px solid $grey05;
+		}
+		.c-twitter-user--follow {
+			position: absolute;
+			top: -25px;
+			left: auto;
+			right: 0;
+			bottom: 0;
+			height: 28px;
+			margin: auto;
+		}
+		.c-twitter-block,
+		.last .c-twitter-block {
+			padding: 40px 0;
+			border-top: 1px solid $grey05;
+
+			.c-tweet {
+				font-size: 22px;
+			}
+		}
+		.u-odd,
+		.u-even {
+			width: 50%;
+		}
+		.u-odd {
+			float: left;
+			clear: left;
+			padding-right: 5%;
+		}
+		.u-even {
+			float: right;
+			padding-left: 5%;
+		}
+	}
+}

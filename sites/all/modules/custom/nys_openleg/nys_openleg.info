@@ -1,0 +1,6 @@
+name = NYS OpenLeg
+description = A library for calls to NYS OpenLegislation API
+package = NY STATE SENATE
+core = 7.x
+version = 7.x-1.0
+dependencies[] = composer_manager

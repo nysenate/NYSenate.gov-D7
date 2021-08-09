@@ -1,0 +1,251 @@
+<?php
+
+/**
+ * @file
+ * Allows to send messages to all members of an organic group
+ */
+
+/**
+ * Implements hook_permissions().
+ */
+function privatemsg_groups_permission() {
+  $permissions = array(
+    'write privatemsg to all organic groups' => array(
+      'title' => t('Write private messages to all organic groups'),
+      'description' => t('Allows to write messages to all users which belong to a specific organic group.'),
+    ),
+    'write privatemsg to own organic groups' => array(
+      'title' => t('Write private messages to own organic groups'),
+      'description' => t('Allows to write messages to all users which belong to own organic group.'),
+    ),
+    'view organic groups recipients' => array(
+      'title' => t('View organic groups recipients'),
+      'description' => t('Ability to view organic groups recipients and the name of these organic groups.'),
+    ),
+  );
+  return $permissions;
+}
+
+/**
+ * Implements hook_og_permission().
+ */
+function privatemsg_groups_og_permission() {
+  return array(
+    'write privatemsg to group' => array(
+      'title' => t('Write privatemsg to an organic group'),
+      'description' => t("Allow user to write private messages to an organic group."),
+      'default role' => array(OG_ADMINISTRATOR_ROLE),
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function privatemsg_groups_theme() {
+  return array(
+    'privatemsg_groups_format' => array(
+      'variables' => array('recipient' => NULL, 'options' => array()),
+    ),
+  );
+}
+
+/**
+ * Implements hook_privatemsg_recipient_type_info().
+ */
+function privatemsg_groups_privatemsg_recipient_type_info() {
+  $info = array();
+  foreach (og_get_all_group_bundle() as $entity_type => $bundles) {
+    $entity_info = entity_get_info($entity_type);
+    $name = $entity_info['label'];
+    $info[_privatemsg_groups_get_group_recipient_type($entity_type)] = array(
+      'name' => t('Organic Group: ') . $entity_info['label'],
+      'description' => t('Enter the name of an organic group to write a message to all users in that group.'),
+      'load' => 'privatemsg_groups_load_multiple',
+      'format' => 'privatemsg_groups_format',
+      'autocomplete' => 'privatemsg_groups_autocomplete',
+      'generate recipients' => 'privatemsg_groups_load_recipients',
+      'count' => 'privatemsg_groups_count_recipients',
+      'write callback' => 'privatemsg_groups_write_access',
+      'view access' => 'view organic groups recipients',
+    );
+  }
+  return $info;
+}
+
+/**
+ * Write permission check for group recipients.
+ */
+function privatemsg_groups_write_access($recipient) {
+  // Check if user has permission to write to all groups.
+  if (user_access('write privatemsg to all organic groups')) {
+    return TRUE;
+  }
+
+  // Check if user has permission to write to own groups.
+  if (!user_access('write privatemsg to own organic groups')) {
+    return FALSE;
+  }
+
+  if ($recipient) {
+    $group_type = _privatemsg_groups_get_group_type($recipient->type);
+    $gid = $recipient->recipient;
+    return og_user_access($group_type, $gid, 'write privatemsg to group');
+  }
+
+  // Give access only to users that have group subscriptions.
+  $gids = og_get_groups_by_user();
+  return !empty($gids);
+}
+
+/**
+ * Load a number of ogs based on their group ids.
+ */
+function privatemsg_groups_load_multiple($gids, $type) {
+  $recipients = array();
+  $group_type = _privatemsg_groups_get_group_type($type);
+  $groups = entity_load($group_type, $gids);
+  foreach ($groups as $gid => $group) {
+    $recipient = clone $group;
+    $recipient->type = $type;
+    $recipient->recipient = $gid;
+    $recipients[privatemsg_recipient_key($recipient)] = $recipient;
+  }
+  return $recipients;
+}
+
+/**
+ * Format a role to be displayed as a recipient.
+ */
+function theme_privatemsg_groups_format($variables) {
+  $recipient = $variables['recipient'];
+  $options = $variables['options'];
+  $group_type = _privatemsg_groups_get_group_type($recipient->type);
+  $gid = $recipient->recipient;
+
+  $group = entity_load_single($group_type, $gid);
+  $name = entity_label($group_type, $group);
+  if (!empty($options['plain'])) {
+    if (!empty($options['unique'])) {
+      $name .= ' [group]';
+    }
+    return $name;
+  }
+  return t('%group (group)', array('%group' => $name));
+}
+
+/**
+ * Loads users in a specific group.
+ */
+function privatemsg_groups_load_recipients($recipient, $limit, $offset) {
+  $group_type = _privatemsg_groups_get_group_type($recipient->type);
+  $gid = $recipient->recipient;
+
+  $query = new EntityFieldQuery();
+  $query
+    ->entityCondition('entity_type', 'og_membership')
+    ->propertyCondition('group_type', $group_type)
+    ->propertyCondition('gid', $gid)
+    ->propertyCondition('entity_type', 'user')
+    ->propertyCondition('state', OG_STATE_ACTIVE)
+    ->range($offset, $limit);
+  if ($result = $query->execute()) {
+    $mids = array_keys($result['og_membership']);
+    $memberships = og_membership_load_multiple($mids);
+    $uids = array();
+    foreach($memberships as $membership) {
+      $uids[] = $membership->etid;
+    }
+    return $uids;
+  }
+  return array();
+}
+
+/**
+ * Return the number of users in a group.
+ */
+function privatemsg_groups_count_recipients($recipient) {
+  $group_type = _privatemsg_groups_get_group_type($recipient->type);
+  $gid = $recipient->recipient;
+
+  $query = new EntityFieldQuery();
+  $query
+    ->entityCondition('entity_type', 'og_membership')
+    ->propertyCondition('group_type', $group_type)
+    ->propertyCondition('gid', $gid)
+    ->propertyCondition('entity_type', 'user')
+    ->propertyCondition('state', OG_STATE_ACTIVE);
+  return $query->count()->execute();
+}
+
+/**
+ * Provides autocomplete suggestions for group.
+ */
+function privatemsg_groups_autocomplete($fragment, $names, $limit, $type) {
+  $group_type = _privatemsg_groups_get_group_type($type);
+  $gids = og_get_all_group($group_type);
+  $groups = entity_load($group_type, $gids);
+  $suggestions = array();
+  foreach ($groups as $gid => $group) {
+    $recipient = clone $group;
+    $recipient->type = $type;
+    $recipient->recipient = $gid;
+    if (privatemsg_groups_write_access($recipient)) {
+      $name = entity_label($group_type, $group);
+      if (stripos($name, $fragment) !== false && !in_array($name, $names)) {
+        $suggestions[privatemsg_recipient_key($recipient)] = $recipient;
+        if (count($suggestions) >= $limit) {
+          return $suggestions;
+        }
+      }
+    }
+  }
+  return $suggestions;
+}
+
+/**
+ * Implements hook_privatemsg_name_lookup().
+ */
+function privatemsg_groups_privatemsg_name_lookup($string) {
+  // Remove optional group specifier.
+  $string = trim(str_replace(t('[group]'), '', $string));
+
+  foreach (og_get_all_group_bundle() as $group_type => $bundles) {
+    $type = _privatemsg_groups_get_group_recipient_type($group_type);
+    $type_info = privatemsg_recipient_get_type($type);
+    if ($type_info) {
+      $gids = og_get_all_group($group_type);
+      $groups = entity_load($group_type, $gids);
+      foreach ($groups as $gid => $group) {
+        $name = entity_label($group_type, $group);
+        if ($string == $name) {
+          $recipient = clone $group;
+          $recipient->type = $type;
+          $recipient->recipient = $gid;
+          return array(privatemsg_recipient_key($recipient) => $recipient);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Given a group entity type, return the recipient type name.
+ */
+function _privatemsg_groups_get_group_recipient_type($group_type) {
+  return 'og:' . $group_type;
+}
+
+/**
+ * Given a recipient type name, check to see if it is a group recipient type.
+ */
+function _privatemsg_groups_is_group_recipient_type($recipient_type) {
+  return strpos($recipient_type, 'og:', 0) === 0;
+}
+
+/**
+* Given a group recipient type name, return the group entity type.
+*/
+function _privatemsg_groups_get_group_type($group_recipient_type) {
+  return str_replace('og:', '', $group_recipient_type);
+}

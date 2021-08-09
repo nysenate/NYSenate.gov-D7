@@ -1,0 +1,141 @@
+<?php
+
+/**
+ * @file
+ * Alters webform's schema to add things needed to make export reliable.
+ */
+
+/**
+ * Implements hook_schema_alter().
+ */
+function webform_features_schema_alter(&$schema) {
+  $schema['webform']['fields']['machine_name'] = array(
+    'type' => 'varchar',
+    'length' => 32,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'The machine name of the webform. Used during exports & for template suggestions.',
+  );
+  $schema['webform_component']['fields']['machine_name'] = array(
+    'type' => 'varchar',
+    'length' => 66,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => "The machine name of the webform's component. Used during exports.",
+  );
+}
+
+/**
+ * Implements hook_install().
+ */
+function webform_features_install() {
+  // Add machine_name fields to the weform & webform_component tables.
+  $table_names = array('webform', 'webform_component');
+  $schema = array();
+  foreach ($table_names as $table_name) {
+    $schema[$table_name] = array('fields' => array());
+  }
+  webform_features_schema_alter($schema);
+  foreach ($table_names as $table_name) {
+    foreach ($schema[$table_name]['fields'] as $name => $spec) {
+      db_add_field($table_name, $name, $spec);
+    }
+  }
+
+  // Populate existing webforms' machine names
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid', 'title', 'type'))
+    ->condition('type', webform_variable_get('webform_node_types'), 'IN')
+    ->orderBy('type', 'ASC')
+    ->orderBy('title', 'ASC');
+  $query->join('webform', 'w', 'n.nid = w.nid');
+  $query->fields('w', array('machine_name'))
+    ->condition(
+      db_or()
+        ->isNull('machine_name')
+        ->condition('machine_name', '')
+    );
+  $results = $query->execute()->fetchAll();
+
+  foreach ($results as $result) {
+    // Load existing webform
+    $node = node_load($result->nid);
+
+    // Build machine name from its title
+    $machine_name = $node->title;
+    $machine_name = drupal_strtolower($machine_name);
+    $machine_name = preg_replace('#[^a-z]+#', '_', $machine_name);
+
+    // Ensure machine name is unique
+    $name = substr($machine_name, 0, 32);
+    $i = 1;
+    $exists = webform_features_machine_name_load($name);
+    while (!empty($exists) && $exists->nid != $node->nid) {
+      $name = substr($machine_name, 0, 31 - strlen($i)) . '_' . ++$i;
+      $exists = webform_features_machine_name_load($name);
+    }
+
+    // Save unique machine name
+    $node->webform['machine_name'] = $name;
+    node_save($node);
+  }
+
+  // Populate existing webform_components' machine names
+  $query = db_select('webform_component', 'wc')
+    ->fields('wc', array('nid', 'cid', 'form_key', 'machine_name'))
+    ->orderBy('nid', 'ASC');
+  $query->join('webform', 'w', 'wc.nid = w.nid');
+  $query->addField('w', 'machine_name', 'webform_machine_name');
+  $results = $query->execute()->fetchAll();
+
+  $existing = array();
+  foreach ($results as $result) {
+    if (!empty($result->machine_name)) {
+      $existing[$result->machine_name] = TRUE;
+    }
+  }
+
+  foreach ($results as $result) {
+    if (!empty($result->machine_name)) {
+      continue;
+    }
+
+    // Build machine name from the webform's one and the form_key
+    $wf_machine_name = $result->webform_machine_name;
+    $cmp_machine_name = $result->form_key;
+
+    // Ensure machine name is unique
+    $name = $wf_machine_name . '__' . substr($cmp_machine_name, 0, 32);
+    $i = 1;
+    $exists = !empty($existing[$name]);
+    while (!empty($exists) && $exists->nid != $node->nid) {
+      $name = $wf_machine_name . '__' . substr($cmp_machine_name, 0, 31 - strlen($i)) . '_' . ++$i;
+      $exists = !empty($existing[$name]);
+    }
+
+    // Save unique machine name
+    db_update('webform_component')
+      ->fields(array('machine_name' => $name))
+      ->condition('cid', $result->cid)
+      ->execute();
+    $existing[$name] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function webform_features_uninstall() {
+  // Remove machine_name fields to the weform & webform_component tables.
+  $table_names = array('webform', 'webform_component');
+  $schema = array();
+  foreach ($table_names as $table_name) {
+    $schema[$table_name] = array('fields' => array());
+  }
+  webform_features_schema_alter($schema);
+  foreach ($table_names as $table_name) {
+    foreach ($schema[$table_name]['fields'] as $name => $spec) {
+      db_drop_field($table_name, $name);
+    }
+  }
+}

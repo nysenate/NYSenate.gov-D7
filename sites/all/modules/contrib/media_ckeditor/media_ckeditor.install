@@ -1,0 +1,86 @@
+<?php
+
+/**
+ * @file
+ * Install tasks for media_ckeditor.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function media_ckeditor_install() {
+  // Get all the CKEditor profiles for a site.
+  $ckeditor_profiles = db_query("SELECT * FROM {ckeditor_settings}
+    WHERE name <> :name",
+    array(':name' => 'CKEditor Global Profile'))
+    ->fetchAllAssoc('name');
+  // Get the path to the module.
+  $mod_path = drupal_get_path('module', 'media_ckeditor');
+  foreach ((array) $ckeditor_profiles as $profile) {
+    // Get the name of the profile.
+    $name = $profile->name;
+    // Unserialize all the settings for that profile.
+    $profile_settings = unserialize($profile->settings);
+    // Check to see if the profile is using plugins.
+    if (isset($profile_settings['loadPlugins'])) {
+      // Loop over each plugin.
+      foreach ((array) $profile_settings['loadPlugins'] as $i => $plugin) {
+        // Check if the media plugin is used.
+        if ($i === 'media') {
+          // Update the path variable to the new path.
+          $plugin['path'] = '%base_path%' . $mod_path . '/js/plugins/media/';
+          // Update the plugin with the new path.
+          $profile_settings['loadPlugins'][$i] = $plugin;
+        }
+      }
+    }
+    // Serialize the settings array before saving back into the database.
+    $profile_settings = serialize($profile_settings);
+    // Update the ckeditor settings for that profile name.
+    db_query("UPDATE {ckeditor_settings} set settings = :settings WHERE name = :name",
+      array(
+        ':settings' => $profile_settings,
+        ':name' => $name,
+      ));
+  }
+}
+
+/**
+ * Updates the path to the Media plugin if used. *.
+ */
+function media_ckeditor_update_7201() {
+  // Get all the CKEditor profiles for a site.
+  $ckeditor_profiles = db_query("SELECT * FROM {ckeditor_settings}
+    WHERE name <> :name",
+    array(':name' => 'CKEditor Global Profile'))
+    ->fetchAllAssoc('name');
+  // Get the path to the module.
+  $mod_path = drupal_get_path('module', 'media_ckeditor');
+  foreach ((array) $ckeditor_profiles as $profile) {
+    // Get the name of the profile.
+    $name = $profile->name;
+    // Unserialize all the settings for that profile.
+    $profile_settings = unserialize($profile->settings);
+    // Check to see if the profile is using plugins.
+    if (isset($profile_settings['loadPlugins'])) {
+      // Loop over each plugin.
+      foreach ((array) $profile_settings['loadPlugins'] as $i => $plugin) {
+        // Check if the media plugin is used.
+        if ($i === 'media') {
+          // Update the path variable to the new path.
+          $plugin['path'] = '%base_path%' . $mod_path . '/js/plugins/media/';
+          // Update the plugin with the new path.
+          $profile_settings['loadPlugins'][$i] = $plugin;
+        }
+      }
+    }
+    // Serialize the settings array before saving back into the database.
+    $profile_settings = serialize($profile_settings);
+    // Update the ckeditor settings for that profile name.
+    db_query("UPDATE {ckeditor_settings} set settings = :settings WHERE name = :name",
+      array(
+        ':settings' => $profile_settings,
+        ':name' => $name,
+      ));
+  }
+}

@@ -1,0 +1,6 @@
+name = NYS Flag Debug
+description = Custom module to assist with debugging flagging table
+package = NY STATE SENATE
+core = 7.x
+dependencies[] = flag
+version = 7.x-1.0

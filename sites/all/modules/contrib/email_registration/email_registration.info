@@ -1,0 +1,11 @@
+name = Email Registration
+description = Allows users to register with an e-mail address as their username.
+files[] = email_registration.test
+core = 7.x
+dependencies[] = user
+
+; Information added by Drupal.org packaging script on 2019-09-03
+version = "7.x-1.5"
+core = "7.x"
+project = "email_registration"
+datestamp = "1567477989"

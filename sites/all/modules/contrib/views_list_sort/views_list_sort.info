@@ -1,0 +1,13 @@
+name = Views List Sort
+description = Allows views to be sorted by a list field's allowed values.
+core = 7.x
+package = Views
+dependencies[] = views
+files[] = views/handlers/views_list_sort_handler_sort_allowed_values.inc
+
+; Information added by Drupal.org packaging script on 2015-04-10
+version = "7.x-1.0"
+core = "7.x"
+project = "views_list_sort"
+datestamp = "1428699788"
+

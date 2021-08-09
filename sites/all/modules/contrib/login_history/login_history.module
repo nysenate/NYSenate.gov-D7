@@ -1,0 +1,284 @@
+<?php
+
+/**
+ * @file
+ * The login history module.
+ */
+
+/**
+ * Implements hook_views_api().
+ */
+function login_history_views_api() {
+  return array(
+    'api' => '3.0',
+    'path' => drupal_get_path('module', 'login_history') . '/views',
+  );
+}
+
+/**
+ * Implements hook_user_login().
+ */
+function login_history_user_login(&$edit, $account) {
+  // Is this a one-time login?
+  $menu_item = menu_get_item();
+  if ('user/reset/%/%/%' == $menu_item['path']) {
+    $one_time = 1;
+  }
+  else {
+    $one_time = 0;
+  }
+
+  // Validate and parse the cookie.
+  module_load_include('inc', 'login_history', 'login_history');
+  try {
+    $old_device_id = login_history_get_device_id_from_cookie($_COOKIE, drupal_get_hash_salt());
+  }
+  catch (Exception $e) {
+    $old_device_id = '';
+    watchdog_exception('login_history', $e, NULL, array(), WATCHDOG_NOTICE);
+  }
+
+  // Perform some default gathering of info about the login event.
+  $detection = array(
+    'user_agent' => empty($_SERVER['HTTP_USER_AGENT']) ? '' : $_SERVER['HTTP_USER_AGENT'],
+  );
+
+  // Allow other modules to add more info to the detection.
+  drupal_alter('login_history_detect_device', $detection, $edit, $account);
+
+  // Have a consistent order for the hash.
+  asort($detection);
+  $device_id = hash('sha256', implode('', $detection));
+
+  // Limit user agent strings to 255 characters. If a module cares about more
+  // (or less) data, it should create it's own schema and store the agent there.
+
+  // Now save the user's current login timestamp to login_history.
+  $login_id = db_insert('login_history')
+    ->fields(array(
+      'uid' => $account->uid,
+      'login' => $account->login,
+      'hostname' => ip_address(),
+      'one_time' => $one_time,
+      'user_agent' => substr($detection['user_agent'], 0, 255),
+      'device_id' => $device_id,
+      'old_device_id' => $old_device_id,
+    ))
+    ->execute();
+
+  // TODO: would be useful to load the prior login data here e.g. a change of IP address that is
+  // still in the same geo location is less risky than a change of IP address across the world.
+
+  $login_history_cookie = login_history_assemble_cookie($device_id, $login_id, drupal_get_hash_salt());
+  user_cookie_save(array('login_history' => $login_history_cookie));
+
+  module_invoke_all('login_history_detection_results', $login_id, $detection, $old_device_id, $device_id, $account);
+
+  if (variable_get('login_history_mail_on_new_login_device', FALSE)) {
+    login_history_send_mail_new_login_device($login_id, $detection, $old_device_id, $device_id, $account);
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function login_history_menu() {
+  $items = array();
+  $items['admin/reports/login-history'] = array(
+    'title' => 'Login history',
+    'description' => 'Shows previous login information for site users. Useful for troubleshooting and monitoring.',
+    'page callback' => 'login_history_report_callback',
+    'access arguments' => array('administer users'),
+    'file' => 'includes/login_history.pages.inc',
+  );
+  $items['user/%user/login-history'] = array(
+    'title' => 'Login history',
+    'description' => '',
+    'page callback' => 'login_history_report_callback',
+    'page arguments' => array(1),
+    'access callback' => 'login_history_access_user_history_page',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'includes/login_history.pages.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function login_history_permission() {
+  return array(
+    'view own login history' => array(
+      'title' => t('View own login history'),
+    ),
+    'view all login histories' => array(
+      'title' => t('View all login histories'),
+    ));
+}
+
+/**
+ * Access callback for the user-specific Login History page.
+ *
+ * @param object $account
+ *   A user object.
+ *
+ * @return bool
+ *   TRUE if the user can access the page.
+ */
+function login_history_access_user_history_page($account) {
+  return ($account->uid == $GLOBALS['user']->uid && user_access('view own login history')) || user_access('view all login histories');
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function login_history_block_info() {
+  // Show their last login info.
+  $blocks['login_history_last']['info'] = t("Last login");
+  $blocks['login_history_last']['properties']['administrative'] = TRUE;
+  $blocks['login_history_last']['cache'] = DRUPAL_CACHE_PER_USER;
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function login_history_block_view($delta = '') {
+  switch ($delta) {
+    case 'login_history_last':
+      if (user_is_anonymous()) {
+        return;
+      }
+      // Get information about the user's last login. If no information is
+      // found, the block is not displayed.
+      if ($last_login = login_history_last_login()) {
+        $hostname = $last_login->hostname == ip_address() ? t('this IP address') : $last_login->hostname;
+        $user_agent = $last_login->user_agent == $_SERVER['HTTP_USER_AGENT'] ? t('this browser') : $last_login->user_agent;
+        $output = '<p>' . t('You last logged in from @hostname using @user_agent.', array('@hostname' => $hostname, '@user_agent' => $user_agent)) . '</p>';
+        if (user_access('view own login history')) {
+          global $user;
+          $output .= '<span class="read-more">' . l(t('View your login history.'), 'user/' . $user->uid . '/login-history') . '</span>';
+        }
+
+        $block['subject'] = t('Last login');
+        $block['content'] = $output;
+        return $block;
+      }
+  }
+}
+
+
+/**
+ * Determines if an email should be sent to a visitor for a login on a "new" device.
+ *
+ * @param int $login_id
+ *   The primary key login_id of login_history.
+ * @param array $detection
+ *   An array of detection data.
+ * @param string $old_device_id
+ *   An old device id if present/valid, or an empty string.
+ * @param string $device_id
+ *   The new device id.
+ * @param object $account
+ *   A Drupal user object.
+ */
+function login_history_send_mail_new_login_device($login_id, $detection, $old_device_id, $device_id, $account) {
+  // In any case that the old device id is valid, don't send an email.
+  if (!empty($old_device_id)) {
+    return;
+  }
+
+  // If old device id is empty and this is the first login we know of, don't send an email.
+  $old_logins_for_uid = login_history_last_login($account, NULL, $login_id);
+  if (empty($old_logins_for_uid)) {
+    return;
+  }
+
+  // If cookies got deleted, but they've logged in on a device that matches this fingerprint it's OK.
+  $old_logins_for_uid_and_device = login_history_last_login($account, $device_id, $login_id);
+  if (!empty($old_logins_for_uid_and_device)) {
+    return;
+  }
+
+  // Allow other modules to add their own decision about the newness.
+  $previously_detected = FALSE;
+  drupal_alter('login_history_detect_new_login', $detection, $account, $previously_detected);
+  if ($previously_detected) {
+    return;
+  }
+
+  drupal_mail('login_history', 'login_history_new_device', $account->mail, user_preferred_language($account), array(
+      'account' => $account,
+      'detection' => $detection,
+    )
+  );
+}
+
+/**
+ * Implements hook_mail().
+ */
+function login_history_mail($key, &$message, $params){
+  if ('login_history_new_device' == $key) {
+    $language = $message['language'];
+    $langcode = isset($language->language) ? $language->language : NULL;
+    $subject = t('New device login for [user:name] at [site:name]', array(), array('langcode' => $langcode));
+    $body = t("[user:name], a new device or browser logged in to your CARD.com account:
+When: [current-date:short]
+IP Address: @hostname
+Device & Browser: @user_agent
+
+Tip: Don't recognize this login? When in doubt, it is safer to reset your password and ensure your account is healthy.
+
+--  [site:name] team", array(
+      '@user_agent' => $params['detection']['user_agent'],
+      '@hostname' => ip_address(),
+    ), array('langcode' => $langcode));
+
+    $variables = array('user' => $params['account']);
+    $message['subject'] = token_replace($subject, $variables, array('language' => $language, 'callback' => 'user_mail_tokens', 'sanitize' => FALSE, 'clear' => TRUE));
+    $message['body'][] = token_replace($body, $variables, array('language' => $language, 'callback' => 'user_mail_tokens', 'sanitize' => FALSE, 'clear' => TRUE));
+  }
+}
+
+
+/**
+ * Provide data about the last login for a user.
+ *
+ * @param object $account
+ *   Optional user object. The only thing that really matters is the uid.
+ * @param string $device_id
+ *   Optional device id to look for.
+ * @param int $login_id_to_avoid
+ *   An optional login id primary key to exclude from results.
+ *
+ * @return object|false
+ *   An object containing information about the last login or FALSE if no
+ *   result is found.
+ */
+function login_history_last_login($account = NULL, $device_id = NULL, $login_id_to_avoid = NULL) {
+  if (user_is_anonymous()) {
+    return;
+  }
+  if (empty($account)) {
+    global $user;
+    $account = $user;
+  }
+
+  $select = db_select('login_history', 'lh')
+    ->fields('lh', array('login', 'hostname', 'one_time', 'user_agent', 'device_id'))
+    ->condition('lh.uid', $account->uid)
+    ->range(0, 1);
+
+  if (!empty($device_id)) {
+    $select->condition('lh.device_id', $device_id);
+  }
+  if (!empty($login_id_to_avoid)) {
+    $select->condition('lh.login_id', $login_id_to_avoid, '<>');
+  }
+
+  $last_login = $select->execute()->fetchAll();
+
+  return reset($last_login);
+}

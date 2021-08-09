@@ -1,0 +1,32 @@
+diff --git a/features.export.inc b/features.export.inc
+index 5045b13..8020846 100644
+--- a/features.export.inc
++++ b/features.export.inc
+@@ -1020,7 +1020,9 @@ function _features_linetrim($code) {
+  * @param bool $remove_empty if set, remove null or empty values for assoc arrays.
+  */
+ function features_sanitize(&$array, $component = NULL, $remove_empty = TRUE) {
+-  $array = features_remove_recursion($array);
++  if ($component != 'rules_config') {
++    $array = features_remove_recursion($array);
++  }
+   if (isset($component)) {
+     $ignore_keys = _features_get_ignore_keys($component);
+     // remove keys to be ignored
+@@ -1053,6 +1055,16 @@ function _features_sanitize(&$array, $remove_empty = TRUE) {
+     }
+     foreach ($array as $k => $v) {
+       if (is_array($v) or is_object($v)) {
++        if (module_exists('rules') && (
++            $v instanceof RulesReactionRule ||
++            $v instanceof RulesOr ||
++            $v instanceof RulesAnd ||
++            $v instanceof RulesActionSet ||
++            $v instanceof Rule ||
++            $v instanceof RulesRuleSet
++          )) {
++          continue;
++        }
+         _features_sanitize($array[$k]);
+         if ($remove_empty && $is_assoc && empty($array[$k])) {
+           unset($array[$k]);

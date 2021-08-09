@@ -1,0 +1,13 @@
+name = Facetapi Multiselect
+description = Displays search facets as a multiselect widget.
+package = Search Toolkit
+core = 7.x
+dependencies[] = facetapi
+files[] = plugins/facetapi/facetapi_multiselect.inc
+
+; Information added by drupal.org packaging script on 2012-09-05
+version = "7.x-1.0-beta1"
+core = "7.x"
+project = "facetapi_multiselect"
+datestamp = "1346884038"
+

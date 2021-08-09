@@ -1,0 +1,149 @@
+<?php
+
+use Nys_Openleg\ApiRequest;
+
+module_load_include('inc', 'nys_legislation_spotcheck');
+
+
+/**
+ * Generates and sends a data dump to OpenLegislation in parts.
+ *
+ * @param $content_type string
+ * @param $params       array
+ */
+function nys_legislation_spotcheck_handle_spotcheck_dump($content_type, $params
+) {
+  $loader = nys_legislation_spotcheck_get_dump_loader($content_type, $params);
+
+  $total_nodes = $loader->getTotal();
+  $total_parts = $loader->getPartCount();
+  $timestamp = time();
+  $ref_date_time = date('Y-m-d', $timestamp) . "T" . date('H:i:s', $timestamp);
+
+  echo t(
+    "Loading and sending $content_type dump.  " .
+    "$total_nodes nodes in $total_parts parts.\n"
+  );
+
+  if (!isset($params)) {
+    $params = [];
+  }
+  echo t("Params:\n");
+  foreach ($params as $name => $value) {
+    echo t("  $name : $value\n");
+  }
+
+
+  $print = (boolean) ($params['print'] ?? FALSE);
+
+  $selected_part = $params['part'] ?? NULL;
+  if ($selected_part !== NULL && $selected_part > $total_parts) {
+    throw new InvalidArgumentException(
+      "Selected part number ($selected_part) "
+      . "is greater than the number of available parts"
+    );
+  }
+
+  foreach ($loader as $part => $nodes) {
+    $dump_object = nys_legislation_spotcheck_package_dump(
+      $content_type, $ref_date_time, $params['year'], $part, $total_parts,
+      $nodes
+    );
+
+    if ($selected_part === NULL || $part === $selected_part) {
+      nys_legislation_spotcheck_send_dump($dump_object, $print);
+      // If the desired part has been sent, break the loop.
+      if ($selected_part !== NULL) {
+        break;
+      }
+    }
+  }
+}
+
+/**
+ * Package the dump data and metadata in a single object.
+ *
+ * @param $content_type  string
+ * @param $ref_date_time string
+ * @param $year          int
+ * @param $part          int
+ * @param $total_parts   int
+ * @param $nodes         array
+ *
+ * @return array
+ */
+function nys_legislation_spotcheck_package_dump($content_type, $ref_date_time,
+  $year,
+  $part, $total_parts, $nodes
+) {
+  return [
+    'contentType' => $content_type,
+    'refDateTime' => $ref_date_time,
+    'year'        => $year,
+    'part'        => $part,
+    'totalParts'  => $total_parts,
+    'nodes'       => $nodes,
+  ];
+}
+
+/**
+ * Sends the given dump data.
+ *
+ * @param $dump_data array
+ * @param $print     bool
+ */
+function nys_legislation_spotcheck_send_dump($dump_data, $print) {
+  $json_opts = JSON_UNESCAPED_UNICODE;
+  if ($print) {
+    $json_opts = $json_opts | JSON_PRETTY_PRINT;
+  }
+  $json_data = json_encode($dump_data, $json_opts);
+  if ($print) {
+    echo "\n" . $json_data . "\n";
+  }
+  else {
+    nys_legislation_spotcheck_post_dump($json_data);
+  }
+}
+
+/**
+ * Posts the given json data to OpenLegislation as a spotcheck dump.
+ *
+ * @param $json_data string
+ */
+function nys_legislation_spotcheck_post_dump($json_data) {
+  $ol_base_url = 'https://' . ApiRequest::DEFAULT_HOST;
+  $full_url = $ol_base_url . '/api/3/senatesite/dump';
+  $openleg_key = variable_get('nys_openleg_api_key');
+  $qa_url = $full_url . '?key=' . $openleg_key;
+
+  echo t("\n[POST] $full_url\n");
+
+  $curl = curl_init($qa_url);
+  curl_setopt($curl, CURLOPT_HEADER, 1);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+  curl_setopt(
+    $curl, CURLOPT_HTTPHEADER,
+    ["Content-type: application/json; charset=UTF-8"]
+  );
+  curl_setopt($curl, CURLOPT_POST, TRUE);
+  curl_setopt($curl, CURLOPT_POSTFIELDS, $json_data);
+
+  $json_response = curl_exec($curl);
+  $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+  if ($status != 200 && $status != 201) {
+    echo t(
+      "\nError: call to URL $full_url failed with status $status, "
+      . "response $json_response, "
+      . "curl_error " . curl_error($curl) . ", curl_errno " . curl_errno($curl)
+    );
+    curl_close($curl);
+    die();
+  }
+  else {
+    echo t("\nStatus Code: $status\n");
+    echo t("\nResponse: $json_response\n\n");
+  }
+  curl_close($curl);
+}

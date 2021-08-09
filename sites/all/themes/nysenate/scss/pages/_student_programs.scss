@@ -1,0 +1,444 @@
+/*------------------------------------
+/	Student Program and Alumni Testimonial
+/-------------------------------------*/
+.page-student-programs,
+.page-alumni-testimonial {
+	.large-12.columns {
+		padding: 0;
+	}
+	.view-student-programs-news {
+		.view-footer {
+			display: none;
+		}
+	}
+	.explore-link {
+		font-family: "Proxima Nova SemiBold";
+		font-size: 14px;
+		line-height: 18px;
+		text-transform: uppercase;
+		color: $yellow03;
+		display: block;
+		text-align: right;
+		margin: 40px 0;
+		&:after {
+			font-size: 20px;
+			margin-top: -4px;
+		}
+	}
+	.gen-wrapper {
+		.section-title {
+			font-family: "Proxima Nova Regular";
+			font-size: 16px;
+			line-height: 18px;
+			padding-bottom: 20px;
+			margin-bottom: 25px;
+			text-transform: uppercase;
+			color: $grey02;
+			border-bottom: 1px solid $grey05;
+		}
+	}
+	.pane-1 {
+		margin-bottom: 40px;
+	}
+	.pane-node {
+		.pane-title {
+			font-family: "Adelle Bold";
+			font-size: 32px;
+			line-height: 41px;
+			color: $grey02;
+			margin: 40px 0;
+		}
+		.c-news--body {
+			.c-block + .c-block,
+			.c-block--social {
+				display: none;
+			}
+			.c-block {
+				margin-bottom: 30px;
+			}
+		}
+	}
+	.pane-student-programs-news {
+		.pane-title {
+			font-family: "Proxima Nova Regular";
+			font-size: 16px;
+			line-height: 18px;
+			padding-bottom: 20px;
+			margin-bottom: 25px;
+			text-transform: uppercase;
+			color: $grey02;
+			border-bottom: 1px solid $grey02;
+		}
+		.view-student-programs-news {
+			.view-empty {
+				h2 {
+					font-family: "Adelle Bold";
+					font-size: 14px;
+					line-height: 18px;
+					color: $grey02;
+					margin-bottom: 40px;
+				}
+			}
+			.odd,
+			.even {
+				min-height: 100%;
+				position: relative;
+				border-bottom: 1px solid $grey05;
+				margin-bottom: 20px;
+				padding-bottom: 20px;
+				.content-type,
+				.content-title {
+					font-family: "Adelle Bold";
+					font-size: 18px;
+					line-height: 22px;
+				}
+				.content-type {
+					width: 100%;
+					position: relative;
+					top: inherit;
+					left: inherit;
+					color: $grey02;
+				}
+				.content-title {
+					font-family: "Adelle Light";
+					font-size: 24px;
+					line-height: 32px;
+					margin-left: 0;
+					 a {
+						 color: $grey02;
+					 }
+				}
+				.published-date {
+					margin-left: 0;
+					font-family: "Proxima Nova Regular";
+					font-size: 14px;
+					line-height: 32px;
+					color: $grey04;
+				}
+				.main-image {
+					display: none;
+				}
+			}
+		}
+		.view-display-id-block_1 {
+			.views-field-field-image-main {
+				float: left;
+				width: 380px;
+				margin: 0 20px 20px 0;
+			}
+			.views-field-title {
+				font-family: "Proxima Nova Regular";
+				font-size: 16px;
+				line-height: 18px;
+				padding-bottom: 20px;
+				margin-bottom: 25px;
+				text-transform: uppercase;
+				color: $grey02;
+				border-bottom: 1px solid $grey05;
+				 a {
+					 color: $grey02;
+				 }
+			}
+			.view-content {
+				.odd,
+				.even {
+					.nys-arrow-link {
+						margin-top: 10px;
+						float: none;
+						a {
+							color: $yellow03;
+							font-size: 12px;
+							line-height: 14px;
+						}
+					}
+				}
+			}
+		}
+		.view-display-id-block_2 {
+			.view-content {
+				.odd,
+				.even {
+					.nys-arrow-link {
+						margin-top: 10px;
+						a {
+							color: $yellow03;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.c-student-program-contact {
+		margin-top: 40px;
+		.gen-col {
+			background-color: $grey06;
+			padding: 40px;
+			.col {
+				width: 100%;
+				display: block;
+				vertical-align: top;
+				p {
+					font-family: "Proxima Nova Regular";
+					font-size: 16px;
+					line-height: 25px;
+					color: $grey02;
+					a {
+						color: $yellow03;
+					}
+				}
+				&:first-of-type {
+					margin-right: 0;
+				}
+				h3,
+				h4 {
+					font-family: "Proxima Nova SemiBold";
+					font-size: 14px;
+					line-height: 18px;
+					text-transform: uppercase;
+					&.padded {
+						margin-top: 30px;
+					}
+				}
+				h4 {
+					text-transform: none;
+				}
+				.top-col-title {
+					margin-top: 40px;
+				}
+			}
+		}
+	}
+}
+
+.pane-student-programs-news {
+	.pane-title {
+		font-family: "Proxima Nova Regular";
+		font-size: 16px;
+		line-height: 18px;
+		padding-bottom: 20px;
+		margin-bottom: 25px;
+		text-transform: uppercase;
+		color: $grey02;
+		border-bottom: 1px solid $grey02;
+	}
+	.pager-load-more {
+		position: relative;
+		top: -22px;
+		border-top: 2px solid white;
+		margin-top: 0;
+		z-index: 25;
+	}
+}
+
+.view-display-id-block_1 {
+	.nys-arrow-link {
+	  margin-bottom: 0;
+	}
+}
+.article-student-program {
+	.gen-wrapper {
+		.section-title {
+			font-family: "Proxima Nova Regular";
+			font-size: 16px;
+			line-height: 18px;
+			padding-bottom: 20px;
+			margin-bottom: 25px;
+			text-transform: uppercase;
+			color: $grey02;
+			border-bottom: 1px solid $grey05;
+		}
+	}
+	.block-title {
+		font-family: "Proxima Nova Regular";
+		font-size: 16px;
+		line-height: 18px;
+		padding-bottom: 20px;
+		margin-bottom: 25px;
+		text-transform: uppercase;
+		color: $grey02;
+		border-bottom: 1px solid $grey02;
+	}
+
+	.c-student-program-contact {
+		margin-top: 40px;
+		.gen-col {
+			background-color: $grey06;
+			padding: 40px;
+			.col {
+				width: 100%;
+				display: block;
+				vertical-align: top;
+				p {
+					font-family: "Proxima Nova Regular";
+					font-size: 16px;
+					line-height: 25px;
+					color: $grey02;
+					a {
+						color: $yellow03;
+					}
+				}
+				&:first-of-type {
+					margin-right: 0;
+				}
+				h3,
+				h4 {
+					font-family: "Proxima Nova SemiBold";
+					font-size: 14px;
+					line-height: 18px;
+					text-transform: uppercase;
+					&.padded {
+						margin-top: 30px;
+					}
+				}
+				h4 {
+					text-transform: none;
+				}
+				.top-col-title {
+					margin-top: 40px;
+				}
+			}
+		}
+	}
+	.view-student-programs-news {
+		.view-empty {
+			h2 {
+				font-family: "Adelle Bold";
+				font-size: 14px;
+				line-height: 18px;
+				color: $grey02;
+				margin-bottom: 40px;
+			}
+		}
+		.odd,
+		.even {
+			min-height: 100%;
+			position: relative;
+			border-bottom: 1px solid $grey05;
+			margin-bottom: 20px;
+			padding-bottom: 20px;
+			.content-type,
+			.content-title {
+				font-family: "Adelle Bold";
+				font-size: 18px;
+				line-height: 22px;
+			}
+			.content-type {
+				width: 100%;
+				position: relative;
+				top: inherit;
+				left: inherit;
+				color: $grey02;
+			}
+			.content-title {
+				font-family: "Adelle Light";
+				font-size: 24px;
+				line-height: 32px;
+				margin-left: 0;
+				 a {
+					 color: $grey02;
+				 }
+			}
+			.published-date {
+				margin-left: 0;
+				font-family: "Proxima Nova Regular";
+				font-size: 14px;
+				line-height: 32px;
+				color: $grey04;
+			}
+			.main-image {
+				display: none;
+			}
+		}
+	}
+}
+
+@media #{$tablet} {
+	.page-student-programs,
+	.page-alumni-testimonial {
+
+		.c-student-program-contact {
+			.gen-col {
+				.col {
+					width: 45%;
+					display: inline-block;
+					&:first-of-type {
+						margin-right: 9%;
+					}
+					.top-col-title {
+						margin-top: 0;
+					}
+				}
+			}
+		}
+		.pane-student-programs-news {
+			.view-student-programs-news {
+				.odd,
+				.even {
+					min-height: 150px;
+					.content-type {
+						width: 20%;
+						position: absolute;
+						top: 0;
+						left: 0;
+					}
+					.content-title {
+						margin-left: 20%;
+					}
+					.published-date {
+						margin-left: 20%;
+					}
+					.main-image {
+						display: block;
+						float: right;
+						max-width: 220px;
+					}
+				}
+			}
+		}
+	}
+	.article-student-program {
+
+		.c-student-program-contact {
+			.gen-col {
+				.col {
+					width: 45%;
+					display: inline-block;
+					&:first-of-type {
+						margin-right: 9%;
+					}
+					.top-col-title {
+						margin-top: 0;
+					}
+				}
+			}
+		}
+		.view-student-programs-news {
+			.odd,
+			.even {
+				min-height: 150px;
+				.content-type {
+					width: 20%;
+					position: absolute;
+					top: 0;
+					left: 0;
+				}
+				.content-title {
+					margin-left: 20%;
+				}
+				.published-date {
+					margin-left: 20%;
+				}
+				.main-image {
+					display: block;
+					float: right;
+					max-width: 220px;
+				}
+			}
+		}
+	}
+}
+
+@media #{$desktop} {
+
+}

@@ -1,0 +1,22 @@
+{
+  "name": "drupal/contrib/sendgrid_integration_reports",
+  "description": "Sendgrid Reports Module.",
+  "version": "7.x-1.x",
+  "homepage": "https://www.drupal.org/project/sendgrid_integration",
+  "license": "GNU",
+  "keywords": [
+    "SendGrid",
+    "sendgrid",
+    "email",
+    "send",
+    "grid",
+    "php"
+  ],
+  "require": {
+    "guzzlehttp/guzzle": "~6.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.4",
+    "raveren/kint": "^1.0"
+  }
+}

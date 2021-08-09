@@ -1,0 +1,80 @@
+/*-------------------------------------------------------
+/
+/	LISTING BLOCK
+/ Covers: People Listing and Senator Committees Modules
+/ Exists on : Senator About
+/
+/-------------------------------------------------------*/
+.c-listing-block {
+	background: $grey06;
+	padding: 25px 20px 5px;
+	margin-bottom: 20px;
+
+	h3 {
+		font-family: "Adelle SemiBold";
+		font-size: 16px;
+		line-height: 1em;
+		margin-bottom: 20px;
+	}
+	ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+	a,
+	p {
+		display: block;
+		font-family: "Proxima Nova SemiBold";
+		font-size: 14px;
+	}
+	span {
+		display: block;
+		margin-top: 5px;
+
+		font-family: "Proxima Nova Regular";
+		color: $grey02;
+		text-transform: uppercase;
+		font-size: 12px;
+		line-height: 1;
+	}
+}
+.c-listing-block--item {
+	margin-bottom: 18px;
+
+	a {
+		line-height: 1.3em;
+	}
+}
+
+.view-senator-about {
+	ul li + li {
+		margin-top: 0;
+	}
+}
+
+@media #{$tablet} {
+	.c-listing-block {
+		padding: 10px 40px 10px;
+		margin-bottom: 40px;
+
+		h3 {
+			font-size: 20px;
+		}
+		a,
+		p {
+			font-size: 14px;
+		}
+	}
+	.c-listing-block--item {
+		list-style: none;
+		display: inline-block;
+		vertical-align: top;
+		width: 32%;
+		padding-right: 45px;
+	}
+}
+.view-senator-about {
+	ul li + li {
+		margin-top: 0;
+	}
+}

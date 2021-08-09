@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains tests for the Sendgrid Integration module.
+ */
+
+/**
+ * Test case.
+ */
+class SendgridIntegrationTestCaseMail extends SendgridIntegrationTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return [
+      'name' => 'Sendgrid Integration Mail Tests',
+      'description' => 'Test mail functions.',
+      'group' => 'Sendgrid Integration',
+    ];
+  }
+
+}

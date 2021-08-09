@@ -1,0 +1,27 @@
+<?php
+
+if (!class_exists('Redis_Tests_Cache_FlushUnitTestCase')) {
+  require_once(__DIR__ . '/FlushUnitTestCase.php');
+}
+
+class Redis_Tests_Cache_CompressedPhpRedisFlushUnitTestCase extends Redis_Tests_Cache_FlushUnitTestCase
+{
+    public static function getInfo()
+    {
+        return array(
+            'name'        => 'Compressed PhpRedis cache flush',
+            'description' => 'Tests Redis module cache flush modes feature.',
+            'group'       => 'Redis',
+        );
+    }
+
+    protected function createCacheInstance($name = null)
+    {
+        return new Redis_CacheCompressed($name);
+    }
+
+    protected function getClientInterface()
+    {
+        return 'PhpRedis';
+    }
+}

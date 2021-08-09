@@ -1,0 +1,517 @@
+/*----------------------------
+/ ACTION BAR
+/ appears on every page of the main site
+/ states:
+/ SENATOR - signed in and not
+/ COMMITTEE - following or not
+/ BILLS - following or not
+/ ISSUES - following or not
+/
+/	DEFAULT IS SENATOR
+/
+/----------------------------*/
+
+.c-actionbar,
+.c-senate-status {
+	position: relative;
+	display: block;
+	top: 0;
+	width: 100%;
+	height: 60px;
+	padding: 0 60px 0 18px;
+	@extend .lgt-bg;
+	// overflow: hidden;
+	@include transition(margin, 0.25s, ease);
+
+
+	&:before {
+		content: "";
+		position: relative;
+		display: inline-block;
+		height: 100%;
+		width: 1px;
+		vertical-align: middle;
+		margin-left: -4px;
+	}
+	// used when actionbar only contains
+	// a simple message - usually not logged-in
+	.c-actionbar--cta {
+		margin: 0;
+		color: #fff;
+		font-size: 18px;
+		max-width: 320px;
+	}
+	// appears when user is logged in and
+	// on a senator page.
+	.c-actionbar--info {
+		display: inline-block;
+		vertical-align: middle;
+
+		.c-actionbar--cta {
+			font-size: 14px;
+		}
+	}
+	.nys-senator {
+		margin-bottom: 0;
+	}
+	.nys-senator--title {
+		margin: 0 0 3px 0;
+		color: #fff;
+		text-transform: uppercase;
+		font-family: "Proxima Nova Regular";
+		font-size: 12px;
+		line-height: 1em;
+		letter-spacing: 0.1em;
+	}
+	.nys-senator--name {
+		color: #fff;
+		text-transform: capitalize;
+		font-family: "Adelle Regular";
+		font-size: 15px;
+		line-height: 1.2em;
+		letter-spacing: 0.05em;
+	}
+
+	.c-block--btn {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: auto;
+		height: 100%;
+		width: 100%;
+		border: none;
+		font-size: 12px;
+
+		a {
+			display: block;
+			position: relative;
+			width: 100%;
+			height: 100%;
+			padding: 0 18px;
+			line-height: 60px;
+			color: #fff;
+
+			@extend .med-bg;
+			@extend .icon-before__find-senator;
+
+			&:before {
+				line-height: 60px;
+				font-size: 32px;
+				margin-right: 18px;
+			}
+
+		}
+
+		&:before,
+		&:after {
+			line-height: 60px;
+			font-size: 32px;
+			margin-right: 18px;
+		}
+		// issues
+		&.c-btn--follow-issue {
+			a {
+				@extend .icon-before__issue-follow;
+			}
+		}
+		// committees
+		&.c-btn--follow-committee {
+			a {
+				@extend .icon-before__committee-follow;
+			}
+		}
+		// bill
+		&.c-btn--follow-bill {
+			a {
+				@extend .icon-before__bill-follow;
+			}
+		}
+	}
+
+	// drupal flags
+	[class*="c-btn--follow-"] {
+		padding: 0;
+
+		&:before,
+		&:after {
+			display: none;
+		}
+
+		.flag-throbber {
+			position: absolute;
+			top: 0;
+		}
+
+		.flag-wrapper {
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+		}
+		.flag-link-toggle {
+			position: relative;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+			padding: 0 18px;
+			line-height: 60px;
+
+			&:before {
+				line-height: 60px;
+				font-size: 32px;
+				margin-right: 18px;
+			}
+		}
+		.flag-success-message {
+			position: absolute;
+			top: 60px;
+			left: 0;
+			width: 100%;
+			background: $grey06;
+			padding: 0;
+			white-space: nowrap;
+			font-family: "Proxima Nova SemiBold";
+
+			color: $grey03;
+			text-transform: none;
+
+			.close-message {
+				position: absolute;
+				display: block;
+				top: 0;
+				right: 0;
+				width: 30px;
+				height: 30px;
+				padding: 0;
+				@extend .icon-replace__x;
+
+				&:after {
+					color: $grey03;
+					font-size: 23px;
+					line-height: 30px;
+				}
+			}
+		}
+		.message-text {
+			display: block;
+			padding: 30px 20px 20px;
+
+			@extend .icon-before__circle-check;
+
+			p {
+				display: inline-block;
+				vertical-align: middle;
+				font-size: 12px;
+				line-height: 12px;
+				font-family: "Proxima Nova SemiBold";
+
+				> span {
+					display: block;
+				}
+
+			}
+			&:before {
+				display: inline-block;
+				vertical-align: middle;
+				font-size: 15px;
+				@extend .med-text;
+			}
+
+
+		}
+		.flag-success-btn {
+			text-transform: uppercase;
+			@extend .icon-before__mail;
+
+			&:before {
+				margin-right: 5px;
+			}
+
+		}
+		&.c-btn--follow-issue,
+		&.c-btn--follow-committee,
+		&.c-btn--follow-bill {
+			.flag-success-btn {
+				@extend .icon-before__mail;
+			}
+		}
+		// issues
+		&.c-btn--follow-issue {
+			.flag-action {
+				@extend .icon-before__issue-follow;
+			}
+			.unflag-action {
+				@extend .icon-before__issue-unfollow;
+			}
+		}
+		// committees
+		&.c-btn--follow-committee {
+			.flag-action {
+				@extend .icon-before__committee-follow;
+			}
+			.unflag-action {
+				@extend .icon-before__committee-unfollow;
+			}
+		}
+		// bills
+		&.c-btn--follow-bill {
+			.flag-action {
+				@extend .icon-before__bill-follow;
+			}
+			.unflag-action {
+				@extend .icon-before__bill-unfollow;
+			}
+		}
+	}
+
+}
+// signed in and following senator
+.c-actionbar--loggedin {
+	.c-block--btn {
+		width: 60px;
+		@extend .icon-replace__arrow;
+
+		&:after {
+			width: 100%;
+			text-align: center;
+		}
+	}
+}
+
+@media #{$tablet} {
+	.c-actionbar,
+	.c-senate-status {
+		height: 100px;
+		padding: 0 410px 0 9%;
+
+		// &.c-actionbar--committee {
+		// 	padding-right: 410px;
+		// }
+
+		.c-actionbar--info {
+			display: inline-block;
+			vertical-align: middle;
+		}
+
+		.nys-senator--thumb {
+			height: 75px;
+			width: 75px;
+		}
+
+		.nys-senator--name {
+			font-size: 22px;
+		}
+		.c-actionbar--info .c-actionbar--cta,
+		.c-actionbar--cta {
+			width: 100%;
+			max-width: 400px;
+			font-size: 14px;
+			font-size: 1.7vw;
+			line-height: 1.75em;
+		}
+
+		a.c-block--btn {
+			padding: 0 40px;
+			font-size: 16px;
+			line-height: 100px;
+
+			@extend .med-bg;
+
+			&:before {
+				height: 100%;
+				margin-right: 0.1em;
+				font-size: 32px;
+				line-height: 100px;
+			}
+		}
+		.c-block--btn {
+			width: auto;
+			right: 0;
+
+			a {
+				padding: 0 40px;
+				font-size: 16px;
+				line-height: 100px;
+
+				&:before {
+					height: 100%;
+					margin-right: 0.1em;
+					font-size: 32px;
+					line-height: 100px;
+				}
+			}
+		}
+		// drupal flags
+		[class*="c-btn--follow-"] {
+			padding: 0;
+
+			.flag-wrapper {
+				position: relative;
+				display: block;
+			}
+			.flag-link-toggle {
+				padding: 0 40px;
+				line-height: 100px;
+
+				&:before {
+					line-height: 100px;
+				}
+			}
+			.flag-success-message {
+				width: auto;
+				top: 100px;
+				left: auto;
+				right: 0;
+			}
+
+			.message-text {
+
+				p {
+					font-size: 14px;
+					line-height: 14px;
+
+					> span {
+						display: inline;
+					}
+				}
+
+				&:before {
+					font-size: 24px;
+				}
+			}
+		}
+	}
+
+	// signed in and following senator
+	// button becomse full-width
+	.c-actionbar--loggedin {
+
+		.c-block--btn {
+			text-indent: 0;
+			padding: 0 40px;
+			font-size: 16px;
+			line-height: 100px;
+			@extend .icon-before__arrow;
+
+			&:before {
+				line-height: 100px;
+			}
+			&:after{
+				display: none;
+			}
+		}
+	}
+}
+
+@media #{$desktop} {
+	.c-actionbar {
+		.c-actionbar--info .c-actionbar--cta,
+		.c-actionbar--cta {
+			font-size: 18px;
+			width: 100%;
+			max-width: 380px;
+		}
+	}
+	.c-actionbar.c-actionbar--committee {
+		.c-actionbar--info .c-actionbar--cta,
+		.c-actionbar--cta {
+			font-size: 18px;
+			width: 100%;
+			max-width: 465px;
+		}
+	}
+}
+
+// ACTIONBAR WITHIN CONTENT - only happens on homepage
+// only makes a difference larger than mobile
+.front {
+		.c-actionbar,
+		.c-senate-status {
+			max-width: 420px;
+		  margin: 0 auto;
+		}
+	// js clones this into header
+	.l-header {
+		.c-actionbar,
+		.c-senate-status {
+			max-width: none;
+
+			&.hidden {
+				margin-top: -60px;
+			}
+		}
+	}
+}
+@media #{$tablet} {
+	.front {
+		.c-actionbar,
+		.c-senate-status {
+			max-width: 760px;
+			padding: 0 40px;
+      margin: 0 auto;
+
+			.c-actionbar--cta {
+				max-width: 380px;
+				font-size: 16px;
+				line-height: 1.3em;
+				letter-spacing: 0.05em;
+			}
+			.c-block--btn {
+				font-size: 14px;
+			}
+		}
+		.l-header {
+			.c-actionbar,
+			.c-senate-status {
+				max-width: 1500px;
+				padding: 0 9%;
+
+				&.hidden {
+					margin-top: -100px;
+				}
+
+				.c-actionbar--cta {
+					max-width: 400px;
+					font-size: 18px;
+					line-height: 1.3em;
+				}
+				.c-block--btn {
+					font-size: 16px;
+				}
+			}
+		}
+	}
+}
+
+.front .c-senate-status {
+  text-align: center;
+  padding: 0;
+  height: 50px;
+  color: white;
+  font-size: 18px;
+  background: $orange01;
+
+  .c-status-text {
+    padding: 13px 45px 13px 0px;
+    color: #fff;
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+
+    &:after {
+      content: "";
+      width: 30px;
+      height: 30px;
+      background: url("/sites/all/themes/nysenate/images/gavel.png");
+      background-size: 100%;
+      background-position: 75%;
+      background-repeat: no-repeat;
+      top: 10px;
+      right: 5px;
+      position: absolute;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+From 00c84864a7961014451d007f499a9ce15d7457b2 Mon Sep 17 00:00:00 2001
+From: Mohammad Ali Abdel-Qader <m.abdulqader@1281252.no-reply.drupal.org>
+Date: Mon, 7 Aug 2017 20:28:47 +0300
+Subject: [PATCH] Issue #2868593: No icon-css.png file exists in IPE
+
+---
+ {images => panels_ipe/images}/icon-css.png | Bin
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename {images => panels_ipe/images}/icon-css.png (100%)
+
+diff --git a/images/icon-css.png b/panels_ipe/images/icon-css.png
+similarity index 100%
+rename from images/icon-css.png
+rename to panels_ipe/images/icon-css.png
+-- 
+2.12.2
+

@@ -1,0 +1,12 @@
+name = Image style flush
+description = Adds the ability to flush image styles.
+package = Media
+core = 7.x
+configure = admin/config/media/image-styles
+
+; Information added by Drupal.org packaging script on 2017-12-09
+version = "7.x-1.5"
+core = "7.x"
+project = "imagestyleflush"
+datestamp = "1512780486"
+

@@ -1,0 +1,123 @@
+<?php
+
+/**
+ * @file
+ * Page manager existing pages main file.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function pm_existing_pages_menu() {
+  $items = array();
+
+  $items['admin/structure/pages/add-existing'] = array(
+    'title' => 'Add existing page',
+    'page callback' => 'drupal_goto',
+    'page arguments' => array('admin/structure/pages/existing-pages/add'),
+    'access arguments' => array('use page manager'),
+    'type' => MENU_LOCAL_ACTION,
+    'weight' => 10,
+  );
+
+  $items['admin/structure/existing-pages/find'] = array(
+    'title' => 'Add existing page',
+    'page callback' => 'pm_existing_pages_find_paths',
+    'page arguments' => array(4),
+    'access arguments' => array('use page manager'),
+    'file' => 'plugins/export_ui/pm_existing_pages.inc',
+    'type' => MENU_CALLBACK,
+    'weight' => 10,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function pm_existing_pages_menu_alter(&$items) {
+  $items['admin/structure/pages/existing-pages']['type'] = MENU_LOCAL_TASK;
+}
+
+/**
+ * Implement hook_ctools_plugin_api().
+ */
+function pm_existing_pages_ctools_plugin_api($module, $api) {
+  if ($module == 'pm_existing_pages' && $api == 'pm_existing_pages') {
+    return array('version' => 1);
+  }
+}
+
+/**
+ * Implementation of hook_pm_existing_pages_info()
+ */
+function pm_existing_pages_pm_existing_pages_info() {
+  $pm_existing_pages = array();
+
+  $pm_existing_page = new stdClass;
+  $pm_existing_page->api_version = 1;
+  $pm_existing_page->name = 'node_overview';
+  $pm_existing_page->label = 'Node overview';
+  $pm_existing_page->context = '';
+  $pm_existing_page->paths = 'node';
+  $pm_existing_pages['node_overview'] = $pm_existing_page;
+
+  return $pm_existing_pages;
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function pm_existing_pages_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'ctools' && ($plugin_type == 'content_types' || $plugin_type == 'export_ui')) {
+    return 'plugins/' . $plugin_type;
+  }
+  if ($owner == 'page_manager') {
+    return 'plugins/' . $plugin_type;
+  }
+}
+
+/**
+ * Get one or all custom overridden pages.
+ *
+ * @param $task_id
+ *   The name of the task.
+ */
+function pm_existing_pages_get_existing_pages($task_id = NULL) {
+  ctools_include('export');
+
+  if ($task_id) {
+    return ctools_export_crud_load('page_manager_existing_pages', $task_id);
+  }
+  else {
+    return ctools_export_crud_load_all('page_manager_existing_pages');
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function pm_existing_pages_form_alter(&$form, $form_state, $form_id) {
+
+  // Add validation on delete.
+  if ($form_id == 'ctools_export_ui_delete_confirm_form' && arg(3) == 'existing-pages') {
+    $existing_page = arg(5);
+    $form['existing_page'] = array(
+      '#type' => 'value',
+      '#value' => $existing_page
+    );
+    $form['#validate'][] = 'pm_existing_pages_delete_validate';
+  }
+}
+
+/**
+ * Validate callback: make sure no existing pages/variants exist for this page.
+ */
+function pm_existing_pages_delete_validate($form, $form_state) {
+  $existing_page = 'pm_existing_pages-' . $form_state['values']['existing_page'];
+  $page = page_manager_cache_load($existing_page);
+  if ($page && isset($page->handlers) && !empty($page->handlers)) {
+    form_set_error('', t('There is an existing variant for this page, please remove it first.'));
+  }
+}

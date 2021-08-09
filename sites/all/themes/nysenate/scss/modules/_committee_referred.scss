@@ -1,0 +1,132 @@
+.c-referred-title-bar {
+	font-size: 12px;
+	font-family: 'Proxima Nova Regular';
+	text-transform: uppercase;
+	overflow: hidden;
+	margin-bottom: 10px;
+
+	.c-title,
+	.c-votes {
+		display: none;
+	}
+}
+
+.c-reference-block {
+	border-top: 1px solid $grey05;
+	padding-top: 20px;
+	padding-bottom: 30px;
+	color: $grey02;
+	position: relative;
+
+	.c-number {
+		font-family: 'Adelle Bold';
+		font-size: 24px;
+	}
+
+	.c-referred-committee {
+		font-family: 'Proxima Nova Regular';
+		font-size: 10px;
+		text-transform: uppercase;
+		margin-top: 10px;
+	}
+
+	.c-title {
+		font-family: 'Adelle Light';
+		font-size: 18px;
+		margin: 20px 0;
+	}
+
+	.l-senator-container {
+		position: relative;
+		height: 30px;
+		margin-bottom: 20px;
+
+		.c-senator-photo {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 30px;
+			height: 30px;
+		}
+
+		.c-senator-name {
+			margin-left: 40px;
+			font-size: 14px;
+			font-family: 'Proxima Nova Regular';
+			margin-top: 3px;
+			padding-top: 2px;
+		}
+
+		.c-senator-district {
+			margin-left: 40px;
+			font-family: 'Proxima Nova SemiBold';
+			font-size: 10px;
+			@extend .lgt-text;
+		}
+	}
+
+	.c-votes {
+		list-style: none;
+		text-transform: uppercase;
+
+		.c-count {
+			font-size: 10px;
+			font-family: 'Proxima Nova Regular';
+			.c-number {
+				font-size: 10px;
+				font-family: 'Proxima Nova SemiBold';
+				width: 28px;
+				display: inline-block;
+			}
+		}
+	}
+}
+
+@media #{$tablet} {
+	.c-referred-title-bar {
+		position: relative;
+		.c-printed-no {
+			position: absolute;
+			left: 0;
+			top: 0;
+			display: block;
+		}
+		.c-title {
+			float: left;
+			margin-left: 20%;
+			display: block;
+		}
+
+		.c-votes {
+			float: right;
+			width: 180px;
+			display: block;
+		}
+	}
+
+	.c-reference-block {
+		overflow: hidden;
+
+		.l-left {
+			position: absolute;
+			left: 0;
+			width: 70px;
+		}
+
+		.l-center {
+			float: left;
+			width: 340px;
+			margin-left: 20%;
+
+			.c-title {
+				margin-top: 0;
+			}
+		}
+
+		.l-right {
+			float: right;
+			width: 150px;
+			margin-right: 30px;
+		}
+	}
+}

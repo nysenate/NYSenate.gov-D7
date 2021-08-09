@@ -1,0 +1,5 @@
+Upgrading from 7.x-1.x to 7.x-2.x is not yet possible. If you were
+using 7.x-1.x you will need to disable and uninstall 7.x-1.x, then
+enable 7.x-2.x and re-create your configuration.
+
+For more information see https://www.drupal.org/node/2027019

@@ -1,0 +1,135 @@
+<?php
+
+/**
+ * @file
+ * Session API provides an interface for storing information in the session.
+ */
+
+/**
+ * Determine if Session API is available by checking if cookies are enabled.
+ */
+function session_api_available() {
+  return !empty($_COOKIE);
+}
+
+/**
+ * Create an empty string cookie.
+ *
+ * This is useful for fooling the session_api_available() function when using
+ * Pressflow, which does not set a cookie for anonymous users.
+ */
+function session_api_start_session() {
+  $_SESSION[session_api_get_cookie_name()] = '';
+  drupal_session_start();
+}
+
+/**
+ * Returns the current session's Session ID.
+ *
+ * @param bool $create
+ *   (optional) A boolean indicating whether the session needs to be created if
+ *   it doesn't exist yet. Defaults to TRUE.
+ *
+ * @return
+ *   Returns a positive integer with the Session ID when it exists. If not,
+ *   there are 2 possible return values:
+ *   - -1. This indicates that no session exists and none was created.
+ *   - FALSE. This indicates that Session API is unavailable.
+ *
+ * @see drupal_session_initialize()
+ */
+function session_api_get_sid($create = TRUE) {
+  $sid = &drupal_static(__FUNCTION__);
+
+  if ($create) {
+    // Must initialize sessions for anonymous users.
+    session_api_start_session();
+  }
+
+  if (!session_api_available()) {
+    return FALSE;
+  }
+
+  if (!isset($sid) || !$sid) {
+    $sid = FALSE;
+
+    // First, check if we already have an active session.
+    if (isset($_COOKIE[session_api_get_cookie_name()]) && $_COOKIE[session_api_get_cookie_name()]) {
+      $session_id = $_COOKIE[session_api_get_cookie_name()];
+    }
+    // If the caller doesn't want to create a new session if it didn't exist,
+    // then return here.
+    elseif (!$create) {
+      // Return a negative value here, since it won't collide with any
+      // session_api IDs.
+      return -1;
+    }
+    else {
+      $session_id = drupal_hash_base64(uniqid(mt_rand(), TRUE));
+    }
+
+    // Set expiration time. If 0, the cookie will expire when the session ends
+    // (i.e, when the browser closes).
+    $expire = variable_get('session_api_cookie_expire_time', 2592000);
+    $expire_timestamp = ($expire == 0) ? 0 : REQUEST_TIME + $expire;
+
+    // Update the session timeout.
+    db_merge('session_api')
+      ->key(array('session_id' => $session_id))
+      ->fields(array('timestamp' => REQUEST_TIME))
+      ->execute();
+
+    // Retrieve the sid.
+    $query = db_select('session_api', 'sap');
+    $query->fields('sap', array('sid'));
+    $query->condition('session_id', $session_id);
+    $sid = $query->execute()->fetchField();
+
+    // Set cookie using the same domain that Drupal's own session cookie uses.
+    $cookie_domain = ini_get('session.cookie_domain');
+    setcookie(session_api_get_cookie_name(), $session_id, $expire_timestamp, '/', $cookie_domain);
+  }
+
+  return $sid;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function session_api_menu() {
+  $items['admin/config/development/session-api'] = array(
+    'title' => 'Session API Configuration',
+    'description' => 'Configure Session API behavior.',
+    'access arguments' => array('administer site configuration'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('session_api_settings_form'),
+    'file' => 'session_api.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_cron().
+ */
+function session_api_cron() {
+  // Fetch list of outdated sids.
+  $query = db_select('session_api', 'sap');
+  $query->fields('sap', array('sid'));
+  $query->condition('sap.timestamp', REQUEST_TIME - variable_get('session_api_cookie_purge_time', 2592000), '<');
+  $outdated_sids = $query->execute()->fetchCol();
+
+  if (!empty($outdated_sids)) {
+    module_invoke_all('session_api_cleanup', $outdated_sids);
+    db_delete('session_api')
+      ->condition('sid', $outdated_sids)
+      ->execute();
+  }
+}
+
+/**
+ * Get Cookie name to use for this module.
+ */
+function session_api_get_cookie_name() {
+  return variable_get('session_api_cookie_name', 'session_api_session');
+}

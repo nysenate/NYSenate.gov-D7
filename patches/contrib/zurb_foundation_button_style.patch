@@ -1,0 +1,28 @@
+diff --git a/inc/form.inc b/inc/form.inc
+index 4794a3d..c5f8daf 100644
+--- a/inc/form.inc
++++ b/inc/form.inc
+@@ -21,11 +21,6 @@ function zurb_foundation_form_alter(&$form, &$form_state, $form_id) {
+     $form['actions']['#theme_wrappers'] = array();
+   }
+ 
+-  // Sexy submit buttons
+-  if (!empty($form['actions']) && !empty($form['actions']['submit'])) {
+-    $form['actions']['submit']['#attributes'] = array('class' => array('secondary', 'button', 'radius'));
+-  }
+-
+   // Search Block Fixes
+   if (isset($form['#form_id']) && ($form['#form_id'] == 'search_block_form')) {
+     $form['search_block_form']['#attributes']['class'] = array('small-8', 'columns');
+@@ -122,11 +117,6 @@ function zurb_foundation_button($variables) {
+   $label = check_plain($element['#value']);
+   element_set_attributes($element, array('id', 'name', 'value', 'type'));
+ 
+-  $element['#attributes']['class'][] = 'form-' . $element['#button_type'];
+-  if (!empty($element['#attributes']['disabled'])) {
+-    $element['#attributes']['class'][] = 'form-button-disabled';
+-  }
+-
+   // Prepare input whitelist - added to ensure ajax functions don't break
+   $whitelist = _zurb_foundation_element_whitelist();
+ 

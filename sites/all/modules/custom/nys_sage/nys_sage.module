@@ -1,0 +1,269 @@
+<?php
+/**
+ * @file
+ * This module contains code to implement and consume SAGE API.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function nys_sage_menu() {
+  $items = [];
+
+  // Admin page menu item.
+  $items['admin/config/services/sage'] = [
+    'title' => 'SAGE Configuration',
+    'description' => 'Allows for configuration of calls to the SAGE API.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['nys_sage_sagemenu'],
+    'access arguments' => ['administer nys sage'],
+    'file' => 'inc/nys_sage.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  ];
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_permission().
+ */
+function nys_sage_permission() {
+  return [
+    'administer nys sage' => [
+      'title' => t('Administer SAGE Settings'),
+      'description' => t('Administer SAGE settings for NY State Senate'),
+    ],
+  ];
+}
+
+/**
+ * Implements hook_cron().
+ */
+function nys_sage_cron() {
+  $days = (int) variable_get('nys_sage_maximum_retention', 0);
+  if ($days) {
+    try {
+      db_delete('nys_sage_log')
+        ->condition('timestamp', time() - (86400 * $days), '<')
+        ->execute();
+    }
+    catch (Exception $e) {
+      watchdog('nys_sage', 'Failed to trim nys_sage_log table!', ['msg' => $e->getMessage()], WATCHDOG_WARNING);
+    }
+  }
+}
+
+/**
+ * Populates defaults for particular fields in the log row.
+ *
+ * @return array|mixed
+ */
+function _nys_sage_default_log_values() {
+  // Specific non-value placeholders for some fields.
+  return [
+    'success' => 'NO_STATUS',
+    'email' => 'NO_EMAIL',
+    'district' => 0,
+    'form_data' => '',
+    'timestamp' => REQUEST_TIME,
+    'matchlevel' => 'N/A',
+    'is_validated' => 0,
+    'url' => 'NO_URL',
+    'response' => 'NO_RESPONSE',
+    'headers' => $_SERVER,
+  ];
+}
+
+/**
+ * Responsible for constructing the full URL used to call the API.
+ * TODO: This should be task-map aware WRT $action.
+ *
+ * @param string $action The API endpoint to call.
+ *
+ * @return string
+ */
+function nys_sage_construct_url($action = 'district/assign') {
+  $protocol = variable_get('nys_sage_use_ssl', FALSE) ? 'https' : 'http';
+  $base_uri = trim(variable_get('nys_sage_api_endpoint'), '/');
+
+  return $protocol . '://' . $base_uri . '/' . trim($action, '/');
+}
+
+/**
+ * Handles insert a log entry for SAGE returns.
+ *
+ * @param array $data
+ */
+function nys_sage_log($data = []) {
+  // Make sure logging is enabled and appropriate data has been passed.
+  if (variable_get('nys_sage_logging', FALSE) && is_array($data)) {
+    // Get the default log row values.
+    $log_fields = _nys_sage_default_log_values();
+
+    // Merge in the passed data.
+    foreach ($log_fields as $key => &$value) {
+      if (array_key_exists($key, $data) && !is_null($data[$key])) {
+        $value = $data[$key];
+      }
+    }
+
+    // Adjust fields that need it (e.g., JSON encoding).
+    $log_fields['form_data'] = json_encode($log_fields['form_data']);
+    $log_fields['headers'] = json_encode($log_fields['headers']);
+    // TODO: This one should be unnecessary after schema is restored in stage 2.
+    $log_fields['is_validated'] = (int) $log_fields['is_validated'];
+
+    // Make sure the autonumber field is not set.
+    if (array_key_exists('sage_id', $log_fields)) {
+      unset($log_fields['sage_id']);
+    }
+
+    // Insert the log row.
+    try {
+      $new_record_id = db_insert('nys_sage_log')
+        ->fields($log_fields)
+        ->execute();
+    }
+    catch (Exception $e) {
+      watchdog('nys_sage', 'Failed to insert SAGE log record', ['fields' => $log_fields], WATCHDOG_WARNING);
+    }
+  }
+}
+
+/**
+ * Calls the SAGE API using the passed identity information. Note that the
+ * entire $data parameter is encoded and sent to SAGE.  Extraneous data points
+ * should be avoided.
+ *
+ * @param string $action The API endpoint to call.
+ * @param array $data The data to send as POST parameters.
+ * @param boolean $refresh If true, cached response is ignored.
+ *
+ * @return object The response object (may include HTTP response object as a
+ *   property)
+ */
+function nys_sage_call_api($data, $action = 'district/assign', $refresh = FALSE) {
+  nyslog();
+
+  // Keep a cache of calls.
+  $completed_calls = &drupal_static(__FUNCTION__);
+
+  if (!is_array($data)) {
+    $data = (array) $data;
+  }
+
+  // Save the email, if available.
+  $saved_email = array_key_exists('email', $data) ? $data['email'] : 'NO_EMAIL';
+  unset($data['email']);
+
+  // FIX 2019-06-11: Adding districtStrategy to avoid using shape file data.
+  $data['districtStrategy'] = 'streetFallback';
+
+  // FIX 2020-01-30: SAGE now requires web site calls to use an API key.
+  $apikey = variable_get('nys_sage_api_key', FALSE);
+  if ($apikey) {
+    $data['key'] = $apikey;
+  }
+  else {
+    watchdog('nys_sage', 'No API key is configured for SAGE requests.', [], WATCHDOG_WARNING);
+  }
+
+  // Build the query data and check for a cached response.
+  // TODO: need a way to set required data points per call \/\/\/
+  $params = drupal_http_build_query($data);
+
+  // If no cached response, or if response needs refreshing, build and execute the call.
+  if (!isset($completed_calls[$params]) || $refresh) {
+    // Build the query data and execute the call.
+    $url = nys_sage_construct_url($action);
+    $full_url = $url . '?' . $params;
+
+    $c = curl_init();
+    curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($c, CURLOPT_URL, $full_url);
+    if (!variable_get('nys_sage_ssl_verifypeer', TRUE)) {
+      curl_setopt($c, CURLOPT_SSL_VERIFYPEER, 0);
+    }
+    $response = curl_exec($c);
+    curl_close($c);
+    $ret = json_decode($response);
+
+    // Get the "acceptable match" finding.
+    $ret->acceptableMatch = nys_sage_calculate_acceptable_match($ret);
+    $district_number = 0;
+
+    if ($ret->acceptableMatch) {
+      // If a district was assigned, load the senator also.
+      $district_number = (property_exists($ret->districts->senate, 'district'))
+        ? (int) $ret->districts->senate->district
+        : 0;
+      if ($district_number) {
+        $ret->senator = nys_utils_get_senator_from_district_id($district_number);
+      }
+    }
+    // TODO: need a way to set required data points per call ^^^^^^^^^^
+
+    // Log call and response.
+    $log_data = [
+      'success' => $ret->status,
+      'email' => $saved_email,
+      'district' => $district_number,
+      'matchlevel' => $ret->matchLevel,
+      'is_validated' => $ret->uspsValidated,
+      'url' => $full_url,
+      'headers' => $_SERVER,
+      'form_data' => $data,
+      'response' => $response,
+    ];
+    nys_sage_log($log_data);
+
+    // Cache the response.
+    $completed_calls[$params] = $ret;
+  }
+
+  return $completed_calls[$params];
+}
+
+/**
+ * Prepares a parameter array for a SAGE call from a form_state object.
+ *
+ * @param $form_data array|object containing the address information.
+ * @param $require_usps boolean forces the uspsValidate parameter.
+ *
+ * @return array An array populated with the required data points for an API
+ *   call.
+ */
+function nys_sage_prep_params($form_data, $require_usps = TRUE) {
+  nyslog();
+  if (is_object($form_data)) {
+    $form_data = (array) $form_data;
+  }
+  $params = [
+    'addr1' => $form_data['street'],
+    'addr2' => $form_data['additional'],
+    'city' => $form_data['city'],
+    'state' => $form_data['province'],
+    'zip5' => $form_data['postal_code'],
+    'email' => $form_data['email'],
+    'uspsValidate' => $require_usps ? 'true' : 'false',
+  ];
+
+  return $params;
+}
+
+/**
+ * Contains the logic used to determine if the district assignment returned by
+ * SAGE is considered acceptable.  This logic is per our internal requirements
+ * at NYS.
+ *
+ * @param $json object The JSON response object, decoded from SAGE's text
+ *   response.
+ *
+ * @return bool
+ */
+function nys_sage_calculate_acceptable_match($json) {
+  return (
+    ($json->uspsValidated || $json->matchLevel == 'HOUSE')
+    && $json->status == 'SUCCESS'
+  );
+}

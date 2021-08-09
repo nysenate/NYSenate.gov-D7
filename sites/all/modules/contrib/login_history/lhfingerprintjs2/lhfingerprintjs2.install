@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Schema and updates for Login History Fingerprintjs2 integration.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function lhfingerprintjs2_schema() {
+  $schema['lhfingerprintjs2'] = array(
+    'description' => 'Stores additional js based data about logins.',
+    'fields' => array(
+      'login_id' => array(
+        'description' => 'The current {login_history}.login_id identifier.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'fingerprintjs2' => array(
+        'description' => 'A JSON blob of data detected by lhfingerprintjs2.',
+        'type' => 'text',
+        'size' => 'medium',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('login_id'),
+  );
+  return $schema;
+}

@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function lhtest_menu() {
+  $items['lhtest/delete-cookies'] = array(
+    'title' => 'Delete all the cookies',
+    'page callback' => '_lhtest_delete_all_cookies',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Menu callback to delete some cookies. And talk about it.
+ */
+function _lhtest_delete_all_cookies() {
+  $output = '';
+  if (isset($_SERVER['HTTP_COOKIE'])) {
+    $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
+    foreach ($cookies as $cookie) {
+      $parts = explode('=', $cookie);
+      $name = trim($parts[0]);
+      $output .= "<br/> unsetting $name <br/>";
+      setcookie($name, '', time() - 3600);
+      setcookie($name, '', time() - 3600, '/');
+    }
+  }
+
+
+  return $output;
+}

@@ -1,0 +1,70 @@
+<?php
+/**
+ * @file
+ * Charts module integration with Highcharts library.
+ */
+
+/**
+ * Implements hook_charts_info().
+ */
+function charts_highcharts_charts_info() {
+  $info['highcharts'] = array(
+    'label' => t('Highcharts'),
+    'render' => '_charts_highcharts_render',
+    'types' => array('area', 'bar', 'column', 'line', 'pie', 'scatter'),
+    'file' => 'charts_highcharts.inc',
+  );
+  return $info;
+}
+
+/**
+ * Implements hook_library().
+ */
+function charts_highcharts_library() {
+  if ($highcharts_info = libraries_detect('highcharts')) {
+    $library['highcharts'] = array(
+      'title' => t('Highcharts library'),
+      'website' => $highcharts_info['vendor url'],
+      'version' => $highcharts_info['version'],
+      'js' => array(
+        array('data' => $highcharts_info['library path'] . '/js/highcharts.js', 'type' => 'file'),
+      ),
+    );
+  }
+  $library['charts_highcharts'] = array(
+    'title' => t('Highcharts integration'),
+    'version' => '1.0',
+    'js' => array(
+      array('data' => drupal_get_path('module', 'charts_highcharts') . '/charts_highcharts.js', 'type' => 'file'),
+    ),
+    'dependencies' => array(
+      array('charts_highcharts', 'highcharts'),
+    ),
+  );
+
+  return $library;
+}
+
+/**
+ * Implements hook_libraries_info().
+ *
+ * Note that this is hook_libraries_info(), provided by libraries.module, rather
+ * than hook_library() provided by core.
+ */
+function charts_highcharts_libraries_info() {
+  $libraries['highcharts'] = array(
+    'name' => t('Highcharts'),
+    'vendor url' => 'http://www.highcharts.com',
+    'download url' => 'http://www.highcharts.com/download',
+    'version arguments' => array(
+      'file' => 'highcharts.js',
+      // 3.x.x
+      'pattern' => '/v(\d+\.\d+\.\d)/',
+      'lines' => 5,
+    ),
+    'files' => array(
+      'js' => array('js/highcharts.js'),
+    ),
+  );
+  return $libraries;
+}

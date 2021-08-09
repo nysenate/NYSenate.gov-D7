@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Provides testing functionality.
+ */
+
+/**
+ * Implements hook_pre_emit_cache_tags_alter().
+ */
+function pantheon_advanced_page_cache_test_pre_emit_cache_tags_alter(&$tags) {
+  // This is a contrived example of how custom code can be used
+  // to limit a giant list of tags.
+  // In this case, automated Behat tests generate nodes
+  // tagged in 100s of taxonomy terms each. Then when
+  // those nodes are rendered on a view like frontpage
+  // they result in too many total surrogate-keys being set.
+  if (in_array("views:frontpage.page", $tags)) {
+    $new_tags = array();
+    foreach ($tags as $tag) {
+      if (strpos($tag, "taxonomy_term:") === FALSE) {
+        $new_tags[] = $tag;
+      }
+    }
+    $tags = $new_tags;
+  }
+}

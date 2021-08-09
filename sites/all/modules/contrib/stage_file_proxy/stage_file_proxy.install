@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Stage File Proxy module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function stage_file_proxy_uninstall() {
+  variable_del('stage_file_proxy_origin');
+  variable_del('stage_file_proxy_use_imagecache_root');
+  variable_del('stage_file_proxy_hotlink');
+  variable_del('stage_file_proxy_origin_dir');
+  variable_del('stage_file_proxy_sslversion');
+  variable_del('stage_file_proxy_excluded_extensions');
+}

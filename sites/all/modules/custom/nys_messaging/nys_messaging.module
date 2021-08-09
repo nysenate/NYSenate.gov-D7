@@ -1,0 +1,601 @@
+<?php
+
+
+/**
+ * Declare what blocks are provided by this module.
+ * Implements hook_block_info().
+ */
+function nys_messaging_block_info(){
+  $blocks['senator_contact'] = array(
+      'info' => t('Contact Your Senator Block'),
+      'cache' => DRUPAL_CACHE_PER_USER,
+  );
+   $blocks['senator_message'] = array(
+      'info' => t('Message Your Senator Block'),
+      'cache' => DRUPAL_CACHE_PER_USER,
+  );
+  return $blocks;
+}
+ 
+/**
+ * Implements hook_block_view().
+ */
+function nys_messaging_block_view($delta = '') {
+  switch ($delta) {
+    case 'senator_contact':
+      $form = drupal_get_form('nys_messaging_senator_contact_form');
+      $block['content'] = drupal_render($form);
+      break;
+     case 'senator_message':
+      $form = drupal_get_form('nys_messaging_senator_message_form');
+      $block['content'] = drupal_render($form);
+      break;
+  }
+  return $block;
+}
+
+function _nys_messaging_contact_your_senator_block_content() {
+  return 'test';
+}
+
+
+
+/**
+* Implements hook_form_FORM_ID_alter
+*/
+function nys_messaging_form_contact_personal_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('First name'),
+    '#maxlength' => 255,
+    '#required' => TRUE,
+  );
+  $form['last_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Last name'),
+    '#maxlength' => 255,
+    '#required' => TRUE,
+  );  
+  $form['mail'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Your e-mail address'),
+    '#maxlength' => 255,
+    '#default_value' => $user->uid ? $user->mail : '',
+    '#required' => TRUE,
+  );
+  $form['phone'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Phone Number (Optional)'),
+    '#maxlength' => 255,
+  );
+  $form['subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject'),
+    '#maxlength' => 50,
+    '#required' => TRUE,
+  );
+  $form['message'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Message'),
+    '#rows' => 15,
+    '#required' => TRUE,
+  );
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Send message'),
+  );
+
+  $form['#submit'][] = 'personal_contact_form_redirect';
+  $form['#validate'][] = 'site_contact_form_validate';
+
+  //Getting the URL from where the user access this form and proccessing it to use it in redirection on submit (personal_contact_form_redirect())
+  if($_SERVER["HTTP_REFERER"] != "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]")
+    $form['refuri'] = array(
+      '#type' => 'hidden',
+      '#value' => $_SERVER["HTTP_REFERER"],
+    );
+  else 
+    $form['refuri'] = array(
+      '#type' => 'hidden',
+      '#value' => $form_state['input']['refuri'],
+    );
+
+  unset($form['to']);
+  unset($form['copy']);
+}
+
+/**
+* Implements hook_form_FORM_ID_alter
+*/
+function nys_messaging_form_contact_site_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('First name'),
+    '#maxlength' => 255,
+    '#required' => TRUE,
+  );
+  $form['last_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Last name'),
+    '#maxlength' => 255,
+    '#required' => TRUE,
+  );  
+  $form['mail'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Your e-mail address'),
+    '#maxlength' => 255,
+    '#default_value' => $user->uid ? $user->mail : '',
+    '#required' => TRUE,
+  );
+  $form['phone'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Phone Number (Optional)'),
+    '#maxlength' => 255,
+  );
+  $form['subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject'),
+    '#maxlength' => 50,
+    '#required' => TRUE,
+  );
+  $form['message'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Message'),
+    '#rows' => 15,
+    '#required' => TRUE,
+  );
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Send message'),
+  );
+  $form['cid']['#type'] = 'radios';
+  $form['cid']['#title'] = '';
+  $form['cid']['#required'] = FALSE;
+
+  $form['#submit'][] = 'site_contact_form_redirect';
+  $form['#validate'][] = 'site_contact_form_validate';
+
+}
+
+function site_contact_form_redirect($form, &$form_state) {
+  $form_state['redirect'] = array("thanks/site_contact");
+}
+
+function personal_contact_form_redirect($form, &$form_state) {
+  if(strpos($form_state['values']['refuri'],$_SERVER['HTTP_HOST']) !== false)
+    $form_state['redirect'] = array($form_state['values']['refuri']);
+}
+
+function site_contact_form_validate($form, &$form_state) {
+  if(!ctype_alpha($form_state['values']['name']))
+    form_set_error('name', t('You must enter only alphabetical characters'));
+  if(!ctype_alpha($form_state['values']['last_name']))
+    form_set_error('last_name', t('You must enter only alphabetical characters'));
+}
+
+/**
+ * Implements hook_theme().
+ */
+function nys_messaging_theme() {
+  return array(
+    'contact_personal_form' => array(
+        'render element' => 'form',
+        'template' => 'contact-personal-form',
+        'path' => drupal_get_path('theme', 'nysenate') . '/templates/contact',
+    ),
+    'contact_site_form' => array(
+        'render element' => 'form',
+        'template' => 'contact-site-form',
+        'path' => drupal_get_path('theme', 'nysenate') . '/templates/contact',
+    ),
+    'nys_messaging_senator_contact_form' => array(
+        'render element' => 'form',
+        'template' => 'nys-messaging-senator-contact-form',
+        'path' => drupal_get_path('module', 'nys_messaging') . '/templates/contact',
+    ),
+    'nys_messaging_senator_message_form' => array(
+        'render element' => 'form',
+        'template' => 'nys-messaging-senator-message-form',
+        'path' => drupal_get_path('module', 'nys_messaging') . '/templates/contact',
+    ),
+  );
+}
+
+
+/**
+ * Implements hook_mail()
+ * @param 
+ *   type $key to decide which email body to sent on basis of key parameter inacese of multiple email content
+ * @param 
+ *   type $message the email content to be sent.Message array contains 'subject and body ' for the email.
+ * @param 
+ *   type $params using to get the custom email content from a function.  This can be used in my other ways also as per need.
+ */
+function nys_messaging_mail($key, &$message, $params) {
+  $language = $message['language'];
+
+  // take a few defaults from the passed parameters
+  $message['body'][] = $params['body'];
+  if (isset($params['subject'])) {
+    $message['subject'] = $params['subject'];
+  }
+  if (isset($params['content-type'])) {
+    $message['headers']['Content-Type'] = $params['content-type'];
+  }
+
+  // customize by $key
+  switch ($key) {
+    //switching on $key lets you create variations of the email based on the $key parameter
+    case 'senator_contact_mail':
+      $message['subject'] = t('NYSenate.gov - New Contact Form Submission');
+      //the email body is here, inside the $message array
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed';
+      break;
+  }
+}
+
+function nys_messaging_init() {
+  if(arg(2) == 'message') {
+    module_load_include('inc', 'nys_inbox', 'nys_inbox.forms');
+    module_load_include('inc', 'privatemsg', 'privatemsg.pages');
+  }
+}
+
+/**
+ * fucntion to return custom private msg form on menu callback
+ * @param 
+ *   type $form an array consists of form fields
+ * @param 
+ *   type $form_state an array consists of form fields values input a user
+ * @return 
+ *   $form returns array of dorm fields.
+ */
+function nys_messaging_senator_message_form($form, &$form_state) {
+  $senator = node_load(arg(1));
+  
+  if(isset($senator->field_user_account[LANGUAGE_NONE][0]['target_id'])) {
+    $recipient_id = $senator->field_user_account[LANGUAGE_NONE][0]['target_id'];
+  }
+
+  if(!isset($recipient_id)) {
+    drupal_set_message(t('We are having trouble locating your senator'), 'error');
+    return $form;
+  }
+
+  if (!$GLOBALS['user']->uid) {
+    drupal_goto('/registration/nojs/form/start/message-senator', ['query' => ['senator' => $senator->nid]]);
+  }
+
+  $form = array();
+
+  $form['to'] = array(
+    '#type'               => 'textfield',
+    '#title'              => t('To'),
+    '#default_value'      => t('Senator ') . $senator->title,
+    '#weight'             => -10,
+    '#size'               => 50,
+    '#disabled'           => TRUE,
+    '#weight'             => -10,
+  );
+
+  $form['recipient_uid'] = array(
+    '#type'               => 'hidden',
+    '#value'              => $recipient_id,
+    '#weight'             => -9
+  );
+  
+  $form['context'] = array(
+    '#type'  => 'hidden',
+    '#value' => 'nys_messaging_senator_message_form',
+
+  );
+  
+  $form['subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject'),
+    '#default_value' => '',
+    '#weight'        => -8
+  );
+  
+  $form['message'] = array(
+    '#title' => 'Message',
+    '#type' => 'textarea',
+    '#rows' => 5,
+    '#default_value' => '',
+    '#weight'             => -7
+  );
+  
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Send Message'),
+    '#weight'             => -6,
+  );
+
+  $form['#validate'] = array('nys_messaging_senator_message_form_validation');
+  $form['#submit'] = array('nys_inbox_message_form_submit');
+  
+  $form['#attached']['js'] = array(
+    drupal_get_path('module', 'nys_messaging') . '/nys-messaging.js',
+  );
+
+
+  return $form;
+
+}
+
+/**
+ * validation function for custom form
+ * check for vadlidation for email address.
+ * @param type $form
+ * @param type $form_state 
+ */
+function nys_messaging_senator_message_form_validation($form, &$form_state) {
+
+  if (empty($form_state['input']['subject'])) {
+    form_set_error('subject', t('Subject cannot be left blank.'));
+  }
+  else if (empty($form_state['input']['message'])) {
+    form_set_error('message', t('Message cannot be left blank.'));
+  }
+
+}
+
+/**
+ * function to return custom contact form on menu callback
+ * @param 
+ *   type $form an array consists of form fields
+ * @param 
+ *   type $form_state an array consists of form fields values input a user
+ * @return 
+ *   $form returns array of dorm fields.
+ */
+function nys_messaging_senator_contact_form($form, &$form_state) {
+  global $user;
+
+  $senator = node_load(arg(1));
+  $vitals = user_load($user->uid);
+  $recipient_id = nys_utils_senator_get_uid($senator->nid);
+  $recipient = user_load($recipient_id);
+
+  $form = array();
+  $form['senator_uid'] = array(
+    '#type' => 'hidden',
+    '#default_value' => $recipient_id ? $recipient_id : '',
+  ); 
+  $form['recipient'] = array(
+    '#type' => 'hidden',
+    '#default_value' => $senator->title ? $senator->title : '',
+  );  
+  
+  $form['inquiry_type'] = array(
+    '#type' => 'radios',
+    '#default_value' => 'General Inquiry',
+    '#options' => array(
+      'General Inquiry' => t('General Inquiry'), 
+      'Press Inquiry' => t('Press Inquiry')
+    ),
+  );
+  
+  $form['first_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('First name'),
+    '#maxlength' => 255,
+    '#required' => TRUE,
+    '#default_value' =>  !empty($vitals->field_first_name[LANGUAGE_NONE][0]['value']) ? $vitals->field_first_name[LANGUAGE_NONE][0]['value'] : '',
+  );
+
+  $form['last_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Last name'),
+    '#maxlength' => 255,
+    '#required' => TRUE,
+    '#default_value' => !empty($vitals->field_last_name[LANGUAGE_NONE][0]['value']) ? $vitals->field_last_name[LANGUAGE_NONE][0]['value'] : '',
+  );  
+
+  $form['from_email'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Your e-mail address'),
+    '#maxlength' => 255,
+    '#default_value' => $user->uid ? $user->mail : '',
+    '#required' => TRUE,
+  );
+
+  $form['phone'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Phone Number (Optional)'),
+    '#maxlength' => 255,
+  );
+
+  $form['subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject'),
+    '#maxlength' => 50,
+    '#required' => TRUE,
+  );
+
+  $form['email_body'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Message'),
+    '#rows' => 10,
+    '#required' => TRUE,
+  );
+
+  $form['address'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Street Address'),
+    '#maxlength' => 255,
+    '#default_value' => !empty($vitals->field_address[LANGUAGE_NONE][0]['street']) ? $vitals->field_address[LANGUAGE_NONE][0]['street'] : '',
+    '#required' => TRUE,
+  );
+  
+  $form['city'] = array(
+    '#type' => 'textfield',
+    '#title' => t('City'),
+    '#maxlength' => 255,
+    '#default_value' => !empty($vitals->field_address[LANGUAGE_NONE][0]['city']) ? $vitals->field_address[LANGUAGE_NONE][0]['city'] : '',
+    '#required' => TRUE,
+  );
+  
+  $form['zip'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Zip'),
+    '#maxlength' => 5,
+    '#default_value' => !empty($vitals->field_address[LANGUAGE_NONE][0]['postal_code']) ? $vitals->field_address[LANGUAGE_NONE][0]['postal_code'] : '',
+    '#required' => TRUE,
+  );
+
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Send message'),
+  );
+  
+  $form['#attached']['js'] = array(
+    drupal_get_path('module', 'nys_messaging') . '/nys-messaging.js',
+  );
+
+  $form['#validate'] = array('nys_messaging_senator_contact_form_validation');
+
+  return $form;
+  
+}
+
+/**
+ * validation function for custom form
+ * check for vadlidation for email address.
+ * @param type $form
+ * @param type $form_state 
+ */
+function nys_messaging_senator_contact_form_validation($form, &$form_state) {
+
+  $from_email = $form_state['values']['from_email'];
+
+  if (!valid_email_address($from_email)) {
+    form_set_error('from_email', t('Please enter a valid email address.'));
+  }
+
+}
+
+/**
+ * Handle email contact for submissions for senators
+ * @param type $form
+ * @param type $form_state
+ */
+function nys_messaging_senator_contact_form_submit($form, &$form_state) {
+  // Get the node ID for the submitted form and ensure it is a senator node.
+  $senator = node_load(arg(1));
+  $recipient = user_load(nys_utils_senator_get_uid($senator->nid));
+
+  if (user_is_senator($recipient)) {
+    // Determine the proper email address.
+    $to = '';
+    if ($form_state['values']['inquiry_type'] == 'Press Inquiry') {
+      $to = field_get_items('node', $senator, 'field_press_inquiries');
+      $to = isset($to[0]['value']) ? $to[0]['value'] : NULL;
+    }
+    if (!$to) {
+      $to = $recipient->mail;
+    }
+
+    // Prepare the email content from the form submission.
+    $email_content = nys_messaging_get_mail_content($form_state);
+    $params = array('body' => $email_content);
+    $key = 'senator_contact_mail';
+    $from = $form_state['values']['from_email'];
+
+    // Send the email.
+    $mail = drupal_mail('nys_messaging', $key, $to, language_default(), $params, $from);
+    drupal_set_message("Your message has been submitted to the Senator.");
+    $_SESSION['nys_captcha_senator_contact_submitted'] = 1;
+
+    // Check for an autoreply text.  If present, send the autoreply as a separate email.
+    if ($senator->field_email_autoreply_text) {
+      _nys_messaging_send_contact_autoreply($senator, $form_state);
+    }
+
+    // Fire hook_nys_messaging_contact_message_sent().
+    foreach (module_implements('nys_messaging_contact_message_sent') as $module) {
+      $function = $module . '_nys_messaging_contact_message_sent';
+      // will call all modules implementing hook_hook_name
+      // and can pass each argument as reference determined
+      // by the function declaration
+      $function($form_state['values'], $mail);
+    }
+  }
+}
+
+
+/**
+ * function to get the html formatted email content
+ * @param 
+ *   type $form_state to get values from form fields.
+ * @return 
+ *   $body type string return the html email content 
+ */
+function nys_messaging_get_mail_content($form_state) {
+
+  $find_my_senator_uri = "http://".$_SERVER['HTTP_HOST']."/find-my-senator?search=true".'&addr1=' . urlencode($form_state['values']['address']) . '&city=' . urlencode($form_state['values']['city']) . '&zip5=' . urlencode($form_state['values']['zip']);
+
+  $body = '';
+  $body .= 'Sen. ' . $form_state['values']['recipient'] . ', <br /><br />';
+  $body .= 'You have received a ' . strtolower($form_state['values']['inquiry_type']) .' from your contact form at ' . "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] . ': <br /><br />';
+  $body .= $form_state['values']['email_body'] . '<br /><br />';
+  $body .= 'Name: ' . $form_state['values']['first_name'] . ' ' . $form_state['values']['last_name'] .'<br />';
+  $body .= 'Phone: ' . $form_state['values']['phone'] . '<br />';
+  $body .= 'Email: ' . $form_state['values']['from_email'] . '<br />';
+  $body .= 'Street: ' . $form_state['values']['address'] . '<br />';
+  $body .= 'City: ' . $form_state['values']['city'] . '<br />';
+  $body .= 'Zip: ' . $form_state['values']['zip'] . '<br />';
+  $body .= 'SD for postal address: <a href="'. $find_my_senator_uri .'">' . $find_my_senator_uri. '</a><br />';
+
+  return $body;
+}
+
+/**
+ * Implements hook_form_alter.
+ */
+function nys_messaging_form_alter(&$form, &$form_state, $form_id) {
+  if (arg(0) == 'node' && is_numeric(arg(1)) && path_is_admin(current_path()) != 1) {
+    $node = menu_get_object();
+    if (isset($node->type) && $node->type == 'questionnaire') {
+
+      if (isset($form['#node']->webform['nid'])) {
+        // Change the form submit URL when the webform is being embedded in a questionnaire page.
+        $form['#action'] = '/' . drupal_get_path_alias(current_path());
+        $form['#node']->webform['redirect_url'] = '/' . drupal_get_path_alias(current_path());
+        if (!isset($form['#node']->webform['confirmation'])) {
+          $form['#node']->webform['confirmation'] = '<p>Thank you for the submission!</p>';
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Send email auto-reply from senator to user.
+ * @param
+ *   type $senator node object for the senator.
+ * @param 
+ *   type $form_state to get values from form fields.
+ */
+function _nys_messaging_send_contact_autoreply($senator, $form_state) {
+  // Load the node associated with $senator.
+  // Prepare some references.
+  $mail_body = field_get_items('node', $senator, 'field_email_autoreply_text')[0]['value'];
+
+  // Prepare the mail parameters.
+  $mail_params = array(
+    'body' => nl2br($mail_body),
+    'subject' => "[NYSenate.gov] RE:" . $form_state['values']['subject'],
+    'content-type' => 'text/html; charset=UTF-8; format=flowed',
+  );
+
+  // Send the email.
+  $one_message = drupal_mail('nys_messaging',
+                             "autoreply_notification",
+                             $form_state['values']['from_email'],
+                             language_default(),
+                             $mail_params
+                            );
+}

@@ -1,0 +1,5 @@
+name = NYS Legislation Explorer
+package = NY STATE SENATE
+description = "module for pages for searching open leg"
+core = 7.x
+dependencies[] = nys_sage

@@ -1,0 +1,29 @@
+.c-video-container {
+	.c-video {
+		width: 100%;
+		display: block;
+	}
+
+	.c-tag-list {
+		margin-top: 20px;
+		list-style: none;
+
+		.c-tag {
+			float: left;
+			margin-right: 14px;
+			text-transform: uppercase;
+			font-size: 10px;
+			font-family: 'Proxima Nova SemiBold';
+
+			.c-link {
+				@extend .lgt-text;
+				color: green;
+				text-decoration: none;
+			}
+		}
+	}
+}
+
+@media #{$tablet} {
+	
+}

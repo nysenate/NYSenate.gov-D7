@@ -1,0 +1,16 @@
+diff --git a/inc/sendgrid.mail.inc b/inc/sendgrid.mail.inc
+index 078066a..8e1dd73 100644
+--- a/inc/sendgrid.mail.inc
++++ b/inc/sendgrid.mail.inc
+@@ -83,11 +83,6 @@ class SendGridMailSystem implements MailSystemInterface {
+       $data['fromname'] = $sitename;
+     }
+ 
+-    // Check if $send is set to be true.
+-    if ($message['send'] != 1) {
+-      watchdog('SendGrid Integration', 'Email was not sent because send value was disabled', NULL, WATCHDOG_NOTICE, $link = NULL);
+-      return TRUE;
+-    }
+     // Build the Sendgrid mail object.
+     // The message MODULE and ID is used for the Category. Category is the only
+     // thing in the Sendgrid UI you can use to sort mail.

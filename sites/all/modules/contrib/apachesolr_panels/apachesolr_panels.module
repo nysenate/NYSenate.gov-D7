@@ -1,0 +1,157 @@
+<?php
+
+/**
+ * @file
+ * Integrates Apache Solr Search with Panels.
+ *
+ * Authors:
+ *   Joakim Stai (ximo) <http://drupal.org/user/88701)
+ *   Kevin Bridges (cyberswat) <http://drupal.org/user/27802>
+ */
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function apachesolr_panels_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'ctools' && !empty($plugin)) {
+    return "plugins/$plugin";
+  }
+}
+
+/**
+ * Implements hook_forms().
+ */
+function apachesolr_panels_forms() {
+  $forms['apachesolr_panels_search_form'] = array(
+    'callback' => 'apachesolr_panels_search_block',
+  );
+  return $forms;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function apachesolr_panels_block_info() {
+  $blocks['search_form']['info'] = t('Search form (Apache Solr Panels)');
+  $blocks['search_form']['cache'] = DRUPAL_NO_CACHE;
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function apachesolr_panels_block_configure($delta) {
+  switch ($delta) {
+    case 'search_form':
+      $form['search_page'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Path to search page'),
+        '#default_value' => variable_get('apachesolr_panels_search_page', ''),
+      );
+      return $form;
+  }
+}
+
+/**
+ * Implements hook_block_save().
+ */
+function apachesolr_panels_block_save($delta, $edit) {
+  switch ($delta) {
+    case 'search_form':
+    variable_set('apachesolr_panels_search_page', $edit['search_page']);
+    break;
+  }
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function apachesolr_panels_block_view($delta) {
+  if (($delta == 'search_form') && user_access('search content')) {
+    $block['content'] = drupal_get_form('apachesolr_panels_search_block');
+    $block['subject'] = t('Search');
+    return $block;
+  }
+}
+
+/**
+ * Output a search form for the search block, based on core's search box.
+ */
+function apachesolr_panels_search_block($form, &$form_state) {
+  $form = search_box($form, $form_state, 'apachesolr_panels_search_form');
+  $form['#submit'] = array('apachesolr_panels_search_block_form_submit');
+  return $form;
+}
+
+/**
+ * Process a block search form submission.
+ */
+function apachesolr_panels_search_block_form_submit($form, &$form_state) {
+  // Allow core to ensure we have control of the redirect destination.
+  $form_state['values']['search_block_form'] = $form_state['values']['apachesolr_panels_search_form'];
+  $form_state['values']['apachesolr_panels_search_block'] = $form_state['values']['apachesolr_panels_search_form'];
+  search_box_form_submit($form, $form_state);
+
+  // Redirect to the specified search page.
+  $path = variable_get('apachesolr_panels_search_page', '');
+  $form_state['redirect'] = $path . '/' . trim($form_state['values']['apachesolr_panels_search_form']);
+}
+
+/**
+ * Execute a Solr search.
+ *
+ * Using hook_search() would make this module a first-class search module
+ * alongside Apache Solr Search, which we don't want. Instead, we execute the
+ * search directly and imitate what the core Search module does.
+ *
+ * @see search_data()
+ */
+function apachesolr_panels_search_execute($search) {
+  // Store information about the search for use in other panes.
+  apachesolr_panels_static_search_cache($search);
+
+  $results = NULL;
+  try {
+    $solr = apachesolr_get_solr($search['env_id']);
+    $results = apachesolr_search_run('apachesolr', array_filter(array('q' => $search['keys'], 'fq' => $search['filters'], 'rows' => $search['rows'])), $search['sort'], $search['path'], $search['page'], $solr);
+  }
+  catch (Exception $e) {
+    watchdog('Apache Solr', nl2br(check_plain($e->getMessage())), NULL, WATCHDOG_ERROR);
+    apachesolr_failure(t('Solr search'), $search['keys']);
+  }
+
+  // Imitate search_data() to present the results as Apache Solr Search would.
+  if (is_array($results) && count($results)) {
+    if (module_hook('apachesolr_search', 'search_page')) {
+      return module_invoke('apachesolr_search', 'search_page', $results);
+    }
+    else {
+      return theme('search_results', array('results' => $results, 'module' => 'apachesolr_search'));
+    }
+  }
+}
+
+/**
+ * Store/fetch information about the executed search.
+ *
+ * The search will be stored by the "Search result" pane and fetched by the
+ * "Search form" and "Search information" panes.
+ */
+function apachesolr_panels_static_search_cache($search = NULL) {
+  static $_search = NULL;
+
+  if (!empty($search)) {
+    $_search = array(
+      'keys' => '',
+      'filters' => '',
+      'rows' => 10,
+      'env_id' => '',
+      'sort' => '',
+      'path' => '',
+      'page' => 0,
+    );
+    $_search = array_merge($_search, $search);
+  }
+
+  return $_search;
+}

@@ -1,0 +1,20 @@
+<?php
+
+class Redis_Tests_Cache_PhpRedisShardedFlushUnitTestCase extends Redis_Tests_Cache_FlushUnitTestCase
+{
+    public static function getInfo()
+    {
+        return array(
+            'name'        => 'PhpRedis cache flush (S)',
+            'description' => 'Tests Redis module cache flush modes feature.',
+            'group'       => 'Redis',
+        );
+    }
+
+    protected function getClientInterface()
+    {
+        $GLOBALS['conf']['redis_flush_mode'] = Redis_Cache::FLUSH_SHARD;
+
+        return 'PhpRedis';
+    }
+}

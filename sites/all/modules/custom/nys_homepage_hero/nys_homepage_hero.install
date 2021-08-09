@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Homepage Hero module.
+ */
+
+/**
+ * Implements hook_enable().
+ */
+function nys_homepage_hero_enable() {
+  // Initialize the config.
+  variable_set('homepage_hero_add_polling_js', 0);
+  variable_set('homepage_hero_session_in_progress', 0);
+  // Poll interval length before a session has begun in milliseconds. Defaults
+  // to 10 secs.
+  variable_set('homepage_hero_pre_session_poll_interval', 10000);
+  // Poll interval length while a session is active in milliseconds. Defaults
+  // to 10 mins.
+  variable_set('homepage_hero_active_session_poll_interval', 600000);
+  // The amount of time before a session is scheduled to begin to start client
+  // polling in seconds. Defaults to 2 hrs.
+  variable_set('homepage_hero_scheduled_interval', 7200);
+}

@@ -1,0 +1,14 @@
+.nys_looker_integration_status {
+  color: white;
+  max-width: 500px;
+  padding: .5em 1em;
+  margin: .2em 0;
+}
+
+.nys_looker_integration_fail {
+  background-color: #c00000;
+}
+
+.nys_looker_integration_ok {
+  background-color: darkgreen;
+}

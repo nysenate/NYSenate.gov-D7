@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * @file
+ * Primary hook implementations for the Imagecache Token module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function imagecache_token_menu() {
+  $items = array();
+
+  $items['admin/config/media/imagecache-token'] = array(
+    'title' => 'Imagecache Token',
+    'description' => 'Control which file and media fields contain images.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('imagecache_token_settings_form'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'imagecache_token.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_token_info_alter().
+ */
+function imagecache_token_token_info_alter(&$data) {
+  $fields = field_info_field_map();
+
+  // Check to see which fields are supported.
+  $supported = variable_get('imagecache_token_fields', array());
+  $supported = array_filter($supported);
+
+  foreach ($fields as $field_name => $field) {
+    $field['field_name'] = $field_name;
+    if ($field['type'] == 'image' || $field['type'] == 'file' || $field['type'] == 'media') {
+      foreach ($field['bundles'] as $entity_type => $bundles) {
+        foreach ($bundles as $bundle) {
+          // For 'file' and 'media' field types, it's possible that some fields
+          // won't actually contain images. In these scenarios, the fields must
+          // be enabled on the settings page.
+          if ($field['type'] == 'file' || $field['type'] == 'media') {
+            $key = $field['type'] . ':' . $field['field_name'] . ':' . $entity_type . ':' . $bundle;
+            if (empty($supported[$key])) {
+              continue;
+            }
+          }
+          $token_type = token_get_entity_mapping('entity', $entity_type);
+          if (!empty($data['tokens'][$token_type][$field['field_name']])) {
+            $data['tokens'][$token_type][$field['field_name']]['type'] = 'image-field';
+          }
+        }
+      }
+    }
+  }
+}

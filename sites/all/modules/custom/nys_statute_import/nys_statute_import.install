@@ -1,0 +1,162 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the location module.
+ */
+
+/**
+ * An implementation of hook_uninstall().
+ */
+function nys_statute_import_uninstall() {
+  // Delete variables.
+  variable_del(NYS_STATUTE_IMPORT_ALL_STOP);
+  variable_del(NYS_STATUTE_IMPORT_LAST_UPDATE_TIMETAMP);
+  variable_del(NYS_STATUTE_IMPORT_LAST_REPEAL_TIMETAMP);
+  variable_del(NYS_STATUTE_IMPORT_LAST_STRUCTURAL_TIMETAMP);
+}
+
+/**
+ * An implementation of hook_schema().
+ */
+function nys_statute_import_schema() {
+  $schema = array();
+  $schema['nys_statute_import_log'] = array(
+    'description' => 'Statute survey data from nys_statute_import.module.',
+    'fields' => array(
+      'olid' => array(
+        'description' => 'Primary Key: Unique openleg item.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'law_id' => array(
+        'description' => 'Open Leg Law id.',
+        'type' => 'varchar',
+        'length' => 24,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+      'parent_location_id' => array(
+        'description' => 'Open Leg Parent Location id.',
+        'type' => 'varchar',
+        'length' => 24,
+        'default' => '',
+        'not null' => FALSE,
+      ),
+      'doc_type' => array(
+        'description' => 'Open Leg Node type.',
+        'type' => 'varchar',
+        'length' => 24,
+        'default' => '',
+        'not null' => FALSE,
+      ),
+      'location_id' => array(
+        'description' => 'Open Leg Location id.',
+        'type' => 'varchar',
+        'length' => 24,
+        'default' => '',
+        'not null' => FALSE,
+      ),
+      'statute_id' => array(
+        'description' => 'Open Leg Law id / Location id ',
+        'type' => 'varchar',
+        'length' => 24,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+      'statute_nid' => array(
+        'description' => 'NY Senate Statute Node id.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'status' => array(
+        'description' => 'Status Description.',
+        'type' => 'varchar',
+        'length' => 24,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+      'timestamp' => array(
+        'description' => 'Time Stamp.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('olid'),
+  );
+
+  $schema['nys_statute_import_law_queue'] = array(
+    'description' => 'Statute structure update survey data from nys_statute_import.module.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'Primary Key: Unique law item.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'law_id' => array(
+        'description' => 'Open Leg Law id.',
+        'type' => 'varchar',
+        'length' => 24,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+      'status' => array(
+        'description' => 'Status Description.',
+        'type' => 'varchar',
+        'length' => 24,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+      'timestamp' => array(
+        'description' => 'Time Stamp.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Clean out duplicate url_aliases and content url_aliases.
+ * Implements hook_update_N().
+ */
+/*function nys_statute_import_update_7500() {
+  $default_maintenance_message = variable_get('maintenance_mode_message');
+  variable_set('maintenance_mode_message', 'NYSenate.gov is currently disabled for routine maintenance. Service should resume shortly. Please refresh this page after a few minutes.');
+  variable_set('maintenance_mode', 1);
+  nys_utils_send_slack_notification("NYSenate.gov maintenance mode enabled for statute alias de-duplication process.",null ,'#publicwebsite-notices', null, 'warning');
+  module_load_include('inc','nys_statute_import','nys_statute_import.alias_cleanup');
+  nys_statute_import_clean_duplicate_url_aliases();
+  nys_statute_import_clean_content_url_aliases();
+  variable_set('maintenance_mode', 0);
+  variable_set('maintenance_mode_message', $default_maintenance_message);
+  nys_utils_send_slack_notification("NYSenate.gov maintenance mode is now disabled.", null, '#publicwebsite-notices', null,'good');
+}*/
+
+/**
+ * Cleans out ~17,000 dupe bill url_aliases and ~1000 aliases with no source.
+ * Implements hook_update_N().
+ */
+/*function nys_statute_import_update_7501() {
+  $default_maintenance_message = variable_get('maintenance_mode_message');
+  variable_set('maintenance_mode_message', 'NYSenate.gov is currently disabled for routine maintenance. Service should resume shortly. Please refresh this page after a few minutes.');
+  variable_set('maintenance_mode', 1);
+  nys_utils_send_slack_notification("NYSenate.gov maintenance mode enabled for statute alias de-duplication process.", null, '#publicwebsite-notices', null, 'warning');
+  module_load_include('inc','nys_statute_import','nys_statute_import.alias_cleanup');
+  nys_statute_import_remove_nidless_url_aliases();
+  nys_statute_import_remove_duplicate_bill_url_aliases();
+  variable_set('maintenance_mode', 0);
+  variable_set('maintenance_mode_message', $default_maintenance_message);
+  nys_utils_send_slack_notification("NYSenate.gov maintenance mode is now disabled.", null, '#publicwebsite-notices', null, 'good');
+}*/

@@ -1,0 +1,18 @@
+name = Imagecache Token
+description = Provides additional image tokens for use with ImageCache
+dependencies[] = image
+dependencies[] = token
+package = Image
+core = 7.x
+
+; There's a settings page to contril which fields.
+configure = admin/config/media/imagecache-token
+
+; Tests.
+files[] = tests/imagecache_token.test
+
+; Information added by Drupal.org packaging script on 2019-02-16
+version = "7.x-1.0-rc3"
+core = "7.x"
+project = "imagecache_token"
+datestamp = "1550347690"

@@ -1,0 +1,11 @@
+name = NYS SendGrid Integration
+description = Provides an extension of Drupal's MailSystemInterface based on SendGrid's API library.
+core = 7.x
+php = 5.5
+package = Mail
+configure = admin/config/services/sendgrid
+files[] = nys_sendgrid.inc
+files[] = nys_sendgrid.mail.inc
+dependencies[] = composer_manager
+dependencies[] = mailsystem (>=2.x)
+dependencies[] = nys_utils

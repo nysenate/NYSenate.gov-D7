@@ -1,0 +1,229 @@
+/*------------------------------------
+/	CALENDAR WIDGET
+/-------------------------------------*/
+.page-calendar {
+
+	#cal-picker {
+		width: 320px;//rg
+		min-height: 250px;
+		padding:20px 20px 0 20px;
+		background-color: $yellow01;
+		position: relative;
+		display: none;
+		.ui-widget-content {
+			background: none;
+			border:none;
+		}
+		.ui-datepicker-header {
+			background: none;
+			background-color: $yellow02;
+			border: none;
+			position: absolute;
+			height: 60px;
+			width: 100%;//rg
+			top: 0;
+			left: 0;
+			.ui-datepicker-title {			
+				color: white;
+				font-size: 16px;//rg
+				line-height: 60px;
+				font-family: "Adelle Bold";				
+			}
+			.ui-datepicker-prev,
+			.ui-datepicker-next {	
+				background: none;
+				font-size: 0;
+				text-indent: -9999em;							
+				&:before {
+					content: "\5e";
+					color: white;
+					font-family: 'senate_icons';
+					display:inline-block;
+					vertical-align: middle;					
+					speak: none;
+					font-size: 30px !important;
+					font-style: normal;
+					font-weight: normal;
+					font-variant: normal;
+					text-transform: none;
+					padding-right: 3px;
+					-webkit-font-smoothing: antialiased;
+					-moz-osx-font-smoothing: grayscale;														
+					-webkit-transform: rotate(-90deg);
+					-moz-transform: rotate(-90deg);
+					-o-transform: rotate(-90deg);
+					transform: rotate(-90deg);
+				}	
+				span {
+					display: none;
+				}										
+			}
+			.ui-datepicker-prev {
+				left: 30px;
+				top: 6px;	
+			}
+			.ui-datepicker-next {	
+				right: 75px;
+				top: 9px;
+				&:before {													
+					-webkit-transform: rotate(90deg);
+					-moz-transform: rotate(90deg);
+					-o-transform: rotate(90deg);
+					transform: rotate(90deg);
+				}				
+			}		
+		}	
+		.ui-datepicker-calendar {
+			background: none;
+			text-align: center;
+			margin: 38px 0 0 -10px;
+			border: none;
+			thead {			
+				background: none;
+				tr {
+					background: none;
+					th {
+						background: none;
+						border: none;
+						color: white;
+						font-size: 12px;
+					}
+				}
+			}
+			tbody {
+				border: none;
+				tr {
+					background-color: $yellow01;
+					td {
+						background: none;
+						color: $grey02;
+						padding: 9px;
+						a {
+								color: $grey10;
+								text-decoration: none;
+								padding: 4px;
+								background: none;
+								border: none;
+							}	
+						&.ui-datepicker-today {
+							a {
+								background-color: rgba(0,0,0,.2);
+								border-radius: 30px;
+								color: $grey10;
+								text-decoration: none;
+							}
+						}						
+						&.ui-datepicker-current-day {
+							a {
+								background-color: white;
+								border-radius: 30px;
+								color: $grey10;
+								text-decoration: none;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	#mobile-cal-trigger {
+		background-color: $yellow01;
+		height: 54px;
+		width: 320px;
+		font-family: "Proxima Nova SemiBold";
+		font-size: 13px;
+		color: white;
+		text-transform: uppercase;
+		line-height: 52px;
+		padding-left: 20px;
+		outline: none;
+		.inner {
+			display: inline-block;
+			width: 100%;
+			&:after {
+				font-family: 'senate_icons';
+				display:inline-block;
+				vertical-align: middle;
+		
+				speak: none;
+				font-style: normal;
+				font-weight: normal;
+				font-variant: normal;
+				text-transform: none;
+				padding-left: 3px;
+		
+				/* Better Font Rendering =========== */
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+
+				margin-right: 8px;
+				content: "\67";
+				float: right;
+				font-size: 18px;
+			}
+		}
+	}
+	#footer-last {
+		.block-menu-menu-global-footer {
+			min-height: 165px;
+		}
+	}
+}
+
+
+@media #{$tablet} {
+	.page-calendar {
+		#mobile-cal-trigger {
+			display: none;
+		}
+		#cal-picker {
+			width: 420px;	
+			display: block;	
+			.ui-datepicker-header {
+				.ui-datepicker-title {					
+					font-size: 25px;				
+				}
+			}
+			.ui-datepicker-calendar {
+				tbody {
+					tr {
+						td {
+							a {
+								color: $grey10;
+								text-decoration: none;
+								padding: 9px;
+							}
+						}
+					}
+				}
+			}
+		}
+		#footer-last {
+			.block-menu-menu-global-footer {
+				min-height: 75px;
+			}
+		}
+	}
+}
+
+@media #{$desktop} {
+	.page-calendar {
+		#cal-picker {
+			width: 460px;
+			min-height: 320px;
+			.ui-datepicker-calendar {
+				tbody {
+					tr {
+						td {
+							a {
+								color: $grey10;
+								text-decoration: none;
+								padding: 12px;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

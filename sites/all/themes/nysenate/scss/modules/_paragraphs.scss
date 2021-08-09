@@ -1,0 +1,370 @@
+h2.pg-subtitle {
+   font-family: 'Proxima Nova SemiBold';
+    color: $grey02;
+    font-size: 30px;
+    margin: 36px 0 24px;
+}
+
+/*----------------------------------------
+/ PARAGRAPH STYLES
+/----------------------------------------*/
+
+.node-paragraph-page {
+  h2.c-container--title {
+    margin: 1px;
+  }
+  .paragraphs-item-feature-image img {
+    margin-bottom: 20px;
+  }
+  .c-block--pg-accordion {
+    h2 {
+      margin-bottom: 0;
+    }
+    &.row {
+      width: 100;
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+  .c-block {
+    margin-bottom: 60px;
+    &.c-block--full-bleed ~ .c-block--full-bleed {
+      margin-top: -60px;
+    }
+   }
+  .c-block--about, .c-senate-works-container {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .c-block-legislation-featured.c-block--half-wrap{
+    float: right;
+    margin: 0 -60px 0 20px;
+  }
+}
+
+.c-block .c-block--full-bleed {
+    margin-bottom: 0px;
+  }
+//.c-block .c-block--full-bleed:only-child {
+//    margin-bottom: 20px;
+//  }
+
+.c-block--pg-two-columns {
+  //margin-top: 55px;
+  //margin-bottom: 25px;
+  p {
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .nys-btn--gold {
+    margin-bottom: 40px;
+  }
+}
+
+h2.c-container--h2-title {
+  border-bottom: 1px solid $grey05;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  color: $grey02;
+  text-transform: uppercase;
+  font-family: "Proxima Nova Regular";
+  font-size: 18px;
+  margin-top: -12px;
+}
+
+.c-block--pg-text {
+  &.c-block--full-bleed {
+    padding-bottom: 40px;
+  }
+  .c-container--link {
+    top: 60px;
+  }
+}
+
+p.c-block--p-small {
+  margin: 0;
+  font-family: "Proxima Nova Regular";
+  font-size: 16px;
+  line-height: 1.2em;
+}
+
+p.nospace {
+    margin-top: 0;
+}
+
+p + p.nospace {
+    margin-top: -15px;
+}
+
+ p.c-tour-contact {
+    margin-bottom: 40px;
+  }
+
+  p.c-tour-contact--title {
+    margin: 0 0 5px 0;
+    padding-right: 20px;
+    font-size: 18px;
+    line-height: 1.2em;
+  }
+
+  p.c-tour-contact--loc,
+  p.c-tour-contact--phone {
+    margin: 0;
+    font-family: "Proxima Nova Regular";
+    font-size: 16px;
+    line-height: 1.2em;
+  }
+
+.c-block--pg-accordion {
+  .node-chapter .node-title {
+    margin: 0;
+  }
+}
+@media #{$tablet} {
+  .c-pg-featured-bills {
+    .c-block-legislation-featured.c-block--half-wrap {
+        margin: 0 24px 28px 0px;
+        clear: both;
+        width: 50%;
+    }
+  }
+}
+
+@media #{$desktop} {
+  .c-pg-featured-bills {
+    .c-block-legislation-featured.c-block--half-wrap {
+        margin: 0 24px 28px -60px;
+        clear: both;
+        width: 50%;
+    }
+  }
+}
+
+/*----------------------------------------
+/ Slider Carousel Paragraph
+/----------------------------------------*/
+
+
+.slick-arrow {
+  border-radius: 0!important;
+  background: $blue01;
+  height: 55px;
+  opacity: .8;
+  @extend .lgt-bg;
+    width: 55px;
+    &:hover, &:focus {
+      //background: $blue01;
+      @extend .lgt-bg;
+      opacity: .5;
+    }
+}
+
+.slick-next {
+  //right: -20px;
+  &:before {
+  opacity: 1;
+  color: #fff;
+  content: "\3e";
+  font-family: 'senate_icons';
+  padding: 1%;
+  }
+}
+
+.slick-prev {
+  //left: -20px;
+  &:before {
+  opacity: 1;
+  color: #fff;
+  content: "\3c";
+  font-family: 'senate_icons';
+  padding: 1%;
+  }
+}
+
+.slick-dots {
+  display: none!important;
+}
+
+
+@media #{$tablet} {
+  .c-block--pg-two-columns {
+
+    .c-container--header {
+      padding-bottom: 20px;
+    }
+
+    h2.c-container--title {
+      font-size: 16px;
+      margin-bottom: 0;
+    }
+
+  }
+}
+
+// This class removed from slick. In order to address
+// regression, this has been added.
+.slick-slider .slick__slide:not(.slick-active) img[data-lazy] {
+  width: 40px;
+  height: 40px;
+}
+
+
+/*----------------------------------------
+/ BUTTONS and READ MORE LINKS
+/----------------------------------------*/
+.nys-btn--gold {
+      clear: both;
+}
+
+.nys-btn--gold-inline {
+  @include transition(background-color, 0.2s, ease);
+  position: relative;
+  display: inline-block;
+  padding: 20px 10px;
+  background: $yellow01;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: "Proxima Nova SemiBold";
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  clear: both;
+  @extend .lgt-bg;
+  &:hover {
+    color: #fff;
+    background: $yellow03;
+  }
+}
+
+.c-btn--small-blue {
+	position: relative;
+	display: block;
+  padding: 5px 20px;
+	float: left;
+	outline: none;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #fff;
+    background-color: $blue01;
+    font-family: "Proxima Nova SemiBold";
+    letter-spacing: 0.1em;
+    font-size: 14px;
+    line-height: 40px;
+    @extend .lgt-bg;
+	&:hover,
+	&:active,
+	&:focus {
+		outline: 0;
+	}
+}
+
+.c-paragraph--more-link {
+    clear: both;
+    margin: 15px 0 30px;
+    //display: block;
+    text-transform: uppercase;
+    font-family: "Proxima Nova SemiBold";
+    font-size: 16px;
+    line-height: 16px;
+    letter-spacing: 0.1em;
+    @extend .icon-after__arrow;
+    @extend .link-text;
+    &.a-left {
+      display: block;
+      text-align: left;
+    }
+    &.a-right {
+      text-align: right;
+      display: block;
+    }
+  &:after {
+		margin-top: -2px;
+		font-size: 17px;
+		line-height: 12px;
+	}
+}
+
+
+
+
+@media #{$tablet} {
+	.c-paragraph--more-link-left{
+		font-size: 16px;
+		line-height: 16px;
+		&:after {
+			margin-top: -4px;
+			font-size: 23px;
+			line-height: 16px;
+		}
+	}
+}
+
+/*----------------------------------------
+/ TWEET THIS  CKEDITOR BUTTON
+/----------------------------------------*/
+
+a.tweetabletext {
+  text-decoration: none;
+  //border-left: 6px solid $blue01;
+  //padding-left: 18px;
+  height: 48px;
+  display: block;
+  margin: 24px 0;
+  font-family: 'Proxima Nova SemiBold';
+  vertical-align: middle;
+  &:before {
+  font-family: 'senate_icons';
+  content: "\23";
+  font-size: 48px;
+  text-decoration: none;
+  margin-right: 5px;
+  right: 0px;
+  position: relative;
+  padding: 0;
+ // top: 3px;
+  vertical-align: middle;
+  }
+}
+
+/*----------------------------------------
+/ OEMBED STYLES
+/----------------------------------------*/
+twitterwidget {
+  margin: 10px auto 40px!important;
+}
+.fb_iframe_widget iframe {
+  margin-left: 20px;
+  margin-bottom: 40px!important;
+}
+.fb_iframe_widget {
+  margin-bottom: 40px;
+}
+.media {
+  .instagram-media-rendered{
+    max-width: 60%!important;
+    margin: 0 auto 40px!important;
+  }
+}
+
+/*--------------------
+/ RESPONSIVE VIDEO
+/--------------------*/
+.paragraphs-item-pg-video {
+  .pg-video {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+
+    & iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}

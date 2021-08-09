@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @file
+ * Main file of the views exclude previous module.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function views_exclude_previous_help($section, $arg) {
+  switch ($section) {
+    case 'admin/modules#description':
+      return t('Views Exclude Previous provides a views filter which exlcudes nodes that have already been loaded/displayed on the current page.');
+  }
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function views_exclude_previous_views_api() {
+  return array(
+    'api' => '3.0',
+    'path' => drupal_get_path('module', 'views_exclude_previous') . '/views',
+  );
+}
+
+/**
+ * Implements hook_node_load().
+ */
+function views_exclude_previous_node_load($nodes, $types) {
+  foreach ($nodes AS $nid => $node) {
+    _views_exclude_previous('node_load', $nid);
+  }
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function views_exclude_previous_node_view($node, $view_mode, $langcode) {
+  _views_exclude_previous('node_view', $node->nid);
+}
+
+/**
+ * This function stores/returns nids for the given category.
+ *
+ * @staticvar array $excludes
+ *   Static storage of our excluded nids.
+ * @param $cat
+ *   A category given by the exclude plugin.
+ * @param $nid
+ *   The nid to be excluded. Optional so the function just returns the category.
+ * @return array
+ *   Always returns the given category.
+ */
+function _views_exclude_previous($cat, $nid = NULL) {
+  $excludes = & drupal_static(__FUNCTION__);
+
+  // Add nid to be excluded in the current category.
+  if (!empty($nid)) {
+    $excludes[$cat][$nid] = $nid;
+  }
+
+  return !empty($excludes[$cat]) ? $excludes[$cat] : array(0);
+}

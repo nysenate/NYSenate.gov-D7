@@ -1,0 +1,687 @@
+<?php
+
+/**
+ * @file
+ * A module to import bills from OpenLeg.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function nys_bill_import_help($path, $arg) {
+  if ($path == "admin/help#nys_bill_import") {
+    return '<p>' . t("A module to import bills from OpenLeg.") . '</p>';
+  }
+}
+
+/**
+ * Get a Senator NID.
+ *
+ * First, we try to retrieve by member ID, then the shortname.
+ * If we find by shortname but not member ID, update the Senator's member ID so
+ * it's set the next time we run the query.
+ */
+function nys_bill_import_get_senator_nid($member_id, $shortname, $chamber) {
+  $senator_nid = FALSE;
+
+  if (strcasecmp($chamber, 'senate') == 0) {
+    // First, try to retrieve the Senator by member_id.
+    $senator_nid = db_query("SELECT entity_id FROM {field_data_field_ol_member_id} WHERE field_ol_member_id_value = :mymemberid", array(":mymemberid" => $member_id))->fetchField();
+    if ($senator_nid === FALSE) {
+      // We didn't find that member ID, let's check by shortname.
+      $senator_nid = db_query("SELECT entity_id FROM {field_data_field_shortname} WHERE field_shortname_value = :myshortname", array(":myshortname" => $shortname))->fetchField();
+      if ($senator_nid !== FALSE) {
+        // Not found by member ID, but found by shortname. Does this shortname
+        // already have an member ID associated to it? If so, don't change their
+        // member ID.
+        $current_member_id = db_query("SELECT field_ol_member_id_value FROM {field_data_field_ol_member_id} WHERE entity_id = :myentityid", array(":myentityid" => $senator_nid))->fetchField();
+        if ($current_member_id === FALSE) {
+          // Found by shortname, doesn't currently have a member ID, add it.
+          $senator = node_load($senator_nid);
+          if ($senator !== FALSE) {
+            $senator->field_ol_member_id[LANGUAGE_NONE][0]["value"] = $member_id;
+            node_save($senator);
+          }
+        }
+      }
+    }
+  }
+  return $senator_nid;
+}
+
+/**
+ * Discovers if a bill should be marked as "IsAmended".
+ *
+ * @param $bill_result
+ *    The result returned from the bill API
+ *
+ * @return bool
+ */
+function nys_bill_import_calc_isamended($bill_result) {
+  $count = 0;
+  if (
+    (is_object($bill_result))
+    && (property_exists($bill_result, 'publishStatusMap'))
+    && (property_exists($bill_result->publishStatusMap, 'items'))
+  ) {
+    foreach ($bill_result->publishStatusMap->items as $k => $v) {
+      if (property_exists($v, 'published') && $v->published) {
+        $count++;
+      }
+    }
+
+  }
+  return (boolean) ($count > 1);
+}
+
+/**
+ * Maps the API's response to bill fields.
+ *
+ * @param object $node
+ *   The node entity we're mapping values to.
+ * @param object $bill_result
+ *   The result returned from the bill API.
+ * @param string $bill_print_no
+ *   The current bills print number.
+ */
+function nys_bill_import_set_values(&$node, $bill_result, $bill_print_no, $is_resolution, $is_active = false) {
+  // Clear the vote collections, since those will be recreated.
+  if (isset($node->field_ol_votes[LANGUAGE_NONE]) && is_array($node->field_ol_votes[LANGUAGE_NONE])) {
+    $fields = [];
+    foreach ($node->field_ol_votes[LANGUAGE_NONE] as $index => $value) {
+      $fields[] = $value["value"];
+    }
+    $node->field_ol_votes[LANGUAGE_NONE] = [];
+    entity_delete_multiple('field_collection_item', $fields);
+  }
+
+  // Clear out co sponsor and multi sponsor entity fields -- ensures when overwritten that data is stored correctly.
+  $co_multi_clear_list = [
+    'field_ol_add_sponsors',
+    'field_ol_co_sponsors',
+    'field_ol_co_sponsor_names',
+    'field_ol_multi_sponsor_name',
+    'field_ol_multi_sponsors',
+  ];
+  foreach ($co_multi_clear_list as $key) {
+    $node->{$key} = [];
+  }
+
+  // Start setting the new values.
+  $chamber = strtolower($bill_result->billType->chamber);
+  $node->field_ol_chamber[LANGUAGE_NONE][0]["value"] = strtolower($bill_result->billType->chamber);
+  $node->field_ol_session[LANGUAGE_NONE][0]["value"] = $bill_result->session;
+
+  $node->field_ol_is_active_version[LANGUAGE_NONE][0]["value"] = $is_active == TRUE ? 1 : 0;
+
+  $node->field_ol_base_print_no[LANGUAGE_NONE][0]["value"] = $bill_result->basePrintNo;
+  $node->field_ol_active_version[LANGUAGE_NONE][0]["value"] = $bill_result->activeVersion;
+  $active_no = $bill_result->basePrintNo . $bill_result->activeVersion;
+  $current_version = ctype_digit(substr($bill_print_no, -1)) ? "" : substr($bill_print_no, -1);
+  $node->field_ol_print_no[LANGUAGE_NONE][0]["value"] = $bill_print_no;
+
+  $node->field_ol_is_amended[LANGUAGE_NONE][0]["value"] = (int) nys_bill_import_calc_isamended($bill_result);
+
+  $node->field_ol_name[LANGUAGE_NONE][0]["value"]         = $bill_result->title;
+  $node->field_ol_publish_date[LANGUAGE_NONE][0]["value"] = strtotime($bill_result->publishedDateTime);
+  if ($bill_result->substitutedBy) {
+    $node->field_ol_substituted_by[LANGUAGE_NONE][0]["value"] = $bill_result->substitutedBy->basePrintNo;
+  }
+
+  // Reference the sponsor, if possible.
+  $sponsor_member_id = $bill_result->sponsor->member->memberId;
+  $sponsor_shortname = $bill_result->sponsor->member->shortName;
+  $sponsor_nid = nys_bill_import_get_senator_nid($sponsor_member_id, $sponsor_shortname, $chamber);
+  if ($sponsor_nid !== FALSE) {
+    $node->field_ol_sponsor[LANGUAGE_NONE][0]["target_id"] = $sponsor_nid;
+  }
+  else {
+    $node->field_ol_sponsor[LANGUAGE_NONE][0]["target_id"] = 0;
+  }
+  $node->field_ol_sponsor_name[LANGUAGE_NONE][0]["value"] = $bill_result->sponsor->member->shortName;
+
+  $node->field_ol_all_statuses[LANGUAGE_NONE][0]["value"] = $is_resolution ? json_encode($bill_result->actions) : json_encode($bill_result->milestones);
+  $node->field_ol_all_actions[LANGUAGE_NONE][0]["value"] = $is_resolution ? NULL : json_encode($bill_result->actions);
+
+  if (!$is_resolution) {
+    $node->field_ol_last_status[LANGUAGE_NONE][0]["value"]             = $bill_result->status->statusType;
+    $node->field_ol_latest_status_committee[LANGUAGE_NONE][0]["value"] = $bill_result->milestones->items[count($bill_result->milestones->items) - 1]->committeeName;
+
+    if (isset($bill_result->milestones->items[count($bill_result->milestones->items) - 1]->actionDate)) {
+      $node->field_ol_last_status_date[LANGUAGE_NONE][0]["value"] = strtotime($bill_result->milestones->items[count($bill_result->milestones->items) - 1]->actionDate);
+    }
+  }
+
+  $node->field_ol_summary[LANGUAGE_NONE][0]["value"]           = $bill_result->summary;
+  $node->field_ol_ammendments[LANGUAGE_NONE][0]["value"]       = json_encode($bill_result->amendments->items);
+  $node->field_ol_previous_versions[LANGUAGE_NONE][0]["value"] = json_encode($bill_result->previousVersions->items);
+
+  // Program Info.
+  if (!empty($bill_result->programInfo)) {
+    $node->field_ol_program_info[LANGUAGE_NONE][0]["value"] = $bill_result->programInfo->name;
+    $node->field_ol_program_info_seq[LANGUAGE_NONE][0]["value"] = $bill_result->programInfo->sequenceNo;
+  }
+
+  $node->field_ol_has_same_as[LANGUAGE_NONE][0]["value"] = $bill_result->amendments->items->$current_version->sameAs->size > 0 ? 1 : 0;
+  $node->field_ol_same_as[LANGUAGE_NONE][0]["value"]     = json_encode($bill_result->amendments->items->$current_version->sameAs->items);
+
+  $node->field_ol_law_section[LANGUAGE_NONE][0]["value"] = $bill_result->amendments->items->$current_version->lawSection;
+
+  if (!$is_resolution) {
+    $node->field_ol_law_code[LANGUAGE_NONE][0]["value"] = $bill_result->amendments->items->$current_version->lawCode;
+  }
+
+  // Memo and full text.
+  $node->field_ol_memo[LANGUAGE_NONE][0]["value"]      = $bill_result->amendments->items->$current_version->memo;
+  $node->field_ol_full_text[LANGUAGE_NONE][0]["value"] = $bill_result->amendments->items->$current_version->fullText;
+
+  // Reference the co-sponsors, if possible.
+  if (isset($bill_result->amendments->items->$current_version->coSponsors->items)) {
+    foreach ($bill_result->amendments->items->$current_version->coSponsors->items as $index => $co_sponsor) {
+      $sponsor_member_id = $co_sponsor->memberId;
+      $sponsor_shortname = $co_sponsor->shortName;
+      $sponsor_nid       = nys_bill_import_get_senator_nid($sponsor_member_id, $sponsor_shortname, $chamber);
+      if ($sponsor_nid !== FALSE) {
+        $node->field_ol_co_sponsors[LANGUAGE_NONE][$index]["target_id"] = $sponsor_nid;
+      }
+    }
+    $node->field_ol_co_sponsor_names[LANGUAGE_NONE][0]["value"] = json_encode($bill_result->amendments->items->$current_version->coSponsors->items);
+  }
+
+  // Reference multi-sponsors, if possible.
+  if (isset($bill_result->amendments->items->$current_version->multiSponsors->items)) {
+    foreach ($bill_result->amendments->items->$current_version->multiSponsors->items as $index => $multi_sponsor) {
+      $sponsor_member_id = $multi_sponsor->memberId;
+      $sponsor_shortname = $multi_sponsor->shortName;
+      $sponsor_nid       = nys_bill_import_get_senator_nid($sponsor_member_id, $sponsor_shortname, $chamber);
+      if ($sponsor_nid !== FALSE) {
+        $node->field_ol_multi_sponsors[LANGUAGE_NONE][$index]["target_id"] = $sponsor_nid;
+      }
+    }
+    $node->field_ol_multi_sponsor_names[LANGUAGE_NONE][0]["value"] = json_encode($bill_result->amendments->items->$current_version->multiSponsors->items);
+  }
+
+  // Reference additional sponsors, if possible.
+  if (isset($bill_result->additionalSponsors->items)) {
+    foreach ($bill_result->additionalSponsors->items as $index => $add_sponsor) {
+      $sponsor_member_id = $add_sponsor->memberId;
+      $sponsor_shortname = $add_sponsor->shortName;
+      $sponsor_nid       = nys_bill_import_get_senator_nid($sponsor_member_id, $sponsor_shortname, $chamber);
+      if ($sponsor_nid !== FALSE) {
+        $node->field_ol_add_sponsors[LANGUAGE_NONE][$index]["target_id"] = $sponsor_nid;
+      }
+    }
+    $node->field_ol_add_sponsor_names[LANGUAGE_NONE][0]["value"] = json_encode($bill_result->additionalSponsors->items);
+  }
+}
+
+/**
+ * Maps the API's response to field collections.
+ *
+ * @param object $node
+ *   The node entity we're mapping values to.
+ * @param object $bill_result
+ *   The result returned from the bill API.
+ * @param mixed $bill_print_no
+ *   The current bills print number.
+ */
+function nys_bill_import_set_field_collection(&$node, $bill_result, $bill_print_no) {
+  $current_version_for_votes = ctype_digit(substr($bill_print_no, -1)) ? "" : substr($bill_print_no, -1);
+
+  // Votes.
+  $vote_member_fields = array(
+    'EXC' => 'field_ol_excused_members',
+    'AYEWR' => 'field_ol_aye_wr_members',
+    'NAY' => 'field_ol_nay_members',
+    'AYE' => 'field_ol_aye_members',
+    'ABD' => 'field_ol_abstained_members',
+    'ABS' => 'field_ol_absent_members',
+  );
+
+  $vote_name_fields = array(
+    'EXC' => 'field_ol_excused_member_names',
+    'AYEWR' => 'field_ol_aye_wr_names',
+    'NAY' => 'field_ol_nay_names',
+    'AYE' => 'field_ol_aye_names',
+    'ABD' => 'field_ol_abstained_names',
+    'ABS' => 'field_ol_absent_names',
+  );
+
+  $vote_count_fields = array(
+    'EXC' => 'field_ol_excused_count',
+    'AYEWR' => 'field_ol_aye_wr_count',
+    'NAY' => 'field_ol_nay_count',
+    'AYE' => 'field_ol_aye_count',
+    'ABD' => 'field_ol_abstained_count',
+    'ABS' => 'field_ol_absent_count',
+  );
+
+  foreach ($bill_result->votes->items as $index => $vote) {
+    if ($vote->version == $current_version_for_votes) {
+      // Create object to store vote cache information before committing to DB.
+      $bill_vote_index_data = new stdClass();
+
+      // Create the new field collection.
+      $field_collection_item = entity_create('field_collection_item', array('field_name' => 'field_ol_votes'));
+      $field_collection_item->setHostEntity('node', $node);
+
+      $field_collection_item->field_ol_vote_type[LANGUAGE_NONE][0]["value"] = strtolower($vote->voteType);
+      $field_collection_item->field_publication_date[LANGUAGE_NONE][0]["value"] = $vote->voteDate;
+
+      // If committee and committee->chamber is Senate, map to committee.
+      if ($vote->voteType == "COMMITTEE" && $vote->committee->chamber == "SENATE") {
+        // Committee vocabulary ID.
+        $vocabulary_id = 11;
+        $committee_tid = db_query("SELECT tid FROM {taxonomy_term_data} WHERE name = :myname AND vid = :myvocabulary",
+          array(":myname" => $vote->committee->name, ":myvocabulary" => $vocabulary_id))->fetchField();
+        if ($committee_tid !== FALSE) {
+          $field_collection_item->field_ol_committee[LANGUAGE_NONE][0]["target_id"] = $committee_tid;
+          $bill_vote_index_data->committee = $committee_tid;
+        }
+        else {
+          $bill_vote_index_data->committee = NULL;
+        }
+      }
+
+      foreach ($vote_count_fields as $vote_code => $vote_count_field) {
+        $vote_member_field = $vote_member_fields[$vote_code];
+        $vote_member_name_field = $vote_name_fields[$vote_code];
+        $field_collection_item->{$vote_count_field}[LANGUAGE_NONE][0]["value"] =
+          isset($bill_result->votes->items[$index]->memberVotes->items->{$vote_code}->size)
+            ? $bill_result->votes->items[$index]->memberVotes->items->{$vote_code}->size : 0;
+        if (isset($bill_result->votes->items[$index]->memberVotes->items->{$vote_code}->items)) {
+          foreach ($bill_result->votes->items[$index]->memberVotes->items->{$vote_code}->items as $index_vote => $vote_by_type) {
+            $vote_member_id = $vote_by_type->memberId;
+            $vote_shortname = $vote_by_type->shortName;
+            $vote_chamber = $vote_by_type->chamber;
+            $vote_nid = nys_bill_import_get_senator_nid($vote_member_id, $vote_shortname, $vote_chamber);
+            if ($vote_nid !== FALSE) {
+              $field_collection_item->{$vote_member_field}[LANGUAGE_NONE][$index_vote]["target_id"] = $vote_nid;
+            }
+          }
+          $field_collection_item->{$vote_member_name_field}[LANGUAGE_NONE][0]["value"] =
+            json_encode($bill_result->votes->items[$index]->memberVotes->items->{$vote_code}->items);
+        }
+      }
+
+      $field_collection_item->save();
+
+      // VOTE CACHE STORAGE
+      // In addition to storing a new entity, a cache entry is created for the
+      // entity for quicker page retrieval.
+      // See nys_blocks for where this data is used / nys_updates for DB table
+      // info $bill_vote_index_info->committee is defined ~30 lines above.
+      $bill_vote_index_data->entity_id = $field_collection_item->item_id;
+      $bill_vote_index_data->vote_date = $vote->voteDate;
+      $bill_vote_index_data->vote_type = strtolower($vote->voteType);
+      $bill_vote_index_data->bill_print_no = $bill_print_no;
+      $bill_vote_index_data->base_print_no = ctype_digit(substr($bill_print_no, -1)) ? $bill_print_no : substr($bill_print_no, 0, -1);
+      $bill_vote_index_data->bill_nid = $node->nid;
+
+      // Delete all cache records and rewrite.
+      $check_bill_vote_index = db_delete('bill_vote_index')
+        ->condition('bill_nid', $bill_vote_index_data->bill_nid)
+        ->condition('type', $bill_vote_index_data->vote_type)
+        ->condition('field_publication_date_value', $bill_vote_index_data->vote_date)
+        ->condition('field_ol_committee_target_id', $bill_vote_index_data->committee)
+        ->execute();
+
+      $write_bill_vote_index_record = db_insert('bill_vote_index')->fields(array(
+        'field_ol_votes_value'              => $bill_vote_index_data->entity_id,
+        'type'                              => $bill_vote_index_data->vote_type,
+        'field_publication_date_value'      => $bill_vote_index_data->vote_date,
+        'field_ol_committee_target_id'      => (is_null($bill_vote_index_data->committee) ? NULL : $bill_vote_index_data->committee),
+        'base_print_no'                     => $bill_vote_index_data->base_print_no,
+        'print_no'                          => $bill_vote_index_data->bill_print_no,
+        'bill_nid'                          => $bill_vote_index_data->bill_nid,
+      ))->execute();
+    }
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function nys_bill_import_cron() {
+
+  $interval = variable_get("bill_import_interval", 60 * 5);
+  $timestamp = variable_get("bill_import_last_update", "2000-01-01T00:00:00");
+
+  // Check the lock.
+  $is_locked      = variable_get("bill_import_is_locked", FALSE);
+  $last_lock_time = variable_get("bill_import_last_lock_time", strtotime("now"));
+
+  // If another process isn't running or that process has been locked > 5
+  // minutes.
+  if (!$is_locked || (strtotime("now") - $last_lock_time) > 300) {
+    // Update the lock.
+    variable_set("bill_import_is_locked", TRUE);
+    variable_set("bill_import_last_lock_time", strtotime("now"));
+
+    nys_bill_import_run($timestamp);
+    variable_set('bill_import_next_execution', time() + $interval);
+  }
+}
+
+/**
+ * First, fetch results from the updates API.
+ *
+ * Iterate and paginate those results and, per bill, make a request to the bill
+ * API. Finally, map values and save each bill as a node.
+ *
+ * Timestamps are in OpenLeg format (mm-dd-yyyyThh:mm:ss).
+ *
+ * @param     $from_time string
+ *                       Timestamp indicating the start of the import window.
+ * @param     $to_time   string
+ *                       Timestamp indicating the end of the import window.
+ * @param     $initial_offset int
+ *                       The starting offset for this run.  Defaults to 1.
+ */
+function nys_bill_import_run($from_time = NULL, $to_time = NULL, $initial_offset = NULL) {
+  // Set up default conditions and state variables.
+  // Necessary for OpenLeg URL creation.
+  $openleg_key  = variable_get("openleg_key");
+  $ol_base_url  = variable_get("openleg_base_url");
+  $base_url     = $ol_base_url . "/api/3/bills/updates/";
+  $ol_url_key   = "&key=" . $openleg_key;
+
+  // Timestamp of the last successfully imported update block.
+  $last_update  = variable_get("bill_import_last_update", date(BILL_IMPORT_DATETIME_FORMAT, 0));
+
+  // Indicates more records exist beyond what is currently fetched.
+  $more_results = true;
+
+  // Indicates whether or not a fetch or import error has occurred in a loop.
+  $bad_result   = false;
+
+  // Indicates the maximum number of update blocks to process in one loop.
+  $throttle     = 50;
+
+  // Indicates the starting offset for this run.  This defaults to '1', but
+  // can be read from command line to resume a failed previous run.
+  $offset       = $initial_offset !== NULL ? $initial_offset : 1;
+
+  // The global count of imported bills.
+  $count        = 0;
+
+  // Detect this run's timestamp window for updates.  These could have been
+  // passed on the command line, or they will default to "from last run
+  // until now".
+  $from_time = $from_time ? $from_time : $last_update;
+  $to_time = $to_time ? $to_time : date(BILL_IMPORT_DATETIME_FORMAT);
+
+  // Loop until all results in this set are consumed.
+  while ($more_results) {
+    // Create this iteration's update block request.  This request goes to
+    // OpenLeg's updates API for a specific range of time.  The request is
+    // limited by the throttle amount and offset value.
+    $ol_url = $base_url . $from_time . "/" . $to_time .
+      "?fullBill=true&order=asc&offset=" . $offset .
+      // removing "type=published" as short-term fix to windowing issue
+      // "&type=published" .
+      "&limit=" . $throttle;
+    $full_url = $ol_url . $ol_url_key;
+
+    // Fetch this iteration's results.
+    echo t("INFO: Fetching: !url", ['!url' => $ol_url]) . "\n";
+    $base_result   = json_decode(file_get_contents($full_url));
+
+    // If we don't have have success in the update blocks call, stop all work.
+    if (!isset($base_result->success) || !$base_result->success) {
+      // Bad base result. Stop the update prematurely.
+      echo t("ERROR: Query for update blocks failed!") . "\n";
+      break;
+    }
+
+    // Report on the loop iteration status.
+    $tracearr = [
+      '!count' => count($base_result->result->items),
+      '!offsetstart' => $base_result->offsetStart,
+      '!offsetend' => $base_result->offsetEnd,
+      '!total' => $base_result->total,
+    ];
+    echo t("INFO: Processing offset !offsetstart -> !offsetend, !count items of !total total", $tracearr) . "\n";
+
+    // Iterate the results and process.
+    foreach ($base_result->result->items as $update) {
+      $bill_session = $update->id->session;
+      $bill_print_no = $update->id->basePrintNo;
+      $fetch_id = "{$bill_session}{$bill_print_no}";
+      $save_success = nys_bill_import_save($update->item);
+      if ($save_success) {
+        $last_update = $update->processedDateTime;
+        $count++;
+      }
+      else {
+        echo "ERROR: Failed to fetch id '$fetch_id'\n";
+        $bad_result = TRUE;
+        break;
+      }
+    }
+
+    // Bad base result. Stop the import cycle now.
+    if ($bad_result) {
+      break;
+    }
+    // If there are more pages, cycle the offset and continue the loop.
+    elseif ($base_result->offsetEnd < $base_result->total) {
+      $offset = $base_result->offsetEnd + 1;
+    }
+    // Otherwise, kill the loop flag.
+    else {
+      echo "INFO: Result datapoints indicate end of cycle.\n";
+      $more_results = FALSE;
+    }
+  }
+
+  // Record the ending point detected during processing.
+  variable_set("bill_import_last_update", $last_update);
+  variable_set("bill_import_last_run", date("Y-m-d\TH:i:s", strtotime("now")));
+
+  // Report final import count.
+  echo t("Updated @count bill(s).", ["@count" => $count]) . "\n";
+
+  // Also, refresh some stats if there were updates.
+  if ($count > 0) {
+    nys_bill_import_what_weve_been_up_to();
+    // If import has automatically created revisions, empty
+    // field_revision_field_ol_full_text.
+    db_truncate('field_revision_field_ol_full_text')->execute();
+  }
+}
+
+/**
+ * Fetches bills from OpenLeg.
+ *
+ * @param mixed $session
+ *   The session of interest.
+ * @param int $initial_offset
+ *   Results offset to start the query from.
+ */
+function nys_bill_import_re_import($session, $initial_offset) {
+  $ol_base_url = variable_get("openleg_base_url");
+  $openleg_key = variable_get("openleg_key");
+  $base_url = $ol_base_url . "/api/3/bills/";
+  // 50 maximum.
+  $limit = 50;
+  $count = 0;
+  $more_results = TRUE;
+
+  $offset = $initial_offset;
+  while ($more_results) {
+    $url = "${base_url}${session}?key=${openleg_key}&full=true&limit=${limit}&offset=${offset}";
+    echo t("Fetching @url", ['@url' => $url]) . "\n";
+    $response = json_decode(file_get_contents($url));
+    if (isset($response->success) && $response->success) {
+      foreach ($response->result->items as $bill_result) {
+        nys_bill_import_save($bill_result);
+        $count++;
+      }
+      if ($response->offsetEnd < $response->total) {
+        $offset = $response->offsetEnd + 1;
+        $more_results = TRUE;
+      }
+      else {
+        $more_results = FALSE;
+      }
+    }
+    else {
+      echo t("Error!") . "\n";
+      break;
+    }
+  }
+  echo t("@count bills from session @session were imported.", [
+    '@count' => $count,
+    '@session' => $session,
+  ]) . "\n";
+}
+
+/**
+ * Updates the "What the Senate Has Been Up To" module data.
+ */
+function nys_bill_import_what_weve_been_up_to() {
+  $ol_base_url         = variable_get("openleg_base_url");
+  $legislative_session = date("Y", strtotime("now"));
+  $openleg_key         = variable_get("openleg_key");
+
+  if (($legislative_session % 2) == 0) {
+    $legislative_session--;
+  }
+
+  $awaiting = "/api/3/bills/search?term=session:" . $legislative_session . "%20AND%20status.statusType:%22DELIVERED_TO_GOV%22&key=" . $openleg_key;
+  $signed   = "/api/3/bills/search?term=session:" . $legislative_session . "%20AND%20status.statusType:%22SIGNED_BY_GOV%22&key=" . $openleg_key;
+  $vetoed   = "/api/3/bills/search?term=session:" . $legislative_session . "%20AND%20status.statusType:%22VETOED%22&key=" . $openleg_key;
+
+  echo t("Fetching: @url", ['@url' => $ol_base_url . $awaiting]) . "\n";
+  $response = file_get_contents($ol_base_url . $awaiting);
+  $response = json_decode($response);
+
+  if (isset($response->success) && $response->success && isset($response->total)) {
+    echo t("-- Found @total result(s).", ['@total' => $response->total]) . "\n";
+    variable_set("bills_awaiting_gov_signature", $response->total);
+  }
+  else {
+    echo t("-- Bad response received.") . "\n";
+  }
+
+  echo t("Fetching: @url", ['@url' => $ol_base_url . $signed]) . "\n";
+  $response = file_get_contents($ol_base_url . $signed);
+  $response = json_decode($response);
+
+  if (isset($response->success) && $response->success && isset($response->total)) {
+    echo t("-- Found @total result(s).", ['@total' => $response->total]) . "\n";
+    variable_set("bills_signed_gov", $response->total);
+  }
+  else {
+    echo t("-- Bad response received.") . "\n";
+  }
+
+  echo t("Fetching: @url", ['@url' => $ol_base_url . $vetoed]) . "\n";
+  $response = file_get_contents($ol_base_url . $vetoed);
+  $response = json_decode($response);
+
+  if (isset($response->success) && $response->success && isset($response->total)) {
+    echo t("-- Found @total result(s).", ['@total' => $response->total]) . "\n";
+    variable_set("bills_vetoed_gov", $response->total);
+  }
+  else {
+    echo t("-- Bad response received.") . "\n";
+  }
+}
+
+/**
+ * Fetch a bill from Openleg with the given session and print no.
+ *
+ * For each amendment in the retrieved bill, create/update the corresponding
+ * Drupal bill node.
+ */
+function nys_bill_import_fetch($bill_session, $bill_print_no) {
+  $ol_base_url = variable_get("openleg_base_url");
+  $base_bill_url = $ol_base_url . "/api/3/bills/";
+  $openleg_key = variable_get("openleg_key");
+  $bill_url = $base_bill_url . $bill_session . "/" . $bill_print_no;
+  $full_bill_url = $bill_url . "?key=" . $openleg_key;
+
+  echo t("Fetching: @url", ['@url' => $bill_url]) . "\n";
+  $bill_result = json_decode(file_get_contents($full_bill_url));
+  if (isset($bill_result->success) && $bill_result->success) {
+    $bill_result = $bill_result->result;
+    return nys_bill_import_save($bill_result);
+  }
+  return FALSE;
+}
+
+/**
+ * Saves the openleg bill result as drupal nodes.
+ */
+function nys_bill_import_save(&$bill_result) {
+  // Set some bill-level references.
+  $is_resolution = $bill_result->billType->resolution;
+  $bill_session = $bill_result->session;
+  $bill_baseprint = $bill_result->basePrintNo;
+
+  // Iterate through each version using the publish status map.
+  $amendPublishStatuses = [];
+  if (isset($bill_result->publishStatusMap->items)) {
+    $amendPublishStatuses = $bill_result->publishStatusMap->items;
+  }
+  foreach ($amendPublishStatuses as $amendPublishStatus) {
+    // Update the print number to reflect the amendment version.
+    $bill_print_no = $bill_baseprint . $amendPublishStatus->version;
+
+    // Query for the existing bill nid.
+    $query = "SELECT node.nid FROM node, field_data_field_ol_session " .
+      "WHERE node.title = :mytitle AND " .
+      "node.nid = field_data_field_ol_session.entity_id AND " .
+      "field_data_field_ol_session.field_ol_session_value = :mysession";
+    $params = [':mytitle' => $bill_print_no, ':mysession' => $bill_session];
+    $bill_nid = db_query($query, $params)->fetchField();
+
+    // If the amendment is published, extract field data from response and save
+    if ($amendPublishStatus->published) {
+      // If the bill doesn't exist, create a new bill object to save later.
+      // Otherwise, load the bill node.
+      if ($bill_nid === false) {
+        $node = (object) [
+          'title' => $bill_print_no,
+          'type' => $is_resolution ? "resolution" : "bill",
+        ];
+      }
+      else {
+        $node = node_load($bill_nid);
+      }
+
+      // Is this the active version?
+      $is_active = ($bill_result->activeVersion == $amendPublishStatus->version);
+
+      // Map the bill's fields.. (and erases vote/sponsor collections!)
+      nys_bill_import_set_values($node, $bill_result, $bill_print_no, $is_resolution, $is_active);
+      if ($bill_nid === FALSE) {
+        // Create a new bill.
+        node_object_prepare($node);
+        $node->uid = "1";
+      }
+      echo t("Saving @session-@printno ... ", ['@printno' => $bill_print_no, '@session' => $bill_session]);
+      node_save($node);
+
+      // Map the bill's field collections.
+      if (!$is_resolution) {
+        nys_bill_import_set_field_collection($node, $bill_result, $bill_print_no);
+      }
+      $msg = $bill_nid === false
+        ? t("Saved new node.")
+        : t("Updated node @nid", ['@nid' => $bill_nid]);
+      echo $msg. "\n";
+    }
+    else {
+      echo t("@print_no is not published.  Deleting existing nodes...", ['@print_no' => $bill_print_no]);
+      // If the amendment is not published and has an existing node, remove it
+      if ($bill_nid !== FALSE) {
+        node_delete($bill_nid);
+        echo t("Deleted node @nid", ['@nid' => $bill_nid]);
+      }
+    }
+  }
+  return TRUE;
+}

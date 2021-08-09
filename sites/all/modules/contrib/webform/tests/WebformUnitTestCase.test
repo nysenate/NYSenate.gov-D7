@@ -1,0 +1,80 @@
+<?php
+
+/**
+ * Webform module unit tests.
+ */
+class WebformUnitTestCase extends DrupalUnitTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Webform unit tests'),
+      'description' => t('Unit tests for Webform functions.'),
+      'group' => t('Webform'),
+    );
+  }
+
+  /**
+   * The tests.
+   */
+  public function test() {
+    require_once __DIR__ . '/../webform.module';
+
+    $test = webform_format_email_address('test@example.com', 'John Smith');
+    $sample = '"John Smith" <test@example.com>';
+    $this->assertIdentical($test, $sample, 'webform_format_email_address() returns string for single name and email address.');
+
+    $test = webform_format_email_address('default', 'default');
+    $sample = '"' . webform_variable_get('webform_default_from_name') . '" <' . webform_variable_get('webform_default_from_address') . '>';
+    $this->assertIdentical($test, $sample, 'webform_format_email_address() handles defaults.');
+
+    $test = webform_format_email_address('test@example.com', NULL);
+    $sample = 'test@example.com';
+    $this->assertIdentical($test, $sample, 'webform_format_email_address() handles NULL name.');
+
+    $test = webform_format_email_address('test@example.com', 'John Smith', NULL, NULL, TRUE, FALSE);
+    $sample = ['"John Smith" <test@example.com>'];
+    $this->assertIdentical($test, $sample, 'webform_format_email_address() returns array for single name and email address.');
+
+    $test = webform_format_email_address(['test1@example.com', 'test2@example.com'], 'John Smith');
+    $sample = '"John Smith" <test1@example.com>';
+    $this->assertIdentical($test, $sample, 'webform_format_email_address() returns single string for multiple email addresses by default.');
+
+    $test = webform_format_email_address(['test1@example.com', 'test2@example.com'], ['John One', 'John Two'], NULL, NULL, TRUE, FALSE);
+    $sample = ['"John One" <test1@example.com>', '"John Two" <test2@example.com>'];
+    $this->assertIdentical($test, $sample, 'webform_format_email_address() returns array for multiple email addresses when $single is FALSE.');
+
+    $test = webform_format_email_address(['test1@example.com', 'test2@example.com'], 'John One', NULL, NULL, TRUE, FALSE);
+    $sample = ['"John One" <test1@example.com>', '"John One" <test2@example.com>'];
+    $this->assertIdentical($test, $sample, 'webform_format_email_address() repeats first name when more emails than names provided.');
+
+    $test = webform_format_email_address('test1@example.com, test2@example.com', 'John One', NULL, NULL, TRUE, FALSE);
+    $sample = ['"John One" <test1@example.com>', '"John One" <test2@example.com>'];
+    $this->assertIdentical($test, $sample, 'webform_format_email_address() accepts multiple emails as comma-separated string.');
+
+    $node = (object) [
+      'webform' => [
+        'components' => [
+          1 => ['name' => 'Email component', 'type' => 'textfield'],
+          2 => ['name' => 'Name component', 'type' => 'textfield'],
+        ],
+      ],
+    ];
+    $test = webform_format_email_address(1, 2, $node);
+    $sample = '"Value of Name component" <Value of "Email component">';
+    $this->assertIdentical($test, $sample, 'webform_format_email_address() takes name and email from component names.');
+
+    $submission = (object) [
+      'data' => [
+        1 => ['test@example.com'],
+        2 => ['John Smith'],
+      ],
+    ];
+    $test = webform_format_email_address(1, 2, $node, $submission);
+    $sample = '"John Smith" <test@example.com>';
+    $this->assertIdentical($test, $sample, 'webform_format_email_address() takes name and email from submission values.');
+  }
+
+}

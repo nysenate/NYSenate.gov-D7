@@ -1,0 +1,6 @@
+name = NY Senate Google Analytics Event Tracking
+description = "Custom events to track using Google Analytics."
+core = 7.x
+package = Statistics
+dependencies[] = googleanalytics
+dependencies[] = google_analytics_et

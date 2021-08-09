@@ -1,0 +1,70 @@
+/*---------------------------
+/ COLORS
+/---------------------------*/
+// greys
+// from darkest to lighest
+// NOTE: moved grey-05 to grey01 and adjusted #s
+//	so that they were in this order
+$grey01: #323232; // rgb(50, 50, 50)
+$grey02: #444444;
+$grey03: #666666;
+$grey04: #888888;
+$grey05: #AAAAAA;
+$grey06: #EEEEEE; // used to be - #F4F4F7 : rgb(244, 244, 247)
+$greyLight: #F4F4F7;
+
+$greyVoteBtnText: #D0D0D0;
+
+// colors for bill track small
+$grey-dot: #E2E8EC;
+$grey-line: #E3E3E3;
+
+// additional colors NOT defined in specs but in comps.
+$grey07: #ABABAB;
+$grey09: #D8D8D8;
+$grey10: #222222;
+
+// Senate Site
+$orange01: #CB8D37; // rgb(203, 141, 55)
+$blue01: #2B6990; // rgb(43, 106, 144)
+$blue02: #004C71; // rgb(0, 77, 113) - or there about
+$blue03: #04A9C5;
+$yellow01: #F1AF58; //rgb(241, 175, 88);
+$yellow02: #E29C44;
+$yellow03: #CB8D37;
+
+// Dashboard
+$blue04: #E1E5EC;
+$blue07: #1D446B;
+$grey11: #f6f8f9;
+$grey12: #f7f8f9;
+$grey13: #E2E8EC;
+$grey14: #C3C3C3;
+
+/*---------------------------
+/ WIDTHS
+/---------------------------*/
+$tabletWidth: 760;
+$desktopWidth: 960;
+$largeWidth: 1280;
+// only for TOP NAV -- makes it so 'find senator link disappears'
+$navBreakWidth: 1100; 
+// for hiding social
+$smallNavBreakWidth: 900;
+
+
+/*---------------------------
+/ MEDIA QUERIES	
+/---------------------------*/
+$tablet: "screen and (min-width: #{$tabletWidth}px)";
+$desktop: "screen and (min-width: #{$desktopWidth}px)";
+$large: "screen and (min-width: #{$largeWidth}px)";
+$mobile: "screen and (max-width: #{($tabletWidth - 1)}px)";
+
+$senatorBtnHidden: "screen and (max-width: #{$navBreakWidth}px)";
+$senatorBtnVisible: "screen and (min-width: #{$navBreakWidth}px)";
+
+$socialBtnsHidden: "screen and (max-width: #{$smallNavBreakWidth}px)";
+
+// mobile landscape -- used to make tiny nav
+$mobileLandscape: "screen and (max-width: #{$tabletWidth}px) and (orientation: landscape)";

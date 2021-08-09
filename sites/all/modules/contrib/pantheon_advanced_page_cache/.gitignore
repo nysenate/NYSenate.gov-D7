@@ -1,0 +1,3 @@
+/drush/behat-drush-endpoint
+/vendor
+tests/vendor

@@ -1,0 +1,13 @@
+diff --git a/sites/all/modules/contrib/gmap/location_gmap_find_address/location_gmap_find_address.module b/sites/all/modules/contrib/gmap/location_gmap_find_address/location_gmap_find_address.module
+index 7fd52623d9..c370029036 100644
+--- a/sites/all/modules/contrib/gmap/location_gmap_find_address/location_gmap_find_address.module
++++ b/sites/all/modules/contrib/gmap/location_gmap_find_address/location_gmap_find_address.module
+@@ -11,7 +11,7 @@
+  */
+ function location_gmap_find_address_field_widget_form_alter(&$element, &$form_state, $context) {
+   if ($context['field']['type'] == 'location' && variable_get('location_usegmap', 0)) {
+-    if (isset($element['#location_settings']['form']['fields']['locpick'])) {
++    if ($element['#location_settings']['form']['fields']['locpick']['collect'] == TRUE) {
+       $js_path = drupal_get_path('module', 'location_gmap_find_address') . '/location_gmap_find_address.js';
+       $element['#attached']['js'][$js_path] = array('scope' => 'footer');
+ 

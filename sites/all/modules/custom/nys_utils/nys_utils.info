@@ -1,0 +1,7 @@
+name = NY Senate custom functions (utils)
+description = General hooks
+core = 7.x
+dependencies[] = ctools
+dependencies[] = context
+
+

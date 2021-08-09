@@ -1,0 +1,160 @@
+<?php
+/**
+ * @file
+ * Google Analytics Event Tracking Module API Example.
+ *
+ * Shows a quick and dirty example of how to integrate the Google Analytics
+ * Event Tracking Module into an user's module.
+ */
+
+/**
+ * Implements hook_google_analytics_et_settings_info().
+ */
+function nys_google_analytics_event_tracking_google_analytics_et_settings_info() {
+  $settings = array();
+
+//  $settings['debug'] = TRUE;
+
+  return $settings;
+}
+
+/**
+ * Implements hook_google_analytics_et_api().
+ */
+function nys_google_analytics_event_tracking_google_analytics_et_api() {
+  return _nys_google_analytics_event_tracking_set_selectors_array();
+}
+
+/**
+ * Internal function returns the example selectors array.
+ */
+function _nys_google_analytics_event_tracking_set_selectors_array() {
+  $selectors = array();
+
+  $selectors = array(
+    // front page promotions
+    array(
+      'event' => 'mousedown',
+      'selector' => 'ul#js-carousel-law',
+      'category' => 'DESKTOP - front page promotions',
+      'action' => 'click',
+      'label' => 'how a bill',
+    ),
+    // social nav
+    array(
+      'event' => 'mousedown',
+      'selector' => 'a.icon-replace__twitter',
+      'category' => 'DESKTOP - social nav',
+      'action' => 'click',
+      'label' => 'twitter',
+    ),
+    array(
+      'event' => 'mousedown',
+      'selector' => 'a.icon-replace__youtube',
+      'category' => 'DESKTOP - social nav',
+      'action' => 'click',
+      'label' => 'youtube',
+    ),
+    array(
+      'event' => 'mousedown',
+      'selector' => 'a.icon-replace__facebook',
+      'category' => 'DESKTOP - social nav',
+      'action' => 'click',
+      'label' => 'facebook',
+    ),
+    // Unfurl Search
+    array(
+      'event' => 'mousedown',
+      'selector' => 'button.js-search--toggle.u-tablet-plus.c-site-search--btn',
+      'category' => 'DESKTOP - nav',
+      'action' => 'click',
+      'label' => 'search',
+      'noninteraction' => TRUE,
+    ),
+    // Nav items
+    array(
+      'event' => 'mousedown',
+      'selector' => 'a.active',
+      'category' => 'DESKTOP - nav',
+      'action' => 'click',
+      'label' => 'home icon',
+    ),
+    array(
+      'event' => 'mousedown',
+      'selector' => 'a.c-header--btn.c-senator-header--btn',
+      'category' => 'DESKTOP - nav',
+      'action' => 'click',
+      'label' => 'my senator',
+    ),
+    array(
+      'event' => 'mousedown',
+      'selector' => 'a.c-header--btn.c-header--btn__primary',
+      'category' => 'DESKTOP - nav',
+      'action' => 'click',
+      'label' => 'my dashboard',
+    ),
+    // Login buttons
+    array(
+      'event' => 'mousedown',
+      'selector' => 'a.c-header--btn.c-header--btn__primary.u-tablet-plus',
+      'category' => 'login buttons',
+      'action' => 'click',
+      'label' => 'desktop login button',
+    ),
+    array(
+      'event' => 'mousedown',
+      'selector' => 'div.c-mobile-login--list.u-mobile-only.span.c-header--btn.c-header--btn-login.a',
+      'category' => 'login buttons',
+      'action' => 'click',
+      'label' => 'mobile hamburger menu login',
+    ),
+    // Check how often users are clicking on tabs
+    array(
+      'event' => 'mousedown',
+      'selector' => 'a.c-tab-link',
+      'category' => 'desktop tab navigation',
+      'action' => 'click',
+      'label' => '!text',
+      'noninteraction' => TRUE,
+    ),
+    // Action Bar
+    array(
+      'event' => 'mousedown',
+      'selector' => 'a.ctools-use-modal.ctools-modal-login-modal.ctools-use-modal-processed',
+      'category' => 'DESKTOP - Action Bar',
+      'action' => 'click',
+      'label' => '!text',
+    ),
+    // Registration Confirmation Page
+    array(
+      'event' => 'mousedown',
+      'selector' => 'button#edit-previous',
+      'category' => 'DESKTOP - Registration Confirmation Page',
+      'action' => 'click',
+      'label' => 'back',
+    ),
+    array(
+      'event' => 'mousedown',
+      'selector' => 'button#edit-return',
+      'category' => 'DESKTOP - Registration Confirmation Page',
+      'action' => 'click',
+      'label' => 'finish',
+    ),
+    // Bill Aye / Nay
+    array(
+      'event' => 'mousedown',
+      'selector' => 'a.c-block--btn.c-half-btn.c-half-btn--left.nys-bill-vote-yes',
+      'category' => 'DESKTOP - Bill Sentiment',
+      'action' => 'click',
+      'label' => 'support',
+    ),
+    array(
+      'event' => 'mousedown',
+      'selector' => 'a.c-block--btn.c-half-btn.c-half-btn--left.nys-bill-vote-no',
+      'category' => 'DESKTOP - Bill Sentiment',
+      'action' => 'click',
+      'label' => 'oppose',
+    )
+  );
+  return $selectors;
+}

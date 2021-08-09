@@ -1,0 +1,32 @@
+/**
+ * @file
+ * Detailed stylings are all yours, get yourself dirty.
+ */
+
+.slick--skin--boxed-carousel .slick-list {
+  margin: 0 60px;
+}
+
+.slick--skin--boxed-carousel .slide__content {
+  background: #fff;
+  border: 1px solid #f3f3f3;
+  border-bottom: 2px solid #f3f3f3;
+  border-radius: 4px;
+  margin: 10px;
+  overflow: hidden;
+  position: relative;
+  -webkit-transition: box-shadow 0.3s 0.5s ease, border 0.3s 0.5s ease;
+  transition: box-shadow 0.3s 0.5s ease, border 0.3s 0.5s ease;
+}
+
+.slick--skin--boxed-carousel .slide__content:hover {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  -webkit-transition-delay: 0s;
+  transition-delay: 0s;
+  border-color: #9bacc3;
+}
+
+.slick--skin--boxed-carousel .slide__content .slide__title {
+  font-size: 22px;
+  font-size: 1.375rem;
+}

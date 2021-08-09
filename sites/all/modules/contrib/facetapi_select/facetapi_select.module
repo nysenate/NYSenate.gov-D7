@@ -1,0 +1,166 @@
+<?php
+
+/**
+ * @file
+ * The core Facetapi Select API. See http://drupal.org/project/facetapi_select for more details.
+ */
+
+/**
+ * Implements hook_forms().
+ */
+function facetapi_select_forms($form_id) {
+  // Build all multiselect facet forms on the page using the same form
+  // callback.
+  $forms = array();
+  if (strpos($form_id, 'facetapi_select_facet_form_') === 0) {
+    $forms[$form_id]['callback'] = 'facetapi_select_facet_form';
+  }
+  return $forms;
+}
+
+/**
+ * Facet form function.
+ */
+function facetapi_select_facet_form($form, &$form_state, $variables) {
+  if (!empty($variables['options'])) {
+    $form['facets'] = array(
+      '#type' => 'select',
+      '#default_value' => '',
+      '#options' => $variables['options'],
+      '#attributes' => array(
+        'class' => array('facetapi-select'),
+      ),
+      '#attached' => array(
+        'js' => array(
+          drupal_get_path('module', 'facetapi_select') . '/js/facetapi_select.js',
+        ),
+      ),
+    );
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#attributes' => array('class' => array('facetapi-select-submit')),
+      '#value' => t('Submit'),
+    );
+  }
+
+  if (!empty($variables['default_option_label'])) {
+    $form['facets']['#empty_option'] = $variables['default_option_label'];
+  }
+
+  return $form;
+}
+
+/**
+ * Submit function for facetapi_select_form().
+ */
+function facetapi_select_facet_form_submit($form, &$form_state) {
+  $parsed_url = drupal_parse_url($form_state['values']['facets']);
+  drupal_goto($parsed_url['path'], array('query' => $parsed_url['query']));
+}
+
+/**
+ * Implements hook_facetapi_widgets().
+ */
+function facetapi_select_facetapi_widgets() {
+  return array(
+    'facetapi_select_dropdowns' => array(
+      'handler' => array(
+        'label' => t('Select Field (Dropdowns)'),
+        'class' => 'FacetapiSelectDropdowns',
+        'query types' => array('term', 'date'),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function facetapi_select_theme() {
+  return array(
+    'facetapi_select_select_option' => array(
+      'variables' => array(
+        'facet_text' => NULL,
+        'facet_count' => 0,
+        'show_count' => TRUE,
+        'is_active' => FALSE,
+        'facetapi_settings' => NULL,
+      ),
+    ),
+  );
+}
+
+/**
+ * Theme an individual select option.
+ */
+function theme_facetapi_select_select_option($variables) {
+  $output = $variables['facet_text'];
+
+  if ($variables['is_active'] && empty($variables['facet_settings']['limit_active_items'])) {
+    $output = '(-) ' . $output;
+  }
+  if ($variables['show_count']) {
+    $output .= ' (' . $variables['facet_count'] . ')';
+  }
+
+  return $output;
+}
+
+/**
+ * Implements hook_i18n_string_info().
+ */
+function facetapi_select_i18n_string_info() {
+  $groups['facetapi_select'] = array(
+    'title' => t('FacetAPI Select'),
+    'description' => t('Translatable FacetAPI- Select default labels.'),
+  // This group doesn't have strings with format.
+    'format' => FALSE,
+  // This group can list all strings.
+    'list' => TRUE,
+  );
+  return $groups;
+}
+
+/**
+ * Implements hook_i18n_string_list().
+ */
+function facetapi_select_i18n_string_list($group) {
+  $strings = array();
+
+  if ($group == 'facetapi_select') {
+    foreach (facetapi_get_searcher_info() as $searcher => $searcher_info) {
+      $adapter = facetapi_adapter_load($searcher);
+      foreach (facetapi_get_realm_info() as $realm_name => $realm) {
+        $realm = facetapi_realm_load($realm_name);
+        foreach (facetapi_get_facet_info($searcher) as $facet) {
+          $settings = $adapter->getFacetSettings($facet, $realm);
+          FacetapiSelectDropdowns::appendTranslatableOption($settings, $strings);
+        }
+      }
+    }
+  }
+
+  return $strings;
+}
+
+/**
+ * Submit handlers for settings form of facet filters.
+ */
+function facetapi_select_facet_settings_form_submit($form, $form_state) {
+  $values = $form_state['values'];
+
+  if (empty($values['widget']) || $values['widget'] != 'facetapi_select_dropdowns') {
+    return;
+  }
+
+  // Getting the Facet identifier.
+  $key = $form['#facetapi']['facet']['name'];
+
+  // Update the i18n string for the "Default Option" label.
+  $string = $values['default_option_label'];
+  FacetapiSelectDropdowns::updateLabelTranslation('default_option_label', $string, $key);
+
+  // Update the i18n string for the "Reset Option" label.
+  $string = $values['reset_option_label'];
+  FacetapiSelectDropdowns::updateLabelTranslation('reset_option_label', $string, $key);
+}
