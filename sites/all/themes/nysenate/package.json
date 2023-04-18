@@ -13,10 +13,10 @@
     "grunt-contrib-watch": "~0.6.1",
     "grunt-drush": "*",
     "grunt-lib-contrib": "0.7.1",
-    "grunt-sass": "~0.18.1",
+    "grunt-sass": "~3.1.0",
     "grunt-stripmq": "0.0.6",
     "node-bourbon": "1.2.3",
-    "node-sass": "^2.1.1"
+    "node-sass": "^8.0.0"
   },
   "dependencies": {
     "request": "^2.81.0"
