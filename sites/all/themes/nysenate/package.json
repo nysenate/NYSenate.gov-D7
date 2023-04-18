@@ -16,9 +16,9 @@
     "grunt-sass": "~0.18.1",
     "grunt-stripmq": "0.0.6",
     "node-bourbon": "1.2.3",
-    "node-sass": "^2.1.1"
+    "node-sass": "^8.0.0"
   },
   "dependencies": {
-    "request": "^2.81.0"
+    "request": "^2.88.2"
   }
 }
